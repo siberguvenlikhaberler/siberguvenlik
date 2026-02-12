@@ -922,105 +922,7 @@ To mitigate 0ktapus-style campaigns, the researchers recommended good hygiene ar
 
 ================================================================================
 
-[13] Security Affairs - Apple fixed first actively exploited zero-day in 2026
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Thu, 12 Feb 2026 10:50:10 +0000
-Link: https://securityaffairs.com/187890/security/apple-fixed-first-actively-exploited-zero-day-in-2026.html
-
-[TAM METİN - 428 kelime]
-Apple released updates for iOS, iPadOS, macOS, watchOS, tvOS, and visionOS to address an actively exploited zero-day tracked as CVE-2026-20700. The flaw is a memory corruption issue in Apple’s Dynamic Link Editor (dyld) that lets attackers execute arbitrary code on vulnerable devices.
-
-Google’s Threat Analysis Group discovered and reported the issue, a circumstance that suggests the flaw may have been exploited by nation-state actors or commercial spyware vendors in attacks in the wild.
-
-“An attacker with memory write capability may be able to execute arbitrary code. Apple is aware of a report that this issue may have been exploited in an extremely sophisticated attack against specific targeted individuals on versions of iOS before iOS 26. CVE-2025-14174 and CVE-2025-43529 were also issued in response to this report.” reads the advisory published by Apple.
-
-Apple fixed both CVE-2025-14174 and CVE-2025-43529 in December 2025 after reports of active exploitation.
-
-CVE-2025-14174 is an out of bounds memory access in ANGLE in Google Chrome on Mac prior to 143.0.7499.110. A remote attacker can exploit the flaw to perform out of bounds memory access via a crafted HTML page.
-
-Google first flagged CVE-2025-14174 (CVSS 8.8), an out-of-bounds memory flaw in ANGLE’s Metal renderer, which could allow code execution. CVE-2025-43529 (CVSS 8.8) is a WebKit use-after-free bug that could also let attackers run code through malicious web content. Updates are available for supported Apple devices and operating systems.
-
-The vulnerability CVE-2025-43529 is a use-after-free flaw in Apple’s WebKit engine, the component responsible for processing web content. When WebKit mishandles memory, it may continue to access a portion of memory after it has already been freed. By delivering specially crafted web content, an attacker can trigger this condition, causing memory corruption. In practice, this can lead to application crashes or, in more serious cases, arbitrary code execution. The issue affects Safari and any Apple or third-party applications that rely on WebKit to parse and render HTML across iOS, iPadOS, macOS, and related platforms.
-
-The IT giant addressed the memory corruption issue CVE-2026-20700 with improved state management.
-
-The vulnerability was addressed with iPhone 11 and later, iPad Pro 12.9-inch 3rd generation and later, iPad Pro 11-inch 1st generation and later, iPad Air 3rd generation and later, iPad 8th generation and later, and iPad mini 5th generation and later.
-
-The security updates are now available for supported Apple devices across the latest iOS, iPadOS, macOS, watchOS, tvOS, and visionOS versions:
-
-IApple also rolled out security updates to fix multiple vulnerabilities in older versions of iOS, iPadOS, macOS, and Safari:
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(XXXXXXX, AÇIK - securityaffairs.com, 12/02/2026)
-
-================================================================================
-
-[14] Security Affairs - Multiple Endpoint Manager bugs patched by Ivanti, including remote auth bypass
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Thu, 12 Feb 2026 06:13:41 +0000
-Link: https://securityaffairs.com/187882/uncategorized/multiple-endpoint-manager-bugs-patched-by-ivanti-including-remote-auth-bypass.html
-
-[TAM METİN - 273 kelime]
-Ivanti released patches for more than a dozen vulnerabilities in Endpoint Manager, including flaws disclosed in October 2025. The update addresses a high-severity authentication bypass, tracked as CVE-2026-1603 (CVSS score of 8.6), that attackers could exploit remotely without credentials to access and steal sensitive login information.
-
-An authentication bypass in Ivanti Endpoint Manager before version 2024 SU5 allows a remote unauthenticated attacker to leak specific stored credential data.
-
-“An authentication bypass in Ivanti Endpoint Manager before version 2024 SU5 allows a remote unauthenticated attacker to leak specific stored credential data.” reads the advisory.
-
-The company also fixed a medium-severity SQL injection, tracked as CVE-2026-1602 (CVSS score of 6.5), in Ivanti Endpoint Manager.
-
-“SQL injection in Ivanti Endpoint Manager before version 2024 SU5 allows a remote authenticated attacker to read arbitrary data from the database.” continues the advisory.
-
-Trend Micro’s ZDI reported the flaws to Ivanti in November 2024, threat actors could exploit the bugs to escalate privileges and run code remotely.
-
-The company said it is not aware of attacks in the wild exploiting these vulnerabilities before public disclosure.
-
-In December, the software firm addressed a newly disclosed vulnerability, tracked as CVE-2025-10573 (CVSS score 9.6), in its Endpoint Manager (EPM) solution.
-
-The vulnerability is a Stored XSS that could allow a remote unauthenticated attacker to execute arbitrary
-
-“Stored XSS in Ivanti Endpoint Manager prior to version 2024 SU4 SR1 allows a remote unauthenticated attacker to execute arbitrary JavaScript in the context of an administrator session. User interaction is required.” reads the advisory.
-
-The flaw impacts Ivanti Endpoint Manager prior to version 2024 SU4 SR1.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(XXXXXXX, AÇIK - securityaffairs.com, 12/02/2026)
-
-================================================================================
-
-[15] Security Affairs - Volvo Group hit in massive Conduent data breach
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Wed, 11 Feb 2026 19:28:49 +0000
-Link: https://securityaffairs.com/187875/security/volvo-group-hit-in-massive-conduent-data-breach.html
-
-[TAM METİN - 394 kelime]
-A data breach at business services provider Conduent has impacted at least 25 million people, far more than initially reported. Volvo Group North America confirmed that the security breach exposed data of nearly 17,000 of its employees, making it one of several major companies affected by the large-scale breach.
-
-SecurityWeek reports that the breach now affects far more people than first thought: Texas sees 15 million impacted (up from 4 million) and over 10 million individuals in Oregon are also affected.
-
-In November 2025, the company confirmed that January 2025 breach exposed the personal data of over 10M people, including names, addresses, DOBs, SSNs, and health and insurance info.
-
-In April 2025, the business services provider revealed that personal information, including names and Social Security numbers, was stolen in a January cyberattack.
-
-In January, the company announced that a cyberattack caused service disruptions after agencies in multiple US states reported outages. Wisconsin and Oklahoma noted impacts on payments and customer support.
-
-Conduent disclosed that hackers accessed its network from October 21, 2024, to January 13, 2025, stealing personal data of users, including SSNs, DOBs, addresses, and health info. The company notified affected individuals and is offering free identity protection.
-
-The Safepay ransomware group claimed the attack in February 2025.
-
-Conduent, which provides printing, mailroom, document processing, payment integrity, and other back-office services, notified individuals about a data breach on behalf of Volvo Group. Volvo told the Maine Attorney General that 16991 employees were affected. The company said it only became aware of the incident in January 2026, months after the breach occurred.
-
-“On behalf of our clients, Conduent Business Services, LLC (“Conduent”) provides third-party printing/mailroom services, document processing services, payment integrity services, and other back-office support services. We are writing to inform you about a recent incident experienced by Conduent that may have involved some of your personal information, which came into our possession due to the services that we provide to your current or former health plan.” reads the data breach notification sent to the impacted individuals and shared with the Maine Attorney General Office. “While we are unaware of any attempted or actual misuse of any information involved in this incident, we are providing you with information about the incident and steps you can take to protect yourself, should you feel it necessary.”
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(XXXXXXX, AÇIK - securityaffairs.com, 12/02/2026)
-
-================================================================================
-
-[16] Graham Cluley - Polish hacker charged seven years after massive Morele.net data breach
+[13] Graham Cluley - Polish hacker charged seven years after massive Morele.net data breach
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 08:04:15 +0000
 Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/polish-hacker-charged-seven-years-after-massive-morele-net-data-breach
@@ -1056,7 +958,7 @@ If anything, this case serves as a timely reminder to cybercriminals that they s
 
 ================================================================================
 
-[17] Graham Cluley - Smashing Security podcast #454: AI was not plotting humanity’s demise. Humans were
+[14] Graham Cluley - Smashing Security podcast #454: AI was not plotting humanity’s demise. Humans were
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 00:30:32 +0000
 Link: https://grahamcluley.com/smashing-security-podcast-454/
@@ -1164,7 +1066,7 @@ Follow him on LinkedIn, Bluesky and Mastodon, or drop him an email.
 
 ================================================================================
 
-[18] Graham Cluley - Fake Dubai Crown Prince tracked to Nigerian mansion after $2.5M romance scam
+[15] Graham Cluley - Fake Dubai Crown Prince tracked to Nigerian mansion after $2.5M romance scam
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sat, 07 Feb 2026 13:19:52 +0000
 Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/fake-dubai-crown-prince-tracked-to-nigerian-mansion-after-2-5m-romance-scam
@@ -1212,7 +1114,7 @@ Whether Ikeji or Dr. Abhulimhen will face justice remains unclear. But at least 
 
 ================================================================================
 
-[19] SANS ISC - ISC Stormcast For Thursday, February 12th, 2026 https://isc.sans.edu/podcastdetail/9806, (Thu, Feb 12th)
+[16] SANS ISC - ISC Stormcast For Thursday, February 12th, 2026 https://isc.sans.edu/podcastdetail/9806, (Thu, Feb 12th)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 02:00:02 GMT
 Link: https://isc.sans.edu/diary/rss/32710
@@ -1223,7 +1125,7 @@ Link: https://isc.sans.edu/diary/rss/32710
 
 ================================================================================
 
-[20] SANS ISC - Four Seconds to Botnet - Analyzing a Self Propagating SSH Worm with Cryptographically Signed C2 &#x5b;Guest Diary&#x5d;, (Wed, Feb 11th)
+[17] SANS ISC - Four Seconds to Botnet - Analyzing a Self Propagating SSH Worm with Cryptographically Signed C2 &#x5b;Guest Diary&#x5d;, (Wed, Feb 11th)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 01:56:24 GMT
 Link: https://isc.sans.edu/diary/rss/32708
@@ -1317,7 +1219,7 @@ gbruneau at isc dot sans dot edu
 
 ================================================================================
 
-[21] SANS ISC - Apple Patches Everything: February 2026, (Wed, Feb 11th)
+[18] SANS ISC - Apple Patches Everything: February 2026, (Wed, Feb 11th)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 11 Feb 2026 19:36:59 GMT
 Link: https://isc.sans.edu/diary/rss/32706
@@ -1339,7 +1241,7 @@ Twitter|
 
 ================================================================================
 
-[22] Recorded Future - State of Security Report | Recorded Future
+[19] Recorded Future - State of Security Report | Recorded Future
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 00:00:00 GMT
 Link: https://www.recordedfuture.com/research/state-of-security
@@ -1429,7 +1331,119 @@ The 2026 State of Security report was produced by Recorded Future's Insikt Group
 
 ================================================================================
 
-[23] Recorded Future - From 27 Steps to 5: How Recorded Future Reimagined Threat Hunting with Autonomous Threat Operations
+[20] Recorded Future - Fragmentation Defined 2025's Threat Landscape. Here's What It Means for 2026
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Thu, 12 Feb 2026 00:00:00 GMT
+Link: https://www.recordedfuture.com/blog/fragmentation-in-2025-what-it-means-for-2026
+
+[TAM METİN - 1624 kelime]
+Fragmentation Defined 2025's Threat Landscape. Here's What It Means for 2026
+
+Uncertainty has become the operating environment for business. And this year, fragmentation is driving it.
+
+The global threat landscape didn't simplify in 2025; it shattered. Geopolitical alliances strained. Criminal enterprises splintered under law enforcement pressure, then regrouped into smaller, faster, and harder-to-track operations. State-sponsored cyber actors shifted from dramatic disruptions to quiet pre-positioning, embedding themselves in networks and waiting. Hacktivist groups and influence networks amplified conflicts, blurring the line between genuine intrusions and perception warfare.
+
+But here's what makes this moment dangerous: as long-established norms unwind, fragmentation is paradoxically enabling greater interoperability across domains that were once distinct. State objectives, criminal capability, and private-sector technology increasingly reinforce one another. That convergence creates uncertainty, compresses warning time, and expands plausible deniability.
+
+Today, Recorded Future's Insikt Group releases the 2026 State of Security report, our most comprehensive annual analysis of the forces shaping global security.
+
+Drawing on proprietary intelligence, network telemetry, and deep geopolitical analysis, this report examines how 2025's fractures are reshaping the threat environment — and what security leaders must prepare for in the year ahead.
+
+The End of Stability as a Baseline Assumption
+
+For decades, organizations built risk models around a core premise: that the international order would hold, diplomatic mechanisms would constrain escalation, and major powers would avoid direct confrontation.
+
+That premise no longer applies.
+
+In 2025, the international geopolitical order fragmented as hard-power competition, transactional diplomacy, and the testing of red lines became defining features of state behavior. The Russia–Ukraine war ground into its fourth year, with Moscow maintaining a strategic advantage despite minimal territorial gains. Israel and Iran clashed directly in a twelve-day conflict that reshaped regional power dynamics. India and Pakistan escalated to ballistic missile exchanges before a US-brokered ceasefire intervened. Thailand and Cambodia exchanged fire along disputed borders, triggering the most intense fighting in nearly fifteen years.
+
+The pattern is clear: states are increasingly willing to use force to advance objectives when diplomatic mechanisms appear unreliable. As modern power struggles threaten institutions like international law, risk is spreading across domains that have historically had clearer boundaries.
+
+For organizations, this means geopolitical crises are increasingly likely to spill over into corporate networks, supply chains, regulatory environments, and digital infrastructure with limited warning. Resilience, not stability, became the baseline operating assumption.
+
+State-Sponsored Actors: Risk Moves to the Edges
+
+While kinetic conflicts dominated headlines, some of 2025's most consequential state-sponsored activity unfolded quietly in digital environments — at the edges of networks where oversight is weakest.
+
+China, Russia, Iran, and North Korea, also known as the four most capable and consistently active hostile state cyber actors Insikt Group tracks, focused not on dramatic attacks but on the covert accumulation of access. They targeted identity systems, cloud environments, and edge infrastructure: the poorly monitored network devices, VPN appliances, and perimeter systems that organizations struggle to patch and defend.
+
+Insikt Group's reporting on RedMike highlighted disciplined pre-positioning in telecommunications infrastructure: access built selectively and held quietly for intelligence value by threat actors ready to pivot quickly when timing and pressure align. Chinese state-sponsored actors targeted telecommunications providers worldwide, with one campaign exploiting unpatched Cisco devices across more than 100 countries. Russian GRU-linked groups intensified operations against critical infrastructure in Ukraine and NATO member states. Iranian operators blended espionage with hack-and-leak campaigns. North Korean actors merged revenue generation with espionage, deploying fraudulent IT workers embedded in foreign companies as an access vector.
+
+The strategic shift is profound: the primary risk is no longer a single, large-scale cyber incident. It's sustained pre-positioning that enables persistent espionage in peacetime and creates latent capacity for disruption during crises. Warning timelines are compressing, as the adversaries are already inside.
+
+Hacktivists and Influence Operators: Convergence Across Domains
+
+Every major conflict in 2025 had a digital front, and unsurprisingly, the combatants weren't always who they claimed to be.
+
+Hacktivist groups, patriotic volunteers, and influence networks played growing roles in conflicts involving Israel–Iran, India–Pakistan, Thailand–Cambodia, and Russia–Ukraine. These actors operated with varying degrees of state alignment but consistently contributed to a threat landscape where genuine intrusions, exaggerated claims, and disinformation reinforced one another.
+
+Regional escalation involving Israel and Iran showed how cyber operations, influence campaigns, and commercial surveillance tools can operate alongside military force, as domains converge in ways that would have seemed implausible just years ago. During the India–Pakistan escalation, both sides deployed large-scale influence networks that spread coordinated narratives, forged military documents, and amplified hacktivist claims of grid disruptions. Russian-aligned hacktivists targeted NATO countries with DDoS campaigns, with investigations revealing that portions of this "hacktivist" ecosystem function as state-directed fronts.
+
+The implication for defenders: perception is now contested terrain. Even low-sophistication attacks can generate outsized reputational and psychological impact when amplified through coordinated information operations.
+
+Cybercrime: Fragmented, Modular, Resilient
+
+Law enforcement achieved significant wins against cybercriminal infrastructure in 2025. Forum takedowns, arrests, and sanctions disrupted major operations. Ransomware payments declined for the second consecutive year.
+
+But the criminal ecosystem just adapted to these new conditions.
+
+Sustained pressure fractured large criminal enterprises into smaller, more decentralized operations. Insikt Group identified 289 new ransomware variants this year (a 33% increase from 2024), most of which were derived from leaked source code. Groups adopted subscription models, outsourced operations, and relied on specialized services for laundering and negotiation. The result: a distributed criminal supply chain that's resilient, decentralized, and increasingly difficult to track.
+
+Cybercrime groups increasingly aligned with national strategic objectives, blurring the boundaries between criminal and state activity. In Venezuela, state action eroded legal, political, and cyber boundaries, challenging assumptions about sovereignty and accountability. Mercenary spyware pursued the same persistent-access goals as state actors, embedding where oversight was weakest and adapting under pressure.
+
+English-speaking criminal actors, such as the Scattered LAPSUS$ Hunters collective, demonstrated that low-tech social engineering tactics — particularly help desk impersonation — remain devastatingly effective. Meanwhile, organized crime in Southeast Asia industrialized fraud at an unprecedented scale, with Chinese-speaking transnational criminal organizations running call center compounds using coerced labor augmented by AI-driven automation.
+
+For organizations, the takeaway is stark: threat actors are adapting faster than defenders. Modular criminal ecosystems that share tools, infrastructure, and access can reconstitute rapidly even after disruptions.
+
+Emerging Technologies: Verification Failure at Scale
+
+2025 was not a breakout year for AI-driven cyber operations.
+
+To separate hype from signal, Insikt Group developed AIM3 — our framework for assessing AI malware maturity. It shows that most observed use remains at an early stage of development. Threat actors experimented with malicious AI models tailored for cyber operations, but the results were incremental rather than transformative.
+
+The immediate risk is not autonomous attacks. It's verification failure at scale, where deception becomes faster, cheaper, and more convincing as AI is embedded into decision workflows.
+
+Deepfake-enabled fraud has increased more than tenfold since the start of 2024. Synthetic identity fraud rose 300% in Q1 2025 alone. Adversaries began testing prompt injection attacks and "generated-SEO" manipulation to poison AI search results. As AI becomes empowered to take real-world actions through autonomous agents, the attack surface for fraud and manipulation will expand dramatically.
+
+At the strategic level, the US–China race for AI dominance intensified, with China pursuing an aggressive diffusion strategy that's embedding Chinese LLMs into the global software ecosystem. Competition over quantum computing, advanced robotics, and space systems is extending beyond commercial markets into sustained geopolitical rivalry.
+
+The organizations that act now to establish AI governance, inventory cryptographic dependencies, and prepare for post-quantum migration will hold significant advantages as these technologies mature.
+
+What 2025 Teaches Us About 2026
+
+Looking ahead, diplomatic friction, selective enforcement of norms, and accelerating technology adoption will continue to widen the gap between how risk is assumed to behave and how it actually behaves.
+
+The patterns of 2025 point toward a 2026 threat environment defined by sustained uncertainty:
+
+Simultaneous regional crises will become the norm. As enforcement of established norms becomes more selective, regional and emerging powers will pursue objectives more aggressively, and external intervention in internal conflicts will expand.
+
+Connectivity disruptions will emerge as a primary tool of coercion. Undersea cables, satellite systems, and positioning/navigation/timing infrastructure are becoming strategic targets, with even limited interference capable of cascading across critical sectors.
+
+Ransomware will fragment further. Declining payments will push threat actors toward shorter attack cycles, lower demands, and disruption-focused tactics designed to compel engagement.
+
+The synthetic identity crisis will deepen. AI-enabled deepfakes and compromised identity verification systems will make business email compromise and social engineering more convincing and scalable.
+
+AI will become the next great attack surface. Prompt-based manipulation will increasingly replace code-based exploits as the preferred intrusion method against AI systems.
+
+Quantum readiness will move from planning to spending. Organizations will begin allocating dedicated budgets for cryptographic inventories, vendor transitions, and post-quantum migration pilots.
+
+Robots and space systems will become contested cyber-physical terrain. In 2026, humanoid robots and space infrastructure will move from experimentation to operational deployment, increasing economic and strategic reliance on network-connected cyber-physical systems.
+
+Intelligence does not eliminate uncertainty; having more access to more data points means nothing without context. Rather, intelligence makes the uncertainty more manageable.
+
+Fragmentation creates complexity. But complexity rewards those who can see connections others miss, such as how risks across geopolitics, cyber operations, and criminal ecosystems converge to shape exposure. That's the purpose of the 2026 State of Security report: not just to catalog threats, but to help leaders reduce surprise, prioritize effectively, and act with confidence.
+
+The full report includes detailed analysis of each threat domain, threat actor profiles, regional risk assessments, and actionable recommendations for building organizational resilience.
+
+Download the full 2026 State of Security report
+
+The 2026 State of Security report was produced by Recorded Future's Insikt Group, which comprises analysts and security researchers with deep experience in government, law enforcement, the military, and intelligence agencies.
+
+(XXXXXXX, AÇIK - recordedfuture.com, 12/02/2026)
+
+================================================================================
+
+[21] Recorded Future - From 27 Steps to 5: How Recorded Future Reimagined Threat Hunting with Autonomous Threat Operations
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 11 Feb 2026 00:00:00 GMT
 Link: https://www.recordedfuture.com/blog/threat-hunting-27-steps-to-5
@@ -1483,672 +1497,7 @@ Download: Reduce 27-step Threat Hunts to 5 Simple Steps
 
 ================================================================================
 
-[24] Recorded Future - Rublevka Team: Anatomy of a Russian Crypto Drainer Operation
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Wed, 04 Feb 2026 00:00:00 GMT
-Link: https://www.recordedfuture.com/research/rublevka-team-anatomy-russian-crypto-drainer-operation
-
-[TAM METİN - 5881 kelime]
-Rublevka Team: Anatomy of a Russian Crypto Drainer Operation
-
-Insikt Group has identified a major cybercriminal operation specializing in large-scale cryptocurrency theft, operating under the moniker “Rublevka Team”. Since its inception in 2023, the threat group has generated over $10 million through affiliate-driven wallet draining campaigns. Rublevka Team is an example of a “traffer team,” composed of a network of thousands of social engineering specialists tasked with directing victim traffic to malicious pages. Unlike traditional malware-based approaches such as those used by the traffer teams Marko Polo and CrazyEvil (previously identified by Insikt Group, both of which distributed infostealer malware), Rublevka Team deploys custom JavaScript scripts via spoofed landing pages that impersonate legitimate crypto services, tricking victims into connecting their wallets and authorizing fraudulent transactions. Their infrastructure is fully automated and scalable, offering affiliates access to Telegram bots, landing page generators, evasion features, and support for over 90 wallet types. By lowering the technical barrier to entry, Rublevka Team has built an extensive ecosystem of global affiliates capable of launching high-volume scams with minimal oversight.
-
-This structure poses a growing threat to cryptocurrency platforms, fintech providers, and brands whose identities are being impersonated. Organizations that facilitate blockchain transactions, particularly fintech firms, exchanges, or wallet providers, face elevated reputational and legal risks if customers fall victim to these scams. Even if the victim’s compromise occurs outside a firm’s platform, failure to detect spoofed landing pages or fraudulent referrals can trigger consumer backlash, loss of trust, or regulatory scrutiny around customer protections and Know Your Customer (KYC) enforcement. The threat group’s agility — evidenced by its use of frequently rotating domains, targeting lower-cost chains like Solana (SOL), and exploiting Remote Procedure Call (RPC) APIs — undermines traditional fraud detection and domain takedown efforts. Their model mirrors ransomware-as-a-service (RaaS) operations, signaling a continuation of the broader shift toward scalable, service-based cybercrime that organizations must proactively monitor, disrupt, and defend against to protect customers and maintain trust.
-
-The objective of a Rublevka Team scam is to create an attractive SOL-based offer, such as a promotion or an airdrop event, generate traffic to the lure via social media or advertisements, and trick a user into connecting their wallet to the website and signing a transaction that drains their wallet.
-
-As of writing, Rublevka Team’s primary Telegram channel has approximately 7,000 members. Over 240,000 messages have been posted to Rublevka Team’s automated “profits” channel, indicating at least 240,000 successful wallet drains, with transactions ranging from $0.16 to over $20,000.
-
-Rublevka Team offers a custom JavaScript drainer embedded into their landing pages, which exfiltrates victims’ SOL assets by draining held tokens. The drainer is compatible with over 90 SOL wallet types.
-
-The threat group’s infrastructure is fully automated via Telegram bots, offering affiliates tools for landing page creation, campaign tracking, cloaking, and distributed denial-of-service (DDoS) protection.
-
-The drainer campaign, active since 2023, leverages spoofed versions of legitimate services such as Phantom, Bitget, and Jito to maximize user trust and conversion
-
-Insikt Group has been monitoring Rublevka Team since August 2025, when we first encountered the threat group’s advertisement banner on Exploit Forum. The name “Rublevka Team” is likely a reference to the Rublevka neighborhood of Moscow, a prestigious and wealthy suburb largely populated by elite Russian businesspeople and government officials. Like other traffer teams previously reported by Insikt Group, such as Marko Polo and Crazy Evil, Rublevka Team is a “cryptoscam” team primarily operating on LolzTeam Forum, as well as maintaining a smaller presence on high-tier forums Exploit and XSS. However, in contrast to the traffer teams previously reported by Insikt Group, Rublevka Team does not rely on infostealer malware to target victims; instead, it operates a drainer script embedded in its landing pages to connect to victims’ cryptocurrency wallets and drain their funds.
-
-Based on analysis by Insikt Group, Rublevka Team has been active since 2023, when it was first launched on LolzTeam Forum by the user “denisssss_inactive”. Based on an analysis of its reported profits within its private channel, Rublevka Team has a lifetime revenue of over $10 million USD as of the time of writing. The team’s tactics, techniques, and procedures (TTPs) have evolved since it began operations in 2023. Originally, the threat group operated fake cryptocurrency exchanges to convince users to connect their wallets and deposit funds, focusing on generating traffic through Instagram and, later, TikTok. In 2024, however, Rublevka Team fundamentally shifted its tactics to deploy a custom JavaScript-based cryptocurrency wallet drainer on its landing pages, which impersonated cryptocurrency token airdrops and giveaways. The threat group initially targeted The Open Network (TON), then shifted to SOL in spring 2025. Its latest campaign, which is ongoing as of writing, has generated the majority of its total revenue (approximately $8.2 million).
-
-Rublevka Team Operations
-
-Affiliate Recruitment
-
-Rublevka Team’s latest post on LolzTeam Forum, which was published by denisssss_inactive on April 18, 2025, advertises Rublevka Team’s SOL drainer scam program. Since Rublevka Team’s original postings advertising its cryptocurrency exchange scams and TON token campaigns, the payout rates have shifted significantly in affiliates’ favor, with a starting percentage of 75% and 80% for “experienced users.” The increase in commission rates for starting affiliates may indicate a shift over time in the team’s monetization strategies based on the financial success the threat group has seen; it may now be more favorable to prioritize expanding the pool of workers rather than extracting maximum income from any individual affiliate.
-
-The post also advertises a fully automated Telegram bot for conducting operations, a landing page generator, and free domains and hosting services with included cloaking features and distributed denial-of-service (DDoS) protections. The advertisement also describes the SOL drainer used on the landing pages, which supports over 90 wallet types, draining capabilities for SOL, Solana Program Library (SPL) tokens (including SPL2022 extension tokens), non-fungible tokens (NFTs), and Native Stake, spoofing and bypass features for Phantom wallet, a drainer API, and over 35 ready-to-use landing pages integrated with the drainer.
-
-The posts do not specify any hard requirements for prospective affiliates, who are instructed to apply for the team via the Telegram bot [@]RublevkaTeam_Bot. Applications are likely vetted by Rublevka Team’s leader, denisssss_inactive, or the administrative team (“Jesse Pinkman” and “Shell” at the time of writing).
-
-Once an applicant is accepted to Rublevka Team, they are directed to join the following private channels:
-
-“[RublevkaTeam] Chat”: Closed group chat with messages dating back to May 2024, with 6,821 members as of writing
-
-“[RublevkaTeam] Info”: An informational channel posting updates to the drainer and affiliate program; the threat group also operates a Russian-language version of this channel, “[Rublevka Team] Инфо”
-
-“[RublevkaTeam] Landing pages”: Repository of screenshots of new landing pages used by Rublevka Team
-
-“RublevkaTeam_bot (@RublevkaTeam_Bot)”: Handles group applications and serves as an administrative panel for affiliate campaigns
-
-“Rublevka Utils (@RublevkaUtils_bot)”: Used for generating custom landing pages and video content for traffic generation
-
-Rublevka Team hosts an informational manual for affiliates on the domain rublevkateam[.]cc. This manual outlines the procedures for working on the team, including how to use the Telegram bot, how to conduct cryptoscams, how to configure the drainer, and more.
-
-The stated goal of the Rublevka Team scam is to create a “drainer-based offer” (usually a promotion, an airdrop notice, a KYC request, or other) and to attract traffic to the website. From the perspective of a victim (referred to as a “lead”), they will encounter the website, connect their cryptocurrency wallet to the website, and then receive an offer to perform a crypto transaction. Upon confirming and signing the transaction, all assets from the lead’s wallet are transferred to the website’s operator.
-
-According to the manual, the team opted for SOL due to its fast transaction time and low fees, as well as its support for smart contracts, decentralized apps (dApps), and NFTs. The manual includes a table of popular wallets that support SOL and are compatible with the Rublevka drainer, which includes Solflare, Phantom, Backpack, Coinbase, Bitget, OKX, Metamask, and others.
-
-Notably, configuration for an affiliate’s campaign is done within the [@]RublevkaTeam_bot, which is available in English, Russian, and Chinese, and in most cases requires no interaction with the support team. This provides affiliates with full control and visibility into their own campaigns.
-
-Rublevka Team affiliates have three options when creating a domain for hosting a landing page:
-
-“Shared domain”: This type of domain is provided by Rublevka Team and is shared among multiple team members. This option is free of charge but has a higher chance of being blocked and comes with a preset list of names. With this option, a user chooses a custom subdomain, which is hosted under a shared apex domain managed by Rublevka Team and periodically rotated by administrators. Users on a shared domain have no control over the IP address of their website. This option has experienced continuous disruptions from December 2025 into 2026.
-
-“Private domain”: An affiliate provides a private domain, which they purchase and configure themselves. This option has minimal risk of being blocked and provides users with full control over their own hosting.
-
-“Self-host”: With this option, the affiliate can host the SOL drainer backend on a Rublevka Team-operated domain for free, with the intent that the affiliate invokes the script from their own privately hosted website.
-
-Users can also choose to register subdomains of their private domain using the bot, with each subdomain functioning as a fully autonomous landing page.
-
-Once a domain is created, the affiliate can configure their landing page. Within the bot, the user has the option to create either a “regular” page, which includes a drainer, or a “white” page, which does not have a drainer and is used to evade abuse detection services. The white pages are used as part of the “Red Table Bypass” feature, designed to unblock a domain that has been blocked by Google by temporarily displaying a harmless web page. In both cases, the user has the option to choose from a wide selection of pre-created landing pages.
-
-Alternatively, users can choose to generate their own landing page based on a template, which can be customized to a token of the user’s choice. They can also choose to “copy” an existing website by providing a URL to the bot; however, as of writing, this functionality appears to be broken.
-
-In addition to generating landing pages, the Telegram bot also allows users to configure “cloaking settings” for their domains. Cloaking is a technique used by cybercriminals that involves presenting website content to a search engine in a way that differs from what the victim will see after navigating to the website. However, Rublevka Team uses the term to describe access restrictions for users from certain countries, IP addresses, internet service providers (ISPs), or virtual private network (VPN) or proxy users. Affiliates can also configure redirect logic and CAPTCHAs via Cloudflare to redirect victims to another landing page if the primary domain is blocked; they can also filter out bots to reduce the likelihood of the domain being blocked. The Telegram bot also supports configurations that allow only the user’s domain to open as a Telegram Mini App for Telegram-based traffic schemes, as well as the option to block specific “leads” (victims).
-
-Rublevka Team affiliates can configure the settings for the drainer to fit their specific needs. The drainer can display a custom fake transaction for receiving SOL or a fake token, based on the contents of an affiliate’s landing page, and can be configured to display a fake credit for each asset drain operation on the wallet. Affiliates can also set up minimum balance alerts to lure victims into buying additional SOL to use on their landing page.
-
-The drainer has additional settings specifically for Phantom wallet, which the manual states is one of the most popular SOL wallets and can allow for a significant boost in “traffic conversion.” The drainer supports the following Phantom wallet “modes,” which are ways to connect with a user’s Phantom wallet to convince a user to sign a malicious drainer transaction:
-
-“Honeypot”: This mode relies on a fake incoming token or SOL receipt to prime the user before initiating a visible drain transaction. The drain is shown as an outgoing transfer, but Phantom does not flag it as risky. Fake receipts only render correctly for tokens installable through Phantom’s UI (not arbitrary custom tokens). A modal window falsely claims that the drained assets will be returned via a second transaction.
-
-“Honeypot2”: Honeypot2 expands on Honeypot by requiring two transactions. The user first sees a fake inbound transfer, then approves a follow-on transaction that performs the drain. When combined with Crasher, the second transaction may appear as a simulation error rather than a clear debit. As with Honeypot, a modal window falsely claims that a refund will follow.
-
-“Fake Return”: Unlike Honeypot, this mode does not simulate inbound funds; instead, it shows a straightforward outgoing transfer that appears legitimate. After a user signs the transaction, a modal window falsely claims that a second “return” transaction will refund the assets.
-
-“Crasher”: This is a stealth-focused drain designed to complete in one interaction with minimal user review. Phantom displays a generic warning commonly seen on legitimate sites, reducing suspicion through familiarity. There is no fake inbound activity or refund narrative. This mode is considered experimental and is replaced by Honeypot behavior on mobile devices.
-
-“Whitelist”: This mode is intended for domains explicitly whitelisted by Phantom, and is used in conjunction with other modes. When active on a whitelisted domain, it enables hidden draining and fake inbound token displays. If enabled on a non-whitelisted domain, Phantom blocks all draining activity, rendering the mode ineffective.
-
-“Warning”: Unlike other modes that suppress warnings, this mode intentionally displays a Phantom warning banner while concealing the drain mechanics, aiming to exploit warning fatigue in users. A modal window instructs the user to proceed despite the warning. Default warnings include:
-            
-“This dApp could be malicious”
-“You are approving over 200 transactions”
-
-“This dApp could be malicious”
-
-“You are approving over 200 transactions”
-
-“Remove Phantom”: This mode restricts Phantom wallet use by hiding it from wallet selectors or blocking connection attempts.
-
-The user can configure notifications in Telegram to notify them when a user visits their website, receives a withdrawal request, does not have funds, and more. Additionally, they can use the “Autosplit” feature, which will send any stolen funds directly to their private wallet, bypassing any intermediaries such as smart contracts or the shared Rublevka Team wallet, which is the default behavior. In this case, the profits are sent as they are, with each drained token being sent without conversion to the threat actor’s wallet.
-
-Additionally, Rublevka Team provides an API (PiterAPI) stored in the piter variable within the JavaScript code to allow more advanced users to further customize drainer behavior. This API includes the following functions:
-
-“connect”: Opens the modal window to connect to a victim’s wallet
-
-“process”: Prompts the user to sign the transaction
-
-“onConnect”: Sets the function to be called when a user connects their wallet
-
-“getBalance,” “getAddress”: Gets victim wallet information
-
-“setToken”: Sets up context for a specific token to be drained, including the token account address, mint, victim address, price, amount, and whether it’s an SPL-2022 token
-
-Landing Pages and Content
-
-Through the Telegram bot, Rublevka Team provides affiliates with an extensive catalog of landing pages available for use in their campaigns. As of October 2025, the Insikt Group identified 50 unique drainer landing pages and eleven “white” landing pages provided to affiliates. It is possible that additional landing pages have been added to the Telegram bot since then.
-
-The drainer landing pages spoofed meme coin and stablecoin token airdrops, token mints, decentralized finance (DeFi) trading platforms, SOL staking services, and more. For the most part, the landing pages impersonate existing “legitimate” services, such as Axiom, Bitget, Photon, Jito, and Marinade. The landing pages also impersonate existing meme coin and social coin tokens for airdrops, including “Bonk,” “DogWifHat,” “Trump,” “Pengu,” and “Fartcoin.” The SOL-specific services pages typically reference SOL liquid staking, “burning” or “incineration,” faucets, airdrops, snipers, and multipliers. Generally, the landing pages included social media and informational links to the actual websites of the coins and services they were impersonating, likely to appear legitimate in a cursory check.
-
-The landing page generator also included a panel for selecting a crypto wallet to connect to the malicious page, which prompts users to either connect an existing wallet or create a new one.
-
-It is likely that these landing pages are used to lure victims to connect their wallet to the website, after which the embedded drainer script, index.js, will enumerate the wallet’s holdings, trick the user into signing a malicious transaction, and drain all held funds.
-
-JavaScript Drainer Analysis
-
-Based on Insikt Group’s analysis of the malicious landing pages, we identified that each page contained the file index.js (9c21d538c2a556f4a5b351b29f3513097ac57643f291ff6d751400d8dbc69489). This file is heavily obfuscated; Insikt Group assesses that the authors possibly used js-confuser, a free open-source JavaScript obfuscation tool with no available deobfuscator. However, Insikt Group was still able to identify strings of interest within the code, including indicators that may suggest parts of the script’s functionality.
-
-The drainer includes the following URLs:
-
-hxxps://mainnet[.]helius-rpc[.]com/?api-key=
-
-hxxps://mainnet[.]helius-rpc[.]com/?api-key=8e0e9a34-2648-421a-8f22-6460b4a68705
-
-hxxps://mainnet[.]helius-rpc[.]com/?api-key=55065729-bda8-4cf8-87a1-7bd64cf22726
-
-hxxps://mainnet[.]helius-rpc[.]com/?api-key=db25ae76-7277-45ce-b21a-5be1a61f2f04
-
-hxxps://mainnet[.]helius-rpc[.]com/?api-key=44b7171f-7de7-4e68-9d08-eff1ef7529bd
-
-hxxps://mainnet[.]helius-rpc[.]com/?api-key=bfd713ef-c9a7-404f-804c-e682c2bd0d3b
-
-hxxps://mainnet[.]helius-rpc[.]com/?api-key=f30d6a96-5fa2-4318-b2da-0f6d1deb5c83
-
-hxxps://mainnet[.]helius-rpc[.]com/?api-key=3b5315ac-170e-4e0e-a60e-4ff5b444fbcf
-
-hxxps://rpc[.]walletconnect[.]org/v1/?chainId=solana%3A5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp&projectId=730eede4c040eafa7a928a503b6cd650
-
-hxxps://solana-rpc[.]publicnode[.]com
-
-hxxps://wallet-api[.]solflare[.]com
-
-These are likely authorization calls to the Solana remote procedure call (RPC) API endpoints provided by RPC platforms Helius and WalletConnect, as well as the free Solana RPC endpoint provided by PublicNode. These endpoints are likely used to conduct the malicious drainer transactions. Notably, the Helius and WalletConnect URLs include API keys, as both services require sign-up and have various service tiers. As such, these API keys likely belong to Rublevka Team developers. The Solflare endpoint is likely used to connect to a victim’s wallet for enumeration and draining. The strings also included the domain efficient-endpoint[.]site (discussed further in the Domains and Infrastructure section below).
-
-The drainer code also includes the following strings (verbatim):
-
-Strings related to building SOL transactions and address tables, including:
-            
-“numSignerAccounts”
-“programAddressIndex”
-“lookupTableAddress”
-“addressTableLookups”
-“solana:101/nativeToken:501”
-“solana:mainnet”
-“standard:connect”
-“solana:signTransaction”
-“solana:signAllTransactions”
-“solana:signMessage”
-
-“programAddressIndex”
-
-“addressTableLookups”
-
-“solana:101/nativeToken:501”
-
-“solana:signTransaction”
-
-“solana:signAllTransactions”
-
-Instructional and error messages related to wallet transactions:
-            
-“Transactions are reverted. Sign all transactions to verificate your account”
-“Phantom is temporarily unsupported, please choose another wallet”
-“You have an insufficient balance. Top-up your balance by at least {fee} SOL”
-“This DApp would like to connect your wallet”
-“You are allowing this DApp to”
-“View wallet balance & activity”
-“Request approval for transactions”
-“Perform transactions without confirmation”
-“\n\nWelcome to our DApp. Signing is the only way we can truly know that you are the owner of the wallet you are connecting. Signing is a safe, gas-less transaction that does not in any way give us permission to perform any transactions with your wallet.\n\nURI: https://”
-“A wallet lets you store, send and receive digital assets like cryptocurrencies and NFTs.”
-
-“Transactions are reverted. Sign all transactions to verificate your account”
-
-“Phantom is temporarily unsupported, please choose another wallet”
-
-“You have an insufficient balance. Top-up your balance by at least {fee} SOL”
-
-“This DApp would like to connect your wallet”
-
-“You are allowing this DApp to”
-
-“View wallet balance & activity”
-
-“Request approval for transactions”
-
-“Perform transactions without confirmation”
-
-“\n\nWelcome to our DApp. Signing is the only way we can truly know that you are the owner of the wallet you are connecting. Signing is a safe, gas-less transaction that does not in any way give us permission to perform any transactions with your wallet.\n\nURI: https://”
-
-“A wallet lets you store, send and receive digital assets like cryptocurrencies and NFTs.”
-
-Messages stating that the dApp can be trusted:
-            
-“This application hasn’t been reviewed by Phantom yet, but it is listed in trusted community-maintained safety databases. You can proceed with confidence — this app is recognized as safe.”
-“This dApp uses a new, optimized transaction delivery method that is not yet displayed correctly in Phantom. You can proceed with confidence — this app is recognized as safe.”
-“This dApp uses Abuse Protection to prevent misuse of platform. You’ll need to complete a quick verification of your transaction history. It’s completely safe and only takes a few seconds.”
-
-“This application hasn’t been reviewed by Phantom yet, but it is listed in trusted community-maintained safety databases. You can proceed with confidence — this app is recognized as safe.”
-
-“This dApp uses a new, optimized transaction delivery method that is not yet displayed correctly in Phantom. You can proceed with confidence — this app is recognized as safe.”
-
-“This dApp uses Abuse Protection to prevent misuse of platform. You’ll need to complete a quick verification of your transaction history. It’s completely safe and only takes a few seconds.”
-
-String related to Telegram integration:
-            
-“TelegramWebview”
-“TelegramWebviewProxy”
-“tgWebAppVersion”
-“TelegramGameProxy”
-“[Telegram.WebView] < receiveEvent”
-
-“TelegramWebviewProxy”
-
-“[Telegram.WebView] < receiveEvent”
-
-A catalog of supported wallets, including wallet display names, URI schemes, iOS and Android package identifiers, and deeplinks, including Arculus, Blockchain, Ledger, KuCoin, Atomic, CoinEx, Trezor, and others.
-
-Insikt Group also identified approximately 160 unique strings within the drainer that resembled SOL addresses. Of these, approximately 30 corresponded to known addresses in the SOL ecosystem, including system programs and token mints. The remaining approximately 130 addresses do not have any official SOL affiliation and are likely private addresses linked to attacker infrastructure. These addresses are discussed further in the Cryptocurrency Addresses section below.
-
-Profits and Top Earners
-
-According to the main chat channel, Rublevka Team has also operated a more private channel for “top earners” to receive “exclusive” information and landing pages. As of May 2025, the eligibility requirements for this channel are:
-
-Having no less than ten TON in profit (the team was targeting TON during this time)
-
-Being in the list of top 50 earners in the last ten days, which can be verified using a command in the [@]RublevkaTeam_bot
-
-Being active in the team for no less than fourteen days, including providing traffic, contributing to the chat channel, or communicating with members of the support team
-
-Having any Telegram username
-
-Although a high number (approximately 14%) of “worker” names are hidden in the channel messages, Insikt Group was able to identify the top named earners in Rublevka Team based on the number of transactions posted to the channel, as well as based on the highest revenue per individual. The worker named “🇨🇦🇹🇷🇮🇷🇪🇪🇪🇺🇫🇮🇫🇷🇩🇪🇯🇵🇳🇱🇰🇷🇺🇸”, for example, has a total of 24,625 posts in the profits channel, the most among any other individual user, and has grossed $292,033.85 USD during their time in Rublevka Team. Other top posters include “Zatecky Gus 🍎🩸🍎🩸🍎🩸🍎🩸🍎🩸🍎🩸🍎” (9,804 posts valued at $95,106.91), “🍎🦮💥💥💥💥💥💥💥💥💥💥💥💥👀” (8,165 posts valued at $76,228.84), and others.
-
-The top earner per the profits channel is the user “hard working guy”; though there are only 799 transactions associated with this user, they are valued at over $1.3 million. Multiple users within the “[RublevkaTeam] Chat” channel expressed amazement at this user’s high profits, with several users asking “hard working guy” to message them for collaboration and speculating on what type of traffic “hard working guy” uses to generate such high profits per transaction. However, “hard working guy” is not active within the chat channel, and several users have cast doubt on whether this user exists, or if they are a fake user created by Rublevka Team administrators to motivate other affiliates to “work harder.” The user “think about it” is a close second to “hard working guy”, with 145 transactions valued at $1.04 million. The next top earner, “Mr. Zelensky” (no relation to the President of Ukraine), made only $325,662.67 with 195 transactions, indicating a significant gradation between these earning tiers. This likely demonstrates the differing approaches between individual affiliates of Rublevka Team, which involve either extracting small sums of money from individual victims over a prolonged period or draining large quantities in fewer transactions.
-
-Domains and Infrastructure
-
-Insikt Group collected a sample of domains associated with Rublevka Team based on the Telegram bot and channels linked to the threat group. Based on proprietary sources, it is evident that Rublevka Team is constantly changing and rotating their infrastructure, including the domains used to host their shared pages for affiliate use, as well as other staging infrastructure to host aspects of their drainer. Over the last year, shared Rublevka Team domains have included:
-
-Using open-source intelligence (OSINT) tools, Insikt Group identified approximately 70 unique subdomains historically associated with open-sol[.]cc, 400 associated with sol-hook[.]org, 300 associated with sol-galaxy[.]cc, 30 associated with web-core[.]cc, and 40 associated with sol-coin[.]xyz, as of writing. A cursory analysis of these domains’ hosting information showed that Rublevka Team primarily hides their shared infrastructure behind Cloudflare, with variation in registrars (using CNOBIN, Public Domain Registry, and an unspecified Hong Kong-based registrar). Notably, in November and December 2025, three of the domains (sol-galaxy[.]cc, web-core[.]cc, and sol-coin[.]xyz) migrated to IP address 158[.]94[.]208[.]165, registered to “Lanedonet Datacenter,” previously named “Metaspinner Net Gmbh.” Insikt Group recently identified Metaspinner net GmbH as a fraudulently registered hosting network that impersonated a legitimate German software company. Following RIPE NCC intervention, the network was re-registered under Lanedonet Datacenter. Insikt Group assessed with high confidence that Lanedonet Datacenter is operated by threat activity enabler (TAE) Virtualine Technologies.
-
-Insikt Group also identified several domains used for Rublevka Team’s shared drainer backend hosting (“selfhost”) service: g-app-d[.]cc, fontmaxplugin[.]cc, and commontechrepo[.]cc. These domains are also behind Cloudflare and have obfuscated registration information. We identified approximately 60 unique subdomains under g-app-d[.]cc, approximately 20 under fontmaxplugin[.]cc, and approximately 40 under commontechrepo[.]cc, all of which followed the naming convention “[word1]-[word2].[domain].cc,” where “word1” and “word2” appeared to be randomly selected words. This is likely due to the specific domain generation algorithm (DGA) used by Rublevka Team to automatically spin up domains as they rotate them.
-
-Insikt Group also identified the domain efficient-endpoint[.]site contained within the drainer file index.js. This domain was registered on September 24, 2025, and was hosted behind Cloudflare until December 12, 2025. After this date, the WHOIS record indicated it was registered via Namecheap to “Alexander Petrov,” with a physical address at 742 Evergreen Drive, Springfield, OR (likely fake), and the email address alex[.]petrov[.]domain[@]emailsecure[.]tech.
-
-Insikt Group identified additional domains registered to this individual and email address, with over 900 registered since April 2025. These subdomains followed several DGA patterns since first being registered, including “[word 1]-[word 2]-[word 3]” and “[word 1][word 2][word 3]” (where each word is themed around decentralized finance and technology), “[word 1][word 2]”, and “[word 1]-[word 2]”. They used the top-level domains .xyz, .online, .site, .store, .space, .online, and .com.
-
-The first website observed in OSINT sources registered to the email address alex[.]petrov[.]domain[@]emailsecure[.]tech is burn-shard-bridge[.]xyz, first observed on April 15, 2025. Around this time, the website displayed a “Connect Wallet” window similar to that observed in the Rublevka Team landing page generator, and an analysis of calls made by the website included /piter/visit and /piter/fetch, matching the name of the “Piter” drainer API described in Rublevka Team’s manual. We identified the following five additional domains that shared similar features and were registered to the same email address:
-
-public-proof[.]online
-
-highperformance-kit[.]online
-
-instant-automated-matrix[.]website
-
-highperformance-shard[.]online
-
-All of these websites demonstrated similar behavior, including displaying the same “Connect Wallet” window, calls to the PiterAPI function openModal(), and references to a JavaScript file that is highly similar to the drainer analyzed by Insikt Group. Hashes for the JavaScript drainer files observed on these websites are included in Appendix A.
-
-We assess that the domains registered to Alexander Petrov are possibly automatically generated infrastructure for use by Rublevka Team to host backend functions of their drainer operation, where the high volume of the domains is likely intended to enable the threat group to frequently rotate their infrastructure.
-
-Cryptocurrency Addresses
-
-Insikt Group identified a set of cryptocurrency addresses connected to Rublevka Team operations. Approximately 160 unique strings resembling SOL addresses were extracted from the JavaScript drainer attached to the team’s malicious landing pages, and several others were obtained by tracing transactions within affiliate screenshots showing proof of their payouts on forums and the “[RublevkaTeam] Chat” Telegram channel. We focused on the following addresses for further analysis:
-
-EAsyxEjYKbDSVi6JbGYF1v9Jq1QyTSghRc8aqCeq7Ub3 (“Address A”, Transaction History)
-
-EkaGjTVHDiRTYqSiup6TQs2QXfqSnEcrWN61dC8UVK21 (“Address B”, Transaction History)
-
-CRnuwdpi3HGvFU5gGnvZAA9rV7AWe12v3sap8H3vXFY4 (“Address C”, Transaction History)
-
-DD6vCVa4NEYRKA7K93rYZSKuY7REydFbqB3rog149ySx (“Address D”, Transaction History)
-
-8e8kiGgEMCxYYx2vuSf2iPo859QjE7ojkY6yGWDez9pW (“Address E”, Transaction History)
-
-4Ri6Rd7zN6M6H8jF3vPc6MqnmFioVcPaizZt3crLVGXd (“Address F”, Transaction History)
-
-Insikt Group identified seventeen references to the above addresses in the Recorded Future Platform, all of which involved posts from users on social media and Telegram stating that those addresses had stolen crypto assets from them, with the earliest post dated July 10, 2025. One such post specifically named pumptoken[.]net as the phishing website that had initiated the transaction; via further historical analysis, Insikt Group identified a JavaScript file linked to this website (b9157f6bff6a6ee6ba5932ebac2c8796836b21eb3c69df08fbeb102e9228ba15) that had a high degree of similarity with the drainer file analyzed above, including the same obfuscation technique and overlap in listed addresses. We assess that these users were likely victims of Rublevka Team.
-
-Both Address A and Address B were contained in the JavaScript drainer code as base64-encoded strings, indicating an attempt by the threat actor to further obfuscate these specific addresses, while all others were available in plaintext. Based on SOL blockchain data, Address A is listed as the “owner” for 31 of the identified addresses within the drainer JavaScript file, corresponding to its Associated Token Accounts (ATAs). As such, these ATAs are almost certainly used as part of the drainer logic. Additionally, the address appeared to be making a high number of conversions to wrapped SOL (wSOL), potentially to use on or swap to compatible blockchains. Insikt Group observed that in fall 2025, Address A followed a pattern of transferring large amounts in and out on the same day, with $50,000 to $80,000 moving through the wallet each day over a several-week period. On October 6, 2025, approximately $1.2 million worth of assets were transferred in and out of the address. This pattern suggests that the wallet was likely used by Rublevka Team as a conduit for transferring and laundering stolen funds before cashing them out. Based on SOL blockchain data, the address first came into use in September 2025.
-
-Insikt Group also identified an account associated with Address A on pump[.]fun, a platform for users to launch their own meme coins. This account holds low balances in over 600 tokens and was first funded by a transaction from Fixed Float Exchange on September 22, 2025.
-
-The account associated with Address B currently holds over 100 tokens and is associated with a high volume of token swap activity. Notably, Address B’s first funder is Address C, which was mentioned in several social media posts as a malicious wallet between July and August 2025. It was also mentioned in a Reddit thread from August 2025, where users discussed having their funds stolen. One user stated that they were signing up for Axiom and connected their Phantom wallet to the service website, and once they authenticated the service took $50 worth of SOL from their wallet and transferred it to Address C. Based on the wallet address and TTPs (using an Axiom-themed landing page and Phantom wallet), we assess that this individual was likely another victim of Rublevka Team.
-
-Insikt Group identified Addresses D and E in several affiliate reviews of Rublevka Team, namely in posts showing proof of funds disbursement to their personal wallets from those addresses. These addresses also appeared in screenshots of the [@]RublevkaTeam_bot “profits” notifications, posted by individual affiliates to the chat channel, many of which did not obfuscate the victim wallet ID, allowing Insikt Group to trace the transaction. Several of these transactions were made directly to Address D and E. Based on this, we assess that these are likely two of the “shared” Rublevka addresses used to collect stolen assets and then disburse affiliates’ cuts. We also note that Address E is the first funder of Address D.
-
-In addition to the above, Insikt Group identified 28 abuse reports for SOL addresses contained in the drainer file (including Addresses A to E) within other open sources, made between April and October 2025. Users reported a variety of scams in which these addresses drained their funds. These scams involved web pages shared on Telegram, social media, and crypto investment advice groups that prompted users to connect their wallets and sign transactions, resulting in the loss of all their funds. The TTPs and timeframe described in these reports match those associated with Rublevka Team, and we assess that these reports were highly likely made by Rublevka Team victims. Notably, in at least one report, users reported that in addition to their wallet funds being drained, they experienced a breach of their personal data and accounts; this may indicate that some Rublevka Team affiliates possibly conduct additional follow-on activity as part of their scams, such as credential theft. For a full list of the domains and malicious social media accounts listed in these reports, see Appendix C.
-
-A complete list of SOL addresses extracted from the drainer script can be found in Appendix D; this section excludes addresses corresponding to SOL system programs and official token mints.
-
-Rublevka Team represents the maturation of cybercrime-as-a-service within the cryptocurrency threat landscape, signaling that sophisticated social engineering and scalable infrastructure now rival malware as the primary tool set for digital asset theft. As this affiliate-driven drainer ecosystem continues to expand, we expect similar models to proliferate across other blockchain ecosystems and decentralized platforms, particularly those with low transaction fees and fast settlement times, such as SOL. The low barrier to entry, combined with high financial incentives, will continue to attract a global pool of cybercriminals, accelerating the volume, complexity, and geographic diversity of crypto-targeted scams in the near term.
-
-Looking ahead, brand impersonation campaigns tied to crypto drainers will become a strategic reputational risk for exchanges, Web3 platforms, and fintech providers. The effectiveness of these spoofing campaigns, especially those that mimic legitimate token airdrops or DeFi services, will continue to erode user trust in the broader crypto ecosystem. As threat actors like Rublevka Team improve their social engineering tactics, abuse of RPC APIs, and cloaking techniques to bypass detection, more platforms will likely come under regulatory pressure to implement proactive monitoring, takedown partnerships, and user verification mechanisms to mitigate liability.
-
-Appendix A: Indicators of Compromise
-
-Appendix B: MITRE ATT&CK Techniques
-
-Appendix C: Domains Included in Scam Reports for Rublevka-Affiliated Cryptocurrency Addresses
-
-Appendix D: Unattributed Cryptocurrency Addresses Contained in Rublevka Team SOL Drainer
-
-9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo
-
-FsTbGbdeomvCh7pJsd37Ay7moqGK7wvaiiHUPDWF3qyg
-
-FeeZVQ5GGCMgM5z4nNVK9YB5s2aaAYoPwMWtAaGQeYhT
-
-CuTbjiKn9pCJdbH46oVuuQmgdgFDd33TG4x7zK52uEnU
-
-Bj4p6uY4WJRCLH3Zk4Dp27UP2MgJ9JBpTH9ZJR1unCsD
-
-BF7HTg1J4joSvMWjUz7EUX2TJ3Z3SkrELJwov22ccffb
-
-5VM3FEDPAzazHFHGGCz5bSCd1paoxkdXM4kmxuXQxyDj
-
-2d2Zbkrjrrk7X7VLqyg99yXbfy9BKBdYB2SRiUZ1mKsR
-
-2c1vZ652u9whxguGxvyJ6HrFDkskcegcgpaMDUeQNoJK
-
-JCNCMFXo5M5qwUPg2Utu1u6YWp3MbygxqBsBeXXJfrw
-
-FpZi3mRSewmMyJnsVFDXch4qNx5HNFhMNW2k2pMP2HAf
-
-Fp49M425pwahRPZ1RV89SWnw3qbwbPpGHkbfDRvKiov3
-
-EwPCxMGGmnCoYnH4D3wu5wc1Lm9GGVwEjo39Cn6r8p1s
-
-EkYa2Tj2tKRpTj9RA5eBhchNh4UpwLurc41W1zXbL9Zh
-
-CMwrBsnX8HovgR64k3cbhmutBBbTHpMoASAuKZqtvJn1
-
-AKkWCmk4jpfY1mcRriGR48VqTZUg2MtdKK3wzXhVDxM3
-
-AEHejaxWe6wBzrU5Pa9KwQMxG7GyCDj7t1vHwbuWB266
-
-9PVZ8Cahy156mTYB3g6Be4S17F9vKEGy4ekkajeiGtwA
-
-9gt2gxSrrZZmP9nBPYdAgViEt9mD6cayuDQCdDCYMcZm
-
-9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump
-
-7FPu8A89YTzvm8ZnhzsHFGoCDg28XYKGAnPUSLe7iixj
-
-6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN
-
-6G3SCdRNcBPuGBpFEZiRABpjoXorS3dqAHGY5NPCtcAj
-
-6FN58cdsazwFA5r8EXzMjVoV6rBFXZjhDVMBm7rS93NE
-
-5UUH9RTDiSpq6HKS6bp4NdU9PNJpXRXuiw6ShBTBhgH2
-
-4tyVZQJc2NUMjZs5pJi5Zyz2pi4uTJmxge1mrxt9KQxV
-
-27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4
-
-ZBCNpuD7YMXzTHB2fhGkGi78MNsHGLRXUhRewNRm9RU
-
-WLFinEv6ypjkczcS83FZqFpgFZYwQXutRbxGe7oC16g
-
-UPTx1d24aBWuRgwxVnFmX4gNraj3QGFzL3QqBgxtWQG
-
-rndrizKT3MK1iimdxRdWabcF7Zg7AR5T4nud4EkHBof
-
-pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn
-
-MEFNBXixkEbait3xn9bkm8WsJzXtVsaJEn4c8Sam21u
-
-J3NKxxXZcnNiMjKw9hYb2K4LUxgwB6t1FtPtQVsv3KFr
-
-J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn
-
-HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr
-
-HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3
-
-H1dJFG8xpDXyfawz2snUjw4Y3GnN3dgyfmzkhAUSbhrA
-
-GNVjeQPrCUu679o1x7DBciGyeKVJPsCze9QgiXMa863A
-
-FeNABkgsWfyuvYBxMMi7BFK1ezDq6rJXZer4d49JF7TU
-
-DvjbEsdca43oQcw2h3HW1CT7N3x5vRcr3QrvTUHnXvgV
-
-CB9dDufT3ZuQXqqSfa1c5kY935TEreyBw9XJXxHKpump
-
-BLZEEuZUBVqFhj8adcCFPJvPVCiCyVmh3hkJMrU8KuJA
-
-B89Hd5Juz7JP2dxCZXFJWk4tMTcbw7feDhuWGb3kq5qE
-
-8xJiLn7RnWpUGA6vsAjhNiGaisXiJfEQFbeXHA3eEDP6
-
-8RcpbkSb5GE6BJpYL5jUzSZJhwiP8HVYQa2tqAEmwhkM
-
-8a5o2DiD5dGxE93374Ft5hVM3Q87faBgtCrrqqv3j6Aj
-
-7wtvexodFHEXEQLuQWdi6tBtAyQRkwZ2DYX2hLeraarg
-
-7kixES9AGa9jzFtmdYXDwWkFywhsFuF7jjhig9FVWxGr
-
-7atgF8KQo4wJrD5ATGX7t1V2zVvykPJbFfNeVf1icFv1
-
-6AJcP7wuLwmRYLBNbi825wgguaPsWzPBEHcHndpRpump
-
-3TTKJZbaBHCQAWEUqP9CE7RsTeFjbdfe2MjrKrxPiq2Q
-
-3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh
-
-2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv
-
-25hAyBQfoDhfWx9ay6rarbgvWGwDdNqcHsXS3jQ3mTDJ
-
-nEeteqhnXLNVbnkQfPsg1xCLqKBGnm86Nf7e2hu8K2i
-
-JDudMa32AMG7qNrMJBEEVPSpU59TPpp5fZoxMM8JbUL1
-
-J8TwdioMgeDvnjcsT19dDA5H9D4nhZsLLHpzbmuQoyiC
-
-HvPWgZobdKrgCkAKFZeKygKHDnJy7eK56CQkwzpXYfy9
-
-HQBDTnf2gMkPbn7Q1LcmigKBuQScquR1mnQpKgbCzAaa
-
-HKzK6FwPQXGGoW2TNZJxr6dXxo5opBgYKvW3GRYan6c8
-
-Hhdix4PLJmHzUFN4aJrUjYCJvx7N8LnMWJUGR6Q7AxXp
-
-HF9X8puGwFMN5qdfx4qbiz9RWtktTXNR9AS4ctgsWkeY
-
-He79tJD1EW7cGC4xFpB2ugVQ5pRgBS4xk8PM4L9QUTSh
-
-H21vVC1WthyNwsrbXq4yokGZufyL1GhMR1tNJNs79cqr
-
-GRGmgWor2PX3sNkoA5wZuNBBYoCnZPoiAufAVvG3WDEi
-
-GgYLqrHteZTnFdG5sEUhZfmPUBXEvH6W1guVKo7mLKJJ
-
-GcEXZEUhbK4KyFV7B7q28Zh7PKzGsC3oqgjvGRLaZJZu
-
-GafNuUXj9rxGLn4y79dPu6MHSuPWeJR6UtTWuexpGh3U
-
-FP8dLEpT5Pr2FLjGzJ99cnECHtN6qFYX18gFqSn8MiKR
-
-FJUszQzUsLMBd2T6H7iL3y5N3Vp2ztKUKTkcCvnJTXie
-
-FJhg2bE1PZEedxpqpXZpJKCfF2m9Z6n9MtLSe2zNo4XY
-
-FDZ6ocTQnX3HHuf9bxgUAgQWiecfy9PG1jSoGXWvGASr
-
-Fd6wohshhx61RtYCSMfRBb6qRjsTQtcdNU8PKHxX7CL6
-
-FbcYcJVccCdNzq5CdMrWzUfSJD3duf4yitRcJAubQgvz
-
-F5o3MLS12oCcz7u8pWzSDVXxMMUtqDoFaR6DQNyEnSiU
-
-EXSTAHhnYebGtnSeioFmUCi6NyKE7RMcXJF5sGaXe9ca
-
-ETrTi8Xhng2wGTUPxYUPTxq6taJh34ejoZTEM27h9Qmd
-
-ErJLDKQy1Jna9m1LpbLJEXGiEc6yDFxkBu1mXAEZea5o
-
-ERCSpGu567Bd6r6i2CT3u2uNauAkPzHaprjcn6NCqwPp
-
-ENtJvjbs3bZqMCJXXGH7FauSHWwH8hrUwBdSafqXUAKe
-
-EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm
-
-EAsyxEjYKbDSVi6JbGYF1v9Jq1QyTSghRc8aqCeq7Ub3
-
-E3iDU6nhniKiaAp8WUfu2181UNYDnoYGGqodWE9HbJN7
-
-Dz9mQ9NzkBcCsuGPFJ3r1bS4wgqKMHBPiVuniW8Mbonk
-
-DNyd87a6uL61EpTXNS1zKwmZXxpvRvP6oYfBEaiQk3oc
-
-DmKR61BQk5zJTNCK9rrt8fM8HrDH6DSdE3Rt7sXKoAKb
-
-DGb4xJ2FDUJMZkUr8uMsnqCCY9uWXAAF8TPfwtNXGn37
-
-D7gyNb1vVQaeeXcgyPHyMvrnRRyxxtRJYGQFqtBKo5yo
-
-CVFLDY7oaToBr8vVHaYQvfEcTDSuZF9k9WxoVDH5Rvre
-
-CtNY5YS7ieorQake2kmmt5sTJmvEKbXTWF33Zsz11Ugq
-
-CSSJFgoeqidqVtHKSNP7i7s6WX8APHfH2kYGdLV195Jb
-
-CQWUdThEbNMjcoEjGyCMTGXHpKvW1aB8JF31hKa1FQQN
-
-CGD7BGq729P6BS1r8CWskpaKarP95q5EUXxFgukFoicK
-
-Cg3z44Jnr4KNgf8Cs6p7XXiSR8LAELr4mcCdkqQ4Zbkv
-
-Cfq1ts1iFr1eUWWBm8eFxUzm5R3YA3UvMZznwiShbgZt
-
-Cbx5qRLx8CgJ43e4UuaMpHEV34Vh6CA2hva66J2fC5U3
-
-CBEADkb8TZAXHjVE3zwad4L995GZE7rJcacJ7asebkVG
-
-C4q2QdKe6C6Nhkc2Kk9JNca7L8CxpGBipVzjcDJwB3cH
-
-C1kvEAHXrDCv6FwcNn3iwyUJqAeXxWrKezm5NXSppBdL
-
-BwnzGfpDTBDzWAwWmPjZjcgXXFZmzgjLhEhNFWGkb8Nj
-
-AzcBxq9NMoVxBfvXcuc1Df3vrSwLAa2ZiMstsvSA91jn
-
-AZB72txkm2Ky2TramPF5FaiBtP13drQ2PFjbUum2qAdC
-
-AyzyikXL9kKs2cwyHsWLEe22aRYAvhbWwFn9TKrgmMx
-
-AUaG3qcYzTNRRCsxDUWyvqdz4AP3cF1yiNLm4f2fnhpt
-
-ArcckXWCZ8vaUY9DQNiuii51YZHNt8UMmoLCJKKbiL8E
-
-AoTXgHCVTxCxb3NcF6bmNAnBv9p2pa6eDPCXU8VPKUdY
-
-AHwhic8fhWwMRPGUCPfT2oUdNNAQjLFfNX4u6vr8Dxq
-
-abvgNpWrqMPsZ8yequUm2795boKrZ6yj7g5w7wih3Ag
-
-9SLPTL41SPsYkgdsMzdfJsxymEANKr5bYoBsQzJyKpKS
-
-9R9u9dEDngmaHRGVUqtG6pUFuqnQ9no4gCx8vocrY8q4
-
-9nFJQ79FNKVYvY7c7d9ULeeQLoFjHsBLV4bQLMYMqRmC
-
-9J4kxVHDYPJ1ymaHuQkvQurziLARKpVMmmBeFHSaa4Ja
-
-9BSY53N64xgbocqA6j2mwx3WwEGenW1xQqkcTfNqaPN2
-
-8VHDwr45BNnyMpMvfGFZwvoUXU4ZPQk4YFj6b5V2Duzd
-
-8tzYaoRju2KwLqYD1LSrcvAEFxJQi7f6aw1aYb9MUqew
-
-8tr7rgDnLv2ZpqcGGRM5QuNBGkPnu3PRWBmNBVFPPoa1
-
-8SZRbhepUNSoPn3FaTwiHzvz51XDFk84hN6khDL1MbPr
-
-8sjamT7N8oaPHvdWfse4YwS7Tf9DxMu3WnjZCrpJ3Yfw
-
-8rFSGrUJUNr7zt65Kc4rTDnroLRhyXuaaESmLu2Pf6R8
-
-8pFhUqCU7Fkxfg2DLytRDf7a9oK4XGtN92PrYwtVQc6G
-
-8K2Nvr695p77cfPGsMvbyz3fhkzvwXo6XcMZPsV42vir
-
-89LjSs8wP3EZNCKcs8aCxngQaEuyhUyGE4STkFwNgRT3
-
-7zND8YAtCYehNoa1JrfDLQZi44xJkEuPWK5b4CkiuFpo
-
-7XX64f8UKE1nxNCSwncCUj3c2FJYdXHmDV5xd5DRdFky
-
-7VHUFJHWu2CuExkJcJrzhQPJ2oygupTWkL2A2For4BmE
-
-7oMjvD5MWttpfwA5mDx9aV7aLE8GkMCYeELxqckXKX3n
-
-7mhcgF1DVsj5iv4CxZDgp51H6MBBwqamsH1KnqXhSRc5
-
-7dF8SFvjbGfEvMkK6uRBkdRXbop4GxbutyAhCqa3JSUn
-
-7cAui6ADtxLnpRr2wYvwJWTkzwgmVF2LYKnjKTLx4xR8
-
-7AN6avKCJPMkXkW8kPwMuHmaWvJeHH69e8rKpLf9rdfk
-
-7AB9DVJwmhjuXSa59sxZseiqyWyHzobkykEgy7drd1Gx
-
-7A4Xk9TQrX1YruPzZ6B4Qiy1itEWMgXaDKEs56Ud9ESW
-
-6tQPS58X6fdEDdtxuTKQRqaKYcVMuhyVj77YhgPF3ro2
-
-6TpuRiQ7KEwQt9A4PchnWD5dHGU2FjXRP2ZJZkzFaiQu
-
-6sga1yRArgQRqa8Darhm54EBromEpV3z8iDAvMTVYXB3
-
-6LY1JzAFVZsP2a2xKrtU6znQMQ5h4i7tocWdgrkZzkzF
-
-6g3aqiR59BzWLkdpweVyxVDicPojFsX1k4DquFZR3GZ5
-
-6CUV3vQ8wfAvz1ogmT7Wp7mSKReECFxuLakm9nQrS4EK
-
-61aq585V8cR2sZBeawJFt2NPqmN7zDi1sws4KLs5xHXV
-
-5WumPYv4jDPRqWjWr3EeybLczpcohHrMPShK9WQ85qfY
-
-5rhms6jZQaXnQc6wbicnrxDTkKqKi4iwfWW3612r5rHb
-
-5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1
-
-5N56aAcpKrdJovtw8QCLLfz7v67q2yVk23ex5iSQ4PMz
-
-5LZkATrLwHYCQj2YuVbjjgsDZzBk6YfL4pFQRJmtboT2
-
-5hpfC9VBxVcoW9opCnM2PqR6YWRLBzrBpabJTZnwwNiw
-
-5FeTzLNqwrvSzexFujeV62a2v4kmQUrBnCQjJANStMXj
-
-5E2d6Z5FRe4584RTmJpyjg8yRtHG1YeorKbFSA1BpkPq
-
-5aj2f1ksHzo2mdJe7KkUuxeymrCnNr9j2T3YEi5h8LCt
-
-584apKZB85789eCoB5Krr1cdUbftG8ES1WjGKgCHQRVU
-
-555oNTKdRECgyLn8fBvySoN6hXMCszFq1Y4oea9p3ZFB
-
-4yCsNPifcJYT7BQWFzYyrSCCzWXo56Qr2c4MugLEmpjj
-
-4tkNAaqmfSVAuCKbxuxoVFXfU2fZu5o9jx8j6AdCjfg2
-
-4QtCFWoMcMrxfGCfa3HfHU8TqZrJWGBmFaftyS5DvaMC
-
-4pBDBu1K3Zsx9FAX39j3dXFkEJSosqVUSPv9tAUmmNxj
-
-4hKiMS1gCybW2RnHiuwSb8fcdJM63bDunaJkw1uETBkj
-
-4aE6ow1YNDm9MRNdk8HRzFFzvs9FXBgEttWSMrH6hupD
-
-43PyQ5EEv45Z8s7KECsD6w1peA8svzKYWH2VeNpByUdr
-
-3Zaz6vATY8br9WceXWD1Xa7fcyCpKSNanWFDRTEjjPqb
-
-3tfdieWFQC1zsp97VF5kQyuw5a38rYzkioBLhyzSCRCL
-
-3nECyn3B2TL5BQLBZJU7V1t3ddqVZUio76oBCTNFWvHJ
-
-38BcC22ZSXxjqBmjA36fCe6BQrxN11k8HHcpz6EKdWUH
-
-31rYartQwHeBMjAe2MgGpffGV57fQY3kug4BDN8tLGqQ
-
-2THWjMryk7FzaCiJv1M66gaYFpDW6vf93KmVtd5XWxZj
-
-2nzNjDgrRwkkSyhyUCmD1n76deGz5m4fvF6MztzqPFq1
-
-2nrDrMP9ZVqsmu5hmaqk3e612YoCmKHCPsm1bMsbvU8E
-
-2LoNg8b8wYneseTQ4FYEVQxSJWp12tsLE799oUdYPDHB
-
-2F5bzLu6mNwzNpwgqNvuNF2QcmobtLswtRxaf39N9uUd
-
-26ddLrqXDext6caX1gRxARePN4kzajyGiAUz9JmzmTGQ
-
-23KfDBTdpaBqfn8aUeoEDgfGJ5368gpnyYGfNkKcECqM
-
-(XXXXXXX, AÇIK - recordedfuture.com, 12/02/2026)
-
-================================================================================
-
-[25] Cyberscoop - 0APT ransomware group rises swiftly with bluster, along with genuine threat of attack
+[22] Cyberscoop - 0APT ransomware group rises swiftly with bluster, along with genuine threat of attack
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 11 Feb 2026 22:29:26 +0000
 Link: https://cyberscoop.com/0apt-ransomware-group-hoax-technical-capabilities/
@@ -2234,7 +1583,7 @@ Lawmakers wonder when Trump administration will weigh on soon-expired surveillan
 
 ================================================================================
 
-[26] Cyberscoop - Acting CISA chief says DHS funding lapse would limit, halt some agency work
+[23] Cyberscoop - Acting CISA chief says DHS funding lapse would limit, halt some agency work
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 11 Feb 2026 22:04:31 +0000
 Link: https://cyberscoop.com/cisa-shutdown-impact-dhs-funding-testimony/
@@ -2304,7 +1653,7 @@ OMB rescinds ‘burdensome’ Biden-era secure software memo
 
 ================================================================================
 
-[27] Cyberscoop - Your AI doctor doesn’t have to follow the same privacy rules as your real one
+[24] Cyberscoop - Your AI doctor doesn’t have to follow the same privacy rules as your real one
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 11 Feb 2026 19:51:01 +0000
 Link: https://cyberscoop.com/ai-healthcare-apps-hipaa-privacy-risks-openai-anthropic/
@@ -2406,7 +1755,7 @@ Lawmakers wonder when Trump administration will weigh on soon-expired surveillan
 
 ================================================================================
 
-[28] The Register - Apple patches decade-old iOS zero-day, possibly exploited by commercial spyware
+[25] The Register - Apple patches decade-old iOS zero-day, possibly exploited by commercial spyware
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-12T14:01:13.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/12/apple_ios_263/
@@ -2450,7 +1799,7 @@ Apple's updates for iOS and iPadOS also feature a host of other fixes for variou
 
 ================================================================================
 
-[29] The Register - Supply chain attacks now fuel a 'self-reinforcing' cybercrime economy
+[26] The Register - Supply chain attacks now fuel a 'self-reinforcing' cybercrime economy
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-12T11:59:09.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/12/supply_chain_attacks/
@@ -2504,7 +1853,7 @@ Supply Chain Security Week
 
 ================================================================================
 
-[30] The Register - Google: China's APT31 used Gemini to plan cyberattacks against US orgs
+[27] The Register - Google: China's APT31 used Gemini to plan cyberattacks against US orgs
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-12T07:00:08.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/12/google_china_apt31_gemini/
