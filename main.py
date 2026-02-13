@@ -170,7 +170,7 @@ class HaberSistemi:
                 print(f"   Deneme {attempt + 1}/{max_retries}...")
                 
                 # Model oluştur
-                model = genai.GenerativeModel('gemini-1.5-flash-latest')
+                model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 prompt = get_claude_prompt(txt_content)
                 
