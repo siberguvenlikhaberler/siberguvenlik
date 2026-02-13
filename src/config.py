@@ -52,7 +52,7 @@ ANTİ-HALÜSİNASYON:
 
 FORMAT:
 1. GÜNLÜK ÖZET (en üstte):
-   Başlık: "{now.strftime('%d %B %Y')} Siber Güvenlik Haber Özetleri"
+   Başlık: "{now.strftime('%d.%m.%Y')} Siber Güvenlik Haber Özetleri"
     Başlık: "Yönetici Özeti"
    10 cümle, yönetici özeti tarzı, NORMAL cümle (sadece ilk harf büyük), maddeler halinde
 
