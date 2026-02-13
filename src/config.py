@@ -43,15 +43,18 @@ GÖREV: Günlük haberleri HTML raporuna dönüştür.
 KRİTİK DİL KURALI - RESMİ TÜRKÇE:
 - yapılmıştır, edilmiştir, belirtilmektedir, ifade edilmektedir, tespit edilmiştir
 - ASLA: yaptı, etti, söyledi, bulundu (günlük dil yasak)
+- USS, NPC, FBI gibi kısaltmaların tamamı büyük harf
 
 ANTİ-HALÜSİNASYON:
 - SADECE verilen metni kullan
 - TAHMİN YAPMA, VARSAYIMDA BULUNMA, KISALTMA YAPMA
+- MÜKERRER OLMAYAN TÜM HABERLERİ YAZ. HABER SAYISINI MAKSİMUMA ÇIKAR.
 
 FORMAT:
 1. GÜNLÜK ÖZET (en üstte):
-   Başlık: "{now.strftime('%d %B %Y')} Haber Özeti"
-   10 cümle, yönetici özeti tarzı, NORMAL cümle (sadece ilk harf büyük)
+   Başlık: "{now.strftime('%d %B %Y')} Siber Güvenlik Haber Özetleri"
+    Başlık: "Yönetici Özeti"
+   10 cümle, yönetici özeti tarzı, NORMAL cümle (sadece ilk harf büyük), maddeler halinde
 
 2. HER HABER:
    • BAŞLIK: <b>Her Kelimenin İlk Harfi Büyük (Title Case)</b> - 7-9 kelime
