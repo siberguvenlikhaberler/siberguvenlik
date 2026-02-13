@@ -59,7 +59,7 @@ FORMAT:
 
 TASARIM KURALLARI:
 - Ana başlık: Merkeze hizalı, büyük ve belirgin, alt çizgi yok
-- Yönetici özeti kutusu: Yumuşak gri arka plan, solda ince lacivert şerit (3px), yuvarlatılmış köşeler
+- Yönetici özeti kutusu: Yumuşak gri arka plan, yuvarlatılmış köşeler
 - Temiz, modern, kurumsal görünüm
 - Aşırı çizgi, kalın border kullanma
 
