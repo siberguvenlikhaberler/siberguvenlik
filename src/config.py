@@ -51,7 +51,7 @@ ANTİ-HALÜSİNASYON:
 FORMAT:
 1. GÜNLÜK ÖZET (en üstte):
    Başlık: "{now.strftime('%d %B %Y')} Haber Özeti"
-   3-4 cümle, yönetici özeti tarzı, NORMAL cümle (sadece ilk harf büyük)
+   10 cümle, yönetici özeti tarzı, NORMAL cümle (sadece ilk harf büyük)
 
 2. HER HABER:
    • BAŞLIK: <b>Her Kelimenin İlk Harfi Büyük (Title Case)</b> - 7-9 kelime
