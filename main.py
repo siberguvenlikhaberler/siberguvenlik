@@ -177,7 +177,7 @@ class HaberSistemi:
                 response = model.generate_content(
                     prompt,
                     generation_config=genai.GenerationConfig(
-                        max_output_tokens=8000,
+                        max_output_tokens=100000,
                         temperature=0.7,
                     )
                 )
