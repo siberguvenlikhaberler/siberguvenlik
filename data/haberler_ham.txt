@@ -1,179 +1,205 @@
 
 ================================================================================
-📅 15 FEBRUARY 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
+📅 16 FEBRUARY 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
-[1] The Hacker News - Google Ties Suspected Russian Actor to CANFAIL Malware Attacks on Ukrainian Orgs
+[1] The Hacker News - New ZeroDayRAT Mobile Spyware Enables Real-Time Surveillance and Data Theft
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 22:57:00 +0530
-Link: https://thehackernews.com/2026/02/google-ties-suspected-russian-actor-to.html
+Tarih: Mon, 16 Feb 2026 15:54:00 +0530
+Link: https://thehackernews.com/2026/02/new-zerodayrat-mobile-spyware-enables.html
 
-[TAM METİN - 343 kelime]
-A previously undocumented threat actor has been attributed to attacks targeting Ukrainian organizations with malware known as CANFAIL.
+[TAM METİN - 1538 kelime]
+Cybersecurity researchers have disclosed details of a new mobile spyware platform dubbed ZeroDayRAT that's being advertised on Telegram as a way to grab sensitive data and facilitate real-time surveillance on Android and iOS devices.
 
-Google Threat Intelligence Group (GTIG) described the hacking group as possibly affiliated with Russian intelligence services. The threat actor is assessed to have targeted defense, military, government, and energy organizations within the Ukrainian regional and national governments.
+"The developer runs dedicated channels for sales, customer support, and regular updates, giving buyers a single point of access to a fully operational spyware panel," Daniel Kelley, security researcher at iVerify, said. "The platform goes beyond typical data collection into real-time surveillance and direct financial theft."
 
-However, the group has also exhibited growing interest in aerospace organizations, manufacturing companies with military and drone ties, nuclear and chemical research organizations, and international organizations involved in conflict monitoring and humanitarian aid in Ukraine, GTIG added.
+ZeroDayRAT is designed to support Android versions 5 through 16 and iOS versions up to 26. It's assessed that the malware is distributed via social engineering or fake app marketplaces. The malicious binaries are generated through a builder that's provided to buyers along with an online panel that they can set up on their own server.
 
-"Despite being less sophisticated and resourced than other Russian threat groups, this actor recently began to overcome some technical limitations using LLMs [large language models]," GTIG said.
+Once the malware infects a device, the operator gets to see all the details, including model, location, operating system, battery status, SIM, carrier details, app usage, notifications, and a preview of recent SMS messages, through a self-hosted panel. This information allows the threat actor to profile the victim and glean more about who they talk to and the apps they use the most.
 
-"Through prompting, they conduct reconnaissance, create lures for social engineering, and seek answers to basic technical questions for post-compromise activity and C2 infrastructure setup."
+The panel also extracts their current GPS coordinates and plots them on Google Maps, along with the history of all locations they have been to over time, effectively turning it into spyware.
 
-Recent phishing campaigns have involved the threat actor impersonating legitimate national and local Ukrainian energy organizations to obtain unauthorized access to organizational and personal email accounts.
+"One of the more problematic panels is the accounts tab," Kelley added. "Every account registered on the device is enumerated: Google, WhatsApp, Instagram, Facebook, Telegram, Amazon, Flipkart, PhonePe, Paytm, Spotify, and more, each with its associated username or email."
 
-The group is also said to have masqueraded as a Romanian energy company that works with customers in Ukraine, in addition to targeting a Romanian firm and conducting reconnaissance on Moldovan organizations.
+Some of the other capabilities of ZeroDayRAT include logging keystrokes, gathering SMS messages -- including one-time passwords (OTPs) to defeat two-factor authentication, as well as allowing hands-on operations, such as activating real-time surveillance via live camera streaming and a microphone feed that allows the adversary to remotely monitor a victim.
 
-To enable its operations, the threat actor generates email address lists tailored to specific regions and industries based on their research. The attack chains seemingly contain LLM-generated lures and embed Google Drive links pointing to a RAR archive containing CANFAIL malware.
+To enable financial theft, the malware incorporates a stealer component that scans for wallet apps like MetaMask, Trust Wallet, Binance, and Coinbase, and substitutes wallet addresses copied to the clipboard to reroute transactions to a wallet under the attacker's control.
 
-Typically disguised with a double extension to pass off as a PDF document (*.pdf.js), CANFAIL is an obfuscated JavaScript malware that's designed to execute a PowerShell script that, in turn, downloads and executes a memory-only PowerShell dropper. In parallel, it displays a fake "error" message to the victim.
+There also exists a bank stealer module to target online mobile wallet platforms like Apple Pay, Google Pay, PayPal, along with PhonePe, an Indian digital payments application that allows instant money transfers with the Unified Payments Interface (UPI), a protocol to facilitate inter-bank peer-to-peer and person-to-merchant transactions.
 
-Google said the threat actor is also linked to a campaign called PhantomCaptcha that was disclosed by SentinelOne SentinelLABS in October 2025 as targeting organizations associated with Ukraine's war relief efforts through phishing emails that direct recipients to fake pages hosting ClickFix-style instructions to activate the infection sequence and deliver a WebSocket-based trojan.
+"Taken together, this is a complete mobile compromise toolkit, the kind that used to require nation-state investment or bespoke exploit development, now sold on Telegram," Kelley said. "A single buyer gets full access to a target's location, messages, finances, camera, microphone, and keystrokes from a browser tab. Cross-platform support and active development make it a growing threat to both individuals and organizations."
 
-(XXXXXXX, AÇIK - thehackernews.com, 15.02.2026)
+The ZeroDayRAT malware is similar to numerous others that have targeted mobile device users, either via phishing or by infiltrating official app marketplaces. Over the past few years, bad actors have repeatedly managed to find various ways to bypass security protections put in place by Apple and Google to trick users into installing malicious apps.
 
-================================================================================
+Attacks targeting Apple's iOS have typically leveraged an enterprise provisioning capability that allows organizations to install apps without the need for publishing them to the App Store. By marketing tools that combine spyware, surveillance, and information-stealing capabilities, they further lower the barrier of entry for less skilled hackers. They also highlight the evolving sophistication and persistence of mobile-focused cyber threats.
 
-[2] The Hacker News - Google Links China, Iran, Russia, North Korea to Coordinated Defense Sector Cyber Operations
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 21:53:00 +0530
-Link: https://thehackernews.com/2026/02/google-links-china-iran-russia-north.html
+News of the commercial spyware platform coincides with the emergence of various mobile malware and scam campaigns that have come to light in recent weeks -
 
-[TAM METİN - 957 kelime]
-Several state-sponsored actors, hacktivist entities, and criminal groups from China, Iran, North Korea, and Russia have trained their sights on the defense industrial base (DIB) sector, according to findings from Google Threat Intelligence Group (GTIG).
+An Android remote access trojan (RAT) campaign has used Hugging Face to host and distribute malicious APK files. The infection chain begins when users download a seemingly harmless dropper app (e.g., TrustBastion) that, when opened, prompts users to install an update, which causes the app to download the APK file hosted on Hugging Face. The malware then requests accessibility permissions and access to other sensitive controls to enable surveillance and credential theft.
 
-The tech giant's threat intelligence division said the adversarial targeting of the sector is centered around four key themes: striking defense entities deploying technologies on the battlefield in the Russia-Ukraine War, directly approaching employees and exploitation of the hiring process by North Korean and Iranian actors, use of edge devices and appliances as initial access pathways for China-nexus groups, and supply chain risk stemming from the breach of the manufacturing sector.
+An Android RAT called Arsink has been found to use Google Apps Script for media and file exfiltration to Google Drive, in addition to relying on Firebase and Telegram for C2. The malware, which allows data theft and complete remote control, is distributed via Telegram, Discord, and MediaFire links, while impersonating various popular brands. Arsink infections have been concentrated in Egypt, Indonesia, Iraq, Yemen, and Türkiye.
 
-"Many of the chief state-sponsors of cyber espionage and hacktivist actors have shown an interest in autonomous vehicles and drones, as these platforms play an increasing role in modern warfare," GTIG said. "Further, the 'evasion of detection' trend [...] continues, as actors focus on single endpoints and individuals, or carry out intrusions in a manner that seeks to avoid endpoint detection and response (EDR) tools altogether."
+A document reader app named All Document Reader (package name: com.recursivestd.highlogic.stellargrid) uploaded to the Google Play Store has been flagged for acting as an installer for the Anatsa (aka TeaBot and Toddler) banking trojan. The app attracted over 50,000 downloads before it was taken down.
 
-Some of the notable threat actors that have participated in the activity include -
+An Android banking trojan called deVixor has been actively targeting Iranian users through phishing websites that impersonate legitimate automotive businesses since October 2025. Besides harvesting sensitive information, the malware includes a remotely triggered ransomware module capable of locking devices and demanding cryptocurrency payments. It uses Google Firebase for command delivery and Telegram-based bot infrastructure for administration.
 
-APT44 (aka Sandworm) has attempted to exfiltrate information from Telegram and Signal encrypted messaging applications, likely after securing physical access to devices obtained during on-ground operations in Ukraine. This includes the use of a Windows batch script called WAVESIGN to decrypt and exfiltrate data from Signal's desktop app.
+A malicious campaign codenamed ShadowRemit has exploited fake Android apps and pages mimicking Google Play app listings to enable unlicensed cross-border money transfers. These bogus pages have been found to promote unauthorized APKs as trusted remittance services with zero fees and improved exchange rates. "Victims are instructed to send payments to beneficiary accounts/eWallet endpoints and provide transaction screenshots as proof for verification," CTM360 said. "This approach can bypass regulated remittance corridors and aligns with mule-account collection patterns."
 
-TEMP.Vermin (aka UAC-0020) has used malware like VERMONSTER, SPECTRUM (aka SPECTR), and FIRMACHAGENT using lure content revolving around drone production and development, anti-drone defense systems, and video surveillance security systems.
+An Android malware campaign targeting users in India has abused the trust associated with government services and official digital platforms to distribute malicious APK files through WhatsApp, leading to the deployment of malware that can steal data, establish persistent control, and run a cryptocurrency miner.
 
-UNC5125 (aka FlyingYeti and UAC-0149) has conducted highly targeted campaigns focusing on frontline drone units. It has used a questionnaire hosted on Google Forms to conduct reconnaissance against prospective drone operators, and distributed via messaging apps malware like MESSYFORK (aka COOKBOX) to an Unmanned Aerial Vehicle (UAV) operator based in Ukraine.
+The operators of an Android trojan and cybercrime tool called Triada have been observed using phishing landing pages disguised as Chrome browser updates to trick users into downloading malicious APK files hosted on GitHub. According to an analysis by Alex, attackers are "actively taking over long-standing, fully verified advertiser accounts to distribute malicious redirects."
 
-UNC5125 is also said to have leveraged an Android malware called GREYBATTLE, a bespoke version of the Hydra banking trojan, to steal credentials and data by distributing it via a website spoofing a Ukrainian military artificial intelligence company.
+A WhatApp-oriented scam campaign has leveraged video calls, in which the threat actor poses as a bank representative or a Meta support and instructs them to share their phone's screen to address a purported unauthorized charge on their credit card, and install a legitimate remote access app, such as AnyDesk or TeamViewer, to steal sensitive data.
 
-UNC5792 (aka UAC-0195) has exploited secure messaging apps to target Ukrainian military and government entities, as well as individuals and organizations in Moldova, Georgia, France, and the U.S. The threat actor is notable for weaponizing Signal's device linking feature to hijack victim accounts.
+An Android spyware campaign has leveraged romance scam tactics to target individuals in Pakistan to distribute a malicious dating chat app dubbed GhostChat to exfiltrate victims' data. It's currently not known how the malware is distributed. The threat actors behind the operation are also suspected to be running a ClickFix attack that infects victims' computers with a DLL payload that can gather system metadata and run commands issued by an external server, as well as a WhatsApp device-linking attack called GhostPairing to gain access to their WhatsApp accounts.
 
-UNC5976, a Russian espionage cluster that has conducted a phishing campaign delivering malicious RDP connection files that are configured to communicate with actor-controlled domains mimicking a Ukrainian telecommunications company.
+A new family of Android click fraud trojans called Phantom has been found to leverage TensorFlow.js, a JavaScript machine learning library, to automatically detect and interact with specific advertisement elements on a site loaded in a hidden WebView. An alternative "signaling" mode uses WebRTC to stream a live video feed of the virtual browser screen to the attackers' server and allow them to click, scroll, or enter text. The malware is distributed via mobile games published to Xiaomi's GetApps store and other unofficial, third-party app stores.
 
-UNC6096, a Russian espionage cluster that has conducted malware delivery operations via WhatsApp using DELTA-related themes to deliver a malicious LNK shortcut within an archive file that downloads a secondary payload. Attacks aimed at Android devices have been found to deliver malware called GALLGRAB that collects locally stored files, contact information, and potentially encrypted user data from specialized battlefield applications.
+An Android malware family called NFCShare has been distributed via a Deutsche Bank phishing campaign to deceive users into installing a malicious APK file ("deutsche.apk") under the pretext of an update, which reads NFC card data and exfiltrates it to a remote WebSocket endpoint. The malware shares similarities with NFC relay malware families like NGate, ZNFC, SuperCard X, PhantomCard, and RelayNFC, with its command-and-control (C2) server previously flagged as associated with SuperCard X activity in November 2025.
 
-UNC5114, a suspected Russian espionage cluster that has delivered a variant of an off-the-shelf Android malware called CraxsRAT by masquerading it as an update for Kropyva, a combat control system used in Ukraine.
+In a report published last month, Group-IB said it has witnessed a surge in NFC-enabled Android tap-to-pay malware, most of which is advertised within Chinese cybercrime communities on Telegram. The NFC-based relay technique is also referred to as Ghost Tap.
 
-APT45 (aka Andariel) has targeted South Korean defense, semiconductor, and automotive manufacturing entities with SmallTiger malware.
+"At least $355,000 in illegitimate transactions have been recorded from one POS vendor alone throughout November 2024 – August 2025," the Singapore-headquartered cybersecurity company said. "In another observed scenario, mobile wallets preloaded with compromised cards are used by mules across the globe to make purchases."
 
-APT43 (aka Kimsuky) has likely leveraged infrastructure mimicking German and U.S. defense-related entities to deploy a backdoor called THINWAVE.
+The end goal of these attacks is to trick victims into installing NFC-enabled malware and tapping their physical payment cards on their smartphone, causing the transaction data to be captured and relayed to the cybercriminal's device through an attacker-controlled server. This is achieved by means of a dedicated app installed on the money mule's device to complete payments or cash-out as though the victims' cards were physically present.
 
-UNC2970 (aka Lazarus Group) has conducted the Operation Dream Job campaign to target aerospace, defense, and energy sectors, in addition to relying on artificial intelligence (AI) tools to conduct reconnaissance on its targets.
+Calling tap-to-pay scams a growing concern, Group-IB said it observed a steady increase in the detection of malware artifacts between May 2024 and December 2025. "At the same time, different families and variants are also appearing, while the old ones remain active," it added. "This indicates the spread of this technology among fraudsters."
 
-UNC1549 (aka Nimbus Manticore) has targeted aerospace, aviation, and defense industries in the Middle East with malware families like MINIBIKE, TWOSTROKE, DEEPROOT, and CRASHPAD. The group is known to orchestrate Lazarus Group-style Dream Job campaigns to trick users into executing malware or giving up credentials under the guise of legitimate employment opportunities.
-
-UNC6446, an Iranian-nexus threat actor that has used resume builder and personality test applications to distribute custom malware to targets in the aerospace and defense vertical across the U.S. and the Middle East.
-
-APT5 (aka Keyhole Panda and Mulberry Typhoon) has targeted current and former employees of major aerospace and defense contractors with tailored phishing lures.
-
-UNC3236 (aka Volt Typhoon) has conducted reconnaissance activity against publicly hosted login portals of North American military and defense contractors, while using the ARCMAZE obfuscation framework to conceal its origin.
-
-UNC6508, a China-nexus threat cluster that targeted a U.S.-based research institution in late 2023 by leveraging a REDCap exploit to drop a custom malware named INFINITERED that's capable of persistent remote access and credential theft after intercepting the application's software upgrade process.
-
-In addition, Google said it has also observed China-nexus threat groups utilizing operational relay box (ORB) networks for reconnaissance against defense industrial targets, thereby complicating detection and attribution efforts.
-
-ORBs confer several advantages to threat actors, allowing them to route their traffic through home or commercial networks, blend with regular network traffic, circumvent geofencing security controls, and pre-position themselves to a target's perimeter ahead of a cyber attack. ORBs are also resilient to takedown attempts, as attackers managing them can scale these networks to add more devices, even if some nodes are discovered and blocked.
-
-"While specific risks vary by geographic footprint and sub-sector specialization, the broader trend is clear: the defense industrial base is under a state of constant, multi-vector siege," Google said. "Financially motivated actors carry out extortion against this sector and the broader manufacturing base, like many of the other verticals they target for monetary gain."
-
-"The campaigns against defense contractors in Ukraine, threats to or exploitation of defense personnel, the persistent volume of intrusions by China-nexus actors, and the hack, leak, and disruption of the manufacturing base are some of the leading threats to this industry today."
-
-(XXXXXXX, AÇIK - thehackernews.com, 15.02.2026)
+(XXXXXXX, AÇIK - thehackernews.com, 16.02.2026)
 
 ================================================================================
 
-[3] The Hacker News - UAT-9921 Deploys VoidLink Malware to Target Technology and Financial Sectors
+[2] The Hacker News - New Chrome Zero-Day (CVE-2026-2441) Under Active Attack — Patch Released
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 20:53:00 +0530
-Link: https://thehackernews.com/2026/02/uat-9921-deploys-voidlink-malware-to.html
+Tarih: Mon, 16 Feb 2026 12:08:00 +0530
+Link: https://thehackernews.com/2026/02/new-chrome-zero-day-cve-2026-2441-under.html
 
-[TAM METİN - 723 kelime]
-A previously unknown threat actor tracked as UAT-9921 has been observed leveraging a new modular framework called VoidLink in its campaigns targeting the technology and financial services sectors, according to findings from Cisco Talos.
+[TAM METİN - 340 kelime]
+Google on Friday released security updates for its Chrome browser to address a security flaw that it said has been exploited in the wild.
 
-"This threat actor seems to have been active since 2019, although they have not necessarily used VoidLink over the duration of their activity," researchers Nick Biasini, Aaron Boyd, Asheer Malhotra, and Vitor Ventura said. "UAT-9921 uses compromised hosts to install VoidLink command-and-control (C2), which are then used to launch scanning activities both internal and external to the network."
+The high-severity vulnerability, tracked as CVE-2026-2441 (CVSS score: 8.8), has been described as a use-after-free bug in CSS. Security researcher Shaheen Fazim has been credited with discovering and reporting the shortcoming on February 11, 2026.
 
-VoidLink was first documented by Check Point last month, describing it as a feature-rich malware framework written in Zig designed for long-term, stealthy access to Linux-based cloud environments. It's assessed to be the work of a single developer with assistance from a large language model (LLM) to flesh out its internals based on a paradigm called spec-driven development.
+"Use after free in CSS in Google Chrome prior to 145.0.7632.75 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page," according to a description of the flaw in the NIST's National Vulnerability Database (NVD).
 
-In another analysis published earlier this week, Ontinue pointed out that the emergence of VoidLink presents a new concern where LLM-generated implants, packed with kernel-level rootkits and features to target cloud environments, can further lower the skill barrier required to produce hard-to-detect malware.
+Google did not disclose any details about how the vulnerability is being exploited in the wild, by whom, or who may have been targeted, but it acknowledged that "an exploit for CVE-2026-2441 exists in the wild."
 
-Per Talos, UAT-9921 is believed to possess knowledge of the Chinese language, given the language of the framework and code comments present in it. The toolkit is said to be a recent addition to its arsenal. It is also believed that the development was split across teams, although the extent of the demarcation between development and the actual operations remains unclear.
+While Google Chrome is no stranger to actively exploited vulnerabilities, the development once again highlights how browser-based flaws are an attractive target for malicious actors, given that they are installed everywhere and expose a broad attack surface.
 
-"The operators deploying VoidLink have access to the source code of some [kernel] modules and some tools to interact with the implants without the C2," the researchers noted. "This indicates inner knowledge of the communication protocols of the implants."
+The disclosure of CVE-2026-2441 makes it the first actively exploited zero-day in Chrome that Google has patched in 2026. Last year, the tech giant addressed eight zero-day flaws in Chrome that were either actively exploited or demonstrated as a proof-of-concept (PoC).
 
-VoidLink is deployed as a post-compromise tool, allowing the adversary to sidestep detection. The threat actor has also been observed deploying a SOCKS proxy on compromised servers to launch scans for internal reconnaissance and lateral movement using open-source tools like Fscan.
+Last week, Apple also shipped iOS, iPadOS, macOS Tahoe, tvOS, watchOS, and visionOS updates to address a zero-day flaw (CVE-2026-20700, CVSS score: 7.8) that had been weaponized as a zero-day to execute arbitrary code on susceptible devices as part of an "extremely sophisticated attack" targeting specific individuals who were running iOS versions before iOS 26.
 
-The cybersecurity company said it's aware of multiple VoidLink-related victims dating back to September 2025, indicating that work on the malware may have commenced much earlier than the November 2025 timeline pieced together by Check Point.
+For optimal protection, users are advised to update their Chrome browser to versions 145.0.7632.75/76 for Windows and Apple macOS, and 144.0.7559.75 for Linux. To make sure the latest updates are installed, users can navigate to More > Help > About Google Chrome and select Relaunch.
 
-When reached for comment regarding the latest findings, Pedro Drimel Neto, malware analysis lead at Check Point Software, told The Hacker News via email that they have not observed evidence of VoidLink "being used as of September 2025 and threat actor activity since 2019," and that "we cannot independently verify activity outside of the datasets and sources available to us."
+Users of other Chromium-based browsers, such as Microsoft Edge, Brave, Opera, and Vivaldi, are also advised to apply the fixes as and when they become available.
 
-VoidLink uses three different programming languages: ZigLang for the implant, C for the plugins, and GoLang for the backend. It supports compilation on demand for plugins, providing support for the different Linux distributions that might be targeted. The plugins allow for gathering information, lateral movement, and anti-forensics.
-
-The framework also comes fitted with a wide range of stealth mechanisms to hinder analysis, prevent its removal from the infected hosts, and even detect endpoint detection and response (EDR) solutions and devise an evasion strategy on the fly.
-
-"The C2 will provide that implant with a plugin to read a specific database the operator has found or an exploit for a known vulnerability, which just happens to be on an internal web server," Talos said.
-
-"The C2 doesn't necessarily need to have all these tools available — it may have an agent that will do its research and prepare the tool for the operator to use. With the current VoidLink compile-on-demand capability, integrating such a feature should not be complex. Keep in mind that all of this will happen while the operator continues to explore the environment."
-
-Another defining trait of VoidLink is its auditability and the existence of a role-based access control (RBAC) mechanism, which consists of three role levels: SuperAdmin, Operator, and Viewer. This suggests that the developers of the framework kept oversight in mind when designing it, raising the possibility that the activity may be part of red team exercises.
-
-What's more, there are signs that there exists a main implant that has been compiled for Windows and can load plugins via a technique called DLL side-loading.
-
-"This is a near-production-ready proof of concept," Talos said. "VoidLink is positioned to become an even more powerful framework based on its capabilities and flexibility."
-
-(XXXXXXX, AÇIK - thehackernews.com, 15.02.2026)
+(XXXXXXX, AÇIK - thehackernews.com, 16.02.2026)
 
 ================================================================================
 
-[4] BleepingComputer - One threat actor responsible for 83% of recent Ivanti RCE attacks
+[3] The Hacker News - Microsoft Discloses DNS-Based ClickFix Attack Using Nslookup for Malware Staging
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 14 Feb 2026 11:02:34 -0500
-Link: https://www.bleepingcomputer.com/news/security/one-threat-actor-responsible-for-83-percent-of-recent-ivanti-rce-attacks/
+Tarih: Sun, 15 Feb 2026 19:40:00 +0530
+Link: https://thehackernews.com/2026/02/microsoft-discloses-dns-based-clickfix.html
 
-[TAM METİN - 627 kelime]
-Threat intelligence observations show that a single threat actor is responsible for most of the active exploitation of two critical vulnerabilities in Ivanti Endpoint Manager Mobile (EPMM), tracked as CVE-2026-21962 and CVE-2026-24061.
+[TAM METİN - 1519 kelime]
+Microsoft has disclosed details of a new version of the ClickFix social engineering tactic in which the attackers trick unsuspecting users into running commands that carry out a Domain Name System (DNS) lookup to retrieve the next-stage payload.
 
-The security issues have been flagged as actively exploited in zero-day attacks in Ivanti's security advisory, where the company also announced hotfixes.
+Specifically, the attack relies on using the "nslookup" (short for nameserver lookup) command to execute a custom DNS lookup triggered via the Windows Run dialog.
 
-Both flaws received a critical severity rating and allow an attacker to inject code without authentication, leading to remote code execution (RCE) on vulnerable systems.
+ClickFix is an increasingly popular technique that's traditionally delivered via phishing, malvertising, or drive-by download schemes, often redirecting targets to bogus landing pages that host fake CAPTCHA verification or instructions to address a non-existent problem on their computers by running a command either through the Windows Run dialog or the macOS Terminal app.
 
-A single IP address hosted on bulletproof infrastructure is responsible for over 83% of exploitation activity related to the two vulnerabilities, says threat-focused internet intelligence company GreyNoise.
+The attack method has become widespread over the past two years since it hinges on the victims infecting their own machines with malware, thereby allowing the threat actors to bypass security controls. The effectiveness of ClickFix has been such that it has spawned several variants, such as FileFix, JackFix, ConsentFix, CrashFix, and GlitchFix.
 
-Between February 1st and 9th, the monitoring platform observed 417 exploitation sessions originating from 8 unique source IP addresses, and centered on CVE-2026-21962 and CVE-2026-24061.
+"In the latest DNS-based staging using ClickFix, the initial command runs through cmd.exe and performs a DNS lookup against a hard-coded external DNS server, rather than the system's default resolver," the Microsoft Threat Intelligence team said in a series of posts on X. "The output is filtered to extract the `Name:` DNS response, which is executed as the second-stage payload."
 
-The highest volume, 83%, comes from 193[.]24[.]123[.]42, hosted by PROSPERO OOO (AS200593), which Censys analysts marked as a bulletproof autonomous system used to target various software products.
+Microsoft said this new variation of ClickFix uses DNS as a "lightweight staging or signaling channel," enabling the threat actor to reach infrastructure under their control, as well as erect a new validation layer before executing the second-stage payload.
 
-A sharp spike occurred on February 8, with 269 recorded sessions in a single day. The figure is almost 13 times the daily average of 22 sessions, GreyNoise noted.
+"Using DNS in this way reduces dependency on traditional web requests and can help blend malicious activity into normal network traffic," the Windows maker added.
 
-Of the 417 exploitation sessions, 354 (85%) used OAST-style DNS callbacks to verify command execution capability, pointing to initial access broker activity.
+The downloaded payload subsequently initiates an attack chain that leads to the download of a ZIP archive from an external server ("azwsappdev[.]com"), from which a malicious Python script is extracted and run to conduct reconnaissance, run discovery commands, and drop a Visual Basic Script (VBScript) responsible for launching ModeloRAT, a Python-based remote access trojan previously distributed through CrashFix.
 
-Interestingly, several published indicators of compromise (IoCs) include IP addresses for Windscribe VPN (185[.]212[.]171[.]0/24) present in GreyNoise telemetry as scanning Oracle WebLogic instances, but no Ivanti exploitation activity.
+To establish persistence, a Windows shortcut (LNK) file pointing to the VBScript is created in the Windows Startup folder so that the malware is automatically launched every time the operating system is started.
 
-The researchers note that the PROSPERO OOO IP address they saw "is not on widely published IOC lists, meaning defenders blocking only published indicators are likely missing the dominant exploitation source."
+The disclosure comes as Bitdefender warned of a surge in Lumma Stealer activity, driven by ClickFix-style fake CAPTCHA campaigns that deploy an AutoIt-version of CastleLoader, a malware loader associated with a threat actor codenamed GrayBravo (formerly TAG-150).
 
-This IP is not limited to Ivanti targeting, as it simultaneously exploited three more vulnerabilities: CVE-2026-21962 in Oracle WebLogic, CVE-2026-24061 in GNU Inetutils Telnetd, and CVE-2025-24799 in GLPI.
+CastleLoader incorporates checks to determine the presence of virtualization software and specific security programs before decrypting and launching the stealer malware in memory. Outside of ClickFix, websites advertising cracked software and pirated movies serve as bait for CastleLoader-based attack chains, deceiving users into downloading rogue installers or executables masquerading as MP4 media files.
 
-The Oracle WebLogic flaw had the lion’s share in session volumes, dwarfing the rest with 2,902 sessions, followed by the Telnetd issue with 497 sessions.
+Other CastleLoader campaigns have also leveraged websites promising cracked software downloads as a starting point to distribute a fake NSIS installer that also runs obfuscated VBA scripts prior to running the AutoIt script that loads Lumma Stealer. The VBA loader is designed to run scheduled tasks responsible for ensuring persistence.
 
-Exploitation activity appears fully automated, rotating between three hundred user agents.
+"Despite significant law enforcement disruption efforts in 2025, Lumma Stealer operations continued, demonstrating resilience by rapidly migrating to new hosting providers and adapting alternative loaders and delivery techniques," the Romanian cybersecurity company said. "At the core of many of these campaigns is CastleLoader, which plays a central role in helping LummaStealer spread through delivery chains."
 
-Ivanti's fixes for CVE-2026-1281 and CVE-2026-1340 are not permanent. The company promised to release complete patches in the first quarter of this year, with the release of EPMM version 12.8.0.0.
+Interestingly, one of the domains on CastleLoader's infrastructure ("testdomain123123[.]shop") was flagged as a Lumma Stealer command-and-control (C2), indicating that the operators of the two malware families are either working together or sharing service providers. The majority of Lumma Stealer infections have been recorded in India, followed by France, the U.S., Spain, Germany, Brazil, Mexico, Romania, Italy, and Canada.
 
-Until then, it is recommended to use RPM packages 12.x.0.x for EPMM versions 12.5.0.x, 12.6.0.x, and 12.7.0.x, and RPM 12.x.1.x for EPMM versions 12.5.1.0 and 12.6.1.0.
+"The effectiveness of ClickFix lies in its abuse of procedural trust rather than technical vulnerabilities," Bitdefender said. "The instructions resemble troubleshooting steps or verification workarounds that users may have encountered previously. As a result, victims often fail to recognize that they are manually executing arbitrary code on their own system."
 
-The vendor notes that the most conservative approach is to build a replacement EPMM instance and migrate all data there. Instructions on how to do that are available here.
+CastleLoader is not the only loader that's being used to distribute Lumma Stealer. Campaigns observed as early as March 2025 have leveraged another loader dubbed RenEngine Loader, with the malware propagated under the guise of game cheats and pirated software like CorelDRAW graphics editor. In these attacks, the loader makes way for a secondary loader named Hijack Loader, which then deploys Lumma Stealer.
 
-Update 2/15 - An Ivanti spokesperson has sent BleepingComputer the following statement:
+According to data from Kaspersky, RenEngine Loader attacks have primarily affected users in Russia, Brazil, Turkey, Spain, Germany, Mexico, Algeria, Egypt, Italy, and France since March 2025.
 
-"Ivanti’s recommendation remains the same: customers who have not yet patched should do so immediately, and then review their appliance for any signs of exploitation that may have occurred prior to patching. Applying the patch is the most effective way to prevent exploitation, regardless of how IOCs change over time, especially once a POC is available. The patch requires no downtime and takes only seconds to apply. Ivanti has provided customers with high fidelity indicators of compromise, technical analysis at disclosure, and an Exploitation Detection script developed with NCSC NL, and continues to support customers as we respond to this threat." - Ivanti spokesperson
+The developments coincide with the emergence of various campaigns using social engineering lures, including ClickFix, to deliver a variety of stealers and malware loaders -
+
+A macOS campaign that has used phishing and malvertising ploys to deliver Odyssey Stealer, a rebrand of Poseidon Stealer, which itself is a fork of Atomic macOS Stealer (AMOS). The stealer exfiltrates credentials and data from 203 browser wallet extensions and 18 desktop wallet applications to facilitate cryptocurrency theft.
+
+"Beyond credential theft, Odyssey operates as a full remote access trojan," Censys said. "A persistent LaunchDaemon polls the C2 every 60 seconds for commands, supporting arbitrary shell execution, reinfection, and a SOCKS5 proxy for tunneling traffic through victim machines."
+
+A ClickFix attack chain targeting Windows systems that uses fake CAPTCHA verification pages on legitimate-but-compromised websites to trick users into executing PowerShell commands that deploy the StealC information stealer.
+
+An email phishing campaign that uses a malicious SVG file contained within a password‑protected ZIP archive to instruct the victim to run a PowerShell command using ClickFix, ultimately resulting in the deployment of an open-source .NET infostealer called Stealerium.
+
+A campaign that exploits the public sharing feature of generative artificial intelligence (AI) services like Anthropic Claude to stage malicious ClickFix instructions on how to perform a variety of tasks on macOS (e.g., "online DNS resolver"), and distribute these links via sponsored results on search engines like Google to deploy Atomic Stealer and MacSync Stealer.
+
+A campaign that directs users searching for "macOS cli disk space analyzer" to a fake Medium article impersonating Apple's Support Team to deceive them into running ClickFix instructions that deliver next-stage stealer payloads from an external server "raxelpak[.]com."
+
+"The C2 domain raxelpak[.]com has URL history going back to 2021, when it appeared to host a safety workwear e-commerce site," MacPaw's Moonlock Lab said. "Whether the domain was hijacked or simply expired and re-registered by the [threat actor] is unclear, but it fits the broader pattern of leveraging aged domains with existing reputation to avoid detection."
+
+A variation of the same campaign that stages ClickFix instructions for supposedly installing Homebrew on links associated with Claude and Evernote and distributes them through sponsored results to install stealer malware.
+
+"The ad shows a real, recognized domain (claude.ai), not a spoof or typo-squatted site," AdGuard said. "Clicking the ad leads to a real Claude page, not a phishing copy. The consequence is clear: Google Ads + a well-known trusted platform + technical users with high downstream impact = a potent malware distribution vector."
+
+A macOS email phishing campaign that prompts recipients to download and run an AppleScript file to address supposed compatibility issues, resulting in the deployment of another AppleScript designed to steal credentials and retrieve additional JavaScript payloads.
+
+"The malware does not grant permissions to itself; instead, it forges TCC authorizations for trusted Apple-signed binaries (Terminal, osascript, Script Editor, and bash) and then executes malicious actions through these binaries to inherit their permissions," Darktrace said.
+
+A ClearFake campaign that employs fake CAPTCHA lures on compromised WordPress sites to trigger the execution of an HTML Application (HTA) file and deploy Lumma Stealer. The campaign is also known to use malicious JavaScript injections to take advantage of a technique known as EtherHiding to execute a contract hosted on the BNB Smart Chain and fetch an unknown payload hosted on GitHub.
+
+EtherHiding offers attackers several advantages. It allows malicious traffic to blend with legitimate Web3 activity. Because blockchain is immutable and decentralized, it also offers increased resilience in the face of takedown efforts.
+
+The use of ClickFix techniques to target macOS underlines a broader trend where threat actors are increasingly seeking out machines that run Apple's operating system to infect them with infostealers and sophisticated tools, per a recent analysis published by Flare. No less than 103 Chrome crypto extensions are targeted by macOS stealers, with attackers obtaining valid Apple developer signatures to bypass Gatekeeper protections.
+
+"Nearly every macOS stealer prioritizes cryptocurrency theft above all else," the company said. "This laser focus reflects economic reality. Cryptocurrency users disproportionately use Macs. They often hold significant value in software wallets. Unlike bank accounts, crypto transactions are irreversible. Once seed phrases are compromised, funds disappear permanently with no recourse."
+
+"The 'Macs don't get viruses' assumption is not just outdated but actively dangerous. Organizations with Mac users need detection capabilities for macOS-specific TTPs: unsigned applications requesting passwords, unusual Terminal activity, connections to blockchain nodes for non-financial purposes, and data exfiltration patterns targeting Keychain and browser storage."
+
+(XXXXXXX, AÇIK - thehackernews.com, 16.02.2026)
+
+================================================================================
+
+[4] BleepingComputer - Google patches first Chrome zero-day exploited in attacks this year
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 16 Feb 2026 03:19:19 -0500
+Link: https://www.bleepingcomputer.com/news/security/google-patches-first-chrome-zero-day-exploited-in-attacks-this-year/
+
+[TAM METİN - 451 kelime]
+Google has released emergency updates to fix a high-severity Chrome vulnerability exploited in zero-day attacks, marking the first such security flaw patched since the start of the year.
+
+"Google is aware that an exploit for CVE-2026-2441 exists in the wild," Google said in a security advisory issued on Friday.
+
+According to the Chromium commit history, this use-after-free vulnerability (reported by security researcher Shaheen Fazim) is due to an iterator invalidation bug in CSSFontFeatureValuesMap, Chrome's implementation of CSS font feature values. Successful exploitation can allow attackers to trigger browser crashes, rendering issues, data corruption, or other undefined behavior.
+
+The commit message also notes that the CVE-2026-2441 patch addresses "the immediate problem" but indicates there's "remaining work" tracked in bug 483936078, suggesting this might be a temporary fix or that related issues still need to be addressed.
+
+The patch was tagged as "cherry-picked" (or backported) across multiple commits, indicating that it was important enough to include in a stable release rather than waiting for the next major version (likely because the vulnerability is being exploited in the wild).
+
+Although Google found evidence of attackers exploiting this zero-day flaw in the wild, it did not share additional details regarding these incidents.
+
+"Access to bug details and links may be kept restricted until a majority of users are updated with a fix. We will also retain restrictions if the bug exists in a third party library that other projects similarly depend on, but haven't yet fixed," it noted.
+
+Google has now fixed this vulnerability for users in the Stable Desktop channel, with new versions rolling out to Windows, macOS (145.0.7632.75/76), and Linux users (144.0.7559.75) worldwide over the coming days or weeks.
+
+If you don't want to update manually, you can also let Chrome check for updates automatically and install them after the next launch.
+
+While this is the first actively exploited Chrome security vulnerability patched since the start of 2026, last year Google addressed a total of eight zero-days abused in the wild, many of them reported by the company's Threat Analysis Group (TAG), widely known for tracking and identifying zero-days exploited in spyware attacks targeting high-risk individuals.
 
 The future of IT infrastructure is here
 
@@ -181,83 +207,69 @@ Modern IT infrastructure moves faster than manual workflows can handle.
 
 In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
 
-Critical BeyondTrust RCE flaw now exploited in attacks, patch now
+Apple fixes two zero-day flaws exploited in 'sophisticated' attacks
 
-CISA says critical VMware RCE flaw now actively exploited
+Apple fixes zero-day flaw used in 'extremely sophisticated' attacks
 
-Trend Micro fixes actively exploited remote code execution bug
+Microsoft fixes bug that blocked Google Chrome from launching
 
-Critical RCE flaw impacts over 115,000 WatchGuard firewalls
+Ivanti warns of two EPMM flaws exploited in zero-day attacks
 
-New critical WatchGuard Firebox firewall flaw exploited in attacks
+Fortinet blocks exploited FortiCloud SSO zero day until patch is ready
 
-(XXXXXXX, AÇIK - bleepingcomputer.com, 15.02.2026)
+(XXXXXXX, AÇIK - bleepingcomputer.com, 16.02.2026)
 
 ================================================================================
 
-[5] BleepingComputer - Snail mail letters target Trezor and Ledger users in crypto-theft attacks
+[5] BleepingComputer - Canada Goose investigating as hackers leak 600K customer records
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 14 Feb 2026 10:15:25 -0500
-Link: https://www.bleepingcomputer.com/news/security/snail-mail-letters-target-trezor-and-ledger-users-in-crypto-theft-attacks/
+Tarih: Sun, 15 Feb 2026 23:45:32 -0500
+Link: https://www.bleepingcomputer.com/news/security/canada-goose-investigating-as-hackers-leak-600k-customer-records/
 
-[TAM METİN - 765 kelime]
-Threat actors are sending physical letters pretending to be from Trezor and Ledger, makers of cryptocurrency hardware wallets, to trick users into submitting recovery phrases in crypto theft attacks.
+[TAM METİN - 640 kelime]
+ShinyHunters, a well-known data extortion group, claims to have stolen more than 600,000 Canada Goose customer records containing personal and payment-related data.
 
-These phishing letters claim recipients must complete a mandatory "Authentication Check" or "Transaction Check" to avoid losing access to wallet functionality, creating a sense of urgency to pressure victims into scanning QR codes that lead to malicious websites.
+Canada Goose told BleepingComputer the dataset appears to relate to past customer transactions and that it has not found evidence of a breach of its own systems.
 
-Snail mail QR code crypto scams
+Founded in 1957, Canada Goose is a Toronto-based performance luxury outerwear brand with a global retail footprint and nearly 4,000 employees.
 
-Hardware wallet users report receiving snail mail letters printed on letterhead that impersonate official communications from Trezor and Ledger security and compliance teams.
+Canada Goose sees no evidence of breach
 
-It is unclear what the targeting criteria are for these letters, but both Trezor and Ledger [2] have suffered data breaches in the past couple of years that have exposed customer contact information.
+"Canada Goose is aware that a historical dataset relating to past customer transactions has recently been published online," the company told BleepingComputer.
 
-A letter impersonating Trezor received by cybersecurity expert Dmitry Smilyanets claims that an "Authentication Check will soon become a mandatory part of Trezor," warning users to complete the process by February 15, 2026, or risk losing functionality on their devices.
+"At this time, we have no indication of any breach of our own systems. We are currently reviewing the newly released dataset to assess its accuracy and scope and will take any further steps as may be appropriate. To be clear, our review shows no evidence that unmasked financial data was involved. Canada Goose remains committed to protecting customer information."
 
-"To avoid any disruption to your Trezor Suite access, please scan the QR code with your mobile device and follow the instructions on our website to enable Authentication Check by February 15th, 2026," reads the fake Trezor letter.
+1.67 GB dataset contains detailed order records
 
-"Note: While you may have already received the notification on your Trezor device and enabled Authentication Check, completing this process is still required to fully activate the feature and ensure your device is synchronized with the full functionality of Authentication Check."
+ShinyHunters added Canada Goose to its data leak site this week, claiming the archive contains more than 600,000 customer records.
 
-A similar Ledger-themed letter was shared on X, claiming a "Transaction Check" would soon become mandatory and warning users to scan a QR code to enable the feature by October 15, 2025, to avoid disruptions.
+Samples reviewed by BleepingComputer show that the 1.67 GB dataset, released in JSON format, contains detailed e-commerce order records, including customer names, email addresses, phone numbers, billing and shipping addresses, IP addresses, and order histories.
 
-Scanning the QR codes leads victims to phishing sites impersonating official Trezor and Ledger setup pages, including:
+The data also includes partial payment card information such as card brand, the last four digits of card numbers, and in some cases the first six digits (BIN), along with payment authorization metadata.
 
-https://trezor.authentication-check[.]io/
+While the dataset does not appear to contain full payment card numbers, the exposed information could still be used for targeted phishing, social engineering, and fraud.
 
-https://ledger.setuptransactioncheck[.]com/
+The records also include purchase history, device and browser information, and order values, potentially allowing attackers to profile high-value customers.
 
-At the time of writing, the Ledger phishing domain is offline, while the Trezor phishing site remains live but is now flagged by Cloudflare as a phishing site.
+Hackers deny link to recent SSO attacks
 
-The Trezor phishing page displays a warning that users must complete an authentication check by February 15, 2026, stating:
+ShinyHunters has recently been linked to a wave of social-engineering attacks targeting single sign-on (SSO) accounts and cloud environments.
 
-"Complete Authentication Check setup by February 15, 2026 unless you purchased a Trezor Safe 7, Trezor Safe 5, Trezor Safe 3, or Trezor Safe 1 after November 30, 2025. In that case, it is already pre-configured, and no action is needed," reads the phishing site.
+When asked whether the Canada Goose data was obtained through those intrusions, the group told BleepingComputer the dataset was unrelated, claiming it originated from a third-party payment processor breach and dates back to August 2025.
 
-Clicking the "Get Started" button leads to another page that warns users that failure to complete the authentication process may result in limited or blocked access to Trezor, transaction signing errors, and disruption with future Trezor updates.
+BleepingComputer has not independently verified the claim.
 
-These warnings are designed to create further urgency so victims continue to the next part of the setup process.
+The dataset's schema (specifically, field names like checkout_id, shipping_lines, cart_token, cancel_reason, etc.), however, closely resembles e-commerce checkout exports commonly associated with hosted storefront and payment processing platforms, which may help explain how the data could have originated from a third-party service provider.
 
-If victims proceed, they are taken to a final phishing page that asks them to enter their wallet recovery phrase.
+ShinyHunters is a prolific data extortion group known for stealing and leaking large volumes of customer data from major brands and online services.
 
-The page allows users to enter 24-, 20-, or 12-word recovery phrases and claims that this information is required to verify device ownership and enable the authentication feature.
+The group has been linked to numerous high-profile breaches and data theft incidents in recent years, often targeting e-commerce platforms, SaaS services, and cloud environments.
 
-Once entered, the recovery phrase is transmitted to the threat actor through a backend API endpoint at https://trezor.authentication-check[.]io/black/api/send.php.
+In recent reporting, security researchers have tied the group to vishing and social-engineering campaigns used to gain access to corporate accounts and cloud data.
 
-This allows attackers to import the victim's wallet onto their own devices and steal funds from the wallet.
+Stolen data is typically used for extortion, sold on underground forums, or published on the group's leak site when victims refuse to pay.
 
-While phishing emails targeting Trezor and Ledger users are common, physical mail phishing campaigns remain relatively rare.
-
-In 2021, threat actors mailed modified Ledger devices designed to steal recovery phrases during setup.
-
-A similar postal phishing campaign was also reported in April targeting Ledger users.
-
-Never share recovery phrases
-
-Hardware wallet recovery phrases, also known as seed phrases, are textual representations of the private keys that control access to cryptocurrency wallets.
-
-Therefore, anyone who has access to a wallet's recovery phrase gains full control over the wallet and its funds.
-
-Hardware wallet manufacturers such as Trezor and Ledger will never ask users to enter, scan, upload, or share their recovery phrase.
-
-Recovery phrases should be entered directly on the hardware wallet device when restoring a wallet, and never on a computer, mobile device, or website.
+It is not yet known how many Canada Goose customers may be affected or whether individuals will be notified. The company says it is continuing to review the dataset to determine its accuracy and scope.
 
 The future of IT infrastructure is here
 
@@ -265,67 +277,73 @@ Modern IT infrastructure moves faster than manual workflows can handle.
 
 In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
 
-Ledger customers impacted by third-party Global-e data breach
+Match Group breach exposes data from Hinge, Tinder, OkCupid, and Match
 
-Betterment confirms data breach after wave of crypto scam emails
+Nike investigates data breach after extortion gang leaks files
 
-New GlassWorm malware wave targets Macs with trojanized crypto wallets
+Have I Been Pwned: SoundCloud data breach impacts 29.8 million accounts
 
-Microsoft Store Outlook add-in hijacked to steal 4,000 Microsoft accounts
+SoundCloud confirms breach after member data stolen, VPN access disrupted
 
-Fake job recruiters hide malware in developer coding challenges
+Spain's Ministry of Science shuts down systems after breach claims
 
-(XXXXXXX, AÇIK - bleepingcomputer.com, 15.02.2026)
+(XXXXXXX, AÇIK - bleepingcomputer.com, 16.02.2026)
 
 ================================================================================
 
-[6] BleepingComputer - Fake job recruiters hide malware in developer coding challenges
+[6] BleepingComputer - New ClickFix attack abuses nslookup to retrieve PowerShell payload via DNS
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 17:35:37 -0500
-Link: https://www.bleepingcomputer.com/news/security/fake-job-recruiters-hide-malware-in-developer-coding-challenges/
+Tarih: Sun, 15 Feb 2026 19:29:00 -0500
+Link: https://www.bleepingcomputer.com/news/security/new-clickfix-attack-abuses-nslookup-to-retrieve-powershell-payload-via-dns/
 
-[TAM METİN - 718 kelime]
-A new variation of the fake recruiter campaign from North Korean threat actors is targeting JavaScript and Python developers with cryptocurrency-related tasks.
+[TAM METİN - 670 kelime]
+Threat actors are now abusing DNS queries as part of ClickFix social engineering attacks to deliver malware, making this the first known use of DNS as a channel in these campaigns.
 
-The activity has been ongoing since at least May 2025 and is characterized by modularity, which allows the threat actor to quickly resume it in case of partial compromise.
+ClickFix attacks typically trick users into manually executing malicious commands under the guise of fixing errors, installing updates, or enabling functionality.
 
-The bad actor relies on packages published on the npm and PyPi registries that act as downloaders for a remote access trojan (RAT). In total, researchers found 192 malicious packages related to this campaign, which they dubbed 'Graphalgo'.
+However, this new variant uses a novel technique in which an attacker-controlled DNS server delivers the second-stage payload via DNS lookups.
 
-Researchers at software supply-chain security company ReversingLabs say that the threat actor creates fake companies in the blockchain and crypto-trading sectors and publishes job offerings on various platforms, like LinkedIn, Facebook, and Reddit.
+DNS queries deliver a malicious PowerShell script
 
-Developers applying for the job are required to show their skills by running, debugging, and improving a given project. However, the attacker's purpose is to make the applicant run the code.
+In a new ClickFix campaign seen by Microsoft, victims are instructed to run the nslookup command that queries an attacker-controlled DNS server instead of the system's default DNS server.
 
-This action would cause a malicious dependency from a legitimate repository to be installed and executed.
+The command returns a query containing a malicious PowerShell script that is then executed on the device to install malware.
 
-"It is easy to create such job task repositories. Threat actors simply need to take a legitimate bare-bone project and fix it up with a malicious dependency and it is ready to be served to targets," the researchers say.
+"Microsoft Defender researchers observed attackers using yet another evasion approach to the ClickFix technique: Asking targets to run a command that executes a custom DNS lookup and parses the Name: response to receive the next-stage payload for execution," reads an X post from Microsoft Threat Intelligence.
 
-To hide the malicious nature of the dependencies, the hackers host the dependencies on legitimate platforms, like npm and PyPi.
+While it is unclear what the lure is to trick users into running the command, Microsoft says the ClickFix attack instructs users to run the command in the Windows Run dialog box.
 
-In one case highlighted in the ReversingLabs report, a package named ‘bigmathutils,’ with 10,000 downloads, was benign until it reached version 1.1.0, which introduced malicious payloads. Shortly after, the threat actor removed the package, marking it as deprecated, likely to conceal the activity.
+This command will issue a DNS lookup for the hostname "example.com" against the threat actor's DNS server at 84[.]21.189[.]20 and then execute the resulting response via the Windows command interpreter (cmd.exe).
 
-The Graphalgo name of the campaign is derived from packages that have “graph” in their name. They typically impersonate legitimate, popular libraries like graphlib, the researchers say.
+This DNS response returns a "NAME:" field that contains the second PowerShell payload that is executed on the device.
 
-However, from December 2025 onward, the North Korean actor shifted to packages with “big” in their name. However, ReversingLabs has not discovered the recruiting part, or the campaign frontend, related to them.
+While this server is no longer available, Microsoft says that the second-stage PowerShell command downloaded additional malware from attacker-controlled infrastructure.
 
-According to the researchers, the actor uses Github Organizations, which are shared accounts for collaboration across multiple projects. They say that the GitHub repositories are clean, and malicious code is introduced indirectly via dependencies hosted on npm and PyPI, which are the Graphalgo packages.
+This attack ultimately downloads a ZIP archive containing a Python runtime executable and malicious scripts that perform reconnaissance on the infected device and domain.
 
-Victims running the project as instructed in the interview infect their systems with these packages, which install a RAT payload on their machines.
+The attack then establishes persistence by creating %APPDATA%\WPy64-31401\python\script.vbs and a %STARTUP%\MonitoringService.lnk shortcut to launch the VBScript file on startup.
 
-It is worth noting that ReversingLabs researchers identified several developers that fell for the trick and contacted them for more details about the recruiting process.
+The final payload is a remote access trojan known as ModeloRAT, which allows attackers to control compromised systems remotely.
 
-The RAT can list the running processes on the host, execute arbitrary commands per instructions from the command-and-control (C2) server, and exfiltrate files or drop additional payloads.
+Unlike the usual ClickFix attacks, which commonly retrieve payloads via HTTP, this technique uses DNS as a communication and staging channel.
 
-The RAT checks whether the MetaMask cryptocurrency extension is installed on the victim’s browser, a clear indication of its money-stealing goals.
+By using DNS responses to deliver malicious PowerShell scripts, attackers can modify payloads on the fly while blending in with normal DNS traffic.
 
-Its C2 communication is token-protected to lock out unauthorized observers, a common tactic for North Korean hackers.
+ClickFix attacks rapidly evolving
 
-ReversingLabs has found multiple variants written in JavaScript, Python, and VBS, showing an intention to cover all possible targets.
+ClickFix attacks have rapidly evolved over the past year, with threat actors experimenting with new delivery tactics and payload types that target a wide variety of operating systems.
 
-The researchers’ attribute the Graphalgo fake recruiter campaign to the Lazarus group with medium-to-high confidence. The conclusion is based on the approach, the use of coding tests as an infection vector, and the cryptocurrency-focused targeting, all of which aligning with previous activity associated with the North Korean threat actor.
+Previously reported ClickFix campaigns relied on convincing users to execute PowerShell or shell commands directly on their operating systems to install malware.
 
-Also, the researchers note the delayed activation of malicious code in the packages, consistent with Lazarus' patience displayed in other attacks. Finally, the Git commits show the GMT +9 time zone, matching North Korea time.
+In more recent campaigns, attackers have expanded their techniques beyond traditional malware payload delivery over the web.
 
-The complete indicators of compromise (IoCs) are available in the original report. Developers who installed the malicious packages at any point should rotate all tokens and account passwords and reinstall their OS.
+For example, a recent ClickFix attack called "ConsentFix" abuses the Azure CLI OAuth app to hijack Microsoft accounts without a password and bypass multi-factor authentication (MFA).
+
+With the rise in popularity of AI LLMs for everyday use, threat actors have begun using shared ChatGPT and Grok pages, as well as Claude Artifact pages, to promote fake guides for ClickFix attacks.
+
+BleepingComputer also reported today about a novel ClickFix attack promoted through Pastebin comments that tricked cryptocurrency users into executing malicious JavaScript directly in their browser while visiting a cryptocurrency exchange to hijack transactions.
+
+This is one of the first ClickFix campaigns designed to execute JavaScript in the browser and hijack web application functionality rather than deploy malware.
 
 The future of IT infrastructure is here
 
@@ -335,213 +353,149 @@ In this new Tines guide, learn how your team can reduce hidden manual delays, im
 
 North Korean hackers use new macOS malware in crypto-theft attacks
 
-Hugging Face abused to spread thousands of Android malware variants
+New ClickFix attacks abuse Windows App-V scripts to push malware
 
-Konni hackers target blockchain engineers with AI-built malware
+Fake ad blocker extension crashes the browser for ClickFix attacks
 
-Hacker arrested for KMSAuto malware campaign with 2.8 million downloads
+ClickFix attack uses fake Windows BSOD screens to push malware
 
-France arrests Latvian for installing malware on Italian ferry
+Windows 11 KB5077181 fixes boot failures linked to failed updates
 
-(XXXXXXX, AÇIK - bleepingcomputer.com, 15.02.2026)
-
-================================================================================
-
-[7] Krebs on Security - Kimwolf Botnet Lurking in Corporate, Govt. Networks
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Tue, 20 Jan 2026 18:19:13 +0000
-Link: https://krebsonsecurity.com/2026/01/kimwolf-botnet-lurking-in-corporate-govt-networks/
-
-[TAM METİN - 992 kelime]
-A new Internet-of-Things (IoT) botnet called Kimwolf has spread to more than 2 million devices, forcing infected systems to participate in massive distributed denial-of-service (DDoS) attacks and to relay other malicious and abusive Internet traffic. Kimwolf’s ability to scan the local networks of compromised systems for other IoT devices to infect makes it a sobering threat to organizations, and new research reveals Kimwolf is surprisingly prevalent in government and corporate networks.
-
-Image: Shutterstock, @Elzicon.
-
-Kimwolf grew rapidly in the waning months of 2025 by tricking various “residential proxy” services into relaying malicious commands to devices on the local networks of those proxy endpoints. Residential proxies are sold as a way to anonymize and localize one’s Web traffic to a specific region, and the biggest of these services allow customers to route their Internet activity through devices in virtually any country or city around the globe.
-
-The malware that turns one’s Internet connection into a proxy node is often quietly bundled with various mobile apps and games, and it typically forces the infected device to relay malicious and abusive traffic — including ad fraud, account takeover attempts, and mass content-scraping.
-
-Kimwolf mainly targeted proxies from IPIDEA, a Chinese service that has millions of proxy endpoints for rent on any given week. The Kimwolf operators discovered they could forward malicious commands to the internal networks of IPIDEA proxy endpoints, and then programmatically scan for and infect other vulnerable devices on each endpoint’s local network.
-
-Most of the systems compromised through Kimwolf’s local network scanning have been unofficial Android TV streaming boxes. These are typically Android Open Source Project devices — not Android TV OS devices or Play Protect certified Android devices — and they are generally marketed as a way to watch unlimited (read:pirated) video content from popular subscription streaming services for a one-time fee.
-
-However, a great many of these TV boxes ship to consumers with residential proxy software pre-installed. What’s more, they have no real security or authentication built-in: If you can communicate directly with the TV box, you can also easily compromise it with malware.
-
-While IPIDEA and other affected proxy providers recently have taken steps to block threats like Kimwolf from going upstream into their endpoints (reportedly with varying degrees of success), the Kimwolf malware remains on millions of infected devices.
-
-A screenshot of IPIDEA’s proxy service.
-
-Kimwolf’s close association with residential proxy networks and compromised Android TV boxes might suggest we’d find relatively few infections on corporate networks. However, the security firm Infoblox said a recent review of its customer traffic found nearly 25 percent of them made a query to a Kimwolf-related domain name since October 1, 2025, when the botnet first showed signs of life.
-
-Infoblox found the affected customers are based all over the world and in a wide range of industry verticals, from education and healthcare to government and finance.
-
-“To be clear, this suggests that nearly 25% of customers had at least one device that was an endpoint in a residential proxy service targeted by Kimwolf operators,” Infoblox explained. “Such a device, maybe a phone or a laptop, was essentially co-opted by the threat actor to probe the local network for vulnerable devices. A query means a scan was made, not that new devices were compromised. Lateral movement would fail if there were no vulnerable devices to be found or if the DNS resolution was blocked.”
-
-Synthient, a startup that tracks proxy services and was the first to disclose on January 2 the unique methods Kimwolf uses to spread, found proxy endpoints from IPIDEA were present in alarming numbers at government and academic institutions worldwide. Synthient said it spied at least 33,000 affected Internet addresses at universities and colleges, and nearly 8,000 IPIDEA proxies within various U.S. and foreign government networks.
-
-The top 50 domain names sought out by users of IPIDEA’s residential proxy service, according to Synthient.
-
-In a webinar on January 16, experts at the proxy tracking service Spur profiled Internet addresses associated with IPIDEA and 10 other proxy services that were thought to be vulnerable to Kimwolf’s tricks. Spur found residential proxies in nearly 300 government owned and operated networks, 318 utility companies, 166 healthcare companies or hospitals, and 141 companies in banking and finance.
-
-“I looked at the 298 [government] owned and operated [networks], and so many of them were DoD [U.S. Department of Defense], which is kind of terrifying that DoD has IPIDEA and these other proxy services located inside of it,” Spur Co-Founder Riley Kilmer said. “I don’t know how these enterprises have these networks set up. It could be that [infected devices] are segregated on the network, that even if you had local access it doesn’t really mean much. However, it’s something to be aware of. If a device goes in, anything that device has access to the proxy would have access to.”
-
-Kilmer said Kimwolf demonstrates how a single residential proxy infection can quickly lead to bigger problems for organizations that are harboring unsecured devices behind their firewalls, noting that proxy services present a potentially simple way for attackers to probe other devices on the local network of a targeted organization.
-
-“If you know you have [proxy] infections that are located in a company, you can chose that [network] to come out of and then locally pivot,” Kilmer said. “If you have an idea of where to start or look, now you have a foothold in a company or an enterprise based on just that.”
-
-This is the third story in our series on the Kimwolf botnet. Next week, we’ll shed light on the myriad China-based individuals and companies connected to the Badbox 2.0 botnet, the collective name given to a vast number of Android TV streaming box models that ship with no discernible security or authentication built-in, and with residential proxy malware pre-installed.
-
-The Kimwolf Botnet is Stalking Your Local Network
-
-Who Benefitted from the Aisuru and Kimwolf Botnets?
-
-A Broken System Fueling Botnets (Synthient).
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 15.02.2026)
+(XXXXXXX, AÇIK - bleepingcomputer.com, 16.02.2026)
 
 ================================================================================
 
-[8] Krebs on Security - Patch Tuesday, January 2026 Edition
+[7] Krebs on Security - Kimwolf Botnet Swamps Anonymity Network I2P
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Wed, 14 Jan 2026 00:47:38 +0000
-Link: https://krebsonsecurity.com/2026/01/patch-tuesday-january-2026-edition/
+Tarih: Wed, 11 Feb 2026 16:08:11 +0000
+Link: https://krebsonsecurity.com/2026/02/kimwolf-botnet-swamps-anonymity-network-i2p/
 
-[TAM METİN - 910 kelime]
-Microsoft today issued patches to plug at least 113 security holes in its various Windows operating systems and supported software. Eight of the vulnerabilities earned Microsoft’s most-dire “critical” rating, and the company warns that attackers are already exploiting one of the bugs fixed today.
+[TAM METİN - 831 kelime]
+For the past week, the massive “Internet of Things” (IoT) botnet known as Kimwolf has been disrupting The Invisible Internet Project (I2P), a decentralized, encrypted communications network designed to anonymize and secure online communications. I2P users started reporting disruptions in the network around the same time the Kimwolf botmasters began relying on it to evade takedown attempts against the botnet’s control servers.
 
-January’s Microsoft zero-day flaw — CVE-2026-20805 — is brought to us by a flaw in the Desktop Window Manager (DWM), a key component of Windows that organizes windows on a user’s screen. Kev Breen, senior director of cyber threat research at Immersive, said despite awarding CVE-2026-20805 a middling CVSS score of 5.5, Microsoft has confirmed its active exploitation in the wild, indicating that threat actors are already leveraging this flaw against organizations.
+Kimwolf is a botnet that surfaced in late 2025 and quickly infected millions of systems, turning poorly secured IoT devices like TV streaming boxes, digital picture frames and routers into relays for malicious traffic and abnormally large distributed denial-of-service (DDoS) attacks.
 
-Breen said vulnerabilities of this kind are commonly used to undermine Address Space Layout Randomization (ASLR), a core operating system security control designed to protect against buffer overflows and other memory-manipulation exploits.
+I2P is a decentralized, privacy-focused network that allows people to communicate and share information anonymously.
 
-“By revealing where code resides in memory, this vulnerability can be chained with a separate code execution flaw, transforming a complex and unreliable exploit into a practical and repeatable attack,” Breen said. “Microsoft has not disclosed which additional components may be involved in such an exploit chain, significantly limiting defenders’ ability to proactively threat hunt for related activity. As a result, rapid patching currently remains the only effective mitigation.”
+“It works by routing data through multiple encrypted layers across volunteer-operated nodes, hiding both the sender’s and receiver’s locations,” the I2P website explains. “The result is a secure, censorship-resistant network designed for private websites, messaging, and data sharing.”
 
-Chris Goettl, vice president of product management at Ivanti, observed that CVE-2026-20805 affects all currently supported and extended security update supported versions of the Windows OS. Goettl said it would be a mistake to dismiss the severity of this flaw based on its “Important” rating and relatively low CVSS score.
+On February 3, I2P users began complaining on the organization’s GitHub page about tens of thousands of routers suddenly overwhelming the network, preventing existing users from communicating with legitimate nodes. Users reported a rapidly increasing number of new routers joining the network that were unable to transmit data, and that the mass influx of new systems had overwhelmed the network to the point where users could no longer connect.
 
-“A risk-based prioritization methodology warrants treating this vulnerability as a higher severity than the vendor rating or CVSS score assigned,” he said.
+I2P users complaining about service disruptions from a rapidly increasing number of routers suddenly swamping the network.
 
-Among the critical flaws patched this month are two Microsoft Office remote code execution bugs (CVE-2026-20952 and CVE-2026-20953) that can be triggered just by viewing a booby-trapped message in the Preview Pane.
+When one I2P user asked whether the network was under attack, another user replied, “Looks like it. My physical router freezes when the number of connections exceeds 60,000.”
 
-Our October 2025 Patch Tuesday “End of 10” roundup noted that Microsoft had removed a modem driver from all versions after it was discovered that hackers were abusing a vulnerability in it to hack into systems. Adam Barnett at Rapid7 said Microsoft today removed another couple of modem drivers from Windows for a broadly similar reason: Microsoft is aware of functional exploit code for an elevation of privilege vulnerability in a very similar modem driver, tracked as CVE-2023-31096.
+A graph shared by I2P developers showing a marked drop in successful connections on the I2P network around the time the Kimwolf botnet started trying to use the network for fallback communications.
 
-“That’s not a typo; this vulnerability was originally published via MITRE over two years ago, along with a credible public writeup by the original researcher,” Barnett said. “Today’s Windows patches remove agrsm64.sys and agrsm.sys. All three modem drivers were originally developed by the same now-defunct third party, and have been included in Windows for decades. These driver removals will pass unnoticed for most people, but you might find active modems still in a few contexts, including some industrial control systems.”
+The same day that I2P users began noticing the outages, the individuals in control of Kimwolf posted to their Discord channel that they had accidentally disrupted I2P after attempting to join 700,000 Kimwolf-infected bots as nodes on the network.
 
-According to Barnett, two questions remain: How many more legacy modem drivers are still present on a fully-patched Windows asset; and how many more elevation-to-SYSTEM vulnerabilities will emerge from them before Microsoft cuts off attackers who have been enjoying “living off the land[line] by exploiting an entire class of dusty old device drivers?”
+The Kimwolf botmaster openly discusses what they are doing with the botnet in a Discord channel with my name on it.
 
-“Although Microsoft doesn’t claim evidence of exploitation for CVE-2023-31096, the relevant 2023 write-up and the 2025 removal of the other Agere modem driver have provided two strong signals for anyone looking for Windows exploits in the meantime,” Barnett said. “In case you were wondering, there is no need to have a modem connected; the mere presence of the driver is enough to render an asset vulnerable.”
+Although Kimwolf is known as a potent weapon for launching DDoS attacks, the outages caused this week by some portion of the botnet attempting to join I2P are what’s known as a “Sybil attack,” a threat in peer-to-peer networks where a single entity can disrupt the system by creating, controlling, and operating a large number of fake, pseudonymous identities.
 
-Immersive, Ivanti and Rapid7 all called attention to CVE-2026-21265, which is a critical Security Feature Bypass vulnerability affecting Windows Secure Boot. This security feature is designed to protect against threats like rootkits and bootkits, and it relies on a set of certificates that are set to expire in June 2026 and October 2026. Once these 2011 certificates expire, Windows devices that do not have the new 2023 certificates can no longer receive Secure Boot security fixes.
+Indeed, the number of Kimwolf-infected routers that tried to join I2P this past week was many times the network’s normal size. I2P’s Wikipedia page says the network consists of roughly 55,000 computers distributed throughout the world, with each participant acting as both a router (to relay traffic) and a client.
 
-Barnett cautioned that when updating the bootloader and BIOS, it is essential to prepare fully ahead of time for the specific OS and BIOS combination you’re working with, since incorrect remediation steps can lead to an unbootable system.
+However, Lance James, founder of the New York City based cybersecurity consultancy Unit 221B and the original founder of I2P, told KrebsOnSecurity the entire I2P network now consists of between 15,000 and 20,000 devices on any given day.
 
-“Fifteen years is a very long time indeed in information security, but the clock is running out on the Microsoft root certificates which have been signing essentially everything in the Secure Boot ecosystem since the days of Stuxnet,” Barnett said. “Microsoft issued replacement certificates back in 2023, alongside CVE-2023-24932 which covered relevant Windows patches as well as subsequent steps to remediate the Secure Boot bypass exploited by the BlackLotus bootkit.”
+An I2P user posted this graph on Feb. 10, showing tens of thousands of routers — mostly from the United States — suddenly attempting to join the network.
 
-Goettl noted that Mozilla has released updates for Firefox and Firefox ESR resolving a total of 34 vulnerabilities, two of which are suspected to be exploited (CVE-2026-0891 and CVE-2026-0892). Both are resolved in Firefox 147 (MFSA2026-01) and CVE-2026-0891 is resolved in Firefox ESR 140.7 (MFSA2026-03).
+Benjamin Brundage is founder of Synthient, a startup that tracks proxy services and was the first to document Kimwolf’s unique spreading techniques. Brundage said the Kimwolf operator(s) have been trying to build a command and control network that can’t easily be taken down by security companies and network operators that are working together to combat the spread of the botnet.
 
-“Expect Google Chrome and Microsoft Edge updates this week in addition to a high severity vulnerability in Chrome WebView that was resolved in the January 6 Chrome update (CVE-2026-0628),” Goettl said.
+Brundage said the people in control of Kimwolf have been experimenting with using I2P and a similar anonymity network — Tor — as a backup command and control network, although there have been no reports of widespread disruptions in the Tor network recently.
 
-As ever, the SANS Internet Storm Center has a per-patch breakdown by severity and urgency. Windows admins should keep an eye on askwoody.com for any news about patches that don’t quite play nice with everything. If you experience any issues related installing January’s patches, please drop a line in the comments below.
+“I don’t think their goal is to take I2P down,” he said. “It’s more they’re looking for an alternative to keep the botnet stable in the face of takedown attempts.”
 
-(XXXXXXX, AÇIK - krebsonsecurity.com, 15.02.2026)
+The Kimwolf botnet created challenges for Cloudflare late last year when it began instructing millions of infected devices to use Cloudflare’s domain name system (DNS) settings, causing control domains associated with Kimwolf to repeatedly usurp Amazon, Apple, Google and Microsoft in Cloudflare’s public ranking of the most frequently requested websites.
+
+James said the I2P network is still operating at about half of its normal capacity, and that a new release is rolling out which should bring some stability improvements over the next week for users.
+
+Meanwhile, Brundage said the good news is Kimwolf’s overlords appear to have quite recently alienated some of their more competent developers and operators, leading to a rookie mistake this past week that caused the botnet’s overall numbers to drop by more than 600,000 infected systems.
+
+“It seems like they’re just testing stuff, like running experiments in production,” he said. “But the botnet’s numbers are dropping significantly now, and they don’t seem to know what they’re doing.”
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 16.02.2026)
 
 ================================================================================
 
-[9] Krebs on Security - Who Benefited from the Aisuru and Kimwolf Botnets?
+[8] Krebs on Security - Patch Tuesday, February 2026 Edition
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Thu, 08 Jan 2026 23:23:43 +0000
-Link: https://krebsonsecurity.com/2026/01/who-benefited-from-the-aisuru-and-kimwolf-botnets/
+Tarih: Tue, 10 Feb 2026 21:49:53 +0000
+Link: https://krebsonsecurity.com/2026/02/patch-tuesday-february-2026-edition/
 
-[TAM METİN - 1877 kelime]
-Our first story of 2026 revealed how a destructive new botnet called Kimwolf has infected more than two million devices by mass-compromising a vast number of unofficial Android TV streaming boxes. Today, we’ll dig through digital clues left behind by the hackers, network operators and services that appear to have benefitted from Kimwolf’s spread.
+[TAM METİN - 515 kelime]
+Microsoft today released updates to fix more than 50 security holes in its Windows operating systems and other software, including patches for a whopping six “zero-day” vulnerabilities that attackers are already exploiting in the wild.
 
-On Dec. 17, 2025, the Chinese security firm XLab published a deep dive on Kimwolf, which forces infected devices to participate in distributed denial-of-service (DDoS) attacks and to relay abusive and malicious Internet traffic for so-called “residential proxy” services.
+Zero-day #1 this month is CVE-2026-21510, a security feature bypass vulnerability in Windows Shell wherein a single click on a malicious link can quietly bypass Windows protections and run attacker-controlled content without warning or consent dialogs. CVE-2026-21510 affects all currently supported versions of Windows.
 
-The software that turns one’s device into a residential proxy is often quietly bundled with mobile apps and games. Kimwolf specifically targeted residential proxy software that is factory installed on more than a thousand different models of unsanctioned Android TV streaming devices. Very quickly, the residential proxy’s Internet address starts funneling traffic that is linked to ad fraud, account takeover attempts and mass content scraping.
+The zero-day flaw CVE-2026-21513 is a security bypass bug targeting MSHTML, the proprietary engine of the default Web browser in Windows. CVE-2026-21514 is a related security feature bypass in Microsoft Word.
 
-The XLab report explained its researchers found “definitive evidence” that the same cybercriminal actors and infrastructure were used to deploy both Kimwolf and the Aisuru botnet — an earlier version of Kimwolf that also enslaved devices for use in DDoS attacks and proxy services.
+The zero-day CVE-2026-21533 allows local attackers to elevate their user privileges to “SYSTEM” level access in Windows Remote Desktop Services. CVE-2026-21519 is a zero-day elevation of privilege flaw in the Desktop Window Manager (DWM), a key component of Windows that organizes windows on a user’s screen. Microsoft fixed a different zero-day in DWM just last month.
 
-XLab said it suspected since October that Kimwolf and Aisuru had the same author(s) and operators, based in part on shared code changes over time. But it said those suspicions were confirmed on December 8 when it witnessed both botnet strains being distributed by the same Internet address at 93.95.112[.]59.
+The sixth zero-day is CVE-2026-21525, a potentially disruptive denial-of-service vulnerability in the Windows Remote Access Connection Manager, the service responsible for maintaining VPN connections to corporate networks.
 
-Public records show the Internet address range flagged by XLab is assigned to Lehi, Utah-based Resi Rack LLC. Resi Rack’s website bills the company as a “Premium Game Server Hosting Provider.” Meanwhile, Resi Rack’s ads on the Internet moneymaking forum BlackHatWorld refer to it as a “Premium Residential Proxy Hosting and Proxy Software Solutions Company.”
+Chris Goettl at Ivanti reminds us Microsoft has issued several out-of-band security updates since January’s Patch Tuesday. On January 17, Microsoft pushed a fix that resolved a credential prompt failure when attempting remote desktop or remote application connections. On January 26, Microsoft patched a zero-day security feature bypass vulnerability (CVE-2026-21509) in Microsoft Office.
 
-Resi Rack co-founder Cassidy Hales told KrebsOnSecurity his company received a notification on December 10 about Kimwolf using their network “that detailed what was being done by one of our customers leasing our servers.”
+Kev Breen at Immersive notes that this month’s Patch Tuesday includes several fixes for remote code execution vulnerabilities affecting GitHub Copilot and multiple integrated development environments (IDEs), including VS Code, Visual Studio, and JetBrains products. The relevant CVEs are CVE-2026-21516, CVE-2026-21523, and CVE-2026-21256.
 
-“When we received this email we took care of this issue immediately,” Hales wrote in response to an email requesting comment. “This is something we are very disappointed is now associated with our name and this was not the intention of our company whatsoever.”
+Breen said the AI vulnerabilities Microsoft patched this month stem from a command injection flaw that can be triggered through prompt injection, or tricking the AI agent into doing something it shouldn’t — like executing malicious code or commands.
 
-The Resi Rack Internet address cited by XLab on December 8 came onto KrebsOnSecurity’s radar more than two weeks before that. Benjamin Brundage is founder of Synthient, a startup that tracks proxy services. In late October 2025, Brundage shared that the people selling various proxy services which benefitted from the Aisuru and Kimwolf botnets were doing so at a new Discord server called resi[.]to.
+“Developers are high-value targets for threat actors, as they often have access to sensitive data such as API keys and secrets that function as keys to critical infrastructure, including privileged AWS or Azure API keys,” Breen said. “When organizations enable developers and automation pipelines to use LLMs and agentic AI, a malicious prompt can have significant impact. This does not mean organizations should stop using AI. It does mean developers should understand the risks, teams should clearly identify which systems and workflows have access to AI agents, and least-privilege principles should be applied to limit the blast radius if developer secrets are compromised.”
 
-On November 24, 2025, a member of the resi-dot-to Discord channel shares an IP address responsible for proxying traffic over Android TV streaming boxes infected by the Kimwolf botnet.
+The SANS Internet Storm Center has a clickable breakdown of each individual fix this month from Microsoft, indexed by severity and CVSS score. Enterprise Windows admins involved in testing patches before rolling them out should keep an eye on askwoody.com, which often has the skinny on wonky updates. Please don’t neglect to back up your data if it has been a while since you’ve done that, and feel free to sound off in the comments if you experience problems installing any of these fixes.
 
-When KrebsOnSecurity joined the resi[.]to Discord channel in late October as a silent lurker, the server had fewer than 150 members, including “Shox” — the nickname used by Resi Rack’s co-founder Mr. Hales — and his business partner “Linus,” who did not respond to requests for comment.
+(XXXXXXX, AÇIK - krebsonsecurity.com, 16.02.2026)
 
-Other members of the resi[.]to Discord channel would periodically post new IP addresses that were responsible for proxying traffic over the Kimwolf botnet. As the screenshot from resi[.]to above shows, that Resi Rack Internet address flagged by XLab was used by Kimwolf to direct proxy traffic as far back as November 24, if not earlier. All told, Synthient said it tracked at least seven static Resi Rack IP addresses connected to Kimwolf proxy infrastructure between October and December 2025.
+================================================================================
 
-Neither of Resi Rack’s co-owners responded to follow-up questions. Both have been active in selling proxy services via Discord for nearly two years. According to a review of Discord messages indexed by the cyber intelligence firm Flashpoint, Shox and Linus spent much of 2024 selling static “ISP proxies” by routing various Internet address blocks at major U.S. Internet service providers.
+[9] Krebs on Security - Please Don’t Feed the Scattered Lapsus ShinyHunters
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Feb 2026 16:15:16 +0000
+Link: https://krebsonsecurity.com/2026/02/please-dont-feed-the-scattered-lapsus-shiny-hunters/
 
-In February 2025, AT&T announced that effective July 31, 2025, it would no longer originate routes for network blocks that are not owned and managed by AT&T (other major ISPs have since made similar moves). Less than a month later, Shox and Linus told customers they would soon cease offering static ISP proxies as a result of these policy changes.
+[TAM METİN - 1200 kelime]
+A prolific data ransom gang that calls itself Scattered Lapsus ShinyHunters (SLSH) has a distinctive playbook when it seeks to extort payment from victim firms: Harassing, threatening and even swatting executives and their families, all while notifying journalists and regulators about the extent of the intrusion. Some victims reportedly are paying — perhaps as much to contain the stolen data as to stop the escalating personal attacks. But a top SLSH expert warns that engaging at all beyond a “We’re not paying” response only encourages further harassment, noting that the group’s fractious and unreliable history means the only winning move is not to pay.
 
-Shox and Linux, talking about their decision to stop selling ISP proxies.
+Image: Shutterstock.com, @Mungujakisa
 
-The stated owner of the resi[.]to Discord server went by the abbreviated username “D.” That initial appears to be short for the hacker handle “Dort,” a name that was invoked frequently throughout these Discord chats.
+Unlike traditional, highly regimented Russia-based ransomware affiliate groups, SLSH is an unruly and somewhat fluid English-language extortion gang that appears uninterested in building a reputation of consistent behavior whereby victims might have some measure of confidence that the criminals will keep their word if paid.
 
-Dort’s profile on resi dot to.
+That’s according to Allison Nixon, director of research at the New York City based security consultancy Unit 221B. Nixon has been closely tracking the criminal group and individual members as they bounce between various Telegram channels used to extort and harass victims, and she said SLSH differs from traditional data ransom groups in other important ways that argue against trusting them to do anything they say they’ll do — such as destroying stolen data.
 
-This “Dort” nickname came up in KrebsOnSecurity’s recent conversations with “Forky,” a Brazilian man who acknowledged being involved in the marketing of the Aisuru botnet at its inception in late 2024. But Forky vehemently denied having anything to do with a series of massive and record-smashing DDoS attacks in the latter half of 2025 that were blamed on Aisuru, saying the botnet by that point had been taken over by rivals.
+Like SLSH, many traditional Russian ransomware groups have employed high-pressure tactics to force payment in exchange for a decryption key and/or a promise to delete stolen data, such as publishing a dark web shaming blog with samples of stolen data next to a countdown clock, or notifying journalists and board members of the victim company. But Nixon said the extortion from SLSH quickly escalates way beyond that — to threats of physical violence against executives and their families, DDoS attacks on the victim’s website, and repeated email-flooding campaigns.
 
-Forky asserts that Dort is a resident of Canada and one of at least two individuals currently in control of the Aisuru/Kimwolf botnet. The other individual Forky named as an Aisuru/Kimwolf botmaster goes by the nickname “Snow.”
+SLSH is known for breaking into companies by phishing employees over the phone, and using the purloined access to steal sensitive internal data. In a January 30 blog post, Google’s security forensics firm Mandiant said SLSH’s most recent extortion attacks stem from incidents spanning early to mid-January 2026, when SLSH members pretended to be IT staff and called employees at targeted victim organizations claiming that the company was updating MFA settings.
 
-On January 2 — just hours after our story on Kimwolf was published — the historical chat records on resi[.]to were erased without warning and replaced by a profanity-laced message for Synthient’s founder. Minutes after that, the entire server disappeared.
+“The threat actor directed the employees to victim-branded credential harvesting sites to capture their SSO credentials and MFA codes, and then registered their own device for MFA,” the blog post explained.
 
-Later that same day, several of the more active members of the now-defunct resi[.]to Discord server moved to a Telegram channel where they posted Brundage’s personal information, and generally complained about being unable to find reliable “bulletproof” hosting for their botnet.
+Victims often first learn of the breach when their brand name is uttered on whatever ephemeral new public Telegram group chat SLSH is using to threaten, extort and harass their prey. According to Nixon, the coordinated harassment on the SLSH Telegram channels is part of a well-orchestrated strategy to overwhelm the victim organization by manufacturing humiliation that pushes them over the threshold to pay.
 
-Hilariously, a user by the name “Richard Remington” briefly appeared in the group’s Telegram server to post a crude “Happy New Year” sketch that claims Dort and Snow are now in control of 3.5 million devices infected by Aisuru and/or Kimwolf. Richard Remington’s Telegram account has since been deleted, but it previously stated its owner operates a website that caters to DDoS-for-hire or “stresser” services seeking to test their firepower.
+Nixon said multiple executives at targeted organizations have been subject to “swatting” attacks, wherein SLSH communicated a phony bomb threat or hostage situation at the target’s address in the hopes of eliciting a heavily armed police response at their home or place of work.
 
-BYTECONNECT, PLAINPROXIES, AND 3XK TECH
+“A big part of what they’re doing to victims is the psychological aspect of it, like harassing executives’ kids and threatening the board of the company,” Nixon told KrebsOnSecurity. “And while these victims are getting extortion demands, they’re simultaneously getting outreach from media outlets saying, ‘Hey, do you have any comments on the bad things we’re going to write about you.”
 
-Reports from both Synthient and XLab found that Kimwolf was used to deploy programs that turned infected systems into Internet traffic relays for multiple residential proxy services. Among those was a component that installed a software development kit (SDK) called ByteConnect, which is distributed by a provider known as Plainproxies.
+In a blog post today, Unit 221B argues that no one should negotiate with SLSH because the group has demonstrated a willingness to extort victims based on promises that it has no intention to keep. Nixon points out that all of SLSH’s known members hail from The Com, shorthand for a constellation of cybercrime-focused Discord and Telegram communities which serve as a kind of distributed social network that facilitates instant collaboration.
 
-ByteConnect says it specializes in “monetizing apps ethically and free,” while Plainproxies advertises the ability to provide content scraping companies with “unlimited” proxy pools. However, Synthient said that upon connecting to ByteConnect’s SDK they instead observed a mass influx of credential-stuffing attacks targeting email servers and popular online websites.
+Nixon said Com-based extortion groups tend to instigate feuds and drama between group members, leading to lying, betrayals, credibility destroying behavior, backstabbing, and sabotaging each other.
 
-A search on LinkedIn finds the CEO of Plainproxies is Friedrich Kraft, whose resume says he is co-founder of ByteConnect Ltd. Public Internet routing records show Mr. Kraft also operates a hosting firm in Germany called 3XK Tech GmbH. Mr. Kraft did not respond to repeated requests for an interview.
+“With this type of ongoing dysfunction, often compounding by substance abuse, these threat actors often aren’t able to act with the core goal in mind of completing a successful, strategic ransom operation,” Nixon wrote. “They continually lose control with outbursts that put their strategy and operational security at risk, which severely limits their ability to build a professional, scalable, and sophisticated criminal organization network for continued successful ransoms – unlike other, more tenured and professional criminal organizations focused on ransomware alone.”
 
-In July 2025, Cloudflare reported that 3XK Tech (a.k.a. Drei-K-Tech) had become the Internet’s largest source of application-layer DDoS attacks. In November 2025, the security firm GreyNoise Intelligence found that Internet addresses on 3XK Tech were responsible for roughly three-quarters of the Internet scanning being done at the time for a newly discovered and critical vulnerability in security products made by Palo Alto Networks.
+Intrusions from established ransomware groups typically center around encryption/decryption malware that mostly stays on the affected machine. In contrast, Nixon said, ransom from a Com group is often structured the same as violent sextortion schemes against minors, wherein members of The Com will steal damaging information, threaten to release it, and “promise” to delete it if the victim complies without any guarantee or technical proof point that they will keep their word. She writes:
 
-Source: Cloudflare’s Q2 2025 DDoS threat report.
+A key component of SLSH’s efforts to convince victims to pay, Nixon said, involves manipulating the media into hyping the threat posed by this group. This approach also borrows a page from the playbook of sextortion attacks, she said, which encourages predators to keep targets continuously engaged and worrying about the consequences of non-compliance.
 
-LinkedIn has a profile for another Plainproxies employee, Julia Levi, who is listed as co-founder of ByteConnect. Ms. Levi did not respond to requests for comment. Her resume says she previously worked for two major proxy providers: Netnut Proxy Network, and Bright Data.
+“On days where SLSH had no substantial criminal ‘win’ to announce, they focused on announcing death threats and harassment to keep law enforcement, journalists, and cybercrime industry professionals focused on this group,” she said.
 
-Synthient likewise said Plainproxies ignored their outreach, noting that the Byteconnect SDK continues to remain active on devices compromised by Kimwolf.
+An excerpt from a sextortion tutorial from a Com-based Telegram channel. Image: Unit 221B.
 
-A post from the LinkedIn page of Plainproxies Chief Revenue Officer Julia Levi, explaining how the residential proxy business works.
+Nixon knows a thing or two about being threatened by SLSH: For the past several months, the group’s Telegram channels have been replete with threats of physical violence against her, against Yours Truly, and against other security researchers. These threats, she said, are just another way the group seeks to generate media attention and achieve a veneer of credibility, but they are useful as indicators of compromise because SLSH members tend to name drop and malign security researchers even in their communications with victims.
 
-Synthient’s January 2 report said another proxy provider heavily involved in the sale of Kimwolf proxies was Maskify, which currently advertises on multiple cybercrime forums that it has more than six million residential Internet addresses for rent.
+“Watch for the following behaviors in their communications to you or their public statements,” Unit 221B’s advisory reads. “Repeated abusive mentions of Allison Nixon (or “A.N”), Unit 221B, or cybersecurity journalists—especially Brian Krebs—or any other cybersecurity employee, or cybersecurity company. Any threats to kill, or commit terrorism, or violence against internal employees, cybersecurity employees, investigators, and journalists.”
 
-Maskify prices its service at a rate of 30 cents per gigabyte of data relayed through their proxies. According to Synthient, that price range is insanely low and is far cheaper than any other proxy provider in business today.
+Unit 221B says that while the pressure campaign during an extortion attempt may be traumatizing to employees, executives, and their family members, entering into drawn-out negotiations with SLSH incentivizes the group to increase the level of harm and risk, which could include the physical safety of employees and their families.
 
-“Synthient’s Research Team received screenshots from other proxy providers showing key Kimwolf actors attempting to offload proxy bandwidth in exchange for upfront cash,” the Synthient report noted. “This approach likely helped fuel early development, with associated members spending earnings on infrastructure and outsourced development tasks. Please note that resellers know precisely what they are selling; proxies at these prices are not ethically sourced.”
+“The breached data will never go back to the way it was, but we can assure you that the harassment will end,” Nixon said. “So, your decision to pay should be a separate issue from the harassment. We believe that when you separate these issues, you will objectively see that the best course of action to protect your interests, in both the short and long term, is to refuse payment.”
 
-Maskify did not respond to requests for comment.
-
-The Maskify website. Image: Synthient.
-
-Hours after our first Kimwolf story was published last week, the resi[.]to Discord server vanished, Synthient’s website was hit with a DDoS attack, and the Kimwolf botmasters took to doxing Brundage via their botnet.
-
-The harassing messages appeared as text records uploaded to the Ethereum Name Service (ENS), a distributed system for supporting smart contracts deployed on the Ethereum blockchain. As documented by XLab, in mid-December the Kimwolf operators upgraded their infrastructure and began using ENS to better withstand the near-constant takedown efforts targeting the botnet’s control servers.
-
-An ENS record used by the Kimwolf operators taunts security firms trying to take down the botnet’s control servers. Image: XLab.
-
-By telling infected systems to seek out the Kimwolf control servers via ENS, even if the servers that the botmasters use to control the botnet are taken down the attacker only needs to update the ENS text record to reflect the new Internet address of the control server, and the infected devices will immediately know where to look for further instructions.
-
-“This channel itself relies on the decentralized nature of blockchain, unregulated by Ethereum or other blockchain operators, and cannot be blocked,” XLab wrote.
-
-The text records included in Kimwolf’s ENS instructions can also feature short messages, such as those that carried Brundage’s personal information. Other ENS text records associated with Kimwolf offered some sage advice: “If flagged, we encourage the TV box to be destroyed.”
-
-An ENS record tied to the Kimwolf botnet advises, “If flagged, we encourage the TV box to be destroyed.”
-
-Both Synthient and XLabs say Kimwolf targets a vast number of Android TV streaming box models, all of which have zero security protections, and many of which ship with proxy malware built in. Generally speaking, if you can send a data packet to one of these devices you can also seize administrative control over it.
-
-If you own a TV box that matches one of these model names and/or numbers, please just rip it out of your network. If you encounter one of these devices on the network of a family member or friend, send them a link to this story (or to our January 2 story on Kimwolf) and explain that it’s not worth the potential hassle and harm created by keeping them plugged in.
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 15.02.2026)
+(XXXXXXX, AÇIK - krebsonsecurity.com, 16.02.2026)
 
 ================================================================================
 
@@ -589,7 +543,7 @@ According to the breach disclosure Nelnet Servicing informed Edfinancial and OSL
 
 Remediation also included two years of free credit monitoring, credit reports and up to $1 million in identity theft insurance.
 
-(XXXXXXX, AÇIK - threatpost.com, 15.02.2026)
+(XXXXXXX, AÇIK - threatpost.com, 16.02.2026)
 
 ================================================================================
 
@@ -645,7 +599,7 @@ The group has, in the past, expanded well beyond Australasia. According to a Dep
 
 Despite the DoJ indictment, analysts “have not observed a distinct disruption of operational tempo” from TA423, and they “collectively expect TA423 / Red Ladon to continue pursuing its intelligence-gathering and espionage mission.”
 
-(XXXXXXX, AÇIK - threatpost.com, 15.02.2026)
+(XXXXXXX, AÇIK - threatpost.com, 16.02.2026)
 
 ================================================================================
 
@@ -693,115 +647,97 @@ To mitigate 0ktapus-style campaigns, the researchers recommended good hygiene ar
 
 “Whatever MFA someone uses,” Grimes advised, “the user should be taught about the common types of attacks that are committed against their form of MFA, how to recognize those attacks, and how to respond. We do the same when we tell users to pick passwords but don’t when we tell them to use supposedly more secure MFA.”
 
-(XXXXXXX, AÇIK - threatpost.com, 15.02.2026)
+(XXXXXXX, AÇIK - threatpost.com, 16.02.2026)
 
 ================================================================================
 
-[13] Security Affairs - Fintech firm Figure disclosed data breach after employee phishing attack
+[13] Security Affairs - Google fixes first actively exploited Chrome zero-day of 2026
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 14 Feb 2026 17:10:33 +0000
-Link: https://securityaffairs.com/187988/data-breach/fintech-firm-figure-disclosed-data-breach-after-employee-phishing-attack.html
+Tarih: Mon, 16 Feb 2026 10:10:46 +0000
+Link: https://securityaffairs.com/188029/security/google-fixes-first-actively-exploited-chrome-zero-day-of-2026.html
 
-[TAM METİN - 299 kelime]
-Blockchain-based lending firm Figure confirmed a data breach after an employee fell victim to a social engineering attack. According to a company spokesperson, the incident allowed hackers to access and steal a limited number of files. The company disclosed the breach following inquiries and is assessing the impact.
+[TAM METİN - 243 kelime]
+Google has released urgent security updates to address a high-severity zero-day vulnerability, tracked as CVE-2026-2441, in Chrome that is already being exploited in real-world attacks. The flaw is a use-after-free bug in the browser’s CSS component.
 
-Figure Technology Solutions has allegedly been breached by ShinyHunters.Figure provides blockchain based HELOCs(Home Equity Line Of Credit)Allegedly pii of all applicants has been stolen @Figure pic.twitter.com/nNGOK2GRLR
+This is the first actively exploited Chrome zero-day fixed in 2026, after eight similar flaws were patched in 2025.
 
-Figure Technology Solutions, Inc. is a US financial technology company. Established in 2018, it develops and operates blockchain-based platforms used in lending, capital markets, and asset management.
+“Use after free in CSS in Google Chrome prior to 145.0.7632.75 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page.” reads the description of the vulnerability provided by NIST’s National Vulnerability Database (NVD).
 
-The company offers consumer and institutional lending products such as HELOCs, cash-out refinancing, DSCR loans, crypto-backed loans, and operates the Figure Connect credit marketplace.
+An attacker could exploit the flaw to compromise affected systems. The issue was discovered and responsibly reported by security researcher Shaheen Fazim on February 11, 2026.
 
-On Friday, Figure spokesperson Alethea Jadick told TechCrunch that the security breach occurred after an employee was tricked in a social engineering attack, allowing hackers to steal “a limited number of files.” She said the company is communicating “with partners and those impacted” and offering free credit monitoring “to all individuals who receive a notice.”
+“CVE-2026-2441: Use after free in CSS. Reported by Shaheen Fazim on 2026-02-11.” reads the Google’s advisory. “Google is aware that an exploit for CVE-2026-2441 exists in the wild.”
 
-Figure has started notifying affected individuals and is offering free credit monitoring to those who receive a breach notice. The company has not shared the number of impacted users or when the breach was discovered.
+Google has confirmed that an exploit for CVE-2026-2441 exists in the wild, but has not shared details about how it is being used or which threat actor is behind the exploitation of the flaw.
 
-The cybercrime group ShinyHunters claimed responsibility for the breach on its dark web site, saying Figure refused to pay a ransom and releasing about 2.5GB of stolen data.
-
-TechCrunch reviewed samples showing names, addresses, birth dates, and phone numbers, raising risks of identity fraud and phishing.
-
-“A member of ShinyHunters told TechCrunch that Figure was among the victims of a hacking campaign that targeted customers who rely on the single sign-on provider Okta.” reported TechCruch.
+Users of Chromium-based browsers such as Microsoft Edge, Brave, Opera, and Vivaldi should also install updates once available. Chrome’s Stable channel has been updated to versions 145.0.7632.75/76 for Windows and Mac, and 144.0.7559.75 for Linux, with the rollout happening over the coming days and weeks.
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(XXXXXXX, AÇIK - securityaffairs.com, 15.02.2026)
+(SecurityAffairs – hacking, Chrome zero-day CVE-2026-2441)
+
+(XXXXXXX, AÇIK - securityaffairs.com, 16.02.2026)
 
 ================================================================================
 
-[14] Security Affairs - U.S. CISA adds a flaw in BeyondTrust RS and PRA to its Known Exploited Vulnerabilities catalog
+[14] Security Affairs - Japanese sex toys maker Tenga discloses data breach
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 14 Feb 2026 15:54:34 +0000
-Link: https://securityaffairs.com/187982/breaking-news/u-s-cisa-adds-a-flaw-in-beyondtrust-rs-and-pra-to-its-known-exploited-vulnerabilities-catalog.html
+Tarih: Mon, 16 Feb 2026 08:31:24 +0000
+Link: https://securityaffairs.com/188022/data-breach/japanese-sex-toys-maker-tenga-discloses-data-breach.html
 
-[TAM METİN - 635 kelime]
-The U.S. Cybersecurity and Infrastructure Security Agency (CISA) added an BeyondTrust RS and PRA vulnerability, tracked as CVE-2026-1731 (CVSS score of 9.9), to its Known Exploited Vulnerabilities (KEV) catalog.
+[TAM METİN - 268 kelime]
+TENGA Co., Ltd. is a Tokyo-based Japanese sexual wellness and lifestyle company known for its innovative adult products. It employs roughly 125–200 people worldwide across its Japan headquarters and international offices.
 
-This week BeyondTrust released security updates to address the critical flaw in its Remote Support and older Privileged Remote Access products. The bug could allow an unauthenticated attacker to send specially crafted requests and run operating system commands remotely, without logging in. The issue, disclosed on February 6, 2026, could lead to full remote code execution if exploited, making the updates essential to prevent abuse.
+Tenga operates in personal care product manufacturing and sells products in dozens of countries, with annual revenue estimates in the tens of millions of dollars.
 
-“BeyondTrust Remote Support (RS) and certain older versions of Privileged Remote Access (PRA) contain a critical pre-authentication remote code execution vulnerability.” reads the advisory. “By sending specially crafted requests, an unauthenticated remote attacker may be able to execute operating system commands in the context of the site user.”
+The Japanese sex toy maker disclosed a data breach after a hacker accessed an employee’s professional email account, TechCruch reports. The unauthorized access exposed the contents of the inbox, potentially including customer names, email addresses, past correspondence, order details, and customer service inquiries. The company started notifying impacted customers on Friday, February 13, 2026.
 
-Exploiting the flaw would let a remote attacker run system commands without authentication or user interaction, potentially leading to full system compromise, data theft, and service disruption.
+With over 162 million products shipped worldwide, exposed emails may contain intimate order details and customer service inquiries that many would prefer to keep private.
 
-”Successful exploitation could allow an unauthenticated remote attacker to execute operating system commands in the context of the site user.” continues the advisory. “Successful exploitation requires no authentication or user interaction and may lead to system compromise, including unauthorized access, data exfiltration, and service disruption.”
+The security breach exposes impacted customers to several risks. This can lead to targeted phishing, social engineering, and scams exploiting sensitive purchase information. Even without direct financial data, the exposure raises privacy concerns, reputational harm, and the potential resale of email addresses on underground forums.
 
-BeyondTrust released patches for CVE-2026-1731 on February 6 after Hacktron researchers warned that about thousands of instances were exposed online.
+The company advises impacted customers to change passwords and monitor for suspicious emails, particularly those that appear to come from the compromised employee, to reduce the risk of phishing or social engineering attacks.
 
-Hacktron AI team reported that roughly 11,000 BeyondTrust Remote Support instances are exposed online across cloud and on-prem environments. Around 8,500 of these are on-prem systems and could remain vulnerable if not patched. Large organizations, including enterprises in the healthcare, financial services, government, and hospitality sectors, primarily use affected deployments.
-
-Threat actors rapidly began exploiting a newly patched BeyondTrust vulnerability, tracked as CVE-2026-1731 (CVSS score of 9.9), soon after a proof-of-concept exploit became public.
-
-After a PoC exploit went public on February 10, GreyNoise detected attack attempts within 24 hours, with one IP responsible for most reconnaissance activity.
-
-“On February 10, a proof-of-concept exploit for CVE-2026-1731, a critical pre-authentication remote code execution vulnerability in BeyondTrust Remote Support and Privileged Remote Access, was posted to GitHub. By February 11, GreyNoise’s Global Observation Grid was recording reconnaissance probing for vulnerable BeyondTrust instances.” reported GreyNoise.
-
-GreyNoise observed rapid reconnaissance for CVE-2026-1731, led by a single IP responsible for 86% of scans. The activity comes from a long-running scanning operation using a commercial VPN and Linux-based tooling. Threat actors mainly probe non-standard ports, suggesting they know enterprises move BeyondTrust services off 443. JA4+ fingerprints show shared exploit tools and VPN tunneling.
-
-The same IPs also target SonicWall, MOVEit, Log4j, Sophos, SSH, and IoT devices, showing multi-exploit behavior. BeyondTrust tools are high-value targets, and past zero-day chains remain active even as new variants quickly emerge.
-
-“The IPs performing reconnaissance for CVE-2026-1731 aren’t single-purpose. While their BeyondTrust activity is a check (enumeration), their GreyNoise profiles show they’re simultaneously conducting active exploitation attempts against other products: SonicWall, MOVEit Transfer, Log4j, Sophos firewalls, SSH brute-forcing, and IoT default-credential testing.” concludes the report. “Some IPs are even using out-of-band callback domains (OAST), a more sophisticated technique to confirm vulnerability before delivering payloads.”
-
-According to Binding Operational Directive (BOD) 22-01: Reducing the Significant Risk of Known Exploited Vulnerabilities, FCEB agencies have to address the identified vulnerabilities by the due date to protect their networks against attacks exploiting the flaws in the catalog.
-
-Experts also recommend that private organizations review the Catalog and address the vulnerabilities in their infrastructure.
-
-CISA orders federal agencies to fix the vulnerability by February 16, 2026.
-
-US CISA also published an alert related to this flaw titled “Fortinet Releases Guidance to Address Ongoing Exploitation of Authentication Bypass Vulnerability CVE-2026-24858“
+In response to the security incident, the company reset the compromised employee’s credentials and enabled multi-factor authentication across its systems to block unauthorized access. The company did not disclose technical details about the attack. It is unclear whether the attackers attempted to blackmail the Japanese firm.
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(SecurityAffairs – hacking, US CISA Known Exploited Vulnerabilities catalog)
-
-(XXXXXXX, AÇIK - securityaffairs.com, 15.02.2026)
+(XXXXXXX, AÇIK - securityaffairs.com, 16.02.2026)
 
 ================================================================================
 
-[15] Security Affairs - Suspected Russian hackers deploy CANFAIL malware against Ukraine
+[15] Security Affairs - Malicious npm and PyPI packages linked to Lazarus APT fake recruiter campaign
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 14 Feb 2026 11:05:33 +0000
-Link: https://securityaffairs.com/187976/hacking/suspected-russian-hackers-deploy-canfail-malware-against-ukraine.html
+Tarih: Sun, 15 Feb 2026 18:13:28 +0000
+Link: https://securityaffairs.com/188009/apt/malicious-npm-and-pypi-packages-llinked-to-lazarus-apt-fake-recruiter-campaign.html
 
-[TAM METİN - 484 kelime]
-Google Threat Intelligence Group identified a previously undocumented threat actor behind attacks on Ukrainian organizations using CANFAIL malware. The group is possibly linked to Russian intelligence services and has targeted defense, military, government, and energy entities at both regional and national levels in Ukraine.
+[TAM METİN - 585 kelime]
+ReversingLabs researcher uncovered new malicious packages on npm and PyPI connected to a fake job recruitment campaign attributed to the North Korea-linked Lazarus Group. The campaign uses deceptive hiring themes to trick developers into downloading infected packages, continuing the group’s efforts to target the software supply chain.
 
-GTIG researchers observed the Russian intelligence conducting phishing campaigns to deliver CANFAIL malware. The actor is also interested in aerospace, drone-linked manufacturers, nuclear research, and humanitarian groups tied to Ukraine. Google reported that the APT group has also probed Romanian and Moldovan entities.
+“The ReversingLabs research team has identified a new branch of a fake recruiter campaign conducted by the North Korean hacking team Lazarus Group.” reads the report published by ReversingLabs. “The campaign, which the team named graphalgo, based on the first package included in this campaign in the npm repository, has been active since the beginning of May 2025.”
 
-“GTIG has recently discovered a threat group suspected to be linked to Russian intelligence services which conducts phishing operations to deliver CANFAIL malware primarily against Ukrainian organizations.” reads the report published by Google. “Despite being less sophisticated and resourced than other Russian threat groups, this actor recently began to overcome some technical limitations using LLMs. Through prompting, they conduct reconnaissance, create lures for social engineering, and seek answers to basic technical questions for post-compromise activity and C2 infrastructure setup.  “
+The campaign, tracked as ‘graphalgo’, has been active since May 2025 and targets JavaScript and Python developers with fake cryptocurrency recruiter tasks. Attackers approach victims on LinkedIn, Facebook, and Reddit, posing as a blockchain company. Malicious code is hidden through multiple public platforms, including GitHub, npm, and PyPI. The researchers noticed that one npm package, bigmathutils, gained over 10,000 downloads before attackers pushed a malicious update.
 
-Though less advanced than other Russian groups, it uses LLMs to craft lures, perform reconnaissance, and solve technical tasks. The threat actors wrote the phishing emails with LLM.
+The Graphalgo campaign is a modular, multi-stage operation designed to stay active even if parts are exposed:
 
-Messages include Google Drive links hosting a RAR archive with CANFAIL malware, often disguised with a double extension like .pdf.js. CANFAIL is obfuscated JavaScript that runs a PowerShell script to download and execute a second-stage payload, typically a memory-only dropper, while showing a fake error popup to the victim.
+Phase 1 – Fake company:Attackers created a fake blockchain firm, Veltrix Capital, with websites and GitHub organizations that look legitimate but lack real leadership details. When one setup risks exposure, they spin up a new company, domains, and AI-generated content to rebuild trust.
 
-“Phishing emails sent by the actor contain a lure that based on analysis appears to be LLM-generated, uses formal language and a specific official template, and Google Drive links which host a RAR archive containing CANFAIL malware, often disguised with a .pdf.js double extension.” continues the report. “CANFAIL is obfuscated JavaScript which executes a PowerShell script to download and execute an additional stage, most commonly a memory-only PowerShell dropper. It additionally displays a fake “error” popup to the victim.”
+Phase 2 – Interview tasks:The fake company publishes GitHub “job interview” repositories in Python and JavaScript. These projects look harmless, but they secretly depend on malicious npm or PyPI packages. When candidates run the tasks, the malicious dependency executes on their systems.
 
-SentinelLABS and the Digital Security Lab of Ukraine documented related activity in the October 2025 “PhantomCaptcha” campaign, which briefly used ClickFix tactics.
+Phase 3 – Recruiting:Victims are lured through Reddit, Facebook groups, LinkedIn, and direct recruiter messages. Some recruiters appear real, adding credibility, but disengage when questioned about the company.
 
-Russian espionage groups continue targeting Ukrainian and Western defense-related organizations using military- and drone-themed lures. Below are some groups observed by Google Threat Intelligence Group:
+Phase 4 – Malicious dependencies:The backend relies on malicious open-source packages hosted on npm and PyPI. Early “graph-” packages impersonate popular libraries, while later “big-” packages build user trust first, then deliver malware in delayed updates.
 
-“Russia’s use of cyber operations in support of military objectives in the war against Ukraine and beyond is multifaceted. On a tactical level, targeting has broadened to include individuals in addition to organizations in order to support frontline operations and beyond, likely due at least in part to the reliance on public and off-the-shelf technology rather than custom products.” concludes the report. “Russian threat actors have targeted secure messaging applications used by the Ukrainian military to communicate and orchestrate military operations, including via attempts to exfiltrate locally stored databases of these apps, such as from mobile devices captured during Russia’s ongoing invasion of Ukraine. “
+Phase 5 – Final payload:Infected systems download a RAT that supports file access, command execution, and process control. The malware uses token-protected C2 communication and checks for crypto wallets like MetaMask, pointing to financial theft motives.
+
+North Korean threat actors, widely linked to the Lazarus Group, have a long track record of abusing npm and PyPI. In 2023, researchers exposed the VMConnect campaign, where fake PyPI packages tied to sham GitHub repos delivered malware. A year later, the operation evolved into fake recruiter coding tests: victims ran malicious packages disguised as interview tasks, triggering second-stage downloads. Reports from other cybersecurity firms, including Phylum, Unit 42, Veracode, and Socket, documented similar npm campaigns.
+
+Attribution to Lazarus is based on repeated patterns: fake job interviews, crypto-focused lures, multistage encrypted malware, delayed malicious updates, token-protected C2, and GMT+9 timestamps. The campaign’s modular design allows attackers to swap fake “frontends” while reusing backend infrastructure. With new package waves and payload variants still emerging, the operation appears ongoing and highly sophisticated.
+
+“Evidence suggests that this is a highly sophisticated campaign. Its modularity, long-lived nature, patience in building trust across different campaign elements, and the complexity of the multilayered and encrypted malware point to the work of a state-sponsored threat actor.” concludes the report. “Fake interviews as the initial contact vector, as well as a cryptocurrency-focused story and malware, together with other techniques mentioned in this blog post, point to North Korea’s Lazarus Group. “
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(XXXXXXX, AÇIK - securityaffairs.com, 15.02.2026)
+(XXXXXXX, AÇIK - securityaffairs.com, 16.02.2026)
 
 ================================================================================
 
@@ -812,7 +748,7 @@ Link: https://www.fortra.com/blog/urgent-warnings-uk-and-us-cyber-agencies-after
 
 ⚠️  Tam metin çekilemedi
 
-(XXXXXXX, AÇIK - fortra.com, 15.02.2026)
+(XXXXXXX, AÇIK - fortra.com, 16.02.2026)
 
 ================================================================================
 
@@ -848,7 +784,7 @@ Now, however, it is the alleged hacker who will be hoping he can escape receivin
 
 If anything, this case serves as a timely reminder to cybercriminals that they should not assume that they have evaded justice just because years have passed since their offence. Digital forensics techniques continue to improve, and law enforcement agencies are increasingly willing to pursue cold cases when new leads emerge.
 
-(XXXXXXX, AÇIK - bitdefender.com, 15.02.2026)
+(XXXXXXX, AÇIK - bitdefender.com, 16.02.2026)
 
 ================================================================================
 
@@ -956,11 +892,73 @@ Graham Cluley is an award-winning keynote speaker who has given presentations ar
 
 Follow him on LinkedIn, Bluesky and Mastodon, or drop him an email.
 
-(XXXXXXX, AÇIK - grahamcluley.com, 15.02.2026)
+(XXXXXXX, AÇIK - grahamcluley.com, 16.02.2026)
 
 ================================================================================
 
-[19] SANS ISC - AI-Powered Knowledge Graph Generator &#x26; APTs, (Thu, Feb 12th)
+[19] SANS ISC - 2026 64-Bits Malware Trend, (Mon, Feb 16th)
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 16 Feb 2026 07:46:36 GMT
+Link: https://isc.sans.edu/diary/rss/32718
+
+[TAM METİN - 245 kelime]
+2026 64-Bits Malware Trend
+
+In 2022 (time flies!), I wrote a diary about the 32-bits VS. 64-bits malware landscape[1]. It demonstrated that, despite the growing number of 64-bits computers, the "old-architecture" remained the standard. In the SANS malware reversing training (FOR610[2]), we quickly cover the main differences between the two architectures. One of the conclusions is that 32-bits code is still popular because it acts like a comme denominator and allows threat actors to target more Windows computers. Yes, Microsoft Windows can smoothly execute 32-bits code on 64-bits computers. It is still the case in 2026? Did the situation evolved?
+
+Last week, I make the exact same exercise and generated some statistics. I download the malware archive from Malware Bazaar[3] and re-executed my YARA rule.
+
+2.167 ZIP archives (one per day)
+
+1.120.034.288.112 bytes  (1.1TB)
+
+Time line covered: from 2020/02/24 - 2026/02/05
+
+346.985 samples analyzed (only PE files)
+
+312.307 32-bits samples
+
+34.677 64-bits samples
+
+11% of 64-bits samples
+
+First, an overview of the global malware trend over the complete time period:
+
+Zoom on the last year:
+
+Now the interesting graph: the 64-bits sample trend over the complete period:
+
+Zoom on the last year:
+
+We can clearly see that, compared to 2022, there is now a trend in 64-bits code! Have a look at the last 30 days:
+
+We are getting close to a 50-50 repartition!
+???????
+[1] https://isc.sans.edu/diary/32+or+64+bits+Malware/28968
+[2] https://www.sans.org/cyber-security-courses/reverse-engineering-malware-malware-analysis-tools-techniques
+[3] https://bazaar.abuse.ch
+
+Xavier Mertens (@xme)
+Xameco
+Senior ISC Handler - Freelance Cyber Security Consultant
+PGP Key
+
+(XXXXXXX, AÇIK - isc.sans.edu, 16.02.2026)
+
+================================================================================
+
+[20] SANS ISC - ISC Stormcast For Monday, February 16th, 2026 https://isc.sans.edu/podcastdetail/9810, (Mon, Feb 16th)
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 16 Feb 2026 02:00:02 GMT
+Link: https://isc.sans.edu/diary/rss/32716
+
+⚠️  Tam metin çekilemedi
+
+(XXXXXXX, AÇIK - isc.sans.edu, 16.02.2026)
+
+================================================================================
+
+[21] SANS ISC - &#x26;#xa;AI-Powered Knowledge Graph Generator &#x26; APTs, (Thu, Feb 12th)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 13 Feb 2026 03:04:48 GMT
 Link: https://isc.sans.edu/diary/rss/32712
@@ -1028,29 +1026,7 @@ Russia’s APT28 Targeting Energy Research, Defense Collaboration Entities
 [1] McDermott, R. (2025) AI Knowledge Graph. Available at: https://github.com/robert-mcdermott/ai-knowledge-graph (Accessed: 18 January 2026 - 11 February 2026).
 [2] Reduan, M.H., (2025) Semantic Triples: Definition, Function, Components, Applications, Benefits, Drawbacks and Best Practices for SEO. Available at: https://www.linkedin.com/pulse/semantic-triples-definition-function-components-benefits-reduan-nqmec/ (Accessed: 11 February 2026).
 
-(XXXXXXX, AÇIK - isc.sans.edu, 15.02.2026)
-
-================================================================================
-
-[20] SANS ISC - ISC Stormcast For Friday, February 13th, 2026 https://isc.sans.edu/podcastdetail/9808, (Fri, Feb 13th)
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Feb 2026 02:00:02 GMT
-Link: https://isc.sans.edu/diary/rss/32714
-
-⚠️  Tam metin çekilemedi
-
-(XXXXXXX, AÇIK - isc.sans.edu, 15.02.2026)
-
-================================================================================
-
-[21] SANS ISC - ISC Stormcast For Thursday, February 12th, 2026 https://isc.sans.edu/podcastdetail/9806, (Thu, Feb 12th)
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Thu, 12 Feb 2026 02:00:02 GMT
-Link: https://isc.sans.edu/diary/rss/32710
-
-⚠️  Tam metin çekilemedi
-
-(XXXXXXX, AÇIK - isc.sans.edu, 15.02.2026)
+(XXXXXXX, AÇIK - isc.sans.edu, 16.02.2026)
 
 ================================================================================
 
@@ -1140,7 +1116,7 @@ Intelligence doesn't eliminate uncertainty—it makes uncertainty manageable. Ge
 
 The 2026 State of Security report was produced by Recorded Future's Insikt Group, comprising analysts and security researchers with deep government, law enforcement, military, and intelligence agency experience.
 
-(XXXXXXX, AÇIK - recordedfuture.com, 15.02.2026)
+(XXXXXXX, AÇIK - recordedfuture.com, 16.02.2026)
 
 ================================================================================
 
@@ -1252,7 +1228,7 @@ Download the full 2026 State of Security report
 
 The 2026 State of Security report was produced by Recorded Future's Insikt Group, which comprises analysts and security researchers with deep experience in government, law enforcement, the military, and intelligence agencies.
 
-(XXXXXXX, AÇIK - recordedfuture.com, 15.02.2026)
+(XXXXXXX, AÇIK - recordedfuture.com, 16.02.2026)
 
 ================================================================================
 
@@ -1306,7 +1282,7 @@ Discover how to eliminate workflow bottlenecks, achieve 24/7 threat coverage, an
 
 Download: Reduce 27-step Threat Hunts to 5 Simple Steps
 
-(XXXXXXX, AÇIK - recordedfuture.com, 15.02.2026)
+(XXXXXXX, AÇIK - recordedfuture.com, 16.02.2026)
 
 ================================================================================
 
@@ -1368,7 +1344,7 @@ Sean Cairncross' cybersecurity agenda: less regulation, more cooperation
 
 US wants to push its view of AI cybersecurity standards to the rest of the world
 
-(XXXXXXX, AÇIK - cyberscoop.com, 15.02.2026)
+(XXXXXXX, AÇIK - cyberscoop.com, 16.02.2026)
 
 ================================================================================
 
@@ -1436,7 +1412,7 @@ Sean Cairncross' cybersecurity agenda: less regulation, more cooperation
 
 US wants to push its view of AI cybersecurity standards to the rest of the world
 
-(XXXXXXX, AÇIK - cyberscoop.com, 15.02.2026)
+(XXXXXXX, AÇIK - cyberscoop.com, 16.02.2026)
 
 ================================================================================
 
@@ -1506,11 +1482,109 @@ Sean Cairncross' cybersecurity agenda: less regulation, more cooperation
 
 US wants to push its view of AI cybersecurity standards to the rest of the world
 
-(XXXXXXX, AÇIK - cyberscoop.com, 15.02.2026)
+(XXXXXXX, AÇIK - cyberscoop.com, 16.02.2026)
 
 ================================================================================
 
-[28] The Register - Top Dutch telco Odido admits 6.2M customers caught in contact system caper
+[28] The Register - Infosec exec sold eight zero-day exploit kits to Russia, says DoJ
+────────────────────────────────────────────────────────────────────────────────
+Tarih: 2026-02-15T23:22:14.00Z
+Link: https://go.theregister.com/feed/www.theregister.com/2026/02/15/exl3harris_exec_sold_8_zeroday/
+
+[TAM METİN - 1009 kelime]
+Infosec exec sold eight zero-day exploit kits to Russia, says DoJ
+
+PLUS: Fake ransomware group exposed; EC blesses Google's big Wiz deal; Alleged sewage hacker cuffed; And more
+
+Infosec in Brief The former General Manager of defense contractor L3Harris’s cyber subsidiary Trenchant sold eight zero-day exploit kits to Russia, according to a court filing last week.
+
+We first wrote about this case in October 2025, when former Trenchant boss Peter Williams pleaded guilty to two counts of theft of trade secrets – but court records didn’t detail exactly what he stole.
+
+That changed last week when the US Department of Justice published a sentencing memorandum [PDF] that frames Williams’ conduct as a betrayal of his employer and the US government, and the cause of significant harm to US national security.
+
+Williams "made it possible for the Russian Broker to arm its clients with powerful cyber exploits that could be used against any manner of victim, civilian or military around the world," the DoJ said. The broker Williams worked with regularly provided exploits to the Russian government, the DoJ alleged.
+
+Along with the damage he caused to US national security, the DoJ said that Williams' actions also led to the loss of more than $35 million for L3Harris and Trenchant, contributing to the government's call to sentence him to the maximum term allowed under federal guidelines.
+
+The sentencing memo notes that Williams could be incarcerated for up to 108 months (9 years), followed by three years of supervised release. An Australian citizen, Williams has agreed to be deported to his home country after his prison term.
+
+In addition to his time behind bars, the DoJ has also asked the judge to force Williams to pay $35 million in restitution and additional forfeitures of items linked to his crimes.
+
+Ransomware gang turns out to be a couple of kids in a trench coat
+
+A recently emerged ransomware group calling itself 0APT is just a bunch of liars who haven't hacked anyone, cybersecurity researchers have determined.
+
+According to GuidePoint Security, 0APT's claim of having successfully attacked over 200 entities in the course of a single week in late January was a total fabrication, with most claimed victims having ridiculous names like "Metropolis City Municipal." As reports emerged that people thought the group was lying, its data leak site went offline before returning to life a day later with a list of around 15 high-profile multinational victims listed.
+
+GuidePoint says companies on the shortlist also appear to have escaped infection by 0APT – the alleged victims found no evidence of intrusion after the group published their names.
+
+GuidePoint believes there could be two reasons for the scam: Either to fool other cybercriminals into paying it for ransomware-as-a-service tools that don't exist, or to trick organizations into believing they have suffered an attack so they pay ransoms out of fear.
+
+In other words, if 0APT claims to have hit your organization, it probably hasn't – but review your logs just in case.
+
+Payment deadlines extended after actual ransomware attack hits BridgePay
+
+People around the United States are getting a little more time to pay their local government bills following a ransomware attack that's taken payment service provider BridgePay offline for more than a week.
+
+BridgePay provides payment services for local governments and utilities around the country – or it did until knocked offline on February 6 due to a ransomware attack. BridgePay remains offline at the time of publication and warns restoring services could take the better part of another week.
+
+The company said attackers did not compromise payment information, but it still doesn't appear to understand the full extent of the incident. BridgePay said it will provide updates as it learns more.
+
+At least one city, Frisco, Texas, has suspended shutoffs and late fees until the situation is resolved, but not everyone is so fortunate – Palm Bay, Florida's advice on the outage suggests residents ought to hoof it to a city building to pay what's owed.
+
+Telcos aren't saying how they fought back against China's Salt Typhoon attacks
+
+Open-source AI is a global security nightmare waiting to happen, say researchers
+
+Pwn2Own Automotive 2026 uncovers 76 zero-days, pays out more than $1M
+
+Mandiant releases quick credential cracker, to hasten the death of a bad protocol
+
+Polish police nab critical infrastructure hacker
+
+Polish cyber cops have arrested a suspect believed to have attacked a water and sewage infrastructure operator.
+
+The Central Bureau for Combatting Cybercrime's (CBZC’s) statement on the matter doesn’t say when the attack took place, but does reveal authorities apprehended the suspect in early February.
+
+The CBZC said that the suspect gained unauthorized access to the critical infrastructure provider, logged into an administrator account and stole data. The data later appeared on the dark web.
+
+Polish police claim that their actions in the western Polish city of Poznań enabled them to locate and delete the data and to make the arrest.
+
+EU clears Google's Wiz acquisition
+
+Google's acquisition of cloud security firm Wiz is one step closer to completion, with the EU last week clearing the deal.
+
+The EU said that Google's acquisition of Wiz wouldn't raise competition concerns in Europe, as the likes of AWS and Azure offer their own strong cloud security packages.
+
+"There are several credible competitors that customers could switch to if Google were to bundle Wiz's multi-cloud security platform with its existing products, or in case Wiz's platform no longer worked with clouds other than Google's," the European Commission said. The deal was also cleared by the US Department of Justice in November 2025.
+
+Google previously tried to acquire Wiz in 2024 for $23 billion, but the cloudy security outfit rejected the offer. Google's second offer of $32 billion was enough to change the Wiz team's mind. The deal marks Google's most expensive acquisition to date. ®
+
+Google Cloud Platform
+
+Google Cloud Platform
+
+Center for Internet Security
+
+Immigration and Nationality Act of 1965
+
+Telecommunications Act of 1996
+
+Google Cloud Platform
+
+Google Cloud Platform
+
+Center for Internet Security
+
+Immigration and Nationality Act of 1965
+
+Telecommunications Act of 1996
+
+(XXXXXXX, AÇIK - go.theregister.com, 16.02.2026)
+
+================================================================================
+
+[29] The Register - Top Dutch telco Odido admits 6.2M customers caught in contact system caper
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-13T11:45:13.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/13/odido_breach/
@@ -1570,11 +1644,11 @@ National Broadband Network
 
 Telecommunications Act of 1996
 
-(XXXXXXX, AÇIK - go.theregister.com, 15.02.2026)
+(XXXXXXX, AÇIK - go.theregister.com, 16.02.2026)
 
 ================================================================================
 
-[29] The Register - Who's the bossware? Ransomware slingers like employee monitoring tools, too
+[30] The Register - Who's the bossware? Ransomware slingers like employee monitoring tools, too
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-12T20:07:13.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/12/ransomware_slingers_bossware/
@@ -1680,51 +1754,7 @@ Quantum key distribution
 
 Trusted Platform Module
 
-(XXXXXXX, AÇIK - go.theregister.com, 15.02.2026)
-
-================================================================================
-
-[30] The Register - Apple patches decade-old iOS zero-day, possibly exploited by commercial spyware
-────────────────────────────────────────────────────────────────────────────────
-Tarih: 2026-02-12T14:01:13.00Z
-Link: https://go.theregister.com/feed/www.theregister.com/2026/02/12/apple_ios_263/
-
-[TAM METİN - 470 kelime]
-Apple patches decade-old iOS zero-day, possibly exploited by commercial spyware
-
-Flaw abused 'in an extremely sophisticated attack against specific targeted individuals'
-
-Apple patched a zero-day vulnerability affecting every iOS version since 1.0, used in what the company calls an "extremely sophisticated attack" against targeted individuals.
-
-CVE-2026-20700, discovered by Google's Threat Analysis Group, affects dyld - Apple's dynamic linker - and allows attackers with memory write capability to execute arbitrary code. Apple said the flaw was exploited in the wild and may have been part of an exploit chain.
-
-Its advisory stated: "An attacker with memory write capability may be able to execute arbitrary code. Apple is aware of a report that this issue may have been exploited in an extremely sophisticated attack against specific targeted individuals on versions of iOS before iOS 26."
-
-Google's researchers also referenced two December vulnerabilities in their report that both carry 8.8 CVSS scores.
-
-CVE-2025-14174 is an out-of-bounds memory access flaw in Google Chrome's ANGLE graphics engine on Mac that could be exploited through a malicious webpage.
-
-The other, CVE-2025-43529, is a use-after-free leading to code execution.
-
-Brian Milbier, deputy CISO at Huntress, said: "Think of dyld as the doorman for your phone. Every single app that wants to run must first pass through this doorman to be assembled and given permission to start.
-
-"Usually, the doorman checks credentials and places apps in a high-security 'sandbox' where they can't touch your private data. This vulnerability allows an attacker to trick the doorman into handing over a master key before security checks even begin."
-
-Ireland wants to give its cops spyware, ability to crack encrypted messages
-
-Stalkerware slinger pleads guilty for selling snooper software to suspicious spouses
-
-Apple, Google forced to issue emergency 0-day patches
-
-Two Android 0-day bugs disclosed and fixed, plus 105 more to patch
-
-By chaining this with WebKit flaws Apple also addressed in the iOS 26.3 update, "attackers have created a 'zero-click' or 'one-click' path to total control. They use a fake ID to bypass the front gate – your browser – and then exploit the doorman's flaw to take over the entire building," Milbier added.
-
-"This level of sophistication resembles other exploits developed by the commercial surveillance industry. These are private companies that also developed prominent spyware tools like Pegasus and Predator. They sell these types of exploits or tools to government clients. While some updates in this patch address minor issues, such as data leakage from physical access, the dyld/WebKit chain is in a different league. iOS 26.3 closes a door that has been unlocked for over a decade."
-
-Apple's updates for iOS and iPadOS also feature a host of other fixes for various bugs, including flaws that grant root access and disclose sensitive user information, but CVE-2026-20700 is the only one it said was exploited in the wild. ®
-
-(XXXXXXX, AÇIK - go.theregister.com, 15.02.2026)
+(XXXXXXX, AÇIK - go.theregister.com, 16.02.2026)
 
 ================================================================================
 
