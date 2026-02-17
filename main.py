@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """Siber Güvenlik Haberleri - Otomatik Günlük Rapor"""
 import requests, time, os, json, hashlib
