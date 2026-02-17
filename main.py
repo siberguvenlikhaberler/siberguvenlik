@@ -74,7 +74,7 @@ class HaberSistemi:
             articles = []
             
             if root.tag.endswith('feed'):  # Atom
-                for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:3]:
+                for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:10]:
                     t = entry.find('{http://www.w3.org/2005/Atom}title')
                     l = entry.find('{http://www.w3.org/2005/Atom}link')
                     s = entry.find('{http://www.w3.org/2005/Atom}summary')
@@ -84,7 +84,7 @@ class HaberSistemi:
                                        'description': s.text if s is not None else '', 'date': d.text if d is not None else '',
                                        'source': source_name})
             else:  # RSS
-                for item in root.findall('.//item')[:3]:
+                for item in root.findall('.//item')[:10]:
                     t = item.find('title')
                     l = item.find('link')
                     d = item.find('description')
@@ -95,46 +95,50 @@ class HaberSistemi:
                                        'source': source_name})
             return articles
         except Exception as e:
-            # Hatayı kaydet
-            error_msg = f"{source_name}: {type(e).__name__} - {str(e)[:100]}"
+            error_msg = f"RSS hatası - {source_name}: {str(e)[:100]}"
             self.rss_errors.append(error_msg)
+            print(f"      ❌ RSS HATA: {str(e)[:50]}")
             return []
     
-    def _similarity(self, a, b):
-        """İki string arasındaki benzerlik oranı (0-1)"""
-        return SequenceMatcher(None, a.lower(), b.lower()).ratio()
-    
     def _load_used_links(self):
-        """Son 7 günün kullanılmış linklerini yükle"""
+        """Kullanılan linkleri 7 günden yükle"""
         if not os.path.exists(self.used_links_file):
             return set(), {}
         
+        cutoff = datetime.now() - timedelta(days=7)
         used_links = set()
         used_titles = {}
-        cutoff = datetime.now() - timedelta(days=7)
         
         with open(self.used_links_file, 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.strip()
-                if not line:
-                    continue
+                if not line: continue
                 try:
-                    date_str, link, title = line.split('\t', 2)
-                    date = datetime.strptime(date_str, '%Y-%m-%d')
-                    if date >= cutoff:
-                        used_links.add(link)
-                        used_titles[link] = title
+                    parts = line.split('\t')
+                    if len(parts) >= 3:
+                        date_str, link, title = parts[0], parts[1], '\t'.join(parts[2:])
+                        date = datetime.strptime(date_str, '%Y-%m-%d')
+                        if date >= cutoff:
+                            used_links.add(link)
+                            used_titles[link] = title
                 except:
                     pass
         
         return used_links, used_titles
     
+    def _similarity(self, a, b):
+        """Başlık benzerliği"""
+        return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+    
     def _save_used_links(self, articles):
         """Kullanılan linkleri kaydet (7 günden eski olanları sil)"""
+        if not articles:
+            return
+        
         now = datetime.now()
         cutoff = now - timedelta(days=7)
         
-        # Eski kayıtları oku
+        # Eski linkleri oku
         existing = []
         if os.path.exists(self.used_links_file):
             with open(self.used_links_file, 'r', encoding='utf-8') as f:
@@ -239,7 +243,7 @@ class HaberSistemi:
         print("="*70)
         print("📰 HABERLERİ TOPLAMA")
         print("="*70)
-        print(f"🔍 {len(self.sources)} kaynak | ⏱️  7-10 dakika\n")
+        print(f"🔍 {len(self.sources)} kaynak | ⏱️  15-25 dakika\n")
         
         all_news = {}
         total = 0
@@ -315,47 +319,46 @@ class HaberSistemi:
         self._save_used_links(all_articles)
         
         return txt
-        with open("data/haberler_ham.txt", 'w', encoding='utf-8') as f:
-            f.write(txt)
-        
-        print(f"✅ data/haberler_ham.txt (günlük - üzerine yazıldı)")
-        return txt
     
     def save_summary_to_archive(self, html_content):
-        """Gemini'nin ürettiği HTML özetini TXT arşivine EKLE (asla silme)"""
-        print("📚 Gemini özeti arşive ekleniyor...")
+        """Gemini'nin seçtiği EN ÖNEMLİ 40 HABERİ TXT arşivine EKLE (sürekli birikim)"""
+        print("📚 En önemli 40 haber arşive ekleniyor...")
         now = datetime.now()
         
-        # HTML'den text özeti çıkar (BeautifulSoup zaten import edilmiş)
+        # HTML'den text özeti çıkar
         soup = BeautifulSoup(html_content, 'html.parser')
         
-        archive_entry = f"\n{'='*80}\n📅 {now.strftime('%d %B %Y').upper()} - GEMİNİ ÖZET RAPORU\n{'='*80}\n\n"
+        archive_entry = f"\n{'='*80}\n📅 {now.strftime('%d %B %Y').upper()} - EN ÖNEMLİ 40 HABER (SEÇİLMİŞ)\n{'='*80}\n\n"
         
-        # Günlük özet
-        exec_summary = soup.find('div', class_='executive-summary')
-        if exec_summary:
-            archive_entry += f"GÜNLÜK ÖZET:\n{exec_summary.get_text(strip=True)}\n\n"
+        # Sadece ilk 40 haberi al (Gemini önem sırasına göre düzenlemiş)
+        news_items = soup.find_all('div', class_='news-item')[:40]
         
-        # Her haber
-        news_items = soup.find_all('div', class_='news-item')
         for idx, item in enumerate(news_items, 1):
-            title = item.find('b', class_='news-title')
-            content = item.find('p', class_='news-content')
-            source = item.find('p', class_='source')
+            title_elem = item.find('div', class_='news-title')
+            content_elem = item.find('p', class_='news-content')
+            source_elem = item.find('p', class_='source')
             
-            if title:
-                archive_entry += f"[{idx}] {title.get_text(strip=True)}\n"
-            if content:
-                archive_entry += f"{content.get_text(strip=True)}\n"
-            if source:
-                archive_entry += f"{source.get_text(strip=True)}\n"
-            archive_entry += "\n" + "─"*80 + "\n\n"
+            if title_elem and content_elem:
+                title = title_elem.get_text(strip=True).replace('<b>', '').replace('</b>', '')
+                content = content_elem.get_text(strip=True)
+                source = source_elem.get_text(strip=True) if source_elem else ""
+                
+                archive_entry += f"[{idx:2d}] {title}\n"
+                archive_entry += f"─────────────────────────────────────────────────────────\n"
+                archive_entry += f"{content}\n"
+                if source:
+                    archive_entry += f"{source}\n"
+                archive_entry += "\n" + "─"*80 + "\n\n"
         
-        # ARŞİVE EKLE (append - asla silme)
+        # ARŞİVE EKLE (append - sürekli birikim)
+        os.makedirs("data", exist_ok=True)
         with open(ARCHIVE_FILE, 'a', encoding='utf-8') as f:
             f.write(archive_entry)
         
-        print(f"✅ {ARCHIVE_FILE} (arşiv - eklendi, asla silinmez)")
+        print(f"✅ {ARCHIVE_FILE} (en önemli {len(news_items)} haber arşivlendi)")
+        
+        # Arşiv dosyası çok büyürse eski kayıtları temizle (6 aydan eski)
+        self._cleanup_old_archive_entries()
     
     def create_html(self, txt_content):
         """Gemini ile HTML oluştur"""
@@ -454,7 +457,7 @@ class HaberSistemi:
         <div class="archive-links">
 """
         for report in reports:
-            archive_html += f'            <a href="/siberguvenlik/raporlar/{report["filename"]}.html" class="archive-link">{report["date"]}</a>\n'
+            archive_html += f'            <a href="/raporlar/{report["filename"]}.html" class="archive-link">{report["date"]}</a>\n'
         
         archive_html += """        </div>
     </div>
@@ -535,6 +538,63 @@ class HaberSistemi:
             print(f"🗑️  {deleted} eski rapor silindi (30+ gün)")
         else:
             print("📁 Arşiv temiz (30 gün içinde)")
+    
+    def _cleanup_old_archive_entries(self):
+        """6 aydan eski arşiv kayıtlarını temizle (TXT dosyası çok büyürse)"""
+        if not os.path.exists(ARCHIVE_FILE):
+            return
+        
+        # Dosya boyutunu kontrol et
+        file_size = os.path.getsize(ARCHIVE_FILE) / (1024 * 1024)  # MB
+        if file_size < 50:  # 50MB'dan küçükse temizlik yapma
+            return
+        
+        from datetime import timedelta
+        cutoff = datetime.now() - timedelta(days=180)  # 6 ay
+        
+        try:
+            # Dosyayı oku
+            with open(ARCHIVE_FILE, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Günlük blokları ayır
+            blocks = content.split('\n📅 ')
+            new_content = blocks[0]  # İlk kısmı koru
+            
+            kept_count = 0
+            removed_count = 0
+            
+            for block in blocks[1:]:
+                if not block.strip():
+                    continue
+                
+                try:
+                    # Tarih satırından tarihi çıkar
+                    first_line = block.split('\n')[0]
+                    date_part = first_line.split(' - ')[0].strip()
+                    # Türkçe ay isimleri → İngilizce
+                    date_part = date_part.replace('OCAK', 'JANUARY').replace('ŞUBAT', 'FEBRUARY').replace('MART', 'MARCH').replace('NİSAN', 'APRIL').replace('MAYIS', 'MAY').replace('HAZİRAN', 'JUNE').replace('TEMMUZ', 'JULY').replace('AĞUSTOS', 'AUGUST').replace('EYLÜL', 'SEPTEMBER').replace('EKİM', 'OCTOBER').replace('KASIM', 'NOVEMBER').replace('ARALIK', 'DECEMBER')
+                    
+                    entry_date = datetime.strptime(date_part, '%d %B %Y')
+                    
+                    if entry_date >= cutoff:
+                        new_content += '\n📅 ' + block
+                        kept_count += 1
+                    else:
+                        removed_count += 1
+                except:
+                    # Tarih parse edemezse koru
+                    new_content += '\n📅 ' + block
+                    kept_count += 1
+            
+            if removed_count > 0:
+                # Temizlenmiş içeriği kaydet
+                with open(ARCHIVE_FILE, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
+                print(f"🗑️  Arşiv temizlendi: {removed_count} eski kayıt silindi, {kept_count} korundu")
+        
+        except Exception as e:
+            print(f"⚠️  Arşiv temizlik hatası: {e}")
 
 def main():
     print("\n"+"="*70)
