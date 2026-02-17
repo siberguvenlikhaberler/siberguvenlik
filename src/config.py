@@ -69,17 +69,20 @@ FORMAT:
    TABLO FORMATI:
    <table class="executive-table">
        <tr>
-           <td>1. Microsoft Exchange'de CVE-2024-1234 güvenlik açığı tespit edilmiştir.</td>
-           <td>2. LockBit 4.0 fidye yazılımı sağlık sektörünü hedef almıştır.</td>
+           <td><a href="#haber-1">1. Microsoft Exchange'de CVE-2024-1234 güvenlik açığı tespit edilmiştir.</a></td>
+           <td><a href="#haber-2">2. LockBit 4.0 fidye yazılımı sağlık sektörünü hedef almıştır.</a></td>
        </tr>
        <tr>
-           <td>3. Google Chrome'da sıfır gün açığı istismar edilmektedir.</td>
-           <td>4. Cisco cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</td>
+           <td><a href="#haber-3">3. Google Chrome'da sıfır gün açığı istismar edilmektedir.</a></td>
+           <td><a href="#haber-4">4. Cisco cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</a></td>
        </tr>
    </table>
    
    ZORUNLU KURALLAR:
-   - Her hücre NUMARA ile başlar: 1., 2., 3., 4...
+   - Her hücre <a href="#haber-N"> ile başlar (N = haber numarası)
+   - Link içinde NUMARA + TAM CÜMLE: "1. Microsoft..."
+   - Her hücrenin tamamı tıklanabilir link olmalı
+   - Her haber NUMARA ile başlar: 1., 2., 3., 4...
    - TAM CÜMLE yapısı: "Özne + yüklem + nesne"
    - RESMİ TÜRKÇE: -mıştır, -miştir, -edilmektedir, -almıştır
    - Her cümle nokta ile biter
@@ -204,6 +207,19 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         .executive-table tr:last-child td {{
             border-bottom: none;
         }}
+        .executive-table a {{
+            color: #283593;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }}
+        .executive-table a:hover {{
+            color: #1a237e;
+            background: #e8eaf6;
+            padding: 4px 8px;
+            margin: -4px -8px;
+            border-radius: 4px;
+        }}
         
         /* HABERLER BÖLÜMÜ */
         .news-section {{
@@ -305,35 +321,41 @@ BU ŞABLONU KULLANARAK:
 - [TARİH] yerine tarihi yaz
 
 - [TABLO SATIRLARI BURAYA] yerine:
-  Her satırda 2 haber, NUMARALI TAM CÜMLE
+  Her satırda 2 haber, NUMARALI TAM CÜMLE + LİNKLİ
   
   ÖRNEK:
   <tr>
-      <td>1. Microsoft Exchange Server'da CVE-2024-1234 güvenlik açığı tespit edilmiştir.</td>
-      <td>2. LockBit 4.0 fidye yazılımı sağlık sektörünü hedef almıştır.</td>
+      <td><a href="#haber-1">1. Microsoft Exchange Server'da CVE-2024-1234 güvenlik açığı tespit edilmiştir.</a></td>
+      <td><a href="#haber-2">2. LockBit 4.0 fidye yazılımı sağlık sektörünü hedef almıştır.</a></td>
   </tr>
   <tr>
-      <td>3. Google Chrome'da sıfır gün açığı aktif olarak istismar edilmektedir.</td>
-      <td>4. Cisco ağ cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</td>
+      <td><a href="#haber-3">3. Google Chrome'da sıfır gün açığı aktif olarak istismar edilmektedir.</a></td>
+      <td><a href="#haber-4">4. Cisco ağ cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</a></td>
   </tr>
   
   ZORUNLU:
+  - Her hücre <a href="#haber-N">...</a> ile sarılı (tıklanabilir)
   - NUMARA: 1., 2., 3., 4... (sürekli artan)
   - TAM CÜMLE: Özne + fiil + nesne
   - RESMİ DİL: -mıştır, -edilmiştir, -almaktadır
   
   Son satır tek haberse:
   <tr>
-      <td>39. Son haber tespit edilmiştir.</td>
+      <td><a href="#haber-39">39. Son haber tespit edilmiştir.</a></td>
       <td></td>
   </tr>
   
 - [HABERLER BURAYA] yerine her haberi şu formatta ekle:
-  <div class="news-item">
+  <div class="news-item" id="haber-1">  ← HER HABERE ID EKLE!
       <div class="news-title"><b>Başlık</b></div>
       <p class="news-content">Özet paragraf...</p>
       <p class="source"><b>(KAYNAK + LİNK)</b></p>
   </div>
+  
+  KRİTİK: 
+  - 1. haber → id="haber-1"
+  - 2. haber → id="haber-2"
+  - Her haber div'ine mutlaka id="haber-N" ekle!
 
 NOT: Arşiv linkleri otomatik eklenecek, sen sadece </body>'den önce bitir.
 
