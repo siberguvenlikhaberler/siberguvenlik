@@ -1367,215 +1367,7 @@ Sponsored and written by Passwork.
 
 ================================================================================
 
-[21] Krebs on Security - Kimwolf Botnet Swamps Anonymity Network I2P
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Wed, 11 Feb 2026 16:08:11 +0000
-Link: https://krebsonsecurity.com/2026/02/kimwolf-botnet-swamps-anonymity-network-i2p/
-
-[TAM METİN - 831 kelime]
-For the past week, the massive “Internet of Things” (IoT) botnet known as Kimwolf has been disrupting The Invisible Internet Project (I2P), a decentralized, encrypted communications network designed to anonymize and secure online communications. I2P users started reporting disruptions in the network around the same time the Kimwolf botmasters began relying on it to evade takedown attempts against the botnet’s control servers.
-
-Kimwolf is a botnet that surfaced in late 2025 and quickly infected millions of systems, turning poorly secured IoT devices like TV streaming boxes, digital picture frames and routers into relays for malicious traffic and abnormally large distributed denial-of-service (DDoS) attacks.
-
-I2P is a decentralized, privacy-focused network that allows people to communicate and share information anonymously.
-
-“It works by routing data through multiple encrypted layers across volunteer-operated nodes, hiding both the sender’s and receiver’s locations,” the I2P website explains. “The result is a secure, censorship-resistant network designed for private websites, messaging, and data sharing.”
-
-On February 3, I2P users began complaining on the organization’s GitHub page about tens of thousands of routers suddenly overwhelming the network, preventing existing users from communicating with legitimate nodes. Users reported a rapidly increasing number of new routers joining the network that were unable to transmit data, and that the mass influx of new systems had overwhelmed the network to the point where users could no longer connect.
-
-I2P users complaining about service disruptions from a rapidly increasing number of routers suddenly swamping the network.
-
-When one I2P user asked whether the network was under attack, another user replied, “Looks like it. My physical router freezes when the number of connections exceeds 60,000.”
-
-A graph shared by I2P developers showing a marked drop in successful connections on the I2P network around the time the Kimwolf botnet started trying to use the network for fallback communications.
-
-The same day that I2P users began noticing the outages, the individuals in control of Kimwolf posted to their Discord channel that they had accidentally disrupted I2P after attempting to join 700,000 Kimwolf-infected bots as nodes on the network.
-
-The Kimwolf botmaster openly discusses what they are doing with the botnet in a Discord channel with my name on it.
-
-Although Kimwolf is known as a potent weapon for launching DDoS attacks, the outages caused this week by some portion of the botnet attempting to join I2P are what’s known as a “Sybil attack,” a threat in peer-to-peer networks where a single entity can disrupt the system by creating, controlling, and operating a large number of fake, pseudonymous identities.
-
-Indeed, the number of Kimwolf-infected routers that tried to join I2P this past week was many times the network’s normal size. I2P’s Wikipedia page says the network consists of roughly 55,000 computers distributed throughout the world, with each participant acting as both a router (to relay traffic) and a client.
-
-However, Lance James, founder of the New York City based cybersecurity consultancy Unit 221B and the original founder of I2P, told KrebsOnSecurity the entire I2P network now consists of between 15,000 and 20,000 devices on any given day.
-
-An I2P user posted this graph on Feb. 10, showing tens of thousands of routers — mostly from the United States — suddenly attempting to join the network.
-
-Benjamin Brundage is founder of Synthient, a startup that tracks proxy services and was the first to document Kimwolf’s unique spreading techniques. Brundage said the Kimwolf operator(s) have been trying to build a command and control network that can’t easily be taken down by security companies and network operators that are working together to combat the spread of the botnet.
-
-Brundage said the people in control of Kimwolf have been experimenting with using I2P and a similar anonymity network — Tor — as a backup command and control network, although there have been no reports of widespread disruptions in the Tor network recently.
-
-“I don’t think their goal is to take I2P down,” he said. “It’s more they’re looking for an alternative to keep the botnet stable in the face of takedown attempts.”
-
-The Kimwolf botnet created challenges for Cloudflare late last year when it began instructing millions of infected devices to use Cloudflare’s domain name system (DNS) settings, causing control domains associated with Kimwolf to repeatedly usurp Amazon, Apple, Google and Microsoft in Cloudflare’s public ranking of the most frequently requested websites.
-
-James said the I2P network is still operating at about half of its normal capacity, and that a new release is rolling out which should bring some stability improvements over the next week for users.
-
-Meanwhile, Brundage said the good news is Kimwolf’s overlords appear to have quite recently alienated some of their more competent developers and operators, leading to a rookie mistake this past week that caused the botnet’s overall numbers to drop by more than 600,000 infected systems.
-
-“It seems like they’re just testing stuff, like running experiments in production,” he said. “But the botnet’s numbers are dropping significantly now, and they don’t seem to know what they’re doing.”
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
-
-================================================================================
-
-[22] Krebs on Security - Patch Tuesday, February 2026 Edition
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Tue, 10 Feb 2026 21:49:53 +0000
-Link: https://krebsonsecurity.com/2026/02/patch-tuesday-february-2026-edition/
-
-[TAM METİN - 515 kelime]
-Microsoft today released updates to fix more than 50 security holes in its Windows operating systems and other software, including patches for a whopping six “zero-day” vulnerabilities that attackers are already exploiting in the wild.
-
-Zero-day #1 this month is CVE-2026-21510, a security feature bypass vulnerability in Windows Shell wherein a single click on a malicious link can quietly bypass Windows protections and run attacker-controlled content without warning or consent dialogs. CVE-2026-21510 affects all currently supported versions of Windows.
-
-The zero-day flaw CVE-2026-21513 is a security bypass bug targeting MSHTML, the proprietary engine of the default Web browser in Windows. CVE-2026-21514 is a related security feature bypass in Microsoft Word.
-
-The zero-day CVE-2026-21533 allows local attackers to elevate their user privileges to “SYSTEM” level access in Windows Remote Desktop Services. CVE-2026-21519 is a zero-day elevation of privilege flaw in the Desktop Window Manager (DWM), a key component of Windows that organizes windows on a user’s screen. Microsoft fixed a different zero-day in DWM just last month.
-
-The sixth zero-day is CVE-2026-21525, a potentially disruptive denial-of-service vulnerability in the Windows Remote Access Connection Manager, the service responsible for maintaining VPN connections to corporate networks.
-
-Chris Goettl at Ivanti reminds us Microsoft has issued several out-of-band security updates since January’s Patch Tuesday. On January 17, Microsoft pushed a fix that resolved a credential prompt failure when attempting remote desktop or remote application connections. On January 26, Microsoft patched a zero-day security feature bypass vulnerability (CVE-2026-21509) in Microsoft Office.
-
-Kev Breen at Immersive notes that this month’s Patch Tuesday includes several fixes for remote code execution vulnerabilities affecting GitHub Copilot and multiple integrated development environments (IDEs), including VS Code, Visual Studio, and JetBrains products. The relevant CVEs are CVE-2026-21516, CVE-2026-21523, and CVE-2026-21256.
-
-Breen said the AI vulnerabilities Microsoft patched this month stem from a command injection flaw that can be triggered through prompt injection, or tricking the AI agent into doing something it shouldn’t — like executing malicious code or commands.
-
-“Developers are high-value targets for threat actors, as they often have access to sensitive data such as API keys and secrets that function as keys to critical infrastructure, including privileged AWS or Azure API keys,” Breen said. “When organizations enable developers and automation pipelines to use LLMs and agentic AI, a malicious prompt can have significant impact. This does not mean organizations should stop using AI. It does mean developers should understand the risks, teams should clearly identify which systems and workflows have access to AI agents, and least-privilege principles should be applied to limit the blast radius if developer secrets are compromised.”
-
-The SANS Internet Storm Center has a clickable breakdown of each individual fix this month from Microsoft, indexed by severity and CVSS score. Enterprise Windows admins involved in testing patches before rolling them out should keep an eye on askwoody.com, which often has the skinny on wonky updates. Please don’t neglect to back up your data if it has been a while since you’ve done that, and feel free to sound off in the comments if you experience problems installing any of these fixes.
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
-
-================================================================================
-
-[23] Krebs on Security - Please Don’t Feed the Scattered Lapsus ShinyHunters
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 02 Feb 2026 16:15:16 +0000
-Link: https://krebsonsecurity.com/2026/02/please-dont-feed-the-scattered-lapsus-shiny-hunters/
-
-[TAM METİN - 1200 kelime]
-A prolific data ransom gang that calls itself Scattered Lapsus ShinyHunters (SLSH) has a distinctive playbook when it seeks to extort payment from victim firms: Harassing, threatening and even swatting executives and their families, all while notifying journalists and regulators about the extent of the intrusion. Some victims reportedly are paying — perhaps as much to contain the stolen data as to stop the escalating personal attacks. But a top SLSH expert warns that engaging at all beyond a “We’re not paying” response only encourages further harassment, noting that the group’s fractious and unreliable history means the only winning move is not to pay.
-
-Image: Shutterstock.com, @Mungujakisa
-
-Unlike traditional, highly regimented Russia-based ransomware affiliate groups, SLSH is an unruly and somewhat fluid English-language extortion gang that appears uninterested in building a reputation of consistent behavior whereby victims might have some measure of confidence that the criminals will keep their word if paid.
-
-That’s according to Allison Nixon, director of research at the New York City based security consultancy Unit 221B. Nixon has been closely tracking the criminal group and individual members as they bounce between various Telegram channels used to extort and harass victims, and she said SLSH differs from traditional data ransom groups in other important ways that argue against trusting them to do anything they say they’ll do — such as destroying stolen data.
-
-Like SLSH, many traditional Russian ransomware groups have employed high-pressure tactics to force payment in exchange for a decryption key and/or a promise to delete stolen data, such as publishing a dark web shaming blog with samples of stolen data next to a countdown clock, or notifying journalists and board members of the victim company. But Nixon said the extortion from SLSH quickly escalates way beyond that — to threats of physical violence against executives and their families, DDoS attacks on the victim’s website, and repeated email-flooding campaigns.
-
-SLSH is known for breaking into companies by phishing employees over the phone, and using the purloined access to steal sensitive internal data. In a January 30 blog post, Google’s security forensics firm Mandiant said SLSH’s most recent extortion attacks stem from incidents spanning early to mid-January 2026, when SLSH members pretended to be IT staff and called employees at targeted victim organizations claiming that the company was updating MFA settings.
-
-“The threat actor directed the employees to victim-branded credential harvesting sites to capture their SSO credentials and MFA codes, and then registered their own device for MFA,” the blog post explained.
-
-Victims often first learn of the breach when their brand name is uttered on whatever ephemeral new public Telegram group chat SLSH is using to threaten, extort and harass their prey. According to Nixon, the coordinated harassment on the SLSH Telegram channels is part of a well-orchestrated strategy to overwhelm the victim organization by manufacturing humiliation that pushes them over the threshold to pay.
-
-Nixon said multiple executives at targeted organizations have been subject to “swatting” attacks, wherein SLSH communicated a phony bomb threat or hostage situation at the target’s address in the hopes of eliciting a heavily armed police response at their home or place of work.
-
-“A big part of what they’re doing to victims is the psychological aspect of it, like harassing executives’ kids and threatening the board of the company,” Nixon told KrebsOnSecurity. “And while these victims are getting extortion demands, they’re simultaneously getting outreach from media outlets saying, ‘Hey, do you have any comments on the bad things we’re going to write about you.”
-
-In a blog post today, Unit 221B argues that no one should negotiate with SLSH because the group has demonstrated a willingness to extort victims based on promises that it has no intention to keep. Nixon points out that all of SLSH’s known members hail from The Com, shorthand for a constellation of cybercrime-focused Discord and Telegram communities which serve as a kind of distributed social network that facilitates instant collaboration.
-
-Nixon said Com-based extortion groups tend to instigate feuds and drama between group members, leading to lying, betrayals, credibility destroying behavior, backstabbing, and sabotaging each other.
-
-“With this type of ongoing dysfunction, often compounding by substance abuse, these threat actors often aren’t able to act with the core goal in mind of completing a successful, strategic ransom operation,” Nixon wrote. “They continually lose control with outbursts that put their strategy and operational security at risk, which severely limits their ability to build a professional, scalable, and sophisticated criminal organization network for continued successful ransoms – unlike other, more tenured and professional criminal organizations focused on ransomware alone.”
-
-Intrusions from established ransomware groups typically center around encryption/decryption malware that mostly stays on the affected machine. In contrast, Nixon said, ransom from a Com group is often structured the same as violent sextortion schemes against minors, wherein members of The Com will steal damaging information, threaten to release it, and “promise” to delete it if the victim complies without any guarantee or technical proof point that they will keep their word. She writes:
-
-A key component of SLSH’s efforts to convince victims to pay, Nixon said, involves manipulating the media into hyping the threat posed by this group. This approach also borrows a page from the playbook of sextortion attacks, she said, which encourages predators to keep targets continuously engaged and worrying about the consequences of non-compliance.
-
-“On days where SLSH had no substantial criminal ‘win’ to announce, they focused on announcing death threats and harassment to keep law enforcement, journalists, and cybercrime industry professionals focused on this group,” she said.
-
-An excerpt from a sextortion tutorial from a Com-based Telegram channel. Image: Unit 221B.
-
-Nixon knows a thing or two about being threatened by SLSH: For the past several months, the group’s Telegram channels have been replete with threats of physical violence against her, against Yours Truly, and against other security researchers. These threats, she said, are just another way the group seeks to generate media attention and achieve a veneer of credibility, but they are useful as indicators of compromise because SLSH members tend to name drop and malign security researchers even in their communications with victims.
-
-“Watch for the following behaviors in their communications to you or their public statements,” Unit 221B’s advisory reads. “Repeated abusive mentions of Allison Nixon (or “A.N”), Unit 221B, or cybersecurity journalists—especially Brian Krebs—or any other cybersecurity employee, or cybersecurity company. Any threats to kill, or commit terrorism, or violence against internal employees, cybersecurity employees, investigators, and journalists.”
-
-Unit 221B says that while the pressure campaign during an extortion attempt may be traumatizing to employees, executives, and their family members, entering into drawn-out negotiations with SLSH incentivizes the group to increase the level of harm and risk, which could include the physical safety of employees and their families.
-
-“The breached data will never go back to the way it was, but we can assure you that the harassment will end,” Nixon said. “So, your decision to pay should be a separate issue from the harassment. We believe that when you separate these issues, you will objectively see that the best course of action to protect your interests, in both the short and long term, is to refuse payment.”
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
-
-================================================================================
-
-[24] Krebs on Security - Who Operates the Badbox 2.0 Botnet?
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 26 Jan 2026 16:11:38 +0000
-Link: https://krebsonsecurity.com/2026/01/who-operates-the-badbox-2-0-botnet/
-
-[TAM METİN - 1452 kelime]
-The cybercriminals in control of Kimwolf — a disruptive botnet that has infected more than 2 million devices — recently shared a screenshot indicating they’d compromised the control panel for Badbox 2.0, a vast China-based botnet powered by malicious software that comes pre-installed on many Android TV streaming boxes. Both the FBI and Google say they are hunting for the people behind Badbox 2.0, and thanks to bragging by the Kimwolf botmasters we may now have a much clearer idea about that.
-
-Our first story of 2026, The Kimwolf Botnet is Stalking Your Local Network, detailed the unique and highly invasive methods Kimwolf uses to spread. The story warned that the vast majority of Kimwolf infected systems were unofficial Android TV boxes that are typically marketed as a way to watch unlimited (pirated) movie and TV streaming services for a one-time fee.
-
-Our January 8 story, Who Benefitted from the Aisuru and Kimwolf Botnets?, cited multiple sources saying the current administrators of Kimwolf went by the nicknames “Dort” and “Snow.” Earlier this month, a close former associate of Dort and Snow shared what they said was a screenshot the Kimwolf botmasters had taken while logged in to the Badbox 2.0 botnet control panel.
-
-That screenshot, a portion of which is shown below, shows seven authorized users of the control panel, including one that doesn’t quite match the others: According to my source, the account “ABCD” (the one that is logged in and listed in the top right of the screenshot) belongs to Dort, who somehow figured out how to add their email address as a valid user of the Badbox 2.0 botnet.
-
-The control panel for the Badbox 2.0 botnet lists seven authorized users and their email addresses. Click to enlarge.
-
-Badbox has a storied history that well predates Kimwolf’s rise in October 2025. In July 2025, Google filed a “John Doe” lawsuit (PDF) against 25 unidentified defendants accused of operating Badbox 2.0, which Google described as a botnet of over ten million unsanctioned Android streaming devices engaged in advertising fraud. Google said Badbox 2.0, in addition to compromising multiple types of devices prior to purchase, also can infect devices by requiring the download of malicious apps from unofficial marketplaces.
-
-Google’s lawsuit came on the heels of a June 2025 advisory from the Federal Bureau of Investigation (FBI), which warned that cyber criminals were gaining unauthorized access to home networks by either configuring the products with malware prior to the user’s purchase, or infecting the device as it downloads required applications that contain backdoors — usually during the set-up process.
-
-The FBI said Badbox 2.0 was discovered after the original Badbox campaign was disrupted in 2024. The original Badbox was identified in 2023, and primarily consisted of Android operating system devices (TV boxes) that were compromised with backdoor malware prior to purchase.
-
-KrebsOnSecurity was initially skeptical of the claim that the Kimwolf botmasters had hacked the Badbox 2.0 botnet. That is, until we began digging into the history of the qq.com email addresses in the screenshot above.
-
-An online search for the address 34557257@qq.com (pictured in the screenshot above as the user “Chen“) shows it is listed as a point of contact for a number of China-based technology companies, including:
-
-–Beijing Hong Dake Wang Science & Technology Co Ltd.
-–Beijing Hengchuang Vision Mobile Media Technology Co. Ltd.
-–Moxin Beijing Science and Technology Co. Ltd.
-
-The website for Beijing Hong Dake Wang Science is asmeisvip[.]net, a domain that was flagged in a March 2025 report by HUMAN Security as one of several dozen sites tied to the distribution and management of the Badbox 2.0 botnet. Ditto for moyix[.]com, a domain associated with Beijing Hengchuang Vision Mobile.
-
-A search at the breach tracking service Constella Intelligence finds 34557257@qq.com at one point used the password “cdh76111.” Pivoting on that password in Constella shows it is known to have been used by just two other email accounts: daihaic@gmail.com and cathead@gmail.com.
-
-Constella found cathead@gmail.com registered an account at jd.com (China’s largest online retailer) in 2021 under the name “陈代海,” which translates to “Chen Daihai.” According to DomainTools.com, the name Chen Daihai is present in the original registration records (2008) for moyix[.]com, along with the email address cathead@astrolink[.]cn.
-
-Incidentally, astrolink[.]cn also is among the Badbox 2.0 domains identified in HUMAN Security’s 2025 report. DomainTools finds cathead@astrolink[.]cn was used to register more than a dozen domains, including vmud[.]net, yet another Badbox 2.0 domain tagged by HUMAN Security.
-
-A cached copy of astrolink[.]cn preserved at archive.org shows the website belongs to a mobile app development company whose full name is Beijing Astrolink Wireless Digital Technology Co. Ltd. The archived website reveals a “Contact Us” page that lists a Chen Daihai as part of the company’s technology department. The other person featured on that contact page is Zhu Zhiyu, and their email address is listed as xavier@astrolink[.]cn.
-
-A Google-translated version of Astrolink’s website, circa 2009. Image: archive.org.
-
-Astute readers will notice that the user Mr.Zhu in the Badbox 2.0 panel used the email address xavierzhu@qq.com. Searching this address in Constella reveals a jd.com account registered in the name of Zhu Zhiyu. A rather unique password used by this account matches the password used by the address xavierzhu@gmail.com, which DomainTools finds was the original registrant of astrolink[.]cn.
-
-The very first account listed in the Badbox 2.0 panel — “admin,” registered in November 2020 — used the email address 189308024@qq.com. DomainTools shows this email is found in the 2022 registration records for the domain guilincloud[.]cn, which includes the registrant name “Huang Guilin.”
-
-Constella finds 189308024@qq.com is associated with the China phone number 18681627767. The open-source intelligence platform osint.industries reveals this phone number is connected to a Microsoft profile created in 2014 under the name Guilin Huang (桂林 黄). The cyber intelligence platform Spycloud says that phone number was used in 2017 to create an account at the Chinese social media platform Weibo under the username “h_guilin.”
-
-The public information attached to Guilin Huang’s Microsoft account, according to the breach tracking service osintindustries.com.
-
-The remaining three users and corresponding qq.com email addresses were all connected to individuals in China. However, none of them (nor Mr. Huang) had any apparent connection to the entities created and operated by Chen Daihai and Zhu Zhiyu — or to any corporate entities for that matter. Also, none of these individuals responded to requests for comment.
-
-The mind map below includes search pivots on the email addresses, company names and phone numbers that suggest a connection between Chen Daihai, Zhu Zhiyu, and Badbox 2.0.
-
-This mind map includes search pivots on the email addresses, company names and phone numbers that appear to connect Chen Daihai and Zhu Zhiyu to Badbox 2.0. Click to enlarge.
-
-The idea that the Kimwolf botmasters could have direct access to the Badbox 2.0 botnet is a big deal, but explaining exactly why that is requires some background on how Kimwolf spreads to new devices. The botmasters figured out they could trick residential proxy services into relaying malicious commands to vulnerable devices behind the firewall on the unsuspecting user’s local network.
-
-The vulnerable systems sought out by Kimwolf are primarily Internet of Things (IoT) devices like unsanctioned Android TV boxes and digital photo frames that have no discernible security or authentication built-in. Put simply, if you can communicate with these devices, you can compromise them with a single command.
-
-Our January 2 story featured research from the proxy-tracking firm Synthient, which alerted 11 different residential proxy providers that their proxy endpoints were vulnerable to being abused for this kind of local network probing and exploitation.
-
-Most of those vulnerable proxy providers have since taken steps to prevent customers from going upstream into the local networks of residential proxy endpoints, and it appeared that Kimwolf would no longer be able to quickly spread to millions of devices simply by exploiting some residential proxy provider.
-
-However, the source of that Badbox 2.0 screenshot said the Kimwolf botmasters had an ace up their sleeve the whole time: Secret access to the Badbox 2.0 botnet control panel.
-
-“Dort has gotten unauthorized access,” the source said. “So, what happened is normal proxy providers patched this. But Badbox doesn’t sell proxies by itself, so it’s not patched. And as long as Dort has access to Badbox, they would be able to load” the Kimwolf malware directly onto TV boxes associated with Badbox 2.0.
-
-The source said it isn’t clear how Dort gained access to the Badbox botnet panel. But it’s unlikely that Dort’s existing account will persist for much longer: All of our notifications to the qq.com email addresses listed in the control panel screenshot received a copy of that image, as well as questions about the apparently rogue ABCD account.
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
-
-================================================================================
-
-[25] Krebs on Security - Kimwolf Botnet Lurking in Corporate, Govt. Networks
+[21] Krebs on Security - Kimwolf Botnet Lurking in Corporate, Govt. Networks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 20 Jan 2026 18:19:13 +0000
 Link: https://krebsonsecurity.com/2026/01/kimwolf-botnet-lurking-in-corporate-govt-networks/
@@ -1629,7 +1421,7 @@ A Broken System Fueling Botnets (Synthient).
 
 ================================================================================
 
-[26] Krebs on Security - Patch Tuesday, January 2026 Edition
+[22] Krebs on Security - Patch Tuesday, January 2026 Edition
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 14 Jan 2026 00:47:38 +0000
 Link: https://krebsonsecurity.com/2026/01/patch-tuesday-january-2026-edition/
@@ -1673,7 +1465,7 @@ As ever, the SANS Internet Storm Center has a per-patch breakdown by severity an
 
 ================================================================================
 
-[27] Krebs on Security - Who Benefited from the Aisuru and Kimwolf Botnets?
+[23] Krebs on Security - Who Benefited from the Aisuru and Kimwolf Botnets?
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 08 Jan 2026 23:23:43 +0000
 Link: https://krebsonsecurity.com/2026/01/who-benefited-from-the-aisuru-and-kimwolf-botnets/
@@ -1773,7 +1565,7 @@ If you own a TV box that matches one of these model names and/or numbers, please
 
 ================================================================================
 
-[28] Krebs on Security - The Kimwolf Botnet is Stalking Your Local Network
+[24] Krebs on Security - The Kimwolf Botnet is Stalking Your Local Network
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 02 Jan 2026 14:20:10 +0000
 Link: https://krebsonsecurity.com/2026/01/the-kimwolf-botnet-is-stalking-your-local-network/
@@ -1959,7 +1751,7 @@ Stay tuned for Part II in this series, which will poke through clues left behind
 
 ================================================================================
 
-[29] Krebs on Security - Happy 16th Birthday, KrebsOnSecurity.com!
+[25] Krebs on Security - Happy 16th Birthday, KrebsOnSecurity.com!
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 29 Dec 2025 20:23:26 +0000
 Link: https://krebsonsecurity.com/2025/12/happy-16th-birthday-krebsonsecurity-com/
@@ -2013,7 +1805,7 @@ Thanks again, and Happy New Year everyone! Be safe out there.
 
 ================================================================================
 
-[30] Krebs on Security - Dismantling Defenses: Trump 2.0 Cyber Year in Review
+[26] Krebs on Security - Dismantling Defenses: Trump 2.0 Cyber Year in Review
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 19 Dec 2025 15:14:55 +0000
 Link: https://krebsonsecurity.com/2025/12/dismantling-defenses-trump-2-0-cyber-year-in-review/
@@ -2146,6 +1938,267 @@ At the same time DOGE was slashing federal programs, President Trump fired at le
 Where is DOGE now? Reuters reported last month that as far as the White House is concerned, DOGE no longer exists, even though it technically has more than half a year left to its charter. Meanwhile, who exactly retains access to federal agency data that was fed by DOGE into AI tools is anyone’s guess.
 
 KrebsOnSecurity would like to thank the anonymous researcher NatInfoSec for assisting with the research on this story.
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
+
+================================================================================
+
+[27] Krebs on Security - Most Parked Domains Now Serving Malicious Content
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 16 Dec 2025 14:14:48 +0000
+Link: https://krebsonsecurity.com/2025/12/most-parked-domains-now-serving-malicious-content/
+
+[TAM METİN - 1002 kelime]
+Direct navigation — the act of visiting a website by manually typing a domain name in a web browser — has never been riskier: A new study finds the vast majority of “parked” domains — mostly expired or dormant domain names, or common misspellings of popular websites — are now configured to redirect visitors to sites that foist scams and malware.
+
+A lookalike domain to the FBI Internet Crime Complaint Center website, returned a non-threatening parking page (left) whereas a mobile user was instantly directed to deceptive content in October 2025 (right). Image: Infoblox.
+
+When Internet users try to visit expired domain names or accidentally navigate to a lookalike “typosquatting” domain, they are typically brought to a placeholder page at a domain parking company that tries to monetize the wayward traffic by displaying links to a number of third-party websites that have paid to have their links shown.
+
+A decade ago, ending up at one of these parked domains came with a relatively small chance of being redirected to a malicious destination: In 2014, researchers found (PDF) that parked domains redirected users to malicious sites less than five percent of the time — regardless of whether the visitor clicked on any links at the parked page.
+
+But in a series of experiments over the past few months, researchers at the security firm Infoblox say they discovered the situation is now reversed, and that malicious content is by far the norm now for parked websites.
+
+“In large scale experiments, we found that over 90% of the time, visitors to a parked domain would be directed to illegal content, scams, scareware and anti-virus software subscriptions, or malware, as the ‘click’ was sold from the parking company to advertisers, who often resold that traffic to yet another party,” Infoblox researchers wrote in a paper published today.
+
+Infoblox found parked websites are benign if the visitor arrives at the site using a virtual private network (VPN), or else via a non-residential Internet address. For example, Scotiabank.com customers who accidentally mistype the domain as scotaibank[.]com will see a normal parking page if they’re using a VPN, but will be redirected to a site that tries to foist scams, malware or other unwanted content if coming from a residential IP address. Again, this redirect happens just by visiting the misspelled domain with a mobile device or desktop computer that is using a residential IP address.
+
+According to Infoblox, the person or entity that owns scotaibank[.]com has a portfolio of nearly 3,000 lookalike domains, including gmai[.]com, which demonstrably has been configured with its own mail server for accepting incoming email messages. Meaning, if you send an email to a Gmail user and accidentally omit the “l” from “gmail.com,” that missive doesn’t just disappear into the ether or produce a bounce reply: It goes straight to these scammers. The report notices this domain also has been leveraged in multiple recent business email compromise campaigns, using a lure indicating a failed payment with trojan malware attached.
+
+Infoblox found this particular domain holder (betrayed by a common DNS server — torresdns[.]com) has set up typosquatting domains targeting dozens of top Internet destinations, including Craigslist, YouTube, Google, Wikipedia, Netflix, TripAdvisor, Yahoo, eBay, and Microsoft. A defanged list of these typosquatting domains is available here (the dots in the listed domains have been replaced with commas).
+
+“It was often a chain of redirects — one or two domains outside the parking company — before threat arrives,” Brunsdon said. “Each time in the handoff the device is profiled again and again, before being passed off to a malicious domain or else a decoy page like Amazon.com or Alibaba.com if they decide it’s not worth targeting.”
+
+Brunsdon said domain parking services claim the search results they return on parked pages are designed to be relevant to their parked domains, but that almost none of this displayed content was related to the lookalike domain names they tested.
+
+Samples of redirection paths when visiting scotaibank dot com. Each branch includes a series of domains observed, including the color-coded landing page. Image: Infoblox.
+
+Infoblox said a different threat actor who owns domaincntrol[.]com — a domain that differs from GoDaddy’s name servers by a single character — has long taken advantage of typos in DNS configurations to drive users to malicious websites. In recent months, however, Infoblox discovered the malicious redirect only happens when the query for the misconfigured domain comes from a visitor who is using Cloudflare’s DNS resolvers (1.1.1.1), and that all other visitors will get a page that refuses to load.
+
+The researchers found that even variations on well-known government domains are being targeted by malicious ad networks.
+
+“When one of our researchers tried to report a crime to the FBI’s Internet Crime Complaint Center (IC3), they accidentally visited ic3[.]org instead of ic3[.]gov,” the report notes. “Their phone was quickly redirected to a false ‘Drive Subscription Expired’ page. They were lucky to receive a scam; based on what we’ve learnt, they could just as easily receive an information stealer or trojan malware.”
+
+The Infoblox report emphasizes that the malicious activity they tracked is not attributed to any known party, noting that the domain parking or advertising platforms named in the study were not implicated in the malvertising they documented.
+
+However, the report concludes that while the parking companies claim to only work with top advertisers, the traffic to these domains was frequently sold to affiliate networks, who often resold the traffic to the point where the final advertiser had no business relationship with the parking companies.
+
+Infoblox also pointed out that recent policy changes by Google may have inadvertently increased the risk to users from direct search abuse. Brunsdon said Google Adsense previously defaulted to allowing their ads to be placed on parked pages, but that in early 2025 Google implemented a default setting that had their customers opt-out by default on presenting ads on parked domains — requiring the person running the ad to voluntarily go into their settings and turn on parking as a location.
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
+
+================================================================================
+
+[28] Krebs on Security - Microsoft Patch Tuesday, December 2025 Edition
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 09 Dec 2025 23:18:29 +0000
+Link: https://krebsonsecurity.com/2025/12/microsoft-patch-tuesday-december-2025-edition/
+
+[TAM METİN - 563 kelime]
+Microsoft today pushed updates to fix at least 56 security flaws in its Windows operating systems and supported software. This final Patch Tuesday of 2025 tackles one zero-day bug that is already being exploited, as well as two publicly disclosed vulnerabilities.
+
+Despite releasing a lower-than-normal number of security updates these past few months, Microsoft patched a whopping 1,129 vulnerabilities in 2025, an 11.9% increase from 2024. According to Satnam Narang at Tenable, this year marks the second consecutive year that Microsoft patched over one thousand vulnerabilities, and the third time it has done so since its inception.
+
+The zero-day flaw patched today is CVE-2025-62221, a privilege escalation vulnerability affecting Windows 10 and later editions. The weakness resides in a component called the “Windows Cloud Files Mini Filter Driver” — a system driver that enables cloud applications to access file system functionalities.
+
+“This is particularly concerning, as the mini filter is integral to services like OneDrive, Google Drive, and iCloud, and remains a core Windows component, even if none of those apps were installed,” said Adam Barnett, lead software engineer at Rapid7.
+
+Only three of the flaws patched today earned Microsoft’s most-dire “critical” rating: Both CVE-2025-62554 and CVE-2025-62557 involve Microsoft Office, and both can exploited merely by viewing a booby-trapped email message in the Preview Pane. Another critical bug — CVE-2025-62562 — involves Microsoft Outlook, although Redmond says the Preview Pane is not an attack vector with this one.
+
+But according to Microsoft, the vulnerabilities most likely to be exploited from this month’s patch batch are other (non-critical) privilege escalation bugs, including:
+
+–CVE-2025-62458 — Win32k
+–CVE-2025-62470 — Windows Common Log File System Driver
+–CVE-2025-62472 — Windows Remote Access Connection Manager
+–CVE-2025-59516 — Windows Storage VSP Driver
+–CVE-2025-59517 — Windows Storage VSP Driver
+
+Kev Breen, senior director of threat research at Immersive, said privilege escalation flaws are observed in almost every incident involving host compromises.
+
+“We don’t know why Microsoft has marked these specifically as more likely, but the majority of these components have historically been exploited in the wild or have enough technical detail on previous CVEs that it would be easier for threat actors to weaponize these,” Breen said. “Either way, while not actively being exploited, these should be patched sooner rather than later.”
+
+One of the more interesting vulnerabilities patched this month is CVE-2025-64671, a remote code execution flaw in the Github Copilot Plugin for Jetbrains AI-based coding assistant that is used by Microsoft and GitHub. Breen said this flaw would allow attackers to execute arbitrary code by tricking the large language model (LLM) into running commands that bypass the user’s “auto-approve” settings.
+
+CVE-2025-64671 is part of a broader, more systemic security crisis that security researcher Ari Marzuk has branded IDEsaster (IDE  stands for “integrated development environment”), which encompasses more than 30 separate vulnerabilities reported in nearly a dozen market-leading AI coding platforms, including Cursor, Windsurf, Gemini CLI, and Claude Code.
+
+The other publicly-disclosed vulnerability patched today is CVE-2025-54100, a remote code execution bug in Windows Powershell on Windows Server 2008 and later that allows an unauthenticated attacker to run code in the security context of the user.
+
+For anyone seeking a more granular breakdown of the security updates Microsoft pushed today, check out the roundup at the SANS Internet Storm Center. As always, please leave a note in the comments if you experience problems applying any of this month’s Windows patches.
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
+
+================================================================================
+
+[29] Krebs on Security - Drones to Diplomas: How Russia’s Largest Private University is Linked to a $25M Essay Mill
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sat, 06 Dec 2025 14:45:03 +0000
+Link: https://krebsonsecurity.com/2025/12/drones-to-diplomas-how-russias-largest-private-university-is-linked-to-a-25m-essay-mill/
+
+[TAM METİN - 1970 kelime]
+A sprawling academic cheating network turbocharged by Google Ads that has generated nearly $25 million in revenue has curious ties to a Kremlin-connected oligarch whose Russian university builds drones for Russia’s war against Ukraine.
+
+The Nerdify homepage.
+
+The link between essay mills and Russian attack drones might seem improbable, but understanding it begins with a simple question: How does a human-intensive academic cheating service stay relevant in an era when students can simply ask AI to write their term papers? The answer – recasting the business as an AI company – is just the latest chapter in a story of many rebrands that link the operation to Russia’s largest private university.
+
+Search in Google for any terms related to academic cheating services — e.g., “help with exam online” or “term paper online” — and you’re likely to encounter websites with the words “nerd” or “geek” in them, such as thenerdify[.]com and geekly-hub[.]com. With a simple request sent via text message, you can hire their tutors to help with any assignment.
+
+These nerdy and geeky-branded websites frequently cite their “honor code,” which emphasizes they do not condone academic cheating, will not write your term papers for you, and will only offer support and advice for customers. But according to This Isn’t Fine, a Substack blog about contract cheating and essay mills, the Nerdify brand of websites will happily ignore that mantra.
+
+“We tested the quick SMS for a price quote,” wrote This Isn’t Fine author Joseph Thibault. “The honor code references and platitudes apparently stop at the website. Within three minutes, we confirmed that a full three-page, plagiarism- and AI-free MLA formatted Argumentative essay could be ours for the low price of $141.”
+
+A screenshot from Joseph Thibault’s Substack post shows him purchasing a 3-page paper with the Nerdify service.
+
+Google prohibits ads that “enable dishonest behavior.” Yet, a sprawling global essay and homework cheating network run under the Nerdy brands has quietly bought its way to the top of Google searches – booking revenues of almost $25 million through a maze of companies in Cyprus, Malta and Hong Kong, while pitching “tutoring” that delivers finished work that students can turn in.
+
+When one Nerdy-related Google Ads account got shut down, the group behind the company would form a new entity with a front-person (typically a young Ukrainian woman), start a new ads account along with a new website and domain name (usually with “nerdy” in the brand), and resume running Google ads for the same set of keywords.
+
+UK companies belonging to the group that have been shut down by Google Ads since Jan 2025 include:
+
+–Proglobal Solutions LTD (advertised nerdifyit[.]com);
+–AW Tech Limited (advertised thenerdify[.]com);
+–Geekly Solutions Ltd (advertised geekly-hub[.]com).
+
+Currently active Google Ads accounts for the Nerdify brands include:
+
+-OK Marketing LTD (advertising geekly-hub[.]net⁩), formed in the name of Olha Karpenko, a young Ukrainian woman;
+–Two Sigma Solutions LTD (advertising litero[.]ai), formed in the name of Olekszij (Alexey) Pokatilo.
+
+Google’s Ads Transparency page for current Nerdify advertiser OK Marketing LTD.
+
+Mr. Pokatilo has been in the essay-writing business since at least 2009, operating a paper-mill enterprise called Livingston Research alongside Alexander Korsukov, who is listed as an owner. According to a lengthy account from a former employee, Livingston Research mainly farmed its writing tasks out to low-cost workers from Kenya, Philippines, Pakistan, Russia and Ukraine.
+
+Pokatilo moved from Ukraine to the United Kingdom in Sept. 2015 and co-founded a company called Awesome Technologies, which pitched itself as a way for people to outsource tasks by sending a text message to the service’s assistants.
+
+The other co-founder of Awesome Technologies is 36-year-old Filip Perkon, a Swedish man living in London who touts himself as a serial entrepreneur and investor. Years before starting Awesome together, Perkon and Pokatilo co-founded a student group called Russian Business Week while the two were classmates at the London School of Economics. According to the Bulgarian investigative journalist Christo Grozev, Perkon’s birth certificate was issued by the Soviet Embassy in Sweden.
+
+Alexey Pokatilo (left) and Filip Perkon at a Facebook event for startups in San Francisco in mid-2015.
+
+Perkon was praised by the Russian Embassy in London for his efforts: During the contentious Brexit vote that ultimately led to the United Kingdom leaving the European Union, the Russian embassy in London used this spam tweeting tool to auto-retweet the Russian ambassador’s posts from supporters’ accounts.
+
+Neither Mr. Perkon nor Mr. Pokatilo replied to requests for comment.
+
+A review of corporations tied to Mr. Perkon as indexed by the business research service North Data finds he holds or held director positions in several U.K. subsidiaries of Synergy University, Russia’s largest private education provider. Synergy has more than 35,000 students, and sells T-shirts with patriotic slogans such as “Crimea is Ours,” and “The Russian Empire — Reloaded.”
+
+The president of Synergy University is Vadim Lobov, a Kremlin insider whose headquarters on the outskirts of Moscow reportedly features a wall-sized portrait of Russian President Vladimir Putin in the pop-art style of Andy Warhol. For a number of years, Lobov and Perkon co-produced a cross-cultural event in the U.K. called Russian Film Week.
+
+Synergy President Vadim Lobov and Filip Perkon, speaking at a press conference for Russian Film Week, a cross-cultural event in the U.K. co-produced by both men.
+
+Mr. Lobov was one of 11 individuals reportedly hand-picked by the convicted Russian spy Marina Butina to attend the 2017 National Prayer Breakfast held in Washington D.C. just two weeks after President Trump’s first inauguration.
+
+While Synergy University promotes itself as Russia’s largest private educational institution, hundreds of international students tell a different story. Online reviews from students paint a picture of unkept promises: Prospective students from Nigeria, Kenya, Ghana, and other nations paying thousands in advance fees for promised study visas to Russia, only to have their applications denied with no refunds offered.
+
+“My experience with Synergy University has been nothing short of heartbreaking,” reads one such account. “When I first discovered the school, their representative was extremely responsive and eager to assist. He communicated frequently and made me believe I was in safe hands. However, after paying my hard-earned tuition fees, my visa was denied. It’s been over 9 months since that denial, and despite their promises, I have received no refund whatsoever. My messages are now ignored, and the same representative who once replied instantly no longer responds at all. Synergy University, how can an institution in Europe feel comfortable exploiting the hopes of Africans who trust you with their life savings? This is not just unethical — it’s predatory.”
+
+This pattern repeats across reviews by multilingual students from Pakistan, Nepal, India, and various African nations — all describing the same scheme: Attractive online marketing, promises of easy visa approval, upfront payment requirements, and then silence after visa denials.
+
+Reddit discussions in r/Moscow and r/AskARussian are filled with warnings. “It’s a scam, a diploma mill,” writes one user. “They literally sell exams. There was an investigation on Rossiya-1 television showing students paying to pass tests.”
+
+The Nerdify website’s “About Us” page says the company was co-founded by Pokatilo and an American named Brian Mellor. The latter identity seems to have been fabricated, or at least there is no evidence that a person with this name ever worked at Nerdify.
+
+Rather, it appears that the SMS assistance company co-founded by Messrs. Pokatilo and Perkon (Awesome Technologies) fizzled out shortly after its creation, and that Nerdify soon adopted the process of accepting assignment requests via text message and routing them to freelance writers.
+
+A closer look at an early “About Us” page for Nerdify in The Wayback Machine suggests that Mr. Perkon was the real co-founder of the company: The photo at the top of the page shows four people wearing Nerdify T-shirts seated around a table on a rooftop deck in San Francisco, and the man facing the camera is Perkon.
+
+Filip Perkon, top right, is pictured wearing a Nerdify T-shirt in an archived copy of the company’s About Us page. Image: archive.org.
+
+Where are they now? Pokatilo is currently running a startup called Litero.Ai, which appears to be an AI-based essay writing service. In July 2025, Mr. Pokatilo received pre-seed funding of $800,000 for Litero from an investment program backed by the venture capital firms AltaIR Capital, Yellow Rocks, Smart Partnership Capital, and I2BF Global Ventures.
+
+Meanwhile, Filip Perkon is busy setting up toy rubber duck stores in Miami and in at least three locations in the United Kingdom. These “Duck World” shops market themselves as “the world’s largest duck store.”
+
+This past week, Mr. Lobov was in India with Putin’s entourage on a charm tour with India’s Prime Minister Narendra Modi. Although Synergy is billed as an educational institution, a review of the company’s sprawling corporate footprint (via DNS) shows it also is assisting the Russian government in its war against Ukraine.
+
+Synergy University President Vadim Lobov (right) pictured this week in India next to Natalia Popova, a Russian TV presenter known for her close ties to Putin’s family, particularly Putin’s daughter, who works with Popova at the education and culture-focused Innopraktika Foundation.
+
+The website bpla.synergy[.]bot, for instance, says the company is involved in developing combat drones to aid Russian forces and to evade international sanctions on the supply and re-export of high-tech products.
+
+A screenshot from the website of synergy,bot shows the company is actively engaged in building armed drones for the war in Ukraine.
+
+KrebsOnSecurity would like to thank the anonymous researcher NatInfoSec for their assistance in this investigation.
+
+Update, Dec. 8, 10:06 a.m. ET: Mr. Pokatilo responded to requests for comment after the publication of this story. Pokatilo said he has no relation to Synergy nor to Mr. Lobov, and that his work with Mr. Perkon ended with the dissolution of Awesome Technologies.
+
+“I have had no involvement in any of his projects and business activities mentioned in the article and he has no involvement in Litero.ai,” Pokatilo said of Perkon.
+
+Mr. Pokatilo said his new company Litero “does not provide contract cheating services and is built specifically to improve transparency and academic integrity in the age of universal use of AI by students.”
+
+“I am Ukrainian,” he said in an email. “My close friends, colleagues, and some family members continue to live in Ukraine under the ongoing invasion. Any suggestion that I or my company may be connected in any way to Russia’s war efforts is deeply offensive on a personal level and harmful to the reputation of Litero.ai, a company where many team members are Ukrainian.”
+
+Update, Dec. 11, 12:07 p.m. ET: Mr. Perkon responded to requests for comment after the publication of this story. Perkon said the photo of him in a Nerdify T-shirt (see screenshot above) was taken after a startup event in San Francisco, where he volunteered to act as a photo model to help friends with their project.
+
+“I have no business or other relations to Nerdify or any other ventures in that space,” Mr. Perkon said in an email response. “As for Vadim Lobov, I worked for Venture Capital arm at Synergy until 2013 as well as his business school project in the UK, that didn’t get off the ground, so the company related to this was made dormant. Then Synergy kindly provided sponsorship for my Russian Film Week event that I created and ran until 2022 in the U.K., an event that became the biggest independent Russian film festival outside of Russia. Since the start of the Ukraine war in 2022 I closed the festival down.”
+
+“I have had no business with Vadim Lobov since 2021 (the last film festival) and I don’t keep track of his endeavours,” Perkon continued. “As for Alexey Pokatilo, we are university friends. Our business relationship has ended after the concierge service Awesome Technologies didn’t work out, many years ago.”
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
+
+================================================================================
+
+[30] Krebs on Security - SMS Phishers Pivot to Points, Taxes, Fake Retailers
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Thu, 04 Dec 2025 23:02:34 +0000
+Link: https://krebsonsecurity.com/2025/12/sms-phishers-pivot-to-points-taxes-fake-retailers/
+
+[TAM METİN - 1315 kelime]
+China-based phishing groups blamed for non-stop scam SMS messages about a supposed wayward package or unpaid toll fee are promoting a new offering, just in time for the holiday shopping season: Phishing kits for mass-creating fake but convincing e-commerce websites that convert customer payment card data into mobile wallets from Apple and Google. Experts say these same phishing groups also are now using SMS lures that promise unclaimed tax refunds and mobile rewards points.
+
+Over the past week, thousands of domain names were registered for scam websites that purport to offer T-Mobile customers the opportunity to claim a large number of rewards points. The phishing domains are being promoted by scam messages sent via Apple’s iMessage service or the functionally equivalent RCS messaging service built into Google phones.
+
+An instant message spoofing T-Mobile says the recipient is eligible to claim thousands of rewards points.
+
+The website scanning service urlscan.io shows thousands of these phishing domains have been deployed in just the past few days alone. The phishing websites will only load if the recipient visits with a mobile device, and they ask for the visitor’s name, address, phone number and payment card data to claim the points.
+
+A phishing website registered this week that spoofs T-Mobile.
+
+If card data is submitted, the site will then prompt the user to share a one-time code sent via SMS by their financial institution. In reality, the bank is sending the code because the fraudsters have just attempted to enroll the victim’s phished card details in a mobile wallet from Apple or Google. If the victim also provides that one-time code, the phishers can then link the victim’s card to a mobile device that they physically control.
+
+Pivoting off these T-Mobile phishing domains in urlscan.io reveals a similar scam targeting AT&T customers:
+
+An SMS phishing or “smishing” website targeting AT&T users.
+
+Ford Merrill works in security research at SecAlliance, a CSIS Security Group company. Merrill said multiple China-based cybercriminal groups that sell phishing-as-a-service platforms have been using the mobile points lure for some time, but the scam has only recently been pointed at consumers in the United States.
+
+“These points redemption schemes have not been very popular in the U.S., but have been in other geographies like EU and Asia for a while now,” Merrill said.
+
+A review of other domains flagged by urlscan.io as tied to this Chinese SMS phishing syndicate shows they are also spoofing U.S. state tax authorities, telling recipients they have an unclaimed tax refund. Again, the goal is to phish the user’s payment card information and one-time code.
+
+A text message that spoofs the District of Columbia’s Office of Tax and Revenue.
+
+Many SMS phishing or “smishing” domains are quickly flagged by browser makers as malicious. But Merrill said one burgeoning area of growth for these phishing kits — fake e-commerce shops — can be far harder to spot because they do not call attention to themselves by spamming the entire world.
+
+Merrill said the same Chinese phishing kits used to blast out package redelivery message scams are equipped with modules that make it simple to quickly deploy a fleet of fake but convincing e-commerce storefronts. Those phony stores are typically advertised on Google and Facebook, and consumers usually end up at them by searching online for deals on specific products.
+
+A machine-translated screenshot of an ad from a China-based phishing group promoting their fake e-commerce shop templates.
+
+With these fake e-commerce stores, the customer is supplying their payment card and personal information as part of the normal check-out process, which is then punctuated by a request for a one-time code sent by your financial institution. The fake shopping site claims the code is required by the user’s bank to verify the transaction, but it is sent to the user because the scammers immediately attempt to enroll the supplied card data in a mobile wallet.
+
+According to Merrill, it is only during the check-out process that these fake shops will fetch the malicious code that gives them away as fraudulent, which tends to make it difficult to locate these stores simply by mass-scanning the web. Also, most customers who pay for products through these sites don’t realize they’ve been snookered until weeks later when the purchased item fails to arrive.
+
+“The fake e-commerce sites are tough because a lot of them can fly under the radar,” Merrill said. “They can go months without being shut down, they’re hard to discover, and they generally don’t get flagged by safe browsing tools.”
+
+Happily, reporting these SMS phishing lures and websites is one of the fastest ways to get them properly identified and shut down. Raymond Dijkxhoorn is the CEO and a founding member of SURBL, a widely-used blocklist that flags domains and IP addresses known to be used in unsolicited messages, phishing and malware distribution. SURBL has created a website called smishreport.com that asks users to forward a screenshot of any smishing message(s) received.
+
+“If [a domain is] unlisted, we can find and add the new pattern and kill the rest” of the matching domains, Dijkxhoorn said. “Just make a screenshot and upload. The tool does the rest.”
+
+The SMS phishing reporting site smishreport.com.
+
+Merrill said the last few weeks of the calendar year typically see a big uptick in smishing — particularly package redelivery schemes that spoof the U.S. Postal Service or commercial shipping companies.
+
+“Every holiday season there is an explosion in smishing activity,” he said. “Everyone is in a bigger hurry, frantically shopping online, paying less attention than they should, and they’re just in a better mindset to get phished.”
+
+SHOP ONLINE LIKE A SECURITY PRO
+
+As we can see, adopting a shopping strategy of simply buying from the online merchant with the lowest advertised prices can be a bit like playing Russian Roulette with your wallet. Even people who shop mainly at big-name online stores can get scammed if they’re not wary of too-good-to-be-true offers (think third-party sellers on these platforms).
+
+If you don’t know much about the online merchant that has the item you wish to buy, take a few minutes to investigate its reputation. If you’re buying from an online store that is brand new, the risk that you will get scammed increases significantly. How do you know the lifespan of a site selling that must-have gadget at the lowest price? One easy way to get a quick idea is to run a basic WHOIS search on the site’s domain name. The more recent the site’s “created” date, the more likely it is a phantom store.
+
+If you receive a message warning about a problem with an order or shipment, visit the e-commerce or shipping site directly, and avoid clicking on links or attachments — particularly missives that warn of some dire consequences unless you act quickly. Phishers and malware purveyors typically seize upon some kind of emergency to create a false alarm that often causes recipients to temporarily let their guard down.
+
+But it’s not just outright scammers who can trip up your holiday shopping: Often times, items that are advertised at steeper discounts than other online stores make up for it by charging way more than normal for shipping and handling.
+
+So be careful what you agree to: Check to make sure you know how long the item will take to be shipped, and that you understand the store’s return policies. Also, keep an eye out for hidden surcharges, and be wary of blithely clicking “ok” during the checkout process.
+
+Most importantly, keep a close eye on your monthly statements. If I were a fraudster, I’d most definitely wait until the holidays to cram through a bunch of unauthorized charges on stolen cards, so that the bogus purchases would get buried amid a flurry of other legitimate transactions. That’s why it’s key to closely review your credit card bill and to quickly dispute any charges you didn’t authorize.
 
 (XXXXXXX, AÇIK - krebsonsecurity.com, 17.02.2026)
 
@@ -7245,12 +7298,114 @@ Trusted Platform Module
 
 ================================================================================
 
-[101] TechCrunch Security - Homeland Security reportedly sent hundreds of subpoenas seeking to unmask anti-ICE accounts
+[101] TechCrunch Security - European Parliament blocks AI on lawmakers’ devices, citing security risks
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 17 Feb 2026 16:30:43 +0000
+Link: https://techcrunch.com/2026/02/17/european-parliament-blocks-ai-on-lawmakers-devices-citing-security-risks/
+
+[TAM METİN - 694 kelime]
+The European Parliament has reportedly blocked lawmakers from using the baked-in AI tools on their work devices, citing cybersecurity and privacy risks with uploading confidential correspondence to the cloud.
+
+Per an email seen by Politico, the parliament’s IT department said it could not guarantee the security of the data uploaded to the servers of AI companies and that the full extent of what information is shared with AI companies is “still being assessed.”
+
+As such, the email said, “It is considered safer to keep such features disabled.”
+
+Uploading data to AI chatbots, like Anthropic’s Claude, Microsoft’s Copilot, and OpenAI’s ChatGPT, for example, means that U.S. authorities can demand the companies that run the chatbots turn over information about their users.
+
+AI chatbots also typically rely on using information that users provide or upload to improve their models, increasing the chance that potentially sensitive information uploaded by one person may be shared and seen by other users.
+
+Europe has some of the strongest data protection rules in the world. But the European Commission, the executive body that oversees the 27-member state bloc, last year floated new legislative proposals aimed at relaxing its data protection rules to make it easier for tech giants to train their AI models on Europeans’ data, drawing ire from critics who said the move caves in to U.S. technology giants.
+
+The move to restrict European lawmakers from accessing AI products on their devices comes as several EU member countries reevaluate their relationships with U.S. tech giants, which remain subject to U.S. law and the unpredictable whims and demands of the Trump administration.
+
+In recent weeks, the U.S. Department of Homeland Security has sent hundreds of subpoenas demanding U.S. tech and social media giants turn over information about people, including Americans, who have been publicly critical of the Trump administration’s policies.
+
+Google, Meta, and Reddit complied in several cases, even though the subpoenas had not been issued by a judge and were not enforced by a court.
+
+He can be reached via encrypted message at zackwhittaker.1337 on Signal. You can also contact him by email, or to verify outreach, at zack.whittaker@techcrunch.com.
+
+Tickets are live at the lowest rates of the year. Save up to $680 on your pass now.Meet investors. Discover your next portfolio company. Hear from 250+ tech leaders, dive into 200+ sessions, and explore 300+ startups building what’s next. Don’t miss these one-time savings.
+
+After all the hype, some AI experts don’t think OpenClaw is all that exciting
+
+
+
+Amanda Silberling
+
+After all the hype, some AI experts don’t think OpenClaw is all that exciting
+
+After all the hype, some AI experts don’t think OpenClaw is all that exciting
+
+OpenClaw creator Peter Steinberger joins OpenAI
+
+
+
+Anthony Ha
+
+OpenClaw creator Peter Steinberger joins OpenAI
+
+OpenClaw creator Peter Steinberger joins OpenAI
+
+Hollywood isn’t happy about the new Seedance 2.0 video generator
+
+
+
+Anthony Ha
+
+Hollywood isn’t happy about the new Seedance 2.0 video generator
+
+Hollywood isn’t happy about the new Seedance 2.0 video generator
+
+The great computer science exodus (and where students are going instead)
+
+
+
+Connie Loizos
+
+The great computer science exodus (and where students are going instead)
+
+The great computer science exodus (and where students are going instead)
+
+A Stanford grad student created an algorithm to help his classmates find love; now, Date Drop is the basis of his new startup
+
+
+
+Amanda Silberling
+
+A Stanford grad student created an algorithm to help his classmates find love; now, Date Drop is the basis of his new startup
+
+A Stanford grad student created an algorithm to help his classmates find love; now, Date Drop is the basis of his new startup
+
+Spotify says its best developers haven’t written a line of code since December, thanks to AI
+
+
+
+Sarah Perez
+
+Spotify says its best developers haven’t written a line of code since December, thanks to AI
+
+Spotify says its best developers haven’t written a line of code since December, thanks to AI
+
+With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
+
+
+
+Connie Loizos
+
+With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
+
+With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
+
+(XXXXXXX, AÇIK - techcrunch.com, 17.02.2026)
+
+================================================================================
+
+[102] TechCrunch Security - Homeland Security reportedly sent hundreds of subpoenas seeking to unmask anti-ICE accounts
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sat, 14 Feb 2026 22:30:00 +0000
 Link: https://techcrunch.com/2026/02/14/homeland-security-reportedly-sent-hundreds-of-subpoenas-seeking-to-unmask-anti-ice-accounts/
 
-[TAM METİN - 486 kelime]
+[TAM METİN - 476 kelime]
 Homeland Security reportedly sent hundreds of subpoenas seeking to unmask anti-ICE accounts
 
 The Department of Homeland Security has been increasing pressure on tech companies to identify the owners of social media accounts that criticize Immigration and Customs Enforcement (ICE), according to The New York Times.
@@ -7273,47 +7428,47 @@ Provides movers and shakers with the info they need to start their day.
 
 By submitting your email, you agree to our Terms and Privacy Notice.
 
-Government & Policy
+Security
 
 
-These are the countries moving to ban social media for children
-
-
-
-Aisha Malik
-
-
-	8 minutes ago
-
-These are the countries moving to ban social media for children
-
-Media & Entertainment
-
-
-Amazon Fire TV’s new interface is now rolling out in the U.S.
+European Parliament blocks AI on lawmakers’ devices, citing security risks
 
 
 
-Sarah Perez
+Zack Whittaker
 
 
-	9 minutes ago
+	3 minutes ago
 
-Amazon Fire TV’s new interface is now rolling out in the U.S.
+European Parliament blocks AI on lawmakers’ devices, citing security risks
 
-Apps
-
-
-Apple Podcasts is getting an enhanced video experience this spring
+AI
 
 
+All the important news from the ongoing India AI Impact Summit
 
-Aisha Malik
 
 
-	1 hour ago
+Ivan Mehta
 
-Apple Podcasts is getting an enhanced video experience this spring
+
+	1 day ago
+
+All the important news from the ongoing India AI Impact Summit
+
+AI
+
+
+Why the economics of orbital AI are so brutal
+
+
+
+Tim Fernholz
+
+
+	Feb 11, 2026
+
+Why the economics of orbital AI are so brutal
 
 Latest in Government & Policy
 
@@ -7327,7 +7482,7 @@ These are the countries moving to ban social media for children
 Aisha Malik
 
 
-	8 minutes ago
+	34 minutes ago
 
 These are the countries moving to ban social media for children
 
@@ -7363,7 +7518,7 @@ All the important news from the ongoing India AI Impact Summit
 
 ================================================================================
 
-[102] TechCrunch Security - Indian pharmacy chain giant exposed customer data and internal systems
+[103] TechCrunch Security - Indian pharmacy chain giant exposed customer data and internal systems
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sat, 14 Feb 2026 03:30:00 +0000
 Link: https://techcrunch.com/2026/02/13/indias-major-pharmacy-chain-exposed-customer-data-and-internal-systems/
@@ -7471,7 +7626,7 @@ With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
 
 ================================================================================
 
-[103] TechCrunch Security - Fintech lending giant Figure confirms data breach
+[104] TechCrunch Security - Fintech lending giant Figure confirms data breach
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 13 Feb 2026 21:02:46 +0000
 Link: https://techcrunch.com/2026/02/13/fintech-lending-giant-figure-confirms-data-breach/
@@ -7521,7 +7676,7 @@ Apple Podcasts is getting an enhanced video experience this spring
 Aisha Malik
 
 
-	49 minutes ago
+	33 minutes ago
 
 Apple Podcasts is getting an enhanced video experience this spring
 
@@ -7535,7 +7690,7 @@ Here are the 17 US-based AI companies that have raised $100m or more in 2026
 Rebecca Szkutak
 
 
-	57 minutes ago
+	41 minutes ago
 
 Here are the 17 US-based AI companies that have raised $100m or more in 2026
 
@@ -7549,7 +7704,7 @@ India bids to attract over $200B in AI infrastructure investment by 2028
 Jagmeet Singh
 
 
-	2 hours ago
+	1 hour ago
 
 India bids to attract over $200B in AI infrastructure investment by 2028
 
@@ -7605,7 +7760,7 @@ Lorenzo Franceschi-Bicchierai
 
 ================================================================================
 
-[104] TechCrunch Security - Sex toys maker Tenga says hacker stole customer information
+[105] TechCrunch Security - Sex toys maker Tenga says hacker stole customer information
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 13 Feb 2026 20:19:05 +0000
 Link: https://techcrunch.com/2026/02/13/sex-toys-maker-tenga-says-hacker-stole-customer-information/
@@ -7715,7 +7870,7 @@ With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
 
 ================================================================================
 
-[105] TechCrunch Security - Dutch phone giant Odido says millions of customers affected by data breach
+[106] TechCrunch Security - Dutch phone giant Odido says millions of customers affected by data breach
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 13 Feb 2026 15:54:13 +0000
 Link: https://techcrunch.com/2026/02/13/dutch-phone-giant-odido-says-millions-of-customers-affected-by-data-breach/
@@ -7817,7 +7972,7 @@ With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
 
 ================================================================================
 
-[106] TechCrunch Security - Amazon’s Ring cancels partnership with Flock, a network of AI cameras used by ICE, feds, and police
+[107] TechCrunch Security - Amazon’s Ring cancels partnership with Flock, a network of AI cameras used by ICE, feds, and police
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 13 Feb 2026 15:40:15 +0000
 Link: https://techcrunch.com/2026/02/13/amazons-ring-cancels-partnership-with-flock-a-network-of-ai-cameras-used-by-ice-feds-and-police/
@@ -7927,7 +8082,7 @@ With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
 
 ================================================================================
 
-[107] TechCrunch Security - Hacker linked to Epstein removed from Black Hat cyber conference website
+[108] TechCrunch Security - Hacker linked to Epstein removed from Black Hat cyber conference website
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 19:15:04 +0000
 Link: https://techcrunch.com/2026/02/12/hacker-linked-to-epstein-removed-from-black-hat-cyber-conference-website/
@@ -8052,7 +8207,7 @@ With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
 
 ================================================================================
 
-[108] TechCrunch Security - More US investors sue South Korean government over handling of Coupang data breach
+[109] TechCrunch Security - More US investors sue South Korean government over handling of Coupang data breach
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 16:56:32 +0000
 Link: https://techcrunch.com/2026/02/12/more-u-s-investors-sue-south-korean-government-over-handling-of-coupang-data-breach/
@@ -8190,7 +8345,7 @@ With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
 
 ================================================================================
 
-[109] TechCrunch Security - Microsoft says hackers are exploiting critical zero-day bugs to target Windows and Office users
+[110] TechCrunch Security - Microsoft says hackers are exploiting critical zero-day bugs to target Windows and Office users
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 11 Feb 2026 20:46:40 +0000
 Link: https://techcrunch.com/2026/02/11/microsoft-says-hackers-are-exploiting-critical-zero-day-bugs-to-target-windows-and-office-users/
@@ -8219,149 +8374,6 @@ Microsoft said this bug allows hackers to bypass security features in Windows to
 According to independent security reporter Brian Krebs, Microsoft also patched three other zero-day bugs in its software that were being actively exploited by hackers.
 
 He can be reached via encrypted message at zackwhittaker.1337 on Signal. You can also contact him by email, or to verify outreach, at zack.whittaker@techcrunch.com.
-
-Tickets are live at the lowest rates of the year. Save up to $680 on your pass now.Meet investors. Discover your next portfolio company. Hear from 250+ tech leaders, dive into 200+ sessions, and explore 300+ startups building what’s next. Don’t miss these one-time savings.
-
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
-
-
-
-Amanda Silberling
-
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
-
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
-
-OpenClaw creator Peter Steinberger joins OpenAI
-
-
-
-Anthony Ha
-
-OpenClaw creator Peter Steinberger joins OpenAI
-
-OpenClaw creator Peter Steinberger joins OpenAI
-
-Hollywood isn’t happy about the new Seedance 2.0 video generator
-
-
-
-Anthony Ha
-
-Hollywood isn’t happy about the new Seedance 2.0 video generator
-
-Hollywood isn’t happy about the new Seedance 2.0 video generator
-
-The great computer science exodus (and where students are going instead)
-
-
-
-Connie Loizos
-
-The great computer science exodus (and where students are going instead)
-
-The great computer science exodus (and where students are going instead)
-
-A Stanford grad student created an algorithm to help his classmates find love; now, Date Drop is the basis of his new startup
-
-
-
-Amanda Silberling
-
-A Stanford grad student created an algorithm to help his classmates find love; now, Date Drop is the basis of his new startup
-
-A Stanford grad student created an algorithm to help his classmates find love; now, Date Drop is the basis of his new startup
-
-Spotify says its best developers haven’t written a line of code since December, thanks to AI
-
-
-
-Sarah Perez
-
-Spotify says its best developers haven’t written a line of code since December, thanks to AI
-
-Spotify says its best developers haven’t written a line of code since December, thanks to AI
-
-With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
-
-
-
-Connie Loizos
-
-With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
-
-With co-founders leaving and an IPO looming, Elon Musk turns talk to the moon
-
-(XXXXXXX, AÇIK - techcrunch.com, 17.02.2026)
-
-================================================================================
-
-[110] TechCrunch Security - DOJ says Trenchant boss sold exploits to Russian broker capable of accessing ‘millions of computers and devices’
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Wed, 11 Feb 2026 18:41:41 +0000
-Link: https://techcrunch.com/2026/02/11/doj-says-trenchant-boss-sold-exploits-to-russian-broker-capable-of-accessing-millions-of-computers-and-devices/
-
-[TAM METİN - 1403 kelime]
-The former boss of a U.S. maker of hacking and surveillance tools stole and sold technology that can hack millions of computers and people worldwide, U.S. prosecutors have confirmed for the first time.
-
-In October, Australian national Peter Williams, 39, pleaded guilty to selling eight hacking tools that he stole from his employer Trenchant, a division of the U.S. defense contractor L3Harris, which sells its surveillance-enabling tools to the U.S. government and its closest allies. Williams admitted to making more than $1.3 million in crypto from the sales between 2022 and 2025, per the Justice Department.
-
-In a court document published on Tuesday, federal prosecutors said Williams’ actions “directly harmed” the U.S. intelligence community by selling the hacking tools to a Russian company, which counts the Russian government among its customers.
-
-While it was known that Williams sold Trenchant’s exploits — software that takes advantage of flaws in other software usually to gain access to someone’s computer or device — prosecutors now say that these eight tools could have been used to indiscriminately enable government surveillance, cybercrime, and ransomware attacks across the globe.
-
-This latest disclosure comes ahead of Williams’ anticipated sentencing on February 24 in a Washington, D.C., federal court. In its sentencing memorandum, which prosecutors use to persuade a court into handing down the maximum punishment, the Justice Department said that the exploits sold by Williams would have allowed the Russian broker and its customers to “potentially access millions of computers and devices around the world, including in the United States.”
-
-Prosecutors asked the judge to sentence Williams to nine years in prison, with three years of supervised release, a mandatory restitution of $35 million, and a maximum fine of $250,000. Williams is expected to be deported to Australia after serving his sentence, the memorandum said.
-
-Contact Us
-			Do you have more information about this case, or about other zero-day and surveillance tech makers? From a non-work device, you can contact Lorenzo Franceschi-Bicchierai securely on Signal at +1 917 257 1382, or via Telegram, Keybase and Wire @lorenzofb, or by email.
-
-In response to the prosecutors’ memorandum, Williams submitted a letter to the judge explaining his decisions, saying that he regretted his actions.
-
-TechCrunch Founder Summit 2026: Tickets Live
-
-TechCrunch Founder Summit: Tickets Live
-
-“I made choices that directly violated the values I believed in and the trust placed in me by my family, colleagues, and friends,” wrote Williams. “I recognize now that I allowed myself to ignore my obligations and my training, and I failed to seek help or guidance when I knew I was moving in the wrong direction.”
-
-Williams’ lawyer, John P. Rowley, wrote in response to prosecutors that none of the stolen hacking tools were classified, and there was no evidence that Williams knew the tools would end up in the hands of the governments of Russia or another country. His lawyer said that Williams did not intend to harm the U.S. and his native Australia, “although he now recognizes that was a consequence of his actions.”
-
-When reached by TechCrunch, Justice Department spokesperson Pierson Furnish declined to comment. Rowley, Williams’ attorney, did not respond to a request for comment.
-
-From scapegoat to sentencing
-
-During mid-2025, several sources with knowledge of the offensive cybersecurity industry told TechCrunch that someone working for Trenchant had stolen sensitive hacking tools and sold them to an adversary of the United States.
-
-A former Trenchant employee came forward, telling TechCrunch that he had been wrongly fired after the company accused him of stealing and leaking details of some of the company’s exploits.
-
-But by October, prosecutors formally accused Williams, who also goes by “Doogie” and was Trenchant’s general manager at the time, of being behind the theft of the company’s hacking tools. The U.S. government charged Williams with selling the exploits to a Russian broker in exchange for crypto.
-
-Prosecutors said that FBI agents were in contact with Williams from late 2024 until the time of his arrest in mid-2025, during which he was overseeing Trenchant’s internal investigation into the theft of the company’s secrets.
-
-Despite the ongoing investigation, Williams continued to sell the company’s secrets and exploits — technically known as zero-days since the software maker affected hadn’t had time to fix them — even when he was aware that the FBI was investigating the theft and sale of Trenchant’s hacking tools.
-
-Williams also oversaw the firing of the Trenchant employee accused of leaking the tools, sources told TechCrunch and prosecutors have since confirmed. The fired employee told TechCrunch that he believed he was a scapegoat for someone else at the company. Weeks after his firing, the employee received a notification from Apple that he had been targeted with government spyware, which has still not been explained.
-
-“[Williams] stood idly by while another employee of the company was essentially blamed for the Defendant’s own conduct,” the prosecutors wrote in their sentencing memorandum. “He looked on while an internal corporate investigation falsely cast blame on his subordinate.”
-
-A spokesperson for Trenchant did not respond to a request for comment about Williams or its investigation.
-
-On August 6, FBI agents obtained and executed search warrants for Williams’ home, and then confronted Williams with evidence that showed receipts of crypto payments, the alias he used to interact with the Russian broker that purchased the stolen trade secrets, and his contract with the broker.
-
-The Russian broker is likely Operation Zero, which offers up to $20 million for tools to hack into Android devices and iPhones. The company explicitly says it only sells to the Russian government and local organizations.
-
-Operation Zero did not return a request for comment.
-
-Prosecutors called the broker, which it did not name, “one of the world’s most nefarious exploit brokers,” and said that Williams chose it because, “by his own admission, he knew they paid the most.”
-
-Williams’ “desire for more money, a better lifestyle, bigger home and more jewels and trinkets simply could not be satiated, and he chose to risk it all to betray his company, his colleagues, and the United States and its allies to satisfy that desire,” the prosecutors wrote.
-
-Senior Reporter, Cybersecurity
-
-Lorenzo Franceschi-Bicchierai is a Senior Writer at TechCrunch, where he covers hacking, cybersecurity, surveillance, and privacy.
-
-You can contact or verify outreach from Lorenzo by emailing lorenzo@techcrunch.com, via encrypted message at +1 917 257 1382 on Signal, and @lorenzofb on Keybase/Telegram.
 
 Tickets are live at the lowest rates of the year. Save up to $680 on your pass now.Meet investors. Discover your next portfolio company. Hear from 250+ tech leaders, dive into 200+ sessions, and explore 300+ startups building what’s next. Don’t miss these one-time savings.
 
@@ -9038,7 +9050,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 Tarih: Mon, 16 Feb 2026 19:41:33 +0000
 Link: https://www.csoonline.com/article/4132781/was-cisos-uber-openclaw-wissen-sollten.html
 
-[TAM METİN - 1821 kelime]
+[TAM METİN - 1814 kelime]
 Was CISOs über OpenClaw wissen sollten
 
 OpenClaw kann für Unternehmen zum Albtraum in Sachen Cybersicherheit werden. Lesen Sie, wo die Gefahren lauern und was zu beachten ist.
@@ -9153,8 +9165,6 @@ Wie Hacker ML für Angriffe nutzen
 analysisDevSecOps: Sichere Softwareentwicklung mit GenAI? 14. März 2024 11 Minuten
 
 DevSecOps: Sichere Softwareentwicklung mit GenAI?
-
-MCSC 2026: „Politik und Wirtschaft müssen zusammenarbeiten“
 
 Was CISOs über OpenClaw wissen sollten
 
@@ -9615,7 +9625,157 @@ Neue Kooperation soll souveräne Cloud-Lösungen bringen
 
 ================================================================================
 
-[121] Infoblox Blog - Leveraging Infoblox Universal Asset Insights™ to Visualize ServiceNow CMDB Accuracy
+[121] Infoblox Blog - Banners, Bots and Butchers: An Automated Long Con Targeting Japan, Asia, and Beyond
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 17 Feb 2026 16:25:26 +0000
+Link: https://www.infoblox.com/blog/threat-intelligence/banners-bots-and-butchers-an-automated-long-con-targeting-japan-asia-and-beyond/
+
+[TAM METİN - 2816 kelime]
+Over the past few months, we investigated cryptocurrency investment scam campaigns that combined two distinct fraud models: malvertising, which typically directs victims to fake investment platforms, and pig butchering, a scam that relies heavily on social engineering to gradually extract larger and larger sums of money from each victim over time. Evidence indicates the campaigns heavily target users in Asia, especially Japan. The financial impact can be significant, with individual victim losses related to this campaign alone of up to ¥10 million (approximately US$63,000) according to a December 2025 report by the Japanese television and radio broadcaster RCC Chugoku Broadcasting.
+
+Our investigation began with the discovery of a cluster of suspicious domains—many generated using registered domain generation algorithms (RDGAs)—that were disproportionately queried by users in Japan. While we expected to uncover a classic investment scam, we discovered something quite different: a hybrid scam model that combines malvertising‑driven victim acquisition with messaging app‑centric pig butchering (Figure 1).
+
+Figure 1. Hybrid use of malvertising and pig butchering
+
+In these campaigns, ads impersonate well‑known financial experts or promote access to the “best” investment AI algorithm. These ads send users to websites that further redirect them to popular messaging apps. Once engaged, victims who have clicked on a legitimate messaging app link or scanned the official QR code, are drawn into one‑on‑one and group chats with AI bots that impersonate these experts, or often their assistants, and provide constant interaction, share fabricated success stories, and offer incentives such as gifts or rewards. Over time, they persuade victims to commit progressively larger amounts of money, culminating in a final demand for a so‑called “release fee” to unlock profits (which do not exist).
+
+After pivoting on our initial DNS findings, we identified multiple interconnected campaigns and ultimately discovered more than 23,000 domains within this ecosystem. Although these campaigns may be operated by different actors, similarities in the underlying website framework along with overlapping advertising flows, analytic identifiers, and messaging‑based social engineering patterns suggest the presence and use of a shared enablement layer, potentially an as‑a‑service model or off‑the‑shelf kit.
+
+To understand the campaigns more deeply, we engaged with the actors. We found that the chat groups had continuous engagement across time zones and a lack of disruption when conversations inadvertently changed language, strongly suggesting the use of automated or AI‑assisted chat systems, rather than a typical human‑driven interaction. In this blog, we’ll share our experience with the threat actors, as well as the DNS findings.
+
+In addition to being a novel combination of malvertising and pig butchering, these campaigns may point toward how automation and AI‑assisted tooling could influence the future of social engineering to enable fraud. If this model were to be further developed, it could transform pig butchering from a high‑profit but labor-intensive operation into a faster, cheaper, and more globally scalable form of investment fraud.
+
+From Malvertising to Messaging Apps
+
+Cryptocurrency investment scams have long followed two familiar playbooks. In one, threat actors rely on malvertising, using social media ads, spam, or sponsored search results to push victims toward fake trading platforms designed to extract funds with the promise of high returns. In the other, pig butchering scams unfold more slowly, using prolonged and highly personalized social engineering techniques, typically via text messages and messaging apps, to encourage victims to invest progressively larger sums over time.
+
+Both approaches are well documented, widely reported, and certainly familiar to us as a research team. We have previously studied each in depth, including our recent work on the booming pig butchering‑as‑a‑service (PBaaS) economy, as well as earlier research on many malvertising actors leveraging different DNS techniques for their campaigns, including Savvy Seahorse, who uses DNS CNAMEs and Facebook ads to lure victims to fake investment platforms. We’ve also documented other actors using Facebook ads and bulk domain registration, as well as lookalike domains used in AI-produced videos on hacked YouTube channels.
+
+Over the past several months, however, we began to observe campaigns that no longer fit neatly into either category. What started as a DNS‑led investigation into suspicious domains disproportionately queried by users in Japan revealed a growing number of investment scams that effectively blend both approaches to scamming into a single operation.
+
+Rather than using malvertising solely to direct victims to fraudulent investment platforms, these campaigns use it as an initial acquisition channel, redirecting users to “lure websites” where they are prompted to initiate contact through popular messaging applications, either by clicking on a legitimate messaging app link or scanning an official QR code. It is within these messaging apps that the social engagement phase, and ultimately the fraud itself, takes place.
+
+This shift changes both the scale and the mechanics of these scams. Malvertising continues to provide reach and volume, while messaging apps offer a familiar and often trusted environment for sustained interactions. Together, they form a hybrid scam model that combines the efficiency and scale of malvertising with the psychological leverage of pig butchering.
+
+These campaigns also use modified pig butchering techniques in an effort to better gain victims’ trust. Instead of scammers initiating contact, as is typical with these schemes, the workflow is structured so victims initiate each step of the scam themselves: clicking the ad, engaging with the lure website, and transitioning to the messaging application. This helps create an impression of voluntary participation rather than overt coercion.
+
+Pivoting from the initial cluster of suspicious domains that triggered this investigation, we expanded our DNS analysis and identified thousands of additional domains associated with similar activity. A significant proportion of those appeared to have been generated using RDGAs, which are typically registered in bulk via APIs.
+
+Threat actors use RDGAs to rapidly create and register large numbers of domains, reducing the time and effort required to scale their campaign infrastructure and allowing domains to be rotated in response to detection or takedown efforts.
+
+While many of these RDGA domains consist of random character strings, others appear to have been created using brand‑related dictionaries to produce lookalike domain names. This is likely an attempt to make campaign-related domains such as googlenames[.]top and youtubefind[.]com appear familiar and legitimate, and therefore safe. When paired with social media advertising, these lookalike domains lower initial suspicion and increase the likelihood of victim engagement.
+
+In addition to distinctive RDGA naming patterns, we used domain registration and DNS characteristics such as name server (NS) records, registrar selection, advertiser tracking IDs, and the autonomous system numbers (ASNs) associated with host IP addresses to identify more than 100 distinct clusters of domains associated with the same scam activity.
+
+To illustrate the scale and complexity of these relationships, Figure 2 shows larger infrastructure nodes (combinations of registrars and name servers), along with the unique, smaller domain nodes associated with them.
+
+Figure 2. Campaign-associated clusters comprised of infrastructure and domain nodes
+
+The observed domain naming strategies correlate with domain longevity. Lookalike and dictionary-based domains often remain active for at least a year, whereas domains composed of random character strings are typically cycled out after approximately four months.
+
+This pattern suggests a deliberate trade-off between domain credibility and disposability within the same operational model: higher-quality domain names seem to be reserved for longer-lived infrastructure while lower-effort domains appear to be treated as more disposable.
+
+Although many of the identified domain clusters exhibit similar characteristics and are interrelated, there are clear differences in registrar usage, hosting providers and top-level domains (TLDs); see Table 1. This variation suggests distinct infrastructure choices, likely made by multiple operators, within a broader shared ecosystem.
+
+The substantial volume of observed domains, the high frequency of new domain registrations and the diversity of supporting infrastructure are consistent with an industrial-scale deployment by multiple actors rather than a single small or localized campaign.
+
+To date, we have associated more than 23,000 domains with this scam ecosystem, including instances where hundreds of domains were registered on a single day. Figure 3 illustrates a steady increase in registrations beginning in early 2025, punctuated by periodic spikes that align with intensified campaign activity in July and September.
+
+Figure 3. Monthly distribution of second-level domain (SLD) registrations linked to these campaigns since January 2025
+
+Upon investigation of the initial malvertising campaigns, we noted that the websites that were hosted on the domains we identified shared consistent layouts, messaging, and interaction flows. Across the large number of sites we analyzed, the underlying structure remained effectively unchanged, suggesting that they were generated from a common site framework or kit rather than being independently developed (Figure 4).
+
+Figure 4. Structurally similar sites (Top: Financial expert variant; Bottom: AI algorithm variant)
+
+These lure websites continue the narrative introduced by the initial malvertising messages to build credibility and trust by exploiting the likeness of the financial expert or offering access to the “best” investment AI algorithm.
+
+The content of these sites is deliberately designed to prompt victim interaction through enticing language, eye‑catching visuals depicting potential investment results, and promises of free assistance, all leading to a clear call to action.
+
+In some cases, visitors are directed to join an investment chat or community within a legitimate messaging app via a link or by scanning an official QR code (to facilitate access from mobile devices). In other cases, users are prompted to submit a company ticker symbol for “AI‑driven” analysis, reinforcing the illusion of legitimacy and credibility before being directed to the investment chats and communities.
+
+Regardless of the interaction mechanism used, the role of these sites is to transition curious potential victims from the initial ad and into a familiar messaging app so that the “personal” interaction phase of the scam can begin.
+
+We were able to use the domains identified during our DNS analysis to compile a catalog of structurally similar scam websites across multiple campaigns and regions.
+
+Evidence of the repeated use of the same underlying framework, especially across otherwise distinct domain clusters, further supports the likelihood of there being a shared enablement layer that underpins most, if not all, of this activity.
+
+Regional Targeting and Persona Impersonation
+
+While Japanese journalists have reported on individual scams and the tens of thousands of yen lost by the victims, these incidents have largely been treated as isolated cases. However, we have been able to piece together a much broader picture by clustering the identified domains and correlating shared characteristics across campaigns.
+
+Geographically, Japan has been the primary target and Asia has been the most heavily impacted region. That being said, the underlying threat appears to be increasingly global in scope. We detect an average of 4,000 RDGA‑generated domains per month tied to these campaigns, and they are active worldwide.
+
+The lures in these Japanese campaigns follow the same patterns described in our April 2025 blog, which detailed common investment scam tactics, techniques, and procedures (TTPs). Specifically, these campaigns use social media ads on platforms such as Instagram and Facebook, promising high returns and free investment advice while exploiting the likenesses of well‑known financial experts, including:
+
+Hiroto Kiritani, a Japanese millionaire widely known as the “God of Freebies”
+
+Nam Seok‑kwan, a prominent figure in the Korean investment industry
+
+Chang Kuo‑wei, president of StarLux Airlines
+
+Several of these individuals have publicly addressed the malicious campaigns abusing their likenesses, warning audiences about the associated risks and decrying the harm being caused to their reputations.
+
+Further highlighting similarities across campaigns, a recent social media ad observed on Meta targeting Japanese speakers and misusing the likeness of Hiroto Kiritani (Figure 5) reuses youtubefind[.]top, a lure domain that was also used in an older campaign that targeted Spanish speakers (Figure 6).
+
+Figure 5. Ad on Meta targeting Japanese speakers, misusing the likeness of Hiroto Kiratani, and directing to ‘youtubefind[.]top’ (Left: Original; Right: English translation)
+
+Figure 6. Older ad on Meta targeting Spanish speakers, also directing to ‘youtubefind[.]top’ (Left: Original; Right: English translation)
+
+While some of these ads were active for only a few hours, many remained online for considerably longer. Notably, even malicious ads that we directly reported to Meta as abusive remained online for approximately one week before any apparent enforcement action was taken.
+
+These ads ultimately direct victims to actor‑controlled websites that form the next stage of the funnel. As shown in Figures 7 and 8, these sites are structurally similar and continue using the same persona as the ads to maintain the investment narrative before driving victims toward legitimate messaging apps such as KakaoTalk, LINE, and WhatsApp.
+
+Figure 7. Actual destination of the ad shown in Figure 5 with the link to youtubefind[.]top (Left: Original; Right: English translation)
+
+Figure 8. Destination website of a South Korean ad campaign (Left: Original; Right: English translation)
+
+Chat Apps and AI Bots
+
+Having encountered an active and ongoing campaign, we made the decision to engage directly, acting as scam bait, to observe and better understand how the fraud unfolds once victims are transitioned into messaging applications. From our resulting “victim experiences,” we confirmed that the TTPs were highly consistent across the campaigns we interacted with.
+
+After clicking through the initial ad and following the flow from the lure website, we were directed into messaging applications, where it quickly became apparent that we were interacting with a chatbot rather than a human, and likely an AI‑driven one at that.
+
+Following an initial one‑on‑one engagement with the impersonated “expert,” we were directed to a secondary chat with their “assistant.” From there, we were guided toward a larger “class group chat,” where a supposed teacher provided investment guidance and other “students, just like us” participated in ongoing daily discussions.
+
+Figure 9 shows a snapshot of the many concurrent chats we became part of after engaging with only three campaigns.
+
+Figure 9. Our “LINE” messaging app showing multiple scam chats and groups across three campaigns (Left: Original; Right: English translation)
+
+Within these group chats, we received a steady stream of enticing messages, including promises of sky‑high profits from the “experts” and fabricated success stories shared by other “students.”
+
+We were also offered a points-based incentive. The points would supposedly be redeemable for prizes (Figure 10) and awarded based on our continued engagement.
+
+Figure 10. Pamphlet of incentive prizes shared during a chat session; we have our eyes on that massage chair! (Left: Original; Right: English translation)
+
+We were encouraged to provide our thoughts on market‑related questions, such as “Do you think X stock will rise tonight?” or “Which currency should be exchanged for the yen: the euro or the dollar?” and share screenshots of our trading activity.
+
+All these chats ultimately give the game away. Seemingly scripted chatter, recycled questions, and lightning‑fast responses at any hour all point toward automated, likely AI‑assisted behavior. While we cannot confirm that the same AI or chatbot system powers every campaign we observed, the consistency of interactions and account behaviors across campaigns strongly suggests the use of the same underlying ecosystem.
+
+The apparent use of intelligent automated interactions demonstrates that pig butchering scams no longer require teams of human operators to maintain one‑on‑one conversations. Victims are effectively alone: there are no experts, no students, and no one gets to sit in that massage chair—except maybe the scammers.
+
+We didn’t take the final step of the scam ourselves; instead, we relied on Japanese media reporting based on victim testimony to complete the sequence. According to these sources1,2 (one is geo-restricted to Japan), victims are first encouraged to deposit funds and make investments using legitimate applications and publicly traded stocks. Once a level of trust has been established, they are prompted to transfer money directly to the scammers, often under the pretext of earning extra profits.
+
+Victims are then shown fabricated and exaggerated returns to give the illusion of success and encourage them to make further deposits. In reality, no investment activity takes place; the funds only enrich those behind the schemes. When the scammers decide to end the interaction, they inform victims that the service is shutting down and instruct them to pay a final fee to “release” their profits—the coup de grâce. By the time the deception becomes clear, the funds are long gone.
+
+From Regional Threat to Global Model
+
+While Japan and South Korea are among the most heavily impacted regions, campaigns associated with this ecosystem are increasingly targeting English-, German-, and Spanish‑speaking audiences. This shift suggests continued geographic expansion beyond the initial focus on Asia, likely enabled by infrastructure and workflows that are easily reused and localizable.
+
+These campaigns demonstrate how pig butchering no longer needs to rely on labor-intensive, long‑con personal interactions. By combining malvertising‑driven victim acquisition with messaging‑centric pig butchering techniques, actors can now deploy scalable, automated business models that merge two previously distinct scam methods into a single operational workflow. The low cost of entry and ability to scale globally make this hybrid approach particularly attractive to cybercriminals and could point toward a meaningful shift in how investment fraud is conducted.
+
+Indicators of Activity
+
+A sample set of technical indicators associated with these campaigns is provided below; further indicators are available from our GitHub repository.
+
+https://www.duras.jp/morihuyuko/
+
+https://diamond.jp/zai/articles/-/1036609
+
+(XXXXXXX, AÇIK - infoblox.com, 17.02.2026)
+
+================================================================================
+
+[122] Infoblox Blog - Leveraging Infoblox Universal Asset Insights™ to Visualize ServiceNow CMDB Accuracy
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 16:00:07 +0000
 Link: https://www.infoblox.com/blog/company/leveraging-infoblox-universal-asset-insights-to-visualize-servicenow-cmdb-accuracy/
@@ -9725,7 +9885,7 @@ For detailed, step-by-step guidance on configuring the ServiceNow provider and d
 
 ================================================================================
 
-[122] Infoblox Blog - Closing the CMDB Trust Gap Starts with the Network
+[123] Infoblox Blog - Closing the CMDB Trust Gap Starts with the Network
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 15:55:31 +0000
 Link: https://www.infoblox.com/blog/company/closing-the-cmdb-trust-gap-starts-with-the-network/
@@ -9789,7 +9949,7 @@ Read the blog post, Leveraging Infoblox Universal Asset Insights™ to Visualize
 
 ================================================================================
 
-[123] Infoblox Blog - Novel AI Techniques for DNS Tunnel Security
+[124] Infoblox Blog - Novel AI Techniques for DNS Tunnel Security
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 05 Feb 2026 15:55:44 +0000
 Link: https://www.infoblox.com/blog/security/novel-ai-techniques-for-dns-tunnel-security/
@@ -9897,7 +10057,7 @@ The secondary validation layer operates as a scalable microservice architecture,
 
 ================================================================================
 
-[124] Infoblox Blog - DNS Armor Now Generally Available
+[125] Infoblox Blog - DNS Armor Now Generally Available
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Feb 2026 18:51:43 +0000
 Link: https://www.infoblox.com/blog/security/dns-armor-now-generally-available/
@@ -9957,7 +10117,7 @@ Learn more about how Infoblox partners with Google Cloud here.
 
 ================================================================================
 
-[125] Infoblox Blog - Compromised Routers, DNS, and a TDS Hidden in Aeza Networks
+[126] Infoblox Blog - Compromised Routers, DNS, and a TDS Hidden in Aeza Networks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Feb 2026 15:55:59 +0000
 Link: https://www.infoblox.com/blog/threat-intelligence/compromised-routers-dns-and-a-tds-hidden-in-aeza-networks/
@@ -10045,7 +10205,7 @@ In our case, a third-party “port 53” collection helped us recognize this ove
 
 ================================================================================
 
-[126] Infoblox Blog - Managed Security Service Providers are Redefining How Enterprises Detect, Disrupt and Respond to Modern Threats
+[127] Infoblox Blog - Managed Security Service Providers are Redefining How Enterprises Detect, Disrupt and Respond to Modern Threats
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 28 Jan 2026 15:55:53 +0000
 Link: https://www.infoblox.com/blog/community/managed-security-service-providers-are-redefining-how-enterprises-detect-disrupt-and-respond-to-modern-threats/
@@ -10075,7 +10235,7 @@ The Skilled to Secure philosophy puts technical competency at the core and rewar
 
 ================================================================================
 
-[127] Infoblox Blog - Global System Integrators Architect the Secure, Cloud-first Infrastructures that Global Enterprises Depend on
+[128] Infoblox Blog - Global System Integrators Architect the Secure, Cloud-first Infrastructures that Global Enterprises Depend on
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 22 Jan 2026 15:55:34 +0000
 Link: https://www.infoblox.com/blog/community/global-system-integrators-architect-the-secure-cloud-first-infrastructures-that-global-enterprises-depend-on/
@@ -10109,7 +10269,7 @@ Engage your Infoblox team to map your GSI sub-track plan across target countries
 
 ================================================================================
 
-[128] Infoblox Blog - Hallucinating for Fun and Profit: Using LLMs to Find Lookalikes without Targets
+[129] Infoblox Blog - Hallucinating for Fun and Profit: Using LLMs to Find Lookalikes without Targets
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 20 Jan 2026 15:55:05 +0000
 Link: https://www.infoblox.com/blog/security/hallucinating-for-fun-and-profit-using-llms-to-find-lookalikes-without-targets/
@@ -10147,7 +10307,7 @@ How does this help protect Infoblox customers? We have now figured out how to ma
 
 ================================================================================
 
-[129] Infoblox Blog - Raising the Bar for Service Providers: Introducing GSI and MSSP Tracks in Skilled to Secure Partner Program
+[130] Infoblox Blog - Raising the Bar for Service Providers: Introducing GSI and MSSP Tracks in Skilled to Secure Partner Program
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 16 Jan 2026 18:11:30 +0000
 Link: https://www.infoblox.com/blog/community/raising-the-bar-for-service-providers-introducing-gsi-and-mssp-tracks-in-skilled-to-secure-partner-program/
@@ -10174,186 +10334,6 @@ If you’re a GSI or MSSP ready to stand out, this is your moment. Connect with 
 About Skilled to Secure
 
 The Infoblox Skilled to Secure, Trusted Partner Program rewards partners who invest in technical competencies with higher status and benefits, including enablement, deal registration advantages and marketing support.
-
-(XXXXXXX, AÇIK - infoblox.com, 17.02.2026)
-
-================================================================================
-
-[130] Infoblox Blog - Inside a Malicious Push Network: What 57M Logs Taught Us
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Thu, 15 Jan 2026 15:55:47 +0000
-Link: https://www.infoblox.com/blog/threat-intelligence/inside-a-malicious-push-network-what-57m-logs-taught-us/
-
-[TAM METİN - 5003 kelime]
-Who doesn’t love to eavesdrop onto a juicy conversation? We recently snooped on the communications of an affiliate advertising push notification system whose DNS records were left misconfigured–oops. This mistake allowed us to receive a copy of every ad they sent victims, along with all the metrics they recorded. We analyzed over 57M logs collected over a two-week period that contained advertisements, requests for software upgrades, and other events. It’ll come as no shock to our regular readers that we observed widespread deceptive practices, scam activity, and brand impersonation throughout the data.
-
-As interesting as the data was, the method we employed was even more fun. We used a DNS technique to take control of a domain abandoned by the threat actor by simply claiming it at the DNS provider. For the DNS geeks out there: we took advantage of a lame name server delegation. We warned about this technique last year, which we dubbed Sitting Ducks attacks, in joint research with Eclypsium. As soon as we realized that the actor had neglected one of their DNS records, we immediately called Eclypsium again.
-
-Within an hour, we had claimed the domain at the DNS provider, and our server was flooded with requests from victim devices, sending detailed information about their device and more! This wasn’t an adversary in the middle (AiTM) operation; we had a seat “on the side” of the threat actor’s operations. Every message from the notification server to every victim was also sent to us. See Figure 1.
-
-Figure 1. How push notifications work according to https://felixgerschau.com/web-push-notifications-tutorial/
-
-But why listen to just one conversation when you can listen to many? It turns out this actor demonstrated poor DNS hygiene, including multiple misconfigured delegations. Within a day, we’d increased our collection from one domain to nearly 120. Thousands of victim devices were connecting to our server and creating 30MB per second of logs. While we collected traffic for a lot of domains, the actor controlled at least an order of magnitude more. This appears to be a large-scale push-notification advertising operation with a global footprint.
-
-Data analysis showed that while the commercial network might claim to be merely delivering “advertisements” on behalf of their affiliates, based on the observed content, these notifications do not resemble legitimate advertising. Users were bombarded with messages, on average over 140 a day. The titles were in over 60 languages spanning the globe; see samples in Table 1.
-
-Table 1. Sample push notification lures in multiple languages
-
-We collected roughly 60GB of compressed JSON collected over 15 days, and the JSON was extremely rich. It showed the inner workings of this push network at a level never previously published. Whereas we knew from personal experience that the notifications delivered by this network were filled with deception, this data allowed us to verify our experience on a global scale. We found that:
-
-The notifications thematically use deception, fear, and hope to entice users to click on the link. They include impersonation of legitimate financial services like Bradesco, Sparkasse, Recibiste, MasterCard, Touch ‘n Go, and GCash. Clickbait lures included references to scandals, politicians, and famous personalities.
-
-The domains we gathered served ads to Android Chrome users all over the world, but most of the notifications we saw were sent to Asia, and more specifically to South Asia. Bangladesh, India, Indonesia, and Pakistan represented 50% of all the traffic.
-
-The actor encodes a click-through-rate (CTR) estimate in each notification. The highest CTR estimated for any victim at any time is 1 in 175, but the average was 1 in 60,000!
-
-The data included user clicks, which confirmed these low rates. We saw 630 user clicks in 57 million events.
-
-To the best of our ability, we can estimate that they were making about $350 per day from these ads. Given the total set of domains under their control at the time, perhaps they were making ten times that worldwide. It’s not a ton of money, but perhaps it is enough in their region of the world. After all our analysis, it feels like we know both a lot more and a lot less about the push advertising world.
-
-Our research reveals the underbelly of a push advertising platform engaged in deceptive practices. But it also lays bare the dangers of neglected domains. While we “rescued” the malicious domains, other bad actors are using the same technique to grab dormant domains from legitimate organizations every day. While similar domain-hijacking techniques are used by other threat actors to distribute malware, this research did not observe malware payload delivery originating from the push-notification network described here. One of the most prevalent examples is Vacant Viper: a DNS threat actor who hijacks domains through this very same technique and then uses them for 404TDS, a malicious traffic distribution system known to deliver a variety of malware. If the abandoned domains are still actively used, the attacker can gain access to lots of sensitive information, as well.
-
-Technically, DNS hygiene is the responsibility of the domain owner and many people, including government officials we spoke with last summer who don’t consider exploiting these vulnerabilities as attacks. It’s more like someone dropped their toy on the sidewalk, and someone else picked it up. Whose fault is that? But being a bit on the “goodie two-shoes” side of things, we told the DNS provider what we were doing… just in case.
-
-Note: This research intentionally avoids attributing the observed behavior to any named organization. Similar operational patterns are exhibited by multiple unrelated actors within the push-notification monetization ecosystem. Additionally, all data analyzed in this research was reviewed in aggregate. Personally identifiable information was not retained, and no attempt was made to identify individual users. As an “observer on the side” of the push notification service, we passively received traffic due to a DNS misconfiguration (lame delegation) that caused requests to be sent to infrastructure under our control. We did not access the service’s systems, issue commands, deliver content, or otherwise interfere with the relationship between the service and the user device.
-
-Our adventure began in January 2025 when we knowingly visited a compromised website and clicked “allow” on a prompt that popped up on the screen, subscribing to push notifications from an unknown actor. With one simple click, a custom service worker was downloaded onto our device to manage our “subscription.” The phone began buzzing constantly with an endless series of alerts, often more than 100 a day. The lures ranged from classic scareware to dating to shocking stories of famous people; see Figure 2 for some examples. This is the third blog in our series chronicling these experiences; our earlier blogs include Pushed down the Rabbit Hole and Survey Says: It’s a Scam!.
-
-Figure 2. An example of the false information included in notifications received from this commercial push network.
-
-We suspected that a commercial affiliate advertising network was operating the subscription service but weren’t sure which one. The domain names were randomly generated, registration data protected, and hosting obscured. It was clear, though, that the scale of the operation was large. Hundreds of domains were delivering the same content through the same infrastructure. When a user clicked on one of the notifications, a detailed set of data about the user, the subscription, and the lure were delivered to the push server.
-
-After a few months, things changed. Our device kept receiving notifications, lots of them, but clicking on them led to an error that the domain was unresolvable. At first, we thought the domain resolution was blocked through a DNS server somewhere along the way. After all, we’re not the only ones in the domain blocking business.
-
-Why would we continue to get notifications for an unresolvable domain? It didn’t make a lot of sense until we realized it wasn’t the domain that was the problem: the name servers didn’t recognize the domain. In DNS lingo this situation is called a lame delegation. When a domain is configured at a registrar to use external name servers, but those name servers do not have information about the domain, they are unable to answer DNS queries about it.
-
-In certain cases, someone who hasn’t registered the domain can then go to the DNS provider and simply “claim” it. Once they establish new DNS records, queries for the domain will be answered as directed by the claimant. Tada! Whatever content was sent to the domain, for example email, is now sent to the usurper. They gain complete control, usually for free, all due to a DNS misconfiguration or a forgotten domain.
-
-There are a lot of domains with lame delegation on the internet, so many that we felt “sitting ducks” was the most apt way to describe this vulnerability and attack. Frequently, these sitting ducks are picked up within a few days for use in various malicious campaigns. Sadly, domain owners almost never notice, and the same domain is hijacked repeatedly for use in different attacks.
-
-So here we found ourselves in August 2025 with an affected device that desperately wanted to connect to a lame domain. We felt compelled to rescue it. We were expecting to see connections from affected devices but were surprised by the torrent of data we received.
-
-Push Notification Services
-
-Push notification services were designed so that applications, such as browsers, could deliver content to users under a subscription model, providing users with up-to-date information without having to visit the site or open the application. It’s also a model frequently abused by threat actors to obtain a form of persistence on the user’s device.
-
-For this story, we only need to know a few things: the protocols involved and the implementations. To learn more, see this article and this article.
-
-To establish a subscription service on a user’s device, the website needs to do the following:
-
-Establish the subscription with the application’s push notification service, which manages the actual delivery of data to the client. While the third-party service, e.g., Google’s Firebase, technically delivers the messages, they are encrypted and not visible to the push service.
-
-Place a service worker on the device that handles incoming messages, manages software updates, and deals with data analytics. The service worker will be automatically updated during the life of the subscription.
-
-When the user clicks on a browser notification, it will follow an embedded link, which may not include the original subscription domain. For example, if the user agreed to receive alerts from domain A, when clicking on one of the lures, they may instead be sent to, or quickly redirected to, domain B. This misdirection is what we showed earlier in Figure 1.
-
-In our case, the lame domain was used to host the service worker software and to redirect victims to scam offerings when they clicked on a notification. The notification URLs contained an automatic redirect to a fixed domain that funneled traffic into a traffic distribution system (TDS) run by the affiliate advertising network. The data we collected was a combination of requests for software updates, advertising details from the service worker, and individual user clicks on notifications. Figure 3 shows a comparison between the original push notification configuration and after we freed the domains.
-
-Figure 3. A comparison between normal traffic flow for the push network (the state where it was vulnerable to a Sitting Ducks domain takeover) and the state where messages are copied to the hijacker
-
-When we first took over these domains, we were unsure why they had been abandoned. After all, even with those domains being left lame, victims still receive malicious push notifications, they just can’t reach the advertisement. It doesn’t seem like it would be much effort for this actor to keep the operations going.
-
-Given that the goal of advertising is to make money, and dropping the domains meant lost opportunity to make money, we strongly suspected that they didn’t mean to abandon their domains. After all, if large organizations are vulnerable to sitting duck attacks, it seems likely that a threat actor whose primary business is not cybersecurity could also carelessly leave their infrastructure vulnerable.
-
-To our surprise, all the tracking, all the notifications, and all the logs our new domains were receiving were in clear text. The actor did not bother to encrypt anything; the most difficult deciphering we had to do was decode a few Base64 strings.
-
-And that is not for a lack of things to hide! One of the main features they use to personalize ads for each victim was a simple list of keywords, which are typically used to target specific audiences. Like other affiliate advertising networks, this one offers several verticals including dating, nutra, sweepstakes, and gambling. Each time the push network sends a notification to a victim, it also includes all the information used to track victims. Each notification log contains the keywords associated with that user as one of the many parameters of a JSON object.
-
-We knew that a lot of the scams being advertised were linked to fake security breaches, so we assumed we would find keywords like “virus” or “malware,” but no… as far as we could tell, they used the keyword “news” to mean anything but adult content. Every other keyword they used was sexual. We’ll spare you the ones we unfortunately had to look up, but some of the more generic keywords included: adult, bisexual, dating, extreme, feet, gay, and VR.
-
-This threat actor also tracks a litany of things that, we assumed, would help them distribute highly targeted ads. The platform boasts about their advanced targeting, which they claim will help advertising affiliates customize incoming traffic for a high return on investment (ROI).
-
-It’s said there is no honor among thieves, and there may be less among affiliate advertisers. As a result, everyone involved in the industry has some kind of fraud protection in place. The actor knows that people will try to abuse their system, so they implement various features that let them separate real victims from anyone else who is a bit too curious. The platform offers a feature that identifies IP mismatches: if a victim responds from an IP that does not match their record; an “IP mismatch” flag is set. They also look for User Agent string mismatches, geo location mismatches, ISP mismatches, and they track victims who click on notifications after their TTL is meant to have expired. For some reason, these fraud prevention features are not always activated, so they might charge advertisers extra to make sure their “ads” are shown to real people.
-
-The final kind of metadata we could see from each notification that the victims logged was data tracking the actor’s operations. They track information about each ad: the ad’s “publisher,” the ad’s payment model, its cost, its estimated click through rate, the domain where the ad came from, and basically everything they need to track their revenue, the total number of notifications they have sent to each victim over the life of their subscription, as well as how many ads they had been shown that day. They also track information like the language of the ad, and the geolocation of their victim (Figure 4). All of this gave us great insight into their operations.
-
-Figure 4. Map showing the percentage of notifications pushed to victims in each country
-
-From looking at the location of all the victims, two things were clear to us: this threat actor has the ability to deliver scams or other malicious content to basically anyone on earth. Despite this, most of the notifications we saw were sent to Asia, and more specifically, to South Asia: Bangladesh, India, Indonesia, and Pakistan represented 50% of all the traffic we were seeing.
-
-As we noticed that most of the victims were from countries where advertising rates are low, a thought started crossing our mind: maybe those malicious notification servers were abandoned because they were not profitable? This isn’t foreshadowing or anything…
-
-TDSs and advertising threat actors are always trying to hide their most malicious activity from prying eyes, and there is only so much we can do to go around their evasion techniques. So, receiving logs of real malvertising traffic was a great opportunity for us to see what real victims are experiencing, and we were not disappointed.
-
-We initially thought that victims were being sent many fewer ads than we were but quickly realized that we were wrong. It turns out that the actor’s platform sent notifications to victims in batches of up to 20. Each notification had a delay parameter, which meant victims would get notifications at regular intervals throughout the day.
-
-Figure 5. Number of new victims per month from October 2024 through June 2025
-
-We suspect these malicious ads aren’t really trying to get you to pay attention to them… they might be just try to trick you into clicking. And that kind of explains why they send hundreds of ads a day to all of their victims: The goal isn’t to target ads to the people who will be the more likely to engage with them; the goal is to try to trick people, to inflate the numbers, and make it look like traffic on the advertiser’s website is increasing. With so many notifications, it is easy to accidentally click one.
-
-What actually happens when victims click on these notifications? We know that when threat researchers click on them, we often get shown decoy pages, but sometimes we do get redirected to really bad (easy to spot) scams through TDSs. Is that actually representative of victims’ experiences? Well, it turns out that the metadata contained in each notification lets us know what victims are going to be shown if they click! It doesn’t indicate what domain name someone will be sent to, but it does specify which template will be shown to the victim. Notifications can lead to a few different kinds of templates. Some have very generic names, like “video-template” or “loading-template;” some seem related to security, like “secure-template” and “captcha-template.” Most remind us that this threat actor specializes in adult content, with “dating-template,” “twogirls-template,” “wanna-fuck-template,” and many others (Figure 6).
-
-Figure 6. Screenshots of the landing pages of a few “safe for work” templates
-
-One thing that was making us realize how few people were actually clicking on those ads was that this threat actor seems to be estimating the Click Through Rate (CTR) each ad might get, but their estimations are pathetically low. Which is confusing because it is a number that they are providing, both to advertisers and victims!?
-
-We thought that there must have been something wrong with their estimation process, so we computed the effective CTR we observed over the 15 days of logs we had, and it turns out that they were surprisingly not far off, with an effective CTR of 1 in 80,000, equivalent to a grand total of 630 clicks out of the 52 million ads we logged.
-
-The notifications used deception, fear, and hope to entice users to click on the links. The themes included impersonation of legitimate financial services like Bradesco, Sparkasse, Recibiste, MasterCard, Touch ‘n Go, and GCash. Clickbait lures included references to scandals, politicians, and famous personalities. The use of figures like Elon Musk led to investment scams and fake news sites. Other notifications led to adult content scam sites, in which victims likely unwittingly interact with AI bots and paid personalities, while giving rights to their personal text and images to the website for commercial use. Scare tactics typically led to unnecessary anti-virus subscriptions. While the affiliate advertising ecosystem is structured in a way that distributes responsibility across multiple services, the behavior of associated partners and affiliates remains relevant when assessing ecosystem risk. Figure 7 shows a distribution of lure types we observed.
-
-Figure 7. Percentages of the different types of lures used in the notifications we analyzed
-
-One question remained: The domains we took over had been running for a while, so how much money did this threat actor actually make with this push notification infrastructure? Considering how few people actually click on the notifications, were the campaigns even profitable? If not, that might explain why they abandoned their domains.
-
-This notification network has two different cost models: Cost Per Mile (1000 impression / CPM), and Cost Per Click (CPC). Considering how low the click through rate was, we assumed that ads using the CPC cost model would make them a negligible amount of money, and after verifications, we were right. Over the 15 days of data we looked at, ads using this cost model generated $1.80 (that is correct–the dot is not misplaced: one dollar and 80 cents).
-
-So, we focused on the cost of the CPM ads. To the best of our ability, we can estimate that they were making about $350.00 per day from these ads. Not to minimize the value of the dollar, but this seemed very low.
-
-The ad publishers here are all sketchy, so we are not really rooting for them, but we can’t help but wonder what they get from advertising on these platforms? One thing that confused us from our logs at the start of our analysis was that the same victim would be shown the same ad multiple times. We started doubting the integrity of our data, and tried to remove duplicate entries, but there were basically none! There were partial duplicates for sure: the same ad being pushed to the same victim at the exact same time with the exact same notification body and title. Each time, the price of the notification would be slightly different, so we were a bit perplexed… until we realized that each time, these duplicated ads had different delays.
-
-Different delays mean that despite getting paid per 1000 ad impressions, this threat actor shows victims the same ad, up to 20 times per day. Obviously, this is annoying for the victims who get spammed with the same scam more than once, but this must also be a genuinely bad investment for the “advertisers” trying to scam victims, right? The likelihood that someone who did not fall for your scam on the 19th time that day falls for it on the 20th time must be incredibly low. This threat actor isn’t just scamming regular people; their pricing and delivery practices appear to disadvantage their own advertising affiliates—which is consistent with public complaints about the platform.
-
-At this point, something seemed off, so we tried to figure out what was impacting the price of ads, and what we might be missing.
-
-We looked at the parameters that influence the price of ads for other similarly shady push notification services we are tracking (Figure 8).
-
-Figure 8. Price of notifications per day per target country
-
-As expected, victims in some countries are more expensive than victims in other countries. Importantly, victims in India are worth basically nothing, and as we mentioned before, about 20% of the notifications we tracked were sent to victims in India. The other interesting aspect of this graph is that, regardless of the country to which the ad is being pushed, the average CPM (Cost per 1000 impressions) is still very low. From looking at publicly advertised pricing and features commonly promoted by similar push-notification monetization services, we would normally expect prices significantly higher than those observed in our data. It is unclear whether the discrepancy reflects differences between publicly advertised pricing for comparable services and the subset of traffic we observed, or whether it is specific to the domains included in our dataset.
-
-As shown in Figure 9 below, most ads cost less than 5 cents (note the graph uses a logarithmic scale) regardless of the payment model used. One important thing to note is that the number of ads per price bracket doesn’t decrease either logarithmically or linearly. For CPM ads, there is a sort of plateau as they start costing more than 25 cents. For CPC ads, their number oddly vanished around under 20 cents, but a surprisingly high number of them cost between 20 and 25 cents, which seems to be their maximum cost. We can only really speculate as to why that is, but one guess is that there is some kind of increased competition for more valuable victims, driving the price of ads targeting valuable users higher than expected.
-
-Figure 9. Number of ads observed per price bracket
-
-Apart from the country their victims are from, it is unclear if any of the other “features” this threat actor offers to their publishers are valuable. For example, they have an “HQ” feature (presumably standing for “high quality”), but the victims with that flag are not being pushed more expensive ads than anyone else. Their IP mismatch feature also doesn’t seem to work, so the flag is often set to True despite the victim using the same IP as when they were sent ads. And with regards to their other FP prevention features, we could not verify any of them were reliable, as none of them ever triggered. Even if those features were working as intended, it seems like either: “advertisers” do not trust them, as they have no impact on the bidding price for ads; or they do not care about who they advertise to, potentially because they have no other option to advertise their scams, and they have accepted that victims accidentally clicking their ads is the only way they can get traffic.
-
-The last factor we thought might influence the price of ads was their content. We classified ads according to their lure, trying to find out whether some ads were inherently more valuable. As Table 2 below shows, this does not appear to be the case. No matter the kind of ads, and the lure they use to deceive victims, they are all priced roughly the same.
-
-Table 2. Number of notifications, victims, and the average CPM per lure category. (Note that victims can be counted more than once in this table if they have been pushed notifications with different lures.)
-
-No matter what variable we tried to isolate, how much we tried to clean up our data to remove outliers and make sure we were not comparing apples to oranges, we couldn’t find anything to explain the low price of those scam push notifications. One possible explanation is that the infrastructure was no longer economically viable.
-
-Distributed Deniability
-
-The operational characteristics observed in this push-notification monetization service align with patterns commonly seen across similar services in the gray-market advertising ecosystem. These patterns include the use of Telegram-based channels for affiliate recruitment and promotion, including Russian-language channels, as well as infrastructure and business models frequently associated with Eastern European push-monetization operations. Discussions on underground advertising forums regularly include complaints and allegations of deceptive practices directed at services exhibiting these characteristics. Together, these factors illustrate how responsibility and accountability are often diffused across interconnected services within this ecosystem.
-
-In this service, the notification hyperlinks contain a rich set of unencrypted data. Every user click sends detailed information to their server that records the bidding process, images used in the notification, and data about the device. The message is assembled from components spread across commercial content distribution networks (CDNs) that market their services to gray-hat and black-hat advertising operations. Images are hosted on one service; user information is tracked on another. See Figure 10 for some of the component images in notifications from this service which are loaded from different providers.
-
-Figure 10. Individual images shown in browser notifications are fetched from dedicated servers run by separate commercial entities
-
-Ultimately, the network is dependent on the services of a variety of other commercial entities to operate. Some of these are abused; their customer base includes both legitimate and sketchy actors. But others are consistently associated with infrastructure used in cybercriminal activity, whether by choice or circumstance. These providers, whether they be hosting providers or software services, make scam and malware distribution at scale possible. At the same time, each one is typically only one component of a very complicated operation. Regardless of where these commercial entities are registered, we believe the micro-segmentation of services that make this all possible is a structure that results in distributed operational responsibility.
-
-Beyond the distributed nature of the affiliate advertising economy, many scammers view different types of fraud with relative morality. For instance, investment scams might be viewed as pure theft. But they perceive other types of digital fraud as lesser evils when the user agrees to terms and conditions (T&C). Of course, most users do not review these documents, and if they do, they are unlikely to understand the tangle of legalese, but scammers believe they are absolved of any wrongdoing by the “fine print.”
-
-Figure 11. These screenshots show partially extracted terms and conditions from a commercial push monetization service. This service is not the subject of this paper and is shown solely as an illustrative example.
-
-Advertising networks often have guidelines for the “creatives” that are used in notifications. These requirements often walk a thin line between deception and outright lies. They might claim to reject messages like “Your computer has HDD malfunction” but allow “Your computer might be damaged” because it is “less aggressive.” We have studied several commercial affiliate advertising networks and have yet to find one that enforces their published guidelines.
-
-According to the website of the platform that we analyzed, their compliance team reviews all advertising content and will purportedly reject deceptive messages. But the data included notifications like:
-
-“¡Android infectado con MALWARE!” (Android infected with malware!)
-
-“System benötigt einen Scan” (System needs a scan)
-
-“bellek dolu” (memory full)
-
-“5 viruses detected!”
-
-“WhatsApp račun je blokiran” (WhatsApp account blocked)
-
-“Sparkasse: Zahlungseingang” (Sparkasse Payment Received)
-
-From millions of push notifications, we saw these lures are the rule, not the exception. Until push notification networks distributing deceptive content place firmer controls on their affiliate content, we consider them a high risk. Fine print that puts the burden of fraud onto the victim is not sufficient.
 
 (XXXXXXX, AÇIK - infoblox.com, 17.02.2026)
 
