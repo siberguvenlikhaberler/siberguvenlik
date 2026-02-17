@@ -63,25 +63,39 @@ FORMAT:
    Başlık: "{now.strftime('%d.%m.%Y')} Siber Güvenlik Haber Özetleri"
    Başlık: "Yönetici Özeti"
    
-   Düz paragraf yazı - Her haber için 1 tam cümle özet
-   Her özet cümlesi, sayfadaki ilgili habere link olacak
+   İki sütunlu tablo - Her haber için 1 satır, NUMARALI + TAM CÜMLE özet
+   Haberler sırayla iki sütuna yerleştirilsin
    
-   ZORUNLU FORMAT:
-   <p><a href="#haber-1">Microsoft Exchange'de tespit edilen CVE-2024-1234 güvenlik açığının 100 bin sunucuyu etkilemesi.</a> <a href="#haber-2">LockBit 4.0 fidye yazılımının sağlık sektörünü hedef alması.</a> <a href="#haber-3">Google Chrome'da aktif olarak istismar edilen sıfır gün açığının tespit edilmesi.</a></p>
+   TABLO FORMATI:
+   <table class="executive-table">
+       <tr>
+           <td>1. Microsoft Exchange'de CVE-2024-1234 güvenlik açığı tespit edilmiştir.</td>
+           <td>2. LockBit 4.0 fidye yazılımı sağlık sektörünü hedef almıştır.</td>
+       </tr>
+       <tr>
+           <td>3. Google Chrome'da sıfır gün açığı istismar edilmektedir.</td>
+           <td>4. Cisco cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</td>
+       </tr>
+   </table>
    
-   YASAK:
-   - 1., 2., 3. gibi NUMARA KULLANMA
-   - •, -, * gibi madde işareti KULLANMA
-   - <ul>, <ol>, <li> KULLANMA
-   - Satır atlamalar YAPMA
+   ZORUNLU KURALLAR:
+   - Her hücre NUMARA ile başlar: 1., 2., 3., 4...
+   - TAM CÜMLE yapısı: "Özne + yüklem + nesne"
+   - RESMİ TÜRKÇE: -mıştır, -miştir, -edilmektedir, -almıştır
+   - Her cümle nokta ile biter
+   - KISA VE ÖZ: 6-10 kelime (gereksiz detay yok!)
+   - Haberler sırayla: 1. sol, 2. sağ, 3. sol, 4. sağ...
+   - Tek sayıda haber varsa son hücre boş
    
-   ZORUNLU:
-   - Sadece <p> paragraf içinde <a> linkleri
-   - Her cümle tam, anlamlı, bağımsız cümle
-   - Her cümle sonunda nokta
-   - Her link: href="#haber-N" (N = haber sırası)
-   - Tüm cümleler yan yana, akıcı paragraf
-   - Düz metin, numara yok!
+   YANLIŞ:
+   • Microsoft Exchange açığı (eksik cümle)
+   Microsoft açığı bulundu (günlük dil)
+   Microsoft Exchange Server'da CVE-2024-1234 güvenlik açığının 100 bin sunucuyu etkilemesi tespit edilmiştir (çok uzun!)
+   
+   DOĞRU:
+   1. Microsoft Exchange'de kritik açık tespit edilmiştir.
+   2. LockBit 4.0 sağlık sektörünü hedef almıştır.
+   3. Chrome'da sıfır gün açığı istismar edilmektedir.
 
 TASARIM KURALLARI:
 - Ana başlık: Merkeze hizalı, büyük ve belirgin, alt çizgi yok
@@ -157,37 +171,38 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             letter-spacing: 0.3px;
         }}
         
-        /* YÖNETİCİ ÖZETİ - Profesyonel kutu */
+        /* YÖNETİCİ ÖZETİ - Kompakt ve optimal */
         .executive-summary {{
             background: #f8f9fa;
-            padding: 35px;
+            padding: 25px 30px;  /* Azaltıldı: 35px → 25px */
             margin: 0;
             border-bottom: 1px solid #e1e8ed;
         }}
         .executive-summary h2 {{
             color: #1a237e;
-            font-size: 20px;
+            font-size: 18px;  /* Azaltıldı: 20px → 18px */
             font-weight: 600;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 15px;  /* Azaltıldı: 20px → 15px */
+            padding-bottom: 8px;  /* Azaltıldı: 12px → 8px */
             border-bottom: 2px solid #1a237e;
         }}
-        .executive-summary p {{
+        
+        /* İki sütunlu tablo - Kompakt */
+        .executive-table {{
+            width: 100%;
+            border-collapse: collapse;
+        }}
+        .executive-table td {{
+            width: 50%;
+            padding: 8px 12px;  /* Azaltıldı: 12px 15px → 8px 12px */
+            vertical-align: top;
             color: #4a5568;
-            font-size: 15px;
-            line-height: 1.8;
-            text-align: justify;
+            font-size: 13px;  /* Azaltıldı: 14px → 13px */
+            line-height: 1.5;  /* Azaltıldı: 1.6 → 1.5 */
+            border-bottom: 1px solid #e1e8ed;
         }}
-        .executive-summary a {{
-            color: #283593;
-            text-decoration: none;
-            border-bottom: 1px dotted #283593;
-            transition: all 0.2s;
-        }}
-        .executive-summary a:hover {{
-            color: #1a237e;
-            border-bottom: 1px solid #1a237e;
-            background: #e8eaf6;
+        .executive-table tr:last-child td {{
+            border-bottom: none;
         }}
         
         /* HABERLER BÖLÜMÜ */
@@ -273,7 +288,9 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         
         <div class="executive-summary">
             <h2>Yönetici Özeti</h2>
-            <p>[DÜZ PARAGRAF - HER CÜMLE LİNKLİ]</p>
+            <table class="executive-table">
+                [TABLO SATIRLARI BURAYA]
+            </table>
         </div>
         
         <div class="news-section">
@@ -286,22 +303,37 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
 
 BU ŞABLONU KULLANARAK:
 - [TARİH] yerine tarihi yaz
-- [DÜZ PARAGRAF - HER CÜMLE LİNKLİ] yerine:
+
+- [TABLO SATIRLARI BURAYA] yerine:
+  Her satırda 2 haber, NUMARALI TAM CÜMLE
   
-  ÖRNEK (TAM OLARAK BÖYLE):
-  <a href="#haber-1">Microsoft Exchange'de kritik güvenlik açığının tespit edilmesi.</a> <a href="#haber-2">LockBit 4.0'ın sağlık sistemlerini hedef alması.</a> <a href="#haber-3">...</a>
+  ÖRNEK:
+  <tr>
+      <td>1. Microsoft Exchange Server'da CVE-2024-1234 güvenlik açığı tespit edilmiştir.</td>
+      <td>2. LockBit 4.0 fidye yazılımı sağlık sektörünü hedef almıştır.</td>
+  </tr>
+  <tr>
+      <td>3. Google Chrome'da sıfır gün açığı aktif olarak istismar edilmektedir.</td>
+      <td>4. Cisco ağ cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</td>
+  </tr>
   
-  YASAK: 1., 2., 3. veya •, -, * KULLANMA!
-  SADECE: Yan yana tam cümleler, her biri link
+  ZORUNLU:
+  - NUMARA: 1., 2., 3., 4... (sürekli artan)
+  - TAM CÜMLE: Özne + fiil + nesne
+  - RESMİ DİL: -mıştır, -edilmiştir, -almaktadır
+  
+  Son satır tek haberse:
+  <tr>
+      <td>39. Son haber tespit edilmiştir.</td>
+      <td></td>
+  </tr>
   
 - [HABERLER BURAYA] yerine her haberi şu formatta ekle:
-  <div class="news-item" id="haber-1">  ← ID EKLE!
+  <div class="news-item">
       <div class="news-title"><b>Başlık</b></div>
       <p class="news-content">Özet paragraf...</p>
       <p class="source"><b>(KAYNAK + LİNK)</b></p>
   </div>
-  
-  ÖNEMLI: Her haber div'ine id="haber-N" ekle (N = 1, 2, 3...)
 
 NOT: Arşiv linkleri otomatik eklenecek, sen sadece </body>'den önce bitir.
 
