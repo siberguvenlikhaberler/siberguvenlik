@@ -61,14 +61,21 @@ ANTİ-HALÜSİNASYON:
 FORMAT:
 1. GÜNLÜK ÖZET (en üstte):
    Başlık: "{now.strftime('%d.%m.%Y')} Siber Güvenlik Haber Özetleri"
-    Başlık: "Yönetici Özeti"
-   Her haber için 1 cümle özet (resmi dil, maddeler halinde)
+   Başlık: "Yönetici Özeti"
    
-   ÖRNEK:
-   • Microsoft Exchange'de tespit edilen CVE-2024-1234 güvenlik açığının 100 bin sunucuyu etkilemesi
-   • LockBit 4.0 fidye yazılımının sağlık sektörünü hedef alması
+   Düz paragraf yazı - Her haber için 1 cümle özet
+   Her özet cümlesi, sayfadaki ilgili habere link olacak
    
-   (Rapordaki TÜM haberler için birer madde)
+   ÖRNEK FORMAT:
+   <p><a href="#haber-1">Microsoft Exchange'de tespit edilen CVE-2024-1234 güvenlik açığının 100 bin sunucuyu etkilemesi.</a> <a href="#haber-2">LockBit 4.0 fidye yazılımının sağlık sektörünü hedef alması.</a> <a href="#haber-3">...</a></p>
+   
+   ZORUNLU:
+   - Madde işareti YOK (•, -, 1., vb.)
+   - <ul> veya <ol> KULLANMA
+   - Düz <p> paragraf içinde <a> linkleri
+   - Her cümle sonunda nokta
+   - Her link: href="#haber-N" (N = haber sırası)
+   - Tüm cümleler yan yana, akıcı paragraf
 
 TASARIM KURALLARI:
 - Ana başlık: Merkeze hizalı, büyük ve belirgin, alt çizgi yok
@@ -111,6 +118,9 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
     <title>Siber Güvenlik Raporu - [TARİH]</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        html {{
+            scroll-behavior: smooth;
+        }}
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
@@ -156,21 +166,22 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             padding-bottom: 12px;
             border-bottom: 2px solid #1a237e;
         }}
-        .executive-summary ul {{
-            list-style: none;
-            padding-left: 0;
-        }}
-        .executive-summary li {{
-            padding: 8px 0 8px 20px;
-            position: relative;
+        .executive-summary p {{
             color: #4a5568;
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: justify;
         }}
-        .executive-summary li:before {{
-            content: "•";
-            color: #3949ab;
-            font-weight: bold;
-            position: absolute;
-            left: 0;
+        .executive-summary a {{
+            color: #283593;
+            text-decoration: none;
+            border-bottom: 1px dotted #283593;
+            transition: all 0.2s;
+        }}
+        .executive-summary a:hover {{
+            color: #1a237e;
+            border-bottom: 1px solid #1a237e;
+            background: #e8eaf6;
         }}
         
         /* HABERLER BÖLÜMÜ */
@@ -256,9 +267,7 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         
         <div class="executive-summary">
             <h2>Yönetici Özeti</h2>
-            <ul>
-                <li>[ÖZET MADDELER BURAYA]</li>
-            </ul>
+            <p>[DÜZ PARAGRAF - HER CÜMLE LİNKLİ]</p>
         </div>
         
         <div class="news-section">
@@ -271,13 +280,18 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
 
 BU ŞABLONU KULLANARAK:
 - [TARİH] yerine tarihi yaz
-- [ÖZET MADDELER BURAYA] yerine her haber için 1 madde yaz (TÜM HABERLER!)
-- [HABERLER BURAYA] yerine TÜM HABERLERİ şu formatta ekle:
-  <div class="news-item">
+- [DÜZ PARAGRAF - HER CÜMLE LİNKLİ] yerine:
+  Her haber için 1 cümle, <a href="#haber-1">cümle</a> formatında
+  Örnek: <a href="#haber-1">Microsoft'ta güvenlik açığı.</a> <a href="#haber-2">LockBit saldırısı.</a>
+  
+- [HABERLER BURAYA] yerine her haberi şu formatta ekle:
+  <div class="news-item" id="haber-1">  ← ID EKLE!
       <div class="news-title"><b>Başlık</b></div>
       <p class="news-content">Özet paragraf...</p>
       <p class="source"><b>(KAYNAK + LİNK)</b></p>
   </div>
+  
+  ÖNEMLI: Her haber div'ine id="haber-N" ekle (N = 1, 2, 3...)
 
 NOT: Arşiv linkleri otomatik eklenecek, sen sadece </body>'den önce bitir.
 
