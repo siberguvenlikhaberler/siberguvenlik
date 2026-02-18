@@ -328,7 +328,7 @@ class HaberSistemi:
         # HTML'den text özeti çıkar
         soup = BeautifulSoup(html_content, 'html.parser')
         
-        archive_entry = f"\n{'='*80}\n📅 {now.strftime('%d %B %Y').upper()} - EN ÖNEMLİ 40 HABER (SEÇİLMİŞ)\n{'='*80}\n\n"
+        archive_entry = f"\n{'='*80}\n📅 {now.strftime('%d %B %Y').upper()} - EN ÖNEMLİ 43 HABER (SEÇİLMİŞ)\n{'='*80}\n\n"
         
         # Sadece ilk 43 haberi al (Gemini önem sırasına göre düzenlemiş)
         news_items = soup.find_all('div', class_='news-item')[:43]
