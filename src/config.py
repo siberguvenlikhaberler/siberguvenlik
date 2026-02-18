@@ -56,7 +56,7 @@ Aşağıdaki türleri ÇIKAR (raporda gösterme):
 ✅ SADECE aktif tehdit, açık, saldırı, veri ihlali, kritik güncelleme haberlerini AL
 
 🚨 KRİTİK AŞAMA 2 - EN ÖNEMLİ 5 HABERİ BELIRLE:
-Bu 6 kritere göre en kritik 5 haberi seç:
+Bu 7 kritere göre en kritik 5 haberi seç:
 
 1️⃣ **CVSS 9.0+ AÇIKLAR + AKTİF EXPLOIT** (Highest Priority)
    - CVE numarası var + "actively exploited", "in the wild"
@@ -89,6 +89,10 @@ Bu 6 kritere göre en kritik 5 haberi seç:
    - Kritik ülke sistemlerine saldırı (Rusya-Ukrayna, ABD-Çin, İran, Kuzey Kore)
    - Seçim sistemleri, kritik altyapı hedefleme
    - Uluslararası hukuk/anlaşma ihlalleri
+
+   7. **YASAL DÜZENLEMELER**
+    - Siber güvenlikle ilgili yeni çıkan yasalar, yasal düzenlemeler
+    
 
 🚨 AŞAMA 3 - YAPILANDIRILMIŞ RAPOR OLUŞTUR:
 
