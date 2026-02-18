@@ -1,4 +1,3 @@
-
 """Config - Tüm ayarlar"""
 import os
 from datetime import datetime
@@ -58,41 +57,41 @@ Aşağıdaki türleri ÇIKAR (raporda gösterme):
 🚨 KRİTİK AŞAMA 2 - EN ÖNEMLİ 5 HABERİ BELIRLE:
 Bu 7 kritere göre en kritik 5 haberi seç:
 
-1️⃣ **CVSS 9.0+ AÇIKLAR + AKTİF EXPLOIT** (Highest Priority)
-   - CVE numarası var + "actively exploited", "in the wild"
-   - CVSS 9.0-10.0 arası puanlar
-   - "Zero-day", "0-day" içeren haberler
-
-2️⃣ **KRİTİK ALTYAPI SALDIRISI** 
+1️⃣ **KRİTİK ALTYAPI SALDIRISI** 
    - Enerji, sağlık, finans, hükümet sektörü
    - "Critical infrastructure", "power grid", "hospital systems"
    - APT grupları + devlet destekli saldırılar
 
-3️⃣ **5 MİLYON+ KULLANICI VERİ İHLALİ**
+2️⃣ **5 MİLYON+ KULLANICI VERİ İHLALİ**
    - "5 million", "10 million", "data breach" 
    - Büyük şirketler (Microsoft, Google, Amazon, Apple)
    - "Personal information", "credit card", "SSN"
 
-4️⃣ **ZERO-DAY + APT GRUBU AKTİVİTESİ**
+3️⃣ **ZERO-DAY + APT GRUBU AKTİVİTESİ**
    - APT28, APT29, Lazarus, etc.
    - Nation-state actors
    - "Previously unknown vulnerability"
 
-5️⃣ **ULUSAL GÜVENLİK / TÜRKİYE**
+4️⃣ **ULUSAL GÜVENLİK / TÜRKİYE**
    - "National security", "government agencies"
    - Türkiye ile ilgili siber güvenlik haberleri
    - NATO, AB, Türk kurumları
 
-6️⃣ **JEOPOLİTİK KRİTİK DURUMLAR**
+5️⃣ **JEOPOLİTİK KRİTİK DURUMLAR**
    - Ülkeler arası siber savaş, siber diplomasi krizi
    - "Cyber warfare", "nation-state conflict", "diplomatic crisis"
    - Kritik ülke sistemlerine saldırı (Rusya-Ukrayna, ABD-Çin, İran, Kuzey Kore)
    - Seçim sistemleri, kritik altyapı hedefleme
    - Uluslararası hukuk/anlaşma ihlalleri
 
-   7. **YASAL DÜZENLEMELER**
-    - Siber güvenlikle ilgili yeni çıkan yasalar, yasal düzenlemeler
-    
+6️⃣ **YASAL DÜZENLEMELER**
+   - Siber güvenlikle ilgili yeni çıkan yasalar, yasal düzenlemeler
+
+7️⃣ **CVSS 9.0+ AÇIKLAR + AKTİF EXPLOIT**
+   - CVE numarası var + "actively exploited", "in the wild"
+   - CVSS 9.0-10.0 arası puanlar
+   - "Zero-day", "0-day" içeren haberler
+
 
 🚨 AŞAMA 3 - YAPILANDIRILMIŞ RAPOR OLUŞTUR:
 
@@ -107,19 +106,19 @@ RAPOR YAPISI (SIRAYLA):
    - Her biri sayfa içi link: <a href="#haber-N">N. CVE-2024-1234 açığı Microsoft sunucularında kritik güvenlik riski oluşturmaktadır.</a>
    - ZORUNLU: Tam cümle (özne + yüklem + nesne) + nokta ile bitiş
 
-4️⃣ **GERİ KALAN 35 HABERİN 2 SÜTUNLU TABLOSU**:
+4️⃣ **GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU**:
    - 6. haber → id="haber-6", 7. haber → id="haber-7" vs.
    - Her biri TAM CÜMLELİK özet + sayfa içi link
    - ZORUNLU: Tam cümle yapısı (özne + yüklem + nesne) + nokta ile bitiş
 
 5️⃣ **HABER PARAGRAFLARI (SIRALAMA ÖNEMLİ!)**:
    - ÖNCE: En önemli 5 haberin 100-130 kelime paragraf özetleri (id="haber-1" dan haber-5'e)
-   - SONRA: Geri kalan 35 haberin paragraf özetleri (id="haber-6" dan haber-40'a)
+   - SONRA: Geri kalan 38 haberin paragraf özetleri (id="haber-6" dan haber-43'e)
 
 KRİTİK KURALLALAR:
-✅ 40 haber toplam (5 önemli + 35 normal)
+✅ 43 haber toplam (5 önemli + 38 normal)
 ✅ Önemli gelişmelerdeki haberler tekrar etmesin tabloda
-✅ ID numaraları: 1-40 arası sürekli
+✅ ID numaraları: 1-43 arası sürekli
 ✅ Sayfa içi linkler doğru çalışsın
 
 KRİTİK DİL KURALI - RESMİ TÜRKÇE:
@@ -311,9 +310,9 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
                 </div>
             </div>
             
-            <!-- GERİ KALAN 35 HABERİN 2 SÜTUNLU TABLOSU -->
+            <!-- GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU -->
             <table class="executive-table">
-                [GERİ KALAN 35 HABERİN 2 SÜTUNLU TABLOSU - TAM CÜMLE ÖRNEKLER:]
+                [GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU - TAM CÜMLE ÖRNEKLER:]
                 <tr>
                     <td><a href="#haber-6">6. Google Chrome'da sıfır gün açığı aktif olarak istismar edilmektedir.</a></td>
                     <td><a href="#haber-7">7. Cisco ağ cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</a></td>
@@ -330,7 +329,7 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
                 <p class="source"><b>(KAYNAK, AÇIK - <a href="URL" target="_blank">domain.com</a>, {now.strftime('%d.%m.%Y')})</b></p>
             </div>
             
-            [SONRA GERİ KALAN 35 HABERİN PARAGRAF ÖZETLERİ]
+            [SONRA GERİ KALAN 38 HABERİN PARAGRAF ÖZETLERİ]
             <div class="news-item" id="haber-6">
                 <div class="news-title"><b>Altıncı Haberin Başlığı</b></div>
                 <p class="news-content">100-130 kelime paragraf özet, resmi Türkçe...</p>
@@ -368,7 +367,7 @@ HAM HABERLER:
 
 ŞİMDİ SIRAYLA YAP:
 1. Filtreleme → Uygun haberleri seç
-2. En önemli 5'ini belirle (yukarıdaki 5 kritere göre)
+2. En önemli 5'ini belirle (yukarıdaki 7 kritere göre)
 3. Kalanları önem sırasına koy
 4. HTML şablonunu doldur
 
