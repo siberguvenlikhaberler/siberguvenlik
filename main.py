@@ -321,8 +321,8 @@ class HaberSistemi:
         return txt
     
     def save_summary_to_archive(self, html_content):
-        """Gemini'nin seçtiği EN ÖNEMLİ 40 HABERİ TXT arşivine EKLE (sürekli birikim)"""
-        print("📚 En önemli 40 haber arşive ekleniyor...")
+        """Gemini'nin seçtiği EN ÖNEMLİ 43 HABERİ TXT arşivine EKLE (sürekli birikim)"""
+        print("📚 En önemli 43 haber arşive ekleniyor...")
         now = datetime.now()
         
         # HTML'den text özeti çıkar
@@ -330,8 +330,8 @@ class HaberSistemi:
         
         archive_entry = f"\n{'='*80}\n📅 {now.strftime('%d %B %Y').upper()} - EN ÖNEMLİ 40 HABER (SEÇİLMİŞ)\n{'='*80}\n\n"
         
-        # Sadece ilk 40 haberi al (Gemini önem sırasına göre düzenlemiş)
-        news_items = soup.find_all('div', class_='news-item')[:40]
+        # Sadece ilk 43 haberi al (Gemini önem sırasına göre düzenlemiş)
+        news_items = soup.find_all('div', class_='news-item')[:43]
         
         for idx, item in enumerate(news_items, 1):
             title_elem = item.find('div', class_='news-title')
