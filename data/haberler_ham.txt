@@ -489,7 +489,55 @@ OpenClaw has had a viral surge in interest since it first debuted in November 20
 
 ================================================================================
 
-[11] BleepingComputer - Spain orders NordVPN, ProtonVPN to block LaLiga piracy sites
+[11] BleepingComputer - Glendale man gets 5 years in prison for role in darknet drug ring
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Wed, 18 Feb 2026 05:50:50 -0500
+Link: https://www.bleepingcomputer.com/news/security/glendale-man-gets-5-years-in-prison-for-role-in-darknet-drug-trafficking-operation/
+
+[TAM METİN - 537 kelime]
+​A Glendale man was sentenced to nearly five years in federal prison for his role in a darknet drug trafficking operation that sold cocaine, methamphetamine, MDMA, and ketamine to customers across the United States.
+
+36-year-old Davit Avalyan received a 57-month sentence from U.S. District Judge Percy Anderson in Los Angeles after pleading guilty in October 2025 to one count of conspiracy to distribute narcotics.
+
+Avalyan is the last of four defendants to be sentenced in the case. His accomplices, Hayk Grigoryan (also known as Hayk Greg), Gurgen Nersesyan (also known as Guro Tiko), and Hrant Gevorgyan, have already received prison sentences of 10 years, 43 months, and 24 months, respectively.
+
+Prosecutors said Avalyan and his co-conspirators ran the operation from September 2018 to February 2025, maintaining a large network of darknet vendor accounts (including multiple storefronts with names like JoyInc, PlanetHollywood, and LaFarmacia) across multiple narcotics online marketplaces.
+
+According to court documents, the group packaged drugs into parcels and mailed them from post offices and mailboxes throughout Los Angeles County and other locations.
+
+JoyInc, one of the network's primary accounts, is believed to have launched as early as 2018 and is considered among the most prolific methamphetamine and cocaine distributors ever to operate on the darknet.
+
+"Vendors JoyInc, LaFarmacia, WhiteDoc, JanesAddiction, DaShop, WhiteRepublic, Tomorowland, PlanetHollywood, DopeValley, and Major2Minor sold cocaine, methamphetamine, 3, 4-Methylenedioxymethamphetamine ('MDMA'), and ketamine to drug customers on these darknet markets in exchange for cryptocurrency, such as Bitcoin and Monero, and shipped the drugs throughout the United States via the United States Postal Service," the indictment reveals.
+
+Their accounts were active "on several darknet marketplaces, including Dream Market, Wallstreet, Empire, Silk Road 3.1, ToRReZ, Dark0de, World Market, Tor2Door, alphabay, Incognito, ASAP, Ares, MGM Grand, Archetyp, Abacus, DrugHub, and DarkMatter and would sell methamphetamine, cocaine, MDMA, and ketamine to customers across the United States."
+
+The FBI's JCODE (Joint Criminal Opioid Darknet Enforcement) team, a task force focused on dismantling criminal networks that use the darknet to traffic narcotics, led the investigation with support from the U.S. Postal Inspection Service, the Drug Enforcement Administration, the IRS Criminal Investigation, and the Los Angeles Police Department.
+
+Earlier this month, a Taiwanese man was also sentenced to 30 years in prison for operating Incognito Market, a massive online narcotics marketplace linked to over $105 million in illegal drug sales.
+
+In January, a Slovakian national pleaded guilty to helping operate a darknet marketplace that sold narcotics, cybercrime services, fake government IDs, and stolen personal information for more than two years, and a Virginia man who co-created the Empire Market dark web marketplace admitted to federal drug conspiracy charges for facilitating $430 million in illegal transactions.
+
+The future of IT infrastructure is here
+
+Modern IT infrastructure moves faster than manual workflows can handle.
+
+In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
+
+Owner of Incognito dark web drugs market gets 30 years in prison
+
+Empire cybercrime market owner pleads guilty to drug conspiracy
+
+Slovakian man pleads guilty to operating darknet marketplace
+
+Microsoft disrupts massive RedVDS cybercrime virtual desktop service
+
+Hacker gets seven years for breaching Rotterdam and Antwerp ports
+
+(XXXXXXX, AÇIK - bleepingcomputer.com, 18.02.2026)
+
+================================================================================
+
+[12] BleepingComputer - Spain orders NordVPN, ProtonVPN to block LaLiga piracy sites
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 18:15:49 -0500
 Link: https://www.bleepingcomputer.com/news/legal/spain-orders-nordvpn-protonvpn-to-block-laliga-piracy-sites/
@@ -549,63 +597,18 @@ Russia tries to block WhatsApp, Telegram in communication blockade
 
 ================================================================================
 
-[12] BleepingComputer - Flaws in popular VSCode extensions expose developers to attacks
+[13] BleepingComputer - Flaws in popular VSCode extensions expose developers to attacks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 16:27:12 -0500
 Link: https://www.bleepingcomputer.com/news/security/flaws-in-popular-vscode-extensions-expose-developers-to-attacks/
 
-[TAM METİN - 492 kelime]
-Vulnerabilities with high to critical severity ratings affecting popular Visual Studio Code (VSCode) extensions collectively downloaded more than 128 million times could be exploited to steal local files and execute code remotely.
-
-The security issues impact Code Runner (CVE-2025-65715), Markdown Preview Enhanced (CVE-2025-65716), Markdown Preview Enhanced (CVE-2025-65717), and Microsoft Live Preview (no identifier assigned).
-
-Researchers at application security company Ox Security discovered the flaws and tried to disclose them since June 2025. However, the researchers say that no maintainer responded.
-
-Remote code execution in IDE
-
-VSCode extensions are add-ons that expand the functionality of Microsoft's integrated development environment (IDE). They can add language support, debugging tools, themes, and other functionality or customization options.
-
-They run with significant access to the local development environment, including files, terminals, and network resources.
-
-Ox Security published reports for each of the discovered flaws and warned that keeping the vulnerable extensions could expose the corporate environment to lateral movement, data exfiltration, and system takeover.
-
-An attacker exploiting the CVE-2025-65717 critical vulnerability in the Live Server extension (over 72 million downloads on VSCode) can steal local files by directing the target to a malicious webpage.
-
-The CVE-2025-65715 vulnerability in the Code Runner VSCode extension, with 37 million downloads, allows remote code execution by changing the extension's configuration file. This could be achieved through tricking the target into pasting or applying a maliciously configuration snippet in the global settings.json file.
-
-Rated with a high-severity score of 8.8, CVE-2025-65716 affects the Markdown Preview Enhanced (8.5 million downloads) and can be leveraged to execute JavaScript via maliciously crafted Markdown file.
-
-Ox Security researchers discovered a one-click XSS vulnerability in versions of Microsoft Live Preview before 0.4.16. It can be exploited to access sensitive files on a developer's machine. The extension has more than 11 million downloads on VSCode.
-
-The flaws in the extensions also apply to Cursor and Windsurf, which are AI-powered VSCode-compatible alternative IDEs.
-
-Ox Security's report highlights that the risks associated with a threat actor leveraging the issues include pivoting on the network and stealing sensitive details like API keys and configuration files.
-
-Developers are advised to avoid running localhost servers unless necessary, opening untrusted HTML while they’re running, and applying untrusted configurations or pasting snippets into settings.json.
-
-Also, it is advisable to remove unnecessary extensions and only install those from reputable publishers, while monitoring for unexpected setting changes.
-
-The future of IT infrastructure is here
-
-Modern IT infrastructure moves faster than manual workflows can handle.
-
-In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
-
-VSCode IDE forks expose users to "recommended extension" attacks
-
-One threat actor responsible for 83% of recent Ivanti RCE attacks
-
-CISA gives feds 3 days to patch actively exploited BeyondTrust flaw
-
-Critical BeyondTrust RCE flaw now exploited in attacks, patch now
-
-BeyondTrust warns of critical RCE flaw in remote support software
+⚠️  Tam metin çekilemedi
 
 (XXXXXXX, AÇIK - bleepingcomputer.com, 18.02.2026)
 
 ================================================================================
 
-[13] BleepingComputer - Chinese hackers exploiting Dell zero-day flaw since mid-2024
+[14] BleepingComputer - Chinese hackers exploiting Dell zero-day flaw since mid-2024
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 15:15:03 -0500
 Link: https://www.bleepingcomputer.com/news/security/chinese-hackers-exploiting-dell-zero-day-flaw-since-mid-2024/
@@ -657,7 +660,7 @@ Konni hackers target blockchain engineers with AI-built malware
 
 ================================================================================
 
-[14] BleepingComputer - Notepad++ boosts update security with ‘double-lock’ mechanism
+[15] BleepingComputer - Notepad++ boosts update security with ‘double-lock’ mechanism
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 13:29:18 -0500
 Link: https://www.bleepingcomputer.com/news/security/notepad-plus-plus-boosts-update-security-with-double-lock-mechanism/
@@ -713,7 +716,7 @@ eScan confirms update server breached to push malicious update
 
 ================================================================================
 
-[15] BleepingComputer - Microsoft Teams outage affects users in United States, Europe
+[16] BleepingComputer - Microsoft Teams outage affects users in United States, Europe
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 10:37:45 -0500
 Link: https://www.bleepingcomputer.com/news/microsoft/microsoft-teams-outage-affects-users-in-united-states-europe/
@@ -763,7 +766,7 @@ Microsoft Exchange Online outage blocks access to mailboxes via IMAP4
 
 ================================================================================
 
-[16] BleepingComputer - What 5 Million Apps Revealed About Secrets in JavaScript
+[17] BleepingComputer - What 5 Million Apps Revealed About Secrets in JavaScript
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 09:40:49 -0500
 Link: https://www.bleepingcomputer.com/news/security/what-5-million-apps-revealed-about-secrets-in-javascript/
@@ -877,7 +880,7 @@ Sponsored and written by Intruder.
 
 ================================================================================
 
-[17] BleepingComputer - New Keenadu backdoor found in Android firmware, Google Play apps
+[18] BleepingComputer - New Keenadu backdoor found in Android firmware, Google Play apps
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 09:05:25 -0500
 Link: https://www.bleepingcomputer.com/news/security/new-keenadu-backdoor-found-in-android-firmware-google-play-apps/
@@ -947,7 +950,7 @@ Infostealer malware found stealing OpenClaw secrets for first time
 
 ================================================================================
 
-[18] BleepingComputer - Poland arrests suspect linked to Phobos ransomware operation
+[19] BleepingComputer - Poland arrests suspect linked to Phobos ransomware operation
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 06:31:37 -0500
 Link: https://www.bleepingcomputer.com/news/security/poland-arrests-suspect-linked-to-phobos-ransomware-operation/
@@ -1001,7 +1004,7 @@ Ukrainian hacker admits affiliate role in Nefilim ransomware gang
 
 ================================================================================
 
-[19] BleepingComputer - Ireland now also investigating X over Grok-made sexual images
+[20] BleepingComputer - Ireland now also investigating X over Grok-made sexual images
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 05:02:21 -0500
 Link: https://www.bleepingcomputer.com/news/security/ireland-now-also-investigating-x-over-grok-made-sexual-images/
@@ -1043,267 +1046,7 @@ xAI teases major Grok upgrade, hints at Grok Code CLI
 
 ================================================================================
 
-[20] BleepingComputer - Washington Hotel in Japan discloses ransomware infection incident
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 16 Feb 2026 16:10:38 -0500
-Link: https://www.bleepingcomputer.com/news/security/washington-hotel-in-japan-discloses-ransomware-infection-incident/
-
-[TAM METİN - 436 kelime]
-The Washington Hotel brand in Japan has announced that that its servers were compromised in a ransomware attack, exposing various business data.
-
-The hospitality group has established an internal task force and engaged external cybersecurity experts to assess the impact of the intrusion, determine whether customer data was compromised, and coordinate recovery efforts.
-
-Washington Hotel, a brand operating under Fujita Kanko Inc. (WHG Hotels), is a business-focused hospitality chain with 30 locations across Japan. WHG has 11,000 rooms over its properties and has nearly 5 million guests every year.
-
-According to the company’s disclosure, hackers breached its network on Friday, February 13, 2026, at 22:00 (local time). The IT staff immediately disconnected servers from the internet to prevent the attack from spreading on the network.
-
-The organization states that it started consulting with the police and external cybersecurity experts.
-
-Although an investigation is ongoing, Washington Hotel can confirm that the attacker gained access to various business data stored on the affected servers.
-
-Customer data is unlikely to be exposed because the company stores this information on servers managed by a separate company, for which no unauthorized access has been confirmed.
-
-The incident is impacting operations at some Washington Hotel brand properties, including the temporary unavailability of credit card terminals. Besides that, the firm says it recorded no significant operational disruption.
-
-The financial impact of the incident is currently under review. Washington Hotel promised to provide updates if any additional relevant details emerge.
-
-As of writing, no ransomware groups have claimed the Washington Hotel on known dark-web-based extortion portals that BleepingComputer monitors.
-
-Multiple companies in Japan have been targeted by hackers lately. Some of the recent incidents include global automaker Nissan, retail giant Muji, the largest brewer in the country, Asahi, and telecom giant NTT.
-
-Although not necessarily related to the breach at Washington Hotel, JPCERT/CC disclosed late last week that hackers were exploiting an arbitrary command injection flaw in Soliton Systems’ FileZen products, tracked under CVE-2026-25108.
-
-The file-sharing appliance is widely used by Japanese companies and was also targeted in 2021.
-
-The future of IT infrastructure is here
-
-Modern IT infrastructure moves faster than manual workflows can handle.
-
-In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
-
-Marquis blames ransomware breach on SonicWall cloud backup hack
-
-Ingram Micro says ransomware attack affected 42,000 people
-
-University of Hawaii Cancer Center hit by ransomware attack
-
-Covenant Health says May data breach impacted nearly 478,000 patients
-
-Nissan says thousands of customers exposed in Red Hat breach
-
-(XXXXXXX, AÇIK - bleepingcomputer.com, 18.02.2026)
-
-================================================================================
-
-[21] Krebs on Security - Kimwolf Botnet Swamps Anonymity Network I2P
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Wed, 11 Feb 2026 16:08:11 +0000
-Link: https://krebsonsecurity.com/2026/02/kimwolf-botnet-swamps-anonymity-network-i2p/
-
-[TAM METİN - 831 kelime]
-For the past week, the massive “Internet of Things” (IoT) botnet known as Kimwolf has been disrupting The Invisible Internet Project (I2P), a decentralized, encrypted communications network designed to anonymize and secure online communications. I2P users started reporting disruptions in the network around the same time the Kimwolf botmasters began relying on it to evade takedown attempts against the botnet’s control servers.
-
-Kimwolf is a botnet that surfaced in late 2025 and quickly infected millions of systems, turning poorly secured IoT devices like TV streaming boxes, digital picture frames and routers into relays for malicious traffic and abnormally large distributed denial-of-service (DDoS) attacks.
-
-I2P is a decentralized, privacy-focused network that allows people to communicate and share information anonymously.
-
-“It works by routing data through multiple encrypted layers across volunteer-operated nodes, hiding both the sender’s and receiver’s locations,” the I2P website explains. “The result is a secure, censorship-resistant network designed for private websites, messaging, and data sharing.”
-
-On February 3, I2P users began complaining on the organization’s GitHub page about tens of thousands of routers suddenly overwhelming the network, preventing existing users from communicating with legitimate nodes. Users reported a rapidly increasing number of new routers joining the network that were unable to transmit data, and that the mass influx of new systems had overwhelmed the network to the point where users could no longer connect.
-
-I2P users complaining about service disruptions from a rapidly increasing number of routers suddenly swamping the network.
-
-When one I2P user asked whether the network was under attack, another user replied, “Looks like it. My physical router freezes when the number of connections exceeds 60,000.”
-
-A graph shared by I2P developers showing a marked drop in successful connections on the I2P network around the time the Kimwolf botnet started trying to use the network for fallback communications.
-
-The same day that I2P users began noticing the outages, the individuals in control of Kimwolf posted to their Discord channel that they had accidentally disrupted I2P after attempting to join 700,000 Kimwolf-infected bots as nodes on the network.
-
-The Kimwolf botmaster openly discusses what they are doing with the botnet in a Discord channel with my name on it.
-
-Although Kimwolf is known as a potent weapon for launching DDoS attacks, the outages caused this week by some portion of the botnet attempting to join I2P are what’s known as a “Sybil attack,” a threat in peer-to-peer networks where a single entity can disrupt the system by creating, controlling, and operating a large number of fake, pseudonymous identities.
-
-Indeed, the number of Kimwolf-infected routers that tried to join I2P this past week was many times the network’s normal size. I2P’s Wikipedia page says the network consists of roughly 55,000 computers distributed throughout the world, with each participant acting as both a router (to relay traffic) and a client.
-
-However, Lance James, founder of the New York City based cybersecurity consultancy Unit 221B and the original founder of I2P, told KrebsOnSecurity the entire I2P network now consists of between 15,000 and 20,000 devices on any given day.
-
-An I2P user posted this graph on Feb. 10, showing tens of thousands of routers — mostly from the United States — suddenly attempting to join the network.
-
-Benjamin Brundage is founder of Synthient, a startup that tracks proxy services and was the first to document Kimwolf’s unique spreading techniques. Brundage said the Kimwolf operator(s) have been trying to build a command and control network that can’t easily be taken down by security companies and network operators that are working together to combat the spread of the botnet.
-
-Brundage said the people in control of Kimwolf have been experimenting with using I2P and a similar anonymity network — Tor — as a backup command and control network, although there have been no reports of widespread disruptions in the Tor network recently.
-
-“I don’t think their goal is to take I2P down,” he said. “It’s more they’re looking for an alternative to keep the botnet stable in the face of takedown attempts.”
-
-The Kimwolf botnet created challenges for Cloudflare late last year when it began instructing millions of infected devices to use Cloudflare’s domain name system (DNS) settings, causing control domains associated with Kimwolf to repeatedly usurp Amazon, Apple, Google and Microsoft in Cloudflare’s public ranking of the most frequently requested websites.
-
-James said the I2P network is still operating at about half of its normal capacity, and that a new release is rolling out which should bring some stability improvements over the next week for users.
-
-Meanwhile, Brundage said the good news is Kimwolf’s overlords appear to have quite recently alienated some of their more competent developers and operators, leading to a rookie mistake this past week that caused the botnet’s overall numbers to drop by more than 600,000 infected systems.
-
-“It seems like they’re just testing stuff, like running experiments in production,” he said. “But the botnet’s numbers are dropping significantly now, and they don’t seem to know what they’re doing.”
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
-
-================================================================================
-
-[22] Krebs on Security - Patch Tuesday, February 2026 Edition
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Tue, 10 Feb 2026 21:49:53 +0000
-Link: https://krebsonsecurity.com/2026/02/patch-tuesday-february-2026-edition/
-
-[TAM METİN - 515 kelime]
-Microsoft today released updates to fix more than 50 security holes in its Windows operating systems and other software, including patches for a whopping six “zero-day” vulnerabilities that attackers are already exploiting in the wild.
-
-Zero-day #1 this month is CVE-2026-21510, a security feature bypass vulnerability in Windows Shell wherein a single click on a malicious link can quietly bypass Windows protections and run attacker-controlled content without warning or consent dialogs. CVE-2026-21510 affects all currently supported versions of Windows.
-
-The zero-day flaw CVE-2026-21513 is a security bypass bug targeting MSHTML, the proprietary engine of the default Web browser in Windows. CVE-2026-21514 is a related security feature bypass in Microsoft Word.
-
-The zero-day CVE-2026-21533 allows local attackers to elevate their user privileges to “SYSTEM” level access in Windows Remote Desktop Services. CVE-2026-21519 is a zero-day elevation of privilege flaw in the Desktop Window Manager (DWM), a key component of Windows that organizes windows on a user’s screen. Microsoft fixed a different zero-day in DWM just last month.
-
-The sixth zero-day is CVE-2026-21525, a potentially disruptive denial-of-service vulnerability in the Windows Remote Access Connection Manager, the service responsible for maintaining VPN connections to corporate networks.
-
-Chris Goettl at Ivanti reminds us Microsoft has issued several out-of-band security updates since January’s Patch Tuesday. On January 17, Microsoft pushed a fix that resolved a credential prompt failure when attempting remote desktop or remote application connections. On January 26, Microsoft patched a zero-day security feature bypass vulnerability (CVE-2026-21509) in Microsoft Office.
-
-Kev Breen at Immersive notes that this month’s Patch Tuesday includes several fixes for remote code execution vulnerabilities affecting GitHub Copilot and multiple integrated development environments (IDEs), including VS Code, Visual Studio, and JetBrains products. The relevant CVEs are CVE-2026-21516, CVE-2026-21523, and CVE-2026-21256.
-
-Breen said the AI vulnerabilities Microsoft patched this month stem from a command injection flaw that can be triggered through prompt injection, or tricking the AI agent into doing something it shouldn’t — like executing malicious code or commands.
-
-“Developers are high-value targets for threat actors, as they often have access to sensitive data such as API keys and secrets that function as keys to critical infrastructure, including privileged AWS or Azure API keys,” Breen said. “When organizations enable developers and automation pipelines to use LLMs and agentic AI, a malicious prompt can have significant impact. This does not mean organizations should stop using AI. It does mean developers should understand the risks, teams should clearly identify which systems and workflows have access to AI agents, and least-privilege principles should be applied to limit the blast radius if developer secrets are compromised.”
-
-The SANS Internet Storm Center has a clickable breakdown of each individual fix this month from Microsoft, indexed by severity and CVSS score. Enterprise Windows admins involved in testing patches before rolling them out should keep an eye on askwoody.com, which often has the skinny on wonky updates. Please don’t neglect to back up your data if it has been a while since you’ve done that, and feel free to sound off in the comments if you experience problems installing any of these fixes.
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
-
-================================================================================
-
-[23] Krebs on Security - Please Don’t Feed the Scattered Lapsus ShinyHunters
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 02 Feb 2026 16:15:16 +0000
-Link: https://krebsonsecurity.com/2026/02/please-dont-feed-the-scattered-lapsus-shiny-hunters/
-
-[TAM METİN - 1200 kelime]
-A prolific data ransom gang that calls itself Scattered Lapsus ShinyHunters (SLSH) has a distinctive playbook when it seeks to extort payment from victim firms: Harassing, threatening and even swatting executives and their families, all while notifying journalists and regulators about the extent of the intrusion. Some victims reportedly are paying — perhaps as much to contain the stolen data as to stop the escalating personal attacks. But a top SLSH expert warns that engaging at all beyond a “We’re not paying” response only encourages further harassment, noting that the group’s fractious and unreliable history means the only winning move is not to pay.
-
-Image: Shutterstock.com, @Mungujakisa
-
-Unlike traditional, highly regimented Russia-based ransomware affiliate groups, SLSH is an unruly and somewhat fluid English-language extortion gang that appears uninterested in building a reputation of consistent behavior whereby victims might have some measure of confidence that the criminals will keep their word if paid.
-
-That’s according to Allison Nixon, director of research at the New York City based security consultancy Unit 221B. Nixon has been closely tracking the criminal group and individual members as they bounce between various Telegram channels used to extort and harass victims, and she said SLSH differs from traditional data ransom groups in other important ways that argue against trusting them to do anything they say they’ll do — such as destroying stolen data.
-
-Like SLSH, many traditional Russian ransomware groups have employed high-pressure tactics to force payment in exchange for a decryption key and/or a promise to delete stolen data, such as publishing a dark web shaming blog with samples of stolen data next to a countdown clock, or notifying journalists and board members of the victim company. But Nixon said the extortion from SLSH quickly escalates way beyond that — to threats of physical violence against executives and their families, DDoS attacks on the victim’s website, and repeated email-flooding campaigns.
-
-SLSH is known for breaking into companies by phishing employees over the phone, and using the purloined access to steal sensitive internal data. In a January 30 blog post, Google’s security forensics firm Mandiant said SLSH’s most recent extortion attacks stem from incidents spanning early to mid-January 2026, when SLSH members pretended to be IT staff and called employees at targeted victim organizations claiming that the company was updating MFA settings.
-
-“The threat actor directed the employees to victim-branded credential harvesting sites to capture their SSO credentials and MFA codes, and then registered their own device for MFA,” the blog post explained.
-
-Victims often first learn of the breach when their brand name is uttered on whatever ephemeral new public Telegram group chat SLSH is using to threaten, extort and harass their prey. According to Nixon, the coordinated harassment on the SLSH Telegram channels is part of a well-orchestrated strategy to overwhelm the victim organization by manufacturing humiliation that pushes them over the threshold to pay.
-
-Nixon said multiple executives at targeted organizations have been subject to “swatting” attacks, wherein SLSH communicated a phony bomb threat or hostage situation at the target’s address in the hopes of eliciting a heavily armed police response at their home or place of work.
-
-“A big part of what they’re doing to victims is the psychological aspect of it, like harassing executives’ kids and threatening the board of the company,” Nixon told KrebsOnSecurity. “And while these victims are getting extortion demands, they’re simultaneously getting outreach from media outlets saying, ‘Hey, do you have any comments on the bad things we’re going to write about you.”
-
-In a blog post today, Unit 221B argues that no one should negotiate with SLSH because the group has demonstrated a willingness to extort victims based on promises that it has no intention to keep. Nixon points out that all of SLSH’s known members hail from The Com, shorthand for a constellation of cybercrime-focused Discord and Telegram communities which serve as a kind of distributed social network that facilitates instant collaboration.
-
-Nixon said Com-based extortion groups tend to instigate feuds and drama between group members, leading to lying, betrayals, credibility destroying behavior, backstabbing, and sabotaging each other.
-
-“With this type of ongoing dysfunction, often compounding by substance abuse, these threat actors often aren’t able to act with the core goal in mind of completing a successful, strategic ransom operation,” Nixon wrote. “They continually lose control with outbursts that put their strategy and operational security at risk, which severely limits their ability to build a professional, scalable, and sophisticated criminal organization network for continued successful ransoms – unlike other, more tenured and professional criminal organizations focused on ransomware alone.”
-
-Intrusions from established ransomware groups typically center around encryption/decryption malware that mostly stays on the affected machine. In contrast, Nixon said, ransom from a Com group is often structured the same as violent sextortion schemes against minors, wherein members of The Com will steal damaging information, threaten to release it, and “promise” to delete it if the victim complies without any guarantee or technical proof point that they will keep their word. She writes:
-
-A key component of SLSH’s efforts to convince victims to pay, Nixon said, involves manipulating the media into hyping the threat posed by this group. This approach also borrows a page from the playbook of sextortion attacks, she said, which encourages predators to keep targets continuously engaged and worrying about the consequences of non-compliance.
-
-“On days where SLSH had no substantial criminal ‘win’ to announce, they focused on announcing death threats and harassment to keep law enforcement, journalists, and cybercrime industry professionals focused on this group,” she said.
-
-An excerpt from a sextortion tutorial from a Com-based Telegram channel. Image: Unit 221B.
-
-Nixon knows a thing or two about being threatened by SLSH: For the past several months, the group’s Telegram channels have been replete with threats of physical violence against her, against Yours Truly, and against other security researchers. These threats, she said, are just another way the group seeks to generate media attention and achieve a veneer of credibility, but they are useful as indicators of compromise because SLSH members tend to name drop and malign security researchers even in their communications with victims.
-
-“Watch for the following behaviors in their communications to you or their public statements,” Unit 221B’s advisory reads. “Repeated abusive mentions of Allison Nixon (or “A.N”), Unit 221B, or cybersecurity journalists—especially Brian Krebs—or any other cybersecurity employee, or cybersecurity company. Any threats to kill, or commit terrorism, or violence against internal employees, cybersecurity employees, investigators, and journalists.”
-
-Unit 221B says that while the pressure campaign during an extortion attempt may be traumatizing to employees, executives, and their family members, entering into drawn-out negotiations with SLSH incentivizes the group to increase the level of harm and risk, which could include the physical safety of employees and their families.
-
-“The breached data will never go back to the way it was, but we can assure you that the harassment will end,” Nixon said. “So, your decision to pay should be a separate issue from the harassment. We believe that when you separate these issues, you will objectively see that the best course of action to protect your interests, in both the short and long term, is to refuse payment.”
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
-
-================================================================================
-
-[24] Krebs on Security - Who Operates the Badbox 2.0 Botnet?
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 26 Jan 2026 16:11:38 +0000
-Link: https://krebsonsecurity.com/2026/01/who-operates-the-badbox-2-0-botnet/
-
-[TAM METİN - 1452 kelime]
-The cybercriminals in control of Kimwolf — a disruptive botnet that has infected more than 2 million devices — recently shared a screenshot indicating they’d compromised the control panel for Badbox 2.0, a vast China-based botnet powered by malicious software that comes pre-installed on many Android TV streaming boxes. Both the FBI and Google say they are hunting for the people behind Badbox 2.0, and thanks to bragging by the Kimwolf botmasters we may now have a much clearer idea about that.
-
-Our first story of 2026, The Kimwolf Botnet is Stalking Your Local Network, detailed the unique and highly invasive methods Kimwolf uses to spread. The story warned that the vast majority of Kimwolf infected systems were unofficial Android TV boxes that are typically marketed as a way to watch unlimited (pirated) movie and TV streaming services for a one-time fee.
-
-Our January 8 story, Who Benefitted from the Aisuru and Kimwolf Botnets?, cited multiple sources saying the current administrators of Kimwolf went by the nicknames “Dort” and “Snow.” Earlier this month, a close former associate of Dort and Snow shared what they said was a screenshot the Kimwolf botmasters had taken while logged in to the Badbox 2.0 botnet control panel.
-
-That screenshot, a portion of which is shown below, shows seven authorized users of the control panel, including one that doesn’t quite match the others: According to my source, the account “ABCD” (the one that is logged in and listed in the top right of the screenshot) belongs to Dort, who somehow figured out how to add their email address as a valid user of the Badbox 2.0 botnet.
-
-The control panel for the Badbox 2.0 botnet lists seven authorized users and their email addresses. Click to enlarge.
-
-Badbox has a storied history that well predates Kimwolf’s rise in October 2025. In July 2025, Google filed a “John Doe” lawsuit (PDF) against 25 unidentified defendants accused of operating Badbox 2.0, which Google described as a botnet of over ten million unsanctioned Android streaming devices engaged in advertising fraud. Google said Badbox 2.0, in addition to compromising multiple types of devices prior to purchase, also can infect devices by requiring the download of malicious apps from unofficial marketplaces.
-
-Google’s lawsuit came on the heels of a June 2025 advisory from the Federal Bureau of Investigation (FBI), which warned that cyber criminals were gaining unauthorized access to home networks by either configuring the products with malware prior to the user’s purchase, or infecting the device as it downloads required applications that contain backdoors — usually during the set-up process.
-
-The FBI said Badbox 2.0 was discovered after the original Badbox campaign was disrupted in 2024. The original Badbox was identified in 2023, and primarily consisted of Android operating system devices (TV boxes) that were compromised with backdoor malware prior to purchase.
-
-KrebsOnSecurity was initially skeptical of the claim that the Kimwolf botmasters had hacked the Badbox 2.0 botnet. That is, until we began digging into the history of the qq.com email addresses in the screenshot above.
-
-An online search for the address 34557257@qq.com (pictured in the screenshot above as the user “Chen“) shows it is listed as a point of contact for a number of China-based technology companies, including:
-
-–Beijing Hong Dake Wang Science & Technology Co Ltd.
-–Beijing Hengchuang Vision Mobile Media Technology Co. Ltd.
-–Moxin Beijing Science and Technology Co. Ltd.
-
-The website for Beijing Hong Dake Wang Science is asmeisvip[.]net, a domain that was flagged in a March 2025 report by HUMAN Security as one of several dozen sites tied to the distribution and management of the Badbox 2.0 botnet. Ditto for moyix[.]com, a domain associated with Beijing Hengchuang Vision Mobile.
-
-A search at the breach tracking service Constella Intelligence finds 34557257@qq.com at one point used the password “cdh76111.” Pivoting on that password in Constella shows it is known to have been used by just two other email accounts: daihaic@gmail.com and cathead@gmail.com.
-
-Constella found cathead@gmail.com registered an account at jd.com (China’s largest online retailer) in 2021 under the name “陈代海,” which translates to “Chen Daihai.” According to DomainTools.com, the name Chen Daihai is present in the original registration records (2008) for moyix[.]com, along with the email address cathead@astrolink[.]cn.
-
-Incidentally, astrolink[.]cn also is among the Badbox 2.0 domains identified in HUMAN Security’s 2025 report. DomainTools finds cathead@astrolink[.]cn was used to register more than a dozen domains, including vmud[.]net, yet another Badbox 2.0 domain tagged by HUMAN Security.
-
-A cached copy of astrolink[.]cn preserved at archive.org shows the website belongs to a mobile app development company whose full name is Beijing Astrolink Wireless Digital Technology Co. Ltd. The archived website reveals a “Contact Us” page that lists a Chen Daihai as part of the company’s technology department. The other person featured on that contact page is Zhu Zhiyu, and their email address is listed as xavier@astrolink[.]cn.
-
-A Google-translated version of Astrolink’s website, circa 2009. Image: archive.org.
-
-Astute readers will notice that the user Mr.Zhu in the Badbox 2.0 panel used the email address xavierzhu@qq.com. Searching this address in Constella reveals a jd.com account registered in the name of Zhu Zhiyu. A rather unique password used by this account matches the password used by the address xavierzhu@gmail.com, which DomainTools finds was the original registrant of astrolink[.]cn.
-
-The very first account listed in the Badbox 2.0 panel — “admin,” registered in November 2020 — used the email address 189308024@qq.com. DomainTools shows this email is found in the 2022 registration records for the domain guilincloud[.]cn, which includes the registrant name “Huang Guilin.”
-
-Constella finds 189308024@qq.com is associated with the China phone number 18681627767. The open-source intelligence platform osint.industries reveals this phone number is connected to a Microsoft profile created in 2014 under the name Guilin Huang (桂林 黄). The cyber intelligence platform Spycloud says that phone number was used in 2017 to create an account at the Chinese social media platform Weibo under the username “h_guilin.”
-
-The public information attached to Guilin Huang’s Microsoft account, according to the breach tracking service osintindustries.com.
-
-The remaining three users and corresponding qq.com email addresses were all connected to individuals in China. However, none of them (nor Mr. Huang) had any apparent connection to the entities created and operated by Chen Daihai and Zhu Zhiyu — or to any corporate entities for that matter. Also, none of these individuals responded to requests for comment.
-
-The mind map below includes search pivots on the email addresses, company names and phone numbers that suggest a connection between Chen Daihai, Zhu Zhiyu, and Badbox 2.0.
-
-This mind map includes search pivots on the email addresses, company names and phone numbers that appear to connect Chen Daihai and Zhu Zhiyu to Badbox 2.0. Click to enlarge.
-
-The idea that the Kimwolf botmasters could have direct access to the Badbox 2.0 botnet is a big deal, but explaining exactly why that is requires some background on how Kimwolf spreads to new devices. The botmasters figured out they could trick residential proxy services into relaying malicious commands to vulnerable devices behind the firewall on the unsuspecting user’s local network.
-
-The vulnerable systems sought out by Kimwolf are primarily Internet of Things (IoT) devices like unsanctioned Android TV boxes and digital photo frames that have no discernible security or authentication built-in. Put simply, if you can communicate with these devices, you can compromise them with a single command.
-
-Our January 2 story featured research from the proxy-tracking firm Synthient, which alerted 11 different residential proxy providers that their proxy endpoints were vulnerable to being abused for this kind of local network probing and exploitation.
-
-Most of those vulnerable proxy providers have since taken steps to prevent customers from going upstream into the local networks of residential proxy endpoints, and it appeared that Kimwolf would no longer be able to quickly spread to millions of devices simply by exploiting some residential proxy provider.
-
-However, the source of that Badbox 2.0 screenshot said the Kimwolf botmasters had an ace up their sleeve the whole time: Secret access to the Badbox 2.0 botnet control panel.
-
-“Dort has gotten unauthorized access,” the source said. “So, what happened is normal proxy providers patched this. But Badbox doesn’t sell proxies by itself, so it’s not patched. And as long as Dort has access to Badbox, they would be able to load” the Kimwolf malware directly onto TV boxes associated with Badbox 2.0.
-
-The source said it isn’t clear how Dort gained access to the Badbox botnet panel. But it’s unlikely that Dort’s existing account will persist for much longer: All of our notifications to the qq.com email addresses listed in the control panel screenshot received a copy of that image, as well as questions about the apparently rogue ABCD account.
-
-(XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
-
-================================================================================
-
-[25] Krebs on Security - Kimwolf Botnet Lurking in Corporate, Govt. Networks
+[21] Krebs on Security - Kimwolf Botnet Lurking in Corporate, Govt. Networks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 20 Jan 2026 18:19:13 +0000
 Link: https://krebsonsecurity.com/2026/01/kimwolf-botnet-lurking-in-corporate-govt-networks/
@@ -1357,7 +1100,7 @@ A Broken System Fueling Botnets (Synthient).
 
 ================================================================================
 
-[26] Krebs on Security - Patch Tuesday, January 2026 Edition
+[22] Krebs on Security - Patch Tuesday, January 2026 Edition
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 14 Jan 2026 00:47:38 +0000
 Link: https://krebsonsecurity.com/2026/01/patch-tuesday-january-2026-edition/
@@ -1401,7 +1144,7 @@ As ever, the SANS Internet Storm Center has a per-patch breakdown by severity an
 
 ================================================================================
 
-[27] Krebs on Security - Who Benefited from the Aisuru and Kimwolf Botnets?
+[23] Krebs on Security - Who Benefited from the Aisuru and Kimwolf Botnets?
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 08 Jan 2026 23:23:43 +0000
 Link: https://krebsonsecurity.com/2026/01/who-benefited-from-the-aisuru-and-kimwolf-botnets/
@@ -1501,7 +1244,7 @@ If you own a TV box that matches one of these model names and/or numbers, please
 
 ================================================================================
 
-[28] Krebs on Security - The Kimwolf Botnet is Stalking Your Local Network
+[24] Krebs on Security - The Kimwolf Botnet is Stalking Your Local Network
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 02 Jan 2026 14:20:10 +0000
 Link: https://krebsonsecurity.com/2026/01/the-kimwolf-botnet-is-stalking-your-local-network/
@@ -1687,7 +1430,7 @@ Stay tuned for Part II in this series, which will poke through clues left behind
 
 ================================================================================
 
-[29] Krebs on Security - Happy 16th Birthday, KrebsOnSecurity.com!
+[25] Krebs on Security - Happy 16th Birthday, KrebsOnSecurity.com!
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 29 Dec 2025 20:23:26 +0000
 Link: https://krebsonsecurity.com/2025/12/happy-16th-birthday-krebsonsecurity-com/
@@ -1741,7 +1484,7 @@ Thanks again, and Happy New Year everyone! Be safe out there.
 
 ================================================================================
 
-[30] Krebs on Security - Dismantling Defenses: Trump 2.0 Cyber Year in Review
+[26] Krebs on Security - Dismantling Defenses: Trump 2.0 Cyber Year in Review
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Fri, 19 Dec 2025 15:14:55 +0000
 Link: https://krebsonsecurity.com/2025/12/dismantling-defenses-trump-2-0-cyber-year-in-review/
@@ -1874,6 +1617,267 @@ At the same time DOGE was slashing federal programs, President Trump fired at le
 Where is DOGE now? Reuters reported last month that as far as the White House is concerned, DOGE no longer exists, even though it technically has more than half a year left to its charter. Meanwhile, who exactly retains access to federal agency data that was fed by DOGE into AI tools is anyone’s guess.
 
 KrebsOnSecurity would like to thank the anonymous researcher NatInfoSec for assisting with the research on this story.
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
+
+================================================================================
+
+[27] Krebs on Security - Most Parked Domains Now Serving Malicious Content
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 16 Dec 2025 14:14:48 +0000
+Link: https://krebsonsecurity.com/2025/12/most-parked-domains-now-serving-malicious-content/
+
+[TAM METİN - 1002 kelime]
+Direct navigation — the act of visiting a website by manually typing a domain name in a web browser — has never been riskier: A new study finds the vast majority of “parked” domains — mostly expired or dormant domain names, or common misspellings of popular websites — are now configured to redirect visitors to sites that foist scams and malware.
+
+A lookalike domain to the FBI Internet Crime Complaint Center website, returned a non-threatening parking page (left) whereas a mobile user was instantly directed to deceptive content in October 2025 (right). Image: Infoblox.
+
+When Internet users try to visit expired domain names or accidentally navigate to a lookalike “typosquatting” domain, they are typically brought to a placeholder page at a domain parking company that tries to monetize the wayward traffic by displaying links to a number of third-party websites that have paid to have their links shown.
+
+A decade ago, ending up at one of these parked domains came with a relatively small chance of being redirected to a malicious destination: In 2014, researchers found (PDF) that parked domains redirected users to malicious sites less than five percent of the time — regardless of whether the visitor clicked on any links at the parked page.
+
+But in a series of experiments over the past few months, researchers at the security firm Infoblox say they discovered the situation is now reversed, and that malicious content is by far the norm now for parked websites.
+
+“In large scale experiments, we found that over 90% of the time, visitors to a parked domain would be directed to illegal content, scams, scareware and anti-virus software subscriptions, or malware, as the ‘click’ was sold from the parking company to advertisers, who often resold that traffic to yet another party,” Infoblox researchers wrote in a paper published today.
+
+Infoblox found parked websites are benign if the visitor arrives at the site using a virtual private network (VPN), or else via a non-residential Internet address. For example, Scotiabank.com customers who accidentally mistype the domain as scotaibank[.]com will see a normal parking page if they’re using a VPN, but will be redirected to a site that tries to foist scams, malware or other unwanted content if coming from a residential IP address. Again, this redirect happens just by visiting the misspelled domain with a mobile device or desktop computer that is using a residential IP address.
+
+According to Infoblox, the person or entity that owns scotaibank[.]com has a portfolio of nearly 3,000 lookalike domains, including gmai[.]com, which demonstrably has been configured with its own mail server for accepting incoming email messages. Meaning, if you send an email to a Gmail user and accidentally omit the “l” from “gmail.com,” that missive doesn’t just disappear into the ether or produce a bounce reply: It goes straight to these scammers. The report notices this domain also has been leveraged in multiple recent business email compromise campaigns, using a lure indicating a failed payment with trojan malware attached.
+
+Infoblox found this particular domain holder (betrayed by a common DNS server — torresdns[.]com) has set up typosquatting domains targeting dozens of top Internet destinations, including Craigslist, YouTube, Google, Wikipedia, Netflix, TripAdvisor, Yahoo, eBay, and Microsoft. A defanged list of these typosquatting domains is available here (the dots in the listed domains have been replaced with commas).
+
+“It was often a chain of redirects — one or two domains outside the parking company — before threat arrives,” Brunsdon said. “Each time in the handoff the device is profiled again and again, before being passed off to a malicious domain or else a decoy page like Amazon.com or Alibaba.com if they decide it’s not worth targeting.”
+
+Brunsdon said domain parking services claim the search results they return on parked pages are designed to be relevant to their parked domains, but that almost none of this displayed content was related to the lookalike domain names they tested.
+
+Samples of redirection paths when visiting scotaibank dot com. Each branch includes a series of domains observed, including the color-coded landing page. Image: Infoblox.
+
+Infoblox said a different threat actor who owns domaincntrol[.]com — a domain that differs from GoDaddy’s name servers by a single character — has long taken advantage of typos in DNS configurations to drive users to malicious websites. In recent months, however, Infoblox discovered the malicious redirect only happens when the query for the misconfigured domain comes from a visitor who is using Cloudflare’s DNS resolvers (1.1.1.1), and that all other visitors will get a page that refuses to load.
+
+The researchers found that even variations on well-known government domains are being targeted by malicious ad networks.
+
+“When one of our researchers tried to report a crime to the FBI’s Internet Crime Complaint Center (IC3), they accidentally visited ic3[.]org instead of ic3[.]gov,” the report notes. “Their phone was quickly redirected to a false ‘Drive Subscription Expired’ page. They were lucky to receive a scam; based on what we’ve learnt, they could just as easily receive an information stealer or trojan malware.”
+
+The Infoblox report emphasizes that the malicious activity they tracked is not attributed to any known party, noting that the domain parking or advertising platforms named in the study were not implicated in the malvertising they documented.
+
+However, the report concludes that while the parking companies claim to only work with top advertisers, the traffic to these domains was frequently sold to affiliate networks, who often resold the traffic to the point where the final advertiser had no business relationship with the parking companies.
+
+Infoblox also pointed out that recent policy changes by Google may have inadvertently increased the risk to users from direct search abuse. Brunsdon said Google Adsense previously defaulted to allowing their ads to be placed on parked pages, but that in early 2025 Google implemented a default setting that had their customers opt-out by default on presenting ads on parked domains — requiring the person running the ad to voluntarily go into their settings and turn on parking as a location.
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
+
+================================================================================
+
+[28] Krebs on Security - Microsoft Patch Tuesday, December 2025 Edition
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 09 Dec 2025 23:18:29 +0000
+Link: https://krebsonsecurity.com/2025/12/microsoft-patch-tuesday-december-2025-edition/
+
+[TAM METİN - 563 kelime]
+Microsoft today pushed updates to fix at least 56 security flaws in its Windows operating systems and supported software. This final Patch Tuesday of 2025 tackles one zero-day bug that is already being exploited, as well as two publicly disclosed vulnerabilities.
+
+Despite releasing a lower-than-normal number of security updates these past few months, Microsoft patched a whopping 1,129 vulnerabilities in 2025, an 11.9% increase from 2024. According to Satnam Narang at Tenable, this year marks the second consecutive year that Microsoft patched over one thousand vulnerabilities, and the third time it has done so since its inception.
+
+The zero-day flaw patched today is CVE-2025-62221, a privilege escalation vulnerability affecting Windows 10 and later editions. The weakness resides in a component called the “Windows Cloud Files Mini Filter Driver” — a system driver that enables cloud applications to access file system functionalities.
+
+“This is particularly concerning, as the mini filter is integral to services like OneDrive, Google Drive, and iCloud, and remains a core Windows component, even if none of those apps were installed,” said Adam Barnett, lead software engineer at Rapid7.
+
+Only three of the flaws patched today earned Microsoft’s most-dire “critical” rating: Both CVE-2025-62554 and CVE-2025-62557 involve Microsoft Office, and both can exploited merely by viewing a booby-trapped email message in the Preview Pane. Another critical bug — CVE-2025-62562 — involves Microsoft Outlook, although Redmond says the Preview Pane is not an attack vector with this one.
+
+But according to Microsoft, the vulnerabilities most likely to be exploited from this month’s patch batch are other (non-critical) privilege escalation bugs, including:
+
+–CVE-2025-62458 — Win32k
+–CVE-2025-62470 — Windows Common Log File System Driver
+–CVE-2025-62472 — Windows Remote Access Connection Manager
+–CVE-2025-59516 — Windows Storage VSP Driver
+–CVE-2025-59517 — Windows Storage VSP Driver
+
+Kev Breen, senior director of threat research at Immersive, said privilege escalation flaws are observed in almost every incident involving host compromises.
+
+“We don’t know why Microsoft has marked these specifically as more likely, but the majority of these components have historically been exploited in the wild or have enough technical detail on previous CVEs that it would be easier for threat actors to weaponize these,” Breen said. “Either way, while not actively being exploited, these should be patched sooner rather than later.”
+
+One of the more interesting vulnerabilities patched this month is CVE-2025-64671, a remote code execution flaw in the Github Copilot Plugin for Jetbrains AI-based coding assistant that is used by Microsoft and GitHub. Breen said this flaw would allow attackers to execute arbitrary code by tricking the large language model (LLM) into running commands that bypass the user’s “auto-approve” settings.
+
+CVE-2025-64671 is part of a broader, more systemic security crisis that security researcher Ari Marzuk has branded IDEsaster (IDE  stands for “integrated development environment”), which encompasses more than 30 separate vulnerabilities reported in nearly a dozen market-leading AI coding platforms, including Cursor, Windsurf, Gemini CLI, and Claude Code.
+
+The other publicly-disclosed vulnerability patched today is CVE-2025-54100, a remote code execution bug in Windows Powershell on Windows Server 2008 and later that allows an unauthenticated attacker to run code in the security context of the user.
+
+For anyone seeking a more granular breakdown of the security updates Microsoft pushed today, check out the roundup at the SANS Internet Storm Center. As always, please leave a note in the comments if you experience problems applying any of this month’s Windows patches.
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
+
+================================================================================
+
+[29] Krebs on Security - Drones to Diplomas: How Russia’s Largest Private University is Linked to a $25M Essay Mill
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sat, 06 Dec 2025 14:45:03 +0000
+Link: https://krebsonsecurity.com/2025/12/drones-to-diplomas-how-russias-largest-private-university-is-linked-to-a-25m-essay-mill/
+
+[TAM METİN - 1970 kelime]
+A sprawling academic cheating network turbocharged by Google Ads that has generated nearly $25 million in revenue has curious ties to a Kremlin-connected oligarch whose Russian university builds drones for Russia’s war against Ukraine.
+
+The Nerdify homepage.
+
+The link between essay mills and Russian attack drones might seem improbable, but understanding it begins with a simple question: How does a human-intensive academic cheating service stay relevant in an era when students can simply ask AI to write their term papers? The answer – recasting the business as an AI company – is just the latest chapter in a story of many rebrands that link the operation to Russia’s largest private university.
+
+Search in Google for any terms related to academic cheating services — e.g., “help with exam online” or “term paper online” — and you’re likely to encounter websites with the words “nerd” or “geek” in them, such as thenerdify[.]com and geekly-hub[.]com. With a simple request sent via text message, you can hire their tutors to help with any assignment.
+
+These nerdy and geeky-branded websites frequently cite their “honor code,” which emphasizes they do not condone academic cheating, will not write your term papers for you, and will only offer support and advice for customers. But according to This Isn’t Fine, a Substack blog about contract cheating and essay mills, the Nerdify brand of websites will happily ignore that mantra.
+
+“We tested the quick SMS for a price quote,” wrote This Isn’t Fine author Joseph Thibault. “The honor code references and platitudes apparently stop at the website. Within three minutes, we confirmed that a full three-page, plagiarism- and AI-free MLA formatted Argumentative essay could be ours for the low price of $141.”
+
+A screenshot from Joseph Thibault’s Substack post shows him purchasing a 3-page paper with the Nerdify service.
+
+Google prohibits ads that “enable dishonest behavior.” Yet, a sprawling global essay and homework cheating network run under the Nerdy brands has quietly bought its way to the top of Google searches – booking revenues of almost $25 million through a maze of companies in Cyprus, Malta and Hong Kong, while pitching “tutoring” that delivers finished work that students can turn in.
+
+When one Nerdy-related Google Ads account got shut down, the group behind the company would form a new entity with a front-person (typically a young Ukrainian woman), start a new ads account along with a new website and domain name (usually with “nerdy” in the brand), and resume running Google ads for the same set of keywords.
+
+UK companies belonging to the group that have been shut down by Google Ads since Jan 2025 include:
+
+–Proglobal Solutions LTD (advertised nerdifyit[.]com);
+–AW Tech Limited (advertised thenerdify[.]com);
+–Geekly Solutions Ltd (advertised geekly-hub[.]com).
+
+Currently active Google Ads accounts for the Nerdify brands include:
+
+-OK Marketing LTD (advertising geekly-hub[.]net⁩), formed in the name of Olha Karpenko, a young Ukrainian woman;
+–Two Sigma Solutions LTD (advertising litero[.]ai), formed in the name of Olekszij (Alexey) Pokatilo.
+
+Google’s Ads Transparency page for current Nerdify advertiser OK Marketing LTD.
+
+Mr. Pokatilo has been in the essay-writing business since at least 2009, operating a paper-mill enterprise called Livingston Research alongside Alexander Korsukov, who is listed as an owner. According to a lengthy account from a former employee, Livingston Research mainly farmed its writing tasks out to low-cost workers from Kenya, Philippines, Pakistan, Russia and Ukraine.
+
+Pokatilo moved from Ukraine to the United Kingdom in Sept. 2015 and co-founded a company called Awesome Technologies, which pitched itself as a way for people to outsource tasks by sending a text message to the service’s assistants.
+
+The other co-founder of Awesome Technologies is 36-year-old Filip Perkon, a Swedish man living in London who touts himself as a serial entrepreneur and investor. Years before starting Awesome together, Perkon and Pokatilo co-founded a student group called Russian Business Week while the two were classmates at the London School of Economics. According to the Bulgarian investigative journalist Christo Grozev, Perkon’s birth certificate was issued by the Soviet Embassy in Sweden.
+
+Alexey Pokatilo (left) and Filip Perkon at a Facebook event for startups in San Francisco in mid-2015.
+
+Perkon was praised by the Russian Embassy in London for his efforts: During the contentious Brexit vote that ultimately led to the United Kingdom leaving the European Union, the Russian embassy in London used this spam tweeting tool to auto-retweet the Russian ambassador’s posts from supporters’ accounts.
+
+Neither Mr. Perkon nor Mr. Pokatilo replied to requests for comment.
+
+A review of corporations tied to Mr. Perkon as indexed by the business research service North Data finds he holds or held director positions in several U.K. subsidiaries of Synergy University, Russia’s largest private education provider. Synergy has more than 35,000 students, and sells T-shirts with patriotic slogans such as “Crimea is Ours,” and “The Russian Empire — Reloaded.”
+
+The president of Synergy University is Vadim Lobov, a Kremlin insider whose headquarters on the outskirts of Moscow reportedly features a wall-sized portrait of Russian President Vladimir Putin in the pop-art style of Andy Warhol. For a number of years, Lobov and Perkon co-produced a cross-cultural event in the U.K. called Russian Film Week.
+
+Synergy President Vadim Lobov and Filip Perkon, speaking at a press conference for Russian Film Week, a cross-cultural event in the U.K. co-produced by both men.
+
+Mr. Lobov was one of 11 individuals reportedly hand-picked by the convicted Russian spy Marina Butina to attend the 2017 National Prayer Breakfast held in Washington D.C. just two weeks after President Trump’s first inauguration.
+
+While Synergy University promotes itself as Russia’s largest private educational institution, hundreds of international students tell a different story. Online reviews from students paint a picture of unkept promises: Prospective students from Nigeria, Kenya, Ghana, and other nations paying thousands in advance fees for promised study visas to Russia, only to have their applications denied with no refunds offered.
+
+“My experience with Synergy University has been nothing short of heartbreaking,” reads one such account. “When I first discovered the school, their representative was extremely responsive and eager to assist. He communicated frequently and made me believe I was in safe hands. However, after paying my hard-earned tuition fees, my visa was denied. It’s been over 9 months since that denial, and despite their promises, I have received no refund whatsoever. My messages are now ignored, and the same representative who once replied instantly no longer responds at all. Synergy University, how can an institution in Europe feel comfortable exploiting the hopes of Africans who trust you with their life savings? This is not just unethical — it’s predatory.”
+
+This pattern repeats across reviews by multilingual students from Pakistan, Nepal, India, and various African nations — all describing the same scheme: Attractive online marketing, promises of easy visa approval, upfront payment requirements, and then silence after visa denials.
+
+Reddit discussions in r/Moscow and r/AskARussian are filled with warnings. “It’s a scam, a diploma mill,” writes one user. “They literally sell exams. There was an investigation on Rossiya-1 television showing students paying to pass tests.”
+
+The Nerdify website’s “About Us” page says the company was co-founded by Pokatilo and an American named Brian Mellor. The latter identity seems to have been fabricated, or at least there is no evidence that a person with this name ever worked at Nerdify.
+
+Rather, it appears that the SMS assistance company co-founded by Messrs. Pokatilo and Perkon (Awesome Technologies) fizzled out shortly after its creation, and that Nerdify soon adopted the process of accepting assignment requests via text message and routing them to freelance writers.
+
+A closer look at an early “About Us” page for Nerdify in The Wayback Machine suggests that Mr. Perkon was the real co-founder of the company: The photo at the top of the page shows four people wearing Nerdify T-shirts seated around a table on a rooftop deck in San Francisco, and the man facing the camera is Perkon.
+
+Filip Perkon, top right, is pictured wearing a Nerdify T-shirt in an archived copy of the company’s About Us page. Image: archive.org.
+
+Where are they now? Pokatilo is currently running a startup called Litero.Ai, which appears to be an AI-based essay writing service. In July 2025, Mr. Pokatilo received pre-seed funding of $800,000 for Litero from an investment program backed by the venture capital firms AltaIR Capital, Yellow Rocks, Smart Partnership Capital, and I2BF Global Ventures.
+
+Meanwhile, Filip Perkon is busy setting up toy rubber duck stores in Miami and in at least three locations in the United Kingdom. These “Duck World” shops market themselves as “the world’s largest duck store.”
+
+This past week, Mr. Lobov was in India with Putin’s entourage on a charm tour with India’s Prime Minister Narendra Modi. Although Synergy is billed as an educational institution, a review of the company’s sprawling corporate footprint (via DNS) shows it also is assisting the Russian government in its war against Ukraine.
+
+Synergy University President Vadim Lobov (right) pictured this week in India next to Natalia Popova, a Russian TV presenter known for her close ties to Putin’s family, particularly Putin’s daughter, who works with Popova at the education and culture-focused Innopraktika Foundation.
+
+The website bpla.synergy[.]bot, for instance, says the company is involved in developing combat drones to aid Russian forces and to evade international sanctions on the supply and re-export of high-tech products.
+
+A screenshot from the website of synergy,bot shows the company is actively engaged in building armed drones for the war in Ukraine.
+
+KrebsOnSecurity would like to thank the anonymous researcher NatInfoSec for their assistance in this investigation.
+
+Update, Dec. 8, 10:06 a.m. ET: Mr. Pokatilo responded to requests for comment after the publication of this story. Pokatilo said he has no relation to Synergy nor to Mr. Lobov, and that his work with Mr. Perkon ended with the dissolution of Awesome Technologies.
+
+“I have had no involvement in any of his projects and business activities mentioned in the article and he has no involvement in Litero.ai,” Pokatilo said of Perkon.
+
+Mr. Pokatilo said his new company Litero “does not provide contract cheating services and is built specifically to improve transparency and academic integrity in the age of universal use of AI by students.”
+
+“I am Ukrainian,” he said in an email. “My close friends, colleagues, and some family members continue to live in Ukraine under the ongoing invasion. Any suggestion that I or my company may be connected in any way to Russia’s war efforts is deeply offensive on a personal level and harmful to the reputation of Litero.ai, a company where many team members are Ukrainian.”
+
+Update, Dec. 11, 12:07 p.m. ET: Mr. Perkon responded to requests for comment after the publication of this story. Perkon said the photo of him in a Nerdify T-shirt (see screenshot above) was taken after a startup event in San Francisco, where he volunteered to act as a photo model to help friends with their project.
+
+“I have no business or other relations to Nerdify or any other ventures in that space,” Mr. Perkon said in an email response. “As for Vadim Lobov, I worked for Venture Capital arm at Synergy until 2013 as well as his business school project in the UK, that didn’t get off the ground, so the company related to this was made dormant. Then Synergy kindly provided sponsorship for my Russian Film Week event that I created and ran until 2022 in the U.K., an event that became the biggest independent Russian film festival outside of Russia. Since the start of the Ukraine war in 2022 I closed the festival down.”
+
+“I have had no business with Vadim Lobov since 2021 (the last film festival) and I don’t keep track of his endeavours,” Perkon continued. “As for Alexey Pokatilo, we are university friends. Our business relationship has ended after the concierge service Awesome Technologies didn’t work out, many years ago.”
+
+(XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
+
+================================================================================
+
+[30] Krebs on Security - SMS Phishers Pivot to Points, Taxes, Fake Retailers
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Thu, 04 Dec 2025 23:02:34 +0000
+Link: https://krebsonsecurity.com/2025/12/sms-phishers-pivot-to-points-taxes-fake-retailers/
+
+[TAM METİN - 1315 kelime]
+China-based phishing groups blamed for non-stop scam SMS messages about a supposed wayward package or unpaid toll fee are promoting a new offering, just in time for the holiday shopping season: Phishing kits for mass-creating fake but convincing e-commerce websites that convert customer payment card data into mobile wallets from Apple and Google. Experts say these same phishing groups also are now using SMS lures that promise unclaimed tax refunds and mobile rewards points.
+
+Over the past week, thousands of domain names were registered for scam websites that purport to offer T-Mobile customers the opportunity to claim a large number of rewards points. The phishing domains are being promoted by scam messages sent via Apple’s iMessage service or the functionally equivalent RCS messaging service built into Google phones.
+
+An instant message spoofing T-Mobile says the recipient is eligible to claim thousands of rewards points.
+
+The website scanning service urlscan.io shows thousands of these phishing domains have been deployed in just the past few days alone. The phishing websites will only load if the recipient visits with a mobile device, and they ask for the visitor’s name, address, phone number and payment card data to claim the points.
+
+A phishing website registered this week that spoofs T-Mobile.
+
+If card data is submitted, the site will then prompt the user to share a one-time code sent via SMS by their financial institution. In reality, the bank is sending the code because the fraudsters have just attempted to enroll the victim’s phished card details in a mobile wallet from Apple or Google. If the victim also provides that one-time code, the phishers can then link the victim’s card to a mobile device that they physically control.
+
+Pivoting off these T-Mobile phishing domains in urlscan.io reveals a similar scam targeting AT&T customers:
+
+An SMS phishing or “smishing” website targeting AT&T users.
+
+Ford Merrill works in security research at SecAlliance, a CSIS Security Group company. Merrill said multiple China-based cybercriminal groups that sell phishing-as-a-service platforms have been using the mobile points lure for some time, but the scam has only recently been pointed at consumers in the United States.
+
+“These points redemption schemes have not been very popular in the U.S., but have been in other geographies like EU and Asia for a while now,” Merrill said.
+
+A review of other domains flagged by urlscan.io as tied to this Chinese SMS phishing syndicate shows they are also spoofing U.S. state tax authorities, telling recipients they have an unclaimed tax refund. Again, the goal is to phish the user’s payment card information and one-time code.
+
+A text message that spoofs the District of Columbia’s Office of Tax and Revenue.
+
+Many SMS phishing or “smishing” domains are quickly flagged by browser makers as malicious. But Merrill said one burgeoning area of growth for these phishing kits — fake e-commerce shops — can be far harder to spot because they do not call attention to themselves by spamming the entire world.
+
+Merrill said the same Chinese phishing kits used to blast out package redelivery message scams are equipped with modules that make it simple to quickly deploy a fleet of fake but convincing e-commerce storefronts. Those phony stores are typically advertised on Google and Facebook, and consumers usually end up at them by searching online for deals on specific products.
+
+A machine-translated screenshot of an ad from a China-based phishing group promoting their fake e-commerce shop templates.
+
+With these fake e-commerce stores, the customer is supplying their payment card and personal information as part of the normal check-out process, which is then punctuated by a request for a one-time code sent by your financial institution. The fake shopping site claims the code is required by the user’s bank to verify the transaction, but it is sent to the user because the scammers immediately attempt to enroll the supplied card data in a mobile wallet.
+
+According to Merrill, it is only during the check-out process that these fake shops will fetch the malicious code that gives them away as fraudulent, which tends to make it difficult to locate these stores simply by mass-scanning the web. Also, most customers who pay for products through these sites don’t realize they’ve been snookered until weeks later when the purchased item fails to arrive.
+
+“The fake e-commerce sites are tough because a lot of them can fly under the radar,” Merrill said. “They can go months without being shut down, they’re hard to discover, and they generally don’t get flagged by safe browsing tools.”
+
+Happily, reporting these SMS phishing lures and websites is one of the fastest ways to get them properly identified and shut down. Raymond Dijkxhoorn is the CEO and a founding member of SURBL, a widely-used blocklist that flags domains and IP addresses known to be used in unsolicited messages, phishing and malware distribution. SURBL has created a website called smishreport.com that asks users to forward a screenshot of any smishing message(s) received.
+
+“If [a domain is] unlisted, we can find and add the new pattern and kill the rest” of the matching domains, Dijkxhoorn said. “Just make a screenshot and upload. The tool does the rest.”
+
+The SMS phishing reporting site smishreport.com.
+
+Merrill said the last few weeks of the calendar year typically see a big uptick in smishing — particularly package redelivery schemes that spoof the U.S. Postal Service or commercial shipping companies.
+
+“Every holiday season there is an explosion in smishing activity,” he said. “Everyone is in a bigger hurry, frantically shopping online, paying less attention than they should, and they’re just in a better mindset to get phished.”
+
+SHOP ONLINE LIKE A SECURITY PRO
+
+As we can see, adopting a shopping strategy of simply buying from the online merchant with the lowest advertised prices can be a bit like playing Russian Roulette with your wallet. Even people who shop mainly at big-name online stores can get scammed if they’re not wary of too-good-to-be-true offers (think third-party sellers on these platforms).
+
+If you don’t know much about the online merchant that has the item you wish to buy, take a few minutes to investigate its reputation. If you’re buying from an online store that is brand new, the risk that you will get scammed increases significantly. How do you know the lifespan of a site selling that must-have gadget at the lowest price? One easy way to get a quick idea is to run a basic WHOIS search on the site’s domain name. The more recent the site’s “created” date, the more likely it is a phantom store.
+
+If you receive a message warning about a problem with an order or shipment, visit the e-commerce or shipping site directly, and avoid clicking on links or attachments — particularly missives that warn of some dire consequences unless you act quickly. Phishers and malware purveyors typically seize upon some kind of emergency to create a false alarm that often causes recipients to temporarily let their guard down.
+
+But it’s not just outright scammers who can trip up your holiday shopping: Often times, items that are advertised at steeper discounts than other online stores make up for it by charging way more than normal for shipping and handling.
+
+So be careful what you agree to: Check to make sure you know how long the item will take to be shipped, and that you understand the store’s return policies. Also, keep an eye out for hidden surcharges, and be wary of blithely clicking “ok” during the checkout process.
+
+Most importantly, keep a close eye on your monthly statements. If I were a fraudster, I’d most definitely wait until the holidays to cram through a bunch of unauthorized charges on stolen cards, so that the bogus purchases would get buried amid a flurry of other legitimate transactions. That’s why it’s key to closely review your credit card bill and to quickly dispute any charges you didn’t authorize.
 
 (XXXXXXX, AÇIK - krebsonsecurity.com, 18.02.2026)
 
@@ -2623,7 +2627,43 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[51] Graham Cluley - Urgent warnings from UK and US cyber agencies after Polish energy grid attack
+[51] Graham Cluley - Dutch police arrest man for “hacking” after accidentally sending him confidential files
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Wed, 18 Feb 2026 10:52:29 +0000
+Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/dutch-police-arrest-man-hacking-accidentally-sending-confidential-files
+
+[TAM METİN - 457 kelime]
+Well, this is embarrassing.
+
+Police in The Netherlands say they have arrested a 40-year-old man on suspicion of hacking... after police officers accidentally sent him a link granting him access to their own confidential documents.
+
+On February 12, the unnamed man from Ridderkerk contacted the Dutch National Police in connection with a separate investigation, telling them that he had images that might be helpful to their case.
+
+The police officer handling the contact sent the man a link intended to allow him to upload the images. However, by mistake, the link that was sent to the man actually allowed him to access and download confidential files.
+
+The man proceeded to download the documents. When police told him to stop and delete the downloaded material he reportedly refused, saying that he would only agree if he "received something in return."
+
+Details of precisely what the man may have wanted as a "reward" has not been shared, but I think nobody would be surprised if it was of a financial nature.
+
+Mistake as it was for the police to carelessly share a link which allowed confidential files to be downloaded, you cannot help but think that the member of the public was also not making the wisest decision of his life in blackmailing the authorities.
+
+At around 7pm that evening, police arrested the man, searched his home, and seized digital devices in an attempt to recover their lost files and prevent their further distribution.
+
+An investigation is now being undertaken into what wrong, and a data breach has been formally reported to regulators. Dutch police say that there is no indication that any of the leaked files have been shared more widely.
+
+Announcing that they were charging the man with "computervredebreuk" — the Dutch legal term for unauthorised access to computer systems - polce attempted to justify their decision:
+
+The nature of the leaked documents has not been disclosed, and it is unclear whether the material included personal data or information related to active police investigations.
+
+Mistakes like the one which has befallen the Dutch police are painful reminder of just how easy it is for humans to foul up. A simple check of whether a link is an upload or download URL before firing it off to a member of the public would seem like a sensible precaution, particularly when the files on the other end belong to a law enforcement agency.
+
+Right now the unnamed man faces a potential future prospecution for accessing files that he was in a very real sense, invited to access. Whatever the outcome of any court case (if it gets that far), one has to hope that the police will be more careful with the links that they send out in future.
+
+(XXXXXXX, AÇIK - bitdefender.com, 18.02.2026)
+
+================================================================================
+
+[52] Graham Cluley - Urgent warnings from UK and US cyber agencies after Polish energy grid attack
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 18:47:52 +0000
 Link: https://www.fortra.com/blog/urgent-warnings-uk-and-us-cyber-agencies-after-polish-energy-grid-attack
@@ -2634,7 +2674,7 @@ Link: https://www.fortra.com/blog/urgent-warnings-uk-and-us-cyber-agencies-after
 
 ================================================================================
 
-[52] Graham Cluley - Polish hacker charged seven years after massive Morele.net data breach
+[53] Graham Cluley - Polish hacker charged seven years after massive Morele.net data breach
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 08:04:15 +0000
 Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/polish-hacker-charged-seven-years-after-massive-morele-net-data-breach
@@ -2670,7 +2710,7 @@ If anything, this case serves as a timely reminder to cybercriminals that they s
 
 ================================================================================
 
-[53] Graham Cluley - Smashing Security podcast #454: AI was not plotting humanity’s demise. Humans were
+[54] Graham Cluley - Smashing Security podcast #454: AI was not plotting humanity’s demise. Humans were
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 12 Feb 2026 00:30:32 +0000
 Link: https://grahamcluley.com/smashing-security-podcast-454/
@@ -2778,7 +2818,7 @@ Follow him on LinkedIn, Bluesky and Mastodon, or drop him an email.
 
 ================================================================================
 
-[54] Graham Cluley - Fake Dubai Crown Prince tracked to Nigerian mansion after $2.5M romance scam
+[55] Graham Cluley - Fake Dubai Crown Prince tracked to Nigerian mansion after $2.5M romance scam
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sat, 07 Feb 2026 13:19:52 +0000
 Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/fake-dubai-crown-prince-tracked-to-nigerian-mansion-after-2-5m-romance-scam
@@ -2826,7 +2866,7 @@ Whether Ikeji or Dr. Abhulimhen will face justice remains unclear. But at least 
 
 ================================================================================
 
-[55] Graham Cluley - Incognito Market admin sentenced to 30 years for running $105 million dark web drug empire
+[56] Graham Cluley - Incognito Market admin sentenced to 30 years for running $105 million dark web drug empire
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 05 Feb 2026 20:15:09 +0000
 Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/incognito-market-admin-sentenced-30-years-105-million-dark-web-drug-empire
@@ -2862,7 +2902,7 @@ Lin has three decades in a US federal prison to ponder whether training the poli
 
 ================================================================================
 
-[56] Graham Cluley - Smashing Security podcast #453: The Epstein Files didn’t hide this hacker very well
+[57] Graham Cluley - Smashing Security podcast #453: The Epstein Files didn’t hide this hacker very well
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 05 Feb 2026 00:30:54 +0000
 Link: https://grahamcluley.com/smashing-security-podcast-453/
@@ -2988,7 +3028,7 @@ Follow him on LinkedIn, Bluesky and Mastodon, or drop him an email.
 
 ================================================================================
 
-[57] Graham Cluley - FBI takes notorious RAMP ransomware forum offline
+[58] Graham Cluley - FBI takes notorious RAMP ransomware forum offline
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sat, 31 Jan 2026 09:43:26 +0000
 Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/fbi-takes-notorious-ramp-ransomware-forum-offline
@@ -3028,7 +3068,7 @@ After all, the seizure of RAMP suggests that the authorities now have access to 
 
 ================================================================================
 
-[58] Graham Cluley - Hacking attack leaves Russian car owners locked out of their vehicles
+[59] Graham Cluley - Hacking attack leaves Russian car owners locked out of their vehicles
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 29 Jan 2026 20:57:05 +0000
 Link: https://www.fortra.com/blog/hacking-attack-leaves-russian-car-owners-locked-out-their-vehicles
@@ -3039,7 +3079,7 @@ Link: https://www.fortra.com/blog/hacking-attack-leaves-russian-car-owners-locke
 
 ================================================================================
 
-[59] Graham Cluley - Smashing Security podcast #452: The dark web’s worst assassins, and Pegasus in the dock
+[60] Graham Cluley - Smashing Security podcast #452: The dark web’s worst assassins, and Pegasus in the dock
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 29 Jan 2026 00:30:58 +0000
 Link: https://grahamcluley.com/smashing-security-podcast-452/
@@ -3159,66 +3199,6 @@ Graham Cluley is an award-winning keynote speaker who has given presentations ar
 Follow him on LinkedIn, Bluesky and Mastodon, or drop him an email.
 
 (XXXXXXX, AÇIK - grahamcluley.com, 18.02.2026)
-
-================================================================================
-
-[60] Graham Cluley - Four arrested in crackdown on Discord-based SWATting and doxing
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Wed, 28 Jan 2026 20:14:41 +0000
-Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/four-arrested-crackdown-discord-swatting-doxing
-
-[TAM METİN - 621 kelime]
-How badly do you want to win an online argument? I certainly hope it's not enough to put the life of the other person at risk.
-
-Police in Hungary and Romania have arrested four young men suspected of making hoax bomb threats and terrorising internet users through SWATting and doxing attacks.
-
-A video released by law enforcement shows how officers simultaneously swooped in co-ordinated raids on four locations across Hungary and Romania, seizing computers, smartphones, and other digital evidence.
-
-According to a press release by Hungarian police, the investigation began in the middle of last year when authorities received multiple alarming reports within the space of a few days.
-
-Anonymous callers were said to have threatened to blow up schools, churches, and other buildings, made threats against police officers, and claimed they were going to kill people.
-
-In response to each threat, police deployed resources to investigate who might be behind the threats - only for investigators to discover later that the bogus calls were in reality SWATting attacks.
-
-SWATting is a particularly underhand way of making someone else's day a misery – without having to leave your home. All you have to do is spoof a phone call to police claiming that serious criminal activity (such as someone being taken hostage, or a threat to explode a bomb) is in progress at your intended victims' property.
-
-The next thing you know an armed response SWAT (Special Weapons and Tactics) team has been despatched to descend on an unsuspecting person's home.
-
-It's an extremely dangerous prank to play, that has resulted in deaths in the past - including that of an innocent Kansas man shot by police in 2017 after a hoax call about a supposed hostage situation.
-
-The Hungarian investigation discovered that the attacks grew out of petty arguments on Discord, the popular communication platform wildly popular with online gamers.
-
-After falling out with other users on the platform, the suspects are alleged to have obtained their victims' personal information - such as their names, addresses, and phone numbers.
-
-That private data was exploited in two ways.
-
-Firstly, the details were published online in what is known as "doxing" (with the intention of helping others to harass or intimidate the individual).
-
-Secondly, the phone numbers were spoofed when making threatening calls to police, effectively directing emergency services to their door.
-
-The four accused suspects are:
-
-A 17-year-old from Bihar County, Romania
-
-A 16-year-old from Kisvárda, Hungary
-
-An 18-year-old from Nyíregyháza, Hungary
-
-A 20-year-old from Budapest, Hungary
-
-The 16-year-old was questioned on suspicion of charges of threatening the safety of the public. He has denied involvement, and remains free pending further investigation.
-
-The Romanian teenager faces more serious charges, including terrorism offences, threatening public danger, multiple counts of false accusation, and misuse of personal data. He also remains presently free while investigations continue.
-
-Meanwhile, the status of the two older adult suspects is still being determined while police continue to examine the seized digital evidence and devices.
-
-Hungarian police are keen to underline that SWATting and doxing are serious criminal offences that endanger lives, and are not harmless pranks.
-
-"The police emphasise that swatting and doxing are serious crimes that endanger the lives of others and are not a joke," reads the press release from the Hungarian police. "The authorities will continue to take decisive action against perpetrators in the future, using international cooperation when necessary."
-
-What might, to an immature mind, seem like a way to "win" an internet argument can result in armed police breaking down an innocent person's door, with unpredictable consequences. But one thing is predicted - if you SWAT someone you could end up with criminal charges that follow you for the rest of your life.
-
-(XXXXXXX, AÇIK - bitdefender.com, 18.02.2026)
 
 ================================================================================
 
@@ -7273,7 +7253,7 @@ These are the countries moving to ban social media for children
 Aisha Malik
 
 
-	18 hours ago
+	19 hours ago
 
 These are the countries moving to ban social media for children
 
@@ -7287,7 +7267,7 @@ India bids to attract over $200B in AI infrastructure investment by 2028
 Jagmeet Singh
 
 
-	20 hours ago
+	21 hours ago
 
 India bids to attract over $200B in AI infrastructure investment by 2028
 
@@ -8140,12 +8120,178 @@ Spotify says its best developers haven’t written a line of code since December
 
 ================================================================================
 
-[111] CSO Online - A new approach for GenAI risk protection
+[111] CSO Online - Cyberangriff auf Bahn stört Auskunftssysteme
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Wed, 18 Feb 2026 11:04:39 +0000
+Link: https://www.csoonline.com/article/4133725/cyberangriff-auf-bahn-stort-auskunftssysteme.html
+
+[TAM METİN - 417 kelime]
+Cyberangriff auf Bahn stört Auskunftssysteme
+
+Der Grund für IT-Störungen bei Bahn-App und Website war eine Cyberattacke. Nach Angaben der Bahn laufen die Systeme wieder.
+
+Deutsche Bahn AG/Volker Emersleben
+
+Die Störungen der Auskunfts- und Buchungssysteme der Deutschen Bahn sind nach Unternehmensangaben auf einen Cyberangriff zurückzuführen. Inzwischen stehen die Systeme wieder zur Verfügung, wie die Bahn mitteilte. Über mögliche Urheber des Angriffs machte der Konzern keine Angaben.
+
+Schon am Dienstagnachmittag hatte es IT-Schwierigkeiten gegeben. Betroffen waren sowohl die Bahn-App «DB Navigator» als auch die Website bahn.de. Auf beiden Systemen können Kunden üblicherweise unter anderem Fahrplanauskünfte einholen und Fahrkarten buchen. Nachdem die Systeme am Abend wieder «weitgehend stabil» liefen, wie die Bahn mitteilte, gab es am Mittwochmorgen erneut Probleme mit den Systemen.
+
+Bahn: Abwehrmaßnahmen wirkten
+
+«Unsere Abwehrmaßnahmen haben gegriffen, um die Auswirkungen für unsere Kunden zunächst so gering wie möglich zu halten», teilte ein Bahnsprecher mit. Dennoch sei es zu vorübergehenden Einschränkungen in den Auskunfts- und Buchungssystemen gekommen.
+
+Bei der Attacke handelte es sich nach Angaben der Bahn um einen DDoS-Angriff. Ein DDoS-Angriff (Distributed Denial of Service) ist eine digitale Überlastungsattacke: Dabei schicken tausende gekaperte Computer oder Geräte gleichzeitig so viele Anfragen an eine Website oder eine App wie den «DB Navigator», dass diese in die Knie gehen. Für die Nutzer sieht das so aus, als sei die Seite offline, obwohl sie technisch nicht zerstört wurde. Ziel solcher Angriffe ist es meist, Unternehmen oder Behörden zu erpressen, zu sabotieren oder politisch unter Druck zu setzen. (dpa/ad)
+
+Von unseren Redakteuren direkt in Ihren Posteingang
+
+Mehr von diesem Autor
+
+newsBehörden warnen vor Hackerangriffen auf Politik und Militär 9. Feb. 2026 3 Minuten
+
+Behörden warnen vor Hackerangriffen auf Politik und Militär
+
+newsKurz vor Olympia: Italien wehrt russische Hacker-Angriffe ab 5. Feb. 2026 1 Minuten
+
+Kurz vor Olympia: Italien wehrt russische Hacker-Angriffe ab
+
+newsKritik am Kritis-Dachgesetz: “Flickenteppich” befürchtet 29. Jan. 2026 3 Minuten
+
+Kritik am Kritis-Dachgesetz: “Flickenteppich” befürchtet
+
+newsDobrindt zu Cyberangriffen: “Wir werden zurückschlagen” 26. Jan. 2026 2 Minuten
+
+Dobrindt zu Cyberangriffen: “Wir werden zurückschlagen”
+
+newsEU-Kommission will Huawei und ZTE aus Netzen verbannen 21. Jan. 2026 5 Minuten
+
+EU-Kommission will Huawei und ZTE aus Netzen verbannen
+
+newsFake-Video mit Reinhold Würth wirbt für dubiose Geldanlagen 20. Jan. 2026 3 Minuten
+
+Fake-Video mit Reinhold Würth wirbt für dubiose Geldanlagen
+
+newsFahndung nach Kopf von Black Basta 19. Jan. 2026 2 Minuten
+
+Fahndung nach Kopf von Black Basta
+
+newsSchlag gegen Cyberkriminelle in Deutschland 15. Jan. 2026 3 Minuten
+
+Schlag gegen Cyberkriminelle in Deutschland
+
+Cyberangriff auf Bahn stört Auskunftssysteme
+
+13 Fragen gegen Drittanbieterrisiken
+
+Was CISOs über OpenClaw wissen sollten
+
+(XXXXXXX, AÇIK - csoonline.com, 18.02.2026)
+
+================================================================================
+
+[112] CSO Online - Discipline is the new power move in cybersecurity leadership
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Wed, 18 Feb 2026 11:00:00 +0000
+Link: https://www.csoonline.com/article/4133280/discipline-is-the-new-power-move-in-cybersecurity-leadership.html
+
+[TAM METİN - 1741 kelime]
+Discipline is the new power move in cybersecurity leadership
+
+Turns out the real power move in security isn’t a bigger budget — it’s cutting the clutter and proving what actually reduces risk.
+
+For years, I was fortunate to live many years, earning enough budget to deploy cybersecurity programs. I worked the same playbook: run a risk assessment, show a few quick wins, build a business case and the budget would follow. It took effort, but after a few cycles, the process almost felt predictable.
+
+One recent experience changed everything. A new boss, a senior VP, came to me and said when I arrived to the role, “We need to be financially efficient. We need to reduce current-year expenses by 10%, absorb next year’s inflation, capture efficiencies that will materialize in the next year’s spending by 5% and do it in a way that creates efficiencies to self-fund new initiatives.”
+
+I thought back to all the industry reports from Gartner, IDC and others consistently pointing to year-over-year increases in cybersecurity spending, often in the high single or double digits. Then, I was being told to cut, not grow. At first, I pushed back. Then I saw the chance to do something different. Instead of fighting the numbers, I started looking for ways to make the team more effective with less. That shift opened up new options I had never considered before.
+
+When we talk about security, we usually don’t think about reducing controls, costs or teams, so we see anything that isn’t directly related to the “risk mitigation mission” as a distraction. We are trained to add, not subtract. When money is easy, we pile on tools, grow teams and chase every new risk. But abundance hides waste. I have seen controls that no one uses, vendors that no one checks, dashboards that gather dust and teams that overlap. The moment the budget tightens, all that clutter stands out. That’s when you find out what really matters and where management earns its keep.
+
+Efficiency as a leadership language
+
+Under financial constraints, the CISO’s mandate shifts from acquisition to capital allocation, where the central question becomes which actions materially reduce risk exposure and how efficiently he is doing his job, while considering financial discipline.
+
+The security roadmap should be managed as a portfolio of investments, with each control evaluated for its cost, efficiency and loss avoidance. To improve clarity and aid decision-making, consider mapping controls onto a simple cost-versus-effectiveness matrix, with the size of each element indicating the risk the control removes from the overall portfolio. This visualization highlights which investments deliver meaningful risk reduction per dollar and which ones consume resources with limited impact.
+
+Credibility is established not by defending every control, but by making informed choices and prioritizing those that deliver measurable risk reduction. Redirecting resources from lower-impact initiatives to those with higher risk reduction is an act of stewardship. When we articulate trade-offs in financial terms and demonstrate the impact on loss exposure and cash flow earns trust more rapidly than one who simply requests additional funding.
+
+How to do more with less
+
+1. Review contracts, renegotiate them or change the operations to a new partner
+
+Scope, service-level agreements and performance metrics should be revisited because many contracts were established under different risk profiles, urgency and pricing conditions. Modernizing contracts to focus on outcomes rather than activities, revalidating pricing and service assumptions where competition exists and trading scope for measurable performance can generate structural savings. Locking multi-year terms when pricing and dependency risk are favorable, or using shorter renewals when market leverage is present, further supports efficiency gains.
+
+I remember sitting with the team, looking at a contract that had been signed right after a major cyber event. Over the years, it had grown fatter with eleven amendments, each one a quick fix for the latest emergency. We went back to the beginning, checked what risks we had in mind, how the service was actually used and what we were really getting. It turned out we were paying for much more than we needed. By going through the details together, we found we could get a better level of protection while still funding an upgrade to a new-generation SIEM platform. In other cases, we just reviewed contracts and kept the same partner with scope changes.
+
+2. Automate the routine
+
+Time is often the most constrained resource in cybersecurity. Automating routine processes such as triage, ticketing, patch workflows, gap analysis, report creation and standard response playbooks reduces unit cost per incident and frees up skilled talent for higher-value work. Automation should be a deliberate effort to eliminate repetitive manual tasks and increase consistency at scale.
+
+We started with the basics: automating the reports and coordination work that always seemed to eat up our time. Instead of building every report by hand, we set up simple flows with tools like Power Automate and Power BI. Suddenly, report generation that had taken hours was completed in minutes and mistakes dropped off. Our playbooks handled the routine incident responses. The real win was seeing our analysts freed from basic tasks, able to devote their energy to real threats and decisions that required their judgment.
+
+3. Cut administrative and non-core spend
+
+Efficiency is not limited to tools and vendors. Administrative spend, travel, low-value recurring activities, duplicative reporting and non-essential services can quietly accumulate and inflate the cost baseline. By establishing a quarterly review of non-core expenses and making explicit decisions to discontinue low-value activities, organizations can capture not only immediate cost savings but also significant cumulative throughput gains. These small cuts, when aggregated over a year, can free up substantial sums, underscoring their strategic importance.
+
+We looked past the obvious places—vendors and tools—and took a hard look at the small, recurring costs that quietly add up. Some subscriptions and services had made sense once, but now just sat there, barely used. I remember reviewing a code-scanning service and realizing we were paying for more than we needed. By trimming it back to match what we really used, we saved money right away, without adding risk. It was a reminder that sometimes, the biggest gains come from quiet, careful housekeeping, not dramatic cuts.
+
+4. Restructure teams and outsourcing around value
+
+Security organizations tend to evolve in silos, shaped by technology domains, incidents or vendors rather than by the risks they are meant to manage. Reviewing the target operating model involves deliberately reorganizing teams and partners around value domains, not tools. Value domains, or clusters of related risks, prioritize risk management alignment over technological segmentation. Consolidating overlapping functions, such as incident response, vulnerability management and threat intelligence across IT, OT and data protection, reduces handoffs, eliminates duplication and improves speed of execution. The objective is not headcount reduction, but the release of capacity and the better allocation of scarce expertise to the most material risks.
+
+When we pulled teams together, we didn’t cut headcount. We just stopped letting groups like incident response and vulnerability management work in isolation. By focusing everyone on the same risks, we made it easier to respond and to deploy our experts where they had the greatest impact. We also took a hard look at outsourcing, combining SOC and MDR for OT, IT and data protection into one operation. That move cut costs, improved efficiency and lowered risk.
+
+Many large organizations maintain multiple solutions that address the same risk domain. Vendor consolidation, rather than expansion, reduces vendor overlap, lowers cost and streamlines operations. The discipline is to standardize on fewer platforms, decommission redundant tooling and ensure the remaining stack is actively used and measured.
+
+We tend to buy a new tool for every new risk we find in the portfolio and in many cases, we look for the best of breed solutions for every different risk we find, which could also be ineffective, so many tools from different vendors, usually not integrated among them and creating a huge amount of work to try to keep it managed and well operated.
+
+The future belongs to the disciplined
+
+I learned that leading with less means every choice counts. Deciding what to stop is as important as what to start. When we restructured teams, renegotiated contracts and automated routine work, we found real efficiency without losing capability. These moves were about discipline, not just cutting costs. Looking ahead, the leaders who can show risk reduction per dollar spent will set the standard. Efficiency is now a mark of leadership.
+
+The next generation of security leaders will not be measured by how much they spend, but by the clarity and impact of their decisions. In the boardroom, trust comes from showing your trade-offs and sticking to them, not from chasing bigger budgets. This is not about cutting for the sake of it. It is about leading with discipline. Where in your environment can you test one of these moves this quarter and measure the outcome?
+
+This article is published as part of the Foundry Expert Contributor Network.Want to join?
+
+From our editors straight to your inbox
+
+Follow Marco Túlio Moraes on LinkedIn
+
+Marco Túlio Moraes is a CISO and cybersecurity executive with over 23 years of experience in technology, security and risk management. Since 2011, he has led strategic cybersecurity and governance programs across critical sectors such as energy, infrastructure and financial services, including Fortune 500 environments. He currently serves as head of information security at Cosan Holding, overseeing cybersecurity and privacy strategies for a multi-industry group operating in transportation, gas and energy. Recognized as one of the Top 50 Global CSOs by IDG, he is also an international speaker and active member of the cybersecurity community.
+
+More from this author
+
+opinionAvoiding the next technical debt: Building AI governance before it breaks Dec 5, 2025 7 mins
+
+Avoiding the next technical debt: Building AI governance before it breaks
+
+Discipline is the new power move in cybersecurity leadership
+
+A new approach for GenAI risk protection
+
+The new paradigm for raising up secure software engineers
+
+How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
+
+Inside the SMB Threat Landscape: AT&T’s Senthil Ramakrishnan on Why Small Businesses Are Cybercrime’s Favorite Target
+
+CSO Executive Session ASEAN: The Human Firewall-Retention, AI Readiness, and Women in Cybersecurity
+
+How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
+
+Inside the SMB Threat Landscape: AT&T’s Senthil Ramakrishnan on Why Small Businesses Are Cybercrime’s Favorite Target
+
+CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Women in Cybersecurity
+
+(XXXXXXX, AÇIK - csoonline.com, 18.02.2026)
+
+================================================================================
+
+[113] CSO Online - A new approach for GenAI risk protection
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4133243/a-new-approach-for-genai-risk-protection.html
 
-[TAM METİN - 1152 kelime]
+[TAM METİN - 1151 kelime]
 A new approach for GenAI risk protection
 
 GenAI isn’t the real problem — unmanaged data is. Smarter XDR-based protection lets teams innovate without leaking what matters most.
@@ -8194,11 +8340,11 @@ Gregory S. Smith is a internationally recognized IT executive with 30 years of e
 
 Gregory's for-profit experience combines IT and business acumen from a decade in US national security, US financial services 100, education and consulting experience from PriceWaterhouseCoopers. He is also the author of several well-reviewed business books, he served for 10 plus years as an adjunct professor at Johns Hopkins University in the Carey Business School, graduate programs, and currently serves as an adjunct professor at Georgetown University, graduate programs.
 
+Discipline is the new power move in cybersecurity leadership
+
 A new approach for GenAI risk protection
 
 The new paradigm for raising up secure software engineers
-
-Cyber attacks enabled by basic failings, Palo Alto analysis finds
 
 How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
 
@@ -8216,7 +8362,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[112] CSO Online - The new paradigm for raising up secure software engineers
+[114] CSO Online - The new paradigm for raising up secure software engineers
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4129134/the-new-paradigm-for-raising-up-secure-software-engineers.html
@@ -8345,9 +8491,9 @@ How much cybersecurity expertise does a board need?
 
 The new paradigm for raising up secure software engineers
 
-With CISOs stretched thin, re-envisioning enterprise risk may be the only fix
+ZeroDayRAT spyware targets Android and iOS devices via commercial toolkit
 
-Why 2025’s agentic AI boom is a CISO’s worst nightmare
+With CISOs stretched thin, re-envisioning enterprise risk may be the only fix
 
 How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
 
@@ -8365,7 +8511,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[113] CSO Online - 13 Fragen gegen Drittanbieterrisiken
+[115] CSO Online - 13 Fragen gegen Drittanbieterrisiken
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 04:00:00 +0000
 Link: https://www.csoonline.com/article/4130820/13-fragen-gegen-drittanbieterrisiken.html
@@ -8475,12 +8621,12 @@ Was CISOs über OpenClaw wissen sollten
 
 ================================================================================
 
-[114] CSO Online - Cyber attacks enabled by basic failings, Palo Alto analysis finds
+[116] CSO Online - Cyber attacks enabled by basic failings, Palo Alto analysis finds
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 21:02:42 +0000
 Link: https://www.csoonline.com/article/4133342/cyber-attacks-enabled-by-basic-failings-palo-alto-analysis-finds.html
 
-[TAM METİN - 1224 kelime]
+[TAM METİN - 1223 kelime]
 Cyber attacks enabled by basic failings, Palo Alto analysis finds
 
 Time to exploit drops to 72 minutes as AI automation accelerates cyberattacks.
@@ -8564,11 +8710,11 @@ newsCisco finally patches seven-week-old zero-day flaw in Secure Email Gateway p
 
 Cisco finally patches seven-week-old zero-day flaw in Secure Email Gateway products
 
+Discipline is the new power move in cybersecurity leadership
+
 The new paradigm for raising up secure software engineers
 
 Cyber attacks enabled by basic failings, Palo Alto analysis finds
-
-ZeroDayRAT spyware targets Android and iOS devices via commercial toolkit
 
 How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
 
@@ -8586,7 +8732,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[115] CSO Online - MCSC 2026: „Politik und Wirtschaft müssen zusammenarbeiten“
+[117] CSO Online - MCSC 2026: „Politik und Wirtschaft müssen zusammenarbeiten“
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 14:49:40 +0000
 Link: https://www.csoonline.com/article/4133182/mcsc-2026-politik-und-wirtschaft-mussen-zusammenarbeiten.html
@@ -8662,7 +8808,7 @@ Was CISOs über OpenClaw wissen sollten
 
 ================================================================================
 
-[116] CSO Online - ZeroDayRAT spyware targets Android and iOS devices via commercial toolkit
+[118] CSO Online - ZeroDayRAT spyware targets Android and iOS devices via commercial toolkit
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 12:10:54 +0000
 Link: https://www.csoonline.com/article/4133122/zerodayrat-spyware-targets-android-and-ios-devices-via-commercial-toolkit.html
@@ -8764,7 +8910,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[117] CSO Online - With CISOs stretched thin, re-envisioning enterprise risk may be the only fix
+[119] CSO Online - With CISOs stretched thin, re-envisioning enterprise risk may be the only fix
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 10:01:00 +0000
 Link: https://www.csoonline.com/article/4128992/with-cisos-stretched-thin-re-envisioning-enterprise-risk-may-be-the-only-fix.html
@@ -8914,7 +9060,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[118] CSO Online - Why 2025’s agentic AI boom is a CISO’s worst nightmare
+[120] CSO Online - Why 2025’s agentic AI boom is a CISO’s worst nightmare
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 17 Feb 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4132860/why-2025s-agentic-ai-boom-is-a-cisos-worst-nightmare.html
@@ -9065,249 +9211,6 @@ How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
 Inside the SMB Threat Landscape: AT&T’s Senthil Ramakrishnan on Why Small Businesses Are Cybercrime’s Favorite Target
 
 CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Women in Cybersecurity
-
-(XXXXXXX, AÇIK - csoonline.com, 18.02.2026)
-
-================================================================================
-
-[119] CSO Online - Exploit available for new Chrome zero-day vulnerability, says Google
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Tue, 17 Feb 2026 00:48:21 +0000
-Link: https://www.csoonline.com/article/4132879/exploit-available-for-new-chrome-zero-day-vulnerability-says-google.html
-
-[TAM METİN - 1124 kelime]
-Exploit available for new Chrome zero-day vulnerability, says Google
-
-Use after free memory hole lets a remote attacker execute code inside a sandbox.
-
-Threat actors now have the ability to exploit a new zero-day vulnerability in the Chrome browser, Google has advised IT administrators.
-
-The warning comes after Google released a patch for Chrome to plug a use after free memory vulnerability (CVE-2026-2441) in cascading style sheets (CSS), which means the browser’s CSS engine isn’t properly managing memory and can be exploited by a hacker.
-
-If not patched, it allows a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. The vulnerability is rated at High in severity.
-
-At risk are Windows and Mac Chrome browsers prior to 145.0.7632.75/76, and prior to 144.0.7559.75 for Linux.
-
-“Google is aware that an exploit for CVE-2026-2441 exists in the wild,” the warning adds.
-
-Details about the hole are scarce. Google says access to bug details and links may be restricted until a majority of users are updated with a fix. It will also maintain the restrictions if the bug exists in a third party library that other projects similarly depend on, but haven’t yet fixed.
-
-Gene Moody, field CTO at Action1, explained that, in this vulnerability, a browser frees an object, but later continues to use the stale reference memory location. Any attacker who can shape heap layout with controlled content can potentially replace the contents of that freed memory with data they control. Because this lives in the renderer, and is reachable through normal page content, he said, the trigger surface is almost absolute.
-
-“In practical terms,” he added, “a vulnerable user simply visiting a malicious page could be enough to effectively trigger the bug.”
-
-Hunting for and exploiting browser vulnerabilities is a popular tool for threat actors. That’s because browsers are often an entry point to enterprises, particularly in an era of cloud applications. Browsers not only access corporate data, they hold sensitive information such as login credentials and personal data stored to autofill forms.
-
-Usually, browsers ship with auto patch installation enabled by default. Some CSOs/CIOs, however, may prefer manual installation, so patches can be tested for compatibility with enterprise applications before installation.
-
-Johannes Ullrich, dean of research at the SANS Institute, said this is just the most recent Chrome 0-day to be discovered, and, based on history, there are probably many others already in use that have not been discovered or patched yet.
-
-“Having a solid endpoint monitoring program in place can mitigate some of this risk,” he said. For enterprise administrators, Google offers Chrome Enterprise Core, which adds the instrumentation necessary to monitor browser versions and release upgrades. Chrome Enterprise Core also adds central management for extensions. Malicious extensions are often a larger problem than 0-days.”
-
-Browsers are highly complex programs that support a large number of technologies, he added, and include some legacy standards with limited current support.
-
-“The open-source Chromium browser codebase includes about 36 million lines of code,” he pointed out. “A large project like this is bound to include vulnerabilities. Google has used a number of automated tools to continuously reduce the number of vulnerabilities, but adversaries do the same, and sometimes find bugs that Google has not yet found or not yet gotten around to patching proactively.”
-
-Browser zero days are never good, because it’s trivial for criminals to use poisoned ads to try to steer victims with vulnerable browsers to websites containing malicious code, said David Shipley, head of Canadian security awareness training provider Beauceron Security.
-
-“In this case, it looks like this is only a partial fix for the vulnerability in progress, and Google is being a bit tight-lipped about how bad this bug was, and all the things it could be used for beyond crashing the browser and corrupting data. But given there are exploits in the wild, and Google says it’s waiting until the majority of users are patched before getting into more details, there’s clearly something more interesting behind this one.”
-
-Getting fixes to enterprise browsers is still not as easy as it should be, he added, and usually involves expensive tools or complex workflows that most smaller organizations don’t have.
-
-Google, however, provides extensive advice for administrators on managing Chrome updates.
-
-From our editors straight to your inbox
-
-Howard Solomon is a Toronto-based freelance reporter who writes on IT and cybersecurity issues.
- 
-Howard is a former editor of IT World Canada and Computing Canada. An IT journalist over 30 years, he has also written for ITBusiness.ca and Computer Dealer News. Before that he was a staff reporter at the Calgary Herald and the Brampton (Ontario) Daily Times.
-
-Howard Solomon is a Toronto-based freelance reporter who writes on IT and cybersecurity issues.
-
-Howard is a former editor of IT World Canada and Computing Canada. An IT journalist over 30 years, he has also written for ITBusiness.ca and Computer Dealer News. Before that he was a staff reporter at the Calgary Herald and the Brampton (Ontario) Daily Times.
-
-More from this author
-
-newsHackers turn bossware against the bosses Feb 12, 2026 6 mins
-
-Hackers turn bossware against the bosses
-
-newsSSHStalker botnet brute-forces its way onto 7,000 Linux machines Feb 11, 2026 7 mins
-
-SSHStalker botnet brute-forces its way onto 7,000 Linux machines
-
-newsFebruary 2026 Patch Tuesday: Six new and actively exploited Microsoft vulnerabilities addressed Feb 10, 2026 8 mins
-
-February 2026 Patch Tuesday: Six new and actively exploited Microsoft vulnerabilities addressed
-
-newsSix more vulnerabilities found in n8n automation platform Feb 6, 2026 5 mins
-
-Six more vulnerabilities found in n8n automation platform
-
-newsFour new vulnerabilities found in Ingress NGINX Feb 5, 2026 4 mins
-
-Four new vulnerabilities found in Ingress NGINX
-
-newsThreat actors hijack web traffic after exploiting React2Shell vulnerability Feb 4, 2026 4 mins
-
-Threat actors hijack web traffic after exploiting React2Shell vulnerability
-
-newsCrooks are hijacking and reselling AI infrastructure: Report Jan 28, 2026 7 mins
-
-Crooks are hijacking and reselling AI infrastructure: Report
-
-newsFixes released for a serious Microsoft Office zero-day flaw Jan 27, 2026 3 mins
-
-Fixes released for a serious Microsoft Office zero-day flaw
-
-A new approach for GenAI risk protection
-
-The new paradigm for raising up secure software engineers
-
-Cyber attacks enabled by basic failings, Palo Alto analysis finds
-
-How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
-
-Inside the SMB Threat Landscape: AT&T’s Senthil Ramakrishnan on Why Small Businesses Are Cybercrime’s Favorite Target
-
-CSO Executive Session ASEAN: The Human Firewall-Retention, AI Readiness, and Women in Cybersecurity
-
-How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
-
-Inside the SMB Threat Landscape: AT&T’s Senthil Ramakrishnan on Why Small Businesses Are Cybercrime’s Favorite Target
-
-CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Women in Cybersecurity
-
-(XXXXXXX, AÇIK - csoonline.com, 18.02.2026)
-
-================================================================================
-
-[120] CSO Online - Was CISOs über OpenClaw wissen sollten
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 16 Feb 2026 19:41:33 +0000
-Link: https://www.csoonline.com/article/4132781/was-cisos-uber-openclaw-wissen-sollten.html
-
-[TAM METİN - 1819 kelime]
-Was CISOs über OpenClaw wissen sollten
-
-OpenClaw kann für Unternehmen zum Albtraum in Sachen Cybersicherheit werden. Lesen Sie, wo die Gefahren lauern und was zu beachten ist.
-
-ackpress – shutterstock.com
-
-Das neue Tool zur Orchestrierung persönlicher KI-Agenten namens OpenClaw – früher Clawdbot, dann Moltbot genannt – erfreut sich aktuell großer Beliebtheit. Die Open-Source-Software kann eigenständig und geräteübergreifend arbeiten, mit Online-Diensten interagieren und Workflows auslösen – kein Wunder, dass das Github-Repo in den vergangenen Wochen Millionen von Besuchen und über 160.000 Sterne verzeichnet hat.
-
-Laut Angaben des Entwicklers hatte das Repo von OpenClaw innerhalb einer einzigen Woche über zwei Millionen Besucher. Zudem gibt es rund 1,7 Millionen Agenten, deren menschliche Besitzer sie für die Social-Media-Plattform Moltbook angemeldet haben. Laut Sicherheitsforschern von OX Security liegen die Downloads von OpenClaw derzeit bei 720.000 pro Woche.
-
-Was OpenClaw so attraktiv macht, ist, dass es lokal läuft und für die Verwendung beliebiger LLM im Backend konfiguriert werden kann. Zudem ermöglicht es seinen Benutzern, über die von ihnen bereits verwendeten Chat-Apps – WhatsApp, Telegram, Discord, Slack, Teams – zu kommunizieren. Das Orchestrierungs-Tool verfügt zudem über vorgefertigte Integrationen mit allen gängigen Betriebssystemen, vielen verschiedenen Smart-Home-Geräten, Produktivitäts-Apps, Chrome und Gmail.
-
-Doch was ist das Problem bei der Anwendung des KI-Agenten?
-
-Lesetipp: Agentic AI – der neue Horror für Sicherheitsentscheider?
-
-Die Cybersicherheitsrisiken von OpenClaw
-
-„Das Problem bei der Verwendung solcher Tools ist, dass sie im Grunde alles tun können, was ein Benutzer auch tun kann“, erklärt Rich Mogull, Chefanalyst bei der Cloud Security Alliance. Allerdings werden sie extern gesteuert Für Unternehmen könnte das ein hohes Risiko darstellen, warnt John Dwyer, stellvertretender CTO bei Binary Defense. „Es gibt zwar einige Schutzmaßnahmen, aber sie sind neu, unerprobt und wurden bereits von Forschern umgangen.“
-
-Seine Empfehlung: CISOs sollten die Verwendung dieser Tools gänzlich verbieten. „Ich freue mich darauf, am Wochenende selbst damit zu experimentieren“, räumt Mogull ein. „Aber zum jetzigen Zeitpunkt sollte man es nicht zulassen, da es kein Sicherheitsmodell gibt.“
-
-Und zwar schnell, denn das Tool wird bereits in einigen Unternehmen eingesetzt. Der Security-Anbieter Token berichtet, dass 22 Prozent seiner Kunden das Tool aktiv nutzen.
-
-Die Auswirkungen gehen dabei über unmittelbare technische Risiken hinaus. „Für Unternehmen könnte dies Geldstrafen, Rechtsstreitigkeiten und Reputationsschäden bei Kunden und Partnern aufgrund von Verstößen gegen die Vertraulichkeit von Daten nach sich ziehen“, mahnt Georgia Cooke, Analystin bei ABI Research. Dazu gehören personenbezogene Daten, die zu Verstößen gegen die DSGVO und ähnliche Vorschriften zur Kontrolle personenbezogener Daten führen könnten, sowie Unternehmensinformationen, die einer Geheimhaltungsvereinbarung unterliegen.
-
-Weitere Risiken sind Wettbewerbsnachteile aufgrund von offengelegten geistigem Eigentum und weitere Angriffe durch zugängliche technische Informationen und Anmeldedaten.
-
-Der Sicherheitsforscher Maor Dayan bezeichnet OpenClaw als „den größten Sicherheitsvorfall in der Geschichte souveräner KI“. Seine Untersuchungen haben bereits mehr als 42.000 im Internet exponierte Instanzen identifiziert, wobei 93 Prozent der überprüften Systeme kritische Schwachstellen zur Umgehung der Authentifizierung aufwiesen.
-
-Frühe Versionen von OpenClaw waren laut Experten standardmäßig unsicher. Die rasante virale Verbreitung habe zudem das Sicherheitsbewusstsein der Benutzer überfordert, sodass viele Implementierungen schnell wieder aufgegeben wurden und Instanzen mit veraltetem Code zurückblieben. Dokumentierte Angriffspfade ermöglichten den Diebstahl von Anmeldedaten, die Kontrolle über den Browser und die potenzielle Ausführung von Remote-Code.
-
-Ende Januar warnten Forscher von Gartner bereits, dass OpenClaw „eine starke Nachfrage nach agentenbasierter KI offenbart, aber auch erhebliche Sicherheitsrisiken mit sich bringt”. Dem Analystenhaus zufolge wurden bereits Schwachstellen nachgewiesen, die eine Remote-Codeausführung innerhalb weniger Stunden nach der Bereitstellung ermöglichen.
-
-Auch der ClawHub-Skills-Marktplatz –Ordner mit Anweisungen, Skripten und Ressourcen, die Agenten laut OpenClaw nutzen können, um Aufgaben genauer und effizienter zu erledigen,  – birgt kritische Risiken für die Lieferkette. Zugangsdaten werden im Klartext gespeichert, und kompromittierte Hosts legen API-Schlüssel, OAuth-Token und sensible Konversationen offen.
-
-„KI-Agenten enthalten oft Tokens und Geheimnisse in Konfigurationsdateien“, erläutert Jeremy Kirk, Director of Threat Intelligence bei Okta. „Wenn Benutzer sie falsch konfiguriert haben, werden sie offengelegt. Im Unternehmenskontext ist das problematisch.“
-
-Darüber hinaus entdeckte Noma Security eine neue Sicherheitslücke im Zusammenhang mit OpenClaw: Unternehmensinterne Gruppen auf Discord, Telegram oder WhatsApp. Einer der Gründe, warum OpenClaw für Benutzer so attraktiv ist, ist die Möglichkeit, über mehrere Kanäle mit dem System zu interagieren. Ist OpenClaw jedoch in einen dieser Gruppenkanäle eingebunden, behandelt es Anweisungen von anderen Teilnehmern so, als kämen sie vom eigentlichen Besitzer.
-
-Verschafft sich ein Angreifer Zugang zu einem öffentlichen Discord-Server, auf dem ein OpenClaw-Agent installiert ist, kann er dem Bot Anweisungen geben. Beispielsweise kann er ihn dazu bringen, einen Cron-Job auszuführen und das lokale Dateisystem nach Tokens, Passwörtern, API-Schlüsseln und Krypto-Seed-Phrasen zu durchsuchen.
-
-„Innerhalb von 30 Sekunden bündelt der Agent die sensiblen Daten und sendet sie direkt an einen vom Angreifer kontrollierten Server“, so die Forscher von Noma. Für das Sicherheitsteam des Unternehmens sehe es so aus, als würde der Bot normal funktionieren – die Sicherheitsverletzung werde erst entdeckt, wenn die gestohlenen Anmeldedaten missbraucht werden. „Wenn Social-Media-Teams oder externe Auftragnehmer autonome Agenten wie Clawdbot einsetzen, öffnen sie damit praktisch eine dauerhafte und unüberwachte Hintertür zu den lokalen Rechnern, die mit ihrer Unternehmensinfrastruktur in Verbindung stehen.“
-
-Und selbst wenn Mitarbeiter das Tool zu Hause auf ihren privaten Rechnern ausführen, stellt OpenClaw ein Sicherheitsrisiko dar:  Über Browser-Steuerelemente oder so genannte Skills könnte die Software möglicherweise über die Anmeldedaten der Benutzer auf Unternehmensanwendungen zugreifen kann.
-
-Die Sicherheitsrisiken werden von Tag zu Tag größer. Laut Forschern von OX Security ist auch die Entwickler-Community rund um OpenClaw ein großes Risiko. Das Projekt setzt auf vibe-codierte Einreichungen, was die Entwicklung beschleunigt, aber auch erhebliche Sicherheitsrisiken mit sich bringt. OX-Forscher haben mehrere unsichere Codierungsmuster in der Codebasis gefunden – mit potenziellen Folgen wie Remote-Code-Ausführung, Path-Traversal-Angriffen, DDoS oder Cross-Site-Scripting.
-
-„Es gibt keine ausreichenden Schutzvorkehrungen“, betonen die Sicherheitsspezialisten. Sie fanden auch mehrere Fälle, in denen Fehlerberichte in GitHub veröffentlicht wurden, anstatt in privaten Nachrichten an die Maintainer. „Das gibt dies Angreifern die Möglichkeit, Schwachstellen schnell auszunutzen, ohne selbst recherchieren oder Penetrationstests durchführen zu müssen“, heißt es in ihrem Forschungsbericht.
-
-Um noch Salz in die Wunde zu streuen: Es gibt es auch keinen formellen Prozess für Sicherheits-Patches und Updates. Die meisten Benutzer führen auch keine Updates durch, sondern bleiben einfach bei der Version, die sie ursprünglich heruntergeladen haben.
-
-Und dann sind da noch die Skills. Der Sicherheitsforscher und OpenSourceMalware-Gründer Paul McCarty hat etwa 400 verschiedene bösartige Skills auf ClawHub, einem zentralen Repository für die OpenClaw-Plattform, identifiziert. Diese Skills sollen bei Aufgaben wie dem Handel mit Kryptowährungen, LinkedIn-Bewerbungen oder dem Herunterladen von YouTube-Video-Thumbnails helfen. Einige haben Tausende von Downloads und gehören zu den am häufigsten heruntergeladenen Skills auf ClawHub. Tatsächlich verleiten sie den Nutzer jedoch dazu, Malware zu installieren.
-
-Um zu demonstrieren, wie einfach es ist, eine bösartige Funktion in das OpenClaw-Ökosystem einzuschleusen, entwickelte der Sicherheitsforscher Jamieson O’Reilly selbst eine solche Funktion. Er erhöhte künstlich die Download-Zahl auf über 4.000 – wodurch sie zur meist heruntergeladenen Funktion auf der Plattform wurde – und beobachtete, wie Entwickler aus sieben verschiedenen Ländern willkürliche Befehle auf ihren Rechnern ausführten, in der Annahme, sie hätten eine echte Funktion heruntergeladen.
-
-„Dies war ein Proof of Concept, eine Demonstration dessen, was möglich ist“, schrieb er. „In den Händen einer weniger gewissenhaften Person wären diesen Entwicklern ihre SSH-Schlüssel, AWS-Anmeldedaten und gesamten Codebasen entwendet worden, bevor sie überhaupt bemerkt hätten, dass etwas nicht stimmt.“
-
-OpenClaw deckt Sicherheitslücken in Unternehmen auf
-
-Die erste wichtige Lehre aus der ganzen OpenClaw-Situation: Unternehmen müssen mehr tun, um ihre Sicherheitsgrundlagen zu verbessern. Denn wenn es irgendwo Lücken gibt, werden diese jetzt in beispiellosem Tempo gefunden und ausgenutzt. Im Fall von OpenClaw bedeutet das, die Benutzerrechte auf das absolute Minimum zu beschränken, eine Multi-Faktor-Authentifizierung für alle Konten einzurichten und andere grundlegende Sicherheitsmaßnahmen zu ergreifen.
-
-Das löst zwar nicht das Problem von OpenClaw – und all den anderen agentenbasierten KI-Plattformen, die noch auf den Markt kommen werden –, aber es hilft, die Risiken zu begrenzen und den Schaden bei einer Sicherheitsverletzung zu reduzieren.
-
-Tipps, um die Risiken einzudämmen
-
-Zudem gibt es Maßnahmen, die Unternehmen ergreifen können, um die mit OpenClaw verbundenen Gefahren einzudämmen, sagt Kayne McGladrey, Senior Member des IEEE. Zunächst einmal können Unternehmen die Telemetrie auf Netzwerkebene untersuchen. „Wie sieht der Netzwerkverkehr aus, der von einem Gerät ausgeht?“, so McGladrey. „Verwendet dieses Gerät plötzlich sehr viel KI in raschem Tempo? Gibt es massive Spitzen bei der Token-Nutzung?“
-
-Unternehmen können auch Tools wie Shodan verwenden, um öffentlich zugängliche Instanzen zu finden, fügt er hinzu, obwohl interne Firewall-Konfigurationen andere verbergen können.
-
-Für Unternehmen, die Experimente zulassen wollen, anstatt sie komplett zu verbieten, schlägt er einen maßvollen Ansatz vor. „Wir müssen über schrittweise Pilotprogramme für interessierte Nutzer sprechen.“ Beispielsweise könnte es Nutzern gestattet werden, OpenClaw auf verwalteten Endpunkten mit Segmentierungsregeln auszuführen, die sie von internen Systemen isolieren, zusammen mit einer starken Telemetrie und kontinuierlicher Überwachung der Agentenaktivität, des ausgehenden Datenverkehrs und Warnmeldungen bei anomalem Verhalten. (jm)
-
-Von unseren Redakteuren direkt in Ihren Posteingang
-
-Maria Korolov is an award-winning technology journalist with over 20 years of experience covering enterprise technology, mostly for Foundry publications -- CIO, CSO, Network World, Computerworld, PCWorld, and others.  She is a speaker, a sci-fi author and magazine editor, and the host of a YouTube channel. She ran a business news bureau in Asia for five years and reported for the Chicago Tribune, Reuters, UPI, the Associated Press and The Hollywood Reporter. In the 1990s, she was a war correspondent in the former Soviet Union and reported from a dozen war zones, including Chechnya and Afghanistan.
-Maria won 2025 AZBEE awards for her coverage of Broadcom VMware and Quantum Computing.
-
-Maria Korolov is an award-winning technology journalist with over 20 years of experience covering enterprise technology, mostly for Foundry publications -- CIO, CSO, Network World, Computerworld, PCWorld, and others.  She is a speaker, a sci-fi author and magazine editor, and the host of a YouTube channel. She ran a business news bureau in Asia for five years and reported for the Chicago Tribune, Reuters, UPI, the Associated Press and The Hollywood Reporter. In the 1990s, she was a war correspondent in the former Soviet Union and reported from a dozen war zones, including Chechnya and Afghanistan.
-
-Maria won 2025 AZBEE awards for her coverage of Broadcom VMware and Quantum Computing.
-
-Mehr von diesem Autor
-
-analysisDer Kaufratgeber für Breach & Attack Simulation Tools 11. Feb. 2026 11 Minuten
-
-Der Kaufratgeber für Breach & Attack Simulation Tools
-
-featureWas bei der Cloud-Konfiguration schiefläuft – und wie es besser geht 5. Jan. 2026 6 Minuten
-
-Was bei der Cloud-Konfiguration schiefläuft – und wie es besser geht
-
-tipTools, um MCP-Server abzusichern 10. Dez. 2025 6 Minuten
-
-Tools, um MCP-Server abzusichern
-
-analysisDer große KI-Risiko-Guide 24. Nov. 2025 9 Minuten
-
-Der große KI-Risiko-Guide
-
-featureWie Model Context Protocol gehackt wird 6. Aug. 2025 8 Minuten
-
-Wie Model Context Protocol gehackt wird
-
-how-to10 Essentials für die KI-Richtlinie in Unternehmen 11. Apr. 2025 6 Minuten
-
-10 Essentials für die KI-Richtlinie in Unternehmen
-
-news analysisWie Hacker ML für Angriffe nutzen 6. Nov. 2024 11 Minuten
-
-Wie Hacker ML für Angriffe nutzen
-
-analysisDevSecOps: Sichere Softwareentwicklung mit GenAI? 14. März 2024 11 Minuten
-
-DevSecOps: Sichere Softwareentwicklung mit GenAI?
-
-13 Fragen gegen Drittanbieterrisiken
-
-MCSC 2026: „Politik und Wirtschaft müssen zusammenarbeiten“
-
-Was CISOs über OpenClaw wissen sollten
 
 (XXXXXXX, AÇIK - csoonline.com, 18.02.2026)
 
