@@ -17,9 +17,21 @@ def _parse_article_date(date_str, fallback):
         return fallback.strftime('%d.%m.%Y')
     date_str = date_str.strip()
     # Timezone-aware formatlar: UTC→TR dönüşümü yap
-    for fmt in ['%a, %d %b %Y %H:%M:%S %z', '%Y-%m-%dT%H:%M:%S%z']:
+    for fmt in ['%a, %d %b %Y %H:%M:%S %z', '%Y-%m-%dT%H:%M:%S%z', '%Y-%m-%dT%H:%M:%S.%f%z']:
         try:
             return datetime.strptime(date_str, fmt).astimezone(TR).strftime('%d.%m.%Y')
+        except:
+            pass
+    # Z sonekini +00:00 ile değiştirip tekrar dene (2026-02-17T21:45:14.00Z gibi)
+    if date_str.endswith('Z'):
+        try:
+            return datetime.strptime(date_str[:-1], '%Y-%m-%dT%H:%M:%S.%f').replace(
+                tzinfo=timezone.utc).astimezone(TR).strftime('%d.%m.%Y')
+        except:
+            pass
+        try:
+            return datetime.strptime(date_str[:-1], '%Y-%m-%dT%H:%M:%S').replace(
+                tzinfo=timezone.utc).astimezone(TR).strftime('%d.%m.%Y')
         except:
             pass
     # Timezone-naive formatlar: olduğu gibi al
@@ -261,56 +273,37 @@ class HaberSistemi:
     
     def _filter_old_articles(self, all_news):
         """Bugüne ait olmayan haberleri filtrele (UTC+3 Türkiye saatine göre)"""
-        # GitHub Actions UTC'de çalışır, Türkiye +3
-        # "Bugün" = TR saati ile bugün = UTC ile bugün veya dün
         from datetime import timezone, timedelta as td
         TR = timezone(td(hours=3))
         today_tr = datetime.now(TR).date()
         yesterday_tr = today_tr - td(days=1)
-        
+        cutoff = yesterday_tr  # dün veya bugün geçer, öncesi elenir
+
         filtered = {}
         removed_count = 0
-        
+
         for src, articles in all_news.items():
             filtered_articles = []
             for art in articles:
-                date_str = art.get('date', '').strip()
-                parsed_date = None
-                
-                # Doğrudan timezone-aware parse dene
-                for fmt in ['%a, %d %b %Y %H:%M:%S %z', '%Y-%m-%dT%H:%M:%S%z']:
-                    try:
-                        dt = datetime.strptime(date_str, fmt)
-                        # TR saatine çevir
-                        parsed_date = dt.astimezone(TR).date()
-                        break
-                    except:
-                        pass
-                
-                # Timezone-naive formatlar
-                if parsed_date is None:
-                    for fmt in ['%a, %d %b %Y %H:%M:%S %Z', '%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d']:
-                        try:
-                            parsed_date = datetime.strptime(date_str, fmt).date()
-                            break
-                        except:
-                            pass
-                
-                if parsed_date is None:
-                    # Parse edilemezse dahil et
-                    filtered_articles.append(art)
-                elif parsed_date >= yesterday_tr:
-                    # Dün veya bugün (TR saati) → dahil et
+                # _parse_article_date ile TR saatine çevrilmiş DD.MM.YYYY al
+                art_date_str = _parse_article_date(art.get('date', ''), datetime.now())
+                try:
+                    parsed_date = datetime.strptime(art_date_str, '%d.%m.%Y').date()
+                except:
+                    filtered_articles.append(art)  # parse edilemezse dahil et
+                    continue
+
+                if parsed_date >= cutoff:
                     filtered_articles.append(art)
                 else:
                     removed_count += 1
-            
+
             if filtered_articles:
                 filtered[src] = filtered_articles
-        
+
         if removed_count > 0:
             print(f"📅 {removed_count} eski tarihli haber filtrelendi")
-        
+
         return filtered
     
     def topla(self):
