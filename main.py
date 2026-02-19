@@ -256,6 +256,36 @@ class HaberSistemi:
         
         return filtered
     
+    def _filter_old_articles(self, all_news):
+        """Bugüne ait olmayan haberleri filtrele"""
+        today = datetime.now().date()
+        filtered = {}
+        removed_count = 0
+        
+        for src, articles in all_news.items():
+            filtered_articles = []
+            for art in articles:
+                date_str = art.get('date', '')
+                art_date = _parse_article_date(date_str, datetime.now())
+                # DD.MM.YYYY -> date objesine çevir
+                try:
+                    parsed = datetime.strptime(art_date, '%d.%m.%Y').date()
+                    if parsed == today:
+                        filtered_articles.append(art)
+                    else:
+                        removed_count += 1
+                except:
+                    # Tarih parse edilemezse dahil et (güvenli taraf)
+                    filtered_articles.append(art)
+            
+            if filtered_articles:
+                filtered[src] = filtered_articles
+        
+        if removed_count > 0:
+            print(f"📅 {removed_count} eski tarihli haber filtrelendi (bugün değil)")
+        
+        return filtered
+    
     def topla(self):
         """Tüm haberleri topla"""
         print("="*70)
@@ -294,6 +324,9 @@ class HaberSistemi:
         
         # Tekrar edenleri filtrele
         all_news = self._filter_duplicates(all_news)
+        
+        # Tarih filtresi - sadece bugünün haberleri
+        all_news = self._filter_old_articles(all_news)
         
         # Toplam yeniden hesapla
         total = sum(len(arts) for arts in all_news.values())
