@@ -569,7 +569,143 @@ Notepad++ users are recommended to update to version 8.9.2, and make sure that t
 
 ================================================================================
 
-[11] BleepingComputer - Police arrests 651 suspects in African cybercrime crackdown
+[11] BleepingComputer - Texas sues TP-Link over Chinese hacking risks, user deception
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Thu, 19 Feb 2026 07:36:51 -0500
+Link: https://www.bleepingcomputer.com/news/security/texas-sues-tp-link-over-chinese-hacking-risks-user-deception/
+
+[TAM METİN - 594 kelime]
+Texas sued networking giant TP-Link Systems, accusing the company of deceptively marketing its routers as secure while allowing Chinese state-backed hackers to exploit firmware vulnerabilities and access users' devices.
+
+The lawsuit follows an investigation launched in October and claims that TP-Link misled buyers by labeling its products "Made in Vietnam" while sourcing nearly all components from China. According to Paxton, this is important because Chinese law can compel companies with Chinese supply-chain ties to cooperate with government intelligence requests and hand over user data.
+
+"This week, my office is launching a coordinated series of actions against CCP-aligned companies to send a clear message that in the Lone Star State we will always put Texas and America First," said Texas Attorney General Paxton. "TP Link will face the full force of the law for putting Americans' security at risk. Let this serve as a clear warning to any Chinese entity seeking to compromise our nation's security."
+
+The suit points to a history of security failures, including firmware vulnerabilities exploited by Chinese hacking groups and the company's routers being used in a large-scale credential-theft botnet later linked to password-spray attacks.
+
+As Microsoft reported in October 2024, this botnet (tracked as Quad7, CovertNetwork-1658, or xlogin) was built from hacked home and small-business routers (primarily TP-Link devices) and operated by Chinese threat actors.
+
+"Despite its claims of privacy and security, TP Link's products have been used by People's Republic of China's ("PRC") state-sponsored hacking entities to launch multiple cyber-attack operations against the United States," Paxton added.
+
+"With nearly all of its products' parts imported from China, TP Link's deliberate deception towards Texans regarding the nationality, privacy, and security capabilities of its networking devices is not just illegal—it is also a national security threat that enables the secret surveillance and exploitation of Texas consumers."
+
+Paxton now seeks civil monetary penalties and injunctions that would require TP-Link to disclose the Chinese origins of its devices and stop collecting consumer data without informed consent.
+
+While a TP-Link spokesperson was not immediately available for comment when contacted by BleepingComputer for comment, TP-Link told The Record that these allegations are "without merit" and that neither the Chinese government nor the Chinese Communist Party (CCP) exercises control over the company, its products, or user data, and added that all U.S. user data is stored on domestic Amazon Web Services servers.
+
+Federal agencies have previously flagged actively exploited flaws in TP-Link hardware, and CISA currently lists half a dozen TP-Link security flaws in its catalog of vulnerabilities known to be exploited in attacks.
+
+In December 2024, the U.S. government was also reportedly considering banning TP-Link routers, with the U.S. Departments of Justice, Commerce, and Defense investigating the issue, and at least one Commerce Department office having subpoenaed the company.
+
+More recently, in December 2025, the Texas Attorney General sued five major television manufacturers (i.e., Sony, Samsung, LG, and China-based companies Hisense and TCL Technology Group Corporation), accusing them of secretly and illegally collecting their users' data using Automated Content Recognition (ACR) technology.
+
+The future of IT infrastructure is here
+
+Modern IT infrastructure moves faster than manual workflows can handle.
+
+In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
+
+Police arrests 300 suspects linked to African cybercrime rings
+
+Chinese hackers exploiting Dell zero-day flaw since mid-2024
+
+Chinese cyberspies breach Singapore's four largest telcos
+
+DKnife Linux toolkit hijacks router traffic to spy, deliver malware
+
+Man pleads guilty to hacking nearly 600 women’s Snapchat accounts
+
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/texas-sues-tp-link-over-chinese-hacking-risks-user-deception/, bleepingcomputer.com, 19.02.2026)
+
+================================================================================
+
+[12] BleepingComputer - Hackers target Microsoft Entra accounts in device code vishing attacks
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Thu, 19 Feb 2026 07:30:37 -0500
+Link: https://www.bleepingcomputer.com/news/security/hackers-target-microsoft-entra-accounts-in-device-code-vishing-attacks/
+
+[TAM METİN - 913 kelime]
+Threat actors are targeting technology, manufacturing, and financial organizations in campaigns that combine device code phishing and voice phishing (vishing) to abuse the OAuth 2.0 Device Authorization flow and compromise Microsoft Entra accounts.
+
+Unlike previous attacks that utilized malicious OAuth applications to compromise accounts, these campaigns instead leverage legitimate Microsoft OAuth client IDs and the device authorization flow to trick victims into authenticating.
+
+This provides attackers with valid authentication tokens that can be used to access the victim's account without relying on regular phishing sites that steal passwords or intercept multi-factor authentication codes.
+
+A source told BleepingComputer they believed the ShinyHunters extortion gang was behind the new device code vishing attacks, which the threat actors later confirmed. BleepingComputer has not been able to confirm this independently.
+
+ShinyHunters was recently linked to vishing attacks used to  breack Okta and Microsoft Entra SSO accounts for data theft attacks.
+
+BleepingComputer contacted Microsoft about these attacks but was told it had nothing to share at this time.
+
+Device code social engineering attacks
+
+BleepingComputer has learned from multiple sources that threat actors have begun using vishing social engineering attacks that no longer require attacker-controlled infrastructure, instead leveraging legitimate Microsoft login forms and standard device code authentication workflows to breach corporate accounts.
+
+A device code phishing attack is when the legitimate OAuth 2.0 device authorization grant flow is abused to obtain authentication tokens for the victim's Microsoft Entra account.
+
+This can then be used to gain access to the user's resources and connected SSO applications, like Microsoft 365, Salesforce, Google Workspace, Dropbox, Adobe, SAP, Slack, Zendesk, Atlassian, and many others.
+
+This grant flow was designed to make it easy to connect devices that lack accessible input options, such as IoT devices, printers, streaming devices, and TVs.
+
+"The Microsoft identity platform supports the device authorization grant, which allows users to sign in to input-constrained devices such as a smart TV, IoT device, or a printer," explains Microsoft.
+
+"To enable this flow, the device has the user visit a webpage in a browser on another device to sign in. Once the user signs in, the device is able to get access tokens and refresh tokens as needed."
+
+This authentication flow is similar to what you see when logging into a streaming service, such as Netflix or Apple TV, where the streaming device displays a short code and instructs you to visit a website on your phone or computer to complete sign-in.
+
+After you enter the code and authenticate, the device is automatically linked to your account without ever handling your password directly.
+
+To conduct a device-code phishing attack, threat actors need the client_id of an existing OAuth app, which can be their own or one of Microsoft's existing apps.
+
+Using open-source tools, the attackers generate a "device_code" and "user_code" that will be shared with the target for the specified OAuth app.
+
+The threat actors then contact a targeted employee and attempt to convince them to enter the generated user_code on the Microsoft device authentication page, microsoft.com/devicelogin.
+
+When the targeted person enters the code, they will be prompted to log in with their credentials and complete any MFA verifications, just as they normally would when logging in. After authenticating, Microsoft displays the name of the OAuth application that was authorized.
+
+However, because threat actors can use legitimate apps, even those from Microsoft, this can lend more legitimacy and trust to the authentication process.
+
+Once the OAuth app is connected to an account, threat actors can use the device_code to retrieve the targeted employee's refresh token, which can then be exchanged for access tokens.
+
+Those access tokens allow attackers to access the employee's Microsoft services without having to complete multi-factor authentication again, since MFA was already completed during the initial login.
+
+The threat actors can now authenticate as the user in Microsoft Entra and access SaaS applications configured with SSO (single sign-on) in the victim's tenant, enabling the theft of corporate data for extortion.
+
+KnowBe4 Threat Labs also discovered a recent campaign that uses traditional phishing emails and websites to deliver device code attacks.
+
+The company first spotted the campaign in December 2025 and said it relies heavily on social engineering lures such as fake payment configuration prompts, document-sharing alerts, and bogus voicemail notifications.
+
+KnowBe4 recommends that Microsoft 365 account holders block the malicious domains and sender addresses, audit and revoke suspicious OAuth app consents, and review Azure AD sign-in logs for device code authentication events.
+
+Administrators are also recommended to turn off the device code flow option when not required and to enforce conditional access policies.
+
+Device code phishing is not new, with multiple threat actors having used this method to breach accounts in the past.
+
+In February 2025, the Microsoft Threat Intelligence Center warned that Russian hackers were targeting Microsoft 365 accounts using device code phishing.
+
+In December, ProofPoint reported similar attacks that use a similar phishing kit seen by KnowBe4 to breach Microsoft accounts.
+
+The future of IT infrastructure is here
+
+Modern IT infrastructure moves faster than manual workflows can handle.
+
+In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
+
+New ConsentFix attack hijacks Microsoft accounts via Azure CLI
+
+Microsoft 365 accounts targeted in wave of OAuth phishing attacks
+
+Germany warns of Signal account hijacking targeting senior figures
+
+Fortinet confirms critical FortiCloud auth bypass not fully patched
+
+Betterment confirms data breach after wave of crypto scam emails
+
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/hackers-target-microsoft-entra-accounts-in-device-code-vishing-attacks/, bleepingcomputer.com, 19.02.2026)
+
+================================================================================
+
+[13] BleepingComputer - Police arrests 651 suspects in African cybercrime crackdown
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 06:24:17 -0500
 Link: https://www.bleepingcomputer.com/news/security/police-arrests-651-suspects-in-african-cybercrime-crackdown/
@@ -615,7 +751,7 @@ Cloud storage payment scam floods inboxes with fake renewals
 
 ================================================================================
 
-[12] BleepingComputer - New 'Massiv' Android banking malware poses as an IPTV app
+[14] BleepingComputer - New 'Massiv' Android banking malware poses as an IPTV app
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 05:00:00 -0500
 Link: https://www.bleepingcomputer.com/news/security/new-massiv-android-banking-malware-poses-as-an-iptv-app/
@@ -671,7 +807,7 @@ Operation Switch Off dismantles major pirate TV streaming services
 
 ================================================================================
 
-[13] BleepingComputer - Critical infra Honeywell CCTVs vulnerable to auth bypass flaw
+[15] BleepingComputer - Critical infra Honeywell CCTVs vulnerable to auth bypass flaw
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 15:58:20 -0500
 Link: https://www.bleepingcomputer.com/news/security/critical-infra-honeywell-cctvs-vulnerable-to-auth-bypass-flaw/
@@ -727,7 +863,7 @@ Hackers exploit critical telnetd auth bypass flaw to get root
 
 ================================================================================
 
-[14] BleepingComputer - AI platforms can be abused for stealthy malware communication
+[16] BleepingComputer - AI platforms can be abused for stealthy malware communication
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 15:18:24 -0500
 Link: https://www.bleepingcomputer.com/news/security/ai-platforms-can-be-abused-for-stealthy-malware-communication/
@@ -793,7 +929,7 @@ Viral Moltbot AI assistant raises concerns over data security
 
 ================================================================================
 
-[15] BleepingComputer - Telegram channels expose rapid weaponization of SmarterMail flaws
+[17] BleepingComputer - Telegram channels expose rapid weaponization of SmarterMail flaws
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 11:27:38 -0500
 Link: https://www.bleepingcomputer.com/news/security/telegram-channels-expose-rapid-weaponization-of-smartermail-flaws/
@@ -961,7 +1097,7 @@ Sponsored and written by Flare.
 
 ================================================================================
 
-[16] BleepingComputer - Microsoft: Anti-phishing rules mistakenly blocked emails, Teams messages
+[18] BleepingComputer - Microsoft: Anti-phishing rules mistakenly blocked emails, Teams messages
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 11:26:53 -0500
 Link: https://www.bleepingcomputer.com/news/microsoft/microsoft-anti-phishing-rules-mistakenly-blocked-emails-teams-messages/
@@ -1013,7 +1149,7 @@ Snail mail letters target Trezor and Ledger users in crypto-theft attacks
 
 ================================================================================
 
-[17] BleepingComputer - Data breach at fintech firm Figure affects nearly 1 million accounts
+[19] BleepingComputer - Data breach at fintech firm Figure affects nearly 1 million accounts
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 09:01:08 -0500
 Link: https://www.bleepingcomputer.com/news/security/data-breach-at-fintech-firm-figure-affects-nearly-1-million-accounts/
@@ -1065,7 +1201,7 @@ Canada Goose investigating as hackers leak 600K customer records
 
 ================================================================================
 
-[18] BleepingComputer - Microsoft says bug causes Copilot to summarize confidential emails
+[20] BleepingComputer - Microsoft says bug causes Copilot to summarize confidential emails
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 07:03:05 -0500
 Link: https://www.bleepingcomputer.com/news/microsoft/microsoft-says-bug-causes-copilot-to-summarize-confidential-emails/
@@ -1109,115 +1245,33 @@ Microsoft announces new mobile-style Windows security controls
 
 ================================================================================
 
-[19] BleepingComputer - Glendale man gets 5 years in prison for role in darknet drug ring
+[21] Security Affairs - CISA alerts to critical auth bypass CVE-2026-1670 in Honeywell CCTVs
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Wed, 18 Feb 2026 05:50:50 -0500
-Link: https://www.bleepingcomputer.com/news/security/glendale-man-gets-5-years-in-prison-for-role-in-darknet-drug-trafficking-operation/
+Tarih: Thu, 19 Feb 2026 11:54:01 +0000
+Link: https://securityaffairs.com/188234/security/cisa-alerts-to-critical-auth-bypass-cve-2026-1670-in-honeywell-cctvs.html
 
-[TAM METİN - 537 kelime]
-​A Glendale man was sentenced to nearly five years in federal prison for his role in a darknet drug trafficking operation that sold cocaine, methamphetamine, MDMA, and ketamine to customers across the United States.
+[TAM METİN - 274 kelime]
+The U.S. Cybersecurity and Infrastructure Security Agency (CISA) warns that Honeywell CCTVs are affected by a critical authentication bypass flaw, tracked as CVE-2026-1670 (CVSS score of 9.8), that lets attackers change the recovery email without logging in. This vulnerability enables account takeovers and unauthorized access to camera feeds by exploiting an unauthenticated API endpoint for password recovery.
 
-36-year-old Davit Avalyan received a 57-month sentence from U.S. District Judge Percy Anderson in Los Angeles after pleading guilty in October 2025 to one count of conspiracy to distribute narcotics.
+“Successful exploitation of this vulnerability could lead to account takeovers and unauthorized access to camera feeds; an unauthenticated attacker may change the recovery email address, potentially leading to further network compromise.” reads the alert published by CISA.
 
-Avalyan is the last of four defendants to be sentenced in the case. His accomplices, Hayk Grigoryan (also known as Hayk Greg), Gurgen Nersesyan (also known as Guro Tiko), and Hrant Gevorgyan, have already received prison sentences of 10 years, 43 months, and 24 months, respectively.
+The vulnerability was discovered by cybersecurity researcher Souvik Kandar.
 
-Prosecutors said Avalyan and his co-conspirators ran the operation from September 2018 to February 2025, maintaining a large network of darknet vendor accounts (including multiple storefronts with names like JoyInc, PlanetHollywood, and LaFarmacia) across multiple narcotics online marketplaces.
+The vulnerability impacts the following Honeywell CCTVs models:
 
-According to court documents, the group packaged drugs into parcels and mailed them from post offices and mailboxes throughout Los Angeles County and other locations.
+A critical auth bypass flaw in Honeywell CCTV models could allow attackers to take over accounts, granting unauthorized access to live feeds. Many of these cameras are used in critical infrastructure, corporate sites, and government facilities worldwide. The flaw can be exploited remotely, risking sensitive surveillance data and enabling attackers to move laterally within networks, making it a severe threat to security, privacy, and operational integrity.
 
-JoyInc, one of the network's primary accounts, is believed to have launched as early as 2018 and is considered among the most prolific methamphetamine and cocaine distributors ever to operate on the darknet.
+CISA advises organizations to reduce risk from this Honeywell CCTV flaw by isolating control system devices from the Internet, using firewalls, and placing remote devices behind secure networks. When remote access is needed, employ updated VPNs and ensure connected devices are secure. Organizations should perform risk assessments before deploying defenses, follow ICS security best practices from cisa.gov/ics, and report suspicious activity. Users should avoid phishing and unsolicited links; no active exploitation has been reported.
 
-"Vendors JoyInc, LaFarmacia, WhiteDoc, JanesAddiction, DaShop, WhiteRepublic, Tomorowland, PlanetHollywood, DopeValley, and Major2Minor sold cocaine, methamphetamine, 3, 4-Methylenedioxymethamphetamine ('MDMA'), and ketamine to drug customers on these darknet markets in exchange for cryptocurrency, such as Bitcoin and Monero, and shipped the drugs throughout the United States via the United States Postal Service," the indictment reveals.
+The US agency is not aware of attacks exploiting this flaw in the wild.
 
-Their accounts were active "on several darknet marketplaces, including Dream Market, Wallstreet, Empire, Silk Road 3.1, ToRReZ, Dark0de, World Market, Tor2Door, alphabay, Incognito, ASAP, Ares, MGM Grand, Archetyp, Abacus, DrugHub, and DarkMatter and would sell methamphetamine, cocaine, MDMA, and ketamine to customers across the United States."
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-The FBI's JCODE (Joint Criminal Opioid Darknet Enforcement) team, a task force focused on dismantling criminal networks that use the darknet to traffic narcotics, led the investigation with support from the U.S. Postal Inspection Service, the Drug Enforcement Administration, the IRS Criminal Investigation, and the Los Angeles Police Department.
-
-Earlier this month, a Taiwanese man was also sentenced to 30 years in prison for operating Incognito Market, a massive online narcotics marketplace linked to over $105 million in illegal drug sales.
-
-In January, a Slovakian national pleaded guilty to helping operate a darknet marketplace that sold narcotics, cybercrime services, fake government IDs, and stolen personal information for more than two years, and a Virginia man who co-created the Empire Market dark web marketplace admitted to federal drug conspiracy charges for facilitating $430 million in illegal transactions.
-
-The future of IT infrastructure is here
-
-Modern IT infrastructure moves faster than manual workflows can handle.
-
-In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
-
-Owner of Incognito dark web drugs market gets 30 years in prison
-
-Empire cybercrime market owner pleads guilty to drug conspiracy
-
-Slovakian man pleads guilty to operating darknet marketplace
-
-Microsoft disrupts massive RedVDS cybercrime virtual desktop service
-
-Hacker gets seven years for breaching Rotterdam and Antwerp ports
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/glendale-man-gets-5-years-in-prison-for-role-in-darknet-drug-trafficking-operation/, bleepingcomputer.com, 18.02.2026)
+(XXXXXXX, AÇIK - https://securityaffairs.com/188234/security/cisa-alerts-to-critical-auth-bypass-cve-2026-1670-in-honeywell-cctvs.html, securityaffairs.com, 19.02.2026)
 
 ================================================================================
 
-[20] BleepingComputer - Spain orders NordVPN, ProtonVPN to block LaLiga piracy sites
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Tue, 17 Feb 2026 18:15:49 -0500
-Link: https://www.bleepingcomputer.com/news/legal/spain-orders-nordvpn-protonvpn-to-block-laliga-piracy-sites/
-
-[TAM METİN - 654 kelime]
-A Spanish court has granted precautionary measures against NordVPN and ProtonVPN, ordering the two popular VPN providers to block 16 websites that facilitate piracy of football matches.
-
-The restrictions will apply to a dynamic list of IP addresses in Spain, and there will be no opportunity for appeals. The measures were taken 'inaudita parte', meaning that the defendants weren’t called to participate in a hearing.
-
-LaLiga - the country’s professional football organizer, and its broadcasting partner, Telefónica, are required to “preserve sufficient digital evidence of the unlawful transmission of the protected contents.”
-
-LaLiga showed a strong stance against the piracy ecosystem in recent years, previously targeting Cloudflare, accusing the internet giant of facilitating illegal sports streaming.
-
-The two organizations proved that the VPN providers fall under the EU Digital Services Regulation, and therefore have a duty to help prevent copyright infringement carried out through their infrastructure.
-
-“The orders identify how VPN systems prove to be a suitable means, 'highly effective and accessible to generate the possibility of access to content not accessible in certain geographic points,' distorting the real geographic location of online access, and facilitating 'access to websites that broadcast protected content illegally,'” reads LaLiga’s announcement.
-
-“What is more, the orders highlight how the defendant companies acknowledge and even advertise that their system is excellent at evading restrictions.”
-
-LaLiga characterized the ruling as unprecedented in Spain, aligning it with similar decisions in France, and celebrated that the liability of VPN providers for piracy is clearly recognized.
-
-In response, ProtonVPN took to Twitter to question the decision, declaring a total lack of awareness of the proceedings and stating that they have not been formally notified.
-
-“Any judicial order issued without proper notification to the affected parties, thereby denying them the opportunity to be heard, would be procedurally invalid under fundamental principles of due process, stated the VPN service provider.
-
-“Spanish courts, like all courts operating under the rule of law, are bound by procedural safeguards that ensure parties are given a fair opportunity to present their case before any binding judgment is rendered.”
-
-In a request for comments to BleepingComputer, NordVPN's spokesperson Laura Tyrylyte stated that the company was not involved in any legal proceedings in Spain.
-
-"At this stage, we have not received the judicial documents mentioned in the press so it will be premature to comment without having reviewed them. We were not part of any Spanish judicial proceedings to our knowledge, and therefore had no opportunity to defend ourselves. Given such judgments impact on how the Internet operates, such an approach by rightsholders is unacceptable" - NordVPN
-
-Tyrylyte stated that the process for blocking domains is ineffective in the fight against piracy as it does not address the root cause. Instead, hosting providers should be the target, since pirates can use subdomains to bypass the restrictions.
-
-"Effective piracy control should focus on eliminating the source of the content, targeting hosting providers, cutting off financing for illegal operations, and increasing the availability of legitimate content."
-
-Through its representative, NordVPN said that the measures affect mostly reputable, paid VPN providers, while free services continue to operate largely unhindered.
-
-"Free VPNs are often harder to regulate and, since users who seek to avoid paying for content are unlikely to pay for a VPN either, these services remain a loophole for pirates to bypass restrictions."
-
-The future of IT infrastructure is here
-
-Modern IT infrastructure moves faster than manual workflows can handle.
-
-In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
-
-US indicts 8Base ransomware operators for Phobos encryption attacks
-
-Police arrests 2 Phobos ransomware suspects, seizes 8Base sites
-
-Block ads & hide your IP with this AdGuard $40 family suite deal
-
-Louis Vuitton, Dior, and Tiffany fined $25 million over data breaches
-
-Russia tries to block WhatsApp, Telegram in communication blockade
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/legal/spain-orders-nordvpn-protonvpn-to-block-laliga-piracy-sites/, bleepingcomputer.com, 17.02.2026)
-
-================================================================================
-
-[21] Security Affairs - Irish regulator probes X after Grok allegedly generated sexual images of children
+[22] Security Affairs - Irish regulator probes X after Grok allegedly generated sexual images of children
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 09:53:32 +0000
 Link: https://securityaffairs.com/188226/ai/irish-regulator-probes-x-after-grok-allegedly-generated-sexual-images-of-children.html
@@ -1247,7 +1301,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[22] Security Affairs - Intellexa’s Predator spyware infected Angolan journalist’s device, Amnesty reports
+[23] Security Affairs - Intellexa’s Predator spyware infected Angolan journalist’s device, Amnesty reports
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 08:17:16 +0000
 Link: https://securityaffairs.com/188215/malware/intellexas-predator-spyware-infected-angolan-journalists-device-amnesty-reports.html
@@ -1279,7 +1333,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[23] Security Affairs - French Ministry confirms data access to 1.2 Million bank accounts
+[24] Security Affairs - French Ministry confirms data access to 1.2 Million bank accounts
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 21:25:19 +0000
 Link: https://securityaffairs.com/188200/hacking/french-ministry-confirms-data-access-to-1-2-million-bank-accounts.html
@@ -1307,7 +1361,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[24] Security Affairs - Notepad++ patches flaw used to hijack update system
+[25] Security Affairs - Notepad++ patches flaw used to hijack update system
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 19:28:02 +0000
 Link: https://securityaffairs.com/188192/hacking/notepad-patches-flaw-used-to-hijack-update-system.html
@@ -1357,7 +1411,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[25] Security Affairs - VS Code extensions with 125M+ installs expose users to cyberattacks
+[26] Security Affairs - VS Code extensions with 125M+ installs expose users to cyberattacks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 15:14:33 +0000
 Link: https://securityaffairs.com/188185/security/vs-code-extensions-with-125m-installs-expose-users-to-cyberattacks.html
@@ -1383,7 +1437,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[26] Security Affairs - China-linked APT weaponized Dell RecoverPoint zero-day since 2024
+[27] Security Affairs - China-linked APT weaponized Dell RecoverPoint zero-day since 2024
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 12:15:46 +0000
 Link: https://securityaffairs.com/188176/apt/china-linked-apt-weaponized-dell-recoverpoint-zero-day-since-2024.html
@@ -1415,7 +1469,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[27] Security Affairs - U.S. CISA adds Google Chromium CSS, Microsoft Windows, TeamT5 ThreatSonar Anti-Ransomware, and Zimbra flaws to its Known Exploited Vulnerabilities catalog
+[28] Security Affairs - U.S. CISA adds Google Chromium CSS, Microsoft Windows, TeamT5 ThreatSonar Anti-Ransomware, and Zimbra flaws to its Known Exploited Vulnerabilities catalog
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 10:55:32 +0000
 Link: https://securityaffairs.com/188163/uncategorized/u-s-cisa-adds-google-chromium-css-microsoft-windows-teamt5-threatsonar-anti-ransomware-and-zimbra-flaws-to-its-known-exploited-vulnerabilities-catalog.html
@@ -1451,7 +1505,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[28] Security Affairs - Keenadu backdoor found preinstalled on Android devices, powers Ad fraud campaign
+[29] Security Affairs - Keenadu backdoor found preinstalled on Android devices, powers Ad fraud campaign
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 08:31:02 +0000
 Link: https://securityaffairs.com/188147/malware/keenadu-backdoor-found-preinstalled-on-android-devices-powers-ad-fraud-campaign.html
@@ -1491,7 +1545,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[29] Graham Cluley - Smashing Security podcast #455: Face off: Meta’s Glasses and America’s internet kill switch
+[30] Graham Cluley - Smashing Security podcast #455: Face off: Meta’s Glasses and America’s internet kill switch
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 00:30:44 +0000
 Link: https://grahamcluley.com/smashing-security-podcast-455/
@@ -1595,7 +1649,7 @@ Follow him on LinkedIn, Bluesky and Mastodon, or drop him an email.
 
 ================================================================================
 
-[30] Graham Cluley - Dutch police arrest man for “hacking” after accidentally sending him confidential files
+[31] Graham Cluley - Dutch police arrest man for “hacking” after accidentally sending him confidential files
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 10:52:29 +0000
 Link: https://www.bitdefender.com/en-us/blog/hotforsecurity/dutch-police-arrest-man-hacking-accidentally-sending-confidential-files
@@ -1631,7 +1685,7 @@ Right now the unnamed man faces a potential future prospecution for accessing fi
 
 ================================================================================
 
-[31] SANS ISC - ISC Stormcast For Thursday, February 19th, 2026 https://isc.sans.edu/podcastdetail/9816, (Thu, Feb 19th)
+[32] SANS ISC - ISC Stormcast For Thursday, February 19th, 2026 https://isc.sans.edu/podcastdetail/9816, (Thu, Feb 19th)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 02:00:03 GMT
 Link: https://isc.sans.edu/diary/rss/32728
@@ -1642,7 +1696,7 @@ Link: https://isc.sans.edu/diary/rss/32728
 
 ================================================================================
 
-[32] SANS ISC - Tracking Malware Campaigns With Reused Material, (Wed, Feb 18th)
+[33] SANS ISC - Tracking Malware Campaigns With Reused Material, (Wed, Feb 18th)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 08:19:42 GMT
 Link: https://isc.sans.edu/diary/rss/32726
@@ -1681,7 +1735,7 @@ PGP Key
 
 ================================================================================
 
-[33] SANS ISC - ISC Stormcast For Wednesday, February 18th, 2026 https://isc.sans.edu/podcastdetail/9814, (Wed, Feb 18th)
+[34] SANS ISC - ISC Stormcast For Wednesday, February 18th, 2026 https://isc.sans.edu/podcastdetail/9814, (Wed, Feb 18th)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 02:15:12 GMT
 Link: https://isc.sans.edu/diary/rss/32724
@@ -1692,7 +1746,7 @@ Link: https://isc.sans.edu/diary/rss/32724
 
 ================================================================================
 
-[34] Recorded Future - GrayCharlie Hijacks Law Firm Sites in Suspected Supply-Chain Attack
+[35] Recorded Future - GrayCharlie Hijacks Law Firm Sites in Suspected Supply-Chain Attack
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 00:00:00 GMT
 Link: https://www.recordedfuture.com/research/graycharlie-hijacks-law-firm-sites-suspected-supply-chain-attack
@@ -1834,7 +1888,7 @@ Appendix A: Indicators of Compromise
 
 ================================================================================
 
-[35] Cyberscoop - The Caracas operation suggests cyber was part of the plan – just not the whole operation
+[36] Cyberscoop - The Caracas operation suggests cyber was part of the plan – just not the whole operation
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 11:00:00 +0000
 Link: https://cyberscoop.com/venezuela-blackout-cyberattack-vs-kinetic-damage-operation-absolute-resolve/
@@ -1942,7 +1996,7 @@ US wants to push its view of AI cybersecurity standards to the rest of the world
 
 ================================================================================
 
-[36] Cyberscoop - Nigerian man sentenced to 8 years in prison for running phony tax refund scheme
+[37] Cyberscoop - Nigerian man sentenced to 8 years in prison for running phony tax refund scheme
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 23:47:14 +0000
 Link: https://cyberscoop.com/nigerian-matthew-akande-tax-refund-fraud/
@@ -2002,7 +2056,7 @@ US wants to push its view of AI cybersecurity standards to the rest of the world
 
 ================================================================================
 
-[37] Cyberscoop - Fulton County lawsuit claims feds used ‘gross mischaracterizations’ to justify raid
+[38] Cyberscoop - Fulton County lawsuit claims feds used ‘gross mischaracterizations’ to justify raid
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 15:59:15 +0000
 Link: https://cyberscoop.com/fulton-county-election-raid-expert-testimony-ryan-macias/
@@ -2070,7 +2124,7 @@ US wants to push its view of AI cybersecurity standards to the rest of the world
 
 ================================================================================
 
-[38] Cyberscoop - Chinese hackers exploited a Dell zero-day for 18 months before anyone noticed
+[39] Cyberscoop - Chinese hackers exploited a Dell zero-day for 18 months before anyone noticed
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 00:32:44 +0000
 Link: https://cyberscoop.com/china-brickstorm-grimbolt-dell-zero-day/
@@ -2144,7 +2198,7 @@ US wants to push its view of AI cybersecurity standards to the rest of the world
 
 ================================================================================
 
-[39] The Register - Adidas investigates third-party data breach after criminals claim they pwned the sportswear giant
+[40] The Register - Adidas investigates third-party data breach after criminals claim they pwned the sportswear giant
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-18T23:57:30.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/18/adidas_investigates_thirdparty_data_breach/
@@ -2226,7 +2280,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[40] The Register - ShinyHunters allegedly drove off with 1.7M CarGurus records
+[41] The Register - ShinyHunters allegedly drove off with 1.7M CarGurus records
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-18T20:40:44.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/18/shinyhunters_cargurus_breach/
@@ -2320,7 +2374,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[41] The Register - Fraudster hacked hotel system, paid 1 cent for luxury rooms, Spanish cops say
+[42] The Register - Fraudster hacked hotel system, paid 1 cent for luxury rooms, Spanish cops say
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-18T18:31:14.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/18/fraudster_hotel_hack_one_cent_luxury_room/
@@ -2404,7 +2458,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[42] The Register - Deutsche Bahn back on track after DDoS yanks the brakes
+[43] The Register - Deutsche Bahn back on track after DDoS yanks the brakes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-18T16:36:52.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/18/deutsche_bahn_ddos/
@@ -2450,7 +2504,7 @@ While DDoS attacks can be carried out by cybercriminals of all stripes, they are
 
 ================================================================================
 
-[43] The Register - China-linked snoops have been exploiting Dell 0-day since mid-2024, using 'ghost NICs' to avoid detection
+[44] The Register - China-linked snoops have been exploiting Dell 0-day since mid-2024, using 'ghost NICs' to avoid detection
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-18T00:05:58.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/18/dell_0day_brickstorm_campaign/
@@ -2576,7 +2630,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[44] The Register - China remains embedded in US energy networks 'for the purpose of taking it down'
+[45] The Register - China remains embedded in US energy networks 'for the purpose of taking it down'
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-17T21:45:14.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/17/volt_typhoon_dragos/
@@ -2696,7 +2750,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[45] The Register - Polish cops nab 47-year-old man in Phobos ransomware raid
+[46] The Register - Polish cops nab 47-year-old man in Phobos ransomware raid
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-17T13:14:33.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/17/poland_phobos_ransomware_arrest/
@@ -2746,7 +2800,7 @@ Current estimates peg the total revenue generated by the group at $16 million, s
 
 ================================================================================
 
-[46] The Register - Canada Goose ruffles feathers over 600K record dump, says leak is old news
+[47] The Register - Canada Goose ruffles feathers over 600K record dump, says leak is old news
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-16T18:01:07.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/16/canada_goose_shinyhunters/
@@ -2792,7 +2846,7 @@ Last year, the criminal crew was linked to attacks on Salesforce, which led to t
 
 ================================================================================
 
-[47] The Register - Google patches Chrome zero-day as in-the-wild exploits surface
+[48] The Register - Google patches Chrome zero-day as in-the-wild exploits surface
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-16T12:39:06.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/16/chromes_zeroday/
@@ -2830,7 +2884,7 @@ The fix also lands days after researchers revealed that at least 287 Chrome exte
 
 ================================================================================
 
-[48] The Register - Infosec exec sold eight zero-day exploit kits to Russia, says DoJ
+[49] The Register - Infosec exec sold eight zero-day exploit kits to Russia, says DoJ
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-15T23:22:14.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/15/exl3harris_exec_sold_8_zeroday/
@@ -2928,7 +2982,7 @@ Telecommunications Act of 1996
 
 ================================================================================
 
-[49] TechCrunch Security - Hacking conference Def Con bans three people linked to Epstein
+[50] TechCrunch Security - Hacking conference Def Con bans three people linked to Epstein
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 22:04:13 +0000
 Link: https://techcrunch.com/2026/02/18/hacking-conference-def-con-bans-three-people-linked-to-epstein/
@@ -3051,7 +3105,7 @@ A Stanford grad student created an algorithm to help his classmates find love; n
 
 ================================================================================
 
-[50] TechCrunch Security - Data breach at fintech giant Figure affects close to a million customers
+[51] TechCrunch Security - Data breach at fintech giant Figure affects close to a million customers
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 18:14:07 +0000
 Link: https://techcrunch.com/2026/02/18/data-breach-at-fintech-giant-figure-affects-close-to-a-million-customers/
@@ -3111,7 +3165,7 @@ Mastodon, a decentralized alternative to X, plans to target creators with new fe
 Sarah Perez
 
 
-	17 hours ago
+	18 hours ago
 
 Mastodon, a decentralized alternative to X, plans to target creators with new features
 
@@ -3181,7 +3235,7 @@ This former Microsoft PM thinks she can unseat CyberArk in 18 months
 
 ================================================================================
 
-[51] TechCrunch Security - This former Microsoft PM thinks she can unseat CyberArk in 18 months
+[52] TechCrunch Security - This former Microsoft PM thinks she can unseat CyberArk in 18 months
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 15:00:00 +0000
 Link: https://techcrunch.com/2026/02/18/the-former-microsoft-pm-who-thinks-she-can-unseat-cyberark-in-18-months/
@@ -3307,7 +3361,7 @@ A Stanford grad student created an algorithm to help his classmates find love; n
 
 ================================================================================
 
-[52] TechCrunch Security - Microsoft says Office bug exposed customers’ confidential emails to Copilot AI
+[53] TechCrunch Security - Microsoft says Office bug exposed customers’ confidential emails to Copilot AI
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 14:44:28 +0000
 Link: https://techcrunch.com/2026/02/18/microsoft-says-office-bug-exposed-customers-confidential-emails-to-copilot-ai/
@@ -3349,7 +3403,7 @@ Kana emerges from stealth with $15M to build flexible AI agents for marketers
 Ram Iyer
 
 
-	21 hours ago
+	22 hours ago
 
 Kana emerges from stealth with $15M to build flexible AI agents for marketers
 
@@ -3391,7 +3445,7 @@ Hacking conference Def Con bans three people linked to Epstein
 Lorenzo Franceschi-Bicchierai
 
 
-	14 hours ago
+	15 hours ago
 
 Hacking conference Def Con bans three people linked to Epstein
 
@@ -3425,7 +3479,7 @@ This former Microsoft PM thinks she can unseat CyberArk in 18 months
 Connie Loizos
 
 
-	21 hours ago
+	22 hours ago
 
 This former Microsoft PM thinks she can unseat CyberArk in 18 months
 
@@ -3433,7 +3487,7 @@ This former Microsoft PM thinks she can unseat CyberArk in 18 months
 
 ================================================================================
 
-[53] TechCrunch Security - Intellexa’s Predator spyware used to hack iPhone of journalist in Angola, research says
+[54] TechCrunch Security - Intellexa’s Predator spyware used to hack iPhone of journalist in Angola, research says
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 00:01:00 +0000
 Link: https://techcrunch.com/2026/02/17/intellexas-predator-spyware-used-to-hack-iphone-of-journalist-in-angola-research-says/
@@ -3558,7 +3612,7 @@ A Stanford grad student created an algorithm to help his classmates find love; n
 
 ================================================================================
 
-[54] CSO Online - Six flaws found hiding in OpenClaw’s plumbing
+[55] CSO Online - Six flaws found hiding in OpenClaw’s plumbing
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 12:14:23 +0000
 Link: https://www.csoonline.com/article/4134540/six-flaws-found-hiding-in-openclaws-plumbing.html
@@ -3658,12 +3712,12 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[55] CSO Online - Hackers can turn Grok, Copilot into covert command-and-control channels, researchers warn
+[56] CSO Online - Hackers can turn Grok, Copilot into covert command-and-control channels, researchers warn
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 10:22:03 +0000
 Link: https://www.csoonline.com/article/4134419/hackers-can-turn-grok-copilot-into-covert-command-and-control-channels-researchers-warn.html
 
-[TAM METİN - 1220 kelime]
+[TAM METİN - 1222 kelime]
 Hackers can turn Grok, Copilot into covert command-and-control channels, researchers warn
 
 Permissive AI access and limited monitoring could allow malware to hide within trusted enterprise traffic, thereby accelerating adaptive, AI-driven attacks.
@@ -3756,7 +3810,7 @@ Hackers can turn Grok, Copilot into covert command-and-control channels, researc
 
 What CISOs need to know before moving into consulting
 
-Keenadu: Android malware that comes preinstalled and can’t be removed by users
+Flaws in four popular VS Code extensions left 128 million installs open to attack
 
 How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
 
@@ -3774,7 +3828,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[56] CSO Online - Cybersicherheit braucht Reife und keine Checklisten
+[57] CSO Online - Cybersicherheit braucht Reife und keine Checklisten
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 09:25:42 +0000
 Link: https://www.csoonline.com/article/4133975/cybersicherheit-braucht-reife-und-keine-checklisten.html
@@ -3856,12 +3910,12 @@ Was CISOs über OpenClaw wissen sollten
 
 ================================================================================
 
-[57] CSO Online - From in-house CISO to consultant. What you need to know before making the leap
+[58] CSO Online - From in-house CISO to consultant. What you need to know before making the leap
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 19 Feb 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4132950/from-in-house-ciso-to-consultant-what-you-need-to-know-before-making-the-leap.html
 
-[TAM METİN - 2128 kelime]
+[TAM METİN - 2126 kelime]
 From in-house CISO to consultant. What you need to know before making the leap
 
 The move from in-house CISO to consultant promises autonomy and impact, but it also forces security leaders to rethink both their skill set and their mindset.
@@ -3993,11 +4047,11 @@ featureCISOs: Stop trying to do the lawyer’s job Feb 10, 2025 11 mins
 
 CISOs: Stop trying to do the lawyer’s job
 
+Six flaws found hiding in OpenClaw’s plumbing
+
 Hackers can turn Grok, Copilot into covert command-and-control channels, researchers warn
 
 What CISOs need to know before moving into consulting
-
-Notepad++ author says fixes make update mechanism ‘effectively unexploitable’
 
 How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
 
@@ -4015,12 +4069,12 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[58] CSO Online - Notepad++ author says fixes make update mechanism ‘effectively unexploitable’
+[59] CSO Online - Notepad++ author says fixes make update mechanism ‘effectively unexploitable’
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 22:18:27 +0000
 Link: https://www.csoonline.com/article/4134135/notepad-author-says-fixes-make-update-mechanism-effectively-unexploitable.html
 
-[TAM METİN - 1312 kelime]
+[TAM METİN - 1310 kelime]
 Notepad++ author says fixes make update mechanism ‘effectively unexploitable’
 
 Hardening had to be done after a threat actor compromised updates with a custom backdoor.
@@ -4107,11 +4161,11 @@ newsCrooks are hijacking and reselling AI infrastructure: Report Jan 28, 2026 7 
 
 Crooks are hijacking and reselling AI infrastructure: Report
 
+Six flaws found hiding in OpenClaw’s plumbing
+
 Hackers can turn Grok, Copilot into covert command-and-control channels, researchers warn
 
 What CISOs need to know before moving into consulting
-
-Notepad++ author says fixes make update mechanism ‘effectively unexploitable’
 
 How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
 
@@ -4129,12 +4183,12 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[59] CSO Online - Chinese hackers exploited zero-day Dell RecoverPoint flaw for 1.5 years
+[60] CSO Online - Chinese hackers exploited zero-day Dell RecoverPoint flaw for 1.5 years
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 21:43:40 +0000
 Link: https://www.csoonline.com/article/4134158/chinese-hackers-exploited-zero-day-dell-recoverpoint-flaw-for-1-5-years.html
 
-[TAM METİN - 1272 kelime]
+[TAM METİN - 1274 kelime]
 Chinese hackers exploited zero-day Dell RecoverPoint flaw for 1.5 years
 
 A suspected Chinese espionage group exploited hardcoded admin credentials in Dell RecoverPoint for Virtual Machines to deploy web shells and maintain persistence in enterprise VMware environments.
@@ -4225,7 +4279,7 @@ What CISOs need to know before moving into consulting
 
 Chinese hackers exploited zero-day Dell RecoverPoint flaw for 1.5 years
 
-Keenadu: Android malware that comes preinstalled and can’t be removed by users
+Flaws in four popular VS Code extensions left 128 million installs open to attack
 
 How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
 
@@ -4243,7 +4297,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[60] CSO Online - Millionen Chrome-Erweiterungen geben Browserverlauf preis
+[61] CSO Online - Millionen Chrome-Erweiterungen geben Browserverlauf preis
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 15:16:32 +0000
 Link: https://www.csoonline.com/article/4133881/millionen-chrome-erweiterungen-geben-browserverlauf-preis.html
@@ -4333,7 +4387,7 @@ Was CISOs über OpenClaw wissen sollten
 
 ================================================================================
 
-[61] CSO Online - Flaws in four popular VS Code extensions left 128 million installs open to attack
+[62] CSO Online - Flaws in four popular VS Code extensions left 128 million installs open to attack
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 12:30:06 +0000
 Link: https://www.csoonline.com/article/4133800/flaws-in-four-popular-vs-code-extensions-left-128-million-installs-open-to-attack.html
@@ -4451,12 +4505,12 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[62] CSO Online - Keenadu: Android malware that comes preinstalled and can’t be removed by users
+[63] CSO Online - Keenadu: Android malware that comes preinstalled and can’t be removed by users
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 12:14:35 +0000
 Link: https://www.csoonline.com/article/4133774/keenadu-android-malware-that-comes-preinstalled-and-cant-be-removed-by-users.html
 
-[TAM METİN - 1124 kelime]
+[TAM METİN - 1112 kelime]
 Keenadu: Android malware that comes preinstalled and can’t be removed by users
 
 Keenadu infiltrated devices by posing as legitimate system components, prompting calls for tighter controls on firmware integrity across manufacturing and supply‑chain pipelines.
@@ -4505,6 +4559,10 @@ Shweta has been writing about enterprise technology since 2017, most recently re
 
 More from this author
 
+newsSix flaws found hiding in OpenClaw’s plumbing Feb 19, 2026 3 mins
+
+Six flaws found hiding in OpenClaw’s plumbing
+
 newsFour new reasons why Windows LNK files cannot be trusted Feb 13, 2026 4 mins
 
 Four new reasons why Windows LNK files cannot be trusted
@@ -4533,10 +4591,6 @@ newsRussian hackers exploited a critical Office bug within days of disclosure Fe
 
 Russian hackers exploited a critical Office bug within days of disclosure
 
-newsFrom credentials to cloud admin in 8 minutes: AI supercharges AWS attack chain Feb 3, 2026 5 mins
-
-From credentials to cloud admin in 8 minutes: AI supercharges AWS attack chain
-
 Hackers can turn Grok, Copilot into covert command-and-control channels, researchers warn
 
 What CISOs need to know before moving into consulting
@@ -4559,7 +4613,7 @@ CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Wo
 
 ================================================================================
 
-[63] CSO Online - Cyberangriff auf Bahn stört Auskunftssysteme
+[64] CSO Online - Cyberangriff auf Bahn stört Auskunftssysteme
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 11:04:39 +0000
 Link: https://www.csoonline.com/article/4133725/cyberangriff-auf-bahn-stort-auskunftssysteme.html
@@ -4627,7 +4681,7 @@ Was CISOs über OpenClaw wissen sollten
 
 ================================================================================
 
-[64] Infoblox Blog - Protective DNS: Harnessing DNS as a Core Weapon in MSSP Cyber Defense and Incident Response
+[65] Infoblox Blog - Protective DNS: Harnessing DNS as a Core Weapon in MSSP Cyber Defense and Incident Response
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 17:51:56 +0000
 Link: https://www.infoblox.com/blog/security/protective-dns-harnessing-dns-as-a-core-weapon-in-mssp-cyber-defense-and-incident-response/
@@ -4703,7 +4757,7 @@ Want to learn more? Explore DNS-layer defense and practical use cases at https:/
 
 ================================================================================
 
-[65] Infoblox Blog - IoT DNS Security and Privacy with UCL and Inria
+[66] Infoblox Blog - IoT DNS Security and Privacy with UCL and Inria
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Wed, 18 Feb 2026 15:55:11 +0000
 Link: https://www.infoblox.com/blog/security/iot-dns-security-and-privacy-with-ucl-and-inria/
