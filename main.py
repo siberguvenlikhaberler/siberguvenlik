@@ -507,6 +507,9 @@ class HaberSistemi:
         
         print(f"✅ HTML oluşturuldu ({len(html)} karakter)")
         
+        # Kaynak tarihlerini ham TXT'den düzelt (Gemini hatasını gider)
+        html = self._fix_source_dates(html, txt_content)
+        
         # Son 30 gün linklerini ekle
         html = self._add_archive_links(html)
         
@@ -531,6 +534,40 @@ class HaberSistemi:
         
         return html
     
+    def _fix_source_dates(self, html, txt_content):
+        """Gemini'nin yazdığı hatalı tarihleri ham TXT'deki gerçek tarihlerle düzelt"""
+        import re
+        
+        # Ham TXT'den link→tarih eşlemesini çıkar
+        link_to_date = {}
+        pattern = re.compile(
+            r'[(]XXXXXXX, [A][C][I][K] - (https?://[^\s,]+),\s*[^,]+,\s*(\d{2}[.]\d{2}[.]\d{4})[)]'
+            .replace('[A][C][I][K]', 'AÇIK')
+        )
+        for m in pattern.finditer(txt_content):
+            link_to_date[m.group(1).strip()] = m.group(2).strip()
+        
+        if not link_to_date:
+            return html
+        
+        # HTML'deki her .source paragrafında href linkini bul ve tarihi düzelt
+        source_pattern = re.compile(r'<p class="source">.*?</p>', re.DOTALL)
+        href_pattern = re.compile(r'href="(https?://[^"]+)"')
+        date_pattern = re.compile(r'\d{2}[.]\d{2}[.]\d{4}(?=[)])')
+        
+        def fix_source(m):
+            src = m.group(0)
+            href_m = href_pattern.search(src)
+            if not href_m:
+                return src
+            href = href_m.group(1).strip()
+            if href not in link_to_date:
+                return src
+            return date_pattern.sub(link_to_date[href], src)
+        
+        fixed_html = source_pattern.sub(fix_source, html)
+        print("   ✅ Kaynak tarihleri düzeltildi")
+        return fixed_html
     def _add_archive_links(self, html):
         """HTML'e son 30 günün linklerini ekle"""
         from datetime import timedelta
