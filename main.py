@@ -9,6 +9,23 @@ import google.generativeai as genai
 from difflib import SequenceMatcher
 from src.config import *
 
+def _parse_article_date(date_str, fallback):
+    """RSS tarihini DD.MM.YYYY formatına çevirir, parse edilemezse bugünün tarihini kullanır"""
+    if not date_str:
+        return fallback.strftime('%d.%m.%Y')
+    for fmt in [
+        '%a, %d %b %Y %H:%M:%S %z',
+        '%a, %d %b %Y %H:%M:%S %Z',
+        '%Y-%m-%dT%H:%M:%S%z',
+        '%Y-%m-%dT%H:%M:%SZ',
+        '%Y-%m-%d',
+    ]:
+        try:
+            return datetime.strptime(date_str[:25], fmt).strftime('%d.%m.%Y')
+        except:
+            pass
+    return fallback.strftime('%d.%m.%Y')
+
 class HaberSistemi:
     def __init__(self):
         self.headers = HEADERS
@@ -307,7 +324,8 @@ class HaberSistemi:
                     txt += f"\n[TAM METİN - {art['word_count']} kelime]\n{art['full_text']}\n"
                 else:
                     txt += f"\n⚠️  Tam metin çekilemedi\n"
-                txt += f"\n(XXXXXXX, AÇIK - {art.get('link','')}, {art.get('domain','')}, {now.strftime('%d.%m.%Y')})\n\n{'='*80}\n\n"
+                art_date = _parse_article_date(art.get('date',''), now)
+                txt += f"\n(XXXXXXX, AÇIK - {art.get('link','')}, {art.get('domain','')}, {art_date})\n\n{'='*80}\n\n"
         
         # HAM RSS - GÜNLÜK (Üzerine Yaz)
         with open("data/haberler_ham.txt", 'w', encoding='utf-8') as f:
