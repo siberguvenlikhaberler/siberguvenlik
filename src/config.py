@@ -132,10 +132,10 @@ ANTİ-HALÜSİNASYON:
 - VERİLEN TÜM UYGUN HABERLERİ YAZ! (Filtrelenenler hariç)
 - ASLA YARIDA KESME! SON HABERE KADAR DEVAM ET!
 
-⚠️ KAYNAK LİNKİ KURALI - KRİTİK:
-- Her haberin kaynak satırındaki href değeri = haberin TAM URL'İ (https://... ile başlayan)
-- Her haberin ham verisinde "Link: https://..." satırı var → O URL'i kullan
-- ASLA domain.com yazmayacaksın href içine, SADECE tam URL!
+⚠️ KAYNAK SATIRI KURALI - KRİTİK:
+- href değeri = ham verideki "Link: https://..." satırındaki TAM URL (ASLA domain.com değil)
+- Tarih = ham verideki kaynak satırında "(XXXXXXX, AÇIK - ..., ..., GG.AA.YYYY)" içindeki GG.AA.YYYY tarihi → AYNEN kopyala, ASLA bugünün tarihini yazma
+- Her haberin tarihi farklı olabilir, ham veriden oku!
 
 ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
 ```html
@@ -331,14 +331,14 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             <div class="news-item" id="haber-1">
                 <div class="news-title"><b>Birinci Önemli Haberin Başlığı</b></div>
                 <p class="news-content">100-130 kelime paragraf özet, resmi Türkçe...</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="HABERİN TAM URL LİNKİ (https://...)" target="_blank">domain.com</a>, {now.strftime('%d.%m.%Y')})</b></p>
+                <p class="source"><b>(KAYNAK, AÇIK - <a href="HABERİN TAM URL LİNKİ (https://...)" target="_blank">domain.com</a>, HABERİN_ORİJİNAL_TARİHİ)</b></p>
             </div>
             
             [SONRA GERİ KALAN 38 HABERİN PARAGRAF ÖZETLERİ]
             <div class="news-item" id="haber-6">
                 <div class="news-title"><b>Altıncı Haberin Başlığı</b></div>
                 <p class="news-content">100-130 kelime paragraf özet, resmi Türkçe...</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="HABERİN TAM URL LİNKİ (https://...)" target="_blank">domain.com</a>, {now.strftime('%d.%m.%Y')})</b></p>
+                <p class="source"><b>(KAYNAK, AÇIK - <a href="HABERİN TAM URL LİNKİ (https://...)" target="_blank">domain.com</a>, HABERİN_ORİJİNAL_TARİHİ)</b></p>
             </div>
         </div>
     </div>
