@@ -307,7 +307,7 @@ class HaberSistemi:
                     txt += f"\n[TAM METİN - {art['word_count']} kelime]\n{art['full_text']}\n"
                 else:
                     txt += f"\n⚠️  Tam metin çekilemedi\n"
-                txt += f"\n(XXXXXXX, AÇIK - {art.get('domain','')}, {now.strftime('%d.%m.%Y')})\n\n{'='*80}\n\n"
+                txt += f"\n(XXXXXXX, AÇIK - {art.get('link','')}, {art.get('domain','')}, {now.strftime('%d.%m.%Y')})\n\n{'='*80}\n\n"
         
         # HAM RSS - GÜNLÜK (Üzerine Yaz)
         with open("data/haberler_ham.txt", 'w', encoding='utf-8') as f:
