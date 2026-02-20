@@ -40,7 +40,7 @@ CONTENT_SELECTORS = {
 }
 
 # Gemini prompt (RESMİ TÜRKÇE) - YENİ GELİŞTİRİLMİŞ VERSİYON
-def get_claude_prompt(news_content):
+def get_claude_prompt(news_content, recent_events=''):
     now = datetime.now()
     return f"""Sen profesyonel siber güvenlik analistisin.
 
@@ -389,6 +389,14 @@ KRİTİK:
 - Kalan haberler → Önem sırasına göre sıralanmış
 - Her habere id="haber-N" ve sayfa içi linkler
 - Filtrelenenler (podcast/webinar/vb) raporda YOK
+
+═══════════════════════════════════════════════════════════
+
+SON 3 GÜNDE RAPORLANAN OLAYLAR (TEKRAR ALMA):
+{recent_events if recent_events else "(Henüz arşiv yok)"}
+
+⛔ Yukarıdaki olaylarla AYNI OLAYI anlatan haberler, farklı kaynak/başlıkla gelse bile ÇIKAR.
+Aynı olay: aynı CVE numarası, aynı şirket/kurum adı + aynı saldırı türü, aynı tehdit aktörü + aynı hedef.
 
 ═══════════════════════════════════════════════════════════
 
