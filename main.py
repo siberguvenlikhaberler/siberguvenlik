@@ -234,9 +234,22 @@ class HaberSistemi:
         
         print(f"⚠️  {len(self.rss_errors)} RSS hatası kaydedildi: {self.rss_errors_file}")
     
+    def _normalize_link(self, link):
+        """Link normalizasyonu - farklı URL formatlarını aynı hale getir"""
+        # go.theregister.com/feed/www.theregister.com/... → theregister.com/...
+        import re
+        link = re.sub(r'^https?://go\.theregister\.com/feed/www\.', 'https://www.', link)
+        # feedproxy.google.com gibi redirect URL'leri temizle
+        link = re.sub(r'^https?://feedproxy\.google\.com/~r/[^/]+/~3/', 'https://', link)
+        # Trailing slash normalize
+        link = link.rstrip('/')
+        return link
+
     def _filter_duplicates(self, all_news):
         """Tekrar eden haberleri filtrele (link + başlık benzerliği)"""
         used_links, used_titles = self._load_used_links()
+        # Normalize edilmiş used_links seti
+        used_links_norm = {self._normalize_link(l) for l in used_links}
         
         filtered = {}
         removed_count = 0
@@ -246,22 +259,14 @@ class HaberSistemi:
             for art in articles:
                 link = art.get('link', '')
                 title = art.get('title', '')
+                link_norm = self._normalize_link(link)
                 
-                # Link kontrolü
-                if link in used_links:
+                # Link kontrolü (hem orijinal hem normalize)
+                if link in used_links or link_norm in used_links_norm:
                     removed_count += 1
                     continue
                 
-                # Başlık benzerliği kontrolü (%80+)
-                is_similar = False
-                for used_link, used_title in used_titles.items():
-                    if self._similarity(title, used_title) >= 0.80:
-                        is_similar = True
-                        removed_count += 1
-                        break
-                
-                if not is_similar:
-                    filtered_articles.append(art)
+                filtered_articles.append(art)
             
             if filtered_articles:
                 filtered[src] = filtered_articles
