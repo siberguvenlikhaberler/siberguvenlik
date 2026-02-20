@@ -87,12 +87,6 @@ Bu 7 kritere göre en kritik 5 haberi seç:
 6️⃣ **YASAL DÜZENLEMELER**
    - Siber güvenlikle ilgili yeni çıkan yasalar, yasal düzenlemeler
 
-7️⃣ **CVSS 9.0+ AÇIKLAR + AKTİF EXPLOIT**
-   - CVE numarası var + "actively exploited", "in the wild"
-   - CVSS 9.0-10.0 arası puanlar
-   - "Zero-day", "0-day" içeren haberler
-
-
 🚨 AŞAMA 3 - YAPILANDIRILMIŞ RAPOR OLUŞTUR:
 
 RAPOR YAPISI (SIRAYLA):
@@ -113,13 +107,16 @@ RAPOR YAPISI (SIRAYLA):
 
 5️⃣ **HABER PARAGRAFLARI (SIRALAMA ÖNEMLİ!)**:
    - ÖNCE: En önemli 5 haberin 100-130 kelime paragraf özetleri (id="haber-1" dan haber-5'e)
-   - SONRA: Geri kalan 38 haberin paragraf özetleri (id="haber-6" dan haber-43'e)
+   - SONRA: Geri kalan TÜM haberlerin paragraf özetleri (id="haber-6"dan son habere kadar)
+   - ⚠️ YARIDA BIRAKMAK YASAK — tabloda kaç haber varsa HEPSININ paragraf özeti olacak
+   - Her news-item için news-content paragrafı ZORUNLUDUR, atlanamaz
 
 KRİTİK KURALLALAR:
-✅ 43 haber toplam (5 önemli + 38 normal)
+✅ Tablodaki haber sayısı = paragraf sayısı (bire bir eşit olmalı)
 ✅ Önemli gelişmelerdeki haberler tekrar etmesin tabloda
-✅ ID numaraları: 1-43 arası sürekli
+✅ ID numaraları: 1'den son habere kadar sürekli
 ✅ Sayfa içi linkler doğru çalışsın
+✅ ASLA eksik paragraf bırakma — her news-item'ın news-content'i dolu olacak
 
 KRİTİK DİL KURALI - RESMİ TÜRKÇE:
 - yapılmıştır, edilmiştir, belirtilmektedir, ifade edilmektedir, tespit edilmiştir
@@ -291,6 +288,33 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         .source a:hover {{
             text-decoration: underline;
         }}
+        
+        /* BAŞA DÖN BUTONU */
+        .back-to-top {{
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }}
+        .back-to-top:hover {{
+            opacity: 1;
+        }}
     </style>
 </head>
 <body>
@@ -344,6 +368,7 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             </div>
         </div>
     </div>
+    <a href="#" class="back-to-top" title="Başa Dön" onclick="window.scrollTo({{top:0,behavior:'smooth'}});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
 </body>
 </html>
 ```
