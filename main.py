@@ -507,17 +507,19 @@ class HaberSistemi:
         html = self._fix_source_dates(html, txt_content)
         
         # Son 30 gün linklerini ekle
-        html = self._add_archive_links(html)
+        # index.html için prefix ./raporlar/, raporlar/X.html için prefix ./
+        html_index = self._add_archive_links(html, is_archive=False)
+        html_archive = self._add_archive_links(html, is_archive=True)
         
         # Kaydet
         os.makedirs("docs/raporlar", exist_ok=True)
         now = datetime.now()
         
         with open("docs/index.html", 'w', encoding='utf-8') as f:
-            f.write(html)
+            f.write(html_index)
         
         with open(f"docs/raporlar/{now.strftime('%Y-%m-%d')}.html", 'w', encoding='utf-8') as f:
-            f.write(html)
+            f.write(html_archive)
         
         print("✅ docs/index.html")
         print(f"✅ docs/raporlar/{now.strftime('%Y-%m-%d')}.html")
@@ -565,7 +567,7 @@ class HaberSistemi:
         print("   ✅ Kaynak tarihleri düzeltildi")
         return fixed_html
     
-    def _add_archive_links(self, html):
+    def _add_archive_links(self, html, is_archive=False):
         """HTML'e son 30 günün linklerini ekle"""
         from datetime import timedelta
         
@@ -585,6 +587,10 @@ class HaberSistemi:
             print("   ℹ️  Henüz arşiv yok (ilk gün)")
             return html
         
+        # index.html → ./raporlar/X.html
+        # raporlar/X.html → ./X.html (aynı klasörde)
+        link_prefix = "./" if is_archive else "./raporlar/"
+        
         # Arşiv linkleri HTML'i
         archive_html = """
     <div class="archive-section">
@@ -592,7 +598,7 @@ class HaberSistemi:
         <div class="archive-links">
 """
         for report in reports:
-            archive_html += f'            <a href="./raporlar/{report["filename"]}.html" class="archive-link">{report["date"]}</a>\n'
+            archive_html += f'            <a href="{link_prefix}{report["filename"]}.html" class="archive-link">{report["date"]}</a>\n'
         
         archive_html += """        </div>
     </div>
