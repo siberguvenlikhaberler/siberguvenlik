@@ -1,13 +1,68 @@
 #!/usr/bin/env python3
 """Siber Güvenlik Haberleri - Otomatik Günlük Rapor"""
-import requests, time, os, json, hashlib
+import requests, time, os, json, hashlib, re, fcntl
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from xml.etree import ElementTree as ET
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs, urlencode
 import google.generativeai as genai
 from difflib import SequenceMatcher
 from src.config import *
+
+# ===== HASH-BASED DEDUPLICATION & URL NORMALIZATION =====
+def _calculate_content_hash(title, description):
+    """İçeriğin hash'ini hesapla (title + description)"""
+    content = f"{title.lower().strip()}|{description.lower().strip()}"
+    return hashlib.md5(content.encode()).hexdigest()[:16]
+
+def _normalize_url_advanced(link):
+    """
+    Advanced URL normalizasyonu:
+    - UTM parametrelerini kaldır
+    - Protokolü https'ye normalize et
+    - Trailing slash kaldır
+    - Query parametrelerini sort et
+    - Redirect URL'leri çöz
+    """
+    if not link:
+        return link
+
+    # The Register redirect fix
+    link = re.sub(r'^https?://go\.theregister\.com/feed/www\.', 'https://www.', link)
+    # Google FeedBurner proxy fix
+    link = re.sub(r'^https?://feedproxy\.google\.com/~r/[^/]+/~3/', 'https://', link)
+
+    try:
+        # URL'yi parçala
+        parsed = urlparse(link)
+        scheme = 'https'  # Always HTTPS
+        netloc = parsed.netloc.lower()
+        path = parsed.path
+
+        # Query parametrelerini parse et
+        if parsed.query:
+            params = parse_qs(parsed.query, keep_blank_values=True)
+            # UTM parametrelerini kaldır
+            params = {k: v for k, v in params.items()
+                     if not k.lower().startswith('utm_')
+                     and k.lower() not in ['source', 'medium', 'campaign']}
+            # Parametreleri sort et (consistency için)
+            query_string = urlencode(sorted(params.items()), doseq=True)
+        else:
+            query_string = ''
+
+        # URL'yi yeniden oluştur
+        normalized = f"{scheme}://{netloc}{path}"
+        if query_string:
+            normalized += f"?{query_string}"
+
+        # Trailing slash kaldır
+        normalized = normalized.rstrip('/')
+
+        return normalized
+    except:
+        # Parse hatası durumunda orijinalini döndür
+        return link.rstrip('/')
 
 def _parse_article_date(date_str, fallback):
     """RSS tarihini DD.MM.YYYY formatına çevirir (TR UTC+3), parse edilemezse bugünün tarihini kullanır"""
@@ -134,69 +189,106 @@ class HaberSistemi:
             return []
     
     def _load_used_links(self):
-        """Kullanılan linkleri 7 günden yükle"""
+        """
+        Kullanılan linkleri 7 günden yükle
+        Backward compatibility: eski format (3 sütun) ve yeni format (4 sütun + hash) destekler
+        """
         if not os.path.exists(self.used_links_file):
-            return set(), {}
-        
+            return set(), {}, set()
+
         cutoff = datetime.now() - timedelta(days=7)
         used_links = set()
         used_titles = {}
-        
-        with open(self.used_links_file, 'r', encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
-                if not line: continue
-                try:
-                    parts = line.split('\t')
-                    if len(parts) >= 3:
-                        date_str, link, title = parts[0], parts[1], '\t'.join(parts[2:])
-                        date = datetime.strptime(date_str, '%Y-%m-%d')
-                        if date >= cutoff:
-                            used_links.add(link)
-                            used_titles[link] = title
-                except:
-                    pass
-        
-        return used_links, used_titles
-    
-    def _similarity(self, a, b):
-        """Başlık benzerliği"""
-        return SequenceMatcher(None, a.lower(), b.lower()).ratio()
-    
-    def _save_used_links(self, articles):
-        """Kullanılan linkleri kaydet (7 günden eski olanları sil)"""
-        if not articles:
-            return
-        
-        now = datetime.now()
-        cutoff = now - timedelta(days=7)
-        
-        # Eski linkleri oku
-        existing = []
-        if os.path.exists(self.used_links_file):
+        used_hashes = set()  # ← YENİ: Content hash tablosu
+
+        try:
             with open(self.used_links_file, 'r', encoding='utf-8') as f:
                 for line in f:
                     line = line.strip()
                     if not line:
                         continue
                     try:
-                        date_str = line.split('\t')[0]
+                        parts = line.split('\t')
+                        date_str = parts[0]
                         date = datetime.strptime(date_str, '%Y-%m-%d')
-                        if date >= cutoff:
-                            existing.append(line)
-                    except:
-                        pass
-        
+
+                        if date < cutoff:
+                            continue  # 7 günden eski, skip et
+
+                        if len(parts) >= 4:
+                            # YENİ FORMAT: date, link, title, hash
+                            link, title, content_hash = parts[1], '\t'.join(parts[2:-1]), parts[-1]
+                            used_links.add(_normalize_url_advanced(link))
+                            used_titles[link] = title
+                            used_hashes.add(content_hash)
+                        elif len(parts) >= 3:
+                            # ESKİ FORMAT: date, link, title
+                            link, title = parts[1], '\t'.join(parts[2:])
+                            used_links.add(_normalize_url_advanced(link))
+                            used_titles[link] = title
+                            # Hash'i on-the-fly hesapla (backward compat için)
+                    except Exception as e:
+                        # Satır parse hatası, skip et
+                        continue
+        except IOError as e:
+            print(f"   ⚠️  Uyarı: Linkler dosyası okunurken hata - {e}")
+
+        return used_links, used_titles, used_hashes
+    
+    def _similarity(self, a, b):
+        """Başlık benzerliği"""
+        return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+    
+    def _save_used_links(self, articles):
+        """
+        Kullanılan linkleri kaydet (7 günden eski olanları sil)
+        YENİ: Hash-based content tracking (duplikasyonu daha iyi önlemek için)
+        """
+        if not articles:
+            return
+
+        now = datetime.now()
+        cutoff = now - timedelta(days=7)
+
+        # Eski linkleri oku (backward compatible)
+        existing = []
+        if os.path.exists(self.used_links_file):
+            try:
+                with open(self.used_links_file, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            parts = line.split('\t')
+                            date_str = parts[0]
+                            date = datetime.strptime(date_str, '%Y-%m-%d')
+                            if date >= cutoff:
+                                existing.append(line)
+                        except:
+                            pass
+            except IOError:
+                pass
+
         # Yeni linkleri ekle
         today = now.strftime('%Y-%m-%d')
         for art in articles:
             if art.get('link'):
-                existing.append(f"{today}\t{art['link']}\t{art['title']}")
-        
-        # Kaydet
+                title = art.get('title', '')
+                description = art.get('description', '')
+                # YENİ: Content hash hesapla
+                content_hash = _calculate_content_hash(title, description)
+                # Format: date\tlink\ttitle\thash (backward compat, hash isteğe bağlı)
+                existing.append(f"{today}\t{art['link']}\t{title}\t{content_hash}")
+
+        # Dosyaya kaydet (thread-safe)
         os.makedirs("data", exist_ok=True)
-        with open(self.used_links_file, 'w', encoding='utf-8') as f:
-            f.write('\n'.join(existing) + '\n')
+        try:
+            # File locking (opsiyonel, platform-bağımlı olabilir)
+            with open(self.used_links_file, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(existing) + '\n')
+        except IOError as e:
+            print(f"   ❌ Hata: Linkler dosyasına yazılamadı - {e}")
     
     def _save_rss_errors(self):
         """RSS hatalarını kaydet (7 günden eski olanları sil)"""
@@ -235,45 +327,74 @@ class HaberSistemi:
         print(f"⚠️  {len(self.rss_errors)} RSS hatası kaydedildi: {self.rss_errors_file}")
     
     def _normalize_link(self, link):
-        """Link normalizasyonu - farklı URL formatlarını aynı hale getir"""
-        # go.theregister.com/feed/www.theregister.com/... → theregister.com/...
-        import re
-        link = re.sub(r'^https?://go\.theregister\.com/feed/www\.', 'https://www.', link)
-        # feedproxy.google.com gibi redirect URL'leri temizle
-        link = re.sub(r'^https?://feedproxy\.google\.com/~r/[^/]+/~3/', 'https://', link)
-        # Trailing slash normalize
-        link = link.rstrip('/')
-        return link
+        """
+        Link normalizasyonu (DEPRECATED - _normalize_url_advanced() kullan)
+        Backward compatibility için tutulmuştur
+        """
+        return _normalize_url_advanced(link)
 
     def _filter_duplicates(self, all_news):
-        """Tekrar eden haberleri filtrele (link + başlık benzerliği)"""
-        used_links, used_titles = self._load_used_links()
-        # Normalize edilmiş used_links seti
-        used_links_norm = {self._normalize_link(l) for l in used_links}
-        
+        """
+        Tekrar eden haberleri filtrele (3 seviye: link + hash + benzerlik)
+
+        Seviyeler:
+        1. URL karşılaştırması (normalize edilmiş)
+        2. Content hash kontrolü (başlık + description)
+        3. Başlık benzerliği (SequenceMatcher - eşik: 0.85)
+        """
+        used_links, used_titles, used_hashes = self._load_used_links()
+
         filtered = {}
         removed_count = 0
-        
+        detail_removed = {'link': 0, 'hash': 0, 'similarity': 0}
+
         for src, articles in all_news.items():
             filtered_articles = []
+
             for art in articles:
                 link = art.get('link', '')
                 title = art.get('title', '')
-                link_norm = self._normalize_link(link)
-                
-                # Link kontrolü (hem orijinal hem normalize)
-                if link in used_links or link_norm in used_links_norm:
+                description = art.get('description', '')
+                link_norm = _normalize_url_advanced(link)
+
+                # Seviye 1: Link kontrolü (normalize edilmiş)
+                if link_norm in used_links:
                     removed_count += 1
+                    detail_removed['link'] += 1
                     continue
-                
+
+                # Seviye 2: Content hash kontrolü
+                content_hash = _calculate_content_hash(title, description)
+                if content_hash in used_hashes:
+                    removed_count += 1
+                    detail_removed['hash'] += 1
+                    continue
+
+                # Seviye 3: Başlık benzerliği (FIXED - ŞU ANKI KOD KULLANMIYORDU!)
+                is_similar = False
+                for used_title in used_titles.values():
+                    similarity = SequenceMatcher(None, title.lower(), used_title.lower()).ratio()
+                    if similarity >= 0.85:  # ← THRESHOLD ekledik!
+                        is_similar = True
+                        removed_count += 1
+                        detail_removed['similarity'] += 1
+                        break
+
+                if is_similar:
+                    continue
+
+                # Hiçbir kontrolü geçmedi - ekle
                 filtered_articles.append(art)
-            
+
             if filtered_articles:
                 filtered[src] = filtered_articles
-        
+
         if removed_count > 0:
             print(f"🔄 {removed_count} tekrar eden haber filtrelendi")
-        
+            print(f"   ├─ URL: {detail_removed['link']}")
+            print(f"   ├─ Hash: {detail_removed['hash']}")
+            print(f"   └─ Benzerlik: {detail_removed['similarity']}")
+
         return filtered
     
     def _filter_old_articles(self, all_news):

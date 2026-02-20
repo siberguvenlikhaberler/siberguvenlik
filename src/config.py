@@ -39,6 +39,50 @@ CONTENT_SELECTORS = {
     'Infoblox Blog': [{'class': 'entry-content'}],
 }
 
+# ===== YENİ: ÖNEM SCORING SİSTEMİ (v2.0) =====
+# Bu ağırlıklar haberleri kategorize etmek için kullanılır
+IMPORTANCE_WEIGHTS = {
+    'infrastructure_attack': {
+        'weight': 100,
+        'description': 'Enerji, sağlık, finans, hükümet altyapısına saldırı',
+        'keywords': ['critical infrastructure', 'power grid', 'hospital', 'healthcare', 'financial', 'government', 'scada', 'industrial control']
+    },
+    'large_breach': {
+        'weight': 80,
+        'description': '5 milyon+ kullanıcı verisi ihlali',
+        'keywords': ['5 million', '10 million', 'million users', 'data breach', 'personal information', 'credit card', 'ssn']
+    },
+    'zero_day_apt': {
+        'weight': 95,
+        'description': 'Zero-day + APT grubu aktivitesi',
+        'keywords': ['zero-day', 'apt28', 'apt29', 'lazarus', 'nation-state', 'previously unknown', 'threat actor', 'advanced persistent']
+    },
+    'national_security': {
+        'weight': 110,
+        'description': 'Ulusal güvenlik / Türkiye',
+        'keywords': ['national security', 'government agencies', 'türkiye', 'nato', 'avrupa birliği', 'gendarmerie', 'moi']
+    },
+    'geopolitical_critical': {
+        'weight': 120,
+        'description': 'Jeopolitik kritik durumlar (siber savaş, ülke çatışması)',
+        'keywords': ['cyber warfare', 'nation-state conflict', 'diplomatic crisis', 'ukraine', 'russia', 'china', 'iran', 'north korea', 'election', 'voting']
+    },
+    'legal_regulation': {
+        'weight': 50,
+        'description': 'Yasal düzenlemeler ve yönetmelikler',
+        'keywords': ['regulation', 'legislation', 'law', 'compliance', 'gdpr', 'kvkk', 'dpa', 'directive', 'act', 'bill']
+    }
+}
+
+# Pattern tanımları (REGEX) - Otomatik kategorizasyon için
+DETECTION_PATTERNS = {
+    'cve': r'CVE-\d{4}-\d{4,5}',
+    'apt_groups': r'\b(APT\d+|Lazarus|Wizard Spider|LockBit|Conti|REvil|DarkSide|Emotet|Conti|Aqua|Scattered)\b',
+    'large_number': r'(\d+)\s*(?:million|M|B)',
+    'sectors': r'\b(healthcare|health|hospital|energy|power|finance|bank|government|military|defense)\b',
+    'countries': r'\b(Ukraine|Russia|China|Iran|Korea|Israel|US|USA|UK|United States)\b',
+}
+
 # Gemini prompt (RESMİ TÜRKÇE) - YENİ GELİŞTİRİLMİŞ VERSİYON
 def get_claude_prompt(news_content, recent_events=''):
     now = datetime.now()
