@@ -1,221 +1,89 @@
 
 ================================================================================
-📅 22 FEBRUARY 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
+📅 23 FEBRUARY 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
-[1] The Hacker News - AI-Assisted Threat Actor Compromises 600+ FortiGate Devices in 55 Countries
+[1] The Hacker News - MuddyWater Targets MENA Organizations with GhostFetch, CHAR, and HTTP_VIP
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 20:19:00 +0530
-Link: https://thehackernews.com/2026/02/ai-assisted-threat-actor-compromises.html
+Tarih: Mon, 23 Feb 2026 12:55:00 +0530
+Link: https://thehackernews.com/2026/02/muddywater-targets-mena-organizations.html
 
-[TAM METİN - 927 kelime]
-A Russian-speaking, financially motivated threat actor has been observed taking advantage of commercial generative artificial intelligence (AI) services to compromise over 600 FortiGate devices located in 55 countries.
+[TAM METİN - 613 kelime]
+The Iranian hacking group known as MuddyWater (aka Earth Vetala, Mango Sandstorm, and MUDDYCOAST) has targeted several organizations and individuals mainly located across the Middle East and North Africa (MENA) region as part of a new campaign codenamed Operation Olalampo.
 
-That's according to new findings from Amazon Threat Intelligence, which said it observed the activity between January 11 and February 18, 2026.
+The activity, first observed on January 26, 2026, has resulted in the deployment of new malware families that share overlapping samples previously identified as used by the threat actor, according to a report published by Group-IB. These include downloaders like GhostFetch and HTTP_VIP, along with a Rust backdoor called CHAR and an advanced implant codenamed GhostBackDoor that's dropped by GhostFetch.
 
-"No exploitation of FortiGate vulnerabilities was observed—instead, this campaign succeeded by exploiting exposed management ports and weak credentials with single-factor authentication, fundamental security gaps that AI helped an unsophisticated actor exploit at scale," CJ Moses, Chief Information Security Officer (CISO) of Amazon Integrated Security, said in a report.
+"These attacks follow similar patterns and align with the killchains previously observed in MuddyWater attacks; starting with a phishing email with a Microsoft Office document attached to it that contains malicious macro code that decodes the embedded payload and drops it on the system and executes it, providing the adversary with remote control of the system," the company said.
 
-The tech giant described the threat actor as having limited technical capabilities, a constraint they overcame by relying on multiple commercial generative AI tools to implement various phases of the attack cycle, such as tool development, attack planning, and command generation.
+One such attack chain employing a malicious Microsoft Excel document prompts users to enable macros in order to activate the infection and ultimately drop CHAR. Another variant of the same attack has been found to lead to the deployment of the GhostFetch downloader, which then downloads GhostBackDoor.
 
-While one AI tool served as the primary backbone of the operation, the attackers also relied on a second AI tool as a fallback to assist with pivoting within a specific compromised network. The names of the AI tools were not disclosed.
+A third version of the attack leverages themes such as flight tickets and reports, in contrast to using lures mimicking an energy and marine services company in the Middle East, to distribute the HTTP_VIP downloader that subsequently deploys the AnyDesk remote desktop software.
 
-The threat actor is assessed to be driven by financial gain and not associated with any advanced persistent threat (APT) with state-sponsored resources. As recently highlighted by Google, generative AI tools are being increasingly adopted by threat actors to scale and accelerate their operations, even if they don't equip them with novel uses of the technology.
+A brief description of the four tools is as follows -
 
-If anything, the emergence of AI tools illustrates how capabilities that were once off-limits to novice or technically challenged threat actors are becoming increasingly feasible, further lowering the barrier to entry for cybercrime and enabling them to come up with attack methodologies.
+GhostFetch, a first-stage downloader that profiles the system, validates mouse movements and checks screen resolution, checks for the presence of debuggers, virtual machine artifacts, and antivirus software, and fetches and executes secondary payloads directly in memory.
 
-"They are likely a financially motivated individual or small group who, through AI augmentation, achieved an operational scale that would have previously required a significantly larger and more skilled team," Moses said.
+GhostBackDoor, a second-stage backdoor delivered by GhostFetch that supports an interactive shell, file read/write, and re-run GhostFetch.
 
-Amazon's investigation into the threat actor's activity has revealed that they have successfully compromised multiple organizations’ Active Directory environments, extracted complete credential databases, and even targeted backup infrastructure, likely in a lead-up to ransomware deployment.
+HTTP_VIP, a native downloader that conducts system reconnaissance, connects to an external server ("codefusiontech[.]org") to authenticate and deploy AnyDesk from the C2 server. A new variant of the malware also adds the ability to retrieve victim information and retrieve instructions to start an interactive shell, download/upload files, capture clipboard contents, and update the sleep/beaconing interval.
 
-What's interesting here is that rather than devising ways to persist within hardened environments or those that had employed sophisticated security controls, the threat actor chose to drop the target altogether and move to a relatively softer victim. This indicates the use of AI as a way to bridge their skill gap for easy pickings.
+CHAR, a Rust backdoor that's controlled by a Telegram bot (whose first name is "Olalampo" and username is "stager_51_bot") to change directory and execute a cmd.exe or PowerShell command.
 
-Amazon said it identified publicly accessible infrastructure managed by the attackers that hosted various artifacts pertinent to the campaign. This included AI-generated attack plans, victim configurations, and source code for custom tooling. The entire modus operandi is akin to an "AI-powered assembly line for cybercrime," the company added.
+The PowerShell command is designed to execute a SOCKS5 reverse proxy or another backdoor named Kalim, upload data stolen from web browsers, and run unknown executables referred to as "sh.exe" and "gshdoc_release_X64_GUI.exe."
 
-At its core, the attacks enabled the threat actor to breach FortiGate appliances, allowing it to extract full device configurations that, in turn, made it possible to glean credentials, network topology information, and device configuration information.
+Group-IB's analysis of CHAR's source code has revealed signs of artificial intelligence (AI)-assisted development owing to the presence of emojis in debug strings, a finding that's consistent with Google's revelations last year that the threat actor is experimenting with generative AI tools to support the development of custom malware to support file transfer and remote execution.
 
-This involved systematic scanning of FortiGate management interfaces exposed to the internet across ports 443, 8443, 10443, and 4443, followed by attempts to authenticate using commonly reused credentials. The activity was sector-agnostic, indicating automated mass scanning for vulnerable appliances. The scans originated from the IP address 212.11.64[.]250.
+Another notable aspect is that CHAR shares a similar structure and development environment as the Rust-based malware BlackBeard (aka Archer RAT and RUSTRIC), which was flagged by CloudSEK and Seqrite Labs as put to use by the threat actor to target various entities in the Middle East.
 
-The stolen data was then used to burrow deeper into targeted networks and conduct post-exploitation activities, including reconnaissance for vulnerability scanning using Nuclei, Active Directory compromise, credential harvesting, and efforts to access backup infrastructure that align with typical ransomware operations.
+MuddyWater has also been observed exploiting recently disclosed vulnerabilities on public-facing servers as a way to obtain initial access to target networks.
 
-Data gathered by Amazon shows that the scanning activity resulted in organizational-level compromise, causing multiple FortiGate devices belonging to the same entity to be accessed. The compromised clusters have been detected across South Asia, Latin America, the Caribbean, West Africa, Northern Europe, and Southeast Asia.
+"The MuddyWater APT group remains an active threat within the META [Middle East, Turkey, and Africa] region, with this operation primarily targeting organizations in the MENA region," Group-IB concluded. "The group's continued adoption of AI technology, combined with continued development of custom malware and tooling and diversified command-and-control (C2) infrastructures, underscores their dedication and intent to expand their operations."
 
-"Following VPN access to victim networks, the threat actor deploys a custom reconnaissance tool, with different versions written in both Go and Python," the company said.
-
-"Analysis of the source code reveals clear indicators of AI-assisted development: redundant comments that merely restate function names, simplistic architecture with disproportionate investment in formatting over functionality, naive JSON parsing via string matching rather than proper deserialization, and compatibility shims for language built-ins with empty documentation stubs."
-
-Some of the other steps undertaken by the threat actor following the reconnaissance phase are listed below -
-
-Achieve domain compromise via DCSync attacks.
-
-Move laterally across the network via pass-the-hash/pass-the-ticket attacks, NTLM relay attacks, and remote command execution on Windows hosts.
-
-Target Veeam Backup & Replication servers to deploy credential harvesting tools and programs aimed at exploiting known Veeam vulnerabilities (e.g., CVE-2023-27532 and CVE-2024-40711).
-
-Another noteworthy finding is the threat actor's pattern of repeatedly running into failures when trying to exploit anything beyond the "most straightforward, automated attack paths," with their own documentation recording that the targets had either patched the services, closed the required ports, or had no vulnerable exploitation vectors.
-
-With Fortinet appliances becoming an attractive target for threat actors, it's essential that organizations ensure management interfaces are not exposed to the internet, change default and common credentials, rotate SSL-VPN user credentials, implement multi-factor authentication for administrative and VPN access, and audit for unauthorized administrative accounts or connections.
-
-It's also essential to isolate backup servers from general network access, ensure all software programs are up-to-date, and monitor for unintended network exposure.
-
-"As we expect this trend to continue in 2026, organizations should anticipate that AI-augmented threat activity will continue to grow in volume from both skilled and unskilled adversaries," Moses said. "Strong defensive fundamentals remain the most effective countermeasure: patch management for perimeter devices, credential hygiene, network segmentation, and robust detection for post-exploitation indicators."
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/ai-assisted-threat-actor-compromises.html, thehackernews.com, 21.02.2026)
+(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/muddywater-targets-mena-organizations.html, thehackernews.com, 23.02.2026)
 
 ================================================================================
 
-[2] The Hacker News - Anthropic Launches Claude Code Security for AI-Powered Vulnerability Scanning
+[2] BleepingComputer - Arkanix Stealer pops up as short-lived AI info-stealer experiment
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 13:28:00 +0530
-Link: https://thehackernews.com/2026/02/anthropic-launches-claude-code-security.html
+Tarih: Sun, 22 Feb 2026 10:33:26 -0500
+Link: https://www.bleepingcomputer.com/news/security/arkanix-stealer-pops-up-as-short-lived-ai-info-stealer-experiment/
 
-[TAM METİN - 351 kelime]
-Artificial intelligence (AI) company Anthropic has begun to roll out a new security feature for Claude Code that can scan a user's software codebase for vulnerabilities and suggest patches.
+[TAM METİN - 534 kelime]
+An information-stealing malware operation named Arkanix Stealer, promoted on multiple dark web forums towards the end of 2025, was likely developed as an AI-assisted experiment.
 
-The capability, called Claude Code Security, is currently available in a limited research preview to Enterprise and Team customers.
+The project included a control panel and a Discord server for communication with users, but the author took them down without notification, just two months after the operation began.
 
-"It scans codebases for security vulnerabilities and suggests targeted software patches for human review, allowing teams to find and fix security issues that traditional methods often miss," the company said in a Friday announcement.
+Arkanix offered many of the standard data-stealing features that cybercriminals are used to, along with a modular architecture and anti-analysis features.
 
-Anthropic said the feature aims to leverage AI as a tool to help find and resolve vulnerabilities to counter attacks where threat actors weaponize the same tools to automate vulnerability discovery.
+Kaspersky researchers analyzed the Arkanix stealer and found clues indicating LLM-assisted development, which "might have drastically reduced development time and costs."
 
-With AI agents increasingly capable of detecting security vulnerabilities that have otherwise escaped human notice, the tech upstart said the same capabilities could be used by adversaries to uncover exploitable weaknesses more quickly than before. Claude Code Security, it added, is designed to counter this kind of AI-enabled attack by giving defenders an advantage and improving the security baseline.
+The researchers believe that Arkanix was a short-lived project for quick financial gains, which makes detection and tracking much more difficult.
 
-Anthropic claimed that Claude Code Security goes beyond static analysis and scanning for known patterns by reasoning the codebase like a human security researcher, as well as understanding how various components interact, tracing data flows throughout the application, and flagging vulnerabilities that may be missed by rule-based tools.
+Arkanix appears online
 
-Each of the identified vulnerabilities is then subjected to what it says is a "multi-stage verification process" where the results are re-analyzed to filter out false positives. The vulnerabilities are also assigned a severity rating to help teams focus on the most important ones.
+Arkanix started being promoted on hacker forums in October 2025, offering two tiers to potential customers: a basic level with a Python-based implementation, and a “premium” one with a native C++ payload using VMProtect protection, integrating AV evasion and wallet injection features.
 
-The final results are displayed to the analyst in the Claude Code Security dashboard, where teams can review the code and the suggested patches and approve them. Anthropic also emphasized that the system's decision-making is driven by a human-in-the-loop (HITL) approach.
+The developer set up a Discord server that acted as a forum for the community around the project to receive updates, provide feedback for proposed features, and receive help.
 
-"Because these issues often involve nuances that are difficult to assess from source code alone, Claude also provides a confidence rating for each finding," Anthropic said. "Nothing is applied without human approval: Claude Code Security identifies problems and suggests solutions, but developers always make the call."
+Also, a referral program was established to promote the project more aggressively, giving referrers an extra free hour of premium access, while potential new customers received one week of free access to the “premium” version.
 
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/anthropic-launches-claude-code-security.html, thehackernews.com, 21.02.2026)
+Data-stealing capabilities
 
-================================================================================
+Additionally, the malware can steal data from Telegram, steal Discord credentials, spread via the Discord API, and send messages to the victim’s friends/channels.
 
-[3] The Hacker News - CISA Adds Two Actively Exploited Roundcube Flaws to KEV Catalog
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 12:51:00 +0530
-Link: https://thehackernews.com/2026/02/cisa-adds-two-actively-exploited.html
+Arkanix also targets credentials for Mullvad, NordVPN, ExpressVPN, and ProtonVPN, and can archive files from the local filesystem to exfiltrate them asynchronously.
 
-[TAM METİN - 227 kelime]
-The U.S. Cybersecurity and Infrastructure Security Agency (CISA) on Friday added two security flaws impacting Roundcube webmail software to its Known Exploited Vulnerabilities (KEV) catalog, citing evidence of active exploitation.
+Additional modules that can be downloaded from the command-and-control include a Chrome grabber, a wallet patcher for Exodus or Atomic, a screenshots tool, HVNC, and stealers for FileZilla and Steam.
 
-The vulnerabilities in question are listed below -
+The “premium” native C++ version adds RDP credential theft, anti-sandbox and anti-debugging checks, WinAPI-powered screen capturing, and also targets Epic Games, Battle.net, Riot, Unreal Engine, Ubisoft Connect, and GOG.
 
-CVE-2025-49113 (CVSS score: 9.9) - A deserialization of untrusted data vulnerability that allows remote code execution by authenticated users because the _from parameter in a URL is not validated in program/actions/settings/upload.php. (Fixed in June 2025)
+The higher-tier variant also delivers the ChromElevator post-exploitation tool, which injects into suspended browser processes for data theft and is designed to bypass Google's App-Bound Encryption (ABE) protection for unauthorized access to user credentials.
 
-CVE-2025-68461 (CVSS score: 7.2) - A cross-site scripting vulnerability via the animate tag in an SVG document. (Fixed in December 2025)
+The purpose of the Arkanix stealer experiment remains unclear. The project may be an attempt to determine how LLM assistance can improve malware development and how quickly new features can be shipped to the community.
 
-Dubai-based cybersecurity company FearsOff, whose founder and CEO, Kirill Firsov, was credited with discovering and reporting CVE-2025-49113, said attackers have already "diffed and weaponized the vulnerability" within 48 hours of public disclosure of the flaw. An exploit for the vulnerability was subsequently made available for sale on June 4, 2025.
+Kaspersky's assessment is that Arkanix is "more of a public software product than a shady stealer."
 
-Firsov also noted that the shortcoming can be triggered reliably on default installations, and that it had been hidden in the codebase for over 10 years.
-
-There are no details on who is behind the exploitation of the two Roundcube flaws. But multiple vulnerabilities in the email software have been weaponized by nation-state threat actors like APT28 and Winter Vivern.
-
-Federal Civilian Executive Branch (FCEB) agencies are to remediate identified vulnerabilities by March 13, 2026, to secure their networks against the active threat.
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/cisa-adds-two-actively-exploited.html, thehackernews.com, 21.02.2026)
-
-================================================================================
-
-[4] The Hacker News - EC-Council Expands AI Certification Portfolio to Strengthen U.S. AI Workforce Readiness and Security
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 10:00:00 +0530
-Link: https://thehackernews.com/2026/02/ec-council-expands-ai-certification.html
-
-[TAM METİN - 800 kelime]
-With $5.5 trillion in global AI risk exposure and 700,000 U.S. workers needing reskilling, four new AI certifications and Certified CISO v4 help close the gap between AI adoption and workforce readiness.
-
-EC-Council, creator of the world-renowned Certified Ethical Hacker (CEH) credential and a global leader in applied cybersecurity education, today launched its Enterprise AI Credential Suite, with four new role-based AI certifications debuting alongside Certified CISO v4, an overhauled executive cyber leadership program. The dual launch is the largest single expansion of EC-Council’s portfolio in its 25-year history. It addresses a structural gap that no single tool, platform, or policy can solve alone: AI is scaling faster than the workforce trained to run, secure, and govern it.
-
-The launch aligns with U.S. priorities on workforce development and applied AI education outlined in Executive Order 14179, the July 2025 AI Action Plan’s workforce development pillar, and Executive Orders 14277 and 14278, which emphasize expanding AI education pathways and building job-relevant skills across professional and skilled-trade roles, at a time when organizations are moving AI from pilot projects into everyday operations and decision-making.
-
-That urgency is visible in both economic exposure and workforce capacity. IDC estimates that unmanaged AI risk could reach $5.5 trillion globally, while Bain & Company projects a 700,000-person AI and cybersecurity reskilling gap in the United States. The International Monetary Fund (IMF) and the World Economic Forum (WEF) have also pointed to workforce readiness, rather than access to technology, as a primary constraint on AI-driven productivity and growth, especially as adoption accelerates across sectors.
-
-Security pressure is rising in parallel with adoption. Eighty-seven percent of organizations report AI-driven attacks, and generative AI traffic has surged by 890 percent, expanding attack surfaces that many teams are still learning how to defend, while AI capability remains concentrated, with 67 percent of AI talent located in just 15 U.S. cities and women representing only 28 percent of the AI workforce, highlighting persistent access and participation gaps as demand increases.
-
-“AI is moving from experimentation to infrastructure, and the workforce has to move with it,” said Jay Bavisi, Group President, EC-Council. “These programs are built to give professionals practical capability across adoption, security, and governance, so organizations can scale AI with confidence and clear accountability.”
-
-Role-Aligned Certifications
-
-The Enterprise AI Credential Suite is structured to mirror how AI capability is developed in practice. Artificial Intelligence Essentials (AIE) serves as the baseline, building practical AI fluency and responsible usage across roles, and it is supported by EC-Council’s proprietary Adopt. Defend. Govern. (ADG) framework, which defines how AI should be operationalized at scale in real environments.
-
-Adopt: Prepare teams to deploy AI deliberately, with readiness and safeguards
-
-Defend: Secure AI systems against threats such as prompt injection, data poisoning, model exploitation, and AI supply-chain compromise
-
-Govern: Embed accountability, oversight, and risk management into AI systems from the outset
-
-Within this structure, the four new certifications align directly to specific workforce needs across the AI lifecycle.
-
-Artificial Intelligence Essentials (AIE) builds foundational AI literacy.
-
-Certified AI Program Manager (CAIPM) equips to translate AI strategy into execution, aligning teams, governance, and delivery to drive measurable ROI and enterprise-scale intelligence.
-
-Certified Offensive AI Security Professional (COASP) builds elite capabilities to test vulnerabilities in LLMs, simulate exploits, and secure AI infrastructure hardening enterprises against emerging threats.
-
-Certified Responsible AI Governance & Ethics (CRAGE) credential focuses on Responsible AI, Governance and Ethics at enterprise scale with NIST/ISO compliance.
-
-Alongside the new AI certifications, Certified CISO v4 updates executive cyber leadership education for AI-driven risk environments, strengthening leadership readiness as intelligent systems become part of core business operations and security decision-making.
-
-“Security leaders are now accountable for systems that learn, adapt, and influence outcomes at speed,” Bavisi added. “Certified CISO v4 prepares leaders to manage AI-driven risk with clarity, strengthen governance, and make informed decisions when responsibility is on the line.”
-
-The portfolio also builds on EC-Council’s long-standing work with government and defense organizations, including its existing DoD 8140 baseline certification recognition, as AI security and workforce readiness take on greater national importance.
-
-To explore the full range of training and certification opportunities, visit the EC-Council AI Courses library.
-
-EC-Council is the creator of the Certified Ethical Hacker (CEH) program and a leader in cybersecurity education. Founded in 2001, EC-Council’s mission is to provide high-quality training and certifications for cybersecurity professionals to keep organizations safe from cyber threats. EC-Council offers over 200 certifications and degrees in various cybersecurity domains, including forensics, security analysis, threat intelligence, and information security.
-
-An ISO/IEC 17024 accredited organization, EC-Council has certified over 350,000 professionals worldwide, with clients ranging from government agencies to Fortune 100 companies. EC-Council is the gold standard in cybersecurity certification, trusted by the U.S. Department of Defense, the Army, Navy, Air Force, and leading global corporations.
-
-For more information, visit: www.eccouncil.org
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/ec-council-expands-ai-certification.html, thehackernews.com, 21.02.2026)
-
-================================================================================
-
-[5] BleepingComputer - Predator spyware hooks iOS SpringBoard to hide mic, camera activity
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 11:13:24 -0500
-Link: https://www.bleepingcomputer.com/news/security/predator-spyware-hooks-ios-springboard-to-hide-mic-camera-activity/
-
-[TAM METİN - 554 kelime]
-Intellexa’s Predator spyware can hide iOS recording indicators while secretly streaming camera and microphone feeds to its operators.
-
-The malware does not exploit any iOS vulnerability but leverages previously obtained kernel-level access to hijack system indicators that would otherwise expose its surveillance operation.
-
-Apple introduced recording indicators on the status bar in iOS 14 to alert users when the camera or microphone is in use, displaying a green or an orange dot, respectively.
-
-US-sanctioned surveillance firm Intellexa developed the Predator commercial spyware and delivered it in attacks that exploited Apple and Chrome zero-day flaws and through 0-click infection mechanisms.
-
-While its ability to suppress camera and microphone activity indicators is well known, it was unclear how the mechanism worked.
-
-How Predator hides recording
-
-Researchers at mobile device management company Jamf analyzed Predator samples and documented the process of hiding the privacy-related indicators.
-
-According to Jamf, Predator hides all recording indicators on iOS 14 by using a single hook function (‘HiddenDot::setupHook()’) inside SpringBoard, invoking the method whenever sensor activity changes (upon camera or microphone activation).
-
-By intercepting it, Predator prevents sensor activity updates from ever reaching the UI layer, so the green or red dot never lights up.
-
-“The target method _handleNewDomainData: is called by iOS whenever sensor activity changes - camera turns on, microphone activates, etc.,” Jamf researchers explain.
-
-“By hooking this single method, Predator intercepts ALL sensor status updates before they reach the indicator display system.”
-
-The hook works by nullifying the object responsible for sensor updates (SBSensorActivityDataProvider in SpringBoard). In Objective-C, calls to a null object are silently ignored, so SpringBoard never processes the camera or microphone activation, and no indicator appears.
-
-Because SBSensorActivityDataProvider aggregates all sensor activity, this single hook disables both the camera and the microphone indicators.
-
-The researchers also found “dead code” that attempted to hook ‘SBRecordingIndicatorManager’ directly. However, it doesn’t execute, and is likely an earlier development path that was abandoned in favor of the better approach that intercepts sensor data upstream.
-
-In the case of VoIP recordings, which Predator also supports, the module responsible lacks an indicator-suppression mechanism, so it relies on the HiddenDot function for stealth.
-
-Jamf further explains that camera access is enabled through a separate module that locates internal camera functions using ARM64 instruction pattern matching and Pointer Authentication Code (PAC) redirection to bypass camera permission checks.
-
-Without indicators lighting up on the status bar, the spyware activity remains completely hidden to the regular user.
-
-Jamf notes that technical analysis reveals the signs of the malicious processes, such as unexpected memory mappings or exception ports in SpringBoard and mediaserverd, breakpoint-based hooks, and audio files written by mediaserverd to unusual paths.
-
-BleepingComputer has contacted Apple with a request for a comment on Jamf’s findings, but the company never responded.
+The researchers provide a comprehensive list of indicators of compromise (IoCs) that include hashes for detected files, along with domains and IP addresses.
 
 The future of IT infrastructure is here
 
@@ -223,235 +91,371 @@ Modern IT infrastructure moves faster than manual workflows can handle.
 
 In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
 
-ZeroDayRAT malware grants full access to Android, iOS devices
+Infostealer malware found stealing OpenClaw secrets for first time
 
-Ransomware gang uses ISPsystem VMs for stealthy payload delivery
+Malicious MoltBot skills used to push password-stealing malware
 
-New Apple privacy feature limits location tracking on iPhones, iPads
+StealC hackers hacked as researchers hijack malware control panels
 
-New WhatsApp lockdown feature protects high-risk users from hackers
+New GlassWorm attack targets macOS via compromised OpenVSX extensions
 
-Microsoft: Outlook for iOS crashes, freezes due to coding error
+New ClickFix attacks abuse Windows App-V scripts to push malware
 
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/predator-spyware-hooks-ios-springboard-to-hide-mic-camera-activity/, bleepingcomputer.com, 21.02.2026)
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/arkanix-stealer-pops-up-as-short-lived-ai-info-stealer-experiment/, bleepingcomputer.com, 22.02.2026)
 
 ================================================================================
 
-[6] BleepingComputer - Amazon: AI-assisted hacker breached 600 Fortinet firewalls in 5 weeks
+[3] Security Affairs - Anthropic unveils Claude Code Security to detect and fix code bugs
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 08:50:58 -0500
-Link: https://www.bleepingcomputer.com/news/security/amazon-ai-assisted-hacker-breached-600-fortigate-firewalls-in-5-weeks/
+Tarih: Mon, 23 Feb 2026 00:11:55 +0000
+Link: https://securityaffairs.com/188358/ai/anthropic-unveils-claude-code-security-to-detect-and-fix-code-bugs.html
 
-[TAM METİN - 1369 kelime]
-Article updated at the bottom with additional technical details about this campaign.
+[TAM METİN - 411 kelime]
+Anthropic has introduced Claude Code Security, a new AI-powered service designed to scan software codebases for vulnerabilities and recommend fixes. Built into Claude Code, the tool aims to help teams detect and remediate security flaws faster. The capability is currently being rolled out in a limited research preview for Enterprise and Team customers.
 
-Amazon is warning that a Russian-speaking hacker used multiple generative AI services as part of a campaign that breached more than 600 FortiGate firewalls across 55 countries in five weeks.
+“Claude Code Security, a new capability built into Claude Code on the web, is now available in a limited research preview. It scans codebases for security vulnerabilities and suggests targeted software patches for human review, allowing teams to find and fix security issues that traditional methods often miss.” reads the announcement published by Anthropic.
 
-A new report by CJ Moses, CISO of Amazon Integrated Security, says that the hacking campaign occurred between January 11 and February 18, 2026, and did not rely on any exploits to breach Fortinet firewalls.
+Claude Code Security is designed to discover complex, high-severity software vulnerabilities. Unlike traditional rule-based scanners, it analyzes code like a human researcher, focusing on data flows, understanding component interactions, and catching issues others miss. Each finding undergoes multi-stage verification, is assigned a severity and confidence rating, and appears in a dashboard for human review.
 
-Instead, the threat actor targeted exposed management interfaces and weak credentials that lacked MFA protection, then used AI to help automate access to other devices on the breached network.
+“Every finding goes through a multi-stage verification process before it reaches an analyst. Claude re-examines each result, attempting to prove or disprove its own findings and filter out false positives.” continues the announcement. “Findings are also assigned severity ratings so teams can focus on the most important fixes first.”
 
-Moses says the compromised firewalls were observed across South Asia, Latin America, the Caribbean, West Africa, Northern Europe, and Southeast Asia, among other regions.
+Currently in limited research preview for Enterprise, Team, and open-source maintainers, it empowers defenders while ensuring responsible deployment.
 
-An AI-powered hacking campaign
+Claude Code Security leverages over a year of research into Claude’s cybersecurity skills. Tested in Capture-the-Flag events and in partnership with Pacific Northwest National Laboratory, Claude has been refined to detect and patch real vulnerabilities. Using Claude Opus 4.6, the team discovered 500+ long-undetected bugs in open-source projects. Now, Claude Code Security brings these defensive capabilities to Enterprise, Team, and open-source maintainers, letting teams review findings and iterate on fixes directly within familiar tools.
 
-Amazon says it learned about the campaign after finding a server hosting malicious tools used to target Fortinet FortiGate firewalls.
+“This is a pivotal time for cybersecurity. We expect that a significant share of the world’s code will be scanned by AI in the near future, given how effective models have become at finding long-hidden bugs and security issues.” concludes Anthropic. “Attackers will use AI to find exploitable weaknesses faster than ever. But defenders who move quickly can find those same weaknesses, patch them, and reduce the risk of an attack.”
 
-As part of the campaign, the threat actor targeted FortiGate management interfaces exposed to the internet by scanning for services running on ports 443, 8443, 10443, and 4443. The targeting was reportedly opportunistic rather than against any specific industries.
-
-Rather than exploiting zero-days, as we commonly see targeting FortiGate devices, the actor used brute-force attacks with common passwords to gain access to devices.
-
-Once breached, the threat actor extracted the device's configuration settings, which include:
-
-SSL-VPN user credentials with recoverable passwords
-
-Administrative credentials
-
-Firewall policies and internal network architecture
-
-IPsec VPN configurations
-
-Network topology and routing information
-
-These configuration files were then parsed and decrypted using what appears to be AI-assisted Python and Go tools.
-
-"Following VPN access to victim networks, the threat actor deploys a custom reconnaissance tool, with different versions written in both Go and Python," explained Amazon.
-
-"Analysis of the source code reveals clear indicators of AI-assisted development: redundant comments that merely restate function names, simplistic architecture with disproportionate investment in formatting over functionality, naive JSON parsing via string matching rather than proper deserialization, and compatibility shims for language built-ins with empty documentation stubs."
-
-"While functional for the threat actor's specific use case, the tooling lacks robustness and fails under edge cases—characteristics typical of AI-generated code used without significant refinement."
-
-These tools were used to automate reconnaissance on the breached networks by analyzing routing tables, classifying networks by size, running port scans using the open-source gogo scanner, identifying SMB hosts and domain controllers, and using Nuclei to look for HTTP services.
-
-The researchers say that while the tools were functional, they commonly failed in more hardened environments.
-
-Operational documentation written in Russian detailed how to use Meterpreter and mimikatz to conduct DCSync attacks against Windows domain controllers and extract NTLM password hashes from the Active Directory database.
-
-The campaign also specifically targeted Veeam Backup & Replication servers using custom PowerShell scripts, compiled credential-extraction tools, and attempted to exploit Veeam vulnerabilities.
-
-On one of the servers found by Amazon (212[.]11.64.250), the threat actor hosted a PowerShell script named "DecryptVeeamPasswords.ps1" that was used to target the backup application.
-
-As Amazon explains, threat actors often target backup infrastructure before deploying ransomware to prevent the restoration of encrypted files from backups.
-
-The threat actors' "operational notes" also contained multiple references to trying to exploit various vulnerabilities, including CVE-2019-7192 (QNAP RCE), CVE-2023-27532 (Veeam information disclosure), and CVE-2024-40711 (Veeam RCE).
-
-The report says that the attacker repeatedly failed when attempting to breach patched or locked-down systems, but instead of continuing to try to gain access, they moved on to easier targets.
-
-While Amazon believes the threat actor has a low-to-medium skill set, that skill set was greatly amplified through the use of AI.
-
-The researchers say the threat actor utilized at least two large language model providers throughout the campaign to:
-
-Generate step-by-step attack methodologies
-
-Develop custom scripts in multiple programming languages
-
-Create reconnaissance frameworks
-
-Plan lateral movement strategies
-
-Draft operational documentation
-
-In one instance, the actor reportedly submitted a full internal victim network topology, including IP addresses, hostnames, credentials, and known services, to an AI service and asked for help spreading further into the network.
-
-Amazon says the campaign demonstrates how commercial AI services are lowering the barrier to entry for threat actors, enabling them to carry out attacks that would normally be outside their skill set.
-
-The company recommends that FortiGate admins not expose management interfaces to the internet, ensure MFA is enabled, ensure VPN passwords are not the same as those for Active Directory accounts, and harden backup infrastructure.
-
-Google recently reported that threat actors are abusing Gemini AI across all stages of cyberattacks, mirroring what Amazon observed in this campaign.
-
-Custom AI toolset powers breaches
-
-Separate research published yesterday on the Cyber and Ramen security blog provides additional technical details about how AI and large language models were incorporated directly into the intrusion campaign.
-
-The researcher shared that the misconfigured server at 212.11.64[.]250, also found by Amazon, exposed 1,402 files, including stolen FortiGate configuration backups, Active Directory mapping data, credential dumps, vulnerability assessments, and attack planning documents.
-
-"The server at 212.11.64[.]250:9999, hosted on AS4264 (Global-Data System IT Corporation, Zurich, Switzerland), contained 1,402 files across 139 subdirectories," explained the threat researcher.
-
-"Folders within the directory included CVE exploit code, FortiGate configuration files, Nuclei scanning templates and Veeam credential extraction tools. Two folders named claude-0 and claude contained over 200 files between the two, including Claude Code task outputs, session diffs, and cached prompt states."
-
-"A folder titled fortigate_27.123(full IP redacted) held configuration data and credentials from what appeared to be a compromised FortiGate appliance."
-
-Included in the exposed files was a custom Model Context Protocol (MCP) server named ARXON, which acted as a bridge between reconnaissance data and commercial large language models. The researcher said they were unable to find any public references to ARXON, indicating it was likely a custom MCP framework created by the threat actor.
-
-An MCP server acts as an intermediary layer that ingests data, feeds it into language models, and then uses the generated output with other tools. In this campaign, the ingested data was used to automate post-compromise analysis and attack planning.
-
-A separate Go tool called CHECKER2 is a Docker-based orchestrator that was used to scan thousands of VPN targets in parallel, with logs showing more than 2,500 potential targets across 100+ countries.
-
-According to the researcher, reconnaissance data collected from compromised FortiGate appliances and internal networks was fed into ARXON, which then queried large language models such as DeepSeek and Claude to generate structured attack plans.
-
-These attack plans included instructions for gaining Domain Admin, suggested locations to search for credentials, recommended exploitation steps, and guidance on spreading laterally to other devices.
-
-In some cases, Claude Code was configured to execute offensive tools on its own, including Impacket scripts, Metasploit modules, and hashcat, without requiring the threat actor to approve each command.
-
-The researcher notes that the operation evolved over several weeks, with the attacker initially using an open-source HexStrike MCP framework and, about eight weeks later, moving to the automated, customized ARXON system.
-
-This report shares Amazon's assessment that generative AI is being used as a multiplier, allowing attackers to scale intrusions more efficiently. The researcher similarly warns that defenders should prioritize patching edge devices and auditing unusual SSH activity and VPN account creation.
-
-CronUp security researcher Germán Fernández also found a different server exposing a directory containing what appear to be AI-generated tools targeting FortiWeb.
-
-While these tools do not appear to be part of the FortiGate campaign, they once again show how threat actors are continuing to use AI tools to power their attacks.
-
-Update 2/21/26: Added more technical details from Cyber and Ramen security blog and Germán Fernández.
-
-The future of IT infrastructure is here
-
-Modern IT infrastructure moves faster than manual workflows can handle.
-
-In this new Tines guide, learn how your team can reduce hidden manual delays, improve reliability through automated response, and build and scale intelligent workflows on top of tools you already use.
-
-Hackers breach Fortinet FortiGate devices, steal firewall configs
-
-Fortinet admins report patched FortiGate firewalls getting hacked
-
-Over 10K Fortinet firewalls exposed to actively exploited 2FA bypass
-
-Fortinet warns of 5-year-old FortiOS 2FA bypass still exploited in attacks
-
-Microsoft says bug causes Copilot to summarize confidential emails
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/amazon-ai-assisted-hacker-breached-600-fortigate-firewalls-in-5-weeks/, bleepingcomputer.com, 21.02.2026)
-
-================================================================================
-
-[7] Security Affairs - U.S. CISA adds RoundCube Webmail flaws to its Known Exploited Vulnerabilities catalog
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 11:19:44 +0000
-Link: https://securityaffairs.com/188324/security/u-s-cisa-adds-roundcube-webmail-flaws-to-its-known-exploited-vulnerabilities-catalog.html
-
-[TAM METİN - 336 kelime]
-The U.S. Cybersecurity and Infrastructure Security Agency (CISA) added two RoundCube Webmail flaws to its Known Exploited Vulnerabilities (KEV) catalog.
-
-Roundcube is a popular webmail platform and has been repeatedly targeted by advanced threat groups like APT28 and Winter Vivern. In the past, attackers exploited these vulnerabilities to steal login credentials and spy on sensitive communications. These campaigns show how unpatched systems remain a serious risk, especially for high-value targets.
-
-The critical flaw CVE-2025-49113 is a deserialization of untrusted data vulnerability. The flaw went unnoticed for over a decade, an attacker can exploit it to take control of affected systems and run malicious code, putting users and organizations at significant risk. Kirill Firsov, founder and CEO of FearsOff, discovered the vulnerability.
-
-“Roundcube Webmail before 1.5.10 and 1.6.x before 1.6.11 allows remote code execution by authenticated users because the _from parameter in a URL is not validated in program/actions/settings/upload.php, leading to PHP Object Deserialization.” reads the advisory published by NIST.
-
-The vulnerability has been addressed in 1.6.11 and 1.5.10 LTS.
-
-At the time of the discovery, Firsov estimated that the flaw was impacting over 53 million hosts (and tools like cPanel, Plesk, ISPConfig, DirectAdmin, etc.),
-
-Researchers at Positive Technologies announced they have reproduced CVE-2025-49113 in Roundcube. The experts urge users to update to the latest version of Roundcube immediately.
-
-The second flaw, tracked as CVE-2025-68461, added to the Kev catalog is a cross-site scripting vulnerability.
-
-“Roundcube Webmail before 1.5.12 and 1.6 before 1.6.12 is prone to a Cross-Site-Scripting (XSS) vulnerability via the animate tag in an SVG document.” reads the advisory.
-
-According to Binding Operational Directive (BOD) 22-01: Reducing the Significant Risk of Known Exploited Vulnerabilities, FCEB agencies have to address the identified vulnerabilities by the due date to protect their networks against attacks exploiting the flaws in the catalog.
-
-Experts also recommend that private organizations review the Catalog and address the vulnerabilities in their infrastructure.
-
-CISA orders federal agencies to fix the vulnerabilities by March 10, 2026.
+Anthropic is launching a limited research preview of Claude Code Security for Enterprise and Team customers, with early access and collaboration. Open-source maintainers can apply for free, expedited access.
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(XXXXXXX, AÇIK - https://securityaffairs.com/188324/security/u-s-cisa-adds-roundcube-webmail-flaws-to-its-known-exploited-vulnerabilities-catalog.html, securityaffairs.com, 21.02.2026)
+(XXXXXXX, AÇIK - https://securityaffairs.com/188358/ai/anthropic-unveils-claude-code-security-to-detect-and-fix-code-bugs.html, securityaffairs.com, 23.02.2026)
 
 ================================================================================
 
-[8] TechCrunch Security - Wikipedia blacklists Archive.today after alleged DDoS attack
+[4] Security Affairs - Luxury hotel stays for just €0.01. Spanish police arrest hacker
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 20:20:15 +0000
-Link: https://techcrunch.com/2026/02/21/wikipedia-blacklists-archive-today-after-alleged-ddos-attack/
+Tarih: Sun, 22 Feb 2026 19:43:01 +0000
+Link: https://securityaffairs.com/188344/cyber-crime/luxury-hotel-stays-for-just-e0-01-spanish-police-arrest-hacker.html
 
-[TAM METİN - 949 kelime]
-Wikipedia editors have decided to remove all links to Archive.today, a web archiving service that they said has been linked to more than 695,000 times across the online encyclopedia.
+[TAM METİN - 311 kelime]
+Spanish police arrested a 20-year-old man in Madrid after allegedly manipulating the online payment system of a travel and hotel booking website to secure luxury hotel stays for just €0.01 per reservation. The scheme allowed him to book rooms costing up to €1,000 per night, causing more than €20,000 in losses to one hotel alone.
 
-Archive.today — which also operates under several other domain names, including archive.is and archive.ph — is perhaps most widely used to access content that’s otherwise inaccessible behind paywalls. That also makes it useful as a source for Wikipedia citations.
+“He manipulated the online payment system and obtained reservations at high -end hotels , costing up to 1,000 euros per night, for minimal prices” reads the press release published by the Spanish National Police.
 
-However, according to the Wikipedia discussion page about this topic, “There is consensus to immediately deprecate archive.today, and, as soon as practicable, add it to the spam blacklist […] and to forthwith remove all links to it.” (Ars Technica first reported on the decision.)
+The investigation began on February 2 after a travel agency reported suspicious bookings on its website. Investigators found the suspect had sabotaged the integrated payment gateway, selecting a well-known international payment platform and launching a tailored cyberattack to alter the transaction validation process.
 
-The discussion page says that Archive.today was previously blacklisted in 2013, only to be removed from the blacklist in 2016.
+“The cybercriminal sabotaged the payment gateway system integrated into a hotel booking website. To do this, he selected the payment option through a well-known international electronic payment platform and, using a specifically designed cyberattack, altered the transaction validation process, causing the system to authorize the operation after entering only one cent.” continues the press release.
 
-Why reverse course again? Because, the discussion page says, “Wikipedia should not direct its readers towards a website that hijacks users’ computers to run a DDoS attack.” Plus, “evidence has been presented that archive.today’s operators have altered the content of archived pages, rendering it unreliable.”
+The system approved reservations as fully paid, while only one cent per booking was actually transferred. The fraud surfaced days later when the company received the minimal payments, revealing losses of about €20,000 in what police say is a previously unseen modus operandi.
 
-The distributed denial of service (DDoS) attack in question was allegedly directed at blogger Jani Patokallio. Patokallio wrote that beginning on January 11, users who loaded the archive’s CAPTCHA page have been unknowingly loading and executing JavaScript that sends a search request to his Gyrovague blog, in an apparent attempt to get Patokallio’s attention and increase his hosting bill.
+After a detailed technical analysis, the police identified the suspect within just four days and arrested him while he was staying at a luxury hotel in Madrid. He had allegedly booked four nights at €1,000 per night and even consumed minibar items, leaving unpaid charges at some hotels. He was brought before judicial authorities on suspicion of computer fraud, and the investigation is still ongoing.
 
-Back in 2023, Patokallio published a blog post examining Archive.today, whose ownership he described as “an opaque mystery.” And while he wasn’t able to track down a specific owner, he concluded the site was likely “a one-person labor of love, operated by a Russian of considerable talent and access to Europe.”
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, luxury hotel payment hack)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188344/cyber-crime/luxury-hotel-stays-for-just-e0-01-spanish-police-arrest-hacker.html, securityaffairs.com, 22.02.2026)
+
+================================================================================
+
+[5] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 85
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 22 Feb 2026 14:29:12 +0000
+Link: https://securityaffairs.com/188337/malware/security-affairs-malware-newsletter-round-85.html
+
+[TAM METİN - 164 kelime]
+Ghost Tapped: Tracking the Rise of Chinese Tap-to-pay Android Malware
+
+Hudson Rock Identifies Real-World Infostealer Infection Targeting OpenClaw Configurations
+
+Divide and conquer: how the new Keenadu backdoor exposed links between major Android botnets
+
+PromptSpy ushers in the era of Android threats using GenAI
+
+Android.Phantom Trojans infiltrate smartphones through games and pirated mods of popular apps. They use machine learning and video streams to manipulate clicks
+
+MIMICRAT: ClickFix Campaign Delivers Custom RAT via Compromised Legitimate Websites
+
+Increase in Malware Enabled ATM Jackpotting Incidents Across United States
+
+NFCShare Android Trojan: NFC card data theft via malicious APK
+
+From BRICKSTORM to GRIMBOLT: UNC6201 Exploiting a Dell RecoverPoint for Virtual Machines Zero-Day
+
+SmartLoader Clones Oura Ring MCP to Deploy Supply Chain Attack
+
+Journalism under attack: Predator spyware in Angola
+
+Image-Based Malware Classification Using DCGAN-Augmented Data and a CNN–Transformer Hybrid Model
+
+A Unified Evaluation of Learning-Based Similarity Techniques for Malware DetectionLoRA-based Parameter-Efficient LLMs for Continuous Learning in Edge-based Malware Detection
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188337/malware/security-affairs-malware-newsletter-round-85.html, securityaffairs.com, 22.02.2026)
+
+================================================================================
+
+[6] Security Affairs - Security Affairs newsletter Round 564 by Pierluigi Paganini – INTERNATIONAL EDITION
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 22 Feb 2026 14:14:08 +0000
+Link: https://securityaffairs.com/188332/breaking-news/security-affairs-newsletter-round-564-by-pierluigi-paganini-international-edition.html
+
+[TAM METİN - 452 kelime]
+Enjoy a new round of the weekly SecurityAffairs newsletter, including the international press.
+
+Snail mail letters target Trezor and Ledger users in crypto-theft attacks
+
+Canada Goose investigating as hackers leak 600K customer records
+
+A 47-year-old man associated with the Phobos group was detained by CBZC police officers
+
+Operation DoppelBrand: Massive Fortune 500 Brand Impersonation Campaign Uncovered
+
+SmartLoader Clones Oura Ring MCP to Deploy Supply Chain Attack
+
+Crypto is playing a growing role in human trafficking networks, report shows
+
+Hacking conference Def Con bans three people linked to Epstein
+
+Major operation in Africa targeting online scams nets 651 arrests, recovers USD 4.3 million
+
+Increase in Malware Enabled ATM Jackpotting Incidents Across United States
+
+Inside Southeast Asia’s industrialised fraud factories
+
+Ukrainian National Sentenced in ‘Laptop Farm’ Scheme That Generated Income for North Korean IT Workers
+
+Ghost Tapped: Tracking the Rise of Chinese Tap-to-pay Android Malware
+
+PromptSpy ushers in the era of Android threats using GenAI
+
+Android.Phantom Trojans infiltrate smartphones through games and pirated mods of popular apps. They use machine learning and video streams to manipulate clicks
+
+NFCShare Android Trojan: NFC card data theft via malicious APK
+
+New Chrome Zero-Day (CVE-2026-2441) Under Active Attack — Patch Released
+
+Hacking a pharmacy to get free prescription drugs and more
+
+Manipulating AI memory for profit: The rise of AI Recommendation Poisoning
+
+Four Vulnerabilities Expose a Massive Security Blind Spot in IDE Extensions
+
+Notepad++ Fixes Hijacked Update Mechanism Used to Deliver Targeted Malware
+
+Hacker accessed data from 1.2 million bank accounts, French Economy Ministry says
+
+Hackers Expose Age-Verification Software Powering Surveillance Web
+
+German Rail Giant Deutsche Bahn Hit by Large-Scale DDoS Attack
+
+Starlink restrictions hit Russian forces as Moscow seeks workarounds
+
+From BRICKSTORM to GRIMBOLT: UNC6201 Exploiting a Dell RecoverPoint for Virtual Machines Zero-Day
+
+Journalism under attack: Predator spyware in Angola
+
+A Chinese hack exposes data of 5,000 Italian counterterrorism officers
+
+the watchers: how openai, the US government, and persona built an identity surveillance machine that files reports on you to the feds
+
+Space emerges as new front in great power competition, officials warn
+
+Dior, Louis Vuitton, Tiffany Fined $25 Million in South Korea After Data Breaches
+
+Giving OpenClaw The Keys to Your Kingdom? Read This First
+
+iOS 26.4 beta adds support for testing end-to-end encrypted RCS messaging
+
+Ireland joins regulator smackdown after X’s Grok AI accused of undressing people
+
+Data Protection Commission opens investigation into X (XIUC)
+
+Grok floods X with sexualized images of women and children
+
+Critical infra Honeywell CCTVs vulnerable to auth bypass flaw
+
+Fake Videos, Real Emotions: Viewers Believe AI-Generated Content Even When It’s Labeled
+
+Moltbook, the Social Network for AI Agents, Exposed Real Humans’ Data
+
+PayPal Confirms Data Breach — Money Stolen, Passwords Reset
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188332/breaking-news/security-affairs-newsletter-round-564-by-pierluigi-paganini-international-edition.html, securityaffairs.com, 22.02.2026)
+
+================================================================================
+
+[7] The Register - Attacker gets into France's database listing all bank accounts, makes off with 1.2 million records
+────────────────────────────────────────────────────────────────────────────────
+Tarih: 2026-02-22T23:26:50.00Z
+Link: https://go.theregister.com/feed/www.theregister.com/2026/02/22/french_bank_hack/
+
+[TAM METİN - 943 kelime]
+Attacker gets into France's database listing all bank accounts, makes off with 1.2 million records
+
+PLUS: Unpatched Ivanti boxes under attack; 0APT might not be a scam; AI gets better at helping cyber-scum; And more
+
+Infosec In Brief An unknown attacker accessed the French government’s database listing every bank account in the country and made off with 1.2 million records.
+
+France’s Ministry of Economics, Finance and Industrial and Digital Sovereignty last week revealed the incident took place in January, after unknown attackers used stolen credentials to access the database.
+
+The Ministry said the attacker's access was restricted immediately upon discovery of the attack, but that the miscreant still managed to access personal information about 1.2 million accounts, including account numbers, account holder’s addresses, and tax identification numbers.
+
+France’s government has mobilized the agencies that fight this sort of incident, and warned account holders to be on the lookout for suspicious messages.
+
+0days in Ivanti's EPMM under attack
+
+Palo Alto Networks' Unit 42 reported last week that the pair of zero-days in Ivanti Endpoint Manager for Mobile (EPMM) that the vendor patched last month are proving popular with attackers.
+
+According to Unit 42 researchers, cyber-scum are aware of the two 9.8-rated CVEs – CVE-2026-1281 and CVE-2026-1340 – and are targeting unpatched systems.
+
+State and local governments, healthcare, manufacturing, professional and legal services, and the tech sector in the US, Germany, Australia, and Canada have all been peppered by attackers leveraging those vulnerabilities.
+
+Unit 42 reports that attackers have tried to exploit them by establishing a reverse shell, installing web shells, downloading malware, and conducting reconnaissance in a search for further vulnerabilities.
+
+The researchers noted that patches are available for both vulnerabilities and point out that installation doesn’t require downtime, so deserves a prominent place on owners’ to-do lists.
+
+0APT a hoax? Not so fast, say researchers
+
+You may recall in last week's security roundup that we wrote about GuidePoint Security’s opinion that a group calling itself 0APT appears to be a fake gang using other cybercriminals' ill-gotten data to pass off as their own.
+
+Researchers with security firm Cyderes' Howler Cell threat research team reached out to warn us not to ignore the group, as there are signs it's a real threat.
+
+According to Howler Cell's research, 0APT's initial presence might be mostly fake, but "the operators behind 0APT are running an active Ransomware-as-a-service platform with functional malicious payloads and a working affiliate model."
+
+Howler Cell warns that the bluff may have been an attempt to attract attention, like we said, but not just to scam victims – they may also be trying to attract affiliates by making quick reputation gains.
+
+Howler Cell said that it managed to access the group's ransomware-as-a-service portal, collecting malware samples that were fully viable and just waiting to be deployed.
+
+"The 0APT ransomware demonstrates a clear focus on reliability, operator configurability, and secure cryptographic implementation, aligning with modern trends in Rust‑based ransomware development," Howler Cell said.
+
+Infosec exec sold eight zero-day exploit kits to Russia, says DoJ
+
+Telcos aren't saying how they fought back against China's Salt Typhoon attacks
+
+Open-source AI is a global security nightmare waiting to happen, say researchers
+
+Pwn2Own Automotive 2026 uncovers 76 zero-days, pays out more than $1M
+
+AI helps cybercrims move faster, do more
+
+AI is rapidly becoming a cybercriminal's best friend, serving as a force multiplier that is increasing attacker success rates at each stage of a campaign.
+
+Unit 42 said in its 2026 Global Incident Response Report published last week that AI contributed to a quadrupling of exfiltration speeds in 2025, making it one of the most dangerous emerging threats for the coming year.
+
+"AI is changing the economics of intrusions," Unit 42 said in the report. "It increases attacker speed, scale and effectiveness while opening entirely new attack vectors."
+
+We've known that AI has helped cybercriminals for a while. Unit 42's report, however, suggests whatever trends we've seen to date are only going to accelerate and make the problem worse.
+
+AI is enabling attackers to move faster to exploit vulnerabilities, with Unit 42 saying it has seen signs that attackers are using AI to help them scan for exposed vulnerabilities within 15 minutes of a CVE being announced.
+
+"Exploitation attempts often begin before many security teams have even finished reading the vulnerability advisory," Unit 42 noted. AI assistance has meant that time-to-exfiltration can be as little as 25 minutes, according to Unit 42's simulations.
+
+AI is further lowering the barrier to entry for new attackers too, by making it easy to personalize social engineering exploits and keeping them free of the spelling and grammar errors that betray their nature.
+
+Constant vigilance and a new line of defenses will be needed to keep up with this latest generation of AI threats, tips for which are included in the Unit 42 report.
+
+Tenga leaks customer details
+
+Sex toy manufacturer Tenga said a "limited segment" of its US customer base who interacted with company support reps have had their details spilled.
+
+Cybercriminals obtained correspondence history and customer email addresses (no other PII or financial information, but even that limited bit of data could get embarrassing) by probing a single employee's email account, the company said.
+
+It seems a malicious email campaign may also be involved using the addresses obtained by the digi-crook, as Tenga is also warning customers caught in the leak not to open suspicious attachments.
+
+The company said it's already been in touch with affected customers, and said it intends to use more protection to prevent another such incident in the future. ®
+
+Advanced persistent threat
+
+Retrieval Augmented Generation
+
+Tensor Processing Unit
+
+Advanced persistent threat
+
+Retrieval Augmented Generation
+
+Tensor Processing Unit
+
+(XXXXXXX, AÇIK - https://go.theregister.com/feed/www.theregister.com/2026/02/22/french_bank_hack/, go.theregister.com, 23.02.2026)
+
+================================================================================
+
+[8] TechCrunch Security - 6 days left to lock in the lowest TechCrunch Disrupt 2026 rates
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 22 Feb 2026 15:00:00 +0000
+Link: https://techcrunch.com/2026/02/22/6-days-left-to-lock-in-the-lowest-techcrunch-disrupt-2026-rates/
+
+[TAM METİN - 638 kelime]
+Super Early Bird pricing for TechCrunch Disrupt 2026 ends February 27 at 11:59 p.m. PT. That means you have just 6 days left to secure the lowest ticket prices of the year.
+
+If Disrupt has been on your must-attend list, this is your moment. Save up to $680 on your individual pass or secure up to 30% off with community passes before prices increase. Register here.
+
+From October 13-15 at San Francisco’s Moscone West, TechCrunch will bring together 10,000 founders, investors, operators, and innovators for three focused days built around launching, scaling, and shaping what’s next in tech.
+
+Disrupt is where you get:
+
+Direct access to founders, VCs, and operators actively building.
+
+Conversations that turn into funding, partnerships, and key hires.
+
+Tactical insights you can apply immediately.
+
+Early visibility into where tech is heading next.
+
+You’ll see 300+ exhibiting startups debut tomorrow’s breakthroughs, experience the high-stakes Startup Battlefield 200 pitch competition — where one standout company wins a $100,000 equity-free prize — and take part in curated networking designed to drive real outcomes.
+
+You’ll also hear insights from some of the most influential voices in tech, including WordPress co-founder Matt Mullenweg, General Motors CEO Mary Barra, and legendary VC Vinod Khosla. Keep an eye on the event page for the agenda drop.
+
+Maximize your experience as a founder or investor
+
+Founder Pass: Built to help you scale faster with the right insights and connections
+
+Investor Pass: Designed to help you discover breakout startups and expand your portfolio
+
+Secure your pass before rates increase
+
+Six days remain to secure the lowest rate of the year. Lock it in before February 27 at 11:59 p.m. PT. Register here.
 
 Save up to $300 or 30% to TechCrunch Founder Summit
 
 Save up to $300 or 30% to TechCrunch Founder Summit
-
-More recently, Patokallio said the webmaster at Archive.today asked him to take the post down for two or three months.
-
-“I do not mind the post, but the issue is: journos from mainstream media (Heise, Verge, etc) cherry-pick just a couple of words from your blog, and then construct very different narratives having your post the only citable source; then they cite each other and produce a shitty result to present for a wide audience,” the webmaster said, according to emails shared by Patokallio.
-
-Patokallio said that after he declined to take the post down, the webmaster responded with “an increasingly unhinged series of threats.”
-
-Wikipedia editors also pointed to webpage snapshots in Archive.today that appeared to have been altered to insert Patokallio’s name — hence the concern that it’s become “unreliable” as an archive.
-
-Wikipedia’s guidance now calls for editors to remove links to Archive.today and related sites, replacing them with links to the original source or to other archives like the Wayback Machine.
-
-On a blog linked from the Archive.today website, the site’s apparent owner wrote that Archive.today’s value to Wikipedia was “not about paywalls” but rather “the ability to offload copyright issues.” They later wrote that things had turned out “pretty well” and said they would “scale down the ‘DDoS’.”
-
-“Why didn’t you write about such events earlier, folks of the tabloids?” they said. “I don’t expect you to write anything good, because then who would read you, but there was plenty of dramas, wasn’t there? Because there was no Jani to nudge you?”
-
-Anthony Ha is TechCrunch’s weekend editor. Previously, he worked as a tech reporter at Adweek, a senior editor at VentureBeat, a local government reporter at the Hollister Free Lance, and vice president of content at a VC firm. He lives in New York City.
-
-You can contact or verify outreach from Anthony by emailing anthony.ha@techcrunch.com.
 
 Save up to $680 on your pass before February 27.Meet investors. Discover your next portfolio company. Hear from 250+ tech leaders, dive into 200+ sessions, and explore 300+ startups building what’s next. Don’t miss these one-time savings.
+
+The 9,000-pound monster I don’t want to give back
+
+
+
+Connie Loizos
+
+The 9,000-pound monster I don’t want to give back
+
+The 9,000-pound monster I don’t want to give back
+
+Sam Altman would like to remind you that humans use a lot of energy, too
+
+
+
+Anthony Ha
+
+Sam Altman would like to remind you that humans use a lot of energy, too
+
+Sam Altman would like to remind you that humans use a lot of energy, too
+
+Google VP warns that two types of AI startups may not survive
+
+
+
+Rebecca Bellan
+
+Google VP warns that two types of AI startups may not survive
+
+Google VP warns that two types of AI startups may not survive
 
 Great news for xAI: Grok is now pretty good at answering questions about Baldur’s Gate
 
@@ -493,141 +497,259 @@ Meta’s own research found parental supervision doesn’t really help curb teen
 
 Meta’s own research found parental supervision doesn’t really help curb teens’ compulsive social media use
 
-How Ricursive Intelligence raised $335M at a $4B valuation in 4 months
-
-
-
-Julie Bort
-
-How Ricursive Intelligence raised $335M at a $4B valuation in 4 months
-
-How Ricursive Intelligence raised $335M at a $4B valuation in 4 months
-
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
-
-
-
-Amanda Silberling
-
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
-
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
-
-OpenClaw creator Peter Steinberger joins OpenAI
-
-
-
-Anthony Ha
-
-OpenClaw creator Peter Steinberger joins OpenAI
-
-OpenClaw creator Peter Steinberger joins OpenAI
-
-(XXXXXXX, AÇIK - https://techcrunch.com/2026/02/21/wikipedia-blacklists-archive-today-after-alleged-ddos-attack/, techcrunch.com, 21.02.2026)
+(XXXXXXX, AÇIK - https://techcrunch.com/2026/02/22/6-days-left-to-lock-in-the-lowest-techcrunch-disrupt-2026-rates/, techcrunch.com, 22.02.2026)
 
 ================================================================================
 
-[9] TechCrunch Security - 7 days until ticket prices rise for TechCrunch Disrupt 2026
+[9] CSO Online - 13 ways attackers use generative AI to exploit your systems
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 21 Feb 2026 15:00:00 +0000
-Link: https://techcrunch.com/2026/02/21/7-days-until-ticket-prices-rise-for-techcrunch-disrupt-2026/
+Tarih: Mon, 23 Feb 2026 07:00:00 +0000
+Link: https://www.csoonline.com/article/3819176/top-5-ways-attackers-use-generative-ai-to-exploit-your-systems.html
 
-[TAM METİN - 574 kelime]
-Super Early Bird pricing for TechCrunch Disrupt 2026 ends February 27 at 11:59 p.m. PT. That gives you one week to secure the biggest savings of the year — up to $680 off individual passes and up to 30% off community passes. Register now to lock in at the lowest rate.
+[TAM METİN - 2975 kelime]
+13 ways attackers use generative AI to exploit your systems
 
-From October 13-15 at Moscone West in San Francisco, Disrupt will bring together 10,000 founders, investors, and operators for three days engineered for results.
+Cybercriminals are increasingly exploiting gen AI technologies to enhance the sophistication and efficiency of their attacks.
 
-What you gain at Disrupt
+Artificial intelligence is revolutionizing the technology industry and this is equally true for the cybercrime ecosystem, as cybercriminals are increasingly leveraging generative AI to improve their tactics, techniques, and procedures and deliver faster, stronger, and sneakier attacks.
 
-Access to active investors and high-growth founders
+As with legitimate use of emerging AI tools, abuse of generative AI for nefarious ends thus far hasn’t been so much about the novel and unseen as it has been about productivity and efficiency, lowering the barrier to entry, and offloading automatable tasks in favor of higher-order thinking on the part of the humans involved.
 
-High-impact networking built to drive deals
+“AI doesn’t necessarily result in new types of cybercrimes, and instead enables the means to accelerate or scale existing crimes we are familiar with, as well as introduce new threat vectors,” Dr. Peter Garraghan, CEO/CTO of AI security testing vendor Mindgard and a professor at the UK’s Lancaster University, tells CSO. “If a legitimate user can find utility in using AI to automate their tasks, capture complex patterns, lower the barrier of technical entry, reduced costs, and generate new content, why wouldn’t a criminal do the same?”
 
-Tactical insights you can implement immediately
+But the advent of agentic AI is beginning to change things, with AI tools no longer just assisting attackers but helping them automate operations.
 
-Visibility into emerging trends before they scale
+“The most significant shift over the past year has been AI’s evolution from a simple ‘helper’ toward becoming a fully autonomous, and quite literally an attacker’s partner-in-crime, capable of executing entire attack chains,” says Crystal Morin, senior cybersecurity strategist at cloud-native security and visibility vendor Sysdig.
 
-Explore 300+ exhibiting startups. Experience Startup Battlefield 200, where one standout company wins a $100,000 equity-free prize. Meet the leaders who can change your company’s trajectory.
+Here is a look at various ways cybercriminals are putting gen AI to use in exploiting enterprise systems today.
 
-Disrupt has a long track record of bringing together the most influential voices in tech. Previous speakers have included WordPress co-founder Matt Mullenweg, Phia co-founders Phoebe Gates and Sophia Kianni, and renowned investor Elad Gil, alongside leaders from Google Cloud, Netflix, Waymo, and more — all sharing actionable insights for building and scaling what’s next. Stay tuned to the event site to see when the 2026 agenda drops.
+Taking phishing to the next level
 
-Lock in your lowest rate now
+Gen AI enables the creation of highly convincing phishing emails, greatly increasingly the likelihood of prospective marks giving over sensitive information to scam sites or downloading malware.
 
-Seven days remain to secure the lowest rate of the year. Whether you’re scaling a company or sourcing your next investment, there’s a pass built for you. Lock in your savings before February 27 at 11:59 p.m. PT.
+Instead of sending generic, unconvincing, and error-ridden emails, cybercriminals can leverage AI to quickly generate more sophisticated, personalized, and legitimate-looking emails to target specific recipients.
 
-Save up to $680 on your pass before February 27.Meet investors. Discover your next portfolio company. Hear from 250+ tech leaders, dive into 200+ sessions, and explore 300+ startups building what’s next. Don’t miss these one-time savings.
+Gen AI tools help enrich phishing campaigns by pulling together wide-ranging sources of data, including targeted information gleaned from social media.
 
-Great news for xAI: Grok is now pretty good at answering questions about Baldur’s Gate
+“AI can be used to quickly learn what types of emails are being rejected or opened, and in turn modify its approach to increase phishing success rate,” Mindgard’s Garraghan explains.
 
+Facilitating malware development
 
+AI can also be used to generate more sophisticated — or less labour-intensive — malware.
 
-Russell Brandom
+For example, cybercriminals are using gen AI to create malicious HTML documents. The XWorm attack, initiated by HTML smuggling, which contains malicious code that downloads and runs the malware, bears the hallmarks of development via AI.
 
-Great news for xAI: Grok is now pretty good at answering questions about Baldur’s Gate
+“The loader’s detailed line-by-line description suggesting it was crafted using generative AI,” according to HP Wolf Security’s 2025 Threat Insights Report.
 
-Great news for xAI: Grok is now pretty good at answering questions about Baldur’s Gate
+In addition, the “design of the HTML webpage delivering XWorm is almost visually identical as the output from ChatGPT 4o after prompting the LLM to generate an HTML page that offers a file download,” HP Wolf Security added in its report.
 
-FBI says ATM ‘jackpotting’ attacks are on the rise, and netting hackers millions in stolen cash
+Elsewhere, ransomware group FunkSec — an Algeria-linked ransomware-as-a-service (RaaS) operator that takes advantage of double-extortion tactics — has begun harnessing AI technologies, according to Check Point Research.
 
+“FunkSec operators appear to use AI-assisted malware development, which can enable even inexperienced actors to quickly produce and refine advanced tools,” Check Point researchers wrote in a blog post.
 
+Accelerating vulnerability hunting and exploits
 
-Zack Whittaker
+Analyzing systems for vulnerabilities and developing exploits can also be simplified through use of gen AI.
 
-FBI says ATM ‘jackpotting’ attacks are on the rise, and netting hackers millions in stolen cash
+“Instead of a black hat hacker spending the time to probe and perform reconnaissance against a system perimeter, an AI agent can be tasked to do this automatically,” Mingard’s Garraghan says.
 
-FBI says ATM ‘jackpotting’ attacks are on the rise, and netting hackers millions in stolen cash
+Gen AI may be behind a 62% reduction in the time between a vulnerability being discovered and its exploitation by attackers from 47 days to just 18 days, according to a study last year by threat intelligence firm ReliaQuest.
 
-A startup called Germ becomes the first private messenger that launches directly from Bluesky’s app
+“This sharp decrease strongly indicates that a major technological advancement — likely gen AI — is enabling threat actors to exploit vulnerabilities at unprecedented speeds,” ReliaQuest wrote.
 
+Adversaries are leveraging gen AI alongside pen-testing tools to write scripts for tasks such as network scanning, privilege escalation, and payload customization. AI is also likely being used by cybercriminals to analyze scan results and suggest optimal exploits, allowing them to identify flaws in victim systems faster.
 
+“These advances accelerate many phases in the kill chain, particularly initial access,” ReliaQuest concluded.
 
-Sarah Perez
+Cyber resilience firm Cybermindr used a different methodology to find that the average time to exploit a vulnerability had fallen to five days in 2025. “AI-driven reconnaissance, automated attack scripts, and underground exploit marketplaces have accelerated the weaponization of vulnerabilities,” it said.
 
-A startup called Germ becomes the first private messenger that launches directly from Bluesky’s app
+CSO’s Lucian Constantin offers a deeper look at how generative AI tools are transforming the cyber threat landscape by democratizing vulnerability hunting for pen-testers and attackers alike.
 
-A startup called Germ becomes the first private messenger that launches directly from Bluesky’s app
+Launching AI-orchestrated espionage
 
-Meta’s own research found parental supervision doesn’t really help curb teens’ compulsive social media use
+Anthropic dropped a bombshell in September 2025 when it revealed that it had disrupted a sophisticated AI-orchestrated cyber espionage campaign.
 
+The attackers abused Claude Code to automate approximately 80% of their campaign activities, targeting around 30 major tech firms, financial institutions, and government agencies.
 
+In a “small number of cases” attacks were successful, according to the AI company, noting that an unnamed “Chinese state-sponsored group” was likely behind the campaign, which relied on jailbreaking tools to make prohibited functions possible.
 
-Sarah Perez
+Last year Carnegie Mellon’s CyLab Security & Privacy Institute researchers, in collaboration with Anthropic, demonstrated that LLMs like GPT-4o can autonomously plan and execute sophisticated cyberattacks on enterprise-scale networks — without any human intervention.
 
-Meta’s own research found parental supervision doesn’t really help curb teens’ compulsive social media use
+“The study reveals that an LLM, when structured with high-level planning capabilities and supported by specialized agent frameworks, can simulate network intrusions and closely mirror real-world breaches,” a CyLab spokesperson explained.
 
-Meta’s own research found parental supervision doesn’t really help curb teens’ compulsive social media use
+Escalating threats with alternative platforms
 
-How Ricursive Intelligence raised $335M at a $4B valuation in 4 months
+Cybercriminals have also begun developing their own large language models (LLMs) — such as WormGPT, FraudGPT, DarkBERT, and others — built without the guardrails that constrain criminals’ misuse of mainstream gen AI platforms.
 
+These platforms are commonly harnessed for applications such as phishing and malware generation.
 
+Moreover, mainstream LLMs can also be customized for targeted use. Security researcher Chris Kubecka shared with CSO in late 2024 how her custom version of ChatGPT, called Zero Day GPT, helped her identify more than 20 zero-days in a matter of months.
 
-Julie Bort
+Stealing resources via LLMjacking
 
-How Ricursive Intelligence raised $335M at a $4B valuation in 4 months
+Threat actors are also busy stealing cloud credentials specifically to hijack costly LLM resources, either for their own gain or to sell access, in an attack technique called LLMjacking.
 
-How Ricursive Intelligence raised $335M at a $4B valuation in 4 months
+“Beyond theft of service, attackers are now actively probing newer LLM models to identify those that lack the guardrails of more mature platforms, effectively using them as unrestricted sandboxes to generate malicious code or bypass regional sanctions,” Sysdig’s Morin reports.
 
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
+Creating a Silk Road–style marketplace for AI agents
 
+Beyond AI agents executing individual attacks, security experts are beginning to track examples where coordination itself is being automated or orchestrated.
 
+“We’re seeing early experiments where multiple specialized agents interact, some focused on reconnaissance, others on tooling, execution, or data movement, without any single agent needing the full picture,” says Lucie Cardiet, cyberthreat research manager at Vectra AI.
 
-Amanda Silberling
+A concrete example of this is Molt Road, which offers a dark-web-style marketplace for AI agents, albeit one with few listings at present.
 
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
+“Autonomous agents can create listings, sell access or capabilities, coordinate tasks, and complete transactions with minimal human involvement, effectively automating the economics of cybercrime,” Cardiet tells CSO.
 
-After all the hype, some AI experts don’t think OpenClaw is all that exciting
+“We can expect attackers to actively leverage this model in the coming months, breaking the attack chain into specialized, cooperating agents to speed up and scale their attacks,” she says.
 
-OpenClaw creator Peter Steinberger joins OpenAI
+Breaking in with authentication bypass
 
+Gen AI tools can also be abused to bypass security defences such as CAPTCHAs or biometric authentication.
 
+“AI can defeat CAPTCHA systems and analyse voice biometrics to compromise authentication,” according to cybersecurity vendor Dispersive. “This capability underscores the need for organizations to adopt more advanced, layered security measures.”
 
-Anthony Ha
+Leveraging deepfakes for social engineering
 
-OpenClaw creator Peter Steinberger joins OpenAI
+AI-generated deepfakes are being abused to exploit channels many employees more implicitly trust, such as voice and video, instead of relying on less convincing email-based attacks.
 
-OpenClaw creator Peter Steinberger joins OpenAI
+The problem is becoming more severe with the wider availability of AI technologies capable of creating more convincing deepfakes, according to Alex Lisle, CTO of deepfake detection platform Reality Defender.
 
-(XXXXXXX, AÇIK - https://techcrunch.com/2026/02/21/7-days-until-ticket-prices-rise-for-techcrunch-disrupt-2026/, techcrunch.com, 21.02.2026)
+“There was a recent case involving a cybersecurity company that relied on visual verification for credential resets,” Lisle says. “Their process required a manager to join a Zoom call with IT to confirm an employee’s identity before a password reset.”
+
+Lisle explains: “Attackers are now leveraging deepfakes to impersonate those managers on live video calls to authorize these resets.”
+
+In the most high-profile example to date, a finance worker at design and engineering company Arup was tricked into authorizing a fraudulent HK$200 million ($25.6 million) transaction after attending a videoconference call during which fraudsters used deepfake technology to impersonate its UK-based CFO.
+
+Impersonating brands in malicious ad campaigns
+
+Cybercriminals have begun using gen AI tools to deliver brand impersonation campaigns delivered via ads and content platforms, rather than traditional phishing or malware.
+
+“Attackers now use gen AI to mass-produce realistic ad copy, creatives, and fake support pages, then distribute them across search ads, social ads, and AI-generated content, targeting high-intent queries like ‘brand login’ or ‘brand support,’” explains Shlomi Beer, co-founder and CEO at ImpersonAlly, a security startup that specializes in protecting the online advertising ecosystem.
+
+The tactic was used in ongoing a series of Google Ad account fraud, to impersonate the Cursor AI coding assistant firm, and in a fake Shopify ecommerce platform customer support scam, among other attacks.
+
+Attackers have also begun targeting viral personal AI agents such as OpenClaw.
+
+OpenClaw offers an open-source AI agent framework. A combination of supply chain attacks on its skill marketplace and misconfigurations open the door to potential exploits and malware slinging, as CSO covered in much more depth in our earlier report.
+
+“Cybercriminals can exploit these virtual assistants to steal private keys to cryptocurrency wallets and execute code on victims’ devices,” says Edward Wu, CEO and founder at Dropzone AI. “We can expect 2026 to be the year when security teams will try to prevent unsanctioned usage of personal AI agents.”
+
+Poisoning model memories
+
+To offer short-term and longer-term context, AI agents are starting to rely more on persistent memory, opening the door for exploits that involve planting malicious memories.
+
+If an attacker injects malicious or false information into an agent’s memory, that corrupted context then influences every future decision the agent makes.
+
+For example, security researcher Johann Rehberger showed how he could plant false memories in ChatGPT in September 2025.
+
+“He [Rehberger] used a malicious image with hidden instructions embedded in it to inject fabricated data into the model’s long-term memory,” said Siri Varma Vegiraju, security tech lead at Microsoft. “The scary part was that once the memory was poisoned, it persisted across sessions and continuously exfiltrated user data to a server the attacker controlled.”
+
+Hacking AI infrastructure
+
+Over the past year, attackers have shifted from using generative AI to targeting the infrastructure that enables it.
+
+This vector of attack is exemplified in the supply chain poisoning in Model Context Protocol servers, where compromised dependencies or modified code introduced vulnerabilities into enterprise environments.
+
+For example, a counterfeit “Postmark MCP Server” discovered in early 2025 silently BCC’d all processed emails, including internal documents, invoices, and credentials, to an attacker-controlled domain.
+
+Many other malicious MCP servers have already been identified in the wild, many designed to exfiltrate information without detection, according to Casey Bleeker CEO at SurePath AI.
+
+“We’re tracking several categories of MCP-specific risk: tool poisoning attacks, where adversaries inject malicious instructions into AI tool descriptions that execute when the agent invokes them; supply chain compromises, where a trusted MCP server or dependency is updated post-approval to behave maliciously; and cross-tool data exfiltration, where compromised components in an agentic workflow silently siphon sensitive data through what looks like legitimate AI activity,” Bleeker explains.
+
+AI technologies are powerful but they have their limitations, several experts tell CSO.
+
+Rik Ferguson, VP of security intelligence at Forescout, says cybercriminals are largely relying on AI to automate repetitive tasks rather than more complex work, such as vulnerability exploitation.
+
+“The most reliable criminal use [of AI] remains in language-heavy and workflow-heavy tasks such as phishing and pretexting, influence and outreach, triaging and contextualizing vulnerabilities, and generating boilerplate components, rather than reliably discovering and exploiting brand-new vulnerabilities end-to-end,” Ferguson says.
+
+Over the past twelve months, managed detection and response firm Huntress has tracked threat actors applying AI to generate and automate traditional tradecraft, from developing scripts to browser extensions and, in some cases, even phishing lures.
+
+“We have also seen such ‘vibe coded’ scripts fail to execute and meet their objectives on multiple occasions,” Anton Ovrutsky, principal tactical response analyst at Huntress, tells CSO.
+
+And while AI has certainly given threat actors a powerful tool it has, at least to date, failed to spawn any new tactics or exploit classes, according to Ovrutsky.
+
+“A threat actor can indeed rapidly prototype a sophisticated credential theft script, yet the basic ‘laws of physics’ still exist; a threat actor must be in a position to execute such a script in the first place,” Ovrutsky says. “We have yet to observe an exploit path that has been enabled through AI-use exclusively.”
+
+Collectively the misuse of gen AI tools is making it easier for less skilled cybercriminals to earn a dishonest living. Defending against the attack vector challenges security professionals to harness the power of artificial intelligence more effectively than attackers.
+
+“Criminal misuse of AI technologies is driving the necessity to test, detect, and respond to these threats, in which AI is also being leveraged to combat cybercriminal activity,” Mindgard’s Garraghan says.
+
+In a blog post, Lawrence Pingree, VP of technical marketing at Dispersive, outlines preemptive cyber defenses that security professionals can take to win what he describes as an “AI ARMS (Automation, Reconnaissance, and Misinformation) race” between attackers and defenders.
+
+“Relying on traditional detection and response mechanisms is no longer sufficient,” Pingree warns.
+
+Alongside employee education and awareness programs, enterprises should be using AI to detect and neutralize generative AI-based threats in real-time.
+
+Forescout’s Ferguson says CISOs should treat enterprise AI like any other high-value SaaS platform.
+
+“Tighten identity and conditional access, minimize privileges, lock down keys, and monitor for anomalous AI/API usage and spend,” Ferguson advises.
+
+From our editors straight to your inbox
+
+John Leyden reports on cybersecurity for CSO Online. He has written about computer networking and cyber-security for more than 20 years. 
+Prior to joining CSO, John wrote and edited articles for PortSwigger's The Daily Swig covering topics including web security, vulnerabilities and hacking culture. He also co-hosted the SwigCast podcast. For more than 17 years, John covered a wide variety of topics including network security and enterprise technology for The Register. His work at The Register earned him a number of awards, including the BT Enigma award for contributions to technology journalism.
+Before the advent of the interwebs John worked as a crime reporter at a local newspaper in Manchester, UK. John holds a degree in electronic engineering from City University, London.
+
+John Leyden reports on cybersecurity for CSO Online. He has written about computer networking and cyber-security for more than 20 years.
+
+Prior to joining CSO, John wrote and edited articles for PortSwigger's The Daily Swig covering topics including web security, vulnerabilities and hacking culture. He also co-hosted the SwigCast podcast. For more than 17 years, John covered a wide variety of topics including network security and enterprise technology for The Register. His work at The Register earned him a number of awards, including the BT Enigma award for contributions to technology journalism.
+
+Before the advent of the interwebs John worked as a crime reporter at a local newspaper in Manchester, UK. John holds a degree in electronic engineering from City University, London.
+
+More from this author
+
+feature10 years later, Bangladesh Bank cyberheist still offers cyber-resiliency lessons Feb 16, 2026 8 mins
+
+10 years later, Bangladesh Bank cyberheist still offers cyber-resiliency lessons
+
+newsResearchers unearth 30-year-old vulnerability in libpng library Feb 13, 2026 3 mins
+
+Researchers unearth 30-year-old vulnerability in libpng library
+
+featureSoftware developers: Prime cyber targets and a rising risk vector for CISOs Feb 9, 2026 9 mins
+
+Software developers: Prime cyber targets and a rising risk vector for CISOs
+
+news analysisEU’s answer to CVE solves dependency issue, adds fragmentation risks Jan 29, 2026 7 mins
+
+EU’s answer to CVE solves dependency issue, adds fragmentation risks
+
+feature73% of CISOs more likely to consider AI-enabled security solution Jan 22, 2026 7 mins
+
+73% of CISOs more likely to consider AI-enabled security solution
+
+featureD&O liability protection rising for security leaders — unless you’re a midtier CISO Dec 18, 2025 7 mins
+
+D&O liability protection rising for security leaders — unless you’re a midtier CISO
+
+newsSAML authentication broken almost beyond repair Dec 11, 2025 3 mins
+
+SAML authentication broken almost beyond repair
+
+newsBattering RAM hardware hack breaks secure CPU enclaves Dec 11, 2025 3 mins
+
+Battering RAM hardware hack breaks secure CPU enclaves
+
+13 ways attackers use generative AI to exploit your systems
+
+Compromised npm package silently installs OpenClaw on developer machines
+
+Don’t trust TrustConnect: This fake remote support tool only helps hackers
+
+How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
+
+Inside the SMB Threat Landscape: AT&T’s Senthil Ramakrishnan on Why Small Businesses Are Cybercrime’s Favorite Target
+
+CSO Executive Session ASEAN: The Human Firewall-Retention, AI Readiness, and Women in Cybersecurity
+
+How Intelligence and AI Are Changing Cyber Defense | Erin Whitmore, Former CIA
+
+Inside the SMB Threat Landscape: AT&T’s Senthil Ramakrishnan on Why Small Businesses Are Cybercrime’s Favorite Target
+
+CSO Executive Sessions ASEAN: The Human Firewall-Retention, AI Readiness, and Women in Cybersecurity
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/3819176/top-5-ways-attackers-use-generative-ai-to-exploit-your-systems.html, csoonline.com, 23.02.2026)
 
 ================================================================================
 
