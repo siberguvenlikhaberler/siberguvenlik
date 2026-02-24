@@ -12,7 +12,8 @@ from datetime import datetime, timedelta
 from difflib import SequenceMatcher
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
-import google.generativeai as genai
+from google import genai
+from google.genai import types as genai_types
 
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
@@ -593,7 +594,7 @@ class HaberSistemi:
         if not GEMINI_API_KEY:
             raise ValueError("❌ GEMINI_API_KEY yok!")
 
-        genai.configure(api_key=GEMINI_API_KEY)
+        client = genai.Client(api_key=GEMINI_API_KEY)
 
         # ═══════════════════════════════════════════
         # AŞAMA 1: Gemini'den HTML al (retry ile)
@@ -605,11 +606,11 @@ class HaberSistemi:
                 print(f"   Deneme {attempt + 1}/{max_retries}...")
 
                 prompt = get_claude_prompt(txt_content)
-                model = genai.GenerativeModel('gemini-2.5-flash')
 
-                response = model.generate_content(
-                    prompt,
-                    generation_config=genai.GenerationConfig(
+                response = client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=prompt,
+                    config=genai_types.GenerateContentConfig(
                         max_output_tokens=65536,
                         temperature=0.7,
                     )
@@ -820,10 +821,11 @@ KURALLAR:
 """
 
         try:
-            model = genai.GenerativeModel('gemini-2.5-flash')
-            response = model.generate_content(
-                completion_prompt,
-                generation_config=genai.GenerationConfig(
+            client = genai.Client(api_key=GEMINI_API_KEY)
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=completion_prompt,
+                config=genai_types.GenerateContentConfig(
                     max_output_tokens=65536,
                     temperature=0.7,
                 )
