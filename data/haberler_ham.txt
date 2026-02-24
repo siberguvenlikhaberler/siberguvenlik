@@ -472,20 +472,20 @@ MuddyWater has also been observed exploiting recently disclosed vulnerabilities 
 Tarih: Tue, 24 Feb 2026 06:00:00 -0500
 Link: https://www.bleepingcomputer.com/news/security/north-korean-lazarus-group-linked-to-medusa-ransomware-attacks/
 
-[TAM METİN - 430 kelime]
-North Korean state-backed hackers associated with the Lazarus threat group are targeting U.S. healthcare organizations in extortion attack using the Medusa ransomware.
+[TAM METİN - 464 kelime]
+North Korean state-backed hackers associated with the Lazarus threat group are targeting U.S. healthcare organizations in extortion attacks using the Medusa ransomware.
 
-The Medusa ransomware-as-a-service (RaaS) operation  emerged in January 2021 and by February 2025 it impacted over 300 organizations in various critical infrastructure sectors. Since then, the gang claimed at least another 80 victims.
+The Medusa ransomware-as-a-service (RaaS) operation emerged in January 2021, and by February 2025, it impacted over 300 organizations in various critical infrastructure sectors. Since then, the gang claimed at least another 80 victims.
 
-North Korean threat actors have previously been linked to other ransomware strains such as HolyGhost, PLAY, Maui, Qilin, and other malware families. However, this is the first time security researchers associate the actor with Medusa.
+North Korean threat actors have previously been linked to other ransomware strains such as HolyGhost, PLAY, Maui, Qilin, as well as other malware families. However, this is the first time security researchers have associated the actor with Medusa.
 
-In a report today, enterprise cybersecurity company Symantec says that a Lazarus subgroup - possibly Andariel/Stonefly, is now using Medusa in financially-motivated cyberattacks targeting U.S. healthcare providers.
+In a report today, enterprise cybersecurity company Symantec says that a Lazarus subgroup, possibly Andariel/Stonefly, is now using Medusa in financially-motivated cyberattacks targeting U.S. healthcare providers.
 
 According to the researchers, the toolset used in these attacks also shows some association with Diamond Sleet, another North Korean group that typically targets media, defense, and IT industries.
 
 However, some of the utilities seen in the Medusa ransomware attacks are commodity tools:
 
-Comebacker – Diamond Sleet-linked backdoor/loader
+Comebacker – Diamond Sleet-linked backdoor/loader (seen used by Diamond Sleet)
 
 Blindingcan – Remote access trojan
 
@@ -499,16 +499,17 @@ RP_Proxy – Custom proxy tool
 
 Curl – Data transfer tool
 
-Though not all recent Medusa attacks can be confidently attributed to Lazarus, the average ransom recorded was $260,000, which past litigation has claimed is used to fund espionage operations, including against the defense, technology, and government sectors in the U.S., Taiwan, and South Korea.
+The researchers comment that no sectors are off-limits for North Korean hackers, who keep getting involved in cybercrime for financial gain.
 
-The researchers comment that no sectors are “out of reach” for the North Koreans, who have no ethical barriers stopping them from disrupting healthcare operations.
+“While some cybercrime outfits claim to steer clear of targeting healthcare organizations due to the reputational damage it may attract, Lazaurs doesn’t seem to be in any way constrained,” Symantec researchers say.
 
-“The switch to Medusa demonstrates that North Korea’s rapacious involvement in cybercrime continues unabated,” comment Symantec researchers.
+Medusa targeted multiple healthcare and non-profit organizations in the U.S., as the gang's data leak site lists four such victims since the beginning of November 2025, among them an educational facility for autistic children.
 
-“While some cybercrime outfits claim to steer clear of targeting healthcare organizations due to the
-reputational damage it may attract, Lazaurs doesn’t seem to be in any way constrained.”
+Not all these Medusa attacks can be confidently attributed to Lazarus hackers, though. Medusa can demand ransoms as large as $15 million, but Symantec researchers say that the average is around $260,000.
 
-Symantec has listed indicators of compromise (IoCs) at the bottom of its report to help defenders catch these attacks early and prevent the encryption of sensitive data.
+Stolen funds are used to support espionage operations against entities in the defense, technology, and government sectors in the U.S., Taiwan, and South Korea.
+
+Symantec has provided a set of indicators of compromise (IoCs) in its report, which include network infrastructure data and hashes for the malware used in attacks.
 
 The future of IT infrastructure is here
 
@@ -860,7 +861,57 @@ CISA: BeyondTrust RCE flaw now exploited in ransomware attacks
 
 ================================================================================
 
-[16] Security Affairs - Operation MacroMaze: APT28 exploits webhooks for covert data exfiltration
+[16] Security Affairs - Arkanix Stealer: AI-assisted info-stealer shuts down after brief campaign
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 24 Feb 2026 10:52:56 +0000
+Link: https://securityaffairs.com/188431/malware/arkanix-stealer-ai-assisted-info-stealer-shuts-down-after-brief-campaign.html
+
+[TAM METİN - 554 kelime]
+Arkanix Stealer: AI-assisted info-stealer shuts down after brief campaign
+
+Arkanix Stealer surfaced in late 2025 as a short-lived info-stealer, likely built as an AI-assisted experiment and quickly abandoned.
+
+Arkanix Stealer emerged in late 2025 as a short-lived information-stealing malware promoted on dark web forums. Researchers believe it was likely created as an AI-assisted experiment, suggesting the operators were testing automated development techniques rather than running a long-term, large-scale cybercriminal operation.
+
+In October 2025, Kaspersky researchers spotted dark web ads for ‘Arkanix Stealer,’ a MaaS offering with a control panel and configurable payloads. It used a C++ build embedding ChromElevator to steal system and crypto wallet data, plus a packed Python version with dynamic configuration. Likely spread via phishing-themed lures, the operation appeared short-lived, and its affiliate program was later shut down.
+
+The ads include a link to a Discord server used as the primary communication channel.
+
+“This stealer is capable of extracting various types of data from supported browsers (22 in total, ranging from the widely popular Google Chrome to the Tor Browser). The list of supported browsers is hardcoded, and unlike other parameters, it cannot be modified during execution.” reads the report published by Kaspersky. “In addition to a separate Chrome grabber module (which we’ll discuss later), the stealer itself supports the extraction of diverse information, such as:
+
+In case of Chromium-based browsers, 0Auth2 data is also extracted”
+
+Browser history (URLs, visit count and last visit)
+
+Autofill information (email, phone, addresses and payment cards details)
+
+Extra modules, including wallet tools and HVNC, can be decrypted and deployed. After completing operations, it deletes itself and related artifacts.
+
+Researchers analyzed both debug and release builds of the native C++ Arkanix Stealer. The release version used VMProtect and the arkanix[.]pw C2, while the debug build relied on a Discord bot and extensive logs. The malware supports anti-analysis checks, patches AMSI and ETW, and steals system, RDP, gaming, browser and screenshot data. It embeds the ChromElevator browser extractor for credential theft and encrypts exfiltrated data with AES-GCM + PBKDF2. The infrastructure observed by the experts included two domains behind Cloudflare hosting a protected panel that was taken offline later.
+
+The group promoted the stealer via Discord with marketing tactics, a referral program and promises of a crypter, suggesting short-lived, possibly AI-assisted development.
+
+“Referrers were promised an additional free hour to their premium license, while invited customers received seven days of free “premium” trial use.” continues the report. “As stated in forum posts, the premium plan included the following features:
+
+Exodus and Atomic cryptocurrency wallets injection
+
+Increased payload generation, up to 10 payloads
+
+The stealer targeted users of cryptocurrency, gaming, and online banking, collecting sensitive data. Likely aided by LLMs, it was a quick, one-shot campaign for fast gains. The developers ran a public forum with updates, surveys, and a referral program, making Arkanix appear more like a marketed software product than a hidden malware operation.
+
+“While being quite functional, it contains probable traces of LLM-assisted development which suggests that such assistance might have drastically reduced development time and costs.” concludes the report. “Hence it follows that this campaign tends to be more of a one-shot campaign for quick financial gains rather than a long-running infection.”
+
+Kaspersky provides a list of indicators of compromise (IoCs).
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, malware)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188431/malware/arkanix-stealer-ai-assisted-info-stealer-shuts-down-after-brief-campaign.html, securityaffairs.com, 24.02.2026)
+
+================================================================================
+
+[17] Security Affairs - Operation MacroMaze: APT28 exploits webhooks for covert data exfiltration
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 09:10:39 +0000
 Link: https://securityaffairs.com/188421/apt/operation-macromaze-apt28-exploits-webhooks-for-covert-data-exfiltration.html
@@ -900,7 +951,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[17] Security Affairs - Everest ransomware hits Vikor Scientific ‘s supplier, data of 140,000 patients stolen
+[18] Security Affairs - Everest ransomware hits Vikor Scientific ‘s supplier, data of 140,000 patients stolen
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 08:37:25 +0000
 Link: https://securityaffairs.com/188397/data-breach/everest-ransomware-hits-vikor-scientific-s-supplier-data-of-140000-patients-stolen.html
@@ -934,7 +985,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[18] Security Affairs - Wormable XMRig campaign leverages BYOVD and timed kill switch for stealth
+[19] Security Affairs - Wormable XMRig campaign leverages BYOVD and timed kill switch for stealth
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 18:36:09 +0000
 Link: https://securityaffairs.com/188388/malware/wormable-xmrig-campaign-leverages-byovd-and-timed-kill-switch-for-stealth.html
@@ -980,7 +1031,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[19] Security Affairs - Romanian hacker pleads guilty to selling access to Oregon state networks
+[20] Security Affairs - Romanian hacker pleads guilty to selling access to Oregon state networks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 14:43:49 +0000
 Link: https://securityaffairs.com/188380/cyber-crime/romanian-hacker-pleads-guilty-to-selling-access-to-oregon-state-networks.html
@@ -1006,7 +1057,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[20] Security Affairs - CVE-2026-1731 fuels ongoing attacks on BeyondTrust remote access products
+[21] Security Affairs - CVE-2026-1731 fuels ongoing attacks on BeyondTrust remote access products
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 12:09:32 +0000
 Link: https://securityaffairs.com/188370/hacking/cve-2026-1731-fuels-ongoing-attacks-on-beyondtrust-remote-access-products.html
@@ -1054,7 +1105,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[21] Security Affairs - AI-powered campaign compromises 600 FortiGate systems worldwide
+[22] Security Affairs - AI-powered campaign compromises 600 FortiGate systems worldwide
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 10:39:40 +0000
 Link: https://securityaffairs.com/188351/hacking/ai-powered-campaign-compromises-600-fortigate-systems-worldwide.html
@@ -1100,7 +1151,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[22] Security Affairs - Anthropic unveils Claude Code Security to detect and fix code bugs
+[23] Security Affairs - Anthropic unveils Claude Code Security to detect and fix code bugs
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 00:11:55 +0000
 Link: https://securityaffairs.com/188358/ai/anthropic-unveils-claude-code-security-to-detect-and-fix-code-bugs.html
@@ -1134,7 +1185,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[23] SANS ISC - ISC Stormcast For Tuesday, February 24th, 2026 https://isc.sans.edu/podcastdetail/9822, (Tue, Feb 24th)
+[24] SANS ISC - ISC Stormcast For Tuesday, February 24th, 2026 https://isc.sans.edu/podcastdetail/9822, (Tue, Feb 24th)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 02:00:02 GMT
 Link: https://isc.sans.edu/diary/rss/32740
@@ -1145,7 +1196,7 @@ Link: https://isc.sans.edu/diary/rss/32740
 
 ================================================================================
 
-[24] SANS ISC - Another day, another malicious JPEG, (Mon, Feb 23rd)
+[25] SANS ISC - Another day, another malicious JPEG, (Mon, Feb 23rd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 14:26:39 GMT
 Link: https://isc.sans.edu/diary/rss/32738
@@ -1226,7 +1277,7 @@ Nettles Consulting
 
 ================================================================================
 
-[25] SANS ISC - ISC Stormcast For Monday, February 23rd, 2026 https://isc.sans.edu/podcastdetail/9820, (Mon, Feb 23rd)
+[26] SANS ISC - ISC Stormcast For Monday, February 23rd, 2026 https://isc.sans.edu/podcastdetail/9820, (Mon, Feb 23rd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 02:45:11 GMT
 Link: https://isc.sans.edu/diary/rss/32736
@@ -1237,7 +1288,7 @@ Link: https://isc.sans.edu/diary/rss/32736
 
 ================================================================================
 
-[26] Cyberscoop - CrowdStrike says attackers are moving through networks in under 30 minutes
+[27] Cyberscoop - CrowdStrike says attackers are moving through networks in under 30 minutes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 08:01:00 +0000
 Link: https://cyberscoop.com/crowdstrike-annual-global-threat-report-attack-breakout-time/
@@ -1343,7 +1394,7 @@ Anthropic accuses Chinese labs of trying to illicitly take Claude’s capabiliti
 
 ================================================================================
 
-[27] Cyberscoop - Anthropic accuses Chinese labs of trying to illicitly take Claude’s capabilities
+[28] Cyberscoop - Anthropic accuses Chinese labs of trying to illicitly take Claude’s capabilities
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 21:02:13 +0000
 Link: https://cyberscoop.com/anthropic-accuses-chinese-labs-ai-distillation-cyber-risk/
@@ -1417,7 +1468,7 @@ FBI: Threats from Salt Typhoon are ‘still very much ongoing’
 
 ================================================================================
 
-[28] The Register - Suspected Anonymous members detained in Spain over post-flood DDoS blitz
+[29] The Register - Suspected Anonymous members detained in Spain over post-flood DDoS blitz
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-23T12:26:30.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/23/anonymous_arrests_spain/
@@ -1467,7 +1518,7 @@ Its presence today is diminished compared to its heyday, although splinter group
 
 ================================================================================
 
-[29] The Register - AWS says more than 600 FortiGate firewalls hit in AI-augmented campaign
+[30] The Register - AWS says more than 600 FortiGate firewalls hit in AI-augmented campaign
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-23T11:41:47.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/23/aws_fortigate_firewalls/
@@ -1517,7 +1568,7 @@ Tensor Processing Unit
 
 ================================================================================
 
-[30] The Register - Attacker gets into France's database listing all bank accounts, makes off with 1.2 million records
+[31] The Register - Attacker gets into France's database listing all bank accounts, makes off with 1.2 million records
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-02-22T23:26:50.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/02/22/french_bank_hack/
@@ -1613,7 +1664,7 @@ Tensor Processing Unit
 
 ================================================================================
 
-[31] TechCrunch Security - Americans are destroying Flock surveillance cameras
+[32] TechCrunch Security - Americans are destroying Flock surveillance cameras
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 18:49:49 +0000
 Link: https://techcrunch.com/2026/02/23/americans-are-destroying-flock-surveillance-cameras/
@@ -1713,7 +1764,7 @@ Meta’s own research found parental supervision doesn’t really help curb teen
 
 ================================================================================
 
-[32] TechCrunch Security - VPN flaws allowed Chinese hackers to compromise dozens of Ivanti customers, says report
+[33] TechCrunch Security - VPN flaws allowed Chinese hackers to compromise dozens of Ivanti customers, says report
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 16:06:54 +0000
 Link: https://techcrunch.com/2026/02/23/vpn-flaws-allowed-chinese-hackers-to-compromise-dozens-of-ivanti-customers-says-report/
@@ -1825,7 +1876,7 @@ Meta’s own research found parental supervision doesn’t really help curb teen
 
 ================================================================================
 
-[33] TechCrunch Security - 5 days left to lock in the lowest TechCrunch Disrupt 2026 ticket rates
+[34] TechCrunch Security - 5 days left to lock in the lowest TechCrunch Disrupt 2026 ticket rates
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 15:00:00 +0000
 Link: https://techcrunch.com/2026/02/23/5-days-left-to-lock-in-the-lowest-techcrunch-disrupt-2026-ticket-rates/
@@ -1965,7 +2016,7 @@ Meta’s own research found parental supervision doesn’t really help curb teen
 
 ================================================================================
 
-[34] CSO Online - Bitcoin-Milliarden von Raubkopie-Portal im Visier der Justiz
+[35] CSO Online - Bitcoin-Milliarden von Raubkopie-Portal im Visier der Justiz
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 09:43:39 +0000
 Link: https://www.csoonline.com/article/4136389/bitcoin-milliarden-von-raubkopie-portal-im-visier-der-justiz.html
@@ -2001,7 +2052,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[35] CSO Online - It’s time to rethink CISO reporting lines
+[36] CSO Online - It’s time to rethink CISO reporting lines
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4136293/its-time-to-rethink-ciso-reporting-lines.html
@@ -2079,7 +2130,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[36] CSO Online - The rise of the evasive adversary
+[37] CSO Online - The rise of the evasive adversary
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 06:30:00 +0000
 Link: https://www.csoonline.com/article/4136276/the-rise-of-the-evasive-adversary.html
@@ -2175,7 +2226,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[37] CSO Online - Anthropic’s Claude Code Security rollout is an industry wakeup call
+[38] CSO Online - Anthropic’s Claude Code Security rollout is an industry wakeup call
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 06:07:58 +0000
 Link: https://www.csoonline.com/article/4136294/anthropics-claude-code-security-rollout-is-an-industry-wakeup-call.html
@@ -2269,7 +2320,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[38] CSO Online - OT-Security: Warum der Blick auf Open Source lohnt
+[39] CSO Online - OT-Security: Warum der Blick auf Open Source lohnt
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 04:00:00 +0000
 Link: https://www.csoonline.com/article/3961114/ot-security-warum-der-blick-auf-open-source-lohnt.html
@@ -2409,11 +2460,11 @@ Support & Wartung: Statt eines dedizierten Hersteller-Supports stützt man sich 
 
 Dennoch belegt die Praxis, dass mit einem kompetenten OT-Security-Team oder externen Beratern auch Open-Source-Lösungen in großem Stil erfolgreich eingesetzt werden können. (jm)
 
-Bitcoin-Milliarden von Raubkopie-Portal im Visier der Justiz
-
 Hacker stiehlt Daten von Tausenden RTL-Mitarbeitern
 
 KI und Komplexität als Brandbeschleuniger für Cyberkriminelle
+
+Sonderkommission ermittelt zu Cyberangriff auf Kunstsammlungen Dresden
 
 Von unseren Redakteuren direkt in Ihren Posteingang
 
@@ -2421,7 +2472,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[39] CSO Online - Russian group uses AI to exploit weakly-protected Fortinet firewalls, says Amazon
+[40] CSO Online - Russian group uses AI to exploit weakly-protected Fortinet firewalls, says Amazon
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 24 Feb 2026 03:49:40 +0000
 Link: https://www.csoonline.com/article/4136198/russian-group-uses-ai-to-exploit-weakly-protected-fortinet-firewalls-says-amazon.html
@@ -2493,7 +2544,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[40] CSO Online - Hacker stiehlt Daten von Tausenden RTL-Mitarbeitern
+[41] CSO Online - Hacker stiehlt Daten von Tausenden RTL-Mitarbeitern
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 11:58:45 +0000
 Link: https://www.csoonline.com/article/4135838/hacker-stiehlt-daten-von-tausenden-rtl-mitarbeitern.html
@@ -2527,7 +2578,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[41] CSO Online - New Arkanix stealer blends rapid Python harvesting with stealthier C++ payloads
+[42] CSO Online - New Arkanix stealer blends rapid Python harvesting with stealthier C++ payloads
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 11:54:52 +0000
 Link: https://www.csoonline.com/article/4135843/new-arkanix-stealer-blends-rapid-python-harvesting-with-stealthier-c-payloads.html
@@ -2569,7 +2620,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[42] CSO Online - Attackers exploit Ivanti EPMM zero-days to seize control of MDM servers
+[43] CSO Online - Attackers exploit Ivanti EPMM zero-days to seize control of MDM servers
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 10:32:31 +0000
 Link: https://www.csoonline.com/article/4135776/attackers-exploit-ivanti-epmm-zero-days-to-seize-control-of-mdm-servers.html
@@ -2629,7 +2680,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[43] CSO Online - 13 ways attackers use generative AI to exploit your systems
+[44] CSO Online - 13 ways attackers use generative AI to exploit your systems
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 23 Feb 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/3819176/top-5-ways-attackers-use-generative-ai-to-exploit-your-systems.html
