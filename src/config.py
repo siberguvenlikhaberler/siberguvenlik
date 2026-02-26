@@ -360,6 +360,103 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         .back-to-top:hover {{
             opacity: 1;
         }}
+
+        /* =============================================
+           MOBİL UYUMLU (RESPONSIVE) CSS
+           ============================================= */
+        @media (max-width: 768px) {{
+            body {{
+                padding: 0;
+                background: white;
+            }}
+            .container {{
+                border-radius: 0;
+                box-shadow: none;
+                max-width: 100%;
+            }}
+            .report-header {{
+                padding: 28px 16px;
+            }}
+            .report-header h1 {{
+                font-size: 19px;
+                line-height: 1.35;
+            }}
+            .important-news {{
+                padding: 16px;
+                border-radius: 0;
+                margin-bottom: 12px;
+            }}
+            .important-news h2 {{
+                font-size: 16px;
+                margin-bottom: 12px;
+            }}
+            .important-item {{
+                padding: 10px 12px;
+            }}
+            .important-item a {{
+                font-size: 13px;
+            }}
+            .executive-summary {{
+                padding: 16px;
+            }}
+            .executive-summary h2 {{
+                font-size: 15px;
+            }}
+            .executive-table {{
+                border-spacing: 4px;
+            }}
+            .executive-table tr {{
+                display: block;
+            }}
+            .executive-table td {{
+                display: block;
+                width: 100% !important;
+                margin-bottom: 6px;
+                padding: 10px 12px;
+            }}
+            .executive-table a {{
+                font-size: 13px;
+            }}
+            .news-section {{
+                padding: 12px 12px 20px;
+            }}
+            .news-item {{
+                padding: 14px;
+                margin-bottom: 14px;
+                border-radius: 6px;
+            }}
+            .news-title {{
+                font-size: 15px;
+                margin-bottom: 8px;
+            }}
+            .news-content {{
+                font-size: 14px;
+                line-height: 1.55;
+            }}
+            .source {{
+                font-size: 12px;
+            }}
+            .back-to-top {{
+                left: auto !important;
+                right: 14px;
+                bottom: 20px;
+                top: auto !important;
+                transform: none !important;
+                width: 42px;
+                height: 42px;
+                font-size: 20px;
+            }}
+        }}
+        @media (max-width: 480px) {{
+            .report-header h1 {{
+                font-size: 16px;
+            }}
+            .important-item a,
+            .executive-table a,
+            .news-content {{
+                font-size: 13px;
+            }}
+        }}
     </style>
 </head>
 <body>
