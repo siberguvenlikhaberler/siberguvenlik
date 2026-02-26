@@ -546,8 +546,7 @@ class HaberSistemi:
         removed_count = 0
 
         for src, articles in all_news.items():
-            # Mastodon postları zaten fetch_mastodon_posts() içinde zaman filtreli
-            # çekildiğinden tarih filtresinden muaf tutulur
+            # Mastodon postları fetch_mastodon_posts() içinde zaten zaman filtreli
             if src == '_mastodon':
                 filtered[src] = articles
                 continue
@@ -833,6 +832,7 @@ class HaberSistemi:
         # ═══════════════════════════════════════════
         # AŞAMA 4: Mevcut post-processing
         # ═══════════════════════════════════════════
+        html = self._inject_mastodon_badges(html)
         html = self._fix_source_dates(html, txt_content)
 
         html_index = self._add_archive_links(html, is_archive=False)
@@ -975,12 +975,6 @@ KURALLAR:
 - Resmi Türkçe (-mıştır, -edilmiştir)
 - Sıra: haber-{missing_ids[0]}'den haber-{missing_ids[-1]}'e
 - Kod bloğu (```) KULLANMA, direkt HTML yaz
-
-⚠️ MASTODON KAYNAK KURALI:
-Ham veride "Mastodon:" ile başlayan kaynaklar sosyal medya postlarıdır.
-Bu haberler için div'e ZORUNLU OLARAK "mastodon-item" class'ı ekle:
-  → <div class="news-item mastodon-item" id="haber-N">
-  → Kaynak satırına [MASTODON_SCORE:reblogs:favs] ekle (RT:N · FAV:N satırından oku)
 """
 
         try:
@@ -1043,6 +1037,131 @@ Bu haberler için div'e ZORUNLU OLARAK "mastodon-item" class'ı ekle:
         except Exception as e:
             print(f"   ❌ Tamamlama hatası: {e}")
             return html
+
+
+    def _inject_mastodon_badges(self, html):
+        """
+        [MASTODON_SCORE:N:N] etiketini badge'e çevirir.
+        Ayrıca mastodon-item class'ı eksikse otomatik ekler.
+        """
+        import re
+
+        def make_badge(reblogs, favs):
+            rb = str(reblogs) if reblogs else '0'
+            fv = str(favs) if favs else '0'
+            return (
+                f'<span class="mastodon-badge">'
+                f'&#9656; Sosyal Medya Sinyali &#8212; '
+                f'Paylaşım: {rb} &middot; Beğeni: {fv}'
+                f'</span>'
+            )
+
+        # Adım 1: [MASTODON_SCORE:N:N] etiketi olan ama mastodon-item class'ı
+        # olmayan div'lere class ekle ve etiketi badge'e çevir
+        def fix_item_and_badge(m):
+            div_html = m.group(0)
+            # MASTODON_SCORE varsa mastodon-item class ekle
+            score_match = re.search(r'\[MASTODON_SCORE:(\d+):(\d+)\]', div_html)
+            if not score_match:
+                return div_html
+            reblogs = int(score_match.group(1))
+            favs    = int(score_match.group(2))
+            badge   = make_badge(reblogs, favs)
+            # class ekle (yoksa)
+            if 'mastodon-item' not in div_html:
+                div_html = div_html.replace(
+                    'class="news-item"',
+                    'class="news-item mastodon-item"'
+                )
+            # etiketi badge ile değiştir
+            div_html = re.sub(r'\[MASTODON_SCORE:\d+:\d+\]', '', div_html)
+            # badge'i news-title'dan önce ekle
+            div_html = div_html.replace(
+                '<div class="news-title">',
+                badge + '\n            <div class="news-title">'
+            )
+            return div_html
+
+        html = re.sub(
+            r'<div class="news-item[^"]*"[^>]*>.*?</div>\s*</div>',
+            fix_item_and_badge,
+            html,
+            flags=re.DOTALL
+        )
+
+        # Adım 2: mastodon-item class'ı var ama badge yoksa fallback ekle
+        def add_fallback_badge(m):
+            div_html = m.group(0)
+            if 'mastodon-badge' in div_html:
+                return div_html
+            badge = make_badge(0, 0).replace(
+                'Paylaşım: 0 &middot; Beğeni: 0', 'Sosyal Medya Kaynağı'
+            )
+            return div_html.replace(
+                '<div class="news-title">',
+                badge + '\n            <div class="news-title">'
+            )
+
+        html = re.sub(
+            r'<div class="news-item mastodon-item"[^>]*>.*?</div>\s*</div>',
+            add_fallback_badge,
+            html,
+            flags=re.DOTALL
+        )
+
+        count = html.count('mastodon-badge')
+        print(f"   ✅ {count} Mastodon badge enjekte edildi")
+        return html
+
+    def _inject_mobile_css(self, html):
+        """
+        Gemini ne yazarsa yazsın, </style> kapanmadan önce mobil CSS garantili eklenir.
+        Zaten @media (max-width: 768px) varsa tekrar eklemez.
+        """
+        if '@media (max-width: 768px)' in html:
+            print("   ℹ️  Mobil CSS zaten mevcut, atlandı")
+            return html
+
+        mobile_css = """
+        /* =============================================
+           MOBİL UYUMLU (RESPONSIVE) CSS
+           ============================================= */
+        @media (max-width: 768px) {
+            body { padding: 0; background: white; }
+            .container { border-radius: 0; box-shadow: none; max-width: 100%; }
+            .report-header { padding: 28px 16px; }
+            .report-header h1 { font-size: 19px; line-height: 1.35; }
+            .important-news { padding: 16px; border-radius: 0; margin-bottom: 12px; }
+            .important-news h2 { font-size: 16px; margin-bottom: 12px; }
+            .important-item { padding: 10px 12px; }
+            .important-item a { font-size: 13px; }
+            .executive-summary { padding: 16px; }
+            .executive-summary h2 { font-size: 15px; }
+            .executive-table { border-spacing: 4px; }
+            .executive-table tr { display: block; }
+            .executive-table td { display: block; width: 100% !important; margin-bottom: 6px; padding: 10px 12px; }
+            .news-section { padding: 12px; }
+            .news-item { padding: 14px; border-radius: 6px; margin-bottom: 14px; }
+            .news-title { font-size: 15px; margin-bottom: 8px; }
+            .news-content { font-size: 14px; line-height: 1.55; }
+            .source { font-size: 12px; }
+            .archive-section { padding: 16px; }
+            .archive-link { font-size: 12px; padding: 6px 10px; }
+            .back-to-top { display: none !important; }
+        }
+        @media (max-width: 480px) {
+            .report-header h1 { font-size: 16px; }
+            .important-news h2 { font-size: 14px; }
+            .news-title { font-size: 14px; }
+            .executive-table td a { font-size: 13px; }
+        }"""
+
+        if '</style>' in html:
+            html = html.replace('</style>', mobile_css + '\n        </style>', 1)
+            print("   ✅ Mobil CSS enjekte edildi")
+        else:
+            print("   ⚠️  </style> bulunamadı, mobil CSS eklenemedi")
+        return html
 
     def _fix_source_dates(self, html, txt_content):
         """Gemini'nin yazdığı hatalı tarihleri ham TXT'deki gerçek tarihlerle düzelt"""
