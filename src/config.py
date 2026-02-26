@@ -25,6 +25,24 @@ NEWS_SOURCES = {
     'Infoblox Blog': 'https://blogs.infoblox.com/feed/',
 }
 
+# ===== MASTODON KAYNAKLARI =====
+# Siber güvenlik alanında önde gelen araştırmacı ve kurumlar
+# instance: Mastodon sunucusu, username: @ ile başlamayan kullanıcı adı
+# Her post için: reblogs_count * 2 + favourites_count >= MIN_ENGAGEMENT_SCORE olmalı
+MASTODON_SOURCES = [
+    {'instance': 'infosec.exchange',  'username': 'ESETresearch',   'label': 'ESET Research'},
+    {'instance': 'mastodon.social',   'username': 'campuscodi',      'label': 'Catalin Cimpanu'},
+    {'instance': 'infosec.exchange',  'username': 'malwaretech',     'label': 'MalwareTech'},
+    {'instance': 'infosec.exchange',  'username': 'thegrugq',        'label': 'thegrugq'},
+    {'instance': 'infosec.exchange',  'username': 'alperovitch',     'label': 'Dmitri Alperovitch'},
+]
+
+# Minimum etkileşim skoru: reblogs*2 + favourites >= bu değer
+MASTODON_MIN_ENGAGEMENT = 5
+
+# Kaç saatlik postları çekelim (son N saat)
+MASTODON_HOURS_BACK = 36
+
 # Scraping ayarları
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
 CONTENT_SELECTORS = {
@@ -180,6 +198,14 @@ Her haberin altında şu format var: (XXXXXXX, AÇIK - https://link, domain.com,
   → görünen metin: domain.com
   → tarih: o satırdaki GG.AA.YYYY değerini AYNEN kopyala
 ⛔ ASLA bugünün tarihini yazma — her haberin tarihi farklıdır, ham veriden oku
+
+⚠️ MASTODON KAYNAK KURALI - KRİTİK:
+Ham veride "Mastodon:" ile başlayan kaynaklar sosyal medya postlarıdır.
+Bu haberler için news-item div'ine ZORUNLU OLARAK "mastodon-item" class'ı ekle:
+  → <div class="news-item mastodon-item" id="haber-N">
+  → Kaynak satırına [MASTODON_SCORE:reblogs:favs] ekle, örnek:
+     <p class="source"><b>(...) [MASTODON_SCORE:12:34]</b></p>
+  → reblogs ve favs değerlerini ham veriden oku: "RT:N · FAV:N" satırından
 
 ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
 ```html
@@ -359,6 +385,24 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         }}
         .back-to-top:hover {{
             opacity: 1;
+        }}
+
+        /* MASTODON SOSYAL MEDYA SİNYALİ */
+        .mastodon-item {{
+            border-left: 4px solid #6364ff;
+        }}
+        .mastodon-badge {{
+            display: inline-block;
+            background: #f0efff;
+            border: 1px solid #c4b5fd;
+            border-radius: 3px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4c3d9e;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+            font-family: inherit;
         }}
 
         /* =============================================
