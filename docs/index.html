@@ -175,6 +175,121 @@
         .back-to-top:hover {
             opacity: 1;
         }
+
+        /* MASTODON SOSYAL MEDYA SİNYALİ */
+        .mastodon-item {
+            border-left: 4px solid #6364ff;
+        }
+        .mastodon-badge {
+            display: inline-block;
+            background: #f0efff;
+            border: 1px solid #c4b5fd;
+            border-radius: 3px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4c3d9e;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+            font-family: inherit;
+        }
+
+        /* =============================================
+           MOBİL UYUMLU (RESPONSIVE) CSS
+           ============================================= */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .container {
+                border-radius: 0;
+                box-shadow: none;
+                max-width: 100%;
+            }
+            .report-header {
+                padding: 28px 16px;
+            }
+            .report-header h1 {
+                font-size: 19px;
+                line-height: 1.35;
+            }
+            .important-news {
+                padding: 16px;
+                border-radius: 0;
+                margin-bottom: 12px;
+            }
+            .important-news h2 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+            .important-item {
+                padding: 10px 12px;
+            }
+            .important-item a {
+                font-size: 13px;
+            }
+            .executive-summary {
+                padding: 16px;
+            }
+            .executive-summary h2 {
+                font-size: 15px;
+            }
+            .executive-table {
+                border-spacing: 4px;
+            }
+            .executive-table tr {
+                display: block;
+            }
+            .executive-table td {
+                display: block;
+                width: 100% !important;
+                margin-bottom: 6px;
+                padding: 10px 12px;
+            }
+            .executive-table a {
+                font-size: 13px;
+            }
+            .news-section {
+                padding: 12px 12px 20px;
+            }
+            .news-item {
+                padding: 14px;
+                margin-bottom: 14px;
+                border-radius: 6px;
+            }
+            .news-title {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
+            .news-content {
+                font-size: 14px;
+                line-height: 1.55;
+            }
+            .source {
+                font-size: 12px;
+            }
+            .back-to-top {
+                left: auto !important;
+                right: 14px;
+                bottom: 20px;
+                top: auto !important;
+                transform: none !important;
+                width: 42px;
+                height: 42px;
+                font-size: 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .report-header h1 {
+                font-size: 16px;
+            }
+            .important-item a,
+            .executive-table a,
+            .news-content {
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -192,19 +307,19 @@
                 <h2>Önemli Gelişmeler</h2>
                 <div class="important-summary">
                     <div class="important-item">
-                        <a href="#haber-1">1. Cisco Catalyst SD-WAN sistemlerinde CVE-2026-20127 kritik sıfır gün açığının 2023'ten beri aktif olarak istismar edildiği tespit edilmiştir.</a>
+                        <a href="#haber-1">1. Cisco SD-WAN Sıfır Gün Açığı Kritik Altyapıyı Hedef Almaktadır.</a>
                     </div>
                     <div class="important-item">
-                        <a href="#haber-2">2. Google, UNC2814 olarak izlenen Çin bağlantılı siber casusluk grubunun 42 ülkede 53 kuruluşu hedef alan GRIDTIDE kampanyasını durdurmuştur.</a>
+                        <a href="#haber-2">2. Google, UNC2814 GRIDTIDE Kampanyasını Başarıyla Engelledi.</a>
                     </div>
                     <div class="important-item">
-                        <a href="#haber-3">3. Marquis Software Solutions, SonicWall'a karşı açtığı davada, bir yedekleme ihlali nedeniyle 74 ABD bankasının operasyonlarını aksatan fidye yazılımı saldırısından SonicWall'ı sorumlu tutmaktadır.</a>
+                        <a href="#haber-3">3. Savunma Yöneticisi Rus Aracıya Sıfır Gün İstismarı Sattı.</a>
                     </div>
                     <div class="important-item">
-                        <a href="#haber-4">4. ABD, savunma müteahhidi L3Harris'in eski yöneticisi Peter Williams'ın çalıntı sıfır gün açıklarını sattığı Rus exploit aracısı Operation Zero'ya yaptırım uygulamıştır.</a>
+                        <a href="#haber-4">4. Lazarus APT Grubu Medusa Fidye Yazılımını Orta Doğu'da Dağıttı.</a>
                     </div>
                     <div class="important-item">
-                        <a href="#haber-5">5. ShinyHunters siber suç grubunun CarGurus platformundan 12.4 milyondan fazla kullanıcının kişisel verilerini içeren bir siber saldırı gerçekleştirdiği bildirilmiştir.</a>
+                        <a href="#haber-5">5. ShinyHunters Siber Saldırısı 12.4 Milyon CarGurus Kullanıcısını Etkiledi.</a>
                     </div>
                 </div>
             </div>
@@ -212,120 +327,166 @@
             <!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU -->
             <table class="executive-table">
                 <tr>
-                    <td><a href="#haber-6">6. Tıbbi cihaz üreticisi UFP Technologies, BT sistemlerini ve verilerini tehlikeye atan bir siber saldırıda veri çalındığı konusunda uyarıda bulunmuştur.</a></td>
-                    <td><a href="#haber-7">7. Çinli bir grubun ChatGPT'yi kullanarak eleştirmenlere yönelik dünya çapında bir taciz ve susturma kampanyası yürüttüğü ortaya çıkarılmıştır.</a></td>
+                    <td><a href="#haber-6">6. Marquis, SonicWall'a Fidye Yazılımı Saldırısı Nedeniyle Dava Açtı.</a></td>
+                    <td><a href="#haber-7">7. Belarus Siber Partizanları Khimvolokno Şirketine Saldırı Düzenledi.</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#haber-8">8. Zyxel, bir düzineden fazla yönlendirici modelini etkileyen ve kimliği doğrulanmamış saldırganların uzaktan komut yürütmesine izin veren kritik bir RCE açığına karşı güvenlik güncellemeleri yayınlamıştır.</a></td>
-                    <td><a href="#haber-9">9. Dört kötü amaçlı NuGet paketinin ASP.NET web uygulaması geliştiricilerini hedef alarak hassas verileri çaldığı ve bir npm paketinin kötü amaçlı yazılım dağıttığı tespit edilmiştir.</a></td>
+                    <td><a href="#haber-8">8. UFP Technologies Siber Saldırıda Veri Çalındığını Duyurdu.</a></td>
+                    <td><a href="#haber-9">9. Microsoft, Sahte Next.js İş Depolarına Karşı Geliştiricileri Uyardı.</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#haber-10">10. Geliştiricileri hedef alan koordineli bir kampanyanın, sahte Next.js iş görüşmesi testleri aracılığıyla geliştirici cihazlarına arka kapı bıraktığı bildirilmiştir.</a></td>
-                    <td><a href="#haber-11">11. Yeni keşfedilen Steaelite RAT'ın veri hırsızlığı ve fidye yazılımı yönetim yeteneklerini tek bir araçta birleştirdiği belirtilmiştir.</a></td>
+                    <td><a href="#haber-10">10. CISA, Soliton FileZen Açığını İstismar Edilenler Listesine Ekledi.</a></td>
+                    <td><a href="#haber-11">11. Zyxel, Kritik Uzaktan Kod Yürütme Açığı Hakkında Uyarı Yaptı.</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#haber-12">12. Anthropic'in Claude Code yapay zeka destekli kodlama asistanındaki birden fazla güvenlik açığının uzaktan kod yürütme ve API kimlik bilgilerinin çalınmasına yol açabileceği açıklanmıştır.</a></td>
-                    <td><a href="#haber-13">13. Scattered LAPSUS$ Hunters (SLH) olarak bilinen siber suç kolektifinin, BT yardım masası vishing saldırıları düzenlemek üzere kadınları işe almak için mali teşvikler sunduğu gözlemlenmiştir.</a></td>
+                    <td><a href="#haber-12">12. Kötü Amaçlı NuGet Paketleri ASP.NET Verilerini Çaldı.</a></td>
+                    <td><a href="#haber-13">13. OpenClaw Yapay Zeka Otomasyon Çerçevesinde RCE Açıkları Tespit Edildi.</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#haber-14">14. OpenClaw Yapay Zeka Otomasyon Çerçevesinde, uzaktan kod yürütme ve kimlik bilgisi hırsızlığına yol açabilecek kritik güvenlik açıkları içeren bir tedarik zinciri güvenlik riski bulunduğu analiz edilmiştir.</a></td>
-                    <td><a href="#haber-15">15. Wynn Resorts, sunucularından çalışan verilerinin çalındığını doğrulamış ve saldırganların verileri sildiğine dair sözlerine güvendiğini belirtmiştir.</a></td>
+                    <td><a href="#haber-14">14. Steaelite RAT, Veri Hırsızlığı ve Fidye Yazılımını Birleştirdi.</a></td>
+                    <td><a href="#haber-15">15. Kötü Amaçlı StripeApi NuGet Paketi API Anahtarlarını Çaldı.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-16">16. Çinli Grup ChatGPT'yi Küresel Taciz Kampanyalarında Kullandı.</a></td>
+                    <td><a href="#haber-17">17. Çin İstihbarat Operasyonu Amerikalıları Hedef Aldı.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-18">18. Claude Code Yazılımında Uzaktan Kod Yürütme Zafiyetleri Bulundu.</a></td>
+                    <td><a href="#haber-19">19. Ukraynalı Şahıs Kuzey Koreli Sahte BT Çalışanlarına Yardım Etti.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-20">20. New York, Valve'a Yasa Dışı Kumarı Teşvik Etmekten Dava Açtı.</a></td>
+                    <td><a href="#haber-21">21. İran Kaynaklı Yeni C77L Fidye Yazılımı Hizmeti Keşfedildi.</a></td>
                 </tr>
             </table>
         </div>
         
         <!-- HABERLER -->
         <div class="news-section">
-            <!-- ÖNEMLİ 5 HABERİN PARAGRAF ÖZETLERİ -->
             <div class="news-item" id="haber-1">
-                <div class="news-title"><b>Cisco SD-WAN Zero-Day CVE-2026-20127'nin Kritik Altyapıları Etkilemesi</b></div>
-                <p class="news-content">Cisco Catalyst SD-WAN Controller ve Manager sistemlerinde CVE-2026-20127 kodlu kritik bir sıfır gün güvenlik açığının 2023'ten bu yana aktif olarak istismar edildiği açıklanmıştır. CVSS puanı 10.0 olan bu güvenlik zafiyeti, kimliği doğrulanmamış uzaktan bir saldırganın kimlik doğrulamasını atlayarak yönetici ayrıcalıkları elde etmesine olanak tanımaktadır. Avustralya Sinyal Müdürlüğü (ASD-ACSC) tarafından rapor edilen bu istismar, UAT-8616 olarak adlandırılan oldukça sofistike bir siber tehdit aktörü tarafından gerçekleştirilmektedir. CISA, federal kurumları etkilenen sistemlere yamaları 24 saat içinde uygulamaya zorlayan acil durum direktifi 26-03'ü yayınlamıştır. Saldırganlar, ilk erişimi sağladıktan sonra yazılım sürümünü düşürüp CVE-2022-20775'i istismar ederek kök ayrıcalıklarına yükselmektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://thehackernews.com/2026/02/cisco-sd-wan-zero-day-cve-2026-20127.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
+                <div class="news-title"><b>Cisco SD-WAN Sıfır Gün Açığı Kritik Altyapıyı Hedef Almaktadır</b></div>
+                <p class="news-content">Cisco Catalyst SD-WAN Controller ve Manager ürünlerinde, CVE-2026-20127 olarak izlenen kritik bir sıfır gün güvenlik açığının 2023 yılından bu yana aktif olarak istismar edildiği tespit edilmiştir. Bu güvenlik açığı, kimlik doğrulaması yapılmamış uzak bir saldırganın kimlik doğrulamasını atlayarak etkilenen sistemlerde yönetici ayrıcalıkları elde etmesine olanak tanımaktadır. Avustralya Sinyal Direktörlüğü'nün (ASD-ACSC) raporladığı bu zafiyetin istismarı, UAT-8616 olarak adlandırılan yüksek derecede sofistike bir tehdit aktörü tarafından gerçekleştirilmektedir. Saldırganlar, bu zafiyeti kullanarak ağ yönetim düzlemine sahte bir eş eklemekte ve ağ konfigürasyonunu manipüle edebilmektedir. ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), federal kurumların bu zafiyeti 24 saat içinde yamalamasını zorunlu kılan acil durum yönergesi yayınlamıştır. Bu durum, kritik altyapı sektörlerine yönelik devam eden tehditleri vurgulamaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/cisco-sd-wan-zero-day-cve-2026-20127.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
             </div>
             
             <div class="news-item" id="haber-2">
-                <div class="news-title"><b>UNC2814 Grubunun 42 Ülkede Telekomünikasyon ve Hükümetleri Hedeflemesi</b></div>
-                <p class="news-content">Google, Mandiant ve sektör ortakları, Çin bağlantılı siber casusluk grubu UNC2814'ün altyapısını çökertmiştir. Bu grup, 42 ülkede en az 53 kuruluşu hedef alarak telekomünikasyon ve hükümet ağlarına sızmıştır. GRIDTIDE adı verilen yeni bir arka kapı, komuta ve kontrol (C2) trafiğini gizlemek amacıyla Google Sheets API'sini kötüye kullanmaktadır. Saldırganların başlangıçtaki erişimi nasıl sağladığı henüz bilinmemekle birlikte, grubun daha önce web sunucularındaki ve uç sistemlerdeki güvenlik açıklarını istismar ettiği belirtilmektedir. UNC2814, hedeflerinde kişisel tanımlayıcı bilgileri (PII) içeren uç noktaları hedeflemiş ve bu durum, siber casusluk faaliyetlerinin izlenen kişilere odaklandığını göstermektedir. Google, saldırıların küresel ölçeğinin telekomünikasyon ve hükümet sektörleri için ciddi bir tehdit oluşturduğunun altını çizmiştir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://thehackernews.com/2026/02/google-disrupts-unc2814-gridtide-campaign-after-53-breaches-across-42-countries.html" target="_blank">thehackernews.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>Google, UNC2814 GRIDTIDE Kampanyasını Başarıyla Engelledi</b></div>
+                <p class="news-content">Google, sektör ortaklarıyla iş birliği yaparak, Çin bağlantılı siber casusluk grubu UNC2814'ün altyapısını bozduğunu duyurmuştur. UNC2814, 42 ülkedeki en az 53 kuruluşu ihlal etmiş ve Afrika, Asya ve Amerika kıtalarındaki uluslararası hükümetleri ve küresel telekomünikasyon kuruluşlarını hedef almıştır. 2017 yılından bu yana takip edilen bu tehdit aktörü, komuta-kontrol (C2) altyapısı olarak SaaS uygulamalarına API çağrılarını kullanarak kötü amaçlı trafiği gizlemektedir. Grubun operasyonlarının merkezinde, GRIDTIDE adlı yeni bir arka kapı bulunmaktadır ve bu arka kapı, C2 trafiğini gizlemek ve ham veri ile kabuk komutlarının aktarımını kolaylaştırmak için Google E-Tablolar API'sini kötüye kullanmaktadır. Google, saldırgan tarafından kontrol edilen tüm Google Cloud Projelerini sonlandırmış ve bilinen UNC2814 altyapısını devre dışı bırakmıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/google-disrupts-unc2814-gridtide.html" target="_blank">thehackernews.com</a>, 25.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-3">
-                <div class="news-title"><b>Marquis'in SonicWall Veri İhlali Sonrası 74 Bankayı Etkileyen Saldırısı</b></div>
-                <p class="news-content">Marquis Software Solutions, SonicWall'a karşı açtığı davada, bir fidye yazılımı saldırısının 74 ABD bankasının operasyonlarını aksatmasına neden olan büyük ihmal ve yanlış beyandan SonicWall'ı sorumlu tutmaktadır. 14 Ağustos 2025'te, SonicWall güvenlik duvarının tehlikeye atılmasıyla Marquis'in ağına sızan saldırganlar, iş ortaklarından alınan kişisel bilgileri çalmıştır. Bu bilgiler arasında isimler, adresler, telefon numaraları, Sosyal Güvenlik numaraları ve finansal hesap bilgileri bulunmaktadır. İhlalin nedeni, SonicWall'ın MySonicWall bulut yedekleme hizmetinde Şubat 2025'teki bir API kod değişikliğiyle ortaya çıkan bir güvenlik açığı olarak belirlenmiştir. Bu durum, yetkisiz kişilerin SonicWall'ın bulutunda depolanan güvenlik duvarı yapılandırma yedekleme dosyalarına erişmesine olanak tanımıştır. Marquis, bu saldırı sonucunda 36'dan fazla tüketici toplu davasına maruz kalmıştır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/marquis-sues-sonicwall-over-backup-breach-that-led-to-ransomware-attack/" target="_blank">bleepingcomputer.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>Savunma Yöneticisi Rus Aracıya Sıfır Gün İstismarı Sattı</b></div>
+                <p class="news-content">Eski bir ABD savunma yüklenicisi olan L3Harris'in yöneticisi Peter Williams, sekiz adet sıfır gün istismarını Rus aracı Operation Zero'ya milyonlarca dolara satmaktan yedi yıldan fazla hapis cezasına çarptırılmıştır. Ekim 2025'te ticari sır hırsızlığından suçunu kabul eden Williams, ABD Adalet Bakanlığı tarafından "dünyanın en kötü şöhretli istismar aracı kurumlarından biri" olarak nitelendirilen Operation Zero'ya bu istismarları satmıştır. Bu istismarların, ABD hükümeti ve müttefik ortaklarının kısıtlı kullanımı için tasarlandığı belirtilmiştir. Williams'ın bu eylemleriyle ulusal güvenliğe 35 milyon dolarlık bir zarar verdiği ve milyonlarca cihaza erişim sağlanabileceği ifade edilmiştir. ABD Hazine Bakanlığı, aynı gün Operation Zero ve kurucusu Sergey Zelenyuk'a yaptırım uygulayarak, şirketi ulusal güvenlik tehdidi olarak tanımlamıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/188482/intelligence/former-u-s-defense-contractor-executive-sentenced-for-selling-zero-day-exploits-to-russian-broker-operation-zero.html" target="_blank">securityaffairs.com</a>, 25.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-4">
-                <div class="news-title"><b>ABD'nin Rus Exploit Aracısına Yaptırım Uygulaması ve Zero-Day Satışı</b></div>
-                <p class="news-content">ABD Hazine Bakanlığı, ABD savunma müteahhidi L3Harris'in eski yöneticisi Peter Williams'ın çalıntı sıfır gün açıklarını satın alan Rus exploit aracısı Operation Zero'ya yaptırım uygulamıştır. Peter Williams, Trenchant'tan çaldığı sekiz sıfır gün açığını Operation Zero'ya yaklaşık 1.3 milyon dolar değerinde kripto para karşılığında sattığını itiraf etmiştir. Bu siber araçlar, yalnızca ABD hükümeti ve müttefik istihbarat teşkilatları tarafından kullanılmak üzere tasarlanmıştır. Operation Zero'nun Rus hükümeti dahil müşterileri olduğu ve ABD yapımı işletim sistemleri ile şifreli mesajlaşma uygulamalarını hedef alan exploit'ler için milyonlarca dolar ödül teklif ettiği belirtilmektedir. Bu yaptırımlar, ABD Fikri Mülkiyetini Koruma Yasası (PAIPA) kapsamında uygulanan ilk yaptırımlar olma özelliğini taşımaktadır ve ulusal güvenliği tehdit eden eylemlere karşı kararlı bir duruş sergilenmektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/us-sanctions-russian-exploit-broker-for-buying-stolen-zero-days/" target="_blank">bleepingcomputer.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>Lazarus APT Grubu Medusa Fidye Yazılımını Orta Doğu'da Dağıttı</b></div>
+                <p class="news-content">Kuzey Kore bağlantılı Lazarus APT grubu (Diamond Sleet ve Pompilus olarak da bilinir), Orta Doğu'daki adı açıklanmayan bir kuruluşa karşı Medusa fidye yazılımını konuşlandırdığı Symantec ve Carbon Black Tehdit Avcısı Ekibi tarafından rapor edilmiştir. Grubun daha önce ABD'deki bir sağlık kuruluşuna yönelik başarısız bir saldırı girişiminde de bulunduğu belirtilmiştir. Medusa, 2023 yılında başlatılan ve Spearwing grubu tarafından işletilen bir hizmet olarak fidye yazılımıdır (RaaS). Lazarus'un bu tür saldırıları, grubun geleneksel casusluktan fidye yazılımı odaklı gasp eylemlerine kaydığını göstermektedir. Bu durum, Kuzey Kore'nin siber suç faaliyetlerine olan doymak bilmez katılımının devam ettiğini ve sağlık kuruluşları gibi hassas hedeflere yönelik saldırılardan çekinmediğini ortaya koymaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/188460/apt/lazarus-apt-group-deployed-medusa-ransomware-against-middle-east-target.html" target="_blank">securityaffairs.com</a>, 25.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-5">
-                <div class="news-title"><b>ShinyHunters Siber Saldırısının CarGurus'tan 12.4 Milyon Kullanıcı Verisini İhlal Etmesi</b></div>
-                <p class="news-content">ShinyHunters siber suç grubu, ABD merkezli otomobil araştırma ve alışveriş platformu CarGurus'tan 12.4 milyondan fazla kullanıcının kişisel verilerini içeren bir siber saldırı gerçekleştirmiştir. Şubat 2026'da meydana gelen bu veri ihlalinde, e-postalar, hesap kimlikleri, finans başvuruları, bayi bilgileri, isimler, telefon numaraları, adresler, IP adresleri ve otomatik finans başvuru sonuçları gibi hassas bilgiler açığa çıkmıştır. ShinyHunters, fidye talepleri başarısız olduğunda verileri sızdırmasıyla tanınan bir gruptur. Bu ihlal, müşteriler için kimlik avı, sosyal mühendislik saldırıları, kimlik hırsızlığı ve finansal dolandırıcılık riskini artırmaktadır. Grubun genellikle sosyal mühendislik ve sesli kimlik avı yöntemlerini kullanarak SaaS platformlarına erişim sağladığı bilinmektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://securityaffairs.com/188491/cyber-crime/shinyhunters-cyberattack-on-cargurus-impacts-12-4-million-users.html" target="_blank">securityaffairs.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>ShinyHunters Siber Saldırısı 12.4 Milyon CarGurus Kullanıcısını Etkiledi</b></div>
+                <p class="news-content">ShinyHunters adlı siber suç grubu, CarGurus platformuna düzenlediği bir siber saldırıda 12.4 milyondan fazla kullanıcının kişisel verilerini sızdırmıştır. Bu veri ihlali, e-postalar, hesap kimlikleri, finans başvuruları, bayi bilgileri, isimler, telefon numaraları, adresler, IP adresleri ve otomatik finans başvuru sonuçları gibi hassas bilgileri içermektedir. CarGurus, ABD merkezli bir dijital otomotiv pazar yeri olup, aylık yaklaşık 40 milyon ziyaretçi çekmektedir. ShinyHunters grubunun bu saldırıyı, fidye taleplerinin başarısız olmasının ardından gerçekleştirdiği belirtilmektedir. Grup, sosyal mühendislik becerileriyle tanınmakta ve genellikle yardım masalarını taklit ederek kimlik bilgilerini çalmaktadır. Bu tür büyük ölçekli veri ihlalleri, kullanıcılar için kimlik avı ve kimlik hırsızlığı risklerini artırmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/188491/cyber-crime/shinyhunters-cyberattack-on-cargurus-impacts-12-4-million-users.html" target="_blank">securityaffairs.com</a>, 25.02.2026)</b></p>
             </div>
             
-            <!-- GERİ KALAN HABERLERİN PARAGRAF ÖZETLERİ -->
             <div class="news-item" id="haber-6">
-                <div class="news-title"><b>UFP Technologies'in Siber Saldırıda Veri Çalınması Konusunda Uyarı Yapması</b></div>
-                <p class="news-content">Amerikalı tıbbi cihaz üreticisi UFP Technologies, BT sistemlerini ve verilerini tehlikeye atan bir siber güvenlik olayını açıklamıştır. Şirket, 14 Şubat'ta BT sistemlerinde şüpheli faaliyetler tespit etmiş ve hemen izolasyon ile iyileştirme önlemleri almıştır. Ön soruşturma sonuçları, tehdidin ortadan kaldırıldığını ancak saldırganın tehlikeye atılan sistemlerden veri çalabildiğini göstermektedir. Verilerin imha edildiğine dair not, bir fidye yazılımı veya wiper saldırısı olasılığını düşündürmektedir. Şirket, kişisel bilgilerin sızdırılıp sızdırılmadığını henüz belirleyemediğini, ancak bu durumun doğrulanması halinde yasal gerekliliklere uygun olarak etkilenen kişilere bildirim yapılacağını belirtmiştir. UFP Technologies, birincil BT sistemlerinin çalışır durumda kaldığını ve olayın operasyonları veya finansalları üzerinde önemli bir etki yaratmasının beklenmediğini ifade etmiştir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/medical-device-maker-ufp-technologies-warns-of-data-stolen-in-cyberattack/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
+                <div class="news-title"><b>Marquis, SonicWall'a Fidye Yazılımı Saldırısı Nedeniyle Dava Açtı</b></div>
+                <p class="news-content">Marquis Software Solutions, SonicWall'a karşı fidye yazılımı saldırısı nedeniyle ağır ihmal ve yanlış beyan iddiasıyla dava açmıştır. Ağustos 2025'te Marquis'in ağına sızan saldırganlar, bir SonicWall güvenlik duvarını ele geçirdikten sonra 74 ABD bankasındaki işlemleri kesintiye uğratmıştır. Saldırıda isimler, adresler, telefon numaraları, Sosyal Güvenlik numaraları ve finansal hesap bilgileri gibi kişisel veriler çalınmıştır. Marquis, Mandiant'ın soruşturması sonucunda saldırının, SonicWall'ın MySonicWall bulut yedekleme hizmetindeki bir API kodu değişikliğiyle ortaya çıkan bir güvenlik açığından kaynaklandığını ve bu açığın devlet destekli bilgisayar korsanları tarafından kullanıldığını iddia etmektedir. Bu durum, finans sektöründeki kritik altyapıların güvenliğine yönelik ciddi endişeleri gündeme getirmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/marquis-sues-sonicwall-over-backup-breach-that-led-to-ransomware-attack/" target="_blank">bleepingcomputer.com</a>, 25.02.2026)</b></p>
             </div>
 
-            <div class="news-item" id="haber-7">
-                <div class="news-title"><b>Çin Grubunun ChatGPT Kullanarak Eleştirmenlere Yönelik Taciz Kampanyası Yürütmesi</b></div>
-                <p class="news-content">OpenAI'nin yeni tehdit raporu, Çinli bir kolluk kuvveti yetkilisinin ChatGPT'yi siber operasyon raporlarını gözden geçirmek ve düzenlemek için kullandığını ortaya çıkarmıştır. Bu durum, Çin'in hem yurt içinde hem de yurt dışında eleştirmenlerine karşı yürüttüğü dünya çapında bir çevrimiçi taciz ve susturma kampanyasının ayrıntılarını ifşa etmiştir. İlgili hesap, Japonya Başbakanı Sanae Takaichi'ye karşı bir propaganda kampanyası planlamak için de ChatGPT'yi kullanmaya çalışmıştır. Kampanya, yüzlerce insan personeli, farklı sosyal medya platformlarında binlerce sahte hesap ve yerel Çin yapay zeka modellerinin kullanımını içermektedir. Operasyonlar arasında toplu gönderi ve içerik üretimi, muhaliflere ait hesaplar hakkında sosyal medya şirketlerine sahte şikayetler yağdırma, belge sahteciliği ve hatta ABD'li yetkilileri taklit etme gibi eylemler bulunmaktadır. Bu faaliyetler, siber suçluların ve devlet destekli aktörlerin AI teknolojisini mevcut operasyonlarını hızlandırmak ve genişletmek için nasıl kullandığını göstermektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://cyberscoop.com/chinese-chatgpt-online-harassment-campaign-against-critics-dissidents/" target="_blank">cyberscoop.com</a>, 25.02.2026)</b></p>
+            <div class="news-item mastodon-item" id="haber-7">
+                <div class="news-title"><b>Belarus Siber Partizanları Khimvolokno Şirketine Saldırı Düzenledi</b></div>
+                <p class="news-content">Belarus Siber Partizanları, Khimvolokno adlı Belaruslu bir şirkete siber saldırı düzenlediklerini iddia etmiştir. Khimvolokno, Rus ordusu için kask astarları ve vücut zırhları yapmakta kullanılan naylon ipliklerin Rusya'daki en büyük tedarikçisidir. Bu saldırı, jeopolitik gerilimlerin siber alana yansıması olarak değerlendirilmekte ve askeri tedarik zincirlerinin siber saldırılara karşı ne kadar savunmasız olduğunu gözler önüne sermektedir. Siber Partizanlar, eylemlerini genellikle Belarus rejimine ve Rusya'ya karşı protesto biçiminde gerçekleştirmektedir. Bu tür saldırılar, kritik askeri altyapı ve tedarik zincirlerinin hedef alınmasıyla ulusal güvenlik üzerinde doğrudan etki yaratmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://x.com/cpartisans/status/2027002004606681526" target="_blank">x.com</a>, 26.02.2026) [MASTODON_SCORE:4:1]</b></p>
             </div>
 
             <div class="news-item" id="haber-8">
-                <div class="news-title"><b>Zyxel'in Birden Fazla Yönlendiriciyi Etkileyen Kritik RCE Açığı Hakkında Uyarıda Bulunması</b></div>
-                <p class="news-content">Tayvanlı ağ sağlayıcısı Zyxel, bir düzineden fazla yönlendirici modelini etkileyen kritik bir güvenlik açığını gidermek üzere güncellemeler yayınlamıştır. CVE-2025-13942 olarak izlenen bu komut enjeksiyonu güvenlik açığı, Zyxel'in 4G LTE/5G NR CPE, DSL/Ethernet CPE, Fiber ONT'leri ve kablosuz genişleticilerinin UPnP işlevinde bulunmuştur. Kimliği doğrulanmamış uzaktan saldırganlar, kötü niyetli olarak hazırlanmış UPnP SOAP istekleri göndererek etkilenen cihazlarda işletim sistemi (OS) komutları yürütebilmektedir. Başarılı istismar için UPnP ve WAN erişiminin etkinleştirilmesi gerekmektedir, ancak WAN erişimi varsayılan olarak devre dışıdır. Zyxel, kullanıcıların optimum koruma sağlamak için yamaları derhal yüklemelerini önemle tavsiye etmiştir. Ayrıca, iki yüksek önem dereceli kimlik doğrulama sonrası komut enjeksiyonu güvenlik açığı (CVE-2025-13943 ve CVE-2026-1459) da giderilmiştir. Bu açıklar, ele geçirilmiş kimlik bilgileri kullanılarak OS komutlarının yürütülmesine olanak tanımaktadır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/zyxel-warns-of-critical-rce-flaw-affecting-over-a-dozen-routers/" target="_blank">bleepingcomputer.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>UFP Technologies Siber Saldırıda Veri Çalındığını Duyurdu</b></div>
+                <p class="news-content">Amerikalı tıbbi cihaz üreticisi UFP Technologies, 14 Şubat'ta BT sistemlerinde şüpheli faaliyetler tespit etmesinin ardından bir siber güvenlik olayı yaşadığını duyurmuştur. Şirket, saldırının kontrol altına alındığını ve tehdidin ortadan kaldırıldığını belirtmiş, ancak bilgisayar korsanlarının sistemlerden veri çaldığını doğrulamıştır. Çalınan veya yok edilen verilerin niteliği hakkında henüz kesin bilgi bulunmamakla birlikte, olayın fidye yazılımı veya wiper saldırısı olabileceği düşünülmektedir. UFP Technologies, kişisel bilgilerin sızdırılıp sızdırılmadığının henüz belirlenemediğini, ancak bu durumun doğrulanması halinde yasal gereklilikler uyarınca etkilenen kişilere bildirim yapılacağını ifade etmiştir. Bu olay, tıbbi cihaz üreticileri gibi kritik sektörlerin siber saldırılara karşı savunmasızlığını göstermektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/medical-device-maker-ufp-technologies-warns-of-data-stolen-in-cyberattack/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-9">
-                <div class="news-title"><b>Kötü Amaçlı NuGet Paketlerinin ASP.NET Verilerini Çalması ve npm Paketlerinin Kötü Amaçlı Yazılım Dağıtması</b></div>
-                <p class="news-content">Siber güvenlik araştırmacıları, ASP.NET web uygulama geliştiricilerini hedef alarak hassas verileri çalmak üzere tasarlanmış dört kötü amaçlı NuGet paketi keşfetmiştir. Socket tarafından tespit edilen bu kampanya, ASP.NET Identity verilerini (kullanıcı hesapları, rol atamaları, izin eşlemeleri) sızdırmakta ve yetkilendirme kurallarını manipüle ederek kurban uygulamalarında kalıcı arka kapılar oluşturmaktadır. NCryptYo, DOMOAuth2_ ve IRAOAuth2.0 gibi paketler, saldırgan kontrollü bir C2 sunucusu ile iletişim kurmakta ve kimlik verilerini çalmaktadır. Ayrıca, Tenable, JavaScript kayıt defterinden kaldırılmadan önce 50.000'den fazla indirilen "ambar-src" adlı kötü amaçlı bir npm paketinin ayrıntılarını açıklamıştır. Bu paket, Windows'ta şifreli shellcode, Linux'ta SSH tabanlı tersine kabuk ve macOS'ta Apfell ajanı gibi kötü amaçlı yazılımları dağıtarak geliştirici sistemlerini tamamen tehlikeye atmaktadır. Saldırının amacı, geliştiricinin makinesini doğrudan değil, geliştirdikleri uygulamaları tehlikeye atmaktır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://thehackernews.com/2026/02/malicious-nuget-packages-stole-aspnet.html" target="_blank">thehackernews.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>Microsoft, Sahte Next.js İş Depolarına Karşı Geliştiricileri Uyardı</b></div>
+                <p class="news-content">Microsoft Defender Güvenlik Araştırma Ekibi, geliştiricileri hedef alan koordineli bir kampanyaya karşı uyarıda bulunmuştur. Bu kampanya, meşru Next.js projeleri ve teknik değerlendirmeler gibi görünen kötü amaçlı depolar kullanarak kurbanları kandırmakta ve ele geçirilen makinelere kalıcı erişim sağlamaktadır. Saldırganlar, geliştirici iş akışlarına karışmak ve kod yürütme olasılığını artırmak için iş temalı yemler kullanmaktadır. Üç farklı yürütme yoluyla, saldırgan kontrolündeki JavaScript'in bellek içinde yürütülmesi hedeflenmektedir. Microsoft, bu aktivitenin Kuzey Kore bağlantılı "Contagious Interview" kampanyasıyla ilişkili olabileceğini belirtmiştir. Nihai amaç, kaynak kodu, sırlar ve kimlik bilgileri gibi hassas verileri içeren geliştirici sistemlerine kötü amaçlı yazılım bulaştırmak ve hedef ağda daha derinlere nüfuz etmektir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/fake-nextjs-repos-target-developers.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-10">
-                <div class="news-title"><b>Sahte Next.js İş Görüşmesi Testlerinin Geliştirici Cihazlarına Arka Kapı Bırakması</b></div>
-                <p class="news-content">Yazılım geliştiricilerini hedef alan koordineli bir kampanya, meşru Next.js projeleri ve teknik değerlendirme materyalleri gibi görünen kötü amaçlı depolama alanları ve kodlama testleri kullanmaktadır. Microsoft Defender ekibi, saldırganın amacının geliştirici makinelerinde uzaktan kod yürütme (RCE) elde etmek, hassas verileri sızdırmak ve tehlikeye atılan sistemlere ek kötü amaçlı yazılımlar yerleştirmek olduğunu belirtmiştir. Hedef, depoyu klonlayıp yerel olarak açtığında, uygulamanın başlatılmasıyla otomatik olarak kötü amaçlı JavaScript tetiklenmektedir. Bu komut dosyası, saldırganın sunucusundan ek kötü amaçlı kod (bir JavaScript arka kapısı) indirerek bellekte doğrudan yürütmekte ve makinede uzaktan kod yürütmeye olanak tanımaktadır. Saldırganlar, enfeksiyon oranını artırmak için kötü amaçlı depolara birden fazla yürütme tetikleyicisi yerleştirmiştir. Microsoft, geliştiricilere standart iş akışlarının yüksek riskli saldırı yüzeyleri olarak kabul edilmesi ve uygun önlemlerin alınması konusunda tavsiyelerde bulunmaktadır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/fake-nextjs-job-interview-tests-backdoor-developers-devices/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
+                <div class="news-title"><b>CISA, Soliton FileZen Açığını İstismar Edilenler Listesine Ekledi</b></div>
+                <p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Soliton Systems K.K. FileZen'deki CVE-2026-25108 numaralı zafiyeti "Bilinen İstismar Edilen Zafiyetler (KEV)" kataloğuna eklemiştir. Bu zafiyet, kimliği doğrulanmış bir kullanıcının özel olarak hazırlanmış HTTP istekleri aracılığıyla rastgele işletim sistemi komutları yürütmesine olanak tanıyan bir komut enjeksiyonu açığıdır. Soliton, bu zafiyetin aktif olarak istismar edildiğini doğrulamış ve en az bir hasar raporu aldığını belirtmiştir. Zafiyetin istismar edilebilmesi için FileZen virüs kontrol özelliğinin etkin olması ve saldırganın geçerli oturum açma erişimine sahip olması gerekmektedir. CISA, federal kurumların bu zafiyeti 17 Mart 2026 tarihine kadar gidermesini emretmiştir. Özel kuruluşların da altyapılarındaki bu zafiyetleri gözden geçirmeleri ve gidermeleri tavsiye edilmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/188473/hacking/u-s-cisa-adds-a-flaw-in-soliton-systems-k-k-filezen-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 25.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-11">
-                <div class="news-title"><b>Steaelite RAT'ın Veri Hırsızlığı ve Fidye Yazılımı Yönetim Yeteneğini Birleştirmesi</b></div>
-                <p class="news-content">BlackFog araştırmacıları, Steaelite adı verilen yeni bir uzaktan erişim truva atının (RAT) veri hırsızlığı ve fidye yazılımı yönetim yeteneklerini tek bir araçta birleştirdiğini açıklamıştır. Bu SaaS aracı, Windows bilgisayarlara yönelik uçtan uca fidye yazılımı kampanyalarının önündeki engeli azaltmaktadır. Steaelite, uzaktan kod yürütme, dosya yönetimi, canlı akış, webcam ve mikrofon erişimi, parola kurtarma, DDoS saldırıları gibi çok sayıda modül içermektedir. En endişe verici özelliklerinden biri, fidye yazılımı modülünün tamamlanmasıyla, operatörlerin önce veri sızdırma ve sonra şifreleme yeteneğine sahip olmalarıdır. Bu durum, siber suçluların çifte şantajı tek bir kontrol panelinden gerçekleştirmelerine olanak tanımaktadır. Steaelite, siber suç sitelerinde aylık 200 dolardan başlayan fiyatlarla hizmet olarak sunulmaktadır. Kurumlar, veri sızdırma önleme mekanizmalarına odaklanarak bu tür gelişmiş tehditlere karşı savunmalarını güçlendirmelidir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://www.csoonline.com/article/4137527/steaelite-rat-combines-data-theft-and-ransomware-management-capability-in-one-tool.html" target="_blank">csoonline.com</a>, 26.02.2026)</b></p>
+                <div class="news-title"><b>Zyxel, Kritik Uzaktan Kod Yürütme Açığı Hakkında Uyarı Yaptı</b></div>
+                <p class="news-content">Tayvanlı ağ sağlayıcısı Zyxel, bir düzineden fazla yönlendirici modelini etkileyen kritik bir güvenlik açığını gidermek için güvenlik güncellemeleri yayınlamıştır. CVE-2025-13942 olarak izlenen bu komut enjeksiyonu zafiyeti, Zyxel 4G LTE/5G NR CPE, DSL/Ethernet CPE, Fiber ONT'ler ve kablosuz genişleticilerin UPnP işlevinde bulunmuştur. Kimlik doğrulaması yapılmamış uzak saldırganların, kötü amaçlı olarak hazırlanmış UPnP SOAP istekleri kullanarak etkilenen bir cihazda işletim sistemi komutları yürütmesine olanak tanımaktadır. Zafiyetin uzaktan istismar edilebilmesi için UPnP ve WAN erişiminin etkinleştirilmiş olması gerekmektedir, ancak WAN erişimi varsayılan olarak devre dışıdır. CISA, Zyxel'in yönlendiricilerini, güvenlik duvarlarını ve NAS cihazlarını etkileyen ve aktif olarak istismar edilen 12 zafiyeti takip etmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/zyxel-warns-of-critical-rce-flaw-affecting-over-a-dozen-routers/" target="_blank">bleepingcomputer.com</a>, 25.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-12">
-                <div class="news-title"><b>Claude Code'daki Güvenlik Açıklarının Uzaktan Kod Yürütme ve API Anahtarı Sızdırmasına İzin Vermesi</b></div>
-                <p class="news-content">Siber güvenlik araştırmacıları, Anthropic'in yapay zeka destekli kodlama asistanı Claude Code'da birden fazla güvenlik açığı tespit etmiştir. Bu açıklar, uzaktan kod yürütme ve API kimlik bilgilerinin çalınmasıyla sonuçlanabilmektedir. Check Point araştırmacıları, Hooks, Model Context Protocol (MCP) sunucuları ve ortam değişkenleri gibi çeşitli yapılandırma mekanizmalarının kötüye kullanıldığını belirtmiştir. Kullanıcılar güvenilmeyen depoları klonlayıp açtıklarında, rastgele kabuk komutları yürütülebilmekte ve Anthropic API anahtarları sızdırılabilmektedir. CVE-2025-59536 ve CVE-2026-21852 gibi kritik güvenlik açıkları, kullanıcı onayı olmaksızın otomatik kod yürütme ve API anahtarı sızdırma gibi riskler taşımaktadır. Bu durum, bir geliştiricinin iş istasyonundan paylaşılan kurumsal bulut ortamlarına sızma potansiyeli taşımaktadır. Güvenilmeyen projelerin açılmasının bile artık bir risk vektörü haline geldiği, AI odaklı geliştirme ortamlarında tedarik zinciri güvenliğinin temelden değiştiği vurgulanmaktadır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://thehackernews.com/2026/02/claude-code-flaws-allow-remote-code.html" target="_blank">thehackernews.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>Kötü Amaçlı NuGet Paketleri ASP.NET Verilerini Çaldı</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, ASP.NET web uygulaması geliştiricilerini hedef alarak hassas verileri çalmak üzere tasarlanmış dört kötü amaçlı NuGet paketi keşfetmiştir. Socket tarafından ortaya çıkarılan bu kampanya, kullanıcı hesapları, rol atamaları ve izin eşleştirmeleri dahil olmak üzere ASP.NET Identity verilerini dışarı sızdırmakta ve kurban uygulamalarında kalıcı arka kapılar oluşturmak için yetkilendirme kurallarını manipüle etmektedir. NCryptYo, DOMOAuth2_, IRAOAuth2.0 ve SimpleWriter_ adlı paketler, meşru kütüphaneleri taklit ederek geliştiricilerin uygulamalarını derlemesini ve normal şekilde çalışmasını sağlamakta, ancak arka planda hassas verileri gizlice kopyalayıp dışarı sızdırmaktadır. Bu saldırı, yazılım tedarik zinciri güvenliğindeki riskleri ve geliştirme aşamasında kötü amaçlı bağımlılıkların kullanımının potansiyel tehlikelerini vurgulamaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/malicious-nuget-packages-stole-aspnet.html" target="_blank">thehackernews.com</a>, 25.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-13">
-                <div class="news-title"><b>SLH Siber Suç Kolektifinin BT Yardım Masası Vishing Saldırıları İçin Kadınları İşe Alması</b></div>
-                <p class="news-content">Scattered LAPSUS$ Hunters (SLH) olarak bilinen siber suç kolektifinin, sosyal mühendislik saldırıları düzenlemek üzere kadınları işe almak için mali teşvikler sunduğu gözlemlenmiştir. Dataminr'ın tehdit brifingine göre, grup BT yardım masalarını hedef alan sesli kimlik avı (vishing) kampanyaları için kadınları işe almaktadır. Her arama için 500 ila 1.000 dolar arasında peşin ödeme teklif edildiği ve saldırıyı gerçekleştirmek için gerekli önceden yazılmış senaryoların sağlandığı belirtilmiştir. SLH'nin bu taktiği, yardım masası taklitlerinin başarı oranını artırmayı amaçlamaktadır. Grup, MFA atlatma ve SIM takası gibi tekniklerle çok faktörlü kimlik doğrulamasını (MFA) aşma konusunda geçmişe sahiptir. Kuruluşlara, BT yardım masası personelini bu tür saldırılara karşı eğitme, sıkı kimlik doğrulama uygulama ve MFA politikalarını güçlendirme tavsiye edilmektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://thehackernews.com/2026/02/slh-offers-5001000-per-call-to-recruit.html" target="_blank">thehackernews.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>OpenClaw Yapay Zeka Otomasyon Çerçevesinde RCE Açıkları Tespit Edildi</b></div>
+                <p class="news-content">OpenClaw, yapay zeka destekli bir otomasyon çerçevesi olup, modüler "beceriler" aracılığıyla e-postaları, programları ve sistem görevlerini yönetmeye olanak tanımaktadır. Bu platformda, uzaktan kod yürütme (RCE) ve kimlik bilgisi hırsızlığına yol açabilecek kritik güvenlik açıkları tespit edilmiştir. CVE-2026-25253 olarak izlenen tek tıklamayla RCE zafiyeti, kötü amaçlı bağlantıların kimlik doğrulama belirteçlerini çalmasına ve beceri kurulumu gerektirmeden uzaktan kod yürütmeyi tetiklemesine izin vermektedir. Ayrıca, ClawHub beceri pazar yerine yüklenen yüzlerce kötü amaçlı beceri, bilgi hırsızları, uzaktan erişim truva atları ve arka kapılar olarak gizlenmektedir. Bu durum, yapay zeka otomasyon çerçevelerinin yazılım tedarik zinciri saldırıları için yeni bir hedef haline geldiğini göstermektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/the-openclaw-hype-analysis-of-chatter-from-open-source-deep-and-dark-web/" target="_blank">bleepingcomputer.com</a>, 25.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-14">
-                <div class="news-title"><b>OpenClaw Yapay Zeka Otomasyon Çerçevesindeki Tedarik Zinciri Güvenlik Riskleri</b></div>
-                <p class="news-content">Flare tarafından yapılan bir analiz, OpenClaw adlı yapay zeka destekli otomasyon çerçevesinde önemli bir tedarik zinciri güvenlik riski bulunduğunu ortaya koymuştur. OpenClaw, kullanıcıların e-postaları, programları ve sistem görevlerini "beceriler" adı verilen modüler eklentiler aracılığıyla yönetmelerine olanak tanımaktadır. CVE-2026-25253 (tek tıklamayla RCE) gibi kritik güvenlik açıkları, kimlik doğrulama belirteçlerinin çalınmasına ve uzaktan kod yürütülmesine yol açabilmektedir. ClawHub adlı beceri pazarında, bilgi hırsızları, RAT'lar ve arka kapılar içeren yüzlerce kötü amaçlı eklenti tespit edilmiştir. Becerilerin sandbox olmadan tam sistem izinleriyle çalışması, kötü amaçlı yazılımların kimlik bilgilerine ve dosyalara kısıtlama olmaksızın erişmesine izin vermektedir. Analiz, bu riskin henüz kitlesel bir sömürü ekosistemine tam olarak dönüşmediğini, ancak güvenlik araştırmaları ve erken aşama deneylerle desteklenen bir hype döngüsünde olduğunu göstermektedir. Bu, gelecekteki kötü amaçlı kullanımların öncü bir işareti olarak kabul edilmektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/the-openclaw-hype-analysis-of-chatter-from-open-source-deep-and-dark-web/" target="_blank">bleepingcomputer.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>Steaelite RAT, Veri Hırsızlığı ve Fidye Yazılımını Birleştirdi</b></div>
+                <p class="news-content">BlackFog araştırmacıları, siber suçluların Windows bilgisayarlarda veri hırsızlığı ve fidye yazılımı saldırılarını tek bir yönetim panelinden kolayca başlatmasına olanak tanıyan yeni bir uzaktan erişim truva atı (RAT) olan Steaelite'ı keşfetmiştir. Kasım ayından bu yana yeraltı siber suç sitelerinde reklamı yapılan ve müşterilere sunulan Steaelite, uzaktan erişim, kimlik bilgisi toplama, veri dışa sızdırma ve fidye yazılımı (geliştirme aşamasında) yeteneklerini tek bir pakette birleştirmektedir. Bu araç, sofistike, uçtan uca fidye yazılımı kampanyalarının yürütülmesinin önündeki engelleri azaltmaktadır. Steaelite, veri hırsızlığını ve ardından şifrelemeyi aynı kontrol panelinden gerçekleştirerek çift gasp saldırılarını kolaylaştırmayı hedeflemektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4137527/steaelite-rat-combines-data-theft-and-ransomware-management-capability-in-one-tool.html" target="_blank">csoonline.com</a>, 26.02.2026)</b></p>
             </div>
 
             <div class="news-item" id="haber-15">
-                <div class="news-title"><b>Wynn Resorts'un Çalınan Çalışan Verilerinin Silindiği Konusunda Saldırganlara Güvenmesi</b></div>
-                <p class="news-content">Wynn Resorts, sunucularından çalışan verilerinin çalındığını doğrulamış ancak saldırganların verileri sildiğine dair sözlerine güvendiğini belirtmiştir. Şirket, geçtiğimiz hafta ShinyHunters siber suç grubunun saldırıyı üstlenmesinin ardından ilk resmi açıklamasını yapmıştır. Wynn Resorts sözcüsü, yetkisiz bir üçüncü tarafın belirli çalışan verilerini ele geçirdiğini ve olayın keşfedilmesi üzerine hemen müdahale protokollerinin etkinleştirildiğini ifade etmiştir. Saldırganın çalınan verileri sildiğini belirttiği ve şirketin bugüne kadar verilerin yayınlandığına veya kötüye kullanıldığına dair herhangi bir kanıt görmediği bildirilmiştir. Ancak güvenlik uzmanları, siber suçlulara güvenmenin doğasında var olan kusurları sorgulamaktadır. Wynn, tüm çalışanlarına ücretsiz kredi izleme ve kimlik koruması hizmeti sunmaktadır. Saldırganlar, Wynn'e Eylül 2025'te bir Oracle PeopleSoft güvenlik açığını ve bir çalışanın kimlik bilgilerini kullanarak sızdıklarını iddia etmiştir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://go.theregister.com/feed/www.theregister.com/2026/02/25/wynn_resorts_shinyhunters/" target="_blank">go.theregister.com</a>, 25.02.2026)</b></p>
+                <div class="news-title"><b>Kötü Amaçlı StripeApi NuGet Paketi API Anahtarlarını Çaldı</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, finans sektörünü hedef alma amacıyla Stripe'ın resmi kütüphanesini taklit eden kötü amaçlı bir NuGet paketi keşfetmiştir. StripeApi.Net olarak adlandırılan bu paket, 16 Şubat 2026 tarihinde "StripePayments" adlı bir kullanıcı tarafından yüklenmiştir ve o zamandan beri kaldırılmıştır. Paket, meşru Stripe.net kütüphanesinin bazı işlevlerini kopyalamakta, ancak kullanıcıların Stripe API anahtarı da dahil olmak üzere hassas verileri toplayıp saldırganlara aktarmak için bazı kritik yöntemleri değiştirmektedir. ReversingLabs, paketi yayınlandıktan "nispeten kısa bir süre sonra" keşfedip bildirdiğini ve ciddi bir hasar vermeden önce kaldırıldığını belirtmiştir. Bu olay, yazılım tedarik zincirindeki typosquatting saldırılarının finansal kurumlar için oluşturduğu riski gözler önüne sermektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/malicious-stripeapi-nuget-package.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-16">
+                <div class="news-title"><b>Çinli Grup ChatGPT'yi Küresel Taciz Kampanyalarında Kullandı</b></div>
+                <p class="news-content">OpenAI, Çinli bir kolluk kuvvetleri yetkilisinin ChatGPT'yi siber özel operasyonlar hakkındaki raporları gözden geçirmek ve düzenlemek için kullanmaya çalıştığını ortaya çıkarmıştır. Bu durum, Çin'in hem yurt içinde hem de yurt dışında Çin'in eleştirmenlerine yönelik küresel bir çevrimiçi taciz ve susturma kampanyasının ayrıntılarını ifşa etmiştir. OpenAI'ye yüklenen raporlar, tehdit aktörlerinin daha önce de büyük ölçekli, kaynak yoğun ve sürekli operasyonlar yürüttüğünü göstermektedir. Bu operasyonlar arasında toplu gönderi ve içerik oluşturma, muhaliflerin hesapları hakkında sahte şikayetlerle sosyal medya şirketlerini hedef alma ve hatta ABD'li yetkilileri taklit etme gibi taktikler bulunmaktadır. Bu olay, yapay zeka araçlarının devlet destekli etki operasyonları ve siber casusluk faaliyetlerinde kötüye kullanım potansiyelini vurgulamaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/chinese-chatgpt-online-harassment-campaign-against-critics-dissidents/" target="_blank">cyberscoop.com</a>, 25.02.2026)</b></p>
+            </div>
+
+            <div class="news-item mastodon-item" id="haber-17">
+                <div class="news-title"><b>Çin İstihbarat Operasyonu Amerikalıları Hedef Aldı</b></div>
+                <p class="news-content">"Operation Silver Lining Playbook" olarak adlandırılan bir Çin istihbarat operasyonunun, Amerikalıları hedef alarak işe alma veya onlarla etkileşim kurma çabaları içinde olduğu belirtilmektedir. Bu operasyonda, sahte bir kurumsal kimlik kullanıldığı ancak sorgulamaların jeopolitik konulara odaklandığı ifade edilmiştir. Bu durum, Çin'in siber casusluk faaliyetlerinin sadece teknik saldırılarla sınırlı kalmayıp, insan istihbaratı ve etki operasyonları yoluyla da ilerlediğini göstermektedir. Amerikalıların jeopolitik konulara odaklanan sahte kurumsal kimlikler aracılığıyla hedef alınması, ulusal güvenlik açısından ciddi endişeler yaratmaktadır. Bu tür operasyonlar, yabancı istihbarat servislerinin bilgi toplama ve etki yaratma yöntemlerinin çeşitliliğini ve karmaşıklığını ortaya koymaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://mastodon.social/@campuscodi/116134117230230508" target="_blank">mastodon.social</a>, 26.02.2026) [MASTODON_SCORE:1:3]</b></p>
+            </div>
+
+            <div class="news-item" id="haber-18">
+                <div class="news-title"><b>Claude Code Yazılımında Uzaktan Kod Yürütme Zafiyetleri Bulundu</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, Anthropic'in yapay zeka destekli kodlama asistanı Claude Code'da birden fazla güvenlik zafiyeti tespit etmiştir. Bu zafiyetler, uzaktan kod yürütme ve API kimlik bilgisi hırsızlığına yol açabilmektedir. Hooks, Model Context Protocol (MCP) sunucuları ve ortam değişkenleri gibi çeşitli yapılandırma mekanizmalarını istismar eden bu zafiyetler, kullanıcıların güvenilmeyen depoları klonlaması ve açması durumunda rastgele kabuk komutlarının yürütülmesine ve Anthropic API anahtarlarının dışarı sızdırılmasına neden olmaktadır. CVE-2025-59536 ve CVE-2026-21852 gibi kritik zafiyetler, kullanıcı izni olmaksızın kod yürütme ve veri sızdırma potansiyeli taşımaktadır. Bu durum, yapay zeka destekli geliştirme ortamlarında tedarik zinciri risklerinin artan önemini göstermektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/claude-code-flaws-allow-remote-code.html" target="_blank">thehackernews.com</a>, 25.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-19">
+                <div class="news-title"><b>Ukraynalı Şahıs Kuzey Koreli Sahte BT Çalışanlarına Yardım Etti</b></div>
+                <p class="news-content">Kiev'den 39 yaşındaki bir Ukraynalı şahıs, Kuzey Koreli BT çalışanlarının çalınan kimlikleri kullanarak Amerikan şirketlerine sızmasına yardım etmekten beş yıl hapis cezasına çarptırılmıştır. Kasım 2025'te ağırlaştırılmış kimlik hırsızlığı ve dolandırıcılık komplosu suçlamalarını kabul eden şahıs, 1.4 milyon doların üzerinde nakit ve kripto para dahil olmak üzere mal varlıklarını da teslim etmeyi kabul etmiştir. ABD yetkililerine göre, yüzlerce kişinin kimliğini çalarak bunları yabancı BT çalışanlarına satmış ve bu çalışanlar yaklaşık 40 ABD şirketinde uzaktan iş bulmak için kullanmıştır. Ayrıca, yüzlerce sahte kimlik ve serbest çalışma platformlarında hesap sağlamış, farklı ülkelerde dizüstü bilgisayar çiftlikleri işletilmesine yardımcı olmuştur.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4137037/ukrainian-convicted-for-helping-fake-north-korean-it-workers.html" target="_blank">csoonline.com</a>, 25.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-20">
+                <div class="news-title"><b>New York, Valve'a Yasa Dışı Kumarı Teşvik Etmekten Dava Açtı</b></div>
+                <p class="news-content">New York Başsavcısı Letitia James, video oyunu geliştiricisi ve yayıncısı Valve Corporation'a, oyun içi ganimet kutuları aracılığıyla çocuklar ve gençler arasında yasa dışı kumar faaliyetlerini teşvik ettiği gerekçesiyle dava açmıştır. Valve'ın işlettiği Steam platformundaki Counter-Strike 2, Team Fortress 2 ve Dota 2 oyunlarındaki ganimet kutularının, oyunculara gerçek parayla takas edilebilecek rastgele sanal ödüller kazanma fırsatı sunduğu iddia edilmektedir. Başsavcı James, bu uygulamanın eyaletin kumar yasalarını ihlal ettiğini ve özellikle gençlerde ciddi bağımlılık sorunlarına yol açabileceğini belirtmiştir. Dava, Valve'ın bu uygulamaları durdurmasını, elde edilen karları iade etmesini ve iddia edilen ihlaller için para cezaları uygulanmasını talep etmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/gaming/new-york-sues-valve-for-promoting-illegal-gambling-via-game-loot-boxes/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item mastodon-item" id="haber-21">
+                <div class="news-title"><b>İran Kaynaklı Yeni C77L Fidye Yazılımı Hizmeti Keşfedildi</b></div>
+                <p class="news-content">Rus güvenlik firması F6, İran'dan işletildiği anlaşılan C77L adlı yeni bir fidye yazılımı hizmetini (RaaS) keşfetmiştir. Bu yeni RaaS'ın ortaya çıkışı, siber suç ekosistemindeki tehdit aktörlerinin coğrafi çeşitliliğini ve gelişen operasyonel yeteneklerini göstermektedir. Fidye yazılımı hizmetlerinin yaygınlaşması, daha az teknik bilgiye sahip siber suçluların bile karmaşık saldırılar düzenlemesine olanak tanımaktadır. İran bağlantılı bir RaaS'ın tespiti, jeopolitik bağlamda siber güvenlik tehditlerinin kaynağının genişlediğini ve uluslararası siber suçla mücadele çabalarını daha da karmaşık hale getirdiğini ifade etmektedir. Bu tür yeni tehdit aktörlerinin izlenmesi, proaktif savunma stratejileri için kritik öneme sahiptir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.f6.ru/blog/c77l-ransomware/" target="_blank">f6.ru</a>, 26.02.2026) [MASTODON_SCORE:5:1]</b></p>
             </div>
         </div>
     </div>
@@ -334,6 +495,7 @@
     <div class="archive-section">
         <h3>📚 Arşiv - Son 30 Gün</h3>
         <div class="archive-links">
+            <a href="./raporlar/2026-02-26.html" class="archive-link">26.02.2026</a>
             <a href="./raporlar/2026-02-25.html" class="archive-link">25.02.2026</a>
             <a href="./raporlar/2026-02-24.html" class="archive-link">24.02.2026</a>
             <a href="./raporlar/2026-02-23.html" class="archive-link">23.02.2026</a>
