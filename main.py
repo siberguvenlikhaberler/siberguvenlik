@@ -257,59 +257,54 @@ class HaberSistemi:
         self.rss_errors_file = "data/rss_errors.txt"
 
     def fetch_full_article(self, url, source_name):
-        """Tam metin çeker — 12 saniyelik hard timeout ile (threading)"""
-        import threading
+        """Tam metin çeker — stream ile boyut sınırlı, erken çıkışlı"""
+        try:
+            print(f"      📄 Tam metin...", end='', flush=True)
+            domain = urlparse(url).netloc.replace('www.', '')
 
-        result = {'full_text': "", 'word_count': 0, 'success': False, 'domain': ''}
+            # stream=True ile max 500KB oku, sonra kes
+            r = requests.get(url, headers=self.headers, timeout=(5, 10), stream=True)
+            raw = b""
+            for chunk in r.iter_content(chunk_size=8192):
+                raw += chunk
+                if len(raw) > 500_000:  # 500KB yeterli
+                    break
+            r.close()
 
-        def _do_fetch():
-            try:
-                r = requests.get(url, headers=self.headers, timeout=(5, 10))
-                soup = BeautifulSoup(r.text, 'html.parser')
-                domain = urlparse(url).netloc.replace('www.', '')
-                text = ""
-                if source_name in self.selectors:
-                    for sel in self.selectors[source_name]:
-                        el = soup.find(**sel)
-                        if el:
-                            text = self._extract(el)
-                            break
-                if not text:
-                    for tag in ['article', 'main']:
-                        el = soup.find(tag)
-                        if el:
-                            text = self._extract(el)
-                            if text:
-                                break
-                if not text:
-                    el = soup.find('div', class_=lambda c: c and any(
-                        x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
+            soup = BeautifulSoup(raw, 'html.parser')
+            text = ""
+            if source_name in self.selectors:
+                for sel in self.selectors[source_name]:
+                    el = soup.find(**sel)
                     if el:
                         text = self._extract(el)
-                wc = len(text.split()) if text else 0
-                text = text.replace('\t', ' ').replace('\r', '')
-                result['full_text'] = text
-                result['word_count'] = wc
-                result['success'] = wc > 100
-                result['domain'] = domain
-            except Exception:
-                pass
+                        break
 
-        print(f"      📄 Tam metin...", end='', flush=True)
-        t = threading.Thread(target=_do_fetch, daemon=True)
-        t.start()
-        t.join(timeout=12)
+            if not text:
+                for tag in ['article', 'main']:
+                    el = soup.find(tag)
+                    if el:
+                        text = self._extract(el)
+                        if text:
+                            break
 
-        if t.is_alive():
-            print(f" ❌ (timeout)")
-            return {'full_text': "", 'word_count': 0, 'success': False, 'domain': ''}
+            if not text:
+                el = soup.find('div', class_=lambda c: c and any(
+                    x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
+                if el:
+                    text = self._extract(el)
 
-        wc = result['word_count']
-        if result['success']:
-            print(f" ✅ ({wc})")
-        else:
+            wc = len(text.split()) if text else 0
+            text = text.replace('\t', ' ').replace('\r', '')
+
+            if wc > 100:
+                print(f" ✅ ({wc})")
+                return {'full_text': text, 'word_count': wc, 'success': True, 'domain': domain}
             print(f" ⚠️  ({wc})")
-        return result
+            return {'full_text': "", 'word_count': 0, 'success': False, 'domain': domain}
+        except Exception as e:
+            print(f" ❌ ({str(e)[:20]})")
+            return {'full_text': "", 'word_count': 0, 'success': False, 'domain': ''}
 
     def _extract(self, element):
         """Temiz metin"""
