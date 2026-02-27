@@ -257,9 +257,13 @@ class HaberSistemi:
         self.rss_errors_file = "data/rss_errors.txt"
 
     def fetch_full_article(self, url, source_name):
-        """Tam metin çeker"""
-        try:
-            print(f"      📄 Tam metin...", end='', flush=True)
+        """Tam metin çeker — 12 saniyelik hard timeout ile"""
+        import signal
+
+        def _timeout_handler(signum, frame):
+            raise TimeoutError("fetch timeout")
+
+        def _do_fetch():
             r = requests.get(url, headers=self.headers, timeout=(5, 10))
             soup = BeautifulSoup(r.text, 'html.parser')
             domain = urlparse(url).netloc.replace('www.', '')
@@ -281,12 +285,23 @@ class HaberSistemi:
                             break
 
             if not text:
-                el = soup.find('div', class_=lambda c: c and any(x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
+                el = soup.find('div', class_=lambda c: c and any(
+                    x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
                 if el:
                     text = self._extract(el)
 
             wc = len(text.split()) if text else 0
             text = text.replace('\t', ' ').replace('\r', '')
+            return text, wc, domain
+
+        try:
+            print(f"      📄 Tam metin...", end='', flush=True)
+            signal.signal(signal.SIGALRM, _timeout_handler)
+            signal.alarm(12)  # 12 saniyelik hard limit
+            try:
+                text, wc, domain = _do_fetch()
+            finally:
+                signal.alarm(0)  # Alarm'ı sıfırla
 
             if wc > 100:
                 print(f" ✅ ({wc})")
@@ -311,7 +326,7 @@ class HaberSistemi:
     def fetch_rss(self, url, source_name):
         """RSS çeker"""
         try:
-            r = requests.get(url, headers=self.headers, timeout=(5, 10))
+            r = requests.get(url, headers=self.headers, timeout=15)
             root = ET.fromstring(r.content)
             articles = []
 
