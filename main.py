@@ -257,21 +257,13 @@ class HaberSistemi:
         self.rss_errors_file = "data/rss_errors.txt"
 
     def fetch_full_article(self, url, source_name):
-        """Tam metin çeker — stream ile boyut sınırlı, erken çıkışlı"""
+        """Tam metin çeker"""
         try:
             print(f"      📄 Tam metin...", end='', flush=True)
+            r = requests.get(url, headers=self.headers, timeout=15)
+            soup = BeautifulSoup(r.text, 'html.parser')
             domain = urlparse(url).netloc.replace('www.', '')
 
-            # stream=True ile max 500KB oku, sonra kes
-            r = requests.get(url, headers=self.headers, timeout=(5, 10), stream=True)
-            raw = b""
-            for chunk in r.iter_content(chunk_size=8192):
-                raw += chunk
-                if len(raw) > 500_000:  # 500KB yeterli
-                    break
-            r.close()
-
-            soup = BeautifulSoup(raw, 'html.parser')
             text = ""
             if source_name in self.selectors:
                 for sel in self.selectors[source_name]:
@@ -289,8 +281,7 @@ class HaberSistemi:
                             break
 
             if not text:
-                el = soup.find('div', class_=lambda c: c and any(
-                    x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
+                el = soup.find('div', class_=lambda c: c and any(x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
                 if el:
                     text = self._extract(el)
 
@@ -808,11 +799,12 @@ class HaberSistemi:
         if not html:
             return self._create_fallback_html(txt_content)
 
-        # HTML temizle
-        if html.startswith('```html'):
-            html = html[7:]
-        if html.startswith('```'):
-            html = html[3:]
+        # HTML temizle — açıklama metni, ```html vs. at
+        doctype_idx = html.find('<!DOCTYPE')
+        if doctype_idx == -1:
+            doctype_idx = html.find('<html')
+        if doctype_idx > 0:
+            html = html[doctype_idx:]  # Önündeki her şeyi at
         if html.endswith('```'):
             html = html[:-3]
         html = html.strip()
