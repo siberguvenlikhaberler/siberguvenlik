@@ -1,8 +1,3 @@
-Siber güvenlik analisti olarak, 130 haberi analiz ettim ve belirtilen kriterlere göre filtreleme, sınıflandırma ve özetleme işlemlerini tamamladım. Rapor, en kritik 5 gelişmeyi vurgulayacak şekilde hazırlanmış, ardından kalan önemli haberler öncelik sırasına göre listelenmiştir. Tüm metinler resmi Türkçe dil kurallarına uygun olarak düzenlenmiştir.
-
-Aşağıda, istenen HTML formatında detaylı siber güvenlik raporu sunulmuştur:
-
-```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -80,6 +75,115 @@ Aşağıda, istenen HTML formatında detaylı siber güvenlik raporu sunulmuştu
         }
         
         /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* HABERLER BÖLÜMÜ */
+        .news-section {
+            padding: 30px;
+        }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .news-content {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .source {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+        .source a {
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+        
+        /* BAŞA DÖN BUTONU */
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1>27.02.2026 Siber Güvenlik Haber Özetleri</h1>
+        </div>
+        
+        <!-- YÖNETİCİ ÖZETİ -->
         <div class="executive-summary">
             <h2>Yönetici Özeti</h2>
             
@@ -88,40 +192,96 @@ Aşağıda, istenen HTML formatında detaylı siber güvenlik raporu sunulmuştu
                 <h2>Önemli Gelişmeler</h2>
                 <div class="important-summary">
                     <div class="important-item">
-                        <a href="#haber-1">1. Yunanistan'da bir mahkeme, politikacılar, iş liderleri ve gazetecileri hedef alan yasa dışı casus yazılım kullanımı nedeniyle dört kişiyi hapis cezasına çarptırmıştır.</a>
+                        <a href="#haber-1">1. Cisco SD-WAN Sıfır Gün Açığı CVE-2026-20127'nin Kritik Altyapıda Aktif İstismarı tespit edilmiştir.</a>
                     </div>
                     <div class="important-item">
-                        <a href="#haber-2">2. Belarus Siber Partizanları, Rus ordusu için kask astarları ve vücut zırhları üretiminde kullanılan naylon ipliklerin en büyük tedarikçisi olan Khimvolokno şirketini hacklediğini iddia etmiştir.</a>
+                        <a href="#haber-2">2. Çin Destekli APT Grubu UNC2814'ün Telekom ve Devlet Kurumlarını Hedefleyen Siber Casusluk Kampanyası durdurulmuştur.</a>
                     </div>
                     <div class="important-item">
-                        <a href="#haber-3">3. "Operation Silver Lining Playbook" olarak adlandırılan bir Çin istihbarat operasyonunun, Amerikalıları sahte kurumsal kimlikler altında jeopolitik konulara odaklanarak işe aldığı veya onlarla etkileşim kurduğu belirtilmiştir.</a>
+                        <a href="#haber-3">3. UAT-10027 Tehdit Aktörünün ABD Eğitim ve Sağlık Sektörlerini Dohdoor Arka Kapısı ile Hedeflemesi devam etmektedir.</a>
                     </div>
                     <div class="important-item">
-                        <a href="#haber-4">4. Tehdit aktörleri, tarayıcılar ve sohbet platformları aracılığıyla Truva atı içeren oyun araçlarını dağıtarak Java tabanlı bir Uzaktan Erişim Truva Atı (RAT) yayılımı gerçekleştirmektedir.</a>
+                        <a href="#haber-4">4. Avrupa DIY Zinciri ManoMano'nun Veri İhlalinde 38 Milyon Müşteri Verisinin Etkilendiği açıklanmıştır.</a>
                     </div>
                     <div class="important-item">
-                        <a href="#haber-5">5. Rus güvenlik firması F6, İran kaynaklı olduğu düşünülen C77L adında yeni bir Fidye Yazılımı Hizmeti (RaaS) keşfetmiştir.</a>
+                        <a href="#haber-5">5. ABD Senatosunda Sağlık Sektörü Siber Güvenlik Reformlarının İlerlemesi kaydedilmiştir.</a>
                     </div>
                 </div>
             </div>
             
-            <!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU -->
+            <!-- GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU -->
             <table class="executive-table">
                 <tr>
-                    <td><a href="#haber-6">6. Meta'nın yeni Threads mikroblog platformunun, Çin Halk Cumhuriyeti yanlısı propaganda botları tarafından istila edildiği yeni bir raporla ortaya çıkarılmıştır.</a></td>
-                    <td><a href="#haber-7">7. Rus medyasının, kötü şöhretli Conti fidye yazılımı grubunu ulusal kahramanlar gibi gösterdiği belirtilmiştir.</a></td>
+                    <td><a href="#haber-6">6. 12 Milyondan Fazla .env Dosyasının Ortaya Çıkması Yaygın Güvenlik Zafiyetlerini gözler önüne sermektedir.</a></td>
+                    <td><a href="#haber-7">7. Microsoft, Sahte Next.js İş Depolarının Geliştiricileri Bellek İçi Kötü Amaçlı Yazılımlarla Hedeflediği konusunda uyarı yapmıştır.</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#haber-8">8. OpenAI, ChatGPT'nin romantizm dolandırıcılıkları ve bilgi operasyonları gibi kötü niyetli kullanımlarını başarıyla engellemiştir.</a></td>
-                    <td><a href="#haber-9">9. Bir güvenlik firması, kötü niyetli reklam test platformuna erişim sağlayarak geçen yıl 59 milyondan fazla kötü niyetli reklamın engellenmesine yardımcı olmuştur.</a></td>
+                    <td><a href="#haber-8">8. Sosyal Mühendislik Yöntemleriyle Microsoft Teams Üzerinden macOS Kötü Amaçlı Yazılımı Dağıtıldığı bildirilmiştir.</a></td>
+                    <td><a href="#haber-9">9. Yunanistan'da Casus Yazılım Üreticileri Politikacıları ve Gazetecileri Dinlediği gerekçesiyle hapis cezasına çarptırılmıştır.</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#haber-10">10. Scattered Lapsus$ Hunters (SLH) grubunun, yardım masası kimlik avı saldırılarının başarı oranını artırmak amacıyla kadınları vishing saldırıları düzenlemek üzere işe aldığı tespit edilmiştir.</a></td>
-                    <td><a href="#haber-11">11. Kimlik avı gruplarının, yalnızca IP adresinden alan adına eşlemeler için kullanılması gereken .arpa üst düzey alan adlarını operasyonları için kötüye kullandığı tespit edilmiştir.</a></td>
+                    <td><a href="#haber-10">10. Belarus Siber Partizanları, Rus Ordusuna Tedarik Sağlayan Belaruslu Bir Şirketi Hacklediğini iddia etmiştir.</a></td>
+                    <td><a href="#haber-11">11. Truva Atı İçeren Oyun Araçları, Tarayıcı ve Sohbet Platformları Üzerinden Java Tabanlı RAT Yaymaktadır.</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#haber-12">12. Siber sigorta sağlayıcısı Resilience tarafından yayımlanan verilere göre, geçen yıl tüm gasp sigortası taleplerinin %57'sini yalnızca veri hırsızlığı saldırıları oluşturmuştur.</a></td>
-                    <td></td> <!-- Kalan 7 haber için tek boş hücre bırakılmıştır. -->
+                    <td><a href="#haber-12">12. Siber Suçluların 2025 Yılında Daha Hızlı Hale Geldiği ve Yapay Zeka Kullandığı belirtilmiştir.</a></td>
+                    <td><a href="#haber-13">13. Saldırganların Yanal Harekete Geçiş Süresinin Dört Dakikaya Düştüğü rapor edilmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-14">14. Apache ActiveMQ İstismarı Sonucu LockBit Fidye Yazılımı Dağıtıldığı tespit edilmiştir.</a></td>
+                    <td><a href="#haber-15">15. Trend Micro, Apex One Ürününde Kritik Kod Yürütme Zafiyetleri Hakkında uyarı yapmıştır.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-16">16. Juniper Networks PTX Cihazlarındaki Kritik Zafiyetin Yönlendiricilerin Tamamen Ele Geçirilmesine İzin Verdiği açıklanmıştır.</a></td>
+                    <td><a href="#haber-17">17. CVE-2025-8088 Numaralı WinRAR Zafiyetinin Yaygın Olarak İstismar Edildiği bildirilmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-18">18. Tıbbi Cihaz Üreticisi UFP Technologies, Siber Saldırıda Veri Çalındığı Konusunda uyarı yapmıştır.</a></td>
+                    <td><a href="#haber-19">19. Daha Önce Zararsız Olan Google API Anahtarlarının Artık Gemini Yapay Zeka Verilerini ifşa ettiği belirlenmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-20">20. Aeternum C2 Botnet'inin Komutlarını Polygon Blockchain Üzerinde Sakladığı ortaya çıkarılmıştır.</a></td>
+                    <td><a href="#haber-21">21. İspanya'da Hükümet Kurumlarına DDoS Saldırıları Düzenleyen Şüpheli Hacktivistler Tutuklanmıştır.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-22">22. Arjantin Yargı Sektörünün RAT Kötü Amaçlı Yazılımıyla Hedeflendiği açıklanmıştır.</a></td>
+                    <td><a href="#haber-23">23. ResidentBat Altyapısının Analizi, Belaruslu Yetkililer Tarafından Kullanılan Android Casus Yazılımını göstermektedir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-24">24. Güvenilmeyen Depoların Claude Kodunu Bir Saldırı Vektörüne Dönüştürdüğü tespit edilmiştir.</a></td>
+                    <td><a href="#haber-25">25. Sahte Huorong Web Sitesinin ValleyRAT Kötü Amaçlı Yazılımı Dağıttığı belirlenmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-26">26. .arpa Alan Adlarının Kötüye Kullanılmasıyla Oltalama Kampanyalarının Yürütüldüğü bildirilmiştir.</a></td>
+                    <td><a href="#haber-27">27. 1Campaign Hizmetinin Kötü Amaçlı Google Reklamlarının Tespit Edilmesini Engellediği ortaya çıkarılmıştır.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-28">28. Mac Kullanıcılarının ClickFix Kullanarak Stealer Kötü Amaçlı Yazılımlarla Hedeflendiği belirtilmiştir.</a></td>
+                    <td><a href="#haber-29">29. Google Chrome Uzantılarının Tarayıcıyı Çökertip Kötü Amaçlı Komutları Yürüttüğü tespit edilmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-30">30. Kripto Para Oltalama Kampanyalarının Bitpanda'yı Taklit Ettiği bildirilmiştir.</a></td>
+                    <td><a href="#haber-31">31. GPUGate Kampanyasının Malvertising ile Hijack Loader ve Atomic Stealer Dağıttığı belirlenmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-32">32. Kötü Amaçlı StripeApi NuGet Paketinin Resmi Kütüphaneyi Taklit Ederek API Tokenlarını Çaldığı açıklanmıştır.</a></td>
+                    <td><a href="#haber-33">33. Açık Kaynak Projelerinin Güvenli Olmayan Varsayılan Kriptografi Kütüphanelerini kullandığı tespit edilmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-34">34. Europol'ün "The Com" Siber Suç Ağını Hedef Alan "Project Compass" Operasyonu başlatılmıştır.</a></td>
+                    <td><a href="#haber-35">35. RAMP Siber Suç Forumunun Kapatılmasının Yeraltı Siber Suç Ekosistemini Yeniden Şekillendirdiği gözlemlenmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-36">36. Moskova'da Bir Kişinin Sahte FSB Subayı Kimliğiyle Conti Fidye Yazılım Grubundan Şantaj Yaptığı iddia edilmiştir.</a></td>
+                    <td><a href="#haber-37">37. Scattered Lapsus$ Hunters Grubunun Sosyal Mühendislik Becerilerini Geliştirmek İçin Kadın Sesleri Aradığı belirtilmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-38">38. Olympique Marseille Kulübünün Siber Saldırıya Uğradığı ve Veri Sızıntısı Yaşadığı doğrulanmıştır.</a></td>
+                    <td><a href="#haber-39">39. Meta'nın Threads Platformunun Çin Yanlısı Propaganda Botları Tarafından İstila Edildiği rapor edilmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-40">40. Rus Güvenlik Firmasının İran Kaynaklı Yeni Bir RaaS Olan C77L'yi Keşfettiği açıklanmıştır.</a></td>
+                    <td></td>
                 </tr>
             </table>
         </div>
@@ -129,85 +289,242 @@ Aşağıda, istenen HTML formatında detaylı siber güvenlik raporu sunulmuştu
         <!-- HABERLER -->
         <div class="news-section">
             <div class="news-item" id="haber-1">
-                <div class="news-title"><b>Yunan Mahkemesinin Predator Casus Yazılım Çetesini Mahkum Etmesi</b></div>
-                <p class="news-content">Yunanistan'da görülen önemli bir davada, bir mahkeme, Predator casus yazılımının yasa dışı kullanımıyla ilgili olarak dört kişiye hapis cezası vermiştir. Bu kişiler arasında iki İsrailli de bulunmaktadır. Casus yazılım, ülkenin önde gelen politikacılarını, iş dünyası liderlerini ve gazetecilerini hedef alarak dinleme skandalına yol açmıştır. Karar, ulusal güvenliği ve kişisel gizliliği tehdit eden siber suçlara karşı yasal mercilerin kararlılığını ortaya koymaktadır. Bu olay, devlet destekli veya yüksek profilli hedeflere yönelik siber saldırıların yasal sonuçlarını ve uluslararası işbirliğinin önemini vurgulamaktadır. Casus yazılımın yaygınlaşması ve kritik figürleri hedef alması, siber güvenlik alanında yasal düzenlemelerin ve uluslararası işbirliğinin ne kadar hayati olduğunu bir kez daha göstermiştir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116137898501718472" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+                <div class="news-title"><b>CVE-2026-20127 Cisco SD-WAN Sıfır Gün Açığının Kritik Altyapıda İstismar Edilmesi</b></div>
+                <p class="news-content">Cisco Catalyst SD-WAN Controller ve Manager ürünlerinde bulunan CVE-2026-20127 kodlu kritik güvenlik açığı, 2023'ten beri aktif olarak istismar edilmektedir. CVSS skoru 10.0 olan bu sıfır gün zafiyeti, kimlik doğrulaması yapılmamış uzaktaki bir saldırganın özel olarak hazırlanmış bir talep göndererek yönetici ayrıcalıklarına erişmesine olanak tanımaktadır. Cisco, UAT-8616 olarak tanımlanan bu sofistike siber tehdit aktörünün saldırılarını izlemektedir. Bu durum, kritik altyapı sektörleri de dahil olmak üzere yüksek değerli kuruluşlara kalıcı erişim sağlamayı hedefleyen siber tehdit aktörlerinin ağ cihazlarını hedefleme eğilimini göstermektedir. ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), CVE-2026-20127'yi istismar edilen bilinen güvenlik açıkları kataloğuna eklemiş ve federal kurumların 24 saat içinde yama uygulamasını zorunlu kılmıştır. Bu durum, ulusal güvenlik açısından acil bir tehdit oluşturmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/cisco-sd-wan-zero-day-cve-2026-20127.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
             </div>
             
-            <div class="news-item mastodon-item" id="haber-2">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>Belarus Siber Partizanlarının Rus Askeri Tedarikçisini Hacklemesi</b></div>
-                <p class="news-content">Belarus Siber Partizanları adlı grup, Rusya'nın askeri tedarik zincirinde kritik bir rol oynayan Khimvolokno şirketini hedef aldığını iddia etmiştir. Bu Belarus şirketi, Rus ordusu için kask astarları ve vücut zırhı yapımında kullanılan naylon ipliklerin en büyük tedarikçisi olarak bilinmektedir. Gerçekleştirilen bu siber saldırı, devam eden jeopolitik gerilimlerin siber alana doğrudan yansımasının önemli bir göstergesi olarak değerlendirilmektedir. Kritik bir askeri tedarikçinin hedef alınması, siber savaşın ve devlet destekli grupların ulusal güvenliğe yönelik tehditlerinin ciddiyetini vurgulamaktadır. Bu tür eylemler, modern çatışmalarda siber operasyonların stratejik önemini ve tedarik zinciri güvenliğinin korunmasının ne denli hayati olduğunu bir kez daha açıkça ortaya koymuştur. Rusya'nın savunma sanayisine yönelik bu müdahale, uluslararası siber güvenlik dinamiklerini etkileyen önemli bir gelişme olarak kaydedilmiştir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116137078031479664" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+            <div class="news-item" id="haber-2">
+                <div class="news-title"><b>Çin Destekli APT Grubu UNC2814'ün Telekom ve Devlet Kurumlarını Hedeflemesi</b></div>
+                <p class="news-content">Google Tehdit İstihbarat Grubu (GTIG) ve ortakları, Çin ile bağlantılı olduğu düşünülen siber casusluk grubu UNC2814'ün küresel altyapısını etkisiz hale getirmiştir. Bu grup, 2017'den beri aktif olup, 42 ülkede telekomünikasyon ve devlet kuruluşlarını hedef almıştır. UNC2814, GRIDTIDE adlı yeni bir arka kapı kullanarak Google E-Tablolar API işlevlerini komuta-kontrol (C2) altyapısı olarak kötüye kullanmıştır. Bu yöntem, kötü niyetli trafiği meşru faaliyet gibi göstererek tespiti zorlaştırmıştır. Saldırganlar, kişisel olarak tanımlanabilir bilgileri (PII) içeren uç noktaları hedeflemiş ve casusluk faaliyetleri için iletişim verilerini izleme potansiyeli taşımıştır. GTIG, saldırganın kontrolündeki tüm Google Cloud Projelerini ve hesaplarını sonlandırarak ve GRIDTIDE arka kapısı erişimini iptal ederek bu tehdidi etkisiz hale getirmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/188521/apt/google-gtig-disrupted-china-linked-apt-unc2814-halting-attacks-on-53-orgs-in-42-countries.html" target="_blank">securityaffairs.com</a>, 26.02.2026)</b></p>
             </div>
-            
-            <div class="news-item mastodon-item" id="haber-3">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>Çin İstihbarat Operasyonunun Amerikalıları Hedef Alması</b></div>
-                <p class="news-content">"Operation Silver Lining Playbook" adıyla bilinen bir Çin istihbarat operasyonunun detayları ortaya çıkarılmıştır. Bu operasyonun, Amerikalıları hedef alarak işe alma veya onlarla etkileşim kurma faaliyetleri yürüttüğü ifade edilmektedir. İstihbarat birimi, faaliyetlerini gizlemek amacıyla sahte kurumsal kimlikler kullanmıştır. Operasyonun temel odak noktasının jeopolitik konular olduğu vurgulanmıştır. Bu durum, ulusal güvenlik açısından ciddi bir tehdit oluşturmakta ve yabancı istihbarat servislerinin siber ve insan tabanlı operasyonlarının karmaşıklığını göstermektedir. Amerikalıların bu tür manipülatif girişimlere karşı uyanık olması gerektiği belirtilmiştir. Operasyon, siber uzaydaki casusluk ve nüfuz etme çabalarının ne denli ileri seviyelere ulaştığını gözler önüne sermektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116134117230230508" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+
+            <div class="news-item" id="haber-3">
+                <div class="news-title"><b>UAT-10027 Tehdit Aktörünün ABD Eğitim ve Sağlık Sektörlerini Dohdoor Arka Kapısı ile Hedeflemesi</b></div>
+                <p class="news-content">Cisco Talos tarafından UAT-10027 olarak izlenen yeni bir tehdit kümesi, Aralık 2025'ten itibaren ABD eğitim ve sağlık sektörlerine yönelik kötü niyetli bir kampanya yürütmektedir. Bu kampanyanın amacı, Dohdoor adlı yeni bir arka kapıyı dağıtmaktır. Dohdoor, komuta-kontrol (C2) iletişimi için DNS-over-HTTPS (DoH) tekniğini kullanmakta ve diğer yük ikili dosyalarını yansıtıcı olarak indirip yürütme yeteneğine sahiptir. Başlangıç erişim vektörü kesin olarak bilinmemekle birlikte, sosyal mühendislik oltalama tekniklerinin kullanıldığı ve PowerShell betiği yürütülerek Cobalt Strike Beacon gibi sonraki aşama yüklerinin dağıtıldığı düşünülmektedir. Tehdit aktörü, Cloudflare altyapısını kullanarak C2 sunucularını gizlemekte ve geleneksel ağ güvenliği araçlarını atlatmaktadır. Dohdoor ayrıca, uç nokta tespit ve yanıt (EDR) çözümlerini atlatmak için sistem çağrılarını devre dışı bırakmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/uat-10027-targets-us-education-and.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
             </div>
-            
+
             <div class="news-item" id="haber-4">
-                <div class="news-title"><b>Truva Atı İçeren Oyun Araçlarıyla Java Tabanlı RAT Yayılımı</b></div>
-                <p class="news-content">Tehdit aktörleri, kullanıcıları trojanize edilmiş oyun araçlarını çalıştırmaya ikna ederek Java tabanlı Uzaktan Erişim Truva Atı (RAT) yayılımı yapmaktadır. Bu kötü amaçlı yazılımlar, tarayıcılar ve sohbet platformları üzerinden dağıtılmaktadır. Microsoft Tehdit İstihbarat ekibi, saldırı zincirinin PowerShell ve LOLBins gibi araçları kullanarak gizli bir şekilde çalıştığını belirtmiştir. Tespit edilmekten kaçınmak için başlangıçtaki indirici silinmekte ve Microsoft Defender dışlamaları yapılandırılmaktadır. Yeni keşfedilen Steaelite RAT ailesi ise veri hırsızlığı ve fidye yazılımı yeteneklerini tek bir panelde birleştirmekte, ayrıca Kazak ve Afgan kuruluşları hedef alan devlet destekli bir kümenin aktif olduğu tespit edilmiştir. Bu durum, siber saldırıların sofistike doğasını ve çok yönlü tehditleri ortaya koymaktadır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://thehackernews.com/2026/02/trojanized-gaming-tools-spread-java.html" target="_blank">thehackernews.com</a>, 27.02.2026)</b></p>
+                <div class="news-title"><b>ManoMano Veri İhlalinde 38 Milyon Müşteri Verisinin Etkilenmesi</b></div>
+                <p class="news-content">Avrupa'nın önde gelen ev geliştirme zinciri ManoMano, Ocak 2026'da üçüncü taraf bir müşteri hizmeti sağlayıcısının siber saldırıya uğradığını ve bu durumun 38 milyon müşteriyi etkilediğini açıklamıştır. İhlal sonucunda, müşteri hizmetleri iletişimleri, ad, soyad, e-posta adresi, telefon numarası gibi kişisel veriler yetkisiz kişilerce ele geçirilmiştir. Şirket, hesap şifrelerinin etkilenmediğini ve kendi sistemlerinde herhangi bir veri değişikliği yaşanmadığını belirtmiştir. Olayın hemen ardından ManoMano, ilgili erişimleri devre dışı bırakmış, alt yüklenicinin müşteri verilerine erişimini iptal etmiş ve erişim kontrollerini güçlendirmiştir. Fransız veri koruma otoritesi CNIL ve ANSSI bilgilendirilmiş, müşterilere oltalama ve sosyal mühendislik girişimlerine karşı dikkatli olmaları tavsiye edilmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/european-dyi-chain-manomano-data-breach-impacts-38-million-customers/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-5">
+                <div class="news-title"><b>ABD Senatosunda Sağlık Sektörü Siber Güvenlik Reformlarının İlerlemesi</b></div>
+                <p class="news-content">ABD Senatosu Sağlık, Eğitim ve Çalışma Komitesi, sağlık ve kamu sağlığı sektörlerindeki siber güvenlik uygulamalarını güçlendirmeyi hedefleyen "Sağlık Siber Güvenliği ve Dirençlilik Yasası"nı ilerletmiştir. Bu yasa, Sağlık ve İnsan Hizmetleri Departmanının (HHS) bir siber güvenlik olay müdahale planı geliştirmesini ve Kongre'ye sunmasını zorunlu kılmaktadır. Ayrıca, HHS'nin Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA) ile işbirliği yaparak sektördeki siber güvenlik denetimini artırmasını, kırsal sağlık hizmeti sağlayıcıları için özel rehberlik oluşturmasını ve sağlık iş gücünün siber güvenlik okuryazarlığını artırma planı geliştirmesini öngörmektedir. Yasa tasarısı, 2024 yılındaki Change Healthcare saldırısının ardından sektörün siber suçlular ve fidye yazılımı aktörleri tarafından sürekli kuşatma altında olduğu argümanıyla desteklenmiştir. HIPAA'nın güncellenmesi ve hastanelere siber güvenlik en iyi uygulamalarını benimsemeleri için federal hibe programları da yasanın önemli unsurları arasında yer almaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/senate-passes-health-care-cyber-reforms-cassidy/" target="_blank">cyberscoop.com</a>, 26.02.2026)</b></p>
+            
+            <div class="news-item" id="haber-6">
+                <div class="news-title"><b>12 Milyondan Fazla .env Dosyasının Ortaya Çıkması Yaygın Güvenlik Zafiyetlerini Gözler Önüne Sermektedir</b></div>
+                <p class="news-content">Mysterium VPN araştırmacıları, dünya genelinde 12 milyondan fazla IP adresinin herkese açık .env dosyaları barındırdığını tespit etmiştir. Bu durum, veritabanı kimlik bilgileri, API anahtarları, JWT imzalama sırları ve bulut tokenları gibi hassas bilgilerin geniş çapta ifşa olmasına yol açmaktadır. Amerika Birleşik Devletleri, 2.8 milyona yakın ifşa edilmiş IP ile listenin başında yer alırken, Japonya, Almanya, Hindistan, Fransa ve Birleşik Krallık da önemli sayıda ifşaya sahiptir. Bu durum, çeşitli sektörlerde ve bölgelerde yaygın bir operasyonel hijyen sorununa işaret etmektedir. Saldırganlar bu sırları ele geçirerek kimlik doğrulama aşamasını atlayabilmekte ve doğrudan sistemlere erişim sağlayabilmektedir. Bu ifşalar genellikle eksik erişim kuralları veya yanlış yapılandırma gibi önlenebilir hatalardan kaynaklanmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/188590/hacking/12-million-exposed-env-files-reveal-widespread-security-failures.html" target="_blank">securityaffairs.com</a>, 27.02.2026)</b></p>
             </div>
             
-            <div class="news-item mastodon-item" id="haber-5">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>İran Kaynaklı Yeni C77L Fidye Yazılımı Hizmetinin (RaaS) Tespit Edilmesi</b></div>
-                <p class="news-content">Rus güvenlik firması F6, siber güvenlik dünyasına yeni bir tehdit olarak ortaya çıkan C77L adında bir Fidye Yazılımı Hizmeti (RaaS) keşfettiğini duyurmuştur. Bu yeni RaaS operasyonunun İran'dan yürütüldüğü tespit edilmiştir. Fidye yazılımları, dünya genelinde işletmeler ve kurumlar için ciddi bir tehdit oluşturmaya devam ederken, bu tür yeni platformların ortaya çıkışı, siber suç ekosisteminin sürekli evrildiğini göstermektedir. İran gibi ülkelerle ilişkilendirilen siber tehditler, jeopolitik gerilimleri artırabilmekte ve uluslararası siber güvenlik işbirliğini daha da karmaşık hale getirmektedir. C77L'nin yetenekleri ve hedefleri hakkında daha fazla bilgi edinildikçe, küresel siber güvenlik duruşunun buna göre ayarlanması gerekmektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116137055681941373" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+            <div class="news-item" id="haber-7">
+                <div class="news-title"><b>Microsoft, Sahte Next.js İş Depolarının Geliştiricileri Bellek İçi Kötü Amaçlı Yazılımlarla Hedeflediği Konusunda Uyarı Yapmıştır</b></div>
+                <p class="news-content">Microsoft, geliştiricileri hedef alan koordineli bir kampanyanın, meşru Next.js projeleri ve teknik değerlendirmeler gibi görünen kötü amaçlı depolar kullandığını belirtmiştir. Bu saldırılar, kurbanları kötü amaçlı yazılımları yürütmeye ve ele geçirilen makinelerde kalıcı erişim sağlamaya ikna etmeyi amaçlamaktadır. Saldırganlar, Bitbucket gibi güvenilir geliştirici platformlarında sahte depolar oluşturarak geliştiricilerin Visual Studio Code çalışma alanı yürütme, derleme zamanı yürütme ve sunucu başlangıcı yürütme gibi çeşitli yöntemlerle kötü amaçlı JavaScript kodunu doğrudan bellekte yürütmesini sağlamaktadır. Bu faaliyet, Kuzey Kore ile bağlantılı "Contagious Interview" adlı siber saldırı kampanyasıyla benzerlik göstermektedir. Geliştirici sistemlerinde kaynak kodu, sırlar ve kimlik bilgileri gibi hassas veriler bulunduğundan, bu tür saldırılar hedef ağlara daha derinlemesine nüfuz etme fırsatları sunmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/fake-nextjs-repos-target-developers.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-8">
+                <div class="news-title"><b>Sosyal Mühendislik Yöntemleriyle Microsoft Teams Üzerinden macOS Kötü Amaçlı Yazılımı Dağıtıldığı Bildirilmiştir</b></div>
+                <p class="news-content">Kuzey Koreli tehdit aktörleri olan GhostCall grubunun, Microsoft Teams toplantılarını kullanarak sosyal mühendislik kampanyaları düzenlediği gözlemlenmiştir. Bu kampanyalar, katılımcıları macOS kötü amaçlı yazılımı yüklemeye ikna etmeyi hedeflemektedir. Saldırganlar, ses sorunları bahanesiyle kurbanları terminal komutlarını çalıştırmaya yönlendirmekte ve böylece kötü amaçlı ikili dosyaları indirip yürütmelerini sağlamaktadır. Daylight Security araştırmacıları, bu faaliyetin macOS önbellek ve geçici yollarından aşamalı indirmeler, Keychain kimlik bilgisi erişimi ve yeni oluşturulan saldırgan kontrollü alan adlarına giden bağlantılarla tutarlı olduğunu belirtmiştir. Bu tür saldırılar, geliştiriciler gibi hassas verilere sahip kullanıcıları hedef alarak, fidye yazılımı veya veri hırsızlığı gibi daha büyük saldırılara zemin hazırlayabilmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
             </div>
             
-            <div class="news-item mastodon-item" id="haber-6">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>Meta Threads Platformunda Çin Yanlısı Propaganda Botlarının Tespit Edilmesi</b></div>
-                <p class="news-content">Yeni bir rapora göre, Meta'nın Threads mikroblog platformu ve Twitter'a rakip olarak konumlandırılan servisi, Çin Halk Cumhuriyeti (PRC) yanlısı propaganda botları tarafından yoğun bir şekilde istila edilmiştir. Bu botlar, platformda belirli anlatıları yaymak ve kamuoyunu manipüle etmek amacıyla kullanılmaktadır. Bu durum, sosyal medya platformlarının jeopolitik bilgi operasyonları için nasıl bir araç haline geldiğini göstermektedir. Dezenformasyon ve propaganda kampanyaları, ulusal güvenlik ve demokratik süreçler üzerinde ciddi etkiler yaratabilmektedir. Sosyal medya şirketlerinin bu tür otomatik bot ağlarına karşı daha güçlü önlemler alması gerektiği belirtilmektedir. Bu olay, siber tehditlerin sadece teknik zafiyetlerden değil, aynı zamanda sosyal mühendislik ve bilgi manipülasyonundan da kaynaklandığını vurgulamaktadır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116137776672700768" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+            <div class="news-item" id="haber-9">
+                <div class="news-title"><b>Yunanistan'da Casus Yazılım Üreticileri Politikacıları ve Gazetecileri Dinlediği Gerekçesiyle Hapis Cezasına Çarptırılmıştır</b></div>
+                <p class="news-content">Yunanistan'da bir mahkeme, Intellexa adlı casus yazılım üreticisi grubunun kurucusu Tal Dilian ve üç yöneticisini, politikacılar, gazeteciler ve iş insanlarının yasa dışı dinlenmesi ve gizlilik ihlalleri nedeniyle sekiz yıl hapis cezasına çarptırmıştır. "Yunan Watergate" olarak adlandırılan bu skandal, 2022 yılına dayanmakta olup, Yunan hükümetinin Intellexa tarafından geliştirilen Predator casus yazılımı ile telefonları dinlediği iddialarını içermektedir. Bu olay, bir casus yazılım üreticisinin teknolojisinin kötüye kullanılması nedeniyle hapis cezası aldığı ilk bilinen vakadır. 2024 yılında ABD hükümeti de Intellexa ve bağlantılı şirketlerini, devlet yetkilileri ve gazeteciler de dahil olmak üzere Amerikalıları hedef alan Predator casus yazılımının geliştirilmesindeki rolleri nedeniyle yaptırım uygulamıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://techcrunch.com/2026/02/26/spyware-maker-sentenced-to-prison-in-greece-for-wiretapping-politicians-and-journalists/" target="_blank">techcrunch.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-10">
+                <div class="news-title"><b>Belarus Siber Partizanları, Rus Ordusuna Tedarik Sağlayan Belaruslu Bir Şirketi Hacklediğini İddia Etmiştir</b></div>
+                <p class="news-content">Belarus Siber Partizanları, Khimvolokno adlı Belaruslu bir şirketi hacklediklerini duyurmuştur. Khimvolokno, Rusya'nın kask astarları ve vücut zırhları için kullanılan naylon ipliklerinin en büyük tedarikçisi konumundadır. Bu eylem, Rusya-Ukrayna savaşı bağlamında siber savaşın ve jeopolitik gerilimlerin bir parçası olarak değerlendirilmektedir. Siber Partizanlar, bu tür saldırılarla Rusya'nın askeri tedarik zincirini bozmayı ve savaş çabalarını engellemeyi amaçlamaktadır. Bu tür saldırılar, ulusal güvenlik ve kritik altyapı hedeflerine yönelik siber operasyonların artan sıklığını ve etkisini vurgulamaktadır. Olay, devlet destekli veya ideolojik motivasyonlu siber grupların, askeri ve endüstriyel hedeflere yönelik saldırılarla jeopolitik olayları etkileme yeteneğini göstermektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://mastodon.social/@campuscodi/116137078031479664, mastodon.social, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-11">
+                <div class="news-title"><b>Truva Atı İçeren Oyun Araçları, Tarayıcı ve Sohbet Platformları Üzerinden Java Tabanlı RAT Yaymaktadır</b></div>
+                <p class="news-content">Tehdit aktörleri, tarayıcılar ve sohbet platformları aracılığıyla dağıtılan truva atı içeren oyun araçlarını kullanarak kullanıcıları Java tabanlı bir uzaktan erişim truva atı (RAT) çalıştırmaya ikna etmektedir. Microsoft Tehdit İstihbarat ekibi, kötü amaçlı bir indiricinin taşınabilir bir Java çalışma zamanı kurduğunu ve jd-gui.jar adlı kötü amaçlı bir Java arşiv dosyasını yürüttüğünü belirtmiştir. Saldırı zinciri, ilk indiriciyi silerek ve Microsoft Defender dışlamaları yapılandırarak tespitten kaçınmak üzere tasarlanmıştır. Bu kötü amaçlı yazılım, yükleyici, çalıştırıcı, indirici ve RAT olarak işlev gören çok amaçlı bir tehdittir. BlackFog tarafından yakın zamanda açıklanan Steaelite adlı yeni bir Windows RAT ailesi de veri hırsızlığı ve fidye yazılımını tek bir web panelinde birleştirmektedir. Ayrıca, KazakRAT adlı bir başka RAT ailesinin de devlet destekli bir küme tarafından Kazakistan ve Afganistanlı varlıkları hedef aldığı şüpheleri bulunmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/trojanized-gaming-tools-spread-java.html" target="_blank">thehackernews.com</a>, 27.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-12">
+                <div class="news-title"><b>Siber Suçluların 2025 Yılında Daha Hızlı Hale Geldiği ve Yapay Zeka Kullandığı Belirtilmiştir</b></div>
+                <p class="news-content">CrowdStrike'ın 2026 Küresel Tehdit Raporu'na göre, siber suçlular 2025 yılında hiç olmadığı kadar hızlanmıştır. İlk erişimden yanal harekete geçiş süresi ortalama 29 dakikaya düşerek, 2024 yılına göre %65'lik bir hız artışı göstermiştir. Bu hızlanmanın temel nedenlerinden biri, yapay zeka (YZ) teknolojilerinin saldırganlar tarafından yaygın olarak kötüye kullanılmasıdır. Fancy Bear ve Punk Spider gibi tehdit aktörleri, YZ'yi operasyonlarını hızlandırmak ve optimize etmek için kullanmışlardır. Raporda, YZ destekli saldırganların sayısında 2024'e kıyasla %89'luk bir artış ve kamuoyuna açıklanmadan önce istismar edilen sıfır gün açıklarında %42'lik bir artış kaydedilmiştir. Bu durum, siber güvenlik ekiplerinin tehditlere karşı daha hızlı tepki vermesi gerektiğini vurgulamaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-13">
+                <div class="news-title"><b>Saldırganların Yanal Harekete Geçiş Süresinin Dört Dakikaya Düştüğü Rapor Edilmiştir</b></div>
+                <p class="news-content">ReliaQuest'in bir raporuna göre, siber saldırılarda yanal harekete geçiş süresi geçen yıla göre %85'lik bir ivmeyle sadece 4 dakikaya düşmüştür. Veri sızdırma ise 6 dakika içinde gerçekleşebilmektedir. Bu istatistik, saldırganların saldırı tekniklerine yapay zeka ve otomasyonu giderek daha fazla entegre etmesiyle açıklanmaktadır. Raporda, saldırganların sıkça yüksek ayrıcalıklı geçerli kimlik bilgilerini ele geçirmesi nedeniyle tepki verme süresinin önemli ölçüde azaldığı belirtilmiştir. 2025 yılında, ortalama yanal harekete geçiş süresi (ilk erişimden yanal harekete) 34 dakikaya düşmüştür. Olayların %47'sinde, saldırganlar ağa dokunmadan önce yüksek ayrıcalıklar elde etmişlerdir. Bu durum, saldırganların ayrıcalık yükseltme adımlarını atlayarak normal ağ trafiğine karışmalarını ve meşru araçları kötüye kullanmalarını sağlamaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-14">
+                <div class="news-title"><b>Apache ActiveMQ İstismarı Sonucu LockBit Fidye Yazılımı Dağıtıldığı Tespit Edilmiştir</b></div>
+                <p class="news-content">Tehdit aktörleri, internete açık Apache ActiveMQ sunucularındaki (CVE-2023-46604) yamalanmış bir güvenlik açığını istismar ederek LockBit fidye yazılımı dağıtmaktadır. The DFIR Report'a göre, saldırganlar ilk sızmanın ardından dışarı çıkarılmış olsalar da, 18 gün sonra aynı sunucuya ikinci kez başarılı bir şekilde sızmışlardır. Sunucuyu ele geçirdikten sonra, tehdit aktörü Metasploit'i ve muhtemelen Meterpreter'ı kullanarak ayrıcalık yükseltme, LSASS işlem belleğine erişim ve ağ içinde yanal hareket gibi saldırı sonrası faaliyetler gerçekleştirmiştir. Yeniden erişim sağlandıktan sonra, saldırgan hızla fidye yazılımı dağıtımına geçmiştir. Daha önceki ihlal sırasında elde edilen kimlik bilgilerini kullanarak RDP aracılığıyla LockBit fidye yazılımını dağıtmışlardır. Fidye yazılımının sızdırılan LockBit oluşturucusu kullanılarak hazırlandığı düşünülmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-15">
+                <div class="news-title"><b>Trend Micro, Apex One Ürününde Kritik Kod Yürütme Zafiyetleri Hakkında Uyarı Yapmıştır</b></div>
+                <p class="news-content">Japon siber güvenlik yazılım firması Trend Micro, Apex One yönetim konsolunda iki kritik güvenlik açığını yamalamıştır. Bu zafiyetler (CVE-2025-71210 ve CVE-2025-71211), saldırganların yamalanmamış Windows sistemlerinde uzaktan kod yürütme (RCE) ayrıcalığı elde etmelerine olanak tanımaktadır. Trend Micro, başarılı bir istismar için saldırganların Apex One Yönetim Konsolu'na erişimi olması gerektiğini ve konsolun IP adresini harici olarak ifşa eden müşterilerin kaynak kısıtlamaları gibi hafifletici faktörleri değerlendirmesi gerektiğini belirtmiştir. Şirket, bu zafiyetlerin aktif olarak istismar edildiğine dair bir bilgi paylaşmamış olsa da, geçmişte Apex One'daki diğer zafiyetlerin saldırılarda kullanıldığı bilinmektedir. ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), aktif olarak istismar edilen 10 Trend Micro Apex zafiyetini takip etmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/trend-micro-warns-of-critical-apex-one-rce-vulnerabilities/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-16">
+                <div class="news-title"><b>Juniper Networks PTX Cihazlarındaki Kritik Zafiyetin Yönlendiricilerin Tamamen Ele Geçirilmesine İzin Verdiği Açıklanmıştır</b></div>
+                <p class="news-content">Juniper Networks'ün PTX Serisi yönlendiricilerinde çalışan Junos OS Evolved ağ işletim sisteminde kritik bir güvenlik açığı (CVE-2026-21902) tespit edilmiştir. Bu zafiyet, kimlik doğrulaması yapılmamış bir saldırganın uzaktan root ayrıcalıklarıyla kod yürütmesine olanak tanımaktadır. PTX Serisi yönlendiriciler, yüksek performanslı çekirdek ve eşleme yönlendiricileri olarak internet servis sağlayıcıları, telekomünikasyon hizmetleri ve bulut ağ uygulamaları tarafından yaygın olarak kullanılmaktadır. Zafiyet, 'On-Box Anomaly Detection' çerçevesindeki yanlış izin atamasından kaynaklanmakta olup, bu hizmetin kök olarak çalışması ve varsayılan olarak etkin olması nedeniyle istismar edildiğinde cihazın tam kontrolünü ele geçirmeye yol açabilmektedir. Juniper Networks, zafiyetin kötü niyetli istismarına dair henüz bir bilgiye sahip olmadığını belirtmiş, ancak etkilenen sürümler için yamalar yayınlamıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/critical-juniper-networks-ptx-flaw-allows-full-router-takeover/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-17">
+                <div class="news-title"><b>CVE-2025-8088 Numaralı WinRAR Zafiyetinin Yaygın Olarak İstismar Edildiği Bildirilmiştir</b></div>
+                <p class="news-content">Siber güvenlik firması Stairwell, izlediği IT ağlarının %80'inden fazlasının CVE-2025-8088 numaralı WinRAR zafiyetine karşı savunmasız sürümler kullandığını açıklamıştır. Bu kritik güvenlik açığı, siber suç ve siber casusluk grupları tarafından yaygın olarak istismar edilmektedir. Bu bulgu, işletme güvenliğinde sürekli bir zorluğu ortaya koymaktadır: yaygın olarak kullanılan, güvenilen yazılımların sessizce güncelliğini yitirmesi ve saldırganlar için yüksek değerli bir hedef haline gelmesi. WinRAR, milyonlarca kullanıcı tarafından dosya sıkıştırma ve arşivleme işlemleri için kullanılan popüler bir yazılımdır. Bu tür yaygın yazılımlardaki zafiyetlerin aktif olarak istismar edilmesi, geniş çaplı sızmalara ve veri ihlallerine yol açma potansiyeli taşımaktadır. Kurumların, kullanılan tüm yazılımların güncel olduğundan emin olmaları ve güvenlik yamalarını derhal uygulamaları kritik önem taşımaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-18">
+                <div class="news-title"><b>Tıbbi Cihaz Üreticisi UFP Technologies, Siber Saldırıda Veri Çalındığı Konusunda Uyarı Yapmıştır</b></div>
+                <p class="news-content">Amerikalı tıbbi cihaz üreticisi UFP Technologies, siber güvenlik olayının IT sistemlerini ve verilerini tehlikeye attığını açıklamıştır. Şirket, 14 Şubat'ta IT sistemlerinde şüpheli faaliyetler tespit etmiş ve derhal izolasyon ve iyileştirme önlemleri almıştır. Yapılan ön soruşturma, tehdidin ortadan kaldırıldığını ancak saldırganların sistemlerden veri çalmayı başardığını göstermektedir. Etkilenen fonksiyonlar arasında faturalandırma ve müşteri teslimatları için etiketleme gibi kritik operasyonlar bulunmaktadır. Veri imhası belirtisi, fidye yazılımı veya wiper saldırısı olasılığını düşündürmektedir. UFP Technologies, şu anda kişisel bilgilerin sızdırılıp sızdırılmadığını belirleyemediğini, ancak teyit edilmesi halinde etkilenen kişilere yasalara uygun olarak bildirimde bulunulacağını ifade etmiştir. Şirket, birincil IT sistemlerinin operasyonel kaldığını ve olayın finansal veya operasyonel etkisinin önemli olmasının beklenmediğini belirtmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/medical-device-maker-ufp-technologies-warns-of-data-stolen-in-cyberattack/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-19">
+                <div class="news-title"><b>Daha Önce Zararsız Olan Google API Anahtarlarının Artık Gemini Yapay Zeka Verilerini İfşa Ettiği Belirlenmiştir</b></div>
+                <p class="news-content">Daha önce zararsız kabul edilen ve haritalar gibi hizmetler için kullanılan Google API anahtarlarının, artık Gemini AI asistanına kimlik doğrulaması yapmak ve özel verilere erişmek için kullanılabileceği tespit edilmiştir. TruffleSecurity araştırmacıları, çeşitli sektörlerdeki kuruluşların ve hatta Google'ın internet sayfalarını tarayarak yaklaşık 3.000 bu tür anahtar bulmuştur. Sorun, Gemini asistanının tanıtılması ve geliştiricilerin LLM API'sini projelerde etkinleştirmesiyle ortaya çıkmıştır. Önceleri Google Cloud API anahtarları hassas veri olarak kabul edilmezken, Gemini ile birlikte daha tehlikeli ayrıcalıklar kazanmıştır. Saldırganlar, bir web sitesinin sayfa kaynağından API anahtarını kopyalayarak Gemini API hizmeti aracılığıyla özel verilere erişebilir ve API çağrıları yaparak binlerce dolarlık maliyet oluşturabilirler. Google, durumu ele aldığını ve sızan API anahtarlarını engellemek için proaktif önlemler uyguladığını belirtmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/previously-harmless-google-api-keys-now-expose-gemini-ai-data/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
             </div>
             
-            <div class="news-item mastodon-item" id="haber-7">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>Rus Medyasının Conti Fidye Yazılımı Grubunu Ulusal Kahraman İlan Etmesi</b></div>
-                <p class="news-content">Rus medyasında, uluslararası alanda büyük siber suçlara karışmış kötü şöhretli Conti fidye yazılımı grubunun "ulusal kahramanlar" gibi ele alındığına dair haberler ortaya çıkmıştır. Bu durum, Rusya'nın siber suç gruplarına karşı tutumunu ve jeopolitik çıkarları doğrultusunda bu tür grupları nasıl kullanabileceğine dair endişeleri artırmaktadır. Devlet destekli siber aktörler ve siber suç grupları arasındaki belirsiz sınırlar, uluslararası siber güvenlik ortamını daha da karmaşık hale getirmektedir. Bu yaklaşım, siber suçlarla mücadelede uluslararası işbirliğini zayıflatmakta ve siber saldırganlara cesaret vermektedir. Global siber güvenliğe yönelik bu tehdit, uluslararası hukuk ve normların uygulanmasını zorlaştıran önemli bir faktör olarak kaydedilmiştir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116134253867576632" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+            <div class="news-item" id="haber-20">
+                <div class="news-title"><b>Aeternum C2 Botnet'inin Komutlarını Polygon Blockchain Üzerinde Sakladığı Ortaya Çıkarılmıştır</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, Aeternum C2 adlı yeni bir botnet yükleyicisinin, ele geçirme çabalarına karşı dayanıklı olmak için blockchain tabanlı bir komuta-kontrol (C2) altyapısı kullandığını açıklamıştır. Qrator Labs'ın raporuna göre, Aeternum, geleneksel sunucular veya alan adları yerine talimatlarını halka açık Polygon blockchain üzerinde saklamaktadır. Bu yaklaşım, Aeternum'un C2 altyapısını etkili bir şekilde kalıcı ve geleneksel ele geçirme yöntemlerine karşı dirençli hale getirmektedir. Botnet'ler tarafından C2 için blockchain kullanımına ilk kez rastlanmamaktadır; 2021'de Google, Bitcoin blockchain'i yedek C2 mekanizması olarak kullanan Glupteba botnet'ini engellemek için adımlar atmıştır. Aeternum C2'nin detayları ilk olarak Aralık 2025'te ortaya çıkmış ve kötü amaçlı yazılımın yeraltı forumlarında satıldığı belirlenmiştir. Bu botnet, akıllı sözleşmelere komutlar yazarak ve botların bu komutları halka açık RPC uç noktaları aracılığıyla okumasını sağlayarak çalışmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/aeternum-c2-botnet-stores-encrypted.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
             </div>
-            
-            <div class="news-item mastodon-item" id="haber-8">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>OpenAI'nin ChatGPT'nin Kötü Niyetli Kullanımını Engellemesi</b></div>
-                <p class="news-content">OpenAI, yapay zeka destekli sohbet robotu ChatGPT'nin kötü niyetli amaçlarla kullanımına karşı önemli adımlar atmıştır. Şirket, özellikle romantizm dolandırıcılıkları ve bilgi operasyonları (info-ops) gibi alanlarda tespit edilen kötüye kullanımları başarıyla engellediğini duyurmuştur. Yapay zeka teknolojilerinin gelişimiyle birlikte, bu teknolojilerin siber suçlular tarafından kötüye kullanılması riski de artmaktadır. OpenAI'nin bu müdahalesi, yapay zeka güvenliği ve etik kullanımı konusunda alınan proaktif önlemlerin önemini vurgulamaktadır. Bu tür engelleme faaliyetleri, yapay zeka tabanlı platformların güvenliğini sağlamak ve kullanıcıları dolandırıcılık ile dezenformasyon kampanyalarından korumak için hayati öneme sahip olarak değerlendirilmektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116133781102465544" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+
+            <div class="news-item" id="haber-21">
+                <div class="news-title"><b>İspanya'da Hükümet Kurumlarına DDoS Saldırıları Düzenleyen Şüpheli Hacktivistler Tutuklanmıştır</b></div>
+                <p class="news-content">İspanyol yetkililer, Anonymous Fénix grubunun dört üyesinin dağıtılmış hizmet reddi (DDoS) saldırılarına karıştıkları gerekçesiyle tutuklandığını duyurmuştur. Şüphelilerin isimleri açıklanmamış olsa da, hükümet bakanlıkları, siyasi partiler ve kamu kurumlarının web sitelerini hedef aldıkları belirtilmiştir. Grubun ilk saldırıları Nisan 2023'te gerçekleşmiş ve Eylül 2024'ten itibaren faaliyetlerini yoğunlaştırarak DDoS saldırıları düzenlemek üzere gönüllüler topladığı ifade edilmiştir. Bu tutuklamalar, devlet kurumlarına yönelik siber saldırıların ciddiyetini ve bu tür eylemlerle mücadeledeki ulusal güvenlik önceliklerini vurgulamaktadır. Hacktivist gruplarının kamu hizmetlerini aksatma ve siyasi mesajlar iletme amacıyla kritik altyapıları hedef alması, siber güvenlik birimleri için sürekli bir tehdit oluşturmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
             </div>
-            
-            <div class="news-item mastodon-item" id="haber-9">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>Güvenlik Firmasının 59 Milyon Kötü Niyetli Reklamı Engellemesi</b></div>
-                <p class="news-content">Bir siber güvenlik firması, kötü niyetli reklam test platformlarına erişim sağlayarak önemli bir başarıya imza atmıştır. Elde edilen bilgiler sayesinde, reklam şirketlerinin geçen yıl 59 milyondan fazla kötü niyetli reklamı engellemesine yardımcı olunmuştur. Bu durum, malvertising olarak bilinen kötü amaçlı reklamcılığın siber tehdit ortamında ne kadar yaygın olduğunu göstermektedir. Kötü niyetli reklamlar, kullanıcıları zararlı web sitelerine yönlendirebilir, casus yazılım veya fidye yazılımı indirmelerine neden olabilir. Güvenlik firmasının bu proaktif müdahalesi, dijital reklam ekosisteminin güvenliğini artırma ve kullanıcıları potansiyel tehlikelerden koruma çabalarının kritik önemini bir kez daha vurgulamıştır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116137737412947559" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+
+            <div class="news-item" id="haber-22">
+                <div class="news-title"><b>Arjantin Yargı Sektörünün RAT Kötü Amaçlı Yazılımıyla Hedeflendiği Açıklanmıştır</b></div>
+                <p class="news-content">Arjantin yargı sektörünü hedef alan bir oltalama kampanyası gözlemlenmiştir. Bu kampanya, başlatıldığında kurbanlara aldatıcı bir PDF gösteren, ancak aynı zamanda Rust tabanlı bir uzaktan erişim truva atı (RAT) bırakan bir ZIP arşivi dağıtmaktadır. Seqrite Labs'a göre, kampanya mahkeme iletişimlerine duyulan güveni istismar etmek için son derece otantik görünen yargısal yem belgelerini kullanmaktadır. Bu durum, gizli bir RAT'ın başarılı bir şekilde dağıtılmasını sağlamakta ve hassas yasal ve kurumsal verilere uzun vadeli erişim imkanı sunmaktadır. Saldırganlar, bu yöntemle yargı sistemlerinin içine sızarak önemli bilgilere erişmeyi ve potansiyel olarak adli süreçleri etkilemeyi amaçlamaktadır. Bu tür hedeflere yönelik saldırılar, ulusal güvenlik açısından ciddi riskler barındırmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
             </div>
-            
-            <div class="news-item mastodon-item" id="haber-10">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>Scattered Lapsus$ Hunters'ın Vishing Saldırıları İçin Kadınları İşe Alması</b></div>
-                <p class="news-content">Scattered Lapsus$ Hunters (SLH) adlı grubun, sesli kimlik avı (vishing) saldırılarının başarı oranını artırmak amacıyla kadınları işe aldığı belirlenmiştir. Bu taktik, yardım masası personeli gibi davranarak kurbanları manipüle etmeyi hedeflemektedir. Sosyal mühendislik tekniklerinin giderek sofistike hale geldiğini gösteren bu gelişme, insan faktörünün siber güvenlikteki kritik rolünü bir kez daha ortaya koymaktadır. Saldırganlar, kurbanların güvenini kazanmak için çeşitli psikolojik yöntemler kullanmakta ve bu sayede hassas bilgilere erişim sağlamayı amaçlamaktadır. Kurumların, çalışanlarını bu tür gelişmiş vishing saldırılarına karşı eğitmesi ve kimlik doğrulama süreçlerini güçlendirmesi gerektiği vurgulanmıştır.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116134628755308198" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+
+            <div class="news-item" id="haber-23">
+                <div class="news-title"><b>ResidentBat Altyapısının Analizi, Belaruslu Yetkililer Tarafından Kullanılan Android Casus Yazılımını Göstermektedir</b></div>
+                <p class="news-content">ResidentBat adlı Android casus yazılımı implantının, Belaruslu yetkililer tarafından gazetecilere ve sivil topluma yönelik gözetim operasyonları için kullanıldığı tespit edilmiştir. Yüklendiğinde, bu kötü amaçlı yazılım operatörlere çağrı günlüklerine, mikrofon kayıtlarına, SMS'lere, şifreli mesajlaşma trafiğine, ekran görüntülerine ve yerel olarak depolanan dosyalara erişim sağlamaktadır. İlk olarak Aralık 2025'te belgelenmiş olmasına rağmen, kötü amaçlı yazılımın 2021 yılına kadar uzandığı tahmin edilmektedir. Censys'e göre, ResidentBat ile ilişkili altyapı Avrupa ve Rusya'da yoğunlaşmıştır. Bu durum, devlet destekli casus yazılımların yaygınlığını ve belirli grupları hedef alarak hassas bilgileri elde etme çabalarını ortaya koymaktadır. Gazeteciler ve sivil toplum kuruluşları, bu tür casus yazılımların hedefi haline gelerek ifade özgürlüğü ve gizlilik hakları açısından ciddi tehditlerle karşılaşmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
             </div>
-            
-            <div class="news-item mastodon-item" id="haber-11">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>Kimlik Avı Gruplarının .arpa Alan Adlarını Kötüye Kullanması</b></div>
-                <p class="news-content">Kimlik avı (phishing) gruplarının, normalde yalnızca IP adresinden alan adına eşlemeler için ayrılmış olan .arpa üst düzey alan adlarını (TLD) kendi kötü niyetli operasyonları için kötüye kullandığı belirlenmiştir. Bu durum, siber suçluların saldırılarını gerçekleştirmek için beklenmedik ve teknik olarak sınırlı olması gereken alan adlarını bile istismar etme konusundaki yaratıcılıklarını ortaya koymaktadır. .arpa alan adlarının kötüye kullanılması, güvenlik denetimlerinin ve alan adı kayıt sistemlerinin daha dikkatli olması gerektiğini göstermektedir. Bu tür teknik istismarlar, geleneksel güvenlik filtrelerini atlatma potansiyeli taşımakta ve kimlik avı saldırılarının tespitini zorlaştırmaktadır. İnternet altyapısının temel bileşenlerinin dahi kötüye kullanılabileceği bu tür vakalar, sürekli tetikte olmayı gerektirmektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116138460924520544" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+
+            <div class="news-item" id="haber-24">
+                <div class="news-title"><b>Güvenilmeyen Depoların Claude Kodunu Bir Saldırı Vektörüne Dönüştürdüğü Tespit Edilmiştir</b></div>
+                <p class="news-content">Check Point Araştırma ekibi, Anthropic'in Claude Code yapay zeka kodlama asistanında uzaktan kod yürütme ve API anahtarı hırsızlığına yol açabilecek birden fazla güvenlik açığı bulmuştur. CVE-2025-59536 ve CVE-2026-21852 olarak izlenen bu zafiyetler, kullanıcıların güvenilmeyen depoları klonlaması ve açmasıyla tetiklenebilmektedir. Kancalar, MCP sunucuları ve ortam değişkenleri gibi özellikler kötüye kullanılarak rastgele kabuk komutları çalıştırılabilmekte ve Anthropic API kimlik bilgileri sızdırılabilmektedir. Bu durum, yapay zeka tedarik zincirinde yeni bir tehdit oluşturmakta ve proje düzeyindeki yapılandırma dosyalarının bir yürütme katmanı olarak işlev görebileceğini göstermektedir. Anthropic, güven onaylarını sıkılaştırarak, harici araç yürütmesini engelleyerek ve kullanıcı onayı olmadan API çağrılarını kısıtlayarak sorunları gidermiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/188508/security/untrusted-repositories-turn-claude-code-into-an-attack-vector.html" target="_blank">securityaffairs.com</a>, 26.02.2026)</b></p>
             </div>
-            
-            <div class="news-item mastodon-item" id="haber-12">
-                <div class="mastodon-badge">Mastodon</div>
-                <div class="news-title"><b>Veri Hırsızlığı Saldırılarının Siber Sigorta Taleplerinin %57'sini Oluşturması</b></div>
-                <p class="news-content">Siber sigorta sağlayıcısı Resilience tarafından açıklanan verilere göre, geçen yıl tüm gasp sigortası taleplerinin büyük bir kısmını, yani %57'sini, yalnızca veri hırsızlığı saldırıları oluşturmuştur. Bu istatistik, fidye yazılımı saldırılarının yanı sıra veri hırsızlığının da siber suç ekosisteminde ne denli önemli bir yer edindiğini gözler önüne sermektedir. Veri hırsızlığı, şirketler için hem finansal hem de itibar açısından ciddi zararlar doğurabilmektedir. Bu eğilim, kuruluşların sadece verilerini şifreleyen fidye yazılımlarına karşı değil, aynı zamanda veri sızdırma ve çalma operasyonlarına karşı da kapsamlı savunma stratejileri geliştirmesi gerektiğini vurgulamaktadır. Siber risk yönetimi ve sigorta taleplerindeki bu değişim, siber tehdit manzarasının evrimini açıkça göstermektedir.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="https://mastodon.social/@campuscodi/116136945154663072" target="_blank">mastodon.social</a>, 26.02.2026)</b></p>
+
+            <div class="news-item" id="haber-25">
+                <div class="news-title"><b>Sahte Huorong Web Sitesinin ValleyRAT Kötü Amaçlı Yazılımı Dağıttığı Belirlenmiştir</b></div>
+                <p class="news-content">Huorong Security antivirüsünün ikna edici bir taklit web sitesi ("huoronga[.]com"), ValleyRAT olarak bilinen bir uzaktan erişim truva atı (RAT) kötü amaçlı yazılımı dağıtmak için kullanılmıştır. Bu kampanya, Silver Fox adlı Çinli bir siber suç grubunun işidir. Silver Fox, popüler Çin yazılımlarının ve diğer yaygın programların truva atı içeren sürümlerini, typosquatting alan adları aracılığıyla dağıtma geçmişine sahiptir. Malwarebytes'a göre, ValleyRAT yüklendikten sonra saldırganlar kurbanı izleyebilir, hassas bilgileri çalabilir ve sistemi uzaktan kontrol edebilirler. Bu tür saldırılar, kullanıcıları sahte web sitelerine yönlendirerek ve meşru yazılımları taklit ederek kötü amaçlı yazılımları yaymakta, geniş çapta veri hırsızlığına ve sistem ele geçirmelerine yol açabilmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-26">
+                <div class="news-title"><b>.arpa Alan Adlarının Kötüye Kullanılmasıyla Oltalama Kampanyalarının Yürütüldüğü Bildirilmiştir</b></div>
+                <p class="news-content">Infoblox araştırmacıları, oltalama e-posta kampanyalarında güvenlik kontrollerini atlatmak için yeni bir yöntem kullanıldığını tespit etmiştir. Saldırganlar, normalde IP adreslerini alan adlarına eşlemek için kullanılan .arpa üst düzey alan adını (TLD) ve IPv6 tünellerini kötüye kullanarak oltalama içeriğini barındırmaktadır. Bu alan adları, internet altyapısı için kritik olduğundan genellikle engellenmemektedir. Tehdit aktörleri, belirli DNS sağlayıcılarının DNS kayıt yönetimi kontrolündeki bir özelliği kullanarak .arpa alan adları için IP adresi kayıtları ekleyebilmektedir. Kurbanlar, e-postalardaki resimli bağlantılara tıkladıklarında, gizli .arpa alan adlarına yönlendirilmekte ve bu da onları sahte web sitelerine götürmektedir. Bu yeni teknik, geleneksel oltalama tespit yöntemlerini atlatarak kullanıcılar için ciddi bir tehdit oluşturmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.infoblox.com/blog/threat-intelligence/abusing-arpa-the-tld-that-isnt-supposed-to-host-anything/" target="_blank">infoblox.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-27">
+                <div class="news-title"><b>1Campaign Hizmetinin Kötü Amaçlı Google Reklamlarının Tespit Edilmesini Engellediği Ortaya Çıkarılmıştır</b></div>
+                <p class="news-content">Varonis, 1Campaign olarak bilinen yeni bir siber suç hizmetinin ayrıntılarını açıklamıştır. Bu hizmet, tehdit aktörlerinin kötü amaçlı Google Reklamlarını uzun süreler boyunca çalıştırmasına ve denetimden kaçmasına olanak tanımaktadır. Varonis güvenlik araştırmacısı Daniel Kelley, bu gizleme platformunun Google'ın tarama süreçlerini geçtiğini, güvenlik araştırmacılarını filtrelediğini ve oltalama ile kripto para birimi boşaltma sayfalarını mümkün olduğunca uzun süre çevrimiçi tutarak gerçek kullanıcıları saldırgan kontrollü sitelere yönlendirdiğini belirtmiştir. 1Campaign, gerçek zamanlı ziyaretçi filtreleme, sahtekarlık puanlama, coğrafi hedefleme ve bot koruma betiği oluşturucuyu tek bir kontrol panelinde birleştirmektedir. DuppyMeister adlı bir tehdit aktörü tarafından üç yılı aşkın süredir geliştirilen ve sürdürülen bu hizmet, ABD, Kanada, Hollanda, Çin, Almanya, Fransa, Japonya, Macaristan ve Arnavutluk'a yayılan trafiği hedeflemektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-28">
+                <div class="news-title"><b>Mac Kullanıcılarının ClickFix Kullanarak Stealer Kötü Amaçlı Yazılımlarla Hedeflendiği Belirtilmiştir</b></div>
+                <p class="news-content">Homebrew, 7-Zip, Notepad++, LibreOffice ve Final Cut Pro gibi popüler yazılımları arayan Mac kullanıcıları, aktif bir kötü amaçlı reklam kampanyasının hedefi haline gelmiştir. Bu kampanya, ABD, Kanada, İtalya, Polonya, Brezilya, Hindistan, Suudi Arabistan, Japonya, Çin, Romanya, Malta, Slovenya, Almanya, Birleşik Krallık ve BAE dahil olmak üzere birçok ülkeden ele geçirilmiş en az 35 Google reklamveren hesabı tarafından desteklenmektedir. 200'den fazla meşru macOS yazılımını taklit eden kötü amaçlı reklam tespit edilmiştir. Bu çabaların nihai amacı, kullanıcıları ClickFix benzeri talimatlar içeren sahte sayfalara yönlendirerek MacSync stealer kötü amaçlı yazılımını dağıtmaktır. Başka bir ClickFix kampanyasında ise sahte CAPTCHA doğrulama yemleri kullanılarak stealer kötü amaçlı yazılımı dağıtıldığı gözlemlenmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-29">
+                <div class="news-title"><b>Google Chrome Uzantılarının Tarayıcıyı Çökertip Kötü Amaçlı Komutları Yürüttüğü Tespit Edilmiştir</b></div>
+                <p class="news-content">Pixel Shield - Block Ads ve PageGuard - Phishing Protection adlı iki yeni Google Chrome uzantısının, tarayıcıyı kasıtlı olarak çökerten ve kullanıcıyı ClickFix benzeri kötü amaçlı bir komut çalıştırmaya ikna eden CrashFix ile aynı taktiği benimsediği bulunmuştur. Bu kampanyanın en endişe verici yönü, uzantıların aslında çalıştığı ve reklamı yapılan işlevselliği sunduğudur. Annex Security'den John Tuckner, orijinal NexShield DoS'un milyarlarca chrome.runtime.connect() çağrısı oluşturduğunu belirtirken, bu varyantların Chrome'un mesajlaşma sistemini milyonlarca çözülemeyen sözle doldurarak tarayıcıyı çökerten farklı bir teknik kullandığını ifade etmiştir. Yeni varyantlar, denetim ve kontrol (C2) sunucusu bir push bildirimi gönderdiğinde hizmet reddinin tetiklenmesini sağlayacak şekilde evrimleşmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-30">
+                <div class="news-title"><b>Kripto Para Oltalama Kampanyalarının Bitpanda'yı Taklit Ettiği Bildirilmiştir</b></div>
+                <p class="news-content">Oltalama kampanyalarının, Bitpanda gibi kripto para brokerlik hizmetlerini taklit ederek, kullanıcıların bilgilerini yeniden onaylamaları veya hesaplarının bloke edilme riskiyle karşı karşıya kalmaları bahanesiyle hassas verileri toplamaya çalıştığı gözlemlenmiştir. Cofense, saldırganların birden fazla bilgi ve kimlik formu elde etmeye çalıştığını ve sıradan bir kullanıcıya meşru görünecek taktikler kullandığını belirtmiştir. İsim doğrulama, e-posta, şifre kimlik bilgileri ve konum gibi kullanıcı bilgileri, çok faktörlü kimlik doğrulama süreci adı altında bilgi toplama girişiminde kullanılmıştır. Bu tür kampanyalar, kripto para piyasasının popülaritesini kötüye kullanarak kullanıcıların finansal varlıklarını ve kişisel verilerini çalmayı hedeflemektedir. Kullanıcıların, bu tür oltalama girişimlerine karşı dikkatli olmaları ve şüpheli e-postaları veya bağlantıları doğrulamaları büyük önem taşımaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-31">
+                <div class="news-title"><b>GPUGate Kampanyasının Malvertising ile Hijack Loader ve Atomic Stealer Dağıttığı Belirlenmiştir</b></div>
+                <p class="news-content">Geliştirici araçları arayan kullanıcılar, kötü amaçlı bir yükleyici kullanarak Hijack Loader ve Atomic Stealer dağıtan GPUGate adlı devam eden bir kampanyanın hedefi haline gelmiştir. GMO Cybersecurity by Ierae, saldırganın sahte bir GitHub hesabı oluşturduğunu ve resmi GitHub Desktop deposunu fork'ladığını belirtmiştir. Saldırgan, README'deki indirme bağlantısını kötü amaçlı yükleyicisine yönlendirecek şekilde düzenlemiş ve bu değişikliği kaydetmiştir. Son olarak, saldırgan "GitHub Desktop" için sponsorlu reklamları kullanarak, GitHub'ın uyarılarını atlamak için README.md içinde bir çapa kullanarak kendi commit'ini tanıtmıştır. Kötü amaçlı Windows yükleyicisini indiren kurbanlar çok aşamalı bir yükleyici yürütürken, Mac kurbanları Atomic Stealer'ı almıştır. Bu kampanya, yazılım tedarik zinciri saldırılarının ve kötü amaçlı reklamcılığın gelişen taktiklerini göstermektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-32">
+                <div class="news-title"><b>Kötü Amaçlı StripeApi NuGet Paketinin Resmi Kütüphaneyi Taklit Ederek API Tokenlarını Çaldığı Açıklanmıştır</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, NuGet Galerisi'nde finansal hizmetler firması Stripe'ın bir kütüphanesini taklit eden yeni bir kötü amaçlı paket keşfetmiştir. StripeApi.Net olarak adlandırılan bu paket, Stripe'ın 75 milyondan fazla indirmeye sahip meşru kütüphanesi Stripe.net'i taklit etmeye çalışmıştır. Paket, 16 Şubat 2026'da StripePayments adlı bir kullanıcı tarafından yüklenmiş olup, artık mevcut değildir. ReversingLabs, kötü amaçlı paketin NuGet sayfasının resmi Stripe.net paketiyle mümkün olduğunca benzer şekilde kurulduğunu belirtmiştir. Tehdit aktörü, typosquatting'li pakete güvenilirlik kazandırmak amacıyla indirme sayısını yapay olarak 180.000'den fazlaya çıkarmıştır. Paket, meşru Stripe paketinin bazı işlevlerini kopyalamış, ancak kullanıcıların Stripe API tokenı da dahil olmak üzere hassas verileri toplayıp tehdit aktörüne aktarmak için bazı kritik yöntemleri değiştirmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/02/malicious-stripeapi-nuget-package.html" target="_blank">thehackernews.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-33">
+                <div class="news-title"><b>Açık Kaynak Projelerinin Güvenli Olmayan Varsayılan Kriptografi Kütüphanelerini Kullandığı Tespit Edilmiştir</b></div>
+                <p class="news-content">Trail of Bits'ten yapılan yeni bir analiz, 723.000'den fazla açık kaynak projesinin güvenli olmayan varsayılan ayarlara sahip kriptografi kütüphanelerini kullandığını ortaya çıkarmıştır. aes-js ve pyaes kütüphanelerinin, AES-CTR API'lerinde varsayılan bir başlatma vektörü (IV) sağlaması, çok sayıda anahtar/IV yeniden kullanım hatasına yol açtığı tespit edilmiştir. Aynı anahtar/IV çiftini yeniden kullanmak, ciddi güvenlik sorunlarına neden olmaktadır; eğer iki mesaj CTR modunda veya GCM'de aynı anahtar ve IV ile şifrelenirse, şifre metinlerine erişimi olan herkes düz metinlerin XOR'unu kurtarabilmektedir. Kütüphaneler yıllardır güncellenmemiş olsa da, strongSwan, strongMan'deki (CVE-2026-25998) sorunu gidermek için bir güncelleme yayınlamıştır. Bu durum, açık kaynak yazılımlarda kriptografik güvenlik uygulamalarının önemini ve geliştiricilerin bu tür zafiyetlere karşı dikkatli olmaları gerektiğini vurgulamaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-34">
+                <div class="news-title"><b>Europol'ün "The Com" Siber Suç Ağını Hedef Alan "Project Compass" Operasyonu Başlatılmıştır</b></div>
+                <p class="news-content">Europol koordinasyonunda ve 28 ülkenin desteğiyle "Project Compass" adlı küresel bir operasyon başlatılmıştır. Bu operasyon, binlerce reşit olmayan ve genç yetişkinden oluşan, fiziksel şiddet ve şantaj dahil olmak üzere çeşitli siber suçlara karışan "The Com" adlı nihilist ağı hedef almaktadır. Ocak 2025'te başlayan girişimden bu yana 30 fail tutuklanmış, 179 failin tam veya kısmi kimlikleri belirlenmiş ve dört kurban korunmuş, 62'ye kadar kurban tespit edilmiştir. The Com, Hacker Com, In Real Life Com ve Extortion Com olmak üzere üç ana alt kümeye ayrılmıştır. Grup üyelerine atfedilen suçlar giderek karmaşıklaşmakta, failler kimliklerini gizlemek, finansal işlemleri saklamak ve para aklamak için büyük çaba sarf etmektedir. Europol, bu işbirliği sayesinde siber suçluların saklanmaya çalıştığı boşlukları kapattıklarını belirtmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/project-compass-the-com-europol/" target="_blank">cyberscoop.com</a>, 27.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-35">
+                <div class="news-title"><b>RAMP Siber Suç Forumunun Kapatılmasının Yeraltı Siber Suç Ekosistemini Yeniden Şekillendirdiği Gözlemlenmiştir</b></div>
+                <p class="news-content">Geçtiğimiz ay ABD'deki kolluk kuvvetleri, kötü şöhretli RAMP siber suç forumuna el koymuştur. Bu olay, yeraltı siber suç ekosisteminde güveni sarsan ve parçalanmayı hızlandıran dalgalanma etkileri yaratmıştır. RAMP'ın ele geçirilmeden çok önce bir honeypot olarak işlev görmüş olabileceği veya ele geçirilmiş olabileceği yönünde spekülasyonlar da bulunmaktadır. Rapid7'ye göre, fidye yazılımı aktörleri tek bir halef etrafında toplanmak yerine, T1erOne gibi kapalı platformlar ve Rehub gibi erişilebilir forumlar arasında yeniden dağılmaktadır. Bu değişim, düşüşten ziyade bir adaptasyonu yansıtmaktadır. Kesintiler güveni parçalamakta ve koordinasyonu birden fazla platforma dağıtmaktadır. Bu durum, siber suçla mücadele eden kolluk kuvvetleri için yeni zorluklar ortaya çıkarmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-36">
+                <div class="news-title"><b>Moskova'da Bir Kişinin Sahte FSB Subayı Kimliğiyle Conti Fidye Yazılım Grubundan Şantaj Yaptığı İddia Edilmiştir</b></div>
+                <p class="news-content">Moskova'da Ruslan Satuchin adlı bir Rus vatandaşının, Rusya Federal Güvenlik Servisi (FSB) subayı gibi davranarak kötü şöhretli Conti fidye yazılım grubundan para sızdırmaya çalıştığı iddia edilmiştir. Yerel medya raporlarına göre, Satuchin'in Eylül 2022'de Conti siber suç grubunun bir üyesiyle iletişime geçerek grubun faaliyetlerine ilişkin bir yasal soruşturma üzerinde etkisi olduğunu öne sürdüğü belirtilmektedir. Satuchin'in, Conti'ye ödeme yapmaları veya cezai sonuçlarla karşılaşmaları teklifini yaptığı iddia edilmektedir. Fidye yazılımı gruplarının kendilerinin şantaja maruz kalması ironik bir durumdur. Satuchin herhangi bir yanlış yapmadığını reddetmiş ve tanıkların sindirilmesini önlemek amacıyla Moskova'da duruşma öncesi gözaltında tutulmaktadır. Suçlu bulunması halinde on yıla kadar hapis cezasıyla karşı karşıya kalabilir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/threatsday-bulletin-kali-linux-claude.html, thehackernews.com, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-37">
+                <div class="news-title"><b>Scattered Lapsus$ Hunters Grubunun Sosyal Mühendislik Becerilerini Geliştirmek İçin Kadın Sesleri Aradığı Belirtilmiştir</b></div>
+                <p class="news-content">Üretken siber suç grubu Scattered Lapsus$ Hunters (SLSH), sosyal mühendislik saldırılarındaki başarı oranını artırmak amacıyla kadınları işe aldığını duyurmuştur. Dataminr tarafından toplanan Telegram kanal gönderilerine göre, grup geçen yılki Salesloft Drift saldırılarının arkasında olup, "başarı ve isabet oranına" bağlı olarak çağrı başına 500-1000 dolar arasında ödeme vaat etmektedir. İlgilenen adayların grubun "Destek" hesabına mesaj göndermeleri istenmekte ve testleri geçenlere bir senaryo sunulmaktadır. SLSH, BT yardım masası personelini aldatarak kuruluşun ağına erişim sağlamak için kimlik bilgilerini ele geçirme konusunda etkili sosyal mühendislik taktikleriyle bilinmektedir. Bu işe alım kampanyası, SLSH'nin taktiklerinde hesaplanmış bir evrimi temsil etmekte olup, BT yardım masası personelinin geleneksel saldırgan profillerini atlatmayı amaçlamaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://go.theregister.com/feed/www.theregister.com/2026/02/26/scattered_lapsus_hunters_female_recruits/" target="_blank">go.theregister.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-38">
+                <div class="news-title"><b>Olympique Marseille Kulübünün Siber Saldırıya Uğradığı ve Veri Sızıntısı Yaşadığı Doğrulanmıştır</b></div>
+                <p class="news-content">Fransız profesyonel futbol kulübü Olympique de Marseille, bu ayın başlarında sistemlerine sızdığını iddia eden bir tehdit aktörünün ardından siber saldırıya uğradığını doğrulamıştır. Tehdit aktörü, Olympique Marseille personel ve taraftar bilgilerini içeren bir veritabanını ele geçirdiğini iddia ederek bir hacker forumunda sızdırılan bilgilerin örneklerini yayınlamıştır. Kulüp, "ulusal ve uluslararası bağlamda büyük kuruluşları hedef alan saldırıların yeniden canlandığı bir dönemde, yakın zamanda bir siber saldırı girişiminin hedefi olduğunu" belirtmiştir. Olympique Marseille, 400.000 kişiye ait ad, adres, sipariş bilgileri, e-posta adresleri ve cep telefonu numaraları gibi bilgileri içerdiğini öne sürmüştür. Kulüp, banka bilgilerinin veya şifrelerin tehlikeye girmediğini ve olay Fransız veri koruma otoritesine (CNIL) bildirilmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/olympique-marseille-football-club-confirms-cyberattack-after-data-leak/" target="_blank">bleepingcomputer.com</a>, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-39">
+                <div class="news-title"><b>Meta'nın Threads Platformunun Çin Yanlısı Propaganda Botları Tarafından İstila Edildiği Rapor Edilmiştir</b></div>
+                <p class="news-content">Meta'nın yeni mikroblog platformu ve Twitter rakibi Threads'in, Çin Halk Cumhuriyeti (PRC) yanlısı propaganda botları tarafından istila edildiği yeni bir rapora göre tespit edilmiştir. Bu botların, platformda Çin hükümetinin anlatılarını yaymak ve dezenformasyon kampanyaları yürütmek amacıyla kullanıldığı düşünülmektedir. Bu durum, büyük sosyal medya platformlarının bilgi manipülasyonu ve devlet destekli propaganda operasyonları için nasıl kullanılabileceğine dair endişeleri artırmaktadır. Sosyal medya platformları, geniş kitlelere ulaşma potansiyelleri nedeniyle bu tür siber operasyonların önemli bir hedefi haline gelmektedir. Meta'nın, platformundaki bu tür kötü niyetli faaliyetleri tespit etme ve engelleme konusunda karşılaştığı zorluklar, diğer büyük teknoloji şirketleri için de benzer güvenlik sorunlarının yaşandığını göstermektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://mastodon.social/@campuscodi/116137776672700768, mastodon.social, 26.02.2026)</b></p>
+            </div>
+
+            <div class="news-item" id="haber-40">
+                <div class="news-title"><b>Rus Güvenlik Firmasının İran Kaynaklı Yeni Bir RaaS Olan C77L'yi Keşfettiği Açıklanmıştır</b></div>
+                <p class="news-content">Rus güvenlik firması F6, İran'dan işletildiği anlaşılan C77L adında yeni bir Fidye Yazılımı Hizmeti (RaaS) keşfettiğini duyurmuştur. RaaS modeli, fidye yazılımı operasyonlarını daha az teknik bilgiye sahip siber suçlular için erişilebilir hale getirerek, fidye yazılımı saldırılarının yaygınlaşmasına katkıda bulunmaktadır. İran ile bağlantılı bir RaaS'ın ortaya çıkması, siber suç faaliyetlerinde jeopolitik aktörlerin rolüne dair endişeleri artırmaktadır. Bu tür gruplar, hem finansal kazanç hem de devlet destekli siber operasyonlar için kullanılabilmektedir. C77L'nin keşfi, siber tehdit ortamının sürekli evrim geçirdiğini ve yeni fidye yazılımı ailelerinin ve operasyonlarının ortaya çıkmaya devam ettiğini göstermektedir. Siber güvenlik topluluğu, bu yeni RaaS'ın taktiklerini ve hedeflerini yakından izlemektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - https://mastodon.social/@campuscodi/116137055681941373, mastodon.social, 26.02.2026)</b></p>
             </div>
         </div>
     </div>
