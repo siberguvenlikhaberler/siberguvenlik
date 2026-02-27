@@ -31,17 +31,14 @@ NEWS_SOURCES = {
 # Her post için: reblogs_count * 2 + favourites_count >= MIN_ENGAGEMENT_SCORE olmalı
 MASTODON_SOURCES = [
     {'instance': 'mastodon.social', 'username': 'ESETresearch',   'label': 'ESET Research'},
-    {'instance': 'mastodon.social', 'username': 'campuscodi',      'label': 'Catalin Cimpanu'},
     {'instance': 'mastodon.social', 'username': 'malwaretech',     'label': 'MalwareTech'},
-    {'instance': 'mastodon.social', 'username': 'thegrugq',        'label': 'thegrugq'},
-    {'instance': 'mastodon.social', 'username': 'alperovitch',     'label': 'Dmitri Alperovitch'},
 ]
 
 # Minimum etkileşim skoru: reblogs*2 + favourites >= bu değer
-MASTODON_MIN_ENGAGEMENT = 5
+MASTODON_MIN_ENGAGEMENT = 20
 
 # Kaç saatlik postları çekelim (son N saat)
-MASTODON_HOURS_BACK = 36
+MASTODON_HOURS_BACK = 12
 
 # Scraping ayarları
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}

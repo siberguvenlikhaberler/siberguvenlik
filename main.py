@@ -162,7 +162,7 @@ def fetch_mastodon_posts(sources, min_engagement, hours_back):
                 if not account_id:
                     return
                 statuses_url = f"https://{instance}/api/v1/accounts/{account_id}/statuses"
-                params = {'limit': 40, 'exclude_replies': 'true', 'exclude_reblogs': 'true'}
+                params = {'limit': 10, 'exclude_replies': 'true', 'exclude_reblogs': 'true'}
                 r2 = requests.get(statuses_url, params=params, timeout=(4, 6),
                                   headers={'User-Agent': 'Mozilla/5.0'})
                 _masto_responses.append(r2)
