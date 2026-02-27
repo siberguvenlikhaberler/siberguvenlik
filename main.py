@@ -145,101 +145,85 @@ def fetch_mastodon_posts(sources, min_engagement, hours_back):
 
         print(f"   \U0001f50d {label} (@{username}@{instance})")
 
-        try:
-            # 1. Önce hesabın numeric ID'sini bul
-            lookup_url = f"https://{instance}/api/v1/accounts/lookup?acct={username}"
-            r = requests.get(lookup_url, timeout=10,
-                             headers={'User-Agent': 'Mozilla/5.0'})
+        src_results = []
 
-            if r.status_code != 200:
-                print(f"      \u274c Hesap bulunamadı (HTTP {r.status_code})")
-                continue
-
-            account_data = r.json()
-            account_id = account_data.get('id')
-            if not account_id:
-                print(f"      \u274c Account ID alınamadı")
-                continue
-
-            # 2. Son 40 postu çek (API limiti 40)
-            statuses_url = f"https://{instance}/api/v1/accounts/{account_id}/statuses"
-            params = {'limit': 40, 'exclude_replies': 'true', 'exclude_reblogs': 'true'}
-            r2 = requests.get(statuses_url, params=params, timeout=10,
-                              headers={'User-Agent': 'Mozilla/5.0'})
-
-            if r2.status_code != 200:
-                print(f"      \u274c Postlar alınamadı (HTTP {r2.status_code})")
-                continue
-
-            statuses = r2.json()
-            if not isinstance(statuses, list):
-                print(f"      \u274c Beklenmeyen yanıt formatı")
-                continue
-
-            # 3. Filtrele: zaman + etkileşim + boş içerik
-            qualified = []
-            for s in statuses:
-                # Zaman filtresi
-                created_raw = s.get('created_at', '')
-                try:
-                    created_dt = datetime.fromisoformat(
-                        created_raw.replace('Z', '+00:00'))
-                    if created_dt < cutoff_dt:
+        def _fetch_mastodon_src(instance=instance, username=username, label=label,
+                                cutoff_dt=cutoff_dt, min_engagement=min_engagement,
+                                src_results=src_results):
+            try:
+                lookup_url = f"https://{instance}/api/v1/accounts/lookup?acct={username}"
+                r = requests.get(lookup_url, timeout=(5, 8),
+                                 headers={'User-Agent': 'Mozilla/5.0'})
+                if r.status_code != 200:
+                    return
+                account_id = r.json().get('id')
+                if not account_id:
+                    return
+                statuses_url = f"https://{instance}/api/v1/accounts/{account_id}/statuses"
+                params = {'limit': 40, 'exclude_replies': 'true', 'exclude_reblogs': 'true'}
+                r2 = requests.get(statuses_url, params=params, timeout=(5, 8),
+                                  headers={'User-Agent': 'Mozilla/5.0'})
+                if r2.status_code != 200:
+                    return
+                statuses = r2.json()
+                if not isinstance(statuses, list):
+                    return
+                qualified = []
+                for s in statuses:
+                    created_raw = s.get('created_at', '')
+                    try:
+                        created_dt = datetime.fromisoformat(created_raw.replace('Z', '+00:00'))
+                        if created_dt < cutoff_dt:
+                            continue
+                    except Exception:
                         continue
-                except Exception:
-                    continue
+                    reblogs = s.get('reblogs_count', 0)
+                    favs = s.get('favourites_count', 0)
+                    score = reblogs * 2 + favs
+                    if score < min_engagement:
+                        continue
+                    raw_content = s.get('content', '')
+                    if not raw_content:
+                        continue
+                    content_soup = BeautifulSoup(raw_content, 'html.parser')
+                    content_text = content_soup.get_text(separator=' ').strip()
+                    if len(content_text) < 50:
+                        continue
+                    post_url = s.get('url', '') or s.get('uri', '')
+                    post_date = datetime.fromisoformat(created_raw.replace('Z', '+00:00'))
+                    qualified.append({
+                        'title': content_text[:120] + ('...' if len(content_text) > 120 else ''),
+                        'link': post_url,
+                        'description': content_text,
+                        'date': post_date.strftime('%a, %d %b %Y %H:%M:%S +0000'),
+                        'source': f'Mastodon: {label}',
+                        'domain': instance,
+                        'engagement_score': score,
+                        'reblogs': reblogs,
+                        'favourites': favs,
+                        'full_text': content_text,
+                        'word_count': len(content_text.split()),
+                        'success': True,
+                    })
+                qualified.sort(key=lambda x: x['engagement_score'], reverse=True)
+                src_results.extend(qualified)
+            except Exception:
+                pass
 
-                # Etkileşim skoru
-                reblogs = s.get('reblogs_count', 0)
-                favs = s.get('favourites_count', 0)
-                score = reblogs * 2 + favs
-                if score < min_engagement:
-                    continue
-
-                # İçerik temizle (HTML tag'lerini kaldır)
-                raw_content = s.get('content', '')
-                if not raw_content:
-                    continue
-                content_soup = BeautifulSoup(raw_content, 'html.parser')
-                content_text = content_soup.get_text(separator=' ').strip()
-
-                # Çok kısa postları atla (sadece link olan vs.)
-                if len(content_text) < 50:
-                    continue
-
-                post_url = s.get('url', '') or s.get('uri', '')
-                post_date = datetime.fromisoformat(
-                    created_raw.replace('Z', '+00:00'))
-
-                qualified.append({
-                    'title': content_text[:120] + ('...' if len(content_text) > 120 else ''),
-                    'link': post_url,
-                    'description': content_text,
-                    'date': post_date.strftime('%a, %d %b %Y %H:%M:%S +0000'),
-                    'source': f'Mastodon: {label}',
-                    'domain': instance,
-                    'engagement_score': score,
-                    'reblogs': reblogs,
-                    'favourites': favs,
-                    'full_text': content_text,
-                    'word_count': len(content_text.split()),
-                    'success': True,
-                })
-
-            # Skora göre sırala
-            qualified.sort(key=lambda x: x['engagement_score'], reverse=True)
-
-            print(f"      \u2705 {len(qualified)} nitelikli post "
-                  f"(toplam {len(statuses)} tarandı, eşik: {min_engagement})")
-            for q in qualified[:3]:
+        import threading as _threading
+        t = _threading.Thread(target=_fetch_mastodon_src, daemon=True)
+        t.start()
+        t.join(timeout=15)
+        if t.is_alive():
+            print(f"      \u274c Timeout (15s) — geçiliyor")
+        elif src_results:
+            print(f"      \u2705 {len(src_results)} nitelikli post")
+            for q in src_results[:3]:
                 print(f"         \U0001f525 [{q['engagement_score']}] {q['title'][:70]}...")
-
-            results.extend(qualified)
-            time.sleep(1)  # Rate limit'e saygı
-
-        except Exception as e:
-            print(f"      \u274c Hata: {str(e)[:60]}")
-            continue
+        else:
+            print(f"      \u2705 0 nitelikli post")
+        results.extend(src_results)
+        time.sleep(1)
 
     print(f"\n   \U0001f4ca Mastodon toplamı: {len(results)} yüksek etkileşimli post")
     return results
@@ -257,45 +241,61 @@ class HaberSistemi:
         self.rss_errors_file = "data/rss_errors.txt"
 
     def fetch_full_article(self, url, source_name):
-        """Tam metin çeker"""
-        try:
-            print(f"      📄 Tam metin...", end='', flush=True)
-            r = requests.get(url, headers=self.headers, timeout=(5, 12))
-            soup = BeautifulSoup(r.text, 'html.parser')
-            domain = urlparse(url).netloc.replace('www.', '')
+        """Tam metin çeker — max 10 saniye, sonra geç"""
+        import threading
+        result = {'full_text': "", 'word_count': 0, 'success': False, 'domain': ''}
 
-            text = ""
-            if source_name in self.selectors:
-                for sel in self.selectors[source_name]:
-                    el = soup.find(**sel)
-                    if el:
-                        text = self._extract(el)
+        def _fetch():
+            try:
+                r = requests.get(url, headers=self.headers, timeout=(5, 8), stream=True)
+                chunks = []
+                for chunk in r.iter_content(chunk_size=8192):
+                    chunks.append(chunk)
+                    if len(b''.join(chunks)) > 500_000:
                         break
-
-            if not text:
-                for tag in ['article', 'main']:
-                    el = soup.find(tag)
+                r.close()
+                raw = b''.join(chunks).decode(r.encoding or 'utf-8', errors='replace')
+                soup = BeautifulSoup(raw, 'html.parser')
+                domain = urlparse(url).netloc.replace('www.', '')
+                text = ""
+                if source_name in self.selectors:
+                    for sel in self.selectors[source_name]:
+                        el = soup.find(**sel)
+                        if el:
+                            text = self._extract(el)
+                            break
+                if not text:
+                    for tag in ['article', 'main']:
+                        el = soup.find(tag)
+                        if el:
+                            text = self._extract(el)
+                            if text:
+                                break
+                if not text:
+                    el = soup.find('div', class_=lambda c: c and any(
+                        x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
                     if el:
                         text = self._extract(el)
-                        if text:
-                            break
+                wc = len(text.split()) if text else 0
+                text = text.replace('\t', ' ').replace('\r', '')
+                if wc > 100:
+                    result.update({'full_text': text, 'word_count': wc, 'success': True, 'domain': domain})
+                else:
+                    result['domain'] = domain
+            except Exception:
+                pass
 
-            if not text:
-                el = soup.find('div', class_=lambda c: c and any(x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
-                if el:
-                    text = self._extract(el)
-
-            wc = len(text.split()) if text else 0
-            text = text.replace('\t', ' ').replace('\r', '')
-
-            if wc > 100:
-                print(f" ✅ ({wc})")
-                return {'full_text': text, 'word_count': wc, 'success': True, 'domain': domain}
-            print(f" ⚠️  ({wc})")
-            return {'full_text': "", 'word_count': 0, 'success': False, 'domain': domain}
-        except Exception as e:
-            print(f" ❌ ({str(e)[:20]})")
-            return {'full_text': "", 'word_count': 0, 'success': False, 'domain': ''}
+        print(f"      📄 Tam metin...", end='', flush=True)
+        t = threading.Thread(target=_fetch, daemon=True)
+        t.start()
+        t.join(timeout=10)
+        if t.is_alive():
+            print(f" ⏱️  (timeout)")
+        elif result['success']:
+            print(f" ✅ ({result['word_count']})")
+        else:
+            print(f" ⚠️  (0)")
+        return result
 
     def _extract(self, element):
         """Temiz metin"""
@@ -663,7 +663,7 @@ class HaberSistemi:
                 txt += f"Tarih: {art['date']}\nLink: {art['link']}\n"
                 txt += f"\n[MASTODON POST - {art.get('word_count', 0)} kelime]\n{art.get('full_text', '')}\n"
                 art_date = _parse_article_date(art.get('date', ''), now)
-                txt += f"\n(XXXXXXX, AÇIK - {art.get('link', '')}, {art.get('domain', '')}, {art_date})\n\n{'=' * 80}\n\n"
+                txt += f"\n(XXXXXXX, AÇIK - {art.get('link', '')}, {art.get('domain', '')}, {art_date}) [MASTODON_SCORE:{reblogs}:{favs}]\n\n{'=' * 80}\n\n"
 
         with open("data/haberler_ham.txt", 'w', encoding='utf-8') as f:
             f.write(txt)
@@ -827,6 +827,7 @@ class HaberSistemi:
         # ═══════════════════════════════════════════
         # AŞAMA 4: Mevcut post-processing
         # ═══════════════════════════════════════════
+        html = self._inject_mastodon_badges(html)
         html = self._fix_source_dates(html, txt_content)
 
         html_index = self._add_archive_links(html, is_archive=False)
@@ -1031,6 +1032,51 @@ KURALLAR:
         except Exception as e:
             print(f"   ❌ Tamamlama hatası: {e}")
             return html
+
+    def _inject_mastodon_badges(self, html):
+        """
+        HTML'deki [MASTODON_SCORE:N:N] etiketlerini bulur,
+        news-item'a mastodon-item class ekler, badge enjekte eder, etiketi temizler.
+        """
+        from bs4 import BeautifulSoup as _BS
+        import re as _re
+
+        if '[MASTODON_SCORE:' not in html:
+            return html
+
+        soup = _BS(html, 'html.parser')
+        for item in soup.find_all('div', class_='news-item'):
+            src_tag = item.find('p', class_='source')
+            if not src_tag:
+                continue
+            src_text = src_tag.get_text()
+            m = _re.search(r'\[MASTODON_SCORE:(\d+):(\d+)\]', src_text)
+            if not m:
+                continue
+            reblogs = int(m.group(1))
+            favs    = int(m.group(2))
+
+            # mastodon-item class ekle
+            classes = item.get('class', [])
+            if 'mastodon-item' not in classes:
+                item['class'] = classes + ['mastodon-item']
+
+            # Etiketi kaynak metninden temizle
+            for tag in src_tag.find_all(string=_re.compile(r'\[MASTODON_SCORE:')):
+                cleaned = _re.sub(r'\s*\[MASTODON_SCORE:\d+:\d+\]', '', tag)
+                tag.replace_with(cleaned)
+
+            # Badge enjekte et (news-title'dan hemen önce)
+            badge_html = (
+                f'<span class="signal-badge">'
+                f'Paylaşım: {reblogs} · Beğeni: {favs}'
+                f'</span>'
+            )
+            title_tag = item.find('div', class_='news-title')
+            if title_tag:
+                title_tag.insert_before(_BS(badge_html, 'html.parser'))
+
+        return str(soup)
 
     def _fix_source_dates(self, html, txt_content):
         """Gemini'nin yazdığı hatalı tarihleri ham TXT'deki gerçek tarihlerle düzelt"""
