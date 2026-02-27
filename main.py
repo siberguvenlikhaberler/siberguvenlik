@@ -260,7 +260,7 @@ class HaberSistemi:
         """Tam metin çeker"""
         try:
             print(f"      📄 Tam metin...", end='', flush=True)
-            r = requests.get(url, headers=self.headers, timeout=15)
+            r = requests.get(url, headers=self.headers, timeout=(5, 10))
             soup = BeautifulSoup(r.text, 'html.parser')
             domain = urlparse(url).netloc.replace('www.', '')
 
@@ -311,7 +311,7 @@ class HaberSistemi:
     def fetch_rss(self, url, source_name):
         """RSS çeker"""
         try:
-            r = requests.get(url, headers=self.headers, timeout=15)
+            r = requests.get(url, headers=self.headers, timeout=(5, 10))
             root = ET.fromstring(r.content)
             articles = []
 
