@@ -257,60 +257,59 @@ class HaberSistemi:
         self.rss_errors_file = "data/rss_errors.txt"
 
     def fetch_full_article(self, url, source_name):
-        """Tam metin çeker — 12 saniyelik hard timeout ile"""
-        import signal
+        """Tam metin çeker — 12 saniyelik hard timeout ile (threading)"""
+        import threading
 
-        def _timeout_handler(signum, frame):
-            raise TimeoutError("fetch timeout")
+        result = {'full_text': "", 'word_count': 0, 'success': False, 'domain': ''}
 
         def _do_fetch():
-            r = requests.get(url, headers=self.headers, timeout=(5, 10))
-            soup = BeautifulSoup(r.text, 'html.parser')
-            domain = urlparse(url).netloc.replace('www.', '')
-
-            text = ""
-            if source_name in self.selectors:
-                for sel in self.selectors[source_name]:
-                    el = soup.find(**sel)
-                    if el:
-                        text = self._extract(el)
-                        break
-
-            if not text:
-                for tag in ['article', 'main']:
-                    el = soup.find(tag)
-                    if el:
-                        text = self._extract(el)
-                        if text:
-                            break
-
-            if not text:
-                el = soup.find('div', class_=lambda c: c and any(
-                    x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
-                if el:
-                    text = self._extract(el)
-
-            wc = len(text.split()) if text else 0
-            text = text.replace('\t', ' ').replace('\r', '')
-            return text, wc, domain
-
-        try:
-            print(f"      📄 Tam metin...", end='', flush=True)
-            signal.signal(signal.SIGALRM, _timeout_handler)
-            signal.alarm(12)  # 12 saniyelik hard limit
             try:
-                text, wc, domain = _do_fetch()
-            finally:
-                signal.alarm(0)  # Alarm'ı sıfırla
+                r = requests.get(url, headers=self.headers, timeout=(5, 10))
+                soup = BeautifulSoup(r.text, 'html.parser')
+                domain = urlparse(url).netloc.replace('www.', '')
+                text = ""
+                if source_name in self.selectors:
+                    for sel in self.selectors[source_name]:
+                        el = soup.find(**sel)
+                        if el:
+                            text = self._extract(el)
+                            break
+                if not text:
+                    for tag in ['article', 'main']:
+                        el = soup.find(tag)
+                        if el:
+                            text = self._extract(el)
+                            if text:
+                                break
+                if not text:
+                    el = soup.find('div', class_=lambda c: c and any(
+                        x in str(c).lower() for x in ['content', 'article', 'body', 'post']))
+                    if el:
+                        text = self._extract(el)
+                wc = len(text.split()) if text else 0
+                text = text.replace('\t', ' ').replace('\r', '')
+                result['full_text'] = text
+                result['word_count'] = wc
+                result['success'] = wc > 100
+                result['domain'] = domain
+            except Exception:
+                pass
 
-            if wc > 100:
-                print(f" ✅ ({wc})")
-                return {'full_text': text, 'word_count': wc, 'success': True, 'domain': domain}
-            print(f" ⚠️  ({wc})")
-            return {'full_text': "", 'word_count': 0, 'success': False, 'domain': domain}
-        except Exception as e:
-            print(f" ❌ ({str(e)[:20]})")
+        print(f"      📄 Tam metin...", end='', flush=True)
+        t = threading.Thread(target=_do_fetch, daemon=True)
+        t.start()
+        t.join(timeout=12)
+
+        if t.is_alive():
+            print(f" ❌ (timeout)")
             return {'full_text': "", 'word_count': 0, 'success': False, 'domain': ''}
+
+        wc = result['word_count']
+        if result['success']:
+            print(f" ✅ ({wc})")
+        else:
+            print(f" ⚠️  ({wc})")
+        return result
 
     def _extract(self, element):
         """Temiz metin"""
