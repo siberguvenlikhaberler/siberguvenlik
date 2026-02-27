@@ -22,7 +22,6 @@ NEWS_SOURCES = {
     'The Register': 'https://www.theregister.com/security/cyber_crime/headlines.atom',
     'TechCrunch Security': 'https://techcrunch.com/category/security/feed/',
     'CSO Online': 'https://www.csoonline.com/feed/',
-    'Infoblox Blog': 'https://blogs.infoblox.com/feed/',
 }
 
 # ===== MASTODON KAYNAKLARI =====
@@ -104,9 +103,7 @@ DETECTION_PATTERNS = {
 # Gemini prompt (RESMİ TÜRKÇE) - YENİ GELİŞTİRİLMİŞ VERSİYON
 def get_claude_prompt(news_content, recent_events=''):
     now = datetime.now()
-    return f"""⚠️ ÇIKTI KURALI: İlk karakterin `<` olacak. Açıklama, giriş, özet metni YAZMA. Direkt <!DOCTYPE html> ile başla, başka hiçbir şey yazma.
-
-Sen profesyonel siber güvenlik analistisin.
+    return f"""Sen profesyonel siber güvenlik analistisin.
 
 GÖREV: 130 haberi analiz et → En önemli 5'ini seç → Kalanları önem sırasına koy → HTML raporu oluştur.
 
