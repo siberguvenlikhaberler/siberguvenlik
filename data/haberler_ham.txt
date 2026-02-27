@@ -3714,80 +3714,12 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[54] Infoblox Blog - Abusing .arpa: The TLD That Isn’t Supposed to Host Anything
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Thu, 26 Feb 2026 15:55:47 +0000
-Link: https://www.infoblox.com/blog/threat-intelligence/abusing-arpa-the-tld-that-isnt-supposed-to-host-anything/
-
-[TAM METİN - 1900 kelime]
-Phishing email campaigns are so common that it takes something fundamentally different to stand out. We recently found campaigns using a novel, previously unreported method to get around security controls. Actors are abusing the .arpa top-level domain (TLD), in conjunction with IPv6 tunnels, to host phishing content on domains that should not resolve to an IP address. Unlike familiar TLDs like .com and .net, that are used for domains that host web content, the .arpa TLD has a special role in the domain name system (DNS): it’s primarily used to map IP addresses to domains, providing reverse records. Threat actors have discovered a feature in the DNS record management control of certain providers, which allows them to add IP address records for .arpa domains. From there, they can do whatever they like at the hosting provider. It’s a pretty clever trick.
-
-The spam emails in the phishing campaigns we analyzed impersonate major brands and promise a free prize. The messages only display an image, which hides an embedded hyperlink that will take the victim to a malicious website, often through a series of redirects via a traffic distribution system (TDS). The novel feature of this attack is that these image links use a reverse DNS string (used to reverse-map an IP address to a domain name via a PTR record) rather than a standard domain name. For example:
-
-d.d.e.0.6.3.0.0.0.7.4.0.1.0.0.2.ip6.arpa
-
-If the user realized they were being sent to a long domain like this, they would probably be alarmed but in these campaigns the domain is hidden. When the user clicks on the image, the device will resolve the .arpa domain. Because .arpa is a critical TLD for the operation of the internet, these domain names are unlikely to be blocked. From the initial link, the user is typically fingerprinted and redirected to fraudulent content. Figure 1 shows an example of the spam HTML.
-
-Figure 1. An example of the HTML of a phishing email using a reverse DNS string, rather than a standard domain name
-
-To make this attack work, the threat actor acquires some IPv6 address space, for which they are delegated control of the corresponding .arpa subdomain. Then, instead of adding the expected PTR records, they create A records for the reverse DNS names. We have seen threat actors abuse Hurricane Electric and Cloudflare to create these records—both of which have good reputations that actors leverage—and we confirmed that some other DNS providers also allow these configurations. Our tests were not exhaustive, but we notified the providers where we discovered a gap. Figure 2 depicts the process the threat actor used to create the domain used in the phishing emails.
-
-Figure 2. An overview of the process used to abuse the .arpa TLD in phishing emails
-
-The same toolkit used in the .arpa abuse phishing campaign appears to be used by multiple actors since at least 2017. In addition to the .arpa tactic, we have also observed these phishing campaigns using several other methods to bypass security controls, including hijacking dangling CNAMEs and subdomain shadowing. Dangling CNAME hijacks are typically DNS records for expired domains or abandoned cloud services and take advantage of highly reputable organizations. While this blog is focused on introducing the IPv6 / arpa trick, dangling CNAMEs remain a major threat to organizations of all shapes and sizes. For this reason, we’ve included a short section on this topic.
-
-How .arpa Can Be Abused
-
-The most well-known type of DNS query is the one used to identify the IP address or addresses for a given domain name: the type A query. Conversely, a reverse DNS lookup is performed to identify the domain name or names associated with a given IP address. A reverse DNS domain is built from the IP address. This process involves reversing the bytes of the IPv4 address or nibbles of an IPv6 address and appending a special domain within the .arpa TLD (in-addr.arpa for IPv4 addresses and ip6.arpa for IPv6 addresses).
-
-Figure 3 shows the process the actors used to turn their IPv6 IP address range into a domain they could use in phishing emails. For a normal reverse DNS lookup, the entire IP address is needed to calculate the reverse DNS string. However, since the threat actor operates a /64 range, the last 64 bits of the address can be ignored. To make their reverse DNS domains harder to detect and block, they prepend the domain with a randomly generated subdomain to make each FQDN unique.
-
-Figure 3. The process to create a reverse DNS lookup string of an IPv6 address range and then create a unique FQDN using the string. Green additions are part of the normal process of building an IPv6 reverse DNS domain from an address range and the red addition is made by the actor.
-
-Reverse DNS domains are only intended for internet infrastructure purposes, but DNS can be challenging to implement correctly and there are sometimes unintended behaviors. Figure 4 shows what happened when we performed a type A query on one of the reverse DNS domains in the phishing emails. DNS servers were queried until the authoritative server for the domain was found. In this case, the authoritative name servers were operated by Cloudflare. Using these name servers, the reverse DNS FQDN resolved to two IP addresses. Both IP addresses belonged to Cloudflare’s edge network, which hides the actual host of—in this case—the malicious content. Although reverse DNS domains aren’t supposed to work like this, the threat actors found a way to make it happen.
-
-Figure 4. The series of DNS queries used to resolve an IPv6 reverse DNS domain to an A record of a phishing actor
-
-While the idea of reverse FQDNs may seem straightforward, there are several potential gotchas that need to be addressed for this attack to work properly. It relies on the coordinated abuse of two different services: getting a free IPv6 tunnel and getting name servers that resolve the reverse DNS domain to the owner’s content. The IPv6 tunnel encapsulates IPv6 traffic and sends it over IPv4, but the actor doesn’t need or use the tunnel. It’s simply an easy way to get administrative access to a free IPv6 range. The tunnel isn’t surprising, but the ability to claim ownership of a .arpa domain with a DNS provider is. Given the reserved nature of the .arpa TLD, we wouldn’t expect it to be as easy as entering the domain in a web form. When we evaluated a few DNS providers to check if they were vulnerable, this was the point in the process that was ultimately the determining factor. If the provider prevented us from claiming ownership of a .arpa domain, either by explicitly denying the request or by the request failing, we considered the DNS provider not vulnerable.
-
-There’s More to the Story
-
-Another notable tactic we have observed in the phishing email hyperlinks is the abuse of subdomains of high-profile, legitimate domains. We found over 100 instances where the threat actor used hijacked CNAMEs of well-known government agencies, universities, telecommunication companies, media organizations, and retailers. Five of the hijacked CNAMEs we observed were previously reported in August 2024 as being used in phishing attacks. The others appear not to be publicly known. We also saw a few cases of domain shadowing, in which an actor-controlled subdomain is created, typically through credential theft. The lure images are unrelated to the hijacked domains. As with the IPv6 reverse domains, victims are unlikely to ever notice them.
-
-We have observed the same hijacked CNAMEs in phishing emails consistently since September 2025. Some were used in over 100 different emails in a single day. Some (including shadow subdomains) appear to have been abused for years; one shadow subdomain has operated since 2020, seemingly without detection.
-
-Many of the CNAMEs appear to have been hijacked one at a time. There are a few instances, though, where a single domain expiring creates many dangling CNAMEs. Some examples:
-
-At one point, the domain publicnoticessites[.]com provided public notice content for over 120 different local newspaper websites. When it expired, the threat actor purchased the domain and gained access to all the CNAMEs that referenced the domain, eight of which we observed in phishing emails.
-
-A similar situation occurred when hobsonsms[.]com expired. The domain provided account services for at least three different universities through the same subdomain account[.]hobsonsms[.]com. Setting up that one subdomain allowed the threat actor to hijack all three.
-
-It isn’t just smaller organizations that have this problem. The domain hyfnrsx1[.]com had subdomains that served as CNAMEs for global food and beverage companies and just recently expired. Hijacked CNAMEs for both companies were observed in phishing emails starting January 2026.
-
-The phishing emails in these campaigns are simple, usually consisting of a hyperlinked lure image. The lure itself frequently promises a “free gift” for completing a survey. Of course they need the victim’s credit card to pay for shipping, but that shouldn’t be much, right? Other lures include claims that an online subscription or service has been interrupted or that the user has exceeded their cloud storage quota. We’ve provided examples of some of the lures in Figure 5.
-
-Figure 5. The phishing emails use a variety of lures to entice users into clicking on the hyperlinked image. The embedded malicious domain is not related to the impersonated brand in the image.
-
-Once victims click on the lure image, they are redirected to one of several TDSs, the exact one depends on the campaign. It initially takes them to a page that analyzes their traffic. If it meets specific criteria, the victim is redirected through a series of domains until they ultimately land on the malicious phishing page. Each domain in the redirection chain performs its own checks and if the victim doesn’t meet the criteria, they will get an HTTP error such as this, or be redirected to a benign page such as TikTok, as shown here. We don’t have access to the specific criteria in the various stages of the redirection chain, but we were able to determine that a combination of being on a mobile device and using a residential IP address increased our chances of getting redirected to the malicious landing page.
-
-Threat actors are constantly looking for new ways to evade detection, and most techniques are variations on familiar themes. The abuse of the .arpa TLD is novel in that it weaponizes infrastructure that is implicitly trusted and essential for network operations. By using IPv6 reverse DNS domains as malicious links, the threat actor has discovered a delivery mechanism that bypasses security tools. The impact is immediate and cannot be overstated: security that depends on detecting suspicious domains using things like reputation, registration information, and policy blocklists is ineffective for these domains. These domains have an implicitly clean reputation, no registration information, and aren’t usually blocked by policy.
-
-To date we have not observed any queries to these kinds of domains in customer traffic. However, we have observed queries to numerous IPv6 and IPv4 reverse DNS domains, including the ones observed in phishing emails, in our global passive DNS.
-
-The table below provides a selection of the indicators of activity observed in these phishing campaigns. Note, indicators are associated legitimate services and namespaces that have been abused. In all cases, careful consideration should be made before blocking.
-
-For more indicators, visit the Infoblox Threat Intel Github repo: https://github.com/infobloxopen/threat-intelligence.
-
-(XXXXXXX, AÇIK - https://www.infoblox.com/blog/threat-intelligence/abusing-arpa-the-tld-that-isnt-supposed-to-host-anything/, infoblox.com, 26.02.2026)
-
-================================================================================
-
 
 ================================================================================
 🐘 MASTODON - YÜKSEK ETKİLEŞİMLİ POSTLAR
 ================================================================================
 
-[55] Mastodon: Catalin Cimpanu [RT:23 · FAV:10 · Skor:56]
+[54] Mastodon: Catalin Cimpanu [RT:23 · FAV:10 · Skor:56]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 16:34:55 +0000
 Link: https://mastodon.social/@campuscodi/116137898501718472
@@ -3799,7 +3731,7 @@ Link: https://mastodon.social/@campuscodi/116137898501718472
 
 ================================================================================
 
-[56] Mastodon: Catalin Cimpanu [RT:12 · FAV:16 · Skor:40]
+[55] Mastodon: Catalin Cimpanu [RT:12 · FAV:16 · Skor:40]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 15:53:57 +0000
 Link: https://mastodon.social/@campuscodi/116137737412947559
@@ -3811,7 +3743,7 @@ A security firm has gained access to a malvertising test platform and used the i
 
 ================================================================================
 
-[57] Mastodon: Catalin Cimpanu [RT:18 · FAV:3 · Skor:39]
+[56] Mastodon: Catalin Cimpanu [RT:18 · FAV:3 · Skor:39]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 16:03:56 +0000
 Link: https://mastodon.social/@campuscodi/116137776672700768
@@ -3823,7 +3755,7 @@ Meta's new Threads micro-blogging platform and Twitter rival has been flooded wi
 
 ================================================================================
 
-[58] Mastodon: Catalin Cimpanu [RT:8 · FAV:6 · Skor:22]
+[57] Mastodon: Catalin Cimpanu [RT:8 · FAV:6 · Skor:22]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 02:43:23 +0000
 Link: https://mastodon.social/@campuscodi/116134628755308198
@@ -3835,7 +3767,7 @@ Scattered Lapsus$ Hunters (SLH) is recruiting women to conduct vishing attacks, 
 
 ================================================================================
 
-[59] Mastodon: Catalin Cimpanu [RT:9 · FAV:1 · Skor:19]
+[58] Mastodon: Catalin Cimpanu [RT:9 · FAV:1 · Skor:19]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 12:31:04 +0000
 Link: https://mastodon.social/@campuscodi/116136939655487395
@@ -3847,7 +3779,7 @@ Apple has published details on how it plans to deal with all the age verificatio
 
 ================================================================================
 
-[60] Mastodon: Catalin Cimpanu [RT:7 · FAV:3 · Skor:17]
+[59] Mastodon: Catalin Cimpanu [RT:7 · FAV:3 · Skor:17]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 18:57:57 +0000
 Link: https://mastodon.social/@campuscodi/116138460924520544
@@ -3859,7 +3791,7 @@ Phishing groups are abusing .arpa domains for their operations, a TLD that's not
 
 ================================================================================
 
-[61] Mastodon: Catalin Cimpanu [RT:5 · FAV:5 · Skor:15]
+[60] Mastodon: Catalin Cimpanu [RT:5 · FAV:5 · Skor:15]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 13:30:05 +0000
 Link: https://mastodon.social/@campuscodi/116137171717310119
@@ -3871,7 +3803,7 @@ Hmmm.... I'll just put him in Andorra, since that's right smack in the middle
 
 ================================================================================
 
-[62] Mastodon: Catalin Cimpanu [RT:6 · FAV:2 · Skor:14]
+[61] Mastodon: Catalin Cimpanu [RT:6 · FAV:2 · Skor:14]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 16:10:03 +0000
 Link: https://mastodon.social/@campuscodi/116137800753442402
@@ -3883,7 +3815,7 @@ Talks from the DefCamp 2025 security conference, which took place in Bucharest a
 
 ================================================================================
 
-[63] Mastodon: Catalin Cimpanu [RT:4 · FAV:6 · Skor:14]
+[62] Mastodon: Catalin Cimpanu [RT:4 · FAV:6 · Skor:14]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 01:08:02 +0000
 Link: https://mastodon.social/@campuscodi/116134253867576632
@@ -3895,7 +3827,7 @@ Russian media are treating Conti like national heroes
 
 ================================================================================
 
-[64] Mastodon: Catalin Cimpanu [RT:6 · FAV:1 · Skor:13]
+[63] Mastodon: Catalin Cimpanu [RT:6 · FAV:1 · Skor:13]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 12:32:28 +0000
 Link: https://mastodon.social/@campuscodi/116136945154663072
@@ -3907,7 +3839,7 @@ Data theft-only attacks accounted for 57% of all extortion insurance claims last
 
 ================================================================================
 
-[65] Mastodon: Catalin Cimpanu [RT:4 · FAV:3 · Skor:11]
+[64] Mastodon: Catalin Cimpanu [RT:4 · FAV:3 · Skor:11]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 13:06:16 +0000
 Link: https://mastodon.social/@campuscodi/116137078031479664
@@ -3919,7 +3851,7 @@ The Belarus Cyber Partisans claim to have hacked Khimvolokno,  a Belarusian comp
 
 ================================================================================
 
-[66] Mastodon: Catalin Cimpanu [RT:5 · FAV:1 · Skor:11]
+[65] Mastodon: Catalin Cimpanu [RT:5 · FAV:1 · Skor:11]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 13:00:34 +0000
 Link: https://mastodon.social/@campuscodi/116137055681941373
@@ -3931,7 +3863,7 @@ Russian security firm F6 has discovered a new RaaS named C77L that appears to be
 
 ================================================================================
 
-[67] Mastodon: Catalin Cimpanu [RT:1 · FAV:3 · Skor:5]
+[66] Mastodon: Catalin Cimpanu [RT:1 · FAV:3 · Skor:5]
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Thu, 26 Feb 2026 00:33:17 +0000
 Link: https://mastodon.social/@campuscodi/116134117230230508
