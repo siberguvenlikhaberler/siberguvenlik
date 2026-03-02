@@ -122,10 +122,35 @@ def _parse_article_date(date_str, fallback):
     return fallback.strftime('%d.%m.%Y')
 
 
+def _get_reddit_token():
+    """
+    Reddit OAuth2 client credentials akışıyla erişim token'ı alır.
+    REDDIT_CLIENT_ID ve REDDIT_CLIENT_SECRET env değişkenleri gerekir.
+    """
+    client_id     = os.getenv('REDDIT_CLIENT_ID', '')
+    client_secret = os.getenv('REDDIT_CLIENT_SECRET', '')
+    if not client_id or not client_secret:
+        return None
+    try:
+        r = requests.post(
+            'https://www.reddit.com/api/v1/access_token',
+            auth=(client_id, client_secret),
+            data={'grant_type': 'client_credentials'},
+            headers={'User-Agent': 'siberguvenlik-bot/1.0 by /u/script'},
+            timeout=(5, 10),
+        )
+        if r.status_code == 200:
+            return r.json().get('access_token')
+        print(f"   Reddit token hatasi: HTTP {r.status_code}")
+    except Exception as e:
+        print(f"   Reddit token exception: {e}")
+    return None
+
+
 def fetch_social_signals(config):
     """
     Reddit, Hacker News ve GitHub'dan yüksek etkileşimli siber güvenlik
-    içeriklerini çeker. Authentication gerektirmez — tüm public API'ler.
+    içeriklerini çeker. Reddit için OAuth2, diğerleri public API.
     """
     hours_back = config.get('hours_back', 24)
     cutoff_ts  = int((datetime.now() - timedelta(hours=hours_back)).timestamp())
@@ -137,62 +162,76 @@ def fetch_social_signals(config):
     print("=" * 70)
 
     # ── Reddit ──────────────────────────────────────────────────────────────
-    reddit_cfg   = config.get('reddit', {})
-    min_score    = reddit_cfg.get('min_score', 100)
-    limit        = reddit_cfg.get('limit', 15)
-    subreddits   = reddit_cfg.get('subreddits', ['netsec', 'cybersecurity'])
-    reddit_hdrs  = {'User-Agent': 'siberguvenlik-bot/1.0 (automated news aggregator)'}
+    reddit_cfg  = config.get('reddit', {})
+    min_score   = reddit_cfg.get('min_score', 100)
+    limit       = reddit_cfg.get('limit', 15)
+    subreddits  = reddit_cfg.get('subreddits', ['netsec', 'cybersecurity'])
 
-    for sub in subreddits:
-        try:
-            url = f"https://www.reddit.com/r/{sub}/top.json?t=day&limit={limit}"
-            r   = requests.get(url, headers=reddit_hdrs, timeout=(5, 10))
-            if r.status_code != 200:
-                print(f"   Reddit r/{sub}: HTTP {r.status_code}")
+    reddit_token = _get_reddit_token()
+    if reddit_token:
+        reddit_base_url = 'https://oauth.reddit.com/r/{sub}/top'
+        reddit_hdrs = {
+            'Authorization': f'Bearer {reddit_token}',
+            'User-Agent':    'siberguvenlik-bot/1.0 by /u/script',
+        }
+        print("   Reddit: OAuth2 token alindi")
+    else:
+        reddit_base_url = None
+        print("   Reddit: OAuth credentials yok, atlanıyor (REDDIT_CLIENT_ID/SECRET eksik)")
+
+    if reddit_base_url:
+        for sub in subreddits:
+            try:
+                url = reddit_base_url.format(sub=sub) + f'?t=day&limit={limit}'
+                r   = requests.get(url, headers=reddit_hdrs, timeout=(5, 10))
+                if r.status_code != 200:
+                    print(f"   Reddit r/{sub}: HTTP {r.status_code}")
+                    time.sleep(1)
+                    continue
+                posts = r.json().get('data', {}).get('children', [])
+                found = 0
+                for post in posts:
+                    p = post.get('data', {})
+                    if p.get('score', 0) < min_score:
+                        continue
+                    if int(p.get('created_utc', 0)) < cutoff_ts:
+                        continue
+                    link = p.get('url') or f"https://www.reddit.com{p.get('permalink', '')}"
+                    results.append({
+                        'platform': 'reddit',
+                        'source':   f"Reddit: r/{sub}",
+                        'title':    p.get('title', ''),
+                        'link':     link,
+                        'score':    p.get('score', 0),
+                        'comments': p.get('num_comments', 0),
+                        'date':     datetime.utcfromtimestamp(
+                                        int(p.get('created_utc', 0))
+                                    ).strftime('%a, %d %b %Y %H:%M:%S +0000'),
+                        'domain':   p.get('domain', 'reddit.com'),
+                        'full_text': (p.get('selftext', '') or '')[:300],
+                        'success':  True,
+                    })
+                    found += 1
+                print(f"   Reddit r/{sub}: {found} nitelikli post")
                 time.sleep(1)
-                continue
-            posts = r.json().get('data', {}).get('children', [])
-            found = 0
-            for post in posts:
-                p = post.get('data', {})
-                if p.get('score', 0) < min_score:
-                    continue
-                if int(p.get('created_utc', 0)) < cutoff_ts:
-                    continue
-                link = p.get('url') or f"https://www.reddit.com{p.get('permalink', '')}"
-                results.append({
-                    'platform': 'reddit',
-                    'source':   f"Reddit: r/{sub}",
-                    'title':    p.get('title', ''),
-                    'link':     link,
-                    'score':    p.get('score', 0),
-                    'comments': p.get('num_comments', 0),
-                    'date':     datetime.utcfromtimestamp(
-                                    int(p.get('created_utc', 0))
-                                ).strftime('%a, %d %b %Y %H:%M:%S +0000'),
-                    'domain':   p.get('domain', 'reddit.com'),
-                    'full_text': (p.get('selftext', '') or '')[:300],
-                    'success':  True,
-                })
-                found += 1
-            print(f"   Reddit r/{sub}: {found} nitelikli post")
-            time.sleep(1)
-        except Exception as e:
-            print(f"   Reddit r/{sub} hatasi: {e}")
-            time.sleep(1)
+            except Exception as e:
+                print(f"   Reddit r/{sub} hatasi: {e}")
+                time.sleep(1)
 
     # ── Hacker News (Algolia API) ────────────────────────────────────────────
     # Skor modeli: combined_score = points + (num_comments × comment_weight)
+    # search endpoint: relevance + popularity ağırlıklı (search_by_date'den
+    # daha güvenilir çünkü points filtresi bazı saatlerde 0 sonuç dönderebilir)
     hn_cfg         = config.get('hackernews', {})
-    min_points     = hn_cfg.get('min_points', 30)
-    hn_limit       = hn_cfg.get('limit', 10)
+    min_points     = hn_cfg.get('min_points', 15)
+    hn_limit       = hn_cfg.get('limit', 25)
     comment_weight = hn_cfg.get('comment_weight', 3)
     try:
         hn_url = (
-            "https://hn.algolia.com/api/v1/search_by_date"
+            "https://hn.algolia.com/api/v1/search"
             "?query=security+cybersecurity+vulnerability+malware+breach"
             "&tags=story"
-            f"&numericFilters=points>{min_points},created_at_i>{cutoff_ts}"
+            f"&numericFilters=points>={min_points},created_at_i>{cutoff_ts}"
             f"&hitsPerPage={hn_limit}"
         )
         r = requests.get(hn_url, headers=HEADERS, timeout=(5, 10))
@@ -832,23 +871,29 @@ class HaberSistemi:
 
                 prompt = get_claude_prompt(txt_content)
 
-                response = client.models.generate_content(
+                # Streaming kullan: büyük response'larda server disconnect riskini önler
+                chunks     = []
+                last_chunk = None
+                for chunk in client.models.generate_content_stream(
                     model='gemini-2.5-flash',
                     contents=prompt,
                     config=genai_types.GenerateContentConfig(
                         max_output_tokens=65536,
                         temperature=0.7,
                     )
-                )
+                ):
+                    if chunk.text:
+                        chunks.append(chunk.text)
+                    last_chunk = chunk
 
-                # ✅ YENİ: finish_reason logla
-                if response.candidates:
-                    finish_reason = response.candidates[0].finish_reason
-                    print(f"   📝 Finish reason: {finish_reason}")
+                # finish_reason son chunk'tan al
+                if last_chunk and last_chunk.candidates:
+                    finish_reason = last_chunk.candidates[0].finish_reason
+                    print(f"   Finish reason: {finish_reason}")
                     if str(finish_reason) not in ['STOP', 'FinishReason.STOP', '1']:
-                        print(f"   ⚠️  Yanıt normal bitmedi! (reason: {finish_reason})")
+                        print(f"   Yanitni normal bitmedi! (reason: {finish_reason})")
 
-                html = response.text
+                html = ''.join(chunks)
                 break
             except Exception as e:
                 print(f"   ⚠️  Hata: {e}")

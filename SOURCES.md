@@ -26,10 +26,12 @@
 - **Subredditler:** r/netsec, r/cybersecurity, r/hacking
 - **Filtreleme:** min 100 upvote, son 24 saat
 - **Sıralama:** upvote skoru (yüksekten düşüğe)
+- **Erişim:** OAuth2 client credentials — `REDDIT_CLIENT_ID` ve `REDDIT_CLIENT_SECRET` GitHub secret olarak tanımlanmalı
 
 ### Hacker News
 - **Arama terimleri:** security, cybersecurity, vulnerability, malware, breach
-- **Filtreleme:** min 30 puan, son 24 saat
+- **Endpoint:** Algolia `search` (relevance + popularity ağırlıklı)
+- **Filtreleme:** min 15 puan, son 24 saat
 - **Sıralama:** `puan + (yorum sayısı × 3)` karma skoru
 
 ### GitHub Security Advisories

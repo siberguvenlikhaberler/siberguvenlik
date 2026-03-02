@@ -35,8 +35,8 @@ SOCIAL_SIGNAL_CONFIG = {
         'limit': 15,
     },
     'hackernews': {
-        'min_points': 30,
-        'limit': 15,           # Daha fazla çek, combined score ile sırala
+        'min_points': 15,      # search endpoint ile daha güvenilir; 30 bazı saatlerde 0 sonuç dönderiyordu
+        'limit': 25,           # Daha fazla çek, combined score ile sırala
         'comment_weight': 3,   # combined_score = points + comments * 3
     },
     'github_advisories': {
