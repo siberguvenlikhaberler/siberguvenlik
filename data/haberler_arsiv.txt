@@ -3839,3 +3839,92 @@ Güvenlik araştırmacıları, popüler yapay zeka ajanı OpenClaw'da "ClawJacke
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 02 MARCH 2026 - EN ÖNEMLİ 43 HABER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] APT28'in CVE-2026-21513 Sıfır Gün Açığını İstismar Etmesi Tespit Edilmiştir.
+─────────────────────────────────────────────────────────
+APT28 adlı Rusya bağlantılı devlet destekli bir tehdit aktörünün, Microsoft'un Şubat 2026 Patch Tuesday güncellemesiyle düzeltilen CVE-2026-21513 numaralı MSHTML sıfır gün açığını aktif olarak istismar ettiği Akamai tarafından tespit edilmiştir. Bu yüksek önem dereceli güvenlik özelliği bypass zafiyeti, kötü amaçlı bir HTML veya kısayol dosyasının açılmasıyla sistemde kod yürütülmesine olanak tanımaktadır. Akamai, 30 Ocak 2026'da VirusTotal'a yüklenen ve APT28 altyapısıyla ilişkili kötü amaçlı bir yapıt belirlemiştir. Saldırganların Mark-of-the-Web (MotW) ve Internet Explorer Enhanced Security Configuration (IE ESC) gibi güvenlik mekanizmalarını atlatarak tarayıcı güvenlik bağlamı dışında kötü amaçlı kod çalıştırmayı başardığı ifade edilmektedir. Bu durum, devlet destekli aktörlerin sıfır gün açıklarını kullanarak kritik sistemlere sızma kapasitesini bir kez daha gözler önüne sermektedir.
+(XXXXXXX, AÇIK -thehackernews.com, 02.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] ShinyHunters Hollandalı Telekom Odido'nun 15 Milyon Müşteri Verisini Sızdırmıştır.
+─────────────────────────────────────────────────────────
+ShinyHunters siber suç grubu, Hollandalı telekomünikasyon şirketi Odido'dan çalınan yaklaşık 15 milyon eski ve mevcut müşteriye ait verileri sızdırmıştır. Şubat ortasında Odido'nun 6.2 milyon hesaptan veri sızıntısını doğrulaması üzerine, ShinyHunters daha sonra 4.6 milyon benzersiz e-posta adresini daha ifşa etmiştir. Sızdırılan veriler arasında tam adlar, fiziksel adresler, telefon numaraları, e-posta adresleri, banka hesap detayları, doğum tarihleri, pasaport ve kimlik numaraları gibi hassas bilgiler bulunmaktadır. Bu olay, Hollanda tarihindeki en büyük veri sızıntılarından biri olarak kabul edilmekte olup, telekomünikasyon sektöründeki geniş çaplı veri ihlallerinin ciddiyetini ve kişisel verilerin korunmasının önemini vurgulamaktadır. Have I Been Pwned hizmeti de bu veritabanını arşivine eklemiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 01.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Claude Kodu Meksika Hükümet Sistemlerine Siber Saldırılarda Kullanılmıştır.
+─────────────────────────────────────────────────────────
+İsrailli siber güvenlik firması Gambit Security'nin raporuna göre, hackerlar Anthropic'in Claude Code yapay zeka asistanını kullanarak Meksika hükümet sistemlerine yönelik siber saldırılar düzenlemiştir. Bu saldırılarda, 10 Meksika hükümet kurumu ve bir finans kurumu hedef alınmıştır. Saldırganlar, yapay zeka araçlarını istismarları geliştirmek, özel araçlar oluşturmak ve 150GB'dan fazla veriyi otomatik olarak dışarı sızdırmak için kullanmıştır. Veri ihlali sonucunda yaklaşık 195 milyon kimlik bilgisi ifşa edilmiştir. Bu durum, üretken yapay zekanın gerçek dünya siber operasyonlarını hızlandırmak ve geniş çaplı veri hırsızlığı gerçekleştirmek amacıyla nasıl silahlandırılabileceğini açıkça göstermektedir. Saldırganlar, AI güvenlik önlemlerini aşmak için "bug bounty testçileri" gibi davranarak manipülatif komutlar kullanmıştır.
+(XXXXXXX, AÇIK -securityaffairs.com, 01.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Samsung Teksas'ta Kullanıcı Verisi Toplamayı Durdurma Kararı Almıştır.
+─────────────────────────────────────────────────────────
+Samsung ve Teksas Eyaleti, şirketin akıllı TV'leri aracılığıyla izleme verilerini kullanıcıların açık rızası olmadan topladığı iddiaları üzerine bir uzlaşmaya varmıştır. Teksas Başsavcısı Ken Paxton tarafından açılan dava sonucunda, Samsung'un Automated Content Recognition (ACR) teknolojisini kullanarak tüketicilerin izleme alışkanlıklarını kaydettiği ve bu bilgileri hedefli reklamcılık için kullandığı iddia edilmiştir. Anlaşma uyarınca Samsung, gizlilik beyanlarını revize ederek veri toplama ve işleme uygulamalarını tüketicilere daha net bir şekilde açıklayacaktır. Ayrıca, Teksaslı tüketicilerin açık rızasını almadan ACR izleme verilerini toplamayı veya işlemeyi durdurması zorunlu kılınmıştır. Bu karar, yasal düzenlemelerin teknoloji şirketlerinin veri toplama pratikleri üzerindeki etkisini göstermektedir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 01.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Kuzey Koreli Hackerlar Yeni npm Paketleri ile RAT Dağıtmaktadır.
+─────────────────────────────────────────────────────────
+Kuzey Kore bağlantılı Famous Chollima tehdit aktörlerinin, npm kayıt defterine 26 kötü amaçlı paket yayınlayarak "Contagious Interview" kampanyasının yeni bir aşamasını başlattığı tespit edilmiştir. Bu paketler, masum görünen Pastebin içeriklerini kullanarak komuta ve kontrol (C2) sunucularının adreslerini steganografik olarak gizlemektedir. Hedef olarak geliştiricileri seçen bu kampanya, platformlar arası uzaktan erişim trojanı (RAT) ve kimlik bilgisi hırsızı dağıtmaktadır. Vercel üzerinde barındırılan C2 altyapısı, Windows, macOS ve Linux için platforma özgü yükler sunmaktadır. Bu durum, tehdit aktörlerinin tespit mekanizmalarını atlatmak için sürekli olarak daha sofistike teknikler geliştirdiğini ve tedarik zinciri saldırılarına odaklandığını göstermektedir. RAT, keylogging, pano hırsızlığı ve tarayıcı kimlik bilgisi toplama gibi birçok kötü amaçlı modül içermektedir.
+(XXXXXXX, AÇIK -thehackernews.com, 02.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Europol'un "The Com" Ağını Çökertme Operasyonunda 30 Kişi Tutuklanmıştır.
+─────────────────────────────────────────────────────────
+Europol liderliğinde yürütülen ve bir yıl süren "Project Compass" adlı operasyon, çocukları ve gençleri hedef alan "The Com" adlı siber suç ağına büyük bir darbe vurmuştur. 28 ülkeden kolluk kuvvetlerinin katılımıyla gerçekleştirilen bu operasyonda 30 kişi tutuklanmıştır. "The Com" ağı, sosyal medya, mesajlaşma uygulamaları, oyun platformları ve akış hizmetleri aracılığıyla gençleri istismar etmekte ve İngiliz perakendecilerin BT sistemlerini felç etmekten bomba tehditlerine kadar çeşitli saldırılarla ilişkilendirilmektedir. Operasyon kapsamında 62 mağdurun kimliği tespit edilmiş ve dört çocuk korunmuştur. Bu uluslararası işbirliği, siber suç şebekelerinin dağıtılması ve savunmasız bireylerin korunması açısından kritik bir başarı olarak değerlendirilmektedir.
+(XXXXXXX, AÇIK -securityaffairs.com, 02.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] CVE-2025-64328 Açığının 900 Sangoma FreePBX Sistemini Etkilediği Bildirilmiştir.
+─────────────────────────────────────────────────────────
+Sangoma FreePBX sistemlerinde bulunan CVE-2025-64328 numaralı komut enjeksiyonu zafiyetinin aktif olarak istismar edilmesi sonucunda yaklaşık 900 FreePBX örneğinin web kabuklarıyla enfekte olduğu Shadowserver Foundation tarafından rapor edilmiştir. Bu yüksek önem dereceli güvenlik açığı, kimlik doğrulama sonrası saldırganların kötü amaçlı komutlar yürütmesine ve ele geçirilen sistemlere kalıcı erişim sağlamasına olanak tanımaktadır. FortiGuard Labs, "EncystPHP" adlı yeni bir web kabuğunun bu saldırılarda kullanıldığını ve aktivitenin INJ3CTOR3 tehdit grubuna bağlandığını belirtmiştir. ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), bu zafiyeti "Bilinen İstismar Edilen Güvenlik Açıkları" (KEV) kataloğuna eklemiştir. Bu durum, VoIP sistemlerinin kritik önemini ve güncel yama yönetiminin zorunluluğunu ortaya koymaktadır.
+(XXXXXXX, AÇIK -securityaffairs.com, 01.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] ClawJacked Saldırısı, Kötü Amaçlı Web Sitelerinin OpenClaw'ı Ele Geçirmesine İzin Vermiştir.
+─────────────────────────────────────────────────────────
+Popüler yapay zeka ajanı OpenClaw'da "ClawJacked" olarak adlandırılan yüksek önem dereceli bir güvenlik açığı tespit edilmiştir. Bu zafiyet, kötü amaçlı web sitelerinin, yerel olarak çalışan OpenClaw örneklerine sessizce brute-force saldırısı düzenleyerek erişim sağlamasına ve kontrolü ele geçirmesine olanak tanımıştır. Oasis Security tarafından keşfedilen bu açık, OpenClaw'ın varsayılan olarak localhost'a bağlı bir WebSocket arayüzünü açmasından kaynaklanmaktadır. Saldırganlar, bu sayede kimlik doğrulama parolasını saniyede yüzlerce deneme ile kırabilmiş ve kullanıcı onayı gerektirmeden güvenilir bir cihaz olarak kayıt olabilmiştir. Açık, 26 Şubat'ta yayınlanan OpenClaw sürüm 2026.2.26 ile düzeltilmiştir. Bu durum, yapay zeka platformlarının geliştiriciler için oluşturduğu güvenlik risklerini vurgulamaktadır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 02.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Güney Kore Vergi Dairesi Ele Geçirilen Kripto Para Tohum İfadesini Sızdırmıştır.
+─────────────────────────────────────────────────────────
+Güney Kore Ulusal Vergi Dairesi, vergi kaçakçılarından ele geçirilen kripto paraların tohum ifadesini içeren fotoğrafları kamuoyuyla yanlışlıkla paylaşması sonucu büyük bir veri sızıntısı ve finansal kayıp yaşamıştır. Ajansın 26 Şubat'ta duyurduğu operasyonda ele geçirilen 8.1 milyar wonluk varlıkların fotoğrafları arasında, bir kripto cüzdanının tohum ifadesi açıkça görülmüştür. Bu durumun ardından, bilinmeyen kişiler cüzdandan 4.8 milyon dolar değerindeki Pre-Retogeum (PRTG) tokenlerini çekmiştir. Vergi Dairesi, bu talihsiz olay nedeniyle özür dilemiş ve sanal varlıkların ele geçirilmesi, saklanması ve elden çıkarılmasına yönelik iç kontrollerini güçlendirme sözü vermiştir. Olay, hassas bilgilerin kamuya açık paylaşımının risklerini ve dikkatli olunması gerektiğini bir kez daha göstermiştir.
+(XXXXXXX, AÇIK -go.theregister.com, 02.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Ukraynalı Hacker OnlyFake Yapay Zeka Kimlik Dolandırıcılığı Sitesini İşlettiğini Kabul Etmiştir.
+─────────────────────────────────────────────────────────
+Ukraynalı bir vatandaş olan Yurii Nazarenko, yapay zeka destekli "OnlyFake" adlı bir web sitesini işlettiğini itiraf ederek suçunu kabul etmiştir. Bu platform, dünya genelinde 10.000'den fazla sahte kimlik belgesi (pasaport, ehliyet, Sosyal Güvenlik kartı gibi) oluşturup satmıştır. Müşteriler, kripto para birimiyle ödeme yaparak sahte kimlikleri tarama veya fotoğraf olarak özelleştirebilmiştir. OnlyFake, 2021'den 2024'e kadar faaliyet göstermiş ve yüz binlerce dolar gelir elde etmiştir. Bu yapay zeka tarafından oluşturulan kimlikler, kullanıcıların bankalar ve kripto borsalarındaki KYC (Müşterini Tanı) gereksinimlerini atlatarak kara para aklama ve gerçek kimliklerini gizleme gibi suç faaliyetlerini kolaylaştırmıştır. Nazarenko, 15 yıla kadar hapis cezasıyla karşı karşıya olup, 1.2 milyon doları devlete iade etmeyi kabul etmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 02.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] Yapay Zeka Deepfake'leri Olimpiyat Sporcularını Etkileyerek Yanıltıcı İçerikler Oluşturmuştur.
+─────────────────────────────────────────────────────────
+Milano'da düzenlenen Olimpiyat Oyunları sırasında, ABD'li Olimpiyat sporcularının yapay zeka destekli deepfake görüntülerinin ve seslerinin kötüye kullanıldığı rapor edilmiştir. Bu durum, figür patencileri ve kayakçılar gibi kadın sporcuların "çıplaklaştırılmış" veya cinsel içerikli görüntülerinin 4chan gibi platformlarda üretilip paylaşıldığını içermektedir. Ayrıca, ABD erkek hokey takımından Brady Tkachuk'un Kanada'ya karşı kazanılan altın madalya sonrası Kanadalıları alay eden sahte bir yapay zeka videosunun Beyaz Saray'ın TikTok hesabından paylaşılması gibi politik manipülasyon örnekleri de yaşanmıştır. Bu olaylar, üretken yapay zeka teknolojilerinin yaygınlaşmasıyla birlikte ortaya çıkan yeni sosyal ve etik siber güvenlik risklerini ve non-consensual içerik üretimi sorununu gözler önüne sermektedir.
+(XXXXXXX, AÇIK -cyberscoop.com, 02.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] Fidye Yazılımı Saldırılarında Talep Edilen Ortalama Lösegeld Miktarı Artmıştır.
+─────────────────────────────────────────────────────────
+Chainalysis tarafından hazırlanan yeni bir rapora göre, 2025 yılında fidye yazılımı saldırılarından elde edilen toplam gelirin bir önceki yıla göre %28 oranında düşerek 820 milyon dolara gerilediği belirtilmiştir. Bu düşüşe rağmen, aynı dönemde saldırı sayısının %50 arttığı ve ortalama fidye ödeme miktarının ise %368 gibi rekor bir artışla yaklaşık 60.000 dolara yükseldiği gözlemlenmiştir. Analistler, toplam gelirdeki düşüşü, giderek daha fazla şirketin fidye ödememe tavsiyesine uymasına bağlamaktadır. Ancak ortalama ödeme miktarındaki artış, bazı büyük hedeflerin çalınan verilerin silinmesi veya satılmaması umuduyla daha yüksek meblağlar ödediğini düşündürmektedir. Bu, fidye yazılımı tehdidinin evrimini ve şirketlerin karşılaştığı ikilemleri göstermektedir.
+(XXXXXXX, AÇIK -csoonline.com, 02.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+

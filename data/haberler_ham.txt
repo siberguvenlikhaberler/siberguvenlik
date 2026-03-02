@@ -3,7 +3,101 @@
 📅 02 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
-[1] BleepingComputer - ClawJacked attack let malicious websites hijack OpenClaw to steal data
+[1] The Hacker News - APT28 Tied to CVE-2026-21513 MSHTML 0-Day Exploited Before Feb 2026 Patch Tuesday
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 16:06:00 +0530
+Link: https://thehackernews.com/2026/03/apt28-tied-to-cve-2026-21513-mshtml-0.html
+
+[TAM METİN - 480 kelime]
+A recently disclosed security flaw patched by Microsoft may have been exploited by the Russia-linked state-sponsored threat actor known as APT28, according to new findings from Akamai.
+
+The vulnerability in question is CVE-2026-21513 (CVSS score: 8.8), a high-severity security feature bypass affecting the MSHTML Framework.
+
+"Protection mechanism failure in MSHTML Framework allows an unauthorized attacker to bypass a security feature over a network," Microsoft noted in its advisory for the flaw. It was fixed by the Windows maker as part of its February 2026 Patch Tuesday update.
+
+However, the tech giant also noted that the vulnerability had been exploited as a zero-day in real-world attacks, crediting the Microsoft Threat Intelligence Center (MSTIC), Microsoft Security Response Center (MSRC), and Office Product Group Security Team, along with Google Threat Intelligence Group (GTIG), for reporting it.
+
+In a hypothetical attack scenario, a threat actor could weaponize the vulnerability by persuading a victim to open a malicious HTML file or shortcut (LNK) file delivered through a link or as an email attachment.
+
+Once the crafted file is opened, it manipulates browser and Windows Shell handling, causing the content to be executed by the operating system, Microsoft noted. This, in turn, allows the attacker to bypass security features and potentially achieve code execution.
+
+While the company has not officially shared any details about the zero-day exploitation effort, Akamai said it identified a malicious artifact that was uploaded to VirusTotal on January 30, 2026, and is associated with infrastructure linked to APT28.
+
+It's worth noting that the sample was flagged by the Computer Emergency Response Team of Ukraine (CERT-UA) early last month in connection with APT28's attacks exploiting another security flaw in Microsoft Office (CVE-2026-21509, CVSS score: 7.8).
+
+The web infrastructure company said CVE-2026-21513 is rooted in the logic within "ieframe.dll" that handles hyperlink navigation, and that it's the result of insufficient validation of the target URL, which allows attacker-controlled input to reach code paths that invoke ShellExecuteExW. This, in turn, enables execution of local or remote resources outside the intended browser security context.
+
+"This payload involves a specially crafted Windows Shortcut (LNK) that embeds an HTML file immediately after the standard LNK structure," security researcher Maor Dahan said. "The LNK file initiates communication with the domain wellnesscaremed[.]com, which is attributed to APT28 and has been in extensive use for the campaign's multistage payloads. The exploit leverages nested iframes and multiple DOM contexts to manipulate trust boundaries."
+
+Akamai noted that the technique makes it possible for an attacker to bypass Mark-of-the-Web (MotW) and Internet Explorer Enhanced Security Configuration (IE ESC), leading to a downgrade of the security context and ultimately facilitating the execution of malicious code outside of the browser sandbox via ShellExecuteExW.
+
+"While the observed campaign leverages malicious LNK files, the vulnerable code path can be triggered through any component embedding MSHTML," the company added. "Therefore, additional delivery mechanisms beyond LNK-based phishing should be expected."
+
+(XXXXXXX, AÇIK - https://thehackernews.com/2026/03/apt28-tied-to-cve-2026-21513-mshtml-0.html, thehackernews.com, 02.03.2026)
+
+================================================================================
+
+[2] The Hacker News - North Korean Hackers Publish 26 npm Packages Hiding Pastebin C2 for Cross-Platform RAT
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 14:14:00 +0530
+Link: https://thehackernews.com/2026/03/north-korean-hackers-publish-26-npm.html
+
+[TAM METİN - 799 kelime]
+Cybersecurity researchers have disclosed a new iteration of the ongoing Contagious Interview campaign, where the North Korean threat actors have published a set of 26 malicious packages to the npm registry.
+
+The packages masquerade as developer tools, but contain functionality to extract the actual command-and-control (C2) by using seemingly harmless Pastebin content as a dead drop resolver and ultimately drop a developer-targeted credential stealer and remote access trojan. The C2 infrastructure is hosted on Vercel across 31 deployments.
+
+The campaign, tracked by Socket and kmsec.uk's Kieran Miyamoto is being tracked under the moniker StegaBin. It's attributed to a North Korean threat activity cluster known as Famous Chollima.
+
+"The loader extracts C2 URLs steganographically encoded within three Pastebin pastes, innocuous computer science essays in which characters at evenly-spaced positions have been replaced to spell out hidden infrastructure addresses," Socket researchers Philipp Burckhardt and Peter van der Zee said.
+
+The list of the malicious npm packages is as follows -
+
+jslint-config@10.22.2
+
+jsnwebapptoken@8.40.2
+
+All identified packages come with an install script ("install.js") that's automatically executed during package installation, which, in turn, runs the malicious payload located in "vendor/scrypt-js/version.js." Another common aspect that unites the 26 packages is that they explicitly declare the legitimate package they are typosquatting as a dependency, likely in an attempt to make them appear credible.
+
+The payload serves as a text steganography decoder by contacting a Pastebin URL and extracting its contents to retrieve the actual C2 Vercel URLs. While the pastes seemingly contain a benign essay about computer science, the decoder is designed to look at specific characters in certain positions in the text and string them together to create a list of C2 domains.
+
+"The decoder strips zero-width Unicode characters, reads a 5-digit length marker from the beginning, calculates evenly-spaced character positions throughout the text, and extracts the characters at those positions," Socket said. "The extracted characters are then split on a ||| separator (with an ===END=== termination marker) to produce an array of C2 domain names."
+
+The malware then reaches out to the decoded domain to fetch platform-specific payloads for Windows, macOS, and Linux, a tactic widely observed in the Contagious Interview campaign. One such domain, "ext-checkdin.vercel[.]app" has been found to serve a shell script, which then contacts the same URL to retrieve a RAT component.
+
+The Trojan connects to 103.106.67[.]63:1244 to await further instructions that allow it to change the current directory and execute shell commands, through which a comprehensive intelligence collection suite is deployed. It contains nine modules to facilitate Microsoft Visual Studio Code (VS Code) persistence, keylogging and clipboard theft, browser credential harvesting, TruffleHog secret scanning, and Git repository and SSH key exfiltration -
+
+vs, which uses a malicious tasks.json file to contact a Vercel domain every time a project is opened in VS Code by taking advantage of the runOn: "folderOpen" trigger. The module specifically scans the victim's VS Code config directory across all three platforms and writes the malicious tasks.json directly into it.
+
+clip, which acts as a keylogger, mouse tracker, and clipboard stealer with support for active window tracking and conducts periodic exfiltration every 10 minutes.
+
+bro, which is a Python payload to steal browser credential stores.
+
+j, which is a Node.js module used for browser and cryptocurrency theft by targeting Google Chrome, Brave, Firefox, Opera, and Microsoft Edge, and extensions like MetaMask, Phantom, Coinbase Wallet, Binance, Trust, Exodus, and Keplr, among others. On macOS, it also targets the iCloud Keychain.
+
+z, which enumerates the file system and steals files matching certain predefined patterns.
+
+n, which acts as a RAT to grant the attacker the ability to remotely control the infected host in real-time via a persistent WebSocket connection to 103.106.67[.]63:1247 and exfiltrate data of interest over FTP.
+
+truffle, which downloads the legitimate TruffleHog secrets scanner from the official GitHub page to discover and exfiltrate developer secrets.
+
+git, which collects files from .ssh directories, extracts Git credentials, and scans repositories.
+
+sched, which is the same as "vendor/scrypt-js/version.js" and is redeployed as a persistence mechanism.
+
+"While previous waves of the Contagious Interview campaign relied on relatively straightforward malicious scripts and Bitbucket-hosted payloads, this latest iteration demonstrates a concerted effort to bypass both automated detection and human review," Socket concluded.
+
+"The use of character-level steganography on Pastebin and multi-stage Vercel routing points to an adversary that is refining its evasion techniques and attempting to make its operations more resilient."
+
+The disclosure comes as the North Korean actors have also been observed publishing malicious npm packages (e.g., express-core-validator) to fetch a next-stage JavaScript payload hosted on Google Drive.
+
+"Only a single package has been published with this new technique," Miyamoto said. "It is likely Famous Chollima will continue to leverage multiple techniques and infrastructure to deliver follow-on payloads. It is unlikely this signals a complete overhaul of their stager behaviour on npm."
+
+(XXXXXXX, AÇIK - https://thehackernews.com/2026/03/north-korean-hackers-publish-26-npm.html, thehackernews.com, 02.03.2026)
+
+================================================================================
+
+[3] BleepingComputer - ClawJacked attack let malicious websites hijack OpenClaw to steal data
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 16:44:55 -0500
 Link: https://www.bleepingcomputer.com/news/security/clawjacked-attack-let-malicious-websites-hijack-openclaw-to-steal-data/
@@ -63,7 +157,7 @@ Zyxel warns of critical RCE flaw affecting over a dozen routers
 
 ================================================================================
 
-[2] BleepingComputer - Samsung TVs to stop collecting Texans’ data without express consent
+[4] BleepingComputer - Samsung TVs to stop collecting Texans’ data without express consent
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:23:34 -0500
 Link: https://www.bleepingcomputer.com/news/security/samsung-tvs-to-stop-collecting-texans-data-without-express-consent/
@@ -117,7 +211,117 @@ Microsoft adds Copilot data controls to all storage locations
 
 ================================================================================
 
-[3] Security Affairs - ShinyHunters leaked the full Odido dataset
+[5] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 10:26:25 +0000
+Link: https://securityaffairs.com/188708/cyber-crime/europols-project-compass-nets-30-arrests-in-crackdown-on-the-com.html
+
+[TAM METİN - 310 kelime]
+Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
+
+Europol’s Project Compass led to 30 arrests targeting ‘The Com’ network, identifying 62 victims and protecting four children from harm.
+
+A yearlong operation, code-named Project Compass, led by Europol has dealt a major blow to The Com,’ a cybercrime network known for targeting children and teenagers. The joint effort, called Project Compass and coordinated by Europol’s European Counter Terrorism Centre, brought together law enforcement agencies from 28 countries.
+
+“The Com” operates through a scattered online network, using social media, messaging apps, gaming platforms and streaming services to recruit and exploit young people. Its decentralized structure makes.
+
+The Com is mostly composed of English-speaking cybercriminals aged 16 to 25. The group has been linked to attacks ranging from crippling British retailers’ IT systems to making bomb threats and coercing teenage girls into self-harm. Its latest alleged victims are premium users of Pornhub, whose data was reportedly hacked by ShinyHunters, an offshoot tied to the broader Com network, which includes Scattered Spider.
+
+Since January 2025, Project Compass has delivered significant operational results, including the safeguarding of four victims and the arrest of 30 perpetrators. Investigators identified or partially identified 62 victims and 179 suspects, while also carrying out nine joint awareness initiatives. The project has strengthened cross-border cooperation among 28 countries, enabling coordinated investigations, faster responses to emerging threats, and structured information sharing.
+
+“These networks deliberately target children in the digital spaces where they feel most at ease. Project Compass allows us to intervene earlier, safeguard victims and disrupt those who exploit vulnerability for extremist purposes.” said Anna Sjöberg, Head of Europol’s European Counter Terrorism Centre. “No country can address this threat alone – and through this cooperation, we are closing the gaps they try to hide in.”
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, cybercrime)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188708/cyber-crime/europols-project-compass-nets-30-arrests-in-crackdown-on-the-com.html, securityaffairs.com, 02.03.2026)
+
+================================================================================
+
+[6] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 09:42:34 +0000
+Link: https://securityaffairs.com/188749/hacking/clawjacked-flaw-exposed-openclaw-users-to-data-theft.html
+
+[TAM METİN - 616 kelime]
+ClawJacked flaw exposed OpenClaw users to data theft
+
+“ClawJacked” flaw let malicious sites hijack OpenClaw AI agents to steal data; patch released in version 2026.2.26.
+
+A high-severity vulnerability called ClawJacked in OpenClaw allowed malicious websites to brute-force and take control of local AI agent instances. Oasis Security discovered the flaw, which enabled silent data theft. OpenClaw addressed the issue with version 2026.2.26, released on February 26.
+
+OpenClaw is an open-source AI agent framework that lets developers run autonomous AI assistants locally. It connects large language models to tools, browsers, and system resources, enabling task automation such as web interaction, data processing, and workflow execution on a user’s machine.
+
+OpenClaw is built around a local WebSocket gateway that acts as the system’s brain, handling authentication, chat sessions, configuration, and coordination of the AI agent. Connected “nodes” (such as a macOS app, iOS device, or other machines) register with the gateway and can execute system commands or access device features. Because the gateway binds to localhost and assumes local traffic is trusted, this design creates a critical security weakness.
+
+Oasis Security researchers uncovered a critical attack chain showing that a malicious website could fully hijack a locally running OpenClaw instance. If a developer had the OpenClaw gateway running on localhost and visited an attacker-controlled site, embedded JavaScript could silently open a WebSocket connection to the local gateway. Because browsers allow WebSocket connections to localhost and OpenClaw trusted local traffic, the connection was not blocked.
+
+The gateway also exempted localhost from rate limiting, allowing attackers to brute-force the password at hundreds of guesses per second without triggering alerts. Once the password was guessed, the malicious script could automatically register as a trusted device, since local pairings required no user confirmation.
+
+With authenticated access, attackers gained admin-level control. They could interact directly with the AI agent, extract configuration details, read logs, enumerate connected nodes, and potentially execute commands on linked devices. In practice, this meant full workstation compromise initiated from a simple browser visit, without any visible warning to the user.
+
+“A developer has OpenClaw running on their laptop, with the gateway bound to localhost, protected by a password.” reads the report published by Oasis Security. “They’re browsing the web and accidentally land on a malicious website. That’s all it takes.
+
+The full attack chain works like this:
+
+The attacker then has full control. They can interact with the AI agent, dump configuration data, enumerate connected devices, and read logs.
+
+The victim visits any attacker-controlled (or compromised) website in their normal browser.
+
+JavaScript on the page opens a WebSocket connection to localhost on the OpenClaw gateway port (permitted becauseWebSocket connections to localhost are not blocked by cross-origin policies).
+
+The script brute-forces the gateway password at hundreds of attempts per second. The gateway’s rate limiter exempts localhost connections entirely.
+
+Once authenticated, the script silently registers as a trusted device. The gateway auto-approves device pairings from localhost with no user prompt.
+
+Below is a video PoC of the attack:
+
+Researchers responsibly disclosed the flaw to the OpenClaw team, the issue was rated high severity and patched in under 24 hours.
+
+Organizations are urged to identify AI tools running on developer machines, as many may be deployed without IT oversight. Any OpenClaw instances should be updated immediately to version 2026.2.25 or later. Companies should also audit what permissions and credentials their AI agents hold, limiting access to only what is necessary.
+
+Finally, experts stress the need for governance around AI agents as non-human identities. Since they can authenticate, store credentials, and act autonomously, they require strict policy controls, monitored access, and full audit trails—just like human users or service accounts.
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, ClawJacked)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188749/hacking/clawjacked-flaw-exposed-openclaw-users-to-data-theft.html, securityaffairs.com, 02.03.2026)
+
+================================================================================
+
+[7] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 08:43:04 +0000
+Link: https://securityaffairs.com/188734/cyber-crime/ukrainian-hacker-pleads-guilty-to-running-onlyfake-ai-id-scam-site.html
+
+[TAM METİN - 393 kelime]
+Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
+
+Ukrainian citizen Yurii Nazarenko admitted running OnlyFake, an AI-driven site that sold over 10,000 fake IDs worldwide.
+
+Ukrainian man Yurii Nazarenko pleaded guilty to operating OnlyFake, an AI-powered site that generated and sold more than 10,000 counterfeit IDs globally.
+
+“United States Attorney for the Southern District of New York, Jay Clayton, and Assistant Director in Charge of the New York Field Office of the Federal Bureau of Investigation (“FBI”), James C. Barnacle, Jr., announced today that Ukrainian national YURII NAZARENKO, a/k/a “Yuriy Nazarenko,” a/k/a “Uriel Septimberus,” a/k/a “Tor Ford,” a/k/a “John Wick,” has been charged and pled guilty for his role in operating the website “OnlyFake,” which sold fake photos of identification documents such as passports and driver’s licenses (“Digital Fake IDs”).” reads the press release published by DoJ. “NAZARENKO pled guilty today to conspiracy to commit fraud in connection with identification documents, authentication features, and information before U.S. District Judge Margaret M. Garnett.”
+
+According to court filings, OnlyFake let customers generate a wide range of digital fake IDs, including U.S. driver’s licenses from all 50 states, passports, passport cards, and Social Security cards, as well as passports from around 56 other countries. Users could customize the output to appear as a scanned document or a photo on a surface, enabling highly realistic counterfeit IDs through the AI-powered platform.
+
+Customers paid OnlyFake in cryptocurrency, with bulk packages of up to 1,000 digital fake IDs. Yurii Nazarenko operated the platform from 2021 to 2024, the service generated at least 10,000 fake IDs and earned hundreds of thousands of dollars. These AI-generated IDs allowed users to bypass KYC requirements at banks and crypto exchanges, facilitating money laundering and concealing their true identities.
+
+Nazarenko pled guilty to conspiring to commit fraud involving fake IDs, facing up to 15 years in prison. He also agreed to forfeit $1.2 million from OnlyFake’s operations. Sentencing is scheduled for June 26, 2026, before Judge Garnett, though the final sentence will be determined by the court.
+
+“We rely on government issued IDs to combat terrorism, hijackings, fraud, money laundering, and a host of other crimes,” said U.S. Attorney Jay Clayton.  “OnlyFake’s manufacture of fraudulent IDs and other documents puts us all at risk and must be stopped.”
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, OnlyFake)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188734/cyber-crime/ukrainian-hacker-pleads-guilty-to-running-onlyfake-ai-id-scam-site.html, securityaffairs.com, 02.03.2026)
+
+================================================================================
+
+[8] Security Affairs - ShinyHunters leaked the full Odido dataset
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 19:12:55 +0000
 Link: https://securityaffairs.com/188709/data-breach/shinyhunters-leaked-the-full-odido-dataset.html
@@ -161,7 +365,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[4] Security Affairs - Claude code abused to steal 150GB in cyberattack on Mexican agencies
+[9] Security Affairs - Claude code abused to steal 150GB in cyberattack on Mexican agencies
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 13:49:07 +0000
 Link: https://securityaffairs.com/188696/ai/claude-code-abused-to-steal-150gb-in-cyberattack-on-mexican-agencies.html
@@ -195,7 +399,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[5] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 86
+[10] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 86
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:30:16 +0000
 Link: https://securityaffairs.com/188691/malware/security-affairs-malware-newsletter-round-86.html
@@ -239,7 +443,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[6] Security Affairs - CVE-2025-64328 exploitation impacts 900 Sangoma FreePBX instances
+[11] Security Affairs - CVE-2025-64328 exploitation impacts 900 Sangoma FreePBX instances
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:01:54 +0000
 Link: https://securityaffairs.com/188679/uncategorized/cve-2025-64328-exploitation-impacts-900-sangoma-freepbx-instances.html
@@ -279,7 +483,144 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[7] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
+[12] Security Affairs - Security Affairs newsletter Round 565 by Pierluigi Paganini – INTERNATIONAL EDITION
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 01 Mar 2026 00:35:00 +0000
+Link: https://securityaffairs.com/188669/security/security-affairs-newsletter-round-565-by-pierluigi-paganini-international-edition.html
+
+[TAM METİN - 394 kelime]
+The National Police arrest a young man for cyberattacking a payment gateway and making reservations at luxury hotels for one cent
+
+AI-augmented threat actor accesses FortiGate devices at scale
+
+Romanian National Pleads Guilty to Selling Access to Networks of Oregon State Government Office and Other U.S. Victims
+
+‘Starkiller’ Phishing Service Proxies Real Login Pages, MFA
+
+Former General Manager for U.S. Defense Contractor Sentenced to 87 Months for Selling Stolen Trade Secrets to Russian Broker
+
+Olympique Marseille confirms ‘attempted’ cyberattack after data leak
+
+Arkanix Stealer: a C++ & Python infostealer
+
+New Malicious npm Package “ambar-src” Targets Developers with Open Source Malware
+
+New Dohdoor malware campaign targets education and health care
+
+Exploring Aeternum C2: a new botnet that lives on the blockchain
+
+VShell and SparkRAT Observed in Exploitation of BeyondTrust Critical Vulnerability (CVE-2026-1731)
+
+Active exploitation of Cisco Catalyst SD-WAN by UAT-8616
+
+datapizza-ai, Yet Another Vulnerable AI Framework
+
+Caught in the Hook: RCE and API Token Exfiltration Through Claude Code
+
+Check Point Researchers Expose Critical Claude Code Flaws
+
+Large Reasoning Models Are Autonomous Jailbreak Agents
+
+Millions of Publicly Exposed .env Files Put Internet Services at Risk: A Mysterium VPN Research
+
+MalTool: Malicious Tool Attacks on LLM Agents
+
+Intelligence and Information Warfare
+
+Cellebrite cut off Serbia citing abuse of its phone unlocking tools. Why not others?
+
+Russia stepping up hybrid attacks, preparing for long standoff with West, Dutch intelligence warns
+
+Operation Olalampo: Inside MuddyWater’s Latest Campaign
+
+Operation MacroMaze: new APT28 campaign using basic tooling and legit infrastructure
+
+North Korean Lazarus Group Now Working With Medusa Ransomware
+
+Treasury Sanctions Exploit Broker Network for Theft and Sale of U.S. Government Cyber Tools
+
+Mercenary Akula Hits Ukraine-Supporting Financial Institution
+
+Ukraine says cyberattacks on energy grid now used to guide missile strikes
+
+Exposing the Undercurrent: Disrupting the GRIDTIDE Global Cyber Espionage Campaign
+
+APT37 Adds New Capabilities for Air-Gapped Networks
+
+Making frontier cybersecurity capabilities available to defenders
+
+CERT EU – Cyber Threat Intelligence Framework
+
+FBI agents visited my home about an article I wrote, and now I can’t go to Mexico
+
+European DYI chain ManoMano data breach impacts 38 million customers
+
+Exclusive: US orders diplomats to fight data sovereignty initiatives
+
+CrowdStrike says attackers are moving through networks in under 30 minutes
+
+Apple iPhone and iPad Cleared for Classified NATO Use
+
+Canadian Tire Corporation E-Commerce Data Incident
+
+Anthropic refuses Pentagon’s demand in AI safeguards dispute
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188669/security/security-affairs-newsletter-round-565-by-pierluigi-paganini-international-edition.html, securityaffairs.com, 01.03.2026)
+
+================================================================================
+
+[13] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 11:13:04 GMT
+Link: https://isc.sans.edu/diary/rss/32696
+
+[TAM METİN - 157 kelime]
+Quick Howto: ZIP Files Inside RTF
+
+In diary entry "Quick Howto: Extract URLs from RTF files" I mentioned ZIP files.
+
+There are OLE objects inside this RTF file:
+
+They can be analyzed with oledump.py like this:
+
+Options --storages and -E %CLSID% are used to show the abused CLSID.
+
+Stream CONTENTS contains the URL:
+
+We extracted this URL with the method described in my previous diary entry "Quick Howto: Extract URLs from RTF files".
+
+But this OLE object contains a .docx file.
+
+A .docx file is a ZIP container, and thus the URLs it contains are inside compressed files, and will not be extracted with the technique I explained.
+
+But this file can be looked into with zipdump.py:
+
+It is possible to search for ZIP files embedded inside RTF files: 50 4B 03 04 -> hex sequence of magic number header for file record in ZIP file.
+
+Search for all embedded ZIP files:
+
+Didier Stevens
+Senior handler
+blog.DidierStevens.com
+
+(XXXXXXX, AÇIK - https://isc.sans.edu/diary/rss/32696, isc.sans.edu, 02.03.2026)
+
+================================================================================
+
+[14] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 11:11:45 GMT
+Link: https://isc.sans.edu/diary/rss/32758
+
+⚠️  Tam metin çekilemedi
+
+(XXXXXXX, AÇIK - https://isc.sans.edu/diary/rss/32758, isc.sans.edu, 02.03.2026)
+
+================================================================================
+
+[15] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 02:00:03 GMT
 Link: https://isc.sans.edu/diary/rss/32756
@@ -290,7 +631,214 @@ Link: https://isc.sans.edu/diary/rss/32756
 
 ================================================================================
 
-[8] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
+[16] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 11:00:00 +0000
+Link: https://cyberscoop.com/ai-deepfakes-olympic-athletes-political-manipulation/
+
+[TAM METİN - 926 kelime]
+From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
+
+While competing for medals and glory in Milan, Italy, U.S. Olympic athletes experienced something that is fast becoming a regular feature of modern public life: the widespread use of AI tools by politicians, trolls and sexual harassers to manipulate their images and voices
+
+Users on 4chan and other sites quickly generated and shared “nudified” or sexualized imagery of multiple female U.S. athletes, including figure skaters Alysa Liu, Amber Glenn and Isabeau Levito, as well as skiers Mikaela Shiffrin and Eileen Gu (who competed for China).
+
+Multiple research firms, including Graphika and Open Measures, tracked the posts and images on 4chan,  a platform that automatically deletes posts and topic-specific boards after a set period.
+
+Cristina López G., a senior analyst at Graphika and author of a report released Monday, told CyberScoop that online communities dedicated to generating and sharing fake, nonconsensual nude images of celebrities, public figures and women they know existed before the generative AI era. But these groups have taken advantage of AI image models, particularly local, open-source versions that can be downloaded and fine-tuned, to improve image quality and make the technology accessible to less technical members.
+
+“These communities have co-opted and adapted these technologies to optimize them for their end use case, which continues to be the production of [nonconsensual sexual imagery],” López G. said.
+
+Users on these 4chan message boards follow a gamified pattern: one person posts a nonconsensual or sexualized image, then asks others to post their own in return. The availability of downloadable, open-source AI models, which lack safety guardrails and can be customized for “nudification”  has accelerated this activity.
+
+These customized weights and settings, called Low Rank Adaptions (LoRA), can be shared online and plugged into other users’ local models, similar to the way gamers create and share mods.
+
+Deepfakes have been around – and steadily improving – for years, but generative AI technology has improved drastically in the past 18 months at generating realistic photos and videos.
+
+Additionally, open-source models have spread throughout the internet, giving users the ability to customize, fine-tune and share ones that are optimized for nudification and non-consensual image generation.
+
+Even though 4chan’s posts auto-delete, they can still spread to the broader internet. In 2024, for example, deepfake nudes of Taylor Swift originated on the site but went viral on mainstream social media. López G. said apps like Telegram—and increasingly X— become conduits for spreading the images further.
+
+“The way in which this alters the game, I would say, is that you’re not only trading outputs anymore, you are trading the ability to generate infinite outputs,” she said. “So the harm compounds, because you are just enabling a lot of other people to be able to produce and uniquely and specifically target these women.”
+
+The use of AI to mimic or harass U.S. Olympians during the games wasn’t limited to nonconsensual nudes on 4chan.
+
+Brady Tkachuk of the U.S. men’s hockey team spoke out after the White House posted an AI-generated video that falsely depicted him mockingCanadians after Team USA’s gold medal win over Canada.
+
+The video, shared through the White House’s TikTok account, depicted Tkachuk saying of Canada, “They booed our national anthem, so I had to come out and teach those maple-syrup-eating f—s a lesson.” Despite including an AI-generated disclaimer, the video has been viewed tens of millions of times.
+
+Nevertheless, Tkachuk – an American citizen who plays professionally for the Ottawa Senators – took issue, telling the media “I don’t like that video” because “it’s not my voice, not my lips moving.”
+
+It’s the latest example of the Trump White House using AI to alter or manipulate public imagery. The administration now regularly creates or shares AI-generated images as part of its political messaging, sometimes without disclosing it to the public. Earlier this year, the White House posted an AI-manipulated photo on X showing Minnesota protester Nekima Levy Armstrong crying as she was arrested and led away in handcuffs, an emotion not present in the original image. Other federal agencies’ social media accounts have also shared AI-manipulated images and videos.
+
+White House officials have consistently defended their actions, describing them as little more than jokes. López G. said whether it’s nonconsensual nudes or political deepfakes, the problem “goes deeper than technological harm,” and reflects how pockets of online culture are essentially in denial about this content’s real-world impact.
+
+“One thing that really jumps out is that many of the people producing [deepfakes] do not connect the harms that they are doing to the actual person,” she said. “In their minds it is ‘this is not real’ and so these people are not getting hurt. There is a disconnect there that has nothing to do with the technology, that has more to do with us as a culture.”
+
+How ‘silent probing’ can make your security playbook a liability   
+
+
+
+By 
+
+      Dimitrios Bougioukas
+
+How ‘silent probing’ can make your security playbook a liability
+
+Chinese group’s ChatGPT use reveals worldwide harassment campaign against critics   
+
+
+
+By 
+
+      Derek B. Johnson
+
+Chinese group’s ChatGPT use reveals worldwide harassment campaign against critics
+
+Across party lines and industry, the verdict is the same: CISA is in trouble   
+
+
+
+By 
+
+      Tim Starks
+
+Across party lines and industry, the verdict is the same: CISA is in trouble
+
+Senate moves one step closer to passing health care cyber reforms    
+
+
+
+By 
+
+      Derek B. Johnson
+
+Senate moves one step closer to passing health care cyber reforms
+
+Gottumukkala out, Andersen in as acting CISA director   
+
+
+
+By 
+
+      Tim Starks
+
+Gottumukkala out, Andersen in as acting CISA director
+
+(XXXXXXX, AÇIK - https://cyberscoop.com/ai-deepfakes-olympic-athletes-political-manipulation/, cyberscoop.com, 02.03.2026)
+
+================================================================================
+
+[17] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 11:00:00 +0000
+Link: https://cyberscoop.com/ai-silent-probing-cyber-risk-behavioral-defense-op-ed/
+
+[TAM METİN - 1113 kelime]
+How ‘silent probing’ can make your security playbook a liability
+
+By
+Dimitrios Bougioukas
+
+For years, cyberattacks followed a familiar pattern: reconnaissance, exploitation, persistence, impact. Defenders built their strategies around that cycle, patching vulnerabilities, monitoring indicators, and working to reduce dwell time. But a quieter shift is underway.
+
+Today’s most sophisticated adversaries are using AI to study how organizations defend themselves. They run what we call “silent probing campaigns:” long-term, subtle operations designed to map how a team detects threats, escalates issues, and responds under pressure. These campaigns focus on learning the defender’s habits, workflow and decision points so attackers can time and tailor follow-on actions to evade detection. This reframes cyber risk, turning it from a technical problem into a behavioral one.
+
+Historically, attackers focused solely on technical gaps, whether from an unpatched server, exposed credentials or a misconfigured cloud. The objective was to find the weakness and exploit it before someone else did. Silent probing adds a new “learning” phase to that playbook.
+
+Attackers study how an organization responds as carefully as they study its systems. Using AI over weeks or months, they quietly measure detection and escalation speed, learn which alerts get ignored, and infer patterns like shift coverage, alert fatigue, and process bottlenecks.
+
+Over time, these subtle probes generate data that feeds adaptive models. Those models help attackers learn what triggers a response, how quickly teams react, and where detection tends to falter. This means when a major attack finally unfolds, it has already been optimized against the organization’s real defensive patterns.
+
+At the same time, organizations are embedding AI into their security operations, from automated triage to autonomous response orchestration. However, this shift introduces a new risk: the very systems designed to defend the enterprise can become part of the attack surface.
+
+As organizations rely more heavily on AI to run their security operations, these systems need wide visibility and access to work properly. They often connect to cloud platforms, identity systems, and endpoint controls so they can detect threats and act quickly. But that level of access creates a substantial amount of power. If one of these AI-driven systems is compromised or manipulated, it doesn’t just expose a single tool, it can give an attacker broad reach across the environment. In that scenario, the technology designed to protect the organization can accelerate the damage.
+
+Automation increases risk when AI systems can take action without human approval, such as  isolating devices, resetting passwords, or changing configurations.  Clear limits and guardrails are required, since manipulated inputs or faulty interpretations can trigger rapid wide-reaching disruption. Risk depends on the system’s authority and the controls around it.
+
+AI hallucination in security operations can cause systems to misidentify threats, isolate the wrong assets or overlook the real threat. Repeated errors can erode trust in the system, or worse, create a false sense of confidence in its automated decisions. This affects judgment, decision-making, and how risk is understood in real time.
+
+Silent probing reveals how predictable an organization’s defenses are. Attackers are now looking for patterns in defensive behavior: response consistency across shifts, routinely ignored alerts, predictable incident response steps, and whether noisy tools accidentally hide slow-moving threats.
+
+When defensive behavior becomes visible and predictable, it can be studied and exploited. Organizations need to understand how their defenses appear from the outside and assess their behavioral exposure the same way red teams test technical controls. This includes understanding how easily an outsider can identify detection thresholds, how clearly response times can be measured, and how much operational routine can be learned through quiet, repeated probing. The key question is whether patterns of response are unintentionally teaching attackers how to succeed.
+
+As AI plays a bigger role in security operations, oversight has to evolve alongside it. Strong governance starts with clearly defining what AI systems are allowed to do. Organizations need to be explicit about which actions can happen automatically and which require human approval. Conversely, least-privilege principles should apply not only to people, but also to machines. AI-driven tools should be tested regularly, reviewed for drift, bias, and inaccurate conclusions. Wherever possible, detection and response authority should be separated to avoid concentrating too much power in a single system. Centralization without control may feel efficient, but in practice, it creates fragility.
+
+Still, policies and guardrails alone are not enough. As attackers use AI to understand defenders, defenders must sharpen their own ability to think like their adversaries. Security professionals need to evaluate how their tools perform and how they might be observed, manipulated, or misled. This requires questioning automated decisions, stepping in when necessary, and investigating anomalies—especially when the system appears confident in its conclusions.
+
+This is why hands-on simulations and AI-focused red teaming matter. Teams need experience in environments that simulate adaptive adversaries who adjust their tactics based on defensive responses. not just textbook attack scenarios. They need to understand AI’s detection capabilities and the risks introduced by poor configurations or blind trust. The gap organizations face has become more cognitive than technological, and closing that gap requires continuous, measurable skill development, including AI literacy, offensive AI awareness, and the ability to critically evaluate automated outputs.
+
+In an AI-first era, resilience now depends on how an organization defends itself like its being watched. Silent probing allows attackers to understand detection thresholds, escalation speed, and response consistency over weeks or months. and how consistently teams respond. This quiet observation can now serve a precursor to a major attack on an enterprise.
+
+Security leaders need to focus on what their organizations reveal through day-to-day defensive behavior. When attackers can observe, learn, and adapt over time, predictable responses become a liability because they are easy to study and exploit.Dimitrios Bougioukas is senior vice president of training at Hack The Box, where he leads the development of advanced training initiatives and certifications that equip cybersecurity professionals worldwide with mission-ready skills.
+
+Artificial Intelligence (AI)
+
+Why ‘secure-by-design’ systems are non-negotiable in the AI era   
+
+
+
+By 
+
+      Jeffrey Knight
+
+Why ‘secure-by-design’ systems are non-negotiable in the AI era
+
+AI security’s ‘Great Wall’ problem   
+
+
+
+By 
+
+      David Schwed
+
+AI security’s ‘Great Wall’ problem
+
+Chinese group’s ChatGPT use reveals worldwide harassment campaign against critics   
+
+
+
+By 
+
+      Derek B. Johnson
+
+Chinese group’s ChatGPT use reveals worldwide harassment campaign against critics
+
+Across party lines and industry, the verdict is the same: CISA is in trouble   
+
+
+
+By 
+
+      Tim Starks
+
+Across party lines and industry, the verdict is the same: CISA is in trouble
+
+Senate moves one step closer to passing health care cyber reforms    
+
+
+
+By 
+
+      Derek B. Johnson
+
+Senate moves one step closer to passing health care cyber reforms
+
+Gottumukkala out, Andersen in as acting CISA director   
+
+
+
+By 
+
+      Tim Starks
+
+Gottumukkala out, Andersen in as acting CISA director
+
+(XXXXXXX, AÇIK - https://cyberscoop.com/ai-silent-probing-cyber-risk-behavioral-defense-op-ed/, cyberscoop.com, 02.03.2026)
+
+================================================================================
+
+[18] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T00:51:38.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/south_korea_tax_office_cryptocurrency_leak/
@@ -372,7 +920,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[9] TechCrunch Security - Let’s explore the best alternatives to Discord
+[19] TechCrunch Security - Let’s explore the best alternatives to Discord
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 19:00:01 +0000
 Link: https://techcrunch.com/2026/03/01/best-discord-alternatives-age-verification-identity-privacy/
@@ -494,7 +1042,483 @@ A Meta AI security researcher said an OpenClaw agent ran amok on her inbox
 
 ================================================================================
 
-[10] CSO Online - Hacker erpressen weniger Lösegeld
+[20] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 11:00:00 +0000
+Link: https://www.csoonline.com/article/4138735/innovation-without-exposure-a-cisos-secure-by-design-framework-for-business-outcomes.html
+
+[TAM METİN - 1992 kelime]
+Block innovation and you create shadow IT. Govern it well, and it becomes your strongest security control.
+
+The brief for security leaders has changed. It used to be enough to reduce risk and keep the lights on. Now you are expected to enable AI adoption, connect more “things” to the network, modernize cloud at pace and still demonstrably reduce exposure, often without the comfort of ever-expanding budgets.
+
+In that environment, innovation is not a nice-to-have. It is a control. When it is governed well, it reduces risk, improves resilience, protects your people and accelerates business outcomes. When it is unmanaged, it becomes shadow IT, tool sprawl, and fragile architectures that increase the blast radius of the next incident.
+
+The solution is not to simply add more tools, more processes or more meetings. The solution is to bring discipline to innovation, so that experimentation becomes safe, repeatable and outcome-driven. As Marco Túlio Moraes recently noted in a CSO op-ed, while “discipline is the new power move in cybersecurity leadership,” the power move is often subtracting clutter and focusing on what actually reduces risk, rather than just adding more controls.
+
+What follows is a practical framework to harness innovation without exposure, grounded in four outcomes CISOs are already accountable for: operational capacity, security advantage, risk containment and business velocity.
+
+Use innovation to reduce burnout, not to create side quests
+
+Burnout is not a wellbeing footnote. It is an operational risk. The burnt-out analyst misses context. The disengaged engineer stops iterating. The overworked incident responder becomes reactive and brittle. Over time, that degrades detection quality, increases mean time to remediate, and drives attrition. You are not just losing staff, you are losing organizational memory and consistency. The 2025 ISC2 Cybersecurity Workforce Study found that almost half (48%) of respondents felt exhausted from trying to stay current on the latest threats and emerging technologies, and 47% often felt overwhelmed by the workload they were expected to bear.
+
+Innovation is one of the most effective tools a CISO has to counter this, but only if it is aimed at eliminating toil.
+
+Start with one blunt question: Where is judgment being wasted?
+
+If your team spends significant time copying evidence into tickets, chasing asset owners, manually enriching alerts, repeating the same triage steps or building reports by hand, you have found your first innovation backlog. Automate the routine, standardize the repeatable and reserve human attention for tasks that require reasoning.
+
+Then make innovation a capability accelerator, not a distraction.
+
+Give people ownership of meaningful improvements that sit within their domain and have an operational endpoint. Examples include:
+
+A detection engineer owning “detection as code” patterns and test harnesses
+
+A threat hunter owning telemetry quality improvements and query optimization
+
+An incident responder owning tabletop iterations and runbook hardening
+
+A cloud security lead owning guardrailed landing zone enhancements
+
+The critical constraint is this: every experiment needs an exit plan. Either it becomes a supported capability, or it is retired cleanly. Nothing drains teams faster than abandoned pilots that turn into “innovation debt” and hidden support burden.
+
+In the age of AI, not innovating is now a greater risk than innovating carefully
+
+AI has shifted the economics of offense. Adversaries can scale reconnaissance, tailor social engineering, generate variants and accelerate capability development with far less effort than before. The defensive posture that worked when change was slower will not hold. Public reporting has already highlighted this shift, including Europol’s ChatGPT – The impact of Large Language Models on Law Enforcement, which outlines how LLMs can accelerate fraud, impersonation and social engineering at scale.
+
+The right answer is not “AI everywhere,” it’s “AI where it changes the risk equation without creating a new blind spot.”
+
+Used well, AI-enabled innovation can compress time-to-judgement and increase defensive iteration speed:
+
+Triaging faster by summarising context, correlating signals, and proposing next investigative steps
+
+Accelerating detection engineering by generating queries, parsing log formats, and drafting test cases
+
+Strengthening readiness by generating realistic adversary emulation variants for purple teaming
+
+Improving resilience by helping teams produce clearer incident comms and decision logs under pressure
+
+The obvious warning is also real. AI can be wrong. It can be manipulated. It can leak sensitive context if data boundaries are weak. AI should be treated like any other high-impact component: scoped, tested and governed.
+
+The secure-by-design principle here is simple:
+
+Minimize the data you provide to models, by default
+
+Apply context-aware, proportionate controls to the data you provide to models, rather than blanket restrictions that push users to unmonitored alternatives (a dynamic now playing out with shadow AI)
+
+Keep humans in the loop for high-impact actions until you have proven safety and repeatability
+
+Make outputs auditable, including prompts, inputs and rationale for decisions
+
+Treat adversarial AI risks as first-class threats, including prompt injection and data leakage pathways (as captured in the OWASP LLM Top 10)
+
+Use a shared taxonomy (for example, MITRE ATLAS) to map likely adversarial AI techniques to your controls and tests
+
+Demand supplier transparency on model provenance, retention and controls if you use third-party platforms
+
+If you need a starting point, NIST’s AI Risk Management Framework (AI RMF 1.0), and its companion Generative AI Profile, provide a practical structure to govern, map, measure and manage AI risk.
+
+In other words, the risk is not “using AI.” The risk is using AI without design discipline. Innovation without exposure is exactly that discipline applied to modern tooling.
+
+Build a safe runway for experimentation, and make it secure-by-design for AI, IoT and cloud
+
+Most organizations fail at innovation in one of two ways. They block it, so the business routes around security. Or they allow it to sprawl, creating exposure through uncontrolled pilots and vendor proliferation.  There is a third path: Enable by design, with controls invisible enough to preserve velocity but intelligent enough to prevent data walking out the door.
+
+The alternative is a safe runway: A repeatable operating model that makes experimentation easy while making new exposure hard.
+
+This is where secure-by-design becomes practical, not philosophical. It means defining guardrails that are standard, pre-approved and baked into how teams build.
+
+For AI, your runway is governance and boundaries.
+
+What data classes are permitted for which AI use cases
+
+What must be redacted or summarized before use
+
+What is logged and retained, and where
+
+How models are evaluated, including security testing and red-team scenarios
+
+Where AI can advise versus where it can act
+
+Visibility into the AI tools your people actually use, not just the ones you have sanctioned, because blocking a handful of apps does not prevent the long tail of shadow AI usage
+
+For IoT, your runway is lifecycle control and segmentation. A useful baseline to anchor “secure by design” requirements for device capability is NISTIR 8259A (IoT Device Cybersecurity Capability Core Baseline).
+
+Device identity and authentication as a baseline, not an enhancement
+
+Secure update mechanisms, firmware integrity and the ability to revoke trust
+
+Network segmentation that assumes compromise is inevitable
+
+Asset inventory that stays current and feeds monitoring
+
+A plan for end-of-life, because unmanaged devices become permanent liabilities
+
+For cloud, your runway is guardrailed architecture. A practical reference point for mapping those guardrails to recognized controls is the Cloud Security Alliance Cloud Controls Matrix (CCM) v4.1.
+
+Standard landing zones that enforce identity, logging and network boundaries
+
+Policy-as-code gates that prevent drift and misconfiguration at speed
+
+Secure CI/CD pathways that stop secrets, keys and risky configurations from shipping
+
+“Golden path” templates that teams can copy, rather than inventing new patterns in isolation
+
+When these guardrails exist, governance can move at the speed the business needs. You are no longer negotiating the basics on every project. You are asking, “Is this use case in scope for our runway, and do we have the controls that make it safe to scale?”
+
+That is what embedding cyber leadership at the innovation stage looks like in practice. It is not attending every meeting. It is owning the design patterns and decision frameworks that the organization uses before risk is locked in.
+
+Innovate to reduce friction, because friction is what creates shadow IT and long-term exposure
+
+A large proportion of enterprise exposure is behavioral, not malicious. Teams take risks when secure choices are slow, unclear or unavailable. Every time security creates friction without providing a usable alternative, the business invents a workaround. That is how shadow IT becomes “just how things get done.” GenAI is the most visible example today: ban ChatGPT and employees move to lesser-known tools or personal accounts, and you lose both control and awareness (as seen in the rise of unauthorized AI use).
+
+Innovation, when aligned to business outcomes, is exposure reduction through usability.
+
+This is where CISOs should behave like platform leaders:
+
+Build self-service security capabilities that reduce queues, such as standardized secrets management, approved identity patterns and reusable logging pipelines
+
+Publish golden paths for delivery teams, so the secure route is also the fastest route
+
+Rationalize tooling, because overlapping tools increase operational load and decrease signal quality
+
+Measure adoption, because a control that is not used is not a control
+
+The goal is not to remove governance. The goal is to remove unnecessary friction so that secure-by-design becomes the default behavior of the organization.
+
+A discipline overlay: Run innovation like a portfolio, and prove what changes outcomes
+
+Innovation without exposure requires one more layer: discipline in measurement and prioritization. This mirrors the broader industry push for secure-by-design and secure-by-default accountability, including CISA’s Secure by Design pledge (summarized CSO senior writer Jon Gold in “CISA inks 68 tech vendors to secure-by-design pledge — but will it matter?“).
+
+Treat innovation like a portfolio of risk-reduction investments:
+
+Define the business outcome you are protecting (time-to-market, uptime, fraud loss, customer trust, regulatory posture)
+
+Define the security outcome you are shifting (attack surface reduction, detection coverage, response speed, blast radius containment)
+
+Define the operational outcome you are improving (toil reduction, fewer false positives, better prioritisation, healthier on-call)
+
+Then measure what changed. If you cannot show movement in these metrics, you have activity, not progress.
+
+A simple 90-day plan to start:
+
+Days 1 – 30: Establish the runway
+
+Quantify toil and burnout signals in your security operations and engineering workflows
+
+Define standard guardrails for AI, IoT, and cloud, including data boundaries, identity, logging and segmentation
+
+Publish two or three golden path patterns that teams can reuse
+
+Set a fortnightly innovation review that focuses on design risk early, not sign-off late
+
+Days 31 – 60: Run two pilots with clear exit criteria
+
+Pilot 1: Delete toil in an operational workflow, and measure the time returned to the team
+
+Pilot 2: A secure-by-design pilot in emerging tech, such as an AI assistant with strict data boundaries, an IoT segmentation model or a cloud policy-as-code gate
+
+Days 61 – 90: Operationalize, rationalize and standardize
+
+Turn what worked into supported platform patterns and documented standards
+
+Retire what did not, to avoid innovation debt
+
+Measure adoption of golden paths and reduction in exceptions, alongside operational outcomes like queue health and response times
+
+Innovation is already happening in your organization. The only question is whether it happens inside your guardrails, aligned to business outcomes, or in the shadows where it becomes exposure.
+
+For CISOs, the leadership move is disciplined innovation: Protect your people by deleting toil, keep pace with AI-enabled offense, embed secure-by-design principles into AI, IoT and cloud from the start, and reduce friction so the business stops routing around security. Do that consistently, and innovation becomes one of your strongest controls, not your biggest risk. The organizations pulling ahead are the ones that made GenAI safe to use at scale, with controls that move at the speed of their employees, not the speed of the next policy review cycle.
+
+This article is published as part of the Foundry Expert Contributor Network.Want to join?
+
+A scorecard for cyber and risk culture
+
+The farmers and the mercenaries: Rethinking the ‘human layer’ in security
+
+Boards don’t need cyber metrics — they need risk signals
+
+From our editors straight to your inbox
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/4138735/innovation-without-exposure-a-cisos-secure-by-design-framework-for-business-outcomes.html, csoonline.com, 02.03.2026)
+
+================================================================================
+
+[21] CSO Online - A scorecard for cyber and risk culture
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 10:00:00 +0000
+Link: https://www.csoonline.com/article/4138709/a-scorecard-for-cyber-and-risk-culture.html
+
+[TAM METİN - 2444 kelime]
+How to move from security awareness to measurable, repeatable behaviors. Then prove it with four cultural signals leaders can't dispute.
+
+Have you once watched a leadership team clap for their “security culture month” like they’d landed a rover? Posters everywhere. Quizzes. A prize draw. Someone baked cupcakes with padlocks iced on top. Cute.
+
+Two weeks later, a product manager asked an engineer to “just share the admin credentials for an hour” because the vendor demo was in thirty minutes and the CEO was joining. The engineer hesitated, then shrugged and sent them. Nobody wanted to be the person who ruined the moment.
+
+That is culture. People in action, not process — just people trying to help each other, with good intent and possibly very bad outcomes. Not just the cupcakes…
+
+Awareness is what people can repeat. Ownership is what they do when the calendar screams and the boss stares. Your job is to turn the first into the second. Then prove it with numbers that mean something.
+
+What culture is when you stop romanticizing it
+
+Cybersecurity and risk culture isn’t a vibe. It’s a set of actions, behaviors and attitudes you can point to without raising your voice.
+
+Culture shows up in five places:
+
+When someone asks for an exception.
+
+When a change goes in late.
+
+When an alert fires at 2 a.m.
+
+When a junior analyst spots something odd and wonders if it’s worth escalating.
+
+When an executive wants speed, and the team wants safety.
+
+Ownership means people act like the risk is partly theirs. They don’t outsource judgment to “security.” They don’t hide behind process. They use the process as a tool.
+
+You can see ownership. It looks like this:
+
+A developer uses the approved deployment path instead of the clever shortcut.
+
+A finance lead challenges a risky vendor clause because they know who bears the breach liability.
+
+A team flags a near-miss and expects a response, not punishment.
+
+A leader says, “We’ll slip the release,” and doesn’t make a martyr out of the person who raised the red flag.
+
+You can’t train people into that. You have to build an environment where that behavior makes sense, an environment based on trust and performance not one or the other
+
+Why awareness stalls and ownership never arrives
+
+Most organizations don’t have a people problem. They have a system that trains people to behave badly and then acts surprised when they do. There are many examples, here are a few of our favorites:
+
+Mixed rewards. Leaders say, “Be secure,” then celebrate only speed, cost and heroics. People learn fast. If the quickest route wins promotions, it becomes policy.
+
+Foggy decision-making. Policies often read like a wish list. “Ensure least privilege.” “Maintain secure configurations.” Fine. But what do you do when a third party needs access today, the contract is vague and the project is already late? Real life lives in the gaps between policy sentences.
+
+Friction tax. If the secure path requires three approvals and a sacrifice, people will take the unofficial path. Shadow IT isn’t rebellion. It’s survival.
+
+Diffused accountability. “Security is everyone’s responsibility” sounds noble. It also means nobody is responsible. Everyone becomes an audience member. Security becomes the clean-up crew.
+
+Dead feedback loops. A junior person reports something suspicious. It disappears into a ticket queue. No acknowledgement. No learning. No change. Next time, they keep quiet. Your culture just taught them to.
+
+If you recognize yourself here, don’t panic. It’s normal. It’s also fixable. But the fix isn’t another awareness campaign. It’s a redesign.
+
+Redesign the operating system so ownership becomes the obvious move
+
+Ownership is a design outcome. Treat it like product design. Remove friction. Clarify choices. Make it hard to do the wrong thing by accident and easy to make the best possible decision.
+
+Make the secure path the easiest path
+
+People choose defaults. Give them good ones.
+
+Create golden paths for common work. Secure templates. Approved tools. Automated guardrails. Self-service access with sane limits.
+
+If your secure path feels like an obstacle course, you are manufacturing risk and hurting culture.
+
+Clarify decision rights in plain language
+
+Who can accept risk? Who must escalate? Who has the final call?
+
+Put it on one page. Add examples.
+
+“Any request for privileged access outside the approved workflow triggers escalation to the control owner.” That sentence beats a 10-page policy every day.
+
+Embed security inside the workflow, not at the end
+
+Late-stage gates create late-stage resentment.
+
+Shift checks into the delivery rhythm. Intake. Design. Build. Deploy.
+
+Keep each control point lightweight. One question. One evidence item. One decision.
+
+Turn “everyone” into “someone”
+
+Create local ownership roles where work happens. Product risk leads. Engineering champions. Business control owners.
+
+Give them time and authority. Don’t make it a volunteer hobby for the already-busy.
+
+Handle consequences like adults on the same team
+
+Protect good-faith reporting. People won’t raise their hand if you slap it.
+
+Also, address repeated bypass. Calmly. Consistently. Without drama.
+
+Culture hates inconsistency. It feeds on it.
+
+When you do this well, people stop fighting security. They start using it because it helps them ship with fewer landmines.
+
+Measure culture without turning it into theatre
+
+If you can’t measure the behavior, you can’t claim the culture. You can claim a feeling. Feelings don’t survive audits, incidents or Board scrutiny.
+
+We’ve seen teams measure what’s easy and then call the numbers “maturity.” Training completion. Controls “done.” Zero incidents. Nice charts. Clean dashboards. Meanwhile, the real culture runs beneath the surface, making exceptions, working around friction and staying quiet when speaking up feels risky.
+
+When interviewed at McKinsey, Richard Fain spoke about culture. “It’s not DNA. It’s not magic. It’s a daily effort, driven by leadership choices. If that’s true, your metrics aren’t a report. They’re your steering wheel. They tell you what your leaders are really building. Not what they say they value.”
+
+One of the most dangerous culture metrics is silence dressed up as success. “Zero incidents reported” can mean you’re safe. It can also mean people don’t trust the system enough to speak up. The difference matters. The wrong interpretation is how organizations walk into breaches with a smile.
+
+Measure culture as you would safety in a factory. You don’t celebrate that nobody pulled the emergency cord. You ask whether people would pull it if needed and whether the system would respond without disruption.
+
+The 5 metrics that move you from awareness to ownership
+
+These five aren’t perfect. They’re useful. They track whether people tell the truth early, whether the right owners act fast, whether you stop tolerating repeat risk and whether you learn by removing failure paths. That’s ownership in measurable form. They also align with what research shows matters most. Employee behavior. Especially the extra-role behavior people choose when nobody forces them.
+
+What it is. The percentage of staff who raised a security concern or near miss in the last 90 days, per 100 employees.
+
+Why it matters. It tests psychological safety with receipts. People don’t report when they think it’s pointless, risky or embarrassing. When they do report, they’re signalling trust. Not just awareness.
+
+Make it sharper by adding a quality tag. Actionable versus FYI. Actionable means it triggered a review, a mitigation or a decision. FYI means vague noise, or a handoff with no context. If your Speak up rate rises but everything is FYI, you haven’t built ownership. You’ve built a complaint channel.
+
+What it replaces. “Zero incidents reported.” That metric rewards silence. It trains people to keep problems invisible.
+
+2) Time to escalation
+
+What it is. The median time from the first signal. alert, anomaly, user report, to “right owner engaged.
+
+“Why it matters: This is decision velocity in a cyber suit. If escalation depends on a heroic individual noticing the right thing at the right time, your culture is brittle. A resilient culture routes signals to owners fast and reliably.
+
+What it exposes. Fuzzy decision rights, weak handoffs and teams that spend hours arguing about whose problem it is. Those delays aren’t technical. They’re cultural.
+
+How to measure properly. Track the median and the long tail. The tail is where breakdowns hide.
+
+3) Repeat exception rate
+
+What it is. The number of repeated policy exceptions per quarter, and the percentage with an approved end date.
+
+Why it matters. Culture shows up in what you keep tolerating. One exception can be pragmatic. Repeated exceptions are a habit. Habits are culture. No end date means the exception became the real policy, just without the honesty of writing it down.
+
+What it replaces. “100% control completion.” Controls can be “complete” while exceptions quietly hollow them out.
+
+Use it as a lens, not a whip. split “new” versus “repeat” exceptions. Then sort repeats by root cause: friction, vendor constraints, unclear ownership, unrealistic delivery pressure. The point isn’t blame. The point is to fix the system that keeps producing the exception.
+
+4) Phishing reporting ratio
+
+What it is. User-reported phishing versus tool-detected phishing, plus the median time to report.
+
+Why it matters. This metric captures vigilance, confidence and trust in one line. If users report fast, they believe reporting matters. They believe they won’t be mocked. They believe something will happen. That’s culture. If tools catch everything and users report nothing, you might still be protected, but you’re running a passive workforce. Passive workforces don’t surface near misses. They surface breaches.
+
+What it replaces. Training completion and simulation click rates used as stand-alone evidence of culture. Those can be useful inputs. They are not proof of ownership.
+
+What it is. The percentage of recurring control failures eliminated at the root cause within 60 days. Not patched.
+
+Why it matters. High-performing cultures remove failure paths. They don’t babysit them. This is organizational learning you can’t fake. It also protects you from the comforting lie of activity. You can close a thousand tickets and still keep the same failure alive. “Closed on time” can be theatre. Fix-forward asks a sharper question. Did the failure stop happening?
+
+Make it ungameable. define “root cause eliminated” up front. If the same failure happens again, it wasn’t eliminated. It was rescheduled.
+
+Keep the scorecard simple, and test the signal
+
+While the ORCS standard uses 5 levels, a good starting point is to use three levels. Basic. Managed. Predictive. Tie each level to evidence, not optimism.
+
+Then do one thing many teams skip. Validate signal quality. Ask whether improving these metrics reduces harm or speeds recovery. If the metric moves and nothing improves, kill it. Legacy metrics derail transformation because people optimize what you track. In cyber, that can turn measurement into misdirection.
+
+If you build around these five, you stop measuring culture as intention. You start measuring it as behavior, decision speed, tolerance for repeat risk and the ability to learn fast. That’s the difference between “we care about security” and “we act like we do.”
+
+Keep the scorecard simple. Basic. Managed. Predictive. Tie each level to evidence, not confidence. “We think we’re better” is not a metric. It’s a hope.
+
+Turn measurement into governance that changes decisions
+
+Metrics without governance create cynical employees. They see numbers. They never see action. Then they stop caring. Be careful not to make compliance ‘the culture’ as it’s what people do when no one is looking that counts.
+
+Make culture a leadership routine
+
+Review the culture scorecard monthly. Treat it like revenue. Like reliability. Like safety.
+
+Quarterly, go deeper on hotspots. Repeat failures. Friction points.
+
+Each metric requires someone who can change, adapt and influence the system. Not just report the number.
+
+Security can advise and enable. The business must own the risk and the trade-offs.
+
+Reward the right stories
+
+Stop celebrating only heroic recoveries. Celebrate prevented incidents. Celebrate early escalation. Celebrate boring discipline.
+
+If you want ownership, reward the behaviors that create it.
+
+Fund friction removal
+
+Invest in automation, secure defaults, identity hygiene and vendor controls that make the safe path easy to follow.
+
+Defund theatre. The posters. The annual checkbox training that no one remembers by Friday.
+
+Close the learning loop fast
+
+After an incident, don’t ask “what happened?” forever.
+
+Ask, “What will change by Friday?” Then track it. Publicly.
+
+When people see changes land, they keep reporting. When they don’t, they stop.
+
+Sustain ownership when the novelty wears off
+
+Culture doesn’t fail in the first month. It often fails in month seven, when priorities shift and the organization becomes fatigued. HBR shows the governance pattern that makes metrics live, and modern metrics must be embedded in routines and tied to ownership.
+
+Build micro-habits that survive stress
+
+Add a two-minute risk pause to major change approvals.
+
+Remember to use breathing to help manage stress
+
+Run pre-mortems before big releases. “How could this go wrong?” sounds simple. It saves you later.
+
+Give managers escalation scripts. People freeze when they need words. Give them words with aligned meaning.
+
+Most security stories start with shame. They end with blame.
+
+Tell stories about good judgment. About near-misses caught early. About a leader who chose safety and still shipped. Celebrating good news not just bad news is very important.
+
+Stories travel faster than policies. They also train identity. “This is who we are.”
+
+Rebuild ownership during onboarding
+
+Every hire is a culture reset.
+
+Teach new joiners how decisions really work. Who to call. What gets escalated? What does good look like in daily work?
+
+Role-based scenarios delivered with passion beat generic slides; every time.
+
+Equip middle managers
+
+Middle managers translate strategy into Tuesday — they are the oil and glue of the system.
+
+If they don’t model ownership, nobody will. Give them tools, not slogans. Trade-off language. Decision rules. Support when they push back on risky demands.
+
+Stress-test the system
+
+Run exercises that test decisions, not just technical response.
+
+Include product, legal, comms, procurement and key vendors.
+
+Ask one hard question. “Who can accept this risk right now?” If the room goes quiet, your culture just confessed.
+
+Awareness is polite. Ownership is personal.
+
+Awareness says, “I attended.” Ownership says, “I changed how I work.”
+
+You build ownership by making it possible to care without getting punished.
+
+So, pick three behaviors you want to see. Make the secure path easier than the shortcut. Assign owners. Measure the signal. Review it monthly. Fix friction fast.
+
+Then, the next time someone asks for admin credentials “just for an hour,” you won’t need a cupcake to say no. Make cultural high performance the foundation of great security!
+
+This article is published as part of the Foundry Expert Contributor Network.Want to join?
+
+The farmers and the mercenaries: Rethinking the ‘human layer’ in security
+
+Boards don’t need cyber metrics — they need risk signals
+
+It’s time to rethink CISO reporting lines
+
+From our editors straight to your inbox
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/4138709/a-scorecard-for-cyber-and-risk-culture.html, csoonline.com, 02.03.2026)
+
+================================================================================
+
+[22] CSO Online - Hacker erpressen weniger Lösegeld
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:24:16 +0000
 Link: https://www.csoonline.com/article/4139126/hacker-erpressen-weniger-losegeld.html
@@ -532,12 +1556,12 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[11] CSO Online - How CISOs can build a resilient workforce
+[23] CSO Online - How CISOs can build a resilient workforce
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4136307/how-cisos-can-build-a-resilient-workforce.html
 
-[TAM METİN - 1745 kelime]
+[TAM METİN - 1747 kelime]
 Resilience has become the organizing principle for the cybersecurity posture of many organizations, but what about cyber workforce resilience?
 
 With ongoing skills gaps, AI reshaping roles and workforce stress as standing concerns for many CISOs, ensuring the resilience of the workforce has become top of mind. But due to budget constraints, return to office mandates and teams struggling to keep up with the threat landscape, CISOs are faced with a real challenge.
@@ -652,11 +1676,11 @@ Delegate, manage staffing pipeline, and pay attention to team workload and cultu
 
 Encourage leaders to plug into peer networks for both intel sharing and emotional support, recognizing that CISO burnout is a systemic risk.
 
+Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
+
 Discipline is the new power move in cybersecurity leadership
 
 The foundation problem: How a lack of accountability is destroying cybersecurity
-
-SolarWinds WHD zero-days from January are under attack
 
 From our editors straight to your inbox
 
@@ -664,7 +1688,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[12] CSO Online - Im Fokus: RZ-Modernisierung
+[24] CSO Online - Im Fokus: RZ-Modernisierung
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 06:00:00 +0000
 Link: https://whitepaper.computerwoche.de/resources/im-fokus-warum-die-modernisierung-von-rechenzentren-not-tut/
@@ -675,7 +1699,7 @@ Link: https://whitepaper.computerwoche.de/resources/im-fokus-warum-die-modernisi
 
 ================================================================================
 
-[13] CSO Online - Kubernetes Security: Wie Sie Ihre Cluster (besser) absichern
+[25] CSO Online - Kubernetes Security: Wie Sie Ihre Cluster (besser) absichern
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 03:47:00 +0000
 Link: https://www.csoonline.com/article/3492006/kubernetes-security-wie-sie-ihre-cluster-besser-absichern.html
