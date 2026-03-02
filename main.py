@@ -1241,7 +1241,7 @@ KURALLAR:
                 sev_raw    = post.get('severity', '').lower()
                 sev_label  = _sev_tr.get(sev_raw, sev_raw.upper())
                 cvss       = post.get('cvss', 0)
-                engagement = f"SEVERİTE: {sev_label}"
+                engagement = f"ÖNEM: {sev_label}"
                 if cvss:
                     engagement += f"  |  CVSS: {cvss}"
             else:
