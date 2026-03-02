@@ -290,6 +290,7 @@ class HaberSistemi:
         self.rss_errors = []
         self.used_links_file = "data/haberler_linkler.txt"
         self.rss_errors_file = "data/rss_errors.txt"
+        self.social_data = []  # fetch_social_signals() sonuçları; topla() tarafından doldurulur
 
     def fetch_full_article(self, url, source_name):
         """Tam metin çeker — max 10 saniye, sonra geç"""
@@ -1126,7 +1127,6 @@ KURALLAR:
         platform_labels = {
             'reddit':            'Reddit',
             'hackernews':        'HackerNews',
-            'github':            'GitHub',
             'github_advisories': 'GitHub Advisory',
         }
 

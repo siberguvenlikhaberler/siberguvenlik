@@ -98,7 +98,7 @@ IMPORTANCE_WEIGHTS = {
 # Pattern tanımları (REGEX) - Otomatik kategorizasyon için
 DETECTION_PATTERNS = {
     'cve': r'CVE-\d{4}-\d{4,5}',
-    'apt_groups': r'\b(APT\d+|Lazarus|Wizard Spider|LockBit|Conti|REvil|DarkSide|Emotet|Conti|Aqua|Scattered)\b',
+    'apt_groups': r'\b(APT\d+|Lazarus|Wizard Spider|LockBit|Conti|REvil|DarkSide|Emotet|Aqua|Scattered)\b',
     'large_number': r'(\d+)\s*(?:million|M|B)',
     'sectors': r'\b(healthcare|health|hospital|energy|power|finance|bank|government|military|defense)\b',
     'countries': r'\b(Ukraine|Russia|China|Iran|Korea|Israel|US|USA|UK|United States)\b',
