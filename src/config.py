@@ -35,10 +35,10 @@ MASTODON_SOURCES = [
 ]
 
 # Minimum etkileşim skoru: reblogs*2 + favourites >= bu değer
-MASTODON_MIN_ENGAGEMENT = 20
+MASTODON_MIN_ENGAGEMENT = 10
 
 # Kaç saatlik postları çekelim (son N saat)
-MASTODON_HOURS_BACK = 12
+MASTODON_HOURS_BACK = 24
 
 # Scraping ayarları
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
@@ -162,10 +162,10 @@ RAPOR YAPISI (SIRAYLA):
 3️⃣ᵇ **"SOSYAL MEDYA SİNYALLERİ" KUTUSU** (Önemli Gelişmeler kutusunun hemen altına):
    - Ham veride [MASTODON_SCORE:N:N] etiketi olan haberler bunlardır
    - Bu haberleri signal-item olarak listele, her birinde signal-badge ile etkileşim göster
-   - badge formatı: Paylaşım: N · Beğeni: N  (N yerine ham verideki gerçek sayıyı yaz)
+   - badge formatı: <span class="signal-badge">Mastodon | Paylasim: N | Begeni: N | Skor: S</span>  (N=gerçek sayı, S=reblogs*2+favs)
    - Sayfa içi link: <a href="#haber-N">haber başlığı veya kısa özet</a>
    - Mastodon haberi yoksa bu kutuyu tamamen çıkar
-   - Hiçbir ikon veya emoji kullanma
+   - Hiçbir ikon veya emoji kullanma (badge içinde de emoji yok)
 
 4️⃣ **GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU**:
    - 6. haber → id="haber-6", 7. haber → id="haber-7" vs.
@@ -412,16 +412,37 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         }}
         /* Mastodon haberlerinin badge'i (haber detay sayfasında) */
         .signal-badge {{
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             background: #ede9fe;
             border: 1px solid #c4b5fd;
-            border-radius: 3px;
-            padding: 2px 8px;
+            border-radius: 4px;
+            padding: 4px 10px;
             font-size: 11px;
             font-weight: 600;
             color: #4c3d9e;
             white-space: nowrap;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+        }}
+        .signal-platform {{
+            font-weight: 700;
+            color: #6d28d9;
+        }}
+        .signal-sep {{
+            color: #a78bfa;
+            margin: 0 2px;
+        }}
+        .signal-stat {{
+            color: #4c3d9e;
+        }}
+        .signal-score {{
+            background: #6d28d9;
+            color: #fff;
+            border-radius: 3px;
+            padding: 1px 6px;
+            font-size: 10px;
+            margin-left: 2px;
         }}
 
         .back-to-top {{

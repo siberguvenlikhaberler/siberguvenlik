@@ -162,7 +162,7 @@ def fetch_mastodon_posts(sources, min_engagement, hours_back):
                 if not account_id:
                     return
                 statuses_url = f"https://{instance}/api/v1/accounts/{account_id}/statuses"
-                params = {'limit': 10, 'exclude_replies': 'true', 'exclude_reblogs': 'true'}
+                params = {'limit': 15, 'exclude_replies': 'true', 'exclude_reblogs': 'true'}
                 r2 = requests.get(statuses_url, params=params, timeout=(4, 6),
                                   headers={'User-Agent': 'Mozilla/5.0'})
                 _masto_responses.append(r2)
@@ -1074,6 +1074,7 @@ KURALLAR:
         """
         HTML'deki [MASTODON_SCORE:N:N] etiketlerini bulur,
         news-item'a mastodon-item class ekler, badge enjekte eder, etiketi temizler.
+        Badge: platform ikonu + paylaşım + beğeni + toplam etkileşim skoru
         """
         from bs4 import BeautifulSoup as _BS
         import re as _re
@@ -1092,6 +1093,7 @@ KURALLAR:
                 continue
             reblogs = int(m.group(1))
             favs    = int(m.group(2))
+            score   = reblogs * 2 + favs
 
             # mastodon-item class ekle
             classes = item.get('class', [])
@@ -1104,9 +1106,14 @@ KURALLAR:
                 tag.replace_with(cleaned)
 
             # Badge enjekte et (news-title'dan hemen önce)
+            # Platform + paylaşım + beğeni + toplam etkileşim skoru
             badge_html = (
-                f'<span class="signal-badge">'
-                f'Paylaşım: {reblogs} · Beğeni: {favs}'
+                f'<span class="signal-badge mastodon-badge">'
+                f'<span class="signal-platform">&#128024; Mastodon</span>'
+                f'<span class="signal-sep">|</span>'
+                f'<span class="signal-stat">&#128260; {reblogs}</span>'
+                f'<span class="signal-stat">&#10084; {favs}</span>'
+                f'<span class="signal-score">Skor: {score}</span>'
                 f'</span>'
             )
             title_tag = item.find('div', class_='news-title')
