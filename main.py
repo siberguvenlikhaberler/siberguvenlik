@@ -886,12 +886,15 @@ class HaberSistemi:
                         chunks.append(chunk.text)
                     last_chunk = chunk
 
-                # finish_reason son chunk'tan al
+                # finish_reason son chunk'tan al — STOP dışında her şey hata sayılır
+                # (akış ortada kesilirse kısmi HTML sessizce kabul edilmez)
                 if last_chunk and last_chunk.candidates:
                     finish_reason = last_chunk.candidates[0].finish_reason
                     print(f"   Finish reason: {finish_reason}")
                     if str(finish_reason) not in ['STOP', 'FinishReason.STOP', '1']:
-                        print(f"   Yanitni normal bitmedi! (reason: {finish_reason})")
+                        raise Exception(f"Stream tamamlanmadi (finish_reason={finish_reason})")
+                elif not chunks:
+                    raise Exception("Stream bos dondu")
 
                 html = ''.join(chunks)
                 break
