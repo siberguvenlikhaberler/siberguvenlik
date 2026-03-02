@@ -164,13 +164,8 @@ RAPOR YAPISI (SIRAYLA):
    - Her biri sayfa içi link: <a href="#haber-N">N. CVE-2024-1234 açığı Microsoft sunucularında kritik güvenlik riski oluşturmaktadır.</a>
    - ZORUNLU: Tam cümle (özne + yüklem + nesne) + nokta ile bitiş
 
-3️⃣ᵇ **"SOSYAL MEDYA SİNYALLERİ" KUTUSU** (Önemli Gelişmeler kutusunun hemen altına):
-   - Ham veride [SOCIAL_SCORE:platform:skor:yorum] etiketi olan haberler bunlardır (platform: reddit/hackernews/github)
-   - Bu haberleri signal-item olarak listele, her birinde signal-badge ile etkileşim göster
-   - badge formatı: <span class="signal-badge">Platform | Skor: N | Yorum: N</span>  (N yerine ham verideki gerçek sayıyı yaz)
-   - Sayfa içi link: <a href="#haber-N">haber başlığı veya kısa özet</a>
-   - Sosyal sinyal haberi yoksa bu kutuyu tamamen çıkar
-   - Hiçbir ikon veya emoji kullanma (badge içinde de emoji yok)
+⚠️ Ham veride [S1]-[S5] ile başlayan satırlar SOSYAL SİNYAL referansıdır.
+   Bunları ASLA haber olarak sayma, numaralandırma veya paragraf yazma. Tamamen yoksay.
 
 4️⃣ **GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU**:
    - 6. haber → id="haber-6", 7. haber → id="haber-7" vs.
@@ -363,96 +358,77 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         }}
         
         /* BAŞA DÖN BUTONU */
-        /* SOSYAL MEDYA SİNYALLERİ KUTUSU */
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
         .social-signals {{
-            background: linear-gradient(135deg, #f0f4ff 0%, #f8faff 100%);
-            color: #2c3e50;
-            padding: 25px 30px;
-            margin: 0;
+            background: #f8faff;
             border: 1px solid #c7d7fd;
             border-radius: 8px;
+            padding: 24px 28px;
             margin-bottom: 20px;
         }}
         .social-signals h2 {{
             color: #1e3a8a;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
         }}
-        .social-signals .signal-summary {{
-            display: grid;
-            gap: 12px;
+        .social-signals .signal-list {{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }}
         .social-signals .signal-item {{
-            background: rgba(255,255,255,0.8);
-            padding: 12px 16px;
-            border-radius: 6px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+        }}
+        .social-signals .signal-item.reddit-item {{ border-left-color: #ff4500; }}
+        .social-signals .signal-item.hn-item     {{ border-left-color: #ff6600; }}
+        .social-signals .signal-item.github-item {{ border-left-color: #238636; }}
+        .social-signals .signal-meta {{
             display: flex;
-            align-items: baseline;
-            gap: 12px;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }}
+        .social-signals .signal-platform-label {{
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }}
+        .social-signals .signal-engagement {{
+            font-size: 12px;
+            color: #475569;
+            background: #f1f5f9;
+            border-radius: 4px;
+            padding: 2px 8px;
         }}
         .social-signals .signal-item a {{
-            color: #2c3e50;
+            color: #1e293b;
             text-decoration: none;
+            font-size: 14px;
             font-weight: 500;
-            font-size: 15px;
-            flex: 1;
+            line-height: 1.5;
+            display: block;
         }}
         .social-signals .signal-item a:hover {{
+            color: #1e3a8a;
             text-decoration: underline;
-            color: #1e3a8a;
         }}
-        .social-signals .signal-badge {{
-            display: inline-block;
-            background: #dbeafe;
-            border: 1px solid #93c5fd;
-            border-radius: 3px;
-            padding: 2px 8px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #1e3a8a;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }}
-        /* Sosyal sinyal haber badge'i (haber detay sayfasında) */
-        .signal-badge {{
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #dbeafe;
-            border: 1px solid #93c5fd;
-            border-radius: 4px;
-            padding: 4px 10px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #1e3a8a;
-            white-space: nowrap;
-            margin-bottom: 10px;
-        }}
-        .signal-badge.reddit-badge {{ background: #fff1ec; border-color: #ffb899; color: #b91c1c; }}
-        .signal-badge.reddit-badge .signal-score {{ background: #ef4444; }}
-        .signal-badge.hn-badge {{ background: #fff7ed; border-color: #fed7aa; color: #92400e; }}
-        .signal-badge.hn-badge .signal-score {{ background: #f97316; }}
-        .signal-badge.github-badge {{ background: #f0fdf4; border-color: #86efac; color: #14532d; }}
-        .signal-badge.github-badge .signal-score {{ background: #16a34a; }}
-        .signal-platform {{
-            font-weight: 700;
-        }}
-        .signal-sep {{
-            color: #94a3b8;
-            margin: 0 2px;
-        }}
-        .signal-stat {{
-            color: inherit;
-        }}
-        .signal-score {{
-            background: #1e3a8a;
-            color: #fff;
-            border-radius: 3px;
-            padding: 1px 6px;
-            font-size: 10px;
-            margin-left: 2px;
+        @media (max-width: 600px) {{
+            .social-signals {{
+                padding: 16px;
+            }}
+            .social-signals .signal-meta {{
+                gap: 6px;
+            }}
         }}
 
         .back-to-top {{
@@ -502,18 +478,6 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
                     </div>
                     <div class="important-item">
                         <a href="#haber-2">2. LockBit 4.0 fidye yazılımı dünya genelinde sağlık kurumlarını hedef almaktadır.</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- SOSYAL MEDYA SİNYALLERİ KUTUSU -->
-            <div class="social-signals">
-                <h2>Sosyal Medya Sinyalleri</h2>
-                <div class="signal-summary">
-                    [SOSYAL SİNYAL HABERLERİ BURADA - ham veride [SOCIAL_SCORE:platform:skor:yorum] etiketi olan haberler:]
-                    <div class="signal-item">
-                        <a href="#haber-N">Haber başlığı veya kısa özet.</a>
-                        <span class="signal-badge">Reddit | Skor: 1234 | Yorum: 567</span>
                     </div>
                 </div>
             </div>

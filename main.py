@@ -261,7 +261,11 @@ def fetch_social_signals(config):
     except Exception as e:
         print(f"   GitHub hatasi: {e}")
 
-    print(f"\n   📊 Sosyal sinyal toplamı: {len(results)} içerik")
+    # Etkileşim skoruna göre sırala, en yüksek 5 tanesini al
+    results.sort(key=lambda x: x.get('score', 0), reverse=True)
+    results = results[:5]
+
+    print(f"\n   📊 Sosyal sinyal toplamı: {len(results)} içerik (top 5)")
     return results
 
 
@@ -669,19 +673,17 @@ class HaberSistemi:
             self._save_rss_errors()
 
         # ── Sosyal medya sinyalleri (Reddit, HN, GitHub) ──
-        social_posts = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
-        if social_posts:
-            all_news['_social'] = social_posts
+        # Haber akışından ayrı tutulur, sadece HTML enjeksiyonu için saklanır
+        self.social_data = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
 
         all_news = self._filter_duplicates(all_news)
         all_news = self._filter_old_articles(all_news)
 
         total        = sum(len(arts) for arts in all_news.values())
         full_text_ok = sum(1 for arts in all_news.values() for art in arts if art.get('success'))
-        social_count = len(all_news.get('_social', []))
 
         print(f"\n{'=' * 70}")
-        print(f"📊 {total} haber (tekrarsız) | {full_text_ok} tam metin | 📡 {social_count} sosyal sinyal")
+        print(f"📊 {total} haber (tekrarsız) | {full_text_ok} tam metin | 📡 {len(self.social_data)} sosyal sinyal")
         print(f"{'=' * 70}\n")
         return all_news
 
@@ -691,15 +693,11 @@ class HaberSistemi:
         now = datetime.now()
         os.makedirs("data", exist_ok=True)
 
-        # Sosyal sinyal postlarını ayrı tut
-        rss_data    = {k: v for k, v in news_data.items() if k != '_social'}
-        social_data = news_data.get('_social', [])
-
         txt = f"\n{'=' * 80}\n📅 {now.strftime('%d %B %Y').upper()} - SİBER GÜVENLİK HABERLERİ (HAM RSS)\n{'=' * 80}\n\n"
 
         all_articles = []
         num = 0
-        for src, articles in rss_data.items():
+        for src, articles in news_data.items():
             for art in articles:
                 num += 1
                 all_articles.append(art)
@@ -712,21 +710,22 @@ class HaberSistemi:
                 art_date = _parse_article_date(art.get('date', ''), now)
                 txt += f"\n(XXXXXXX, AÇIK - {art.get('link', '')}, {art.get('domain', '')}, {art_date})\n\n{'=' * 80}\n\n"
 
-        # Mastodon postlarını ayrı bölüm olarak ekle
-        if social_data:
-            txt += f"\n{'=' * 80}\n📡 SOSYAL MEDYA SİNYALLERİ (Reddit / HackerNews / GitHub)\n{'=' * 80}\n\n"
-            for art in social_data:
-                num += 1
-                all_articles.append(art)
+        # Sosyal sinyaller — haber değil, arşiv amaçlı referans kaydı
+        if self.social_data:
+            txt += f"\n{'=' * 80}\n"
+            txt += f"SOSYAL MEDYA SİNYALLERİ — HABER DEĞİL, SADECE REFERANS KAYDI\n"
+            txt += f"[S1]-[S5] etiketleri haber sayılmaz, Gemini bu bölümü işlemez.\n"
+            txt += f"{'=' * 80}\n\n"
+            for i, art in enumerate(self.social_data, 1):
                 platform = art.get('platform', 'unknown')
                 score    = art.get('score', 0)
                 comments = art.get('comments', 0)
-                txt += f"[{num}] {art['source']} [Skor:{score} | Yorum:{comments}]\n{'─' * 80}\n"
-                txt += f"Tarih: {art['date']}\nLink: {art['link']}\n"
+                txt += f"[S{i}] {art['source']} | Skor: {score} | Yorum: {comments}\n"
+                txt += f"Baslik: {art['title']}\n"
+                txt += f"Link: {art['link']}\n"
                 if art.get('full_text'):
-                    txt += f"\n{art['full_text']}\n"
-                art_date = _parse_article_date(art.get('date', ''), now)
-                txt += f"\n(XXXXXXX, AÇIK - {art.get('link', '')}, {art.get('domain', '')}, {art_date}) [SOCIAL_SCORE:{platform}:{score}:{comments}]\n\n{'=' * 80}\n\n"
+                    txt += f"{art['full_text'][:200]}\n"
+                txt += f"\n"
 
         with open("data/haberler_ham.txt", 'w', encoding='utf-8') as f:
             f.write(txt)
@@ -890,7 +889,7 @@ class HaberSistemi:
         # ═══════════════════════════════════════════
         # AŞAMA 4: Mevcut post-processing
         # ═══════════════════════════════════════════
-        html = self._inject_social_badges(html)
+        html = self._inject_social_box(html)
         html = self._fix_source_dates(html, txt_content)
 
         html_index = self._add_archive_links(html, is_archive=False)
@@ -1096,81 +1095,80 @@ KURALLAR:
             print(f"   ❌ Tamamlama hatası: {e}")
             return html
 
-    def _inject_social_badges(self, html):
+    def _inject_social_box(self, html):
         """
-        HTML'deki [SOCIAL_SCORE:platform:skor:yorum] etiketlerini bulur,
-        news-item'a social-item class ekler, platforma özgü badge enjekte eder.
+        Sosyal medya sinyalleri kutusunu HTML'e enjekte eder.
+        Konum: .executive-table'dan sonra, .news-section'dan önce (B konumu).
+        self.social_data listesini kullanır — Gemini'den bağımsız, programatik.
         """
         from bs4 import BeautifulSoup as _BS
-        import re as _re
 
-        if '[SOCIAL_SCORE:' not in html:
+        if not getattr(self, 'social_data', None):
             return html
 
-        # Platform etiket adları
-        platform_labels = {
-            'reddit':      'Reddit',
-            'hackernews':  'HackerNews',
-            'github':      'GitHub',
-        }
-        # Platform CSS sınıfları
-        platform_classes = {
-            'reddit':      'reddit-badge',
-            'hackernews':  'hn-badge',
-            'github':      'github-badge',
-        }
-        # Skor metrik isimleri
         score_labels = {
-            'reddit':      'upvote',
-            'hackernews':  'puan',
-            'github':      'yildiz',
+            'reddit':     'upvote',
+            'hackernews': 'puan',
+            'github':     'yildiz',
+        }
+        platform_css = {
+            'reddit':     'reddit-item',
+            'hackernews': 'hn-item',
+            'github':     'github-item',
+        }
+        platform_labels = {
+            'reddit':     'Reddit',
+            'hackernews': 'HackerNews',
+            'github':     'GitHub',
         }
 
-        soup = _BS(html, 'html.parser')
-        for item in soup.find_all('div', class_='news-item'):
-            src_tag = item.find('p', class_='source')
-            if not src_tag:
-                continue
-            src_text = src_tag.get_text()
-            m = _re.search(r'\[SOCIAL_SCORE:(\w+):(\d+):(\d+)\]', src_text)
-            if not m:
-                continue
+        items_html = ''
+        for post in self.social_data:
+            platform    = post.get('platform', '')
+            source      = platform_labels.get(platform, post.get('source', ''))
+            title       = post.get('title', '').replace('<', '&lt;').replace('>', '&gt;')
+            link        = post.get('link', '#')
+            score       = post.get('score', 0)
+            comments    = post.get('comments', 0)
+            s_label     = score_labels.get(platform, 'puan')
+            item_cls    = platform_css.get(platform, '')
 
-            platform = m.group(1)
-            score    = int(m.group(2))
-            comments = int(m.group(3))
-            label    = platform_labels.get(platform, platform.capitalize())
-            css_cls  = platform_classes.get(platform, '')
-            s_label  = score_labels.get(platform, 'puan')
+            engagement  = f"{score} {s_label}"
+            if comments > 0:
+                engagement += f"  |  {comments} yorum"
 
-            # social-item class ekle
-            classes = item.get('class', [])
-            if 'social-item' not in classes:
-                item['class'] = classes + ['social-item']
-
-            # Etiketi kaynak metninden temizle
-            for tag in src_tag.find_all(string=_re.compile(r'\[SOCIAL_SCORE:')):
-                cleaned = _re.sub(r'\s*\[SOCIAL_SCORE:\w+:\d+:\d+\]', '', tag)
-                tag.replace_with(cleaned)
-
-            # Badge oluştur
-            comment_part = (
-                f'<span class="signal-sep">|</span>'
-                f'<span class="signal-stat">{comments} yorum</span>'
-            ) if comments > 0 else ''
-
-            badge_html = (
-                f'<span class="signal-badge {css_cls}">'
-                f'<span class="signal-platform">{label}</span>'
-                f'<span class="signal-sep">|</span>'
-                f'<span class="signal-stat">{score} {s_label}</span>'
-                f'{comment_part}'
-                f'</span>'
+            items_html += (
+                f'<div class="signal-item {item_cls}">'
+                f'  <div class="signal-meta">'
+                f'    <span class="signal-platform-label">{source}</span>'
+                f'    <span class="signal-engagement">{engagement}</span>'
+                f'  </div>'
+                f'  <a href="{link}" target="_blank" rel="noopener noreferrer">{title}</a>'
+                f'</div>\n'
             )
 
-            title_tag = item.find('div', class_='news-title')
-            if title_tag:
-                title_tag.insert_before(_BS(badge_html, 'html.parser'))
+        box_html = (
+            f'<div class="social-signals">'
+            f'<h2>Sosyal Medya Sinyalleri</h2>'
+            f'<div class="signal-list">{items_html}</div>'
+            f'</div>'
+        )
+
+        soup = _BS(html, 'html.parser')
+
+        # Konum B: executive-table'dan sonra, news-section'dan önce
+        exec_table   = soup.find('table', class_='executive-table')
+        news_section = soup.find('div', class_='news-section')
+
+        if exec_table:
+            exec_table.insert_after(_BS(box_html, 'html.parser'))
+        elif news_section:
+            news_section.insert_before(_BS(box_html, 'html.parser'))
+        else:
+            # Fallback: body'nin sonuna ekle
+            body = soup.find('body')
+            if body:
+                body.append(_BS(box_html, 'html.parser'))
 
         return str(soup)
 
