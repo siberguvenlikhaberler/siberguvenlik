@@ -3,7 +3,339 @@
 📅 02 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
-[1] The Hacker News - APT28 Tied to CVE-2026-21513 MSHTML 0-Day Exploited Before Feb 2026 Patch Tuesday
+[1] The Hacker News - ⚡ Weekly Recap: SD-WAN 0-Day, Critical CVEs, Telegram Probe, Smart TV Proxy SDK and More
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 18:56:00 +0530
+Link: https://thehackernews.com/2026/03/weekly-recap-sd-wan-0-day-critical-cves.html
+
+[TAM METİN - 3614 kelime]
+This week is not about one big event. It shows where things are moving. Network systems, cloud setups, AI tools, and common apps are all being pushed in different ways. Small gaps in access control, exposed keys, and normal features are being used as entry points.
+
+The pattern becomes clear only when you see everything together. Faster scans, smarter misuse of trusted services, and steady targeting of high-value sectors. Each story adds context. Reading them all gives a fuller picture of how today’s threat landscape is evolving.
+
+Cisco SD-WAN Zero-Day Exploited — A newly disclosed maximum-severity security flaw in Cisco Catalyst SD-WAN Controller (formerly vSmart) and Catalyst SD-WAN Manager (formerly vManage) has come under active exploitation in the wild as part of malicious activity that dates back to 2023. The vulnerability, tracked as CVE-2026-20127 (CVSS score: 10.0), allows an unauthenticated remote attacker to bypass authentication and obtain administrative privileges on an affected system by sending a crafted request. Cisco credited the Australian Signals Directorate's Australian Cyber Security Centre (ASD-ACSC) for reporting the vulnerability. The networking equipment major is tracking the exploitation and subsequent post-compromise activity under the moniker UAT-8616, describing the cluster as a "highly sophisticated cyber threat actor."
+
+Control Your AI Agents Before They Control You
+
+Airia is the governance and orchestration layer for enterprise AI. Monitor drift, enforce policy, optimize inference cost, and generate audit-ready evidence—so your AI scales securely, compliantly, and profitably.
+
+Anthropic Accuses 3 Chinese Firms of Distillation Attacks — Anthropic accused three Chinese AI firms of engaging in concerted "industrial-scale" distillation attack campaigns aimed at extracting information from its model, making it the latest American tech firm to level such claims after OpenAI issued similar complaints. DeepSeek, Moonshot AI, and MiniMax are said to have flooded Claude with large volumes of specially-crafted prompts to elicit responses to train their own proprietary models. Last month, OpenAI submitted an open letter to U.S. legislators, claiming to have observed activity "indicative of ongoing attempts by DeepSeek to distill frontier models of OpenAI and other U.S. frontier labs, including through new, obfuscated methods." The disclosure renewed a debate over training data sources and distillation techniques, with some criticizing the company for training its own systems using copyrighted material without permission. "Anthropic is guilty of stealing training data at a massive scale and has had to pay multibillion-dollar settlements for their theft," xAI CEO Elon Musk said.
+
+Google Disrupts UNC2814 GRIDTIDE Campaign — Google disclosed that it worked with industry partners to disrupt the infrastructure of a suspected China-nexus cyber espionage group tracked as UNC2814 that breached at least 53 organizations across 42 countries. The tech giant described UNC2814 as a prolific, elusive actor that has a history of targeting international governments and global telecommunications organizations across Africa, Asia, and the Americas. Central to the hacking group's operations is a novel backdoor dubbed GRIDTIDE that abuses Google Sheets API as a communication channel to disguise C2 traffic and facilitate the transfer of raw data and shell commands. Chinese cyber espionage groups have consistently prioritized the telecommunication sector as a target precisely because of the access their networks provide to sensitive data and lawful intercept infrastructure.
+
+Thousands of Public Google Cloud API Keys Exposed with Gemini Access — New research has found that Google Cloud API keys, typically designated as project identifiers for billing purposes, could be abused to authenticate to sensitive Gemini endpoints and access private data. The problem occurs when users enable the Gemini API on a Google Cloud project (i.e., Generative Language API), causing the existing API keys in that project, including those accessible via the website JavaScript code, to gain surreptitious access to Gemini endpoints without any warning or notice. With a valid key, an attacker can access uploaded files, cached data, and even rack up LLM usage charges, Truffle Security said. The issue has since been plugged by Google.
+
+UAT-10027 Targets U.S. Education and Healthcare Sectors — A previously undocumented threat activity cluster known as UAT-10027 has been attributed to an ongoing malicious campaign targeting education and healthcare sectors in the U.S. since at least December 2025. The end goal of the attacks is to deliver a never-before-seen backdoor codenamed Dohdoor. "Dohdoor utilizes the DNS-over-HTTPS (DoH) technique for command-and-control (C2) communications and has the ability to download and execute other payload binaries reflectively," Cisco Talos said. Analysis of the campaign has revealed no evidence of data exfiltration to date. Although no final payloads have been observed other than what appears to be the Cobalt Strike Beacon to backdoor into the victim's environment, it's believed that UAT-10027's actions are likely driven by financial gain based on the victimology pattern.
+
+Claude Code Flaws Allow Remote Code Execution and API Key Exfiltration — Security vulnerabilities in Anthropic Claude Code could have allowed attackers to remotely execute code on users' machines and steal API keys by injecting malicious configurations into repositories, and then waiting for an unsuspecting developer to clone and open an untrustworthy project. The vulnerabilities were addressed between September 2025 and January 2026. "The ability to execute arbitrary commands through repository-controlled configuration files created severe supply chain risks, where a single malicious commit could compromise any developer working with the affected repository," Check Point said. "The integration of AI into development workflows brings tremendous productivity benefits, but also introduces new attack surfaces that weren't present in traditional tools."
+
+New vulnerabilities surface daily, and attackers move fast. Reviewing and patching early keeps your systems resilient.
+
+Here are this week’s most critical flaws to check first — CVE-2025-40538, CVE-2025-40539, CVE-2025-40540, CVE-2025-40541 (SolarWinds Serv-U), CVE-2026-20127, CVE-2026-20122, CVE-2026-20126, CVE-2026-20128 (Cisco Catalyst SD-WAN), CVE-2026-25755 (jsPDF), CVE-2025-12543 (HPE Telco Service Activator), CVE-2026-22719, CVE-2026-22720, CVE-2026-22721 (Broadcom VMware Aria Operations), CVE-2026-3061, CVE-2026-3062, CVE-2026-3063 (Google Chrome), CVE-2025-10010 (CryptoPro Secure Disk for BitLocker), CVE-2025-13942, CVE-2025-13943, CVE-2026-1459 (Zyxel), CVE-2025-71210, CVE-2025-71211 (Trend Micro Apex One), CVE-2026-0542 (ServiceNow AI Platform), CVE-2026-24061 (telnetd), CVE-2026-21902 (Juniper Networks Junos OS), CVE-2025-29631, CVE-2025-1242 (Gardyn Home Kit), CVE-2025-15576 (FreeBSD), CVE-2026-26365 (Akamai), CVE-2026-27739 (Angular), and SVE-2025-50109 (Samsung Tizen OS).
+
+🎥 Cybersecurity Webinars
+
+Automating Real-World Security Testing to Prove What Actually Works → This webinar explains why one-time security assessments are no longer enough and shows how organizations can automate continuous, real-world testing of their defenses to uncover gaps and measure how well controls hold up against actual attack techniques.
+
+When AI Agents Become Your New Attack Surface → This webinar explains that as AI tools turn into autonomous agents that can browse, call APIs, and access internal systems, the security risk expands beyond the model to the entire environment they operate in, requiring stricter access controls, monitoring, and system-level safeguards rather than model testing alone.
+
+Quantum Is Coming: Preparing for the End of Today’s Encryption → This webinar explains how future quantum computers could break today’s encryption, why “harvest now, decrypt later” attacks are a real risk, and what practical steps organizations can take now to begin shifting to post-quantum cryptography.
+
+📰 Around the Cyber World
+
+UNC6384 Drops New PlugX Variant — IIJ-SECT and LAB52 have detailed new activity from the Chinese cyber espionage group UNC6384. The attacks follow a known modus operandi of using STATICPLUGIN, a digitally signed downloader, to deliver updated versions of PlugX using DLL side-loading. The malicious payloads are distributed via phishing emails with meeting invitation lures or through fake software updates.
+
+OpenAI Takes Action Against ChatGPT Accounts Used for Harmful Purposes — OpenAI said it took down ChatGPT accounts used for influence operations, phishing, and malware development. This included a possible Chinese intelligence operation in which an individual associated with Chinese law enforcement used the AI tool for covert influence operations against domestic and foreign adversaries. The company also acted against clusters conducting reconnaissance about U.S. persons and federal building locations, online romance scams, and Russian influence operations across Africa by generating social media posts and long-form commentary articles. "Unusually, this scam network combined manual ChatGPT prompting and an automated AI chatbot to try to entrap its targets," OpenAI said about the scam operation running out of Cambodia. Some of these scams targeted Indonesian loveseekers. Other scams used ChatGPT to create content that purported to come from fictitious law firms, as well as impersonate real attorneys and U.S. law enforcement as part of a recovery scam targeting fraud victims.
+
+AI-Induced Lateral Movement — New research from Orca Security has highlighted how AI can become a "third dimension" in the world of lateral movement, after network and identity, allowing attackers to expand their reach. "By injecting prompt injections in overlooked fields that are fetched by AI agents, hackers can trick LLMs, abuse Agentic tools, and carry out significant security incidents," Orca said. "LLMs don’t truly understand the difference between data and instructions, and when tool output is fed back into the model, it can be interpreted as something to act on. Which opens a window to AI-induced Lateral Movement (AILM) activities."
+
+Russia Launches Probe into Telegram CEO — Russian authorities launched a criminal investigation of Telegram founder and CEO Pavel Durov. He is allegedly charged with promoting and facilitating terrorist activity on the messaging platform by failing to respond to law enforcement takedown requests. Russian officials have accused Durov of choosing a "path of violence and permissiveness" by not cooperating with its law enforcement agencies, according to the Rossiyskaya Gazeta. The move comes after Russia began restricting access to Telegram in the country in favor of MAX. Last month, Durov called it an "attempt to force its citizens to switch to a state-controlled app built for surveillance and political censorship."
+
+Hacked Prayer App Sends Surrender Messages — According to reports from The Wall Street Journal and WIRED, unidentified hackers seized control of an Iranian prayer app during a joint U.S.-Israeli attack to send messages urging the Iranian military to lay down their weapons and promising amnesty if they surrendered. The messages were sent in the form of push notifications to the BadeSaba Calendar app. It's currently not clear who is behind the hack. The app has been downloaded more than 5 million times from the Google Play Store. Following the U.S.-Israel war on Iran, the government shut down all internet access in the country.
+
+Smart TVs Turned Into AI Content Scrapers — Several smart TV app makers are deploying a new SDK named Bright SDK that lets users see fewer ads but also stealthily turns their TV into a node in a global proxy network that crawls and scrapes the web. Bright Data, the company behind the SDK, claims to operate more than 150 million residential proxy IP addresses spanning 195 countries.
+
+Multiple Stealer Malware Families Detected — Multiple information stealer families have been detected in the wild. This includes Arkanix, CharlieKirk GRABBER, ComSuon, DarkCloud, MawaStealer, and MioLab (NovaStealer). Kaspersky's analysis of Arkanix has revealed that it was likely developed as an LLM-assisted experiment, shrinking development time and costs. While Arkanix was promoted on underground forums in October 2025, the malware-as-a-service (MaaS) appears to have been taken down towards the end of 2025. The findings demonstrate continued demand for off-the-key stealer malware, creating an ecosystem that enables other threat actors to purchase stealer logs for obtaining initial access to targets. "Raw Infostealer logs are meticulously filtered by corporate domain, packaged, and sold to initial access brokers and attackers specifically looking for frictionless entry points into high-value corporate networks," Hudson Rock said. The development has been complemented by underground networks turning into cybercrime marketplaces, complete with reputation systems, escrow, and specialist vendors, Varonis added. "One operator runs infostealers across thousands of machines. Another extracts and sorts the credentials. A third sells curated access," security researcher Daniel Kelley said. "A fourth deploys the ransomware. Each person focuses on what they do best, and the ecosystem has become ruthlessly efficient."
+
+Chilean National Extradited to U.S. to Face Financial Fraud Crimes — Alex Rodrigo Valenzuela Monje (aka VAL4K), a 24-year-old Chilean national, has been extradited to the U.S. over his alleged role in running a cybercrime operation that involved the trafficking of payment card data. The defendant is accused of trafficking stolen credit card numbers and information for over 26,500 credit cards. "From at least May 2021 to August 2023, Valenzuela Monje operated an illegal online card shop, selling dumps of unauthorized access devices through Telegram channels," the U.S. Justice Department said. "He allegedly operated the channels known as MacacoCC Collective and Novato Carding, offering payment card data for virtually all U.S. payment cards."
+
+New FUNNULL Infrastructure Discovered — QiAnXin has flagged new infrastructure associated with FUNNULL, a Philippines-based content delivery network (CDN) sanctioned last year by the U.S. Treasury for facilitating cyber scam operations. "Previously, their main method was to poison existing public CDN services; now they have evolved to independently develop complete server-side attack suites (RingH23), actively infiltrating CDN nodes, demonstrating a significant improvement in control and technical sophistication," QiAnXin XLab said. Two independent supply chain infection channels have been identified: the compromise of maccms.la to distribute a malicious PHP backdoor through its update channel, and the compromise of the GoEdge CDN management node to implant an infection module, and deploy the proprietary RingH23 attack suite to all edge nodes via SSH remote commands. The campaign has compromised 10,748 unique IP addresses, predominantly video streaming sites.
+
+Spike in Scans for SonicWall Devices — GreyNoise said it detected a spike in scans for SonicWall devices originating from the infrastructure of a known proxy provider. The activity started on February 22, 2026, and scanned for exposed SonicWall SSL VPNs. A total of 84,142 scanning sessions targeting SonicWall SonicOS infrastructure were observed between February 22 and February 25, 2026. The scanning came from 4,305 unique IP addresses across 20 autonomous systems. "Ninety-two percent of sessions probed a single API endpoint to determine whether SSL VPN is enabled — the prerequisite check before credential attacks," GreyNoise said. "A commercial proxy service delivered 32% of campaign volume through 4,102 rotating exit IPs in two surgical bursts totaling 16 hours."
+
+Google Removes 115 Android Apps Tied to Ad Fraud — A new ad fraud operation dubbed Genisys involved hijacking Android devices to run malicious activity in the background. The activity leveraged a set of 115 apps that stealthily opened websites inside hidden browser windows to generate ad display revenue for their creators. More than 500 domains were generated using AI tools to serve the ads. "They appear as generic blogs, news-style sites, and informational properties produced at scale, built not to attract real audiences but to receive and monetize fraudulent traffic," Integral Ads said. The apps have since been removed by Google. The findings build on another mobile ad fraud scheme called Arcade in which mobile apps generated hidden in-app browser activity to load websites in the background and convert mobile-origin activity into web traffic.
+
+Zerobot Exploits Flaws in n8n and Tenda Routers — A Mirai-based IoT botnet named Zerobot has been observed exploiting vulnerabilities in the n8n AI automation platform (CVE-2025-68613) and Tenda routers (CVE-2025-7544) to expand its reach. The activity was first detected in January 2026. "Targeting of the n8n vulnerability is particularly interesting: Botnets typically exploit Internet of Things (IoT) devices, such as security cameras, DVRs, and routers, but n8n falls into an entirely different category," Akamai said. "Although this isn’t entirely new behavior for botnets, this sort of targeting presents a greater danger to organizations by exposing more critical infrastructure to compromise as the n8n exploit could enable lateral movement for a threat actor."
+
+Various ClickFix Campaigns Spotted — Threat hunters disclosed multiple ClickFix campaigns, including one leading to a hands-on-keyboard attack that deployed the Termite ransomware. The attack has been attributed to a group known as Velvet Tempest (DEV-0504). Another ClickFix campaign, codenamed OCRFix, used websites impersonating the Tesseract OCR tool as a launchpad for delivering malware that uses EtherHiding to retrieve the C2 server, send system information, and await further instructions. A third campaign has been found employing fake GitHub repositories impersonating software companies and leveraging ClickFix to social-engineer victims into installing infostealers, such as SHub Stealer v2.0.
+
+GTFire Phishing Scheme Detailed — A phishing campaign dubbed GTFire is abusing Google Firebase to host phishing pages and Google Translate to disguise the malicious URLs and bypass email and web security filters. "By chaining these services together, the attackers create phishing links that appear benign, leverage Google’s reputation, and dynamically redirect victims to brand‑impersonating login pages," Group-IB said. "Once credentials are submitted and harvested, victims are often redirected back to the legitimate website of the targeted organization, reducing suspicion and delaying incident response." The campaign is estimated to have harvested thousands of stolen credentials associated with more than a thousand organizations, spanning over a hundred countries and hundreds of industries. The threat actor behind the operation has been active since at least January 1, 2022. Mexico, the U.S., Spain, India, and Argentina are among the prominent targets.
+
+C77L Ransomware Targets Russia — A ransomware operation called C77L has been tied to at least 40 attacks on Russian and Belarusian enterprises since March 2025. The group is assessed to be operating out of Iran. Initial access to target networks is accomplished via weak passwords for publicly available RDP and VPN endpoints. "The targets of attacks are Windows systems due to their overwhelming predominance in the IT infrastructures of medium and small businesses," F6 said.
+
+RESURGE Malware Can Be Dormant on Infected Ivanti Devices — The U.S. Cybersecurity and Infrastructure Security Agency (CISA) updated its original alert for RESURGE, a piece of malware deployed as part of exploitation activity targeting a now-patched security flaw in Ivanti Connect Secure (ICS) appliances. The agency said "RESURGE has sophisticated network-level evasion and authentication techniques, leveraging advanced cryptographic methods and forged TLS certificates to facilitate covert communications," adding "RESURGE can remain latent on systems until a remote actor attempts to connect to the compromised device."
+
+30 Members of The Com Arrested — A coordinated law enforcement operation led by Europol detained 30 individuals connected to an underground online community known as The Com. The operation, launched in January 2025, has been codenamed Project Compass. An additional 179 members were also identified as part of the investigation. The Com is the name assigned to a loose-knit cybercrime collective that has been linked to online doxxing, harassment, threats of violence, extortion, sexual exploitation, phishing, SIM swapping, ransomware, and other digital crimes. Europol described The Com as a decentralized extremist network.
+
+U.K. Government Cuts Cyber Attack Fix Times by 84% — The U.K. government has claimed it has reduced its backlog of critical vulnerabilities by 75% and reduced cyber attack fix times by 87%. Serious security weaknesses in public sector websites are fixed six times faster, cutting the average time from nearly two months to just over a week, the U.K. government said in an update published on 26 February.
+
+Poland Dismantles Organized Crime Group — Poland's Central Bureau for Combating Cybercrime (CBZC) dismantled an organized group that used phishing to take control of Facebook accounts and extract BLIK payment codes from victims. Eleven members of an organized criminal group operating in Poland and Germany between May 2022 and May 2024 were identified. Six suspects have been placed in pretrial detention as part of the investigation, and over 100,000 credentials were seized. The group used "phishing techniques to obtain login details for Facebook accounts, and then gained access to them and used instant messaging to extort BLIK codes from other users of the portal," CBZC said.
+
+Hacker Exploits Clade to Target Mexican Government Sites — An unknown hacker exploited Anthropic's Claude chatbot to carry out attacks against Mexican government agencies, according to a report by Gambit Security. "Within a month of the initial compromise, ten government bodies and one financial institution were affected, approximately 195 million identities exposed, and roughly 150GB of data exfiltrated: tax records, civil registry files, voter data," the company said. "The attacker even built an automated system that forges official government tax certificates using live data. It was orchestrated by an individual actor directing AI to operate as a nation-state-level team of operators and analysts." The operation ran on more than 1,000 prompts and regularly passed information to OpenAI's GPT-4.1 for analysis. The breach began in late December 2025 and continued for about a month. Anthropic has since disrupted the activity and banned all of the accounts involved. The attacks haven't been attributed to a specific group.
+
+🔧 Cybersecurity Tools
+
+Titus → It is an open-source tool from Praetorian that scans code, files, repositories, and traffic to find leaked credentials like API keys and tokens. It uses hundreds of pattern rules and can check whether a detected secret is actually active. You can run it as a command-line tool, use it inside other tools as a Go library, or use it as extensions in Burp Suite or a browser to uncover credential leaks in different workflows.
+
+Sirius → It is an open-source vulnerability scanning platform on GitHub that automates network and system security checks to find weaknesses and risks in infrastructure. It combines community-driven security data with automated tests, runs within containers, and gives operators a unified view of vulnerabilities to prioritize remediation.
+
+Disclaimer: These tools are provided for research and educational use only. They are not security-audited and may cause harm if misused. Review the code, test in controlled environments, and comply with all applicable laws and policies.
+
+Viewed one by one, these incidents seem contained. Seen together, they show how risk now flows across connected systems that organizations rely on daily. Infrastructure, AI platforms, cloud services, and third-party tools are deeply intertwined, and strain in one area often exposes another.
+
+The takeaway is clarity, not alarm. Adversaries are improving efficiency, scaling access, and operating inside normal processes. Reading through each report helps map that shift and understand how the broader environment is changing.
+
+(XXXXXXX, AÇIK - https://thehackernews.com/2026/03/weekly-recap-sd-wan-0-day-critical-cves.html, thehackernews.com, 02.03.2026)
+
+================================================================================
+
+[2] The Hacker News - How to Protect Your SaaS from Bot Attacks with SafeLine WAF
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 17:25:00 +0530
+Link: https://thehackernews.com/2026/03/how-to-protect-your-saas-from-bot.html
+
+[TAM METİN - 1432 kelime]
+Most SaaS teams remember the day their user traffic started growing fast. Few notice the day bots started targeting them.
+
+On paper, everything looks great: more sign-ups, more sessions, more API calls. But in reality, something feels off:
+
+Sign-ups increase, but users aren’t activating.
+
+Server costs rise faster than revenue.
+
+Logs are filled with repeated requests from strange user agents.
+
+If this sounds familiar, it’s not just a sign of popularity. Your app is under constant automated attack, even if no ransom emails have arrived. Your load balancer sees traffic. Your product team sees “growth”. Your database sees pain.
+
+This is where a WAF like SafeLine fits in.
+
+SafeLine is a self-hosted web application firewall (WAF) that sits in front of your app and inspects every HTTP request before it reaches your code.
+
+It does not just look for broken packets or known bad IPs. It watches how traffic behaves: what it sends, how fast, in what patterns, and against which endpoints.
+
+In this article, we’ll show what real attacks look like for a SaaS product, how bots exploit business logic, and how SafeLine can protect your app without adding extra work for your team.
+
+The Attacks SaaS Products Actually See
+
+When people say “web attacks”, many think only about SQL injection or XSS. Those still exist, and SafeLine blocks them with a built‑in Semantic Analysis Engine.
+
+SafeLine's Semantic Analysis Engine reads HTTP requests like a security engineer. Instead of just hunting keywords, it understands context, decoding payloads, spotting weird field types, and recognizing attack intent across SQL, JS, NoSQL, and modern frameworks. Blocks sophisticated bots and zero-days with 99.45% accuracy and no constant rule tweaks needed.
+
+But for SaaS, the most painful attacks are not always the most “technical”. They are the ones that bend your business rules.
+
+Fake sign‑ups: Automated sign‑up scripts farm free trials, burn invitation codes, or harvest discount coupons.
+
+Credential stuffing: Bots try leaked username/password pairs against your login endpoint until something works.
+
+API scraping: Competitors or generic scrapers walk your API, page by page, copying your content or pricing.
+
+Abusive automation: One user (or botnet) triggers heavy background jobs, export tasks, or webhook storms that you pay for.
+
+Bot traffic spikes: Sudden waves of scripted requests hit the same endpoints, not big enough to be a classic DDoS, but enough to slow everything down.
+
+The tricky part is that all these requests look “normal” at the HTTP level.
+
+Using your documented API
+
+Why a Self‑Hosted WAF Makes Sense for SaaS
+
+There are many cloud WAF products. They work well for a lot of teams. But SaaS products have some special concerns:
+
+Data control: You may not want every request and response to flow through another company’s cloud.
+
+Latency and routing: Extra external hops can matter for global users.
+
+Debugging: When a cloud WAF blocks something, you often see a vague message, not full context.
+
+SafeLine takes a different path:
+
+It is self‑hosted and runs as a reverse proxy in front of your app.
+
+You keep full control over logs and traffic.
+
+You see exactly why a request was blocked, in your own dashboards.
+
+For SaaS teams, that means you can:
+
+Meet stricter customer or compliance demands about where data flows.
+
+Tune rules without opening a support ticket.
+
+Treat your WAF configuration as part of your normal infrastructure, not a black‑box service.
+
+How SafeLine Sees and Stops Bot Traffic
+
+Bots are not one thing. Some are clumsy scripts; some are almost indistinguishable from real users. SafeLine uses several layers to deal with them.
+
+1. Understanding traffic, not just signatures
+
+SafeLine combines rule‑based checks with semantic analysis of requests.
+
+In practice, that means it looks at:
+
+Parameters and payloads (for injection attempts, strange encodings, exploit patterns).
+
+URL structures and access paths (for scanners, crawlers, and exploit kits).
+
+Frequency and distribution of calls (for login abuse, scraping, and subtle flood attacks).
+
+This is what allows it to:
+
+Block classic web attacks with a low false positive rate.
+
+Detect weird patterns that do not match any single “signature” but clearly are not normal user behavior.
+
+2. Anti‑Bot challenges
+
+Some bots can only be stopped by forcing them to prove they are not machines. SafeLine includes an Anti‑Bot Challenge feature: when it detects suspicious traffic, it can present a challenge that real browsers handle, but bots fail.
+
+Normal human users barely notice it.
+
+Basic crawlers, scripts, and abuse tools get blocked or slowed down sharply.
+
+You decide where to enable it: sign‑up, login, pricing pages, or specific APIs.
+
+3. Rate limiting as a safety net
+
+For SaaS, “too much of a good thing” is a real problem. One overly eager integration, one faulty script, or one attack can exhaust resources.
+
+SafeLine’s rate limiting lets you:
+
+Limit how many requests an IP or token can make to specific endpoints per second, minute, or hour.
+
+Protect login, sign‑up, and expensive APIs from brute force and floods.
+
+Keep your application stable even under abnormal spikes.
+
+This is essential for:
+
+Protecting free tiers from abuse.
+
+Keeping “unlimited API calls” from turning into “unlimited cloud bills”.
+
+4. Identity and access controls
+
+Some parts of your SaaS should never be public:
+
+Region‑specific admin tools
+
+SafeLine provides an authentication challenge feature. When enabled, visitors must enter a password you set before they can continue.
+
+This is a simple way to:
+
+Hide internal or staging environments from scanners and bots.
+
+Reduce the blast radius of misconfigured or forgotten routes.
+
+A Simple Story: A SaaS Team vs. Bot Abuse
+
+There is a small B2B SaaS product:
+
+Less than 10 people on the team.
+
+Nginx fronting a set of REST APIs.
+
+Free trials, public sign‑up, and open API docs.
+
+At first, numbers look good. Then:
+
+Fake sign‑ups climb to 150–200 per day.
+
+CPU peaks hit 70% because of login attempts and abuse traffic.
+
+The database grows faster than paying users.
+
+When they add SafeLine:
+
+They deploy it behind Nginx, as a self‑hosted WAF.
+
+They enable bot detection, rate limits on sign‑up and login, and basic abuse rules for new accounts.
+
+Fake registrations fall below 10 per day.
+
+CPU stabilizes around 40%.
+
+Conversion starts to recover, because real users face fewer obstacles.
+
+The interesting part is not the numbers.
+
+It is what the team did not have to do:
+
+They did not design complex in‑app throttling.
+
+They did not maintain custom bot‑blocking code.
+
+They did not argue for months about whether they could send traffic to an external inspection service.
+
+SafeLine quietly took the first wave of abuse, and the product team focused again on features and customers.
+
+How SafeLine Fits into a SaaS Stack
+
+From an architecture point of view, SafeLine behaves like a reverse proxy:
+
+External traffic → SafeLine → your Nginx / app servers.
+
+This makes it easier to adopt without rewriting your product.
+
+Put SafeLine in front of your main web app and API gateway.
+
+Slowly route more domains and services through it as you gain confidence.
+
+The SafeLine dashboard then becomes your “security console”:
+
+You see attack logs: which IP tried what, which rule triggered, what payload was blocked.
+
+You see trends: increased scans, new kinds of payloads, or growing bot patterns.
+
+You can adjust rules and protections in a few clicks.
+
+Deployment and Ease of Use
+
+SafeLine WAF is designed for SaaS operators who may not have dedicated security teams.
+
+A deployment typically takes less than 10 minutes. Below is the one-click deployment command:
+
+bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/manager.sh)" -- --en
+
+See the official documentation for detailed instructions: https://docs.waf.chaitin.com/en/GetStarted/Deploy
+
+More importantly, SafeLine still provides a free edition for all users worldwide. So once you install it, it's ready to use right out of the box—no extra costs at all. Only when you need advanced features is a paid license required.
+
+After installation, you’ll see a clean interface with a super simple and intuitive configuration experience. Protect your first app by following this official tutorial: https://docs.waf.chaitin.com/en/GetStarted/AddApplication.
+
+Once configured, the WAF operates autonomously while providing detailed visibility into threats and mitigation actions.
+
+Looking Ahead: Continuous Security
+
+The threat landscape is constantly evolving. Bots are becoming smarter, attacks are increasingly targeted, and SaaS platforms continue to grow in complexity. To stay ahead, companies must:
+
+Monitor traffic behavior continuously
+
+Adapt rate-limiting and bot detection rules dynamically
+
+Regularly audit logs for unusual activity
+
+Ensure sensitive endpoints have layered protections
+
+SafeLine’s approach aligns perfectly with these needs, providing a flexible, data-driven security layer that grows with your SaaS business.
+
+For those interested in exploring the technology firsthand, visit the SafeLine GitHub Repository or experience the Live Demo. Or you can just go straight to install it and try it for free forever!
+
+(XXXXXXX, AÇIK - https://thehackernews.com/2026/03/how-to-protect-your-saas-from-bot.html, thehackernews.com, 02.03.2026)
+
+================================================================================
+
+[3] The Hacker News - APT28 Tied to CVE-2026-21513 MSHTML 0-Day Exploited Before Feb 2026 Patch Tuesday
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 16:06:00 +0530
 Link: https://thehackernews.com/2026/03/apt28-tied-to-cve-2026-21513-mshtml-0.html
@@ -37,7 +369,7 @@ Akamai noted that the technique makes it possible for an attacker to bypass Mark
 
 ================================================================================
 
-[2] The Hacker News - North Korean Hackers Publish 26 npm Packages Hiding Pastebin C2 for Cross-Platform RAT
+[4] The Hacker News - North Korean Hackers Publish 26 npm Packages Hiding Pastebin C2 for Cross-Platform RAT
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 14:14:00 +0530
 Link: https://thehackernews.com/2026/03/north-korean-hackers-publish-26-npm.html
@@ -97,7 +429,39 @@ The disclosure comes as the North Korean actors have also been observed publishi
 
 ================================================================================
 
-[3] BleepingComputer - ClawJacked attack let malicious websites hijack OpenClaw to steal data
+[5] BleepingComputer - Anthropic confirms Claude is down in a worldwide outage
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 07:23:00 -0500
+Link: https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-confirms-claude-is-down-in-a-worldwide-outage/
+
+[TAM METİN - 183 kelime]
+Claude appears to be having a major outage right now, with elevated errors reported across all platforms.
+
+The incident was flagged on March 2, 2026, and it’s impacting users broadly rather than being limited to one app or region.
+
+According to the latest status update, the team is still investigating the issue.
+
+The first “Investigating” notice went out at 11:49 UTC, and a follow-up update at 12:06 UTC said the investigation is ongoing.
+
+For now, that likely means you may see failed requests, timeouts, or inconsistent responses when trying to use Claude on web, mobile, or API.
+
+There’s no ETA mentioned yet, but the status suggests it’s actively being worked on
+
+Red Report 2026: Why Ransomware Encryption Dropped 38%
+
+Malware is getting smarter. The Red Report 2026 reveals how new threats use math to detect sandboxes and hide in plain sight.
+
+Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
+
+Anthropic brings Claude to healthcare with HIPAA-ready Enterprise tools
+
+Anthropic: Viral Claude “Banned and reported to authorities” message isn’t real
+
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-confirms-claude-is-down-in-a-worldwide-outage/, bleepingcomputer.com, 02.03.2026)
+
+================================================================================
+
+[6] BleepingComputer - ClawJacked attack let malicious websites hijack OpenClaw to steal data
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 16:44:55 -0500
 Link: https://www.bleepingcomputer.com/news/security/clawjacked-attack-let-malicious-websites-hijack-openclaw-to-steal-data/
@@ -157,7 +521,7 @@ Zyxel warns of critical RCE flaw affecting over a dozen routers
 
 ================================================================================
 
-[4] BleepingComputer - Samsung TVs to stop collecting Texans’ data without express consent
+[7] BleepingComputer - Samsung TVs to stop collecting Texans’ data without express consent
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:23:34 -0500
 Link: https://www.bleepingcomputer.com/news/security/samsung-tvs-to-stop-collecting-texans-data-without-express-consent/
@@ -211,7 +575,47 @@ Microsoft adds Copilot data controls to all storage locations
 
 ================================================================================
 
-[5] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
+[8] Security Affairs - APT37 combines cloud storage and USB implants to infiltrate air-gapped systems
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 12:38:26 +0000
+Link: https://securityaffairs.com/188767/apt/apt37-combines-cloud-storage-and-usb-implants-to-infiltrate-air-gapped-systems.html
+
+[TAM METİN - 617 kelime]
+APT37 combines cloud storage and USB implants to infiltrate air-gapped systems
+
+North Korea-linked APT 37 used Zoho WorkDrive and USB malware to breach air-gapped networks in the Ruby Jumper campaign.
+
+North Korean group ScarCruft (aka APT37, Reaper, and Group123) deployed new tools in a campaign dubbed Ruby Jumper, using a backdoor that leverages Zoho WorkDrive for C2 and a USB-based implant to breach air-gapped systems. Zscaler ThreatLabz discovered the campaign in December 2025; the attacks relied on multiple malware families to conduct surveillance and deliver additional payloads.
+
+The recent attacks begin with malicious LNK files and deploys multiple newly identified tools, including RESTLEAF and SNAKEDROPPER, to deliver backdoors such as FOOTWINE and BLUELIGHT for surveillance.
+
+Zscaler ThreatLabz mapped the full “Ruby Jumper” attack chain used by North Korea’s APT37. The campaign starts with a malicious LNK file that runs PowerShell and extracts hidden payloads, ultimately loading a backdoor called RESTLEAF in memory. RESTLEAF abuses Zoho WorkDrive for command-and-control, authenticating with hardcoded tokens and downloading shellcode for execution via process injection.
+
+The shellcode deploys SNAKEDROPPER, which installs a rogue Ruby runtime disguised as a USB utility, establishes persistence, and drops additional components. Among them is THUMBSBD, a backdoor designed to bridge air-gapped networks using removable media. It collects system data, stages files for exfiltration, and uses hidden folders on USB drives to pass commands and stolen data between isolated systems.
+
+“THUMBSBD collects system information including hardware diagnostics (dxdiag), running processes, network configuration (ipconfig /all), recursive file system enumeration (complete file tree), and connectivity status via ping tests and netstat.” reads the report published by Zscaler. “THUMBSBD employed several working directories to stage data for exfiltration and for executing backdoor commands. The directories ThreatLabz observed are listed in the table below.”
+
+VIRUSTASK spreads the infection further by replacing files on USB drives with malicious shortcuts, infecting new machines when users click them. Later-stage payloads include FOOTWINE, a surveillance backdoor with keylogging and audio/video capture capabilities, and BLUELIGHT, which leverages cloud services for covert C2 communications.
+
+“THUMBSBD also delivers BLUELIGHT, a previously documented backdoor which leverages several legitimate cloud providers, including Google Drive, Microsoft OneDrive, pCloud, and BackBlaze for its C2 communication.” continues the report. “BLUELIGHT’s backdoor functionalities include executing arbitrary commands, enumerating the file system, downloading additional payloads, uploading files, and self-removal.”
+
+Together, the tools form a sophisticated toolkit for espionage and air-gap compromise.
+
+ThreatLabz attributes the Ruby Jumper campaign to APT37 with high confidence. The group’s use of LNK-based infection chains combining batch, PowerShell, and encrypted shellcode matches past activity. Previously linked malware like BLUELIGHT, its distinctive two-stage shellcode with custom API hashing, and reliance on cloud services for C2 all align with known tactics. The decoy content also fits APT37’s typical DPRK-focused targeting.
+
+ScarCruft has been active since at least 2012, it made the headlines in early February 2018 when researchers revealed that the APT group leveraged a zero-day vulnerability in Adobe Flash Player to deliver malware to South Korean users. Kaspersky first documented the operations of the group in 2016. Cyber attacks conducted by the APT37 group mainly targeted government, defense, military, and media organizations in South Korea.
+
+“The Ruby Jumper campaign involves a mult-stage infection chain that begins with a malicious LNK file and utilizes legitimate cloud services (like Zoho WorkDrive, Google Drive, Microsoft OneDrive, etc.) to deploy a novel, self-contained Ruby execution environment.” concludes the report. “Most critically, THUMBSBD and VIRUSTASK weaponize removable media to bypass network isolation and infect air-gapped systems. To maintain a strong security posture, the security community should focus on monitoring endpoint activity and physical access points to counter this threat and other campaigns led by APT37.”
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, APT37)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188767/apt/apt37-combines-cloud-storage-and-usb-implants-to-infiltrate-air-gapped-systems.html, securityaffairs.com, 02.03.2026)
+
+================================================================================
+
+[9] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:26:25 +0000
 Link: https://securityaffairs.com/188708/cyber-crime/europols-project-compass-nets-30-arrests-in-crackdown-on-the-com.html
@@ -239,7 +643,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[6] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
+[10] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 09:42:34 +0000
 Link: https://securityaffairs.com/188749/hacking/clawjacked-flaw-exposed-openclaw-users-to-data-theft.html
@@ -291,7 +695,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[7] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
+[11] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:43:04 +0000
 Link: https://securityaffairs.com/188734/cyber-crime/ukrainian-hacker-pleads-guilty-to-running-onlyfake-ai-id-scam-site.html
@@ -321,7 +725,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[8] Security Affairs - ShinyHunters leaked the full Odido dataset
+[12] Security Affairs - ShinyHunters leaked the full Odido dataset
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 19:12:55 +0000
 Link: https://securityaffairs.com/188709/data-breach/shinyhunters-leaked-the-full-odido-dataset.html
@@ -365,7 +769,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[9] Security Affairs - Claude code abused to steal 150GB in cyberattack on Mexican agencies
+[13] Security Affairs - Claude code abused to steal 150GB in cyberattack on Mexican agencies
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 13:49:07 +0000
 Link: https://securityaffairs.com/188696/ai/claude-code-abused-to-steal-150gb-in-cyberattack-on-mexican-agencies.html
@@ -399,7 +803,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[10] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 86
+[14] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 86
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:30:16 +0000
 Link: https://securityaffairs.com/188691/malware/security-affairs-malware-newsletter-round-86.html
@@ -443,7 +847,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[11] Security Affairs - CVE-2025-64328 exploitation impacts 900 Sangoma FreePBX instances
+[15] Security Affairs - CVE-2025-64328 exploitation impacts 900 Sangoma FreePBX instances
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:01:54 +0000
 Link: https://securityaffairs.com/188679/uncategorized/cve-2025-64328-exploitation-impacts-900-sangoma-freepbx-instances.html
@@ -483,7 +887,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[12] Security Affairs - Security Affairs newsletter Round 565 by Pierluigi Paganini – INTERNATIONAL EDITION
+[16] Security Affairs - Security Affairs newsletter Round 565 by Pierluigi Paganini – INTERNATIONAL EDITION
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 00:35:00 +0000
 Link: https://securityaffairs.com/188669/security/security-affairs-newsletter-round-565-by-pierluigi-paganini-international-edition.html
@@ -571,7 +975,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[13] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
+[17] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:13:04 GMT
 Link: https://isc.sans.edu/diary/rss/32696
@@ -609,7 +1013,7 @@ blog.DidierStevens.com
 
 ================================================================================
 
-[14] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
+[18] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:11:45 GMT
 Link: https://isc.sans.edu/diary/rss/32758
@@ -620,7 +1024,7 @@ Link: https://isc.sans.edu/diary/rss/32758
 
 ================================================================================
 
-[15] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
+[19] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 02:00:03 GMT
 Link: https://isc.sans.edu/diary/rss/32756
@@ -631,12 +1035,12 @@ Link: https://isc.sans.edu/diary/rss/32756
 
 ================================================================================
 
-[16] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
+[20] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://cyberscoop.com/ai-deepfakes-olympic-athletes-political-manipulation/
 
-[TAM METİN - 926 kelime]
+[TAM METİN - 906 kelime]
 From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
 
 While competing for medals and glory in Milan, Italy, U.S. Olympic athletes experienced something that is fast becoming a regular feature of modern public life: the widespread use of AI tools by politicians, trolls and sexual harassers to manipulate their images and voices
@@ -705,36 +1109,26 @@ By
 
 Across party lines and industry, the verdict is the same: CISA is in trouble
 
-Senate moves one step closer to passing health care cyber reforms    
+Project Compass is Europol’s new playbook for taking on The Com   
 
 
 
 By 
 
-      Derek B. Johnson
+      Matt Kapko
 
-Senate moves one step closer to passing health care cyber reforms
-
-Gottumukkala out, Andersen in as acting CISA director   
-
-
-
-By 
-
-      Tim Starks
-
-Gottumukkala out, Andersen in as acting CISA director
+Project Compass is Europol’s new playbook for taking on The Com
 
 (XXXXXXX, AÇIK - https://cyberscoop.com/ai-deepfakes-olympic-athletes-political-manipulation/, cyberscoop.com, 02.03.2026)
 
 ================================================================================
 
-[17] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
+[21] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://cyberscoop.com/ai-silent-probing-cyber-risk-behavioral-defense-op-ed/
 
-[TAM METİN - 1113 kelime]
+[TAM METİN - 1088 kelime]
 How ‘silent probing’ can make your security playbook a liability
 
 By
@@ -804,17 +1198,7 @@ By
 
 Chinese group’s ChatGPT use reveals worldwide harassment campaign against critics
 
-Across party lines and industry, the verdict is the same: CISA is in trouble   
-
-
-
-By 
-
-      Tim Starks
-
-Across party lines and industry, the verdict is the same: CISA is in trouble
-
-Senate moves one step closer to passing health care cyber reforms    
+From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes   
 
 
 
@@ -822,23 +1206,73 @@ By
 
       Derek B. Johnson
 
-Senate moves one step closer to passing health care cyber reforms
+From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
 
-Gottumukkala out, Andersen in as acting CISA director   
+Project Compass is Europol’s new playbook for taking on The Com   
 
 
 
 By 
 
-      Tim Starks
+      Matt Kapko
 
-Gottumukkala out, Andersen in as acting CISA director
+Project Compass is Europol’s new playbook for taking on The Com
 
 (XXXXXXX, AÇIK - https://cyberscoop.com/ai-silent-probing-cyber-risk-behavioral-defense-op-ed/, cyberscoop.com, 02.03.2026)
 
 ================================================================================
 
-[18] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
+[22] The Register - Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
+────────────────────────────────────────────────────────────────────────────────
+Tarih: 2026-03-02T13:42:52.00Z
+Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/dubai_iran_sim_swap/
+
+[TAM METİN - 479 kelime]
+Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
+
+Vulnerable citizens targeted by criminals purporting to represent fake police crisis department
+
+Scammers targeted Dubai citizens mere hours after missiles struck the city, attempting to gain access to their bank accounts, police have warned.
+
+Financially motivated cybercriminals are contacting citizens under the guise of Dubai Crisis Management, a fictitious department ostensibly tied to Dubai Police, in attempts to gather information that could be used in SIM-swap attacks.
+
+The police said that the fraudsters are impersonating officials to acquire "sensitive information, including UAE Pass credentials and Emirates ID details, from vulnerable individuals rocked by the deadly Iranian missile attacks on Saturday."
+
+"Dubai Police caution that disclosing such data may enable criminals to carry out SIM swap operations and gain unauthorized access to bank accounts through mobile banking applications," the police announced on Sunday.
+
+"Dubai Police affirm that they do not request confidential information or verification codes via telephone calls or text messages under any circumstances."
+
+SIM swapping involves gathering details on individuals in order to socially engineer mobile network operators into switching control of SIMs, and the communications that are sent to them, from the rightful owners to the attackers.
+
+Successful attacks can see one-time passcodes associated with authentication into mobile banking apps intercepted and abused to fraudulently gain access to victims' bank accounts.
+
+Such attacks have historically proved highly effective, and were for a long time the de facto tactics deployed by cybercrime groups such as Scattered Spider.
+
+Iran all but vanishes from the global internet amid US-Israel strikes
+
+OpenAI's Altman says Pentagon set 'scary precedent' binning Anthropic
+
+AWS Middle East disrupted after 'objects struck datacenter' amid Iran war
+
+Ex-Google engineers accused of helping themselves to chip security secrets
+
+Of the recent scam attempts, Dubai Police said: "Members of the public are strongly urged not to share personal or banking information with any unverified party and to report any suspected fraudulent activity immediately through official channels by calling 901 or via the eCrime platform dedicated to cybercrime reports."
+
+The news follows major geopolitical developments in recent days. The US and Israel launched aerial strikes on Iran, starting on February 28, reportedly killing hundreds of civilians, including children, and top officials, such as supreme leader Ali Khamenei.
+
+Iran responded by attacking US military bases, as well as firing missiles at other targets, including a UK Royal Air Force base in Cyprus, and various sites in Dubai.
+
+The city's airport, as well as Abu Dhabi's, was bombed, leading to a number of casualties and fatalities, while drone strikes also hit luxury hotels, whose staff guided guests into underground car parks.
+
+US President Donald Trump said the US-Israel strikes were launched in response to longstanding campaigns of violence toward the US, and Iran's continued refusal to end its nuclear program.
+
+Iran has called its retaliation a "legitimate act of self-defense." ®
+
+(XXXXXXX, AÇIK - https://go.theregister.com/feed/www.theregister.com/2026/03/02/dubai_iran_sim_swap/, go.theregister.com, 02.03.2026)
+
+================================================================================
+
+[23] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T00:51:38.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/south_korea_tax_office_cryptocurrency_leak/
@@ -920,7 +1354,117 @@ Trusted Platform Module
 
 ================================================================================
 
-[19] TechCrunch Security - Let’s explore the best alternatives to Discord
+[24] TechCrunch Security - Hackers and internet outages hit Iran amid U.S. air strikes
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 14:16:53 +0000
+Link: https://techcrunch.com/2026/03/02/hackers-and-internet-outages-hit-iran-amid-u-s-air-strikes/
+
+[TAM METİN - 737 kelime]
+Early on Saturday, cities across Iran, including its capital Tehran, were rocked by a series of U.S. and Israel-led airstrikes that killed the country’s supreme leader, Ali Hosseini Khamenei, and top leadership. According to reports, the military campaign coincided with cyberattacks targeting the country, one of which flooded a popular phone app with notifications, amid an ongoing outage across the Iranian internet.
+
+The strikes came after several days of failed negotiations between Tehran and Washington. The negotiations were held after weeks of mass protests that saw thousands of people killed alongside the country’s longest internet shutdown to date.
+
+As missiles struck Iranian cities, people on the ground reported being flooded with unsolicited app notifications — not from the ailing government, but from an apparent outsider.
+
+Users of the BadeSaba prayer app received several notifications on their phone, calling for a “reckoning” and promised amnesty for anyone who rises up against government forces, per Wired.
+
+One of the notifications said the Iranian regime would “pay for their cruel and merciless actions against the innocent people of Iran,” implying the app was compromised to display anti-government messaging.
+
+It’s not clear who is behind the hack of the app, which lists more than 5 million downloads.
+
+The Jerusalem Post reported on Saturday that cyberattacks were used as part of the U.S. and Israeli attacks in an effort to limit the Iranian response. Both the U.S. and Israel have been suspected of conducting cyberattacks on banks and crypto exchanges to pressure Iran’s leadership, which has ruled since taking power in a 1989 revolution.
+
+Disrupt 2026: The tech ecosystem, all in one room
+
+Save up to $300 or 30% to TechCrunch Founder Summit
+
+The ongoing disruption hasn’t been limited to Iran. The conflict threatens to spill into the wider Middle East, as Iran retaliates with its own missiles.
+
+Amazon said it was experiencing an outage at its Middle East data center in the United Arab Emirates, soon after Iranian missiles hit the coastal country. Amazon said its outage was caused by “objects that struck the data center, creating sparks and fire.”
+
+The conflict is also likely to disrupt critical ecommerce air and sea routes, as ships carrying goods through the Strait of Hormuz near Iran grind to a halt.
+
+Doug Madory, the director of internet analysis at Kentik, said in a post on Bluesky that internet connectivity dropped to near-zero levels soon after airstrikes hit the country on Saturday morning. Networking giant Cloudflare also confirmed the collapse of Iran’s internet on Saturday.
+
+He can be reached via encrypted message at zackwhittaker.1337 on Signal. You can also contact him by email, or to verify outreach, at zack.whittaker@techcrunch.com.
+
+Actively scaling? Fundraising? Planning your next launch?TechCrunch Founder Summit 2026 delivers tactical playbooks and direct access to 1,000+ founders and investors who are building, backing, and closing.Register by March 13 to save up to $300.
+
+The trap Anthropic built for itself
+
+
+
+Connie Loizos
+
+The trap Anthropic built for itself
+
+The trap Anthropic built for itself
+
+Why did Netflix back down from its deal to acquire Warner Bros.?
+
+
+
+Anthony Ha
+
+Why did Netflix back down from its deal to acquire Warner Bros.?
+
+Why did Netflix back down from its deal to acquire Warner Bros.?
+
+India disrupts access to popular developer platform Supabase with blocking order
+
+
+
+Jagmeet Singh
+
+India disrupts access to popular developer platform Supabase with blocking order
+
+India disrupts access to popular developer platform Supabase with blocking order
+
+Jack Dorsey just halved the size of Block’s employee base — and he says your company is next
+
+
+
+Connie Loizos
+
+Jack Dorsey just halved the size of Block’s employee base — and he says your company is next
+
+Jack Dorsey just halved the size of Block’s employee base — and he says your company is next
+
+An accountant won a big jackpot on Kalshi by betting against DOGE
+
+
+
+Julie Bort
+
+An accountant won a big jackpot on Kalshi by betting against DOGE
+
+An accountant won a big jackpot on Kalshi by betting against DOGE
+
+It’s time to pull the plug on plug-in hybrids
+
+
+
+Tim De Chant
+
+It’s time to pull the plug on plug-in hybrids
+
+It’s time to pull the plug on plug-in hybrids
+
+A Meta AI security researcher said an OpenClaw agent ran amok on her inbox 
+
+
+
+Julie Bort
+
+A Meta AI security researcher said an OpenClaw agent ran amok on her inbox
+
+A Meta AI security researcher said an OpenClaw agent ran amok on her inbox
+
+(XXXXXXX, AÇIK - https://techcrunch.com/2026/03/02/hackers-and-internet-outages-hit-iran-amid-u-s-air-strikes/, techcrunch.com, 02.03.2026)
+
+================================================================================
+
+[25] TechCrunch Security - Let’s explore the best alternatives to Discord
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 19:00:01 +0000
 Link: https://techcrunch.com/2026/03/01/best-discord-alternatives-age-verification-identity-privacy/
@@ -1042,7 +1586,7 @@ A Meta AI security researcher said an OpenClaw agent ran amok on her inbox
 
 ================================================================================
 
-[20] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
+[26] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://www.csoonline.com/article/4138735/innovation-without-exposure-a-cisos-secure-by-design-framework-for-business-outcomes.html
@@ -1244,12 +1788,12 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[21] CSO Online - A scorecard for cyber and risk culture
+[27] CSO Online - A scorecard for cyber and risk culture
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4138709/a-scorecard-for-cyber-and-risk-culture.html
 
-[TAM METİN - 2444 kelime]
+[TAM METİN - 2447 kelime]
 How to move from security awareness to measurable, repeatable behaviors. Then prove it with four cultural signals leaders can't dispute.
 
 Have you once watched a leadership team clap for their “security culture month” like they’d landed a rover? Posters everywhere. Quizzes. A prize draw. Someone baked cupcakes with padlocks iced on top. Cute.
@@ -1506,11 +2050,11 @@ Then, the next time someone asks for admin credentials “just for an hour,” y
 
 This article is published as part of the Foundry Expert Contributor Network.Want to join?
 
+Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
+
 The farmers and the mercenaries: Rethinking the ‘human layer’ in security
 
 Boards don’t need cyber metrics — they need risk signals
-
-It’s time to rethink CISO reporting lines
 
 From our editors straight to your inbox
 
@@ -1518,7 +2062,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[22] CSO Online - Hacker erpressen weniger Lösegeld
+[28] CSO Online - Hacker erpressen weniger Lösegeld
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:24:16 +0000
 Link: https://www.csoonline.com/article/4139126/hacker-erpressen-weniger-losegeld.html
@@ -1556,7 +2100,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[23] CSO Online - How CISOs can build a resilient workforce
+[29] CSO Online - How CISOs can build a resilient workforce
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4136307/how-cisos-can-build-a-resilient-workforce.html
@@ -1688,7 +2232,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[24] CSO Online - Im Fokus: RZ-Modernisierung
+[30] CSO Online - Im Fokus: RZ-Modernisierung
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 06:00:00 +0000
 Link: https://whitepaper.computerwoche.de/resources/im-fokus-warum-die-modernisierung-von-rechenzentren-not-tut/
@@ -1699,7 +2243,7 @@ Link: https://whitepaper.computerwoche.de/resources/im-fokus-warum-die-modernisi
 
 ================================================================================
 
-[25] CSO Online - Kubernetes Security: Wie Sie Ihre Cluster (besser) absichern
+[31] CSO Online - Kubernetes Security: Wie Sie Ihre Cluster (besser) absichern
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 03:47:00 +0000
 Link: https://www.csoonline.com/article/3492006/kubernetes-security-wie-sie-ihre-cluster-besser-absichern.html
@@ -1804,4 +2348,42 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 (XXXXXXX, AÇIK - https://www.csoonline.com/article/3492006/kubernetes-security-wie-sie-ihre-cluster-besser-absichern.html, csoonline.com, 02.03.2026)
 
 ================================================================================
+
+
+================================================================================
+SOSYAL MEDYA SİNYALLERİ — HABER DEĞİL, SADECE REFERANS KAYDI
+[S1]-[S5] etiketleri haber sayılmaz, Gemini bu bölümü işlemez.
+================================================================================
+
+[S1] GitHub Advisory | Skor: 38.7 | Yorum: 0
+Baslik: Statamic vulnerable to privilege escalation via stored cross-site scripting
+Link: https://github.com/advisories/GHSA-5vrj-wf7v-5wr7
+### Impact
+Stored XSS vulnerability in svg and icon related components allow authenticated users with appropriate permissions to inject malicious JavaScript that executes when viewed by higher-privile
+
+[S2] GitHub Advisory | Skor: 38.2 | Yorum: 0
+Baslik: Gradio has SSRF via Malicious `proxy_url` Injection in `gr.load()` Config Processing
+Link: https://github.com/advisories/GHSA-jmh7-g254-2cq9
+### Summary
+
+A Server-Side Request Forgery (SSRF) vulnerability in Gradio allows an attacker to make arbitrary HTTP requests from a victim's server by hosting a malicious Gradio Space. When a victim a
+
+[S3] GitHub Advisory | Skor: 38.2 | Yorum: 0
+Baslik: kaniko has tar archive path traversal in its build context extraction, allowing file writes outside destination directories
+Link: https://github.com/advisories/GHSA-6rxq-q92g-4rmf
+kaniko unpacks build context archives using `filepath.Join(dest, cleanedName)` without enforcing that the final path stays within `dest`. A tar entry like `../outside.txt` escapes the extraction root 
+
+[S4] GitHub Advisory | Skor: 38.0 | Yorum: 0
+Baslik: Statamic vulnerable to remote code execution via Antlers-enabled control panel inputs
+Link: https://github.com/advisories/GHSA-cpv7-q2wx-m8rw
+### Impact
+An authenticated control panel user with access to Antlers-enabled inputs may be able to achieve remote code execution in the application context. That can lead to full compromise of the ap
+
+[S5] GitHub Advisory | Skor: 37.5 | Yorum: 0
+Baslik: Gradio is Vulnerable to Absolute Path Traversal on Windows with Python 3.13+
+Link: https://github.com/advisories/GHSA-39mp-8hj3-5c49
+### Summary
+Gradio apps running on Window with Python 3.13+ are vulnerable to an absolute path traversal issue that enables unauthenticated attackers to read arbitrary files from the file system.
+
+###
 
