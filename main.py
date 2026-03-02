@@ -182,9 +182,11 @@ def fetch_social_signals(config):
             time.sleep(1)
 
     # ── Hacker News (Algolia API) ────────────────────────────────────────────
-    hn_cfg     = config.get('hackernews', {})
-    min_points = hn_cfg.get('min_points', 30)
-    hn_limit   = hn_cfg.get('limit', 10)
+    # Skor modeli: combined_score = points + (num_comments × comment_weight)
+    hn_cfg         = config.get('hackernews', {})
+    min_points     = hn_cfg.get('min_points', 30)
+    hn_limit       = hn_cfg.get('limit', 10)
+    comment_weight = hn_cfg.get('comment_weight', 3)
     try:
         hn_url = (
             "https://hn.algolia.com/api/v1/search_by_date"
@@ -198,6 +200,9 @@ def fetch_social_signals(config):
             hits  = r.json().get('hits', [])
             found = 0
             for hit in hits:
+                points   = int(hit.get('points', 0) or 0)
+                comments = int(hit.get('num_comments', 0) or 0)
+                combined = points + comments * comment_weight
                 item_url = hit.get('url') or \
                            f"https://news.ycombinator.com/item?id={hit.get('objectID', '')}"
                 domain = urlparse(item_url).netloc or 'news.ycombinator.com'
@@ -206,8 +211,8 @@ def fetch_social_signals(config):
                     'source':   'HackerNews',
                     'title':    hit.get('title', ''),
                     'link':     item_url,
-                    'score':    hit.get('points', 0),
-                    'comments': hit.get('num_comments', 0),
+                    'score':    combined,
+                    'comments': comments,
                     'date':     hit.get('created_at', ''),
                     'domain':   domain,
                     'full_text': '',
@@ -220,52 +225,58 @@ def fetch_social_signals(config):
     except Exception as e:
         print(f"   HackerNews hatasi: {e}")
 
-    # ── GitHub ──────────────────────────────────────────────────────────────
-    gh_cfg     = config.get('github', {})
-    min_stars  = gh_cfg.get('min_stars', 10)
-    gh_limit   = gh_cfg.get('limit', 5)
-    gh_query   = gh_cfg.get('search_query', 'security vulnerability')
+    # ── GitHub Security Advisories ───────────────────────────────────────────
+    # En güncel incelenmiş advisory'leri çeker; severity'ye göre önceliklendirir.
+    severity_rank = {'critical': 4, 'high': 3, 'medium': 2, 'low': 1}
+    gh_cfg        = config.get('github_advisories', {})
+    min_severity  = gh_cfg.get('min_severity', ['critical', 'high', 'medium'])
+    gh_limit      = gh_cfg.get('limit', 10)
     try:
-        gh_url = (
-            f"https://api.github.com/search/repositories"
-            f"?q={requests.utils.quote(gh_query)}+created:>{yesterday}"
-            f"&sort=stars&order=desc&per_page={gh_limit}"
-        )
-        gh_hdrs = {'Accept': 'application/vnd.github.v3+json',
-                   'User-Agent': 'siberguvenlik-bot/1.0'}
-        r = requests.get(gh_url, headers=gh_hdrs, timeout=(5, 10))
+        gh_url  = f"https://api.github.com/advisories?type=reviewed&per_page={gh_limit}"
+        gh_hdrs = {
+            'Accept':              'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent':          'siberguvenlik-bot/1.0',
+        }
+        r = requests.get(gh_url, headers=gh_hdrs, timeout=(5, 15))
         if r.status_code == 200:
-            repos = r.json().get('items', [])
+            advisories = r.json()
             found = 0
-            for repo in repos:
-                if repo.get('stargazers_count', 0) < min_stars:
+            for adv in advisories:
+                sev = (adv.get('severity') or 'unknown').lower()
+                if sev not in min_severity:
                     continue
-                desc  = repo.get('description', '') or ''
-                title = f"{repo.get('full_name', '')}: {desc}" if desc else repo.get('full_name', '')
+                cvss_obj   = adv.get('cvss') or {}
+                cvss_score = float(cvss_obj.get('score') or 0) if isinstance(cvss_obj, dict) else 0.0
+                rank       = severity_rank.get(sev, 0)
+                sort_score = rank * 10 + cvss_score  # nihai sıralama için karma puan
                 results.append({
-                    'platform': 'github',
-                    'source':   'GitHub',
-                    'title':    title,
-                    'link':     repo.get('html_url', ''),
-                    'score':    repo.get('stargazers_count', 0),
-                    'comments': 0,
-                    'date':     repo.get('created_at', ''),
-                    'domain':   'github.com',
-                    'full_text': desc,
-                    'success':  True,
+                    'platform':  'github_advisories',
+                    'source':    'GitHub Advisory',
+                    'title':     adv.get('summary') or adv.get('ghsa_id', ''),
+                    'link':      adv.get('html_url') or
+                                 f"https://github.com/advisories/{adv.get('ghsa_id', '')}",
+                    'score':     sort_score,
+                    'comments':  0,
+                    'severity':  sev,
+                    'cvss':      cvss_score,
+                    'date':      adv.get('published_at', ''),
+                    'domain':    'github.com',
+                    'full_text': (adv.get('description') or '')[:300],
+                    'success':   True,
                 })
                 found += 1
-            print(f"   GitHub: {found} nitelikli repo")
+            print(f"   GitHub Advisories: {found} nitelikli advisory")
         else:
-            print(f"   GitHub: HTTP {r.status_code}")
+            print(f"   GitHub Advisories: HTTP {r.status_code}")
     except Exception as e:
-        print(f"   GitHub hatasi: {e}")
+        print(f"   GitHub Advisories hatasi: {e}")
 
-    # Etkileşim skoruna göre sırala, en yüksek 5 tanesini al
+    # Karma skora göre sırala (yüksekten düşüğe), en iyi 5 tanesini al
     results.sort(key=lambda x: x.get('score', 0), reverse=True)
     results = results[:5]
 
-    print(f"\n   📊 Sosyal sinyal toplamı: {len(results)} içerik (top 5)")
+    print(f"\n   Sosyal sinyal toplami: {len(results)} icerik (top 5)")
     return results
 
 
@@ -1106,20 +1117,17 @@ KURALLAR:
         if not getattr(self, 'social_data', None):
             return html
 
-        score_labels = {
-            'reddit':     'upvote',
-            'hackernews': 'puan',
-            'github':     'yildiz',
-        }
         platform_css = {
-            'reddit':     'reddit-item',
-            'hackernews': 'hn-item',
-            'github':     'github-item',
+            'reddit':            'reddit-item',
+            'hackernews':        'hn-item',
+            'github':            'github-item',
+            'github_advisories': 'github-item',
         }
         platform_labels = {
-            'reddit':     'Reddit',
-            'hackernews': 'HackerNews',
-            'github':     'GitHub',
+            'reddit':            'Reddit',
+            'hackernews':        'HackerNews',
+            'github':            'GitHub',
+            'github_advisories': 'GitHub Advisory',
         }
 
         items_html = ''
@@ -1130,12 +1138,20 @@ KURALLAR:
             link        = post.get('link', '#')
             score       = post.get('score', 0)
             comments    = post.get('comments', 0)
-            s_label     = score_labels.get(platform, 'puan')
             item_cls    = platform_css.get(platform, '')
 
-            engagement  = f"{score} {s_label}"
-            if comments > 0:
-                engagement += f"  |  {comments} yorum"
+            if platform == 'github_advisories':
+                severity   = post.get('severity', '').upper()
+                cvss       = post.get('cvss', 0)
+                engagement = f"SEVERİTE: {severity}"
+                if cvss:
+                    engagement += f"  |  CVSS: {cvss}"
+            else:
+                score_labels = {'reddit': 'upvote', 'hackernews': 'puan'}
+                s_label      = score_labels.get(platform, 'puan')
+                engagement   = f"{score} {s_label}"
+                if comments > 0:
+                    engagement += f"  |  {comments} yorum"
 
             items_html += (
                 f'<div class="signal-item {item_cls}">'

@@ -36,12 +36,13 @@ SOCIAL_SIGNAL_CONFIG = {
     },
     'hackernews': {
         'min_points': 30,
-        'limit': 10,
+        'limit': 15,           # Daha fazla çek, combined score ile sırala
+        'comment_weight': 3,   # combined_score = points + comments * 3
     },
-    'github': {
-        'min_stars': 10,
-        'limit': 5,
-        'search_query': 'security vulnerability exploit malware',
+    'github_advisories': {
+        # Severity öncelik sırası: critical > high > medium
+        'min_severity': ['critical', 'high', 'medium'],
+        'limit': 10,           # Çekilecek max advisory sayısı
     },
 }
 
