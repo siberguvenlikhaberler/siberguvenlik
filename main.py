@@ -880,6 +880,16 @@ class HaberSistemi:
                     config=genai_types.GenerateContentConfig(
                         max_output_tokens=65536,
                         temperature=0.7,
+                        safety_settings=[
+                            genai_types.SafetySetting(
+                                category='HARM_CATEGORY_DANGEROUS_CONTENT',
+                                threshold='BLOCK_ONLY_HIGH',
+                            ),
+                            genai_types.SafetySetting(
+                                category='HARM_CATEGORY_HARASSMENT',
+                                threshold='BLOCK_ONLY_HIGH',
+                            ),
+                        ],
                     )
                 ):
                     if chunk.text:
