@@ -25,20 +25,25 @@ NEWS_SOURCES = {
     'Infoblox Blog': 'https://blogs.infoblox.com/feed/',
 }
 
-# ===== MASTODON KAYNAKLARI =====
-# Siber güvenlik alanında önde gelen araştırmacı ve kurumlar
-# instance: Mastodon sunucusu, username: @ ile başlamayan kullanıcı adı
-# Her post için: reblogs_count * 2 + favourites_count >= MIN_ENGAGEMENT_SCORE olmalı
-MASTODON_SOURCES = [
-    {'instance': 'mastodon.social', 'username': 'ESETresearch',   'label': 'ESET Research'},
-    {'instance': 'mastodon.social', 'username': 'malwaretech',     'label': 'MalwareTech'},
-]
-
-# Minimum etkileşim skoru: reblogs*2 + favourites >= bu değer
-MASTODON_MIN_ENGAGEMENT = 10
-
-# Kaç saatlik postları çekelim (son N saat)
-MASTODON_HOURS_BACK = 24
+# ===== SOSYAL MEDYA SİNYALLERİ AYARLARI =====
+# Reddit, Hacker News ve GitHub'dan yüksek etkileşimli içerik toplanır
+SOCIAL_SIGNAL_CONFIG = {
+    'hours_back': 24,
+    'reddit': {
+        'subreddits': ['netsec', 'cybersecurity', 'hacking'],
+        'min_score': 100,
+        'limit': 15,
+    },
+    'hackernews': {
+        'min_points': 30,
+        'limit': 10,
+    },
+    'github': {
+        'min_stars': 10,
+        'limit': 5,
+        'search_query': 'security vulnerability exploit malware',
+    },
+}
 
 # Scraping ayarları
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
@@ -160,11 +165,11 @@ RAPOR YAPISI (SIRAYLA):
    - ZORUNLU: Tam cümle (özne + yüklem + nesne) + nokta ile bitiş
 
 3️⃣ᵇ **"SOSYAL MEDYA SİNYALLERİ" KUTUSU** (Önemli Gelişmeler kutusunun hemen altına):
-   - Ham veride [MASTODON_SCORE:N:N] etiketi olan haberler bunlardır
+   - Ham veride [SOCIAL_SCORE:platform:skor:yorum] etiketi olan haberler bunlardır (platform: reddit/hackernews/github)
    - Bu haberleri signal-item olarak listele, her birinde signal-badge ile etkileşim göster
-   - badge formatı: <span class="signal-badge">Mastodon | Paylasim: N | Begeni: N | Skor: S</span>  (N=gerçek sayı, S=reblogs*2+favs)
+   - badge formatı: <span class="signal-badge">Platform | Skor: N | Yorum: N</span>  (N yerine ham verideki gerçek sayıyı yaz)
    - Sayfa içi link: <a href="#haber-N">haber başlığı veya kısa özet</a>
-   - Mastodon haberi yoksa bu kutuyu tamamen çıkar
+   - Sosyal sinyal haberi yoksa bu kutuyu tamamen çıkar
    - Hiçbir ikon veya emoji kullanma (badge içinde de emoji yok)
 
 4️⃣ **GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU**:
@@ -359,85 +364,90 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         
         /* BAŞA DÖN BUTONU */
         /* SOSYAL MEDYA SİNYALLERİ KUTUSU */
-        .mastodon-signals {{
-            background: linear-gradient(135deg, #f3f0ff 0%, #faf8ff 100%);
+        .social-signals {{
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8faff 100%);
             color: #2c3e50;
             padding: 25px 30px;
             margin: 0;
-            border: 1px solid #ddd6fe;
+            border: 1px solid #c7d7fd;
             border-radius: 8px;
             margin-bottom: 20px;
         }}
-        .mastodon-signals h2 {{
-            color: #4c3d9e;
+        .social-signals h2 {{
+            color: #1e3a8a;
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 20px;
         }}
-        .mastodon-signals .signal-summary {{
+        .social-signals .signal-summary {{
             display: grid;
             gap: 12px;
         }}
-        .mastodon-signals .signal-item {{
-            background: rgba(255,255,255,0.7);
+        .social-signals .signal-item {{
+            background: rgba(255,255,255,0.8);
             padding: 12px 16px;
             border-radius: 6px;
-            border-left: 4px solid #7c3aed;
+            border-left: 4px solid #3b82f6;
             display: flex;
             align-items: baseline;
             gap: 12px;
         }}
-        .mastodon-signals .signal-item a {{
+        .social-signals .signal-item a {{
             color: #2c3e50;
             text-decoration: none;
             font-weight: 500;
             font-size: 15px;
             flex: 1;
         }}
-        .mastodon-signals .signal-item a:hover {{
+        .social-signals .signal-item a:hover {{
             text-decoration: underline;
-            color: #4c3d9e;
+            color: #1e3a8a;
         }}
-        .mastodon-signals .signal-badge {{
+        .social-signals .signal-badge {{
             display: inline-block;
-            background: #ede9fe;
-            border: 1px solid #c4b5fd;
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
             border-radius: 3px;
             padding: 2px 8px;
             font-size: 11px;
             font-weight: 600;
-            color: #4c3d9e;
+            color: #1e3a8a;
             white-space: nowrap;
             flex-shrink: 0;
         }}
-        /* Mastodon haberlerinin badge'i (haber detay sayfasında) */
+        /* Sosyal sinyal haber badge'i (haber detay sayfasında) */
         .signal-badge {{
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #ede9fe;
-            border: 1px solid #c4b5fd;
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
             border-radius: 4px;
             padding: 4px 10px;
             font-size: 11px;
             font-weight: 600;
-            color: #4c3d9e;
+            color: #1e3a8a;
             white-space: nowrap;
             margin-bottom: 10px;
         }}
+        .signal-badge.reddit-badge {{ background: #fff1ec; border-color: #ffb899; color: #b91c1c; }}
+        .signal-badge.reddit-badge .signal-score {{ background: #ef4444; }}
+        .signal-badge.hn-badge {{ background: #fff7ed; border-color: #fed7aa; color: #92400e; }}
+        .signal-badge.hn-badge .signal-score {{ background: #f97316; }}
+        .signal-badge.github-badge {{ background: #f0fdf4; border-color: #86efac; color: #14532d; }}
+        .signal-badge.github-badge .signal-score {{ background: #16a34a; }}
         .signal-platform {{
             font-weight: 700;
-            color: #6d28d9;
         }}
         .signal-sep {{
-            color: #a78bfa;
+            color: #94a3b8;
             margin: 0 2px;
         }}
         .signal-stat {{
-            color: #4c3d9e;
+            color: inherit;
         }}
         .signal-score {{
-            background: #6d28d9;
+            background: #1e3a8a;
             color: #fff;
             border-radius: 3px;
             padding: 1px 6px;
@@ -497,13 +507,13 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             </div>
             
             <!-- SOSYAL MEDYA SİNYALLERİ KUTUSU -->
-            <div class="mastodon-signals">
+            <div class="social-signals">
                 <h2>Sosyal Medya Sinyalleri</h2>
                 <div class="signal-summary">
-                    [MASTODON HABERLERİ BURADA - ham veride [MASTODON_SCORE:N:N] etiketi olan haberler:]
+                    [SOSYAL SİNYAL HABERLERİ BURADA - ham veride [SOCIAL_SCORE:platform:skor:yorum] etiketi olan haberler:]
                     <div class="signal-item">
-                        <a href="#haber-N">Mastodon haber başlığı veya kısa özet.</a>
-                        <span class="signal-badge">Paylaşım: 12 · Beğeni: 8</span>
+                        <a href="#haber-N">Haber başlığı veya kısa özet.</a>
+                        <span class="signal-badge">Reddit | Skor: 1234 | Yorum: 567</span>
                     </div>
                 </div>
             </div>

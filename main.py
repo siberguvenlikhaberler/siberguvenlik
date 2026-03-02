@@ -18,7 +18,7 @@ from google.genai import types as genai_types
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
-    MASTODON_SOURCES, MASTODON_MIN_ENGAGEMENT, MASTODON_HOURS_BACK
+    SOCIAL_SIGNAL_CONFIG
 )
 
 
@@ -122,119 +122,146 @@ def _parse_article_date(date_str, fallback):
     return fallback.strftime('%d.%m.%Y')
 
 
-def fetch_mastodon_posts(sources, min_engagement, hours_back):
+def fetch_social_signals(config):
     """
-    Mastodon API'den yüksek etkileşimli siber güvenlik postlarını çeker.
-    Authentication gerektirmez — tüm public hesaplar erişilebilir.
-
-    Etkileşim skoru: reblogs_count * 2 + favourites_count
+    Reddit, Hacker News ve GitHub'dan yüksek etkileşimli siber güvenlik
+    içeriklerini çeker. Authentication gerektirmez — tüm public API'ler.
     """
-    from datetime import timezone
+    hours_back = config.get('hours_back', 24)
+    cutoff_ts  = int((datetime.now() - timedelta(hours=hours_back)).timestamp())
+    yesterday  = (datetime.now() - timedelta(hours=hours_back)).strftime('%Y-%m-%d')
+    results    = []
 
     print("\n" + "=" * 70)
-    print("\U0001f418 MASTODON POSTLARI ÇEKILIYOR")
+    print("📡 SOSYAL MEDYA SİNYALLERİ ÇEKILIYOR")
     print("=" * 70)
 
-    cutoff_dt = datetime.now(timezone.utc) - timedelta(hours=hours_back)
-    results = []
+    # ── Reddit ──────────────────────────────────────────────────────────────
+    reddit_cfg   = config.get('reddit', {})
+    min_score    = reddit_cfg.get('min_score', 100)
+    limit        = reddit_cfg.get('limit', 15)
+    subreddits   = reddit_cfg.get('subreddits', ['netsec', 'cybersecurity'])
+    reddit_hdrs  = {'User-Agent': 'siberguvenlik-bot/1.0 (automated news aggregator)'}
 
-    for src in sources:
-        instance = src['instance']
-        username = src['username']
-        label = src['label']
+    for sub in subreddits:
+        try:
+            url = f"https://www.reddit.com/r/{sub}/top.json?t=day&limit={limit}"
+            r   = requests.get(url, headers=reddit_hdrs, timeout=(5, 10))
+            if r.status_code != 200:
+                print(f"   Reddit r/{sub}: HTTP {r.status_code}")
+                time.sleep(1)
+                continue
+            posts = r.json().get('data', {}).get('children', [])
+            found = 0
+            for post in posts:
+                p = post.get('data', {})
+                if p.get('score', 0) < min_score:
+                    continue
+                if int(p.get('created_utc', 0)) < cutoff_ts:
+                    continue
+                link = p.get('url') or f"https://www.reddit.com{p.get('permalink', '')}"
+                results.append({
+                    'platform': 'reddit',
+                    'source':   f"Reddit: r/{sub}",
+                    'title':    p.get('title', ''),
+                    'link':     link,
+                    'score':    p.get('score', 0),
+                    'comments': p.get('num_comments', 0),
+                    'date':     datetime.utcfromtimestamp(
+                                    int(p.get('created_utc', 0))
+                                ).strftime('%a, %d %b %Y %H:%M:%S +0000'),
+                    'domain':   p.get('domain', 'reddit.com'),
+                    'full_text': (p.get('selftext', '') or '')[:300],
+                    'success':  True,
+                })
+                found += 1
+            print(f"   Reddit r/{sub}: {found} nitelikli post")
+            time.sleep(1)
+        except Exception as e:
+            print(f"   Reddit r/{sub} hatasi: {e}")
+            time.sleep(1)
 
-        print(f"   \U0001f50d {label} (@{username}@{instance})")
-
-        src_results = []
-        _masto_responses = []  # timeout'ta kapatmak için
-
-        def _fetch_mastodon_src(instance=instance, username=username, label=label,
-                                cutoff_dt=cutoff_dt, min_engagement=min_engagement,
-                                src_results=src_results):
-            try:
-                lookup_url = f"https://{instance}/api/v1/accounts/lookup?acct={username}"
-                r = requests.get(lookup_url, timeout=(4, 6),
-                                 headers={'User-Agent': 'Mozilla/5.0'})
-                _masto_responses.append(r)
-                if r.status_code != 200:
-                    return
-                account_id = r.json().get('id')
-                if not account_id:
-                    return
-                statuses_url = f"https://{instance}/api/v1/accounts/{account_id}/statuses"
-                params = {'limit': 15, 'exclude_replies': 'true', 'exclude_reblogs': 'true'}
-                r2 = requests.get(statuses_url, params=params, timeout=(4, 6),
-                                  headers={'User-Agent': 'Mozilla/5.0'})
-                _masto_responses.append(r2)
-                if r2.status_code != 200:
-                    return
-                statuses = r2.json()
-                if not isinstance(statuses, list):
-                    return
-                qualified = []
-                for s in statuses:
-                    created_raw = s.get('created_at', '')
-                    try:
-                        created_dt = datetime.fromisoformat(created_raw.replace('Z', '+00:00'))
-                        if created_dt < cutoff_dt:
-                            continue
-                    except Exception:
-                        continue
-                    reblogs = s.get('reblogs_count', 0)
-                    favs = s.get('favourites_count', 0)
-                    score = reblogs * 2 + favs
-                    if score < min_engagement:
-                        continue
-                    raw_content = s.get('content', '')
-                    if not raw_content:
-                        continue
-                    content_soup = BeautifulSoup(raw_content, 'html.parser')
-                    content_text = content_soup.get_text(separator=' ').strip()
-                    if len(content_text) < 50:
-                        continue
-                    post_url = s.get('url', '') or s.get('uri', '')
-                    post_date = datetime.fromisoformat(created_raw.replace('Z', '+00:00'))
-                    qualified.append({
-                        'title': content_text[:120] + ('...' if len(content_text) > 120 else ''),
-                        'link': post_url,
-                        'description': content_text,
-                        'date': post_date.strftime('%a, %d %b %Y %H:%M:%S +0000'),
-                        'source': f'Mastodon: {label}',
-                        'domain': instance,
-                        'engagement_score': score,
-                        'reblogs': reblogs,
-                        'favourites': favs,
-                        'full_text': content_text,
-                        'word_count': len(content_text.split()),
-                        'success': True,
-                    })
-                qualified.sort(key=lambda x: x['engagement_score'], reverse=True)
-                src_results.extend(qualified)
-            except Exception:
-                pass
-
-        import threading as _threading
-        t = _threading.Thread(target=_fetch_mastodon_src, daemon=True)
-        t.start()
-        t.join(timeout=15)
-        if t.is_alive():
-            # Bağlantıları zorla kapat
-            for resp in _masto_responses:
-                try:
-                    resp.close()
-                except Exception:
-                    pass
-            print(f"      \u274c Timeout (15s) — geçiliyor")
-        elif src_results:
-            print(f"      \u2705 {len(src_results)} nitelikli post")
-            for q in src_results[:3]:
-                print(f"         \U0001f525 [{q['engagement_score']}] {q['title'][:70]}...")
+    # ── Hacker News (Algolia API) ────────────────────────────────────────────
+    hn_cfg     = config.get('hackernews', {})
+    min_points = hn_cfg.get('min_points', 30)
+    hn_limit   = hn_cfg.get('limit', 10)
+    try:
+        hn_url = (
+            "https://hn.algolia.com/api/v1/search_by_date"
+            "?query=security+cybersecurity+vulnerability+malware+breach"
+            "&tags=story"
+            f"&numericFilters=points>{min_points},created_at_i>{cutoff_ts}"
+            f"&hitsPerPage={hn_limit}"
+        )
+        r = requests.get(hn_url, headers=HEADERS, timeout=(5, 10))
+        if r.status_code == 200:
+            hits  = r.json().get('hits', [])
+            found = 0
+            for hit in hits:
+                item_url = hit.get('url') or \
+                           f"https://news.ycombinator.com/item?id={hit.get('objectID', '')}"
+                domain = urlparse(item_url).netloc or 'news.ycombinator.com'
+                results.append({
+                    'platform': 'hackernews',
+                    'source':   'HackerNews',
+                    'title':    hit.get('title', ''),
+                    'link':     item_url,
+                    'score':    hit.get('points', 0),
+                    'comments': hit.get('num_comments', 0),
+                    'date':     hit.get('created_at', ''),
+                    'domain':   domain,
+                    'full_text': '',
+                    'success':  True,
+                })
+                found += 1
+            print(f"   HackerNews: {found} nitelikli hikaye")
         else:
-            print(f"      \u2705 0 nitelikli post")
-        results.extend(src_results)
-        time.sleep(1)
+            print(f"   HackerNews: HTTP {r.status_code}")
+    except Exception as e:
+        print(f"   HackerNews hatasi: {e}")
 
-    print(f"\n   \U0001f4ca Mastodon toplamı: {len(results)} yüksek etkileşimli post")
+    # ── GitHub ──────────────────────────────────────────────────────────────
+    gh_cfg     = config.get('github', {})
+    min_stars  = gh_cfg.get('min_stars', 10)
+    gh_limit   = gh_cfg.get('limit', 5)
+    gh_query   = gh_cfg.get('search_query', 'security vulnerability')
+    try:
+        gh_url = (
+            f"https://api.github.com/search/repositories"
+            f"?q={requests.utils.quote(gh_query)}+created:>{yesterday}"
+            f"&sort=stars&order=desc&per_page={gh_limit}"
+        )
+        gh_hdrs = {'Accept': 'application/vnd.github.v3+json',
+                   'User-Agent': 'siberguvenlik-bot/1.0'}
+        r = requests.get(gh_url, headers=gh_hdrs, timeout=(5, 10))
+        if r.status_code == 200:
+            repos = r.json().get('items', [])
+            found = 0
+            for repo in repos:
+                if repo.get('stargazers_count', 0) < min_stars:
+                    continue
+                desc  = repo.get('description', '') or ''
+                title = f"{repo.get('full_name', '')}: {desc}" if desc else repo.get('full_name', '')
+                results.append({
+                    'platform': 'github',
+                    'source':   'GitHub',
+                    'title':    title,
+                    'link':     repo.get('html_url', ''),
+                    'score':    repo.get('stargazers_count', 0),
+                    'comments': 0,
+                    'date':     repo.get('created_at', ''),
+                    'domain':   'github.com',
+                    'full_text': desc,
+                    'success':  True,
+                })
+                found += 1
+            print(f"   GitHub: {found} nitelikli repo")
+        else:
+            print(f"   GitHub: HTTP {r.status_code}")
+    except Exception as e:
+        print(f"   GitHub hatasi: {e}")
+
+    print(f"\n   📊 Sosyal sinyal toplamı: {len(results)} içerik")
     return results
 
 
@@ -641,22 +668,20 @@ class HaberSistemi:
         if self.rss_errors:
             self._save_rss_errors()
 
-        # ── Mastodon yüksek etkileşimli postları ──
-        mastodon_posts = fetch_mastodon_posts(
-            MASTODON_SOURCES, MASTODON_MIN_ENGAGEMENT, MASTODON_HOURS_BACK
-        )
-        if mastodon_posts:
-            all_news['_mastodon'] = mastodon_posts
+        # ── Sosyal medya sinyalleri (Reddit, HN, GitHub) ──
+        social_posts = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
+        if social_posts:
+            all_news['_social'] = social_posts
 
         all_news = self._filter_duplicates(all_news)
         all_news = self._filter_old_articles(all_news)
 
-        total = sum(len(arts) for arts in all_news.values())
-        full_text_success = sum(1 for arts in all_news.values() for art in arts if art.get('success'))
-        mastodon_count = len(all_news.get('_mastodon', []))
+        total        = sum(len(arts) for arts in all_news.values())
+        full_text_ok = sum(1 for arts in all_news.values() for art in arts if art.get('success'))
+        social_count = len(all_news.get('_social', []))
 
         print(f"\n{'=' * 70}")
-        print(f"📊 {total} haber (tekrarsız) | {full_text_success} tam metin | 🐘 {mastodon_count} Mastodon post")
+        print(f"📊 {total} haber (tekrarsız) | {full_text_ok} tam metin | 📡 {social_count} sosyal sinyal")
         print(f"{'=' * 70}\n")
         return all_news
 
@@ -666,9 +691,9 @@ class HaberSistemi:
         now = datetime.now()
         os.makedirs("data", exist_ok=True)
 
-        # Mastodon postlarını ayrı bölüm olarak ayır
-        rss_data = {k: v for k, v in news_data.items() if k != '_mastodon'}
-        mastodon_data = news_data.get('_mastodon', [])
+        # Sosyal sinyal postlarını ayrı tut
+        rss_data    = {k: v for k, v in news_data.items() if k != '_social'}
+        social_data = news_data.get('_social', [])
 
         txt = f"\n{'=' * 80}\n📅 {now.strftime('%d %B %Y').upper()} - SİBER GÜVENLİK HABERLERİ (HAM RSS)\n{'=' * 80}\n\n"
 
@@ -688,19 +713,20 @@ class HaberSistemi:
                 txt += f"\n(XXXXXXX, AÇIK - {art.get('link', '')}, {art.get('domain', '')}, {art_date})\n\n{'=' * 80}\n\n"
 
         # Mastodon postlarını ayrı bölüm olarak ekle
-        if mastodon_data:
-            txt += f"\n{'=' * 80}\n🐘 MASTODON - YÜKSEK ETKİLEŞİMLİ POSTLAR\n{'=' * 80}\n\n"
-            for art in mastodon_data:
+        if social_data:
+            txt += f"\n{'=' * 80}\n📡 SOSYAL MEDYA SİNYALLERİ (Reddit / HackerNews / GitHub)\n{'=' * 80}\n\n"
+            for art in social_data:
                 num += 1
                 all_articles.append(art)
-                score = art.get('engagement_score', 0)
-                reblogs = art.get('reblogs', 0)
-                favs = art.get('favourites', 0)
-                txt += f"[{num}] {art['source']} [🔥 Skor:{score} | 🔄{reblogs} ❤️{favs}]\n{'─' * 80}\n"
+                platform = art.get('platform', 'unknown')
+                score    = art.get('score', 0)
+                comments = art.get('comments', 0)
+                txt += f"[{num}] {art['source']} [Skor:{score} | Yorum:{comments}]\n{'─' * 80}\n"
                 txt += f"Tarih: {art['date']}\nLink: {art['link']}\n"
-                txt += f"\n[MASTODON POST - {art.get('word_count', 0)} kelime]\n{art.get('full_text', '')}\n"
+                if art.get('full_text'):
+                    txt += f"\n{art['full_text']}\n"
                 art_date = _parse_article_date(art.get('date', ''), now)
-                txt += f"\n(XXXXXXX, AÇIK - {art.get('link', '')}, {art.get('domain', '')}, {art_date}) [MASTODON_SCORE:{reblogs}:{favs}]\n\n{'=' * 80}\n\n"
+                txt += f"\n(XXXXXXX, AÇIK - {art.get('link', '')}, {art.get('domain', '')}, {art_date}) [SOCIAL_SCORE:{platform}:{score}:{comments}]\n\n{'=' * 80}\n\n"
 
         with open("data/haberler_ham.txt", 'w', encoding='utf-8') as f:
             f.write(txt)
@@ -864,7 +890,7 @@ class HaberSistemi:
         # ═══════════════════════════════════════════
         # AŞAMA 4: Mevcut post-processing
         # ═══════════════════════════════════════════
-        html = self._inject_mastodon_badges(html)
+        html = self._inject_social_badges(html)
         html = self._fix_source_dates(html, txt_content)
 
         html_index = self._add_archive_links(html, is_archive=False)
@@ -1070,17 +1096,35 @@ KURALLAR:
             print(f"   ❌ Tamamlama hatası: {e}")
             return html
 
-    def _inject_mastodon_badges(self, html):
+    def _inject_social_badges(self, html):
         """
-        HTML'deki [MASTODON_SCORE:N:N] etiketlerini bulur,
-        news-item'a mastodon-item class ekler, badge enjekte eder, etiketi temizler.
-        Badge: platform ikonu + paylaşım + beğeni + toplam etkileşim skoru
+        HTML'deki [SOCIAL_SCORE:platform:skor:yorum] etiketlerini bulur,
+        news-item'a social-item class ekler, platforma özgü badge enjekte eder.
         """
         from bs4 import BeautifulSoup as _BS
         import re as _re
 
-        if '[MASTODON_SCORE:' not in html:
+        if '[SOCIAL_SCORE:' not in html:
             return html
+
+        # Platform etiket adları
+        platform_labels = {
+            'reddit':      'Reddit',
+            'hackernews':  'HackerNews',
+            'github':      'GitHub',
+        }
+        # Platform CSS sınıfları
+        platform_classes = {
+            'reddit':      'reddit-badge',
+            'hackernews':  'hn-badge',
+            'github':      'github-badge',
+        }
+        # Skor metrik isimleri
+        score_labels = {
+            'reddit':      'upvote',
+            'hackernews':  'puan',
+            'github':      'yildiz',
+        }
 
         soup = _BS(html, 'html.parser')
         for item in soup.find_all('div', class_='news-item'):
@@ -1088,34 +1132,42 @@ KURALLAR:
             if not src_tag:
                 continue
             src_text = src_tag.get_text()
-            m = _re.search(r'\[MASTODON_SCORE:(\d+):(\d+)\]', src_text)
+            m = _re.search(r'\[SOCIAL_SCORE:(\w+):(\d+):(\d+)\]', src_text)
             if not m:
                 continue
-            reblogs = int(m.group(1))
-            favs    = int(m.group(2))
-            score   = reblogs * 2 + favs
 
-            # mastodon-item class ekle
+            platform = m.group(1)
+            score    = int(m.group(2))
+            comments = int(m.group(3))
+            label    = platform_labels.get(platform, platform.capitalize())
+            css_cls  = platform_classes.get(platform, '')
+            s_label  = score_labels.get(platform, 'puan')
+
+            # social-item class ekle
             classes = item.get('class', [])
-            if 'mastodon-item' not in classes:
-                item['class'] = classes + ['mastodon-item']
+            if 'social-item' not in classes:
+                item['class'] = classes + ['social-item']
 
             # Etiketi kaynak metninden temizle
-            for tag in src_tag.find_all(string=_re.compile(r'\[MASTODON_SCORE:')):
-                cleaned = _re.sub(r'\s*\[MASTODON_SCORE:\d+:\d+\]', '', tag)
+            for tag in src_tag.find_all(string=_re.compile(r'\[SOCIAL_SCORE:')):
+                cleaned = _re.sub(r'\s*\[SOCIAL_SCORE:\w+:\d+:\d+\]', '', tag)
                 tag.replace_with(cleaned)
 
-            # Badge enjekte et (news-title'dan hemen önce)
-            # Platform + paylaşım + beğeni + toplam etkileşim skoru
-            badge_html = (
-                f'<span class="signal-badge mastodon-badge">'
-                f'<span class="signal-platform">&#128024; Mastodon</span>'
+            # Badge oluştur
+            comment_part = (
                 f'<span class="signal-sep">|</span>'
-                f'<span class="signal-stat">&#128260; {reblogs}</span>'
-                f'<span class="signal-stat">&#10084; {favs}</span>'
-                f'<span class="signal-score">Skor: {score}</span>'
+                f'<span class="signal-stat">{comments} yorum</span>'
+            ) if comments > 0 else ''
+
+            badge_html = (
+                f'<span class="signal-badge {css_cls}">'
+                f'<span class="signal-platform">{label}</span>'
+                f'<span class="signal-sep">|</span>'
+                f'<span class="signal-stat">{score} {s_label}</span>'
+                f'{comment_part}'
                 f'</span>'
             )
+
             title_tag = item.find('div', class_='news-title')
             if title_tag:
                 title_tag.insert_before(_BS(badge_html, 'html.parser'))
