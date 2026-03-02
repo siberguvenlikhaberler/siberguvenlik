@@ -429,7 +429,161 @@ The disclosure comes as the North Korean actors have also been observed publishi
 
 ================================================================================
 
-[5] BleepingComputer - Anthropic confirms Claude is down in a worldwide outage
+[5] BleepingComputer - How Deepfakes and Injection Attacks Are Breaking Identity Verification
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 10:01:11 -0500
+Link: https://www.bleepingcomputer.com/news/security/how-deepfakes-and-injection-attacks-are-breaking-identity-verification/
+
+[TAM METİN - 1406 kelime]
+By Ricardo Amper, Founder & CEO, Incode
+
+Deepfakes are evolving and are no longer confined to misinformation campaigns or viral media manipulation. Most security teams already understand the deepfake problem; however, the more urgent shift is how synthetic media is being operationalized.
+
+This fraud vector is being leveraged inside the identity moments that power the internet and economy – such as customer onboarding at a bank, driver onboarding for gig and delivery platforms, marketplace seller verification, account recovery, remote hiring, partner access, and privileged access workflows.
+
+As more work and business is done remotely, identity has become a primary control point – and a primary target. Bad actors don’t only want to fool a selfie check; they want to impersonate a real person, establish durable access, and reuse that foothold across consumer and enterprise environments.
+
+Cybersecurity and fraud teams are now dealing with a convergence of tactics that all aim at the same decision – the moment a system concludes “this is a real person”:
+
+High-fidelity synthetic faces and voices that can pass quick checks
+
+Replayed real footage from stolen or harvested sessions
+
+Automation that probes verification flows at scale
+
+Injection attacks that compromise the capture pipeline and substitute the input stream upstream
+
+This is why “deepfake detection” alone is no longer enough. Enterprises need full-session validation: including perception, device integrity, and behavioral signals… all in a single, real-time control.
+
+That is the model behind Incode Deepsight: an approach built to validate identity sessions end-to-end, not just evaluate the media in isolation.
+
+The right question is not only “Does this face look real?” It is “Can we trust this entire session end-to-end?”
+
+Deepfakes and injection are enterprise security issues
+
+In enterprise systems, a successful bypass is not a reputation event; it’s an access event. When verification accepts a manipulated or compromised session as real, attackers can:
+
+Create fraudulent accounts using synthetic identities
+
+Take over existing user accounts
+
+Bypass HR verification in remote hiring
+
+Gain unauthorized access to sensitive internal systems
+
+Unlike social media deception, these attacks can enable persistent access inside trusted environments. The downstream impact is durable: account persistence, privilege-escalation pathways, and lateral movement opportunities that start with a single false verification decision.
+
+Purdue University Validates Incode’s Deepfake Defense
+
+An independent study from Purdue University evaluated leading biometric vendors under advanced deepfake and presentation attack scenarios.
+
+See how Incode's DeepSight performance ranked across real-world attack simulations.
+
+Where identity checks fail: assuming the sensor is trustworthy
+
+Most identity checks are built around two signals: facial similarity and “liveness.” Both are useful,  and both can be undermined if the system assumes the input stream is authentic.
+
+Attackers break that assumption in two complementary ways.
+
+First, they mimic real media. Deepfakes and voice clones are improving under real operating conditions - short clips, mobile capture, compression, and imperfect lighting. A workflow that depends on a narrow visual surface area is increasingly exposed to false acceptance.
+
+Second, they bypass the sensor entirely. Injection attacks substitute the input stream before it reaches analysis. Instead of presenting a face to a camera, attackers can:
+
+Use virtual camera software to feed synthetic or pre-recorded video
+
+Run verification sessions inside emulators designed to mimic legitimate mobile devices
+
+Operate from rooted or jailbroken devices that bypass integrity checks
+
+Substitute live capture with manipulated streams upstream
+
+In these scenarios, the media can look perfect because it never had to survive a real capture path. That is why perception-only defenses (even strong ones) are necessary but not sufficient.
+
+What the Purdue Political Deepfakes Incident Database benchmark shows
+
+One practical problem for deepfake defense is generalization: detectors that test well in controlled settings often degrade in “in-the-wild” conditions.
+
+Researchers at Purdue University evaluated deepfake detection systems using their real-world benchmark based on the Political Deepfakes Incident Database (PDID).
+
+PDID contains real incident media distributed on platforms such as X, YouTube, TikTok, and Instagram, meaning the inputs are compressed, re-encoded, and post-processed in the same ways defenders often see in production.
+
+Heavy compression and re-encoding
+
+Short, mobile-first clips
+
+Heterogeneous generation pipelines
+
+Detectors were evaluated end-to-end using metrics such as accuracy, AUC, and false-acceptance rate (FAR). In identity workflows, FAR is often the more consequential metric, because even a small false-acceptance rate can allow persistent unauthorized access.
+
+Purdue’s results also highlight a practical reality for defenders: performance varies dramatically across detectors once inputs look like production.
+
+Among the commercial systems evaluated in Purdue’s PDID benchmark, Incode’s Deepsight delivered the strongest results when the task is purely visual deepfake detection - evaluating video content itself under real incident conditions.
+
+But that is only the first layer of the problem.
+
+It’s important to be precise: PDID measures robustness of media detection on real incident content. It does not model injection, device compromise, or full-session attacks.
+
+In real identity workflows, attackers do not choose one technique at a time; they stack them. A high-quality deepfake can be replayed. A replay can be injected. An injected stream can be automated at scale.
+
+The best media detectors still can be bypassed if the capture path is untrusted. That’s why Deepsight goes even deeper than asking “Is this video a deepfake?”
+
+Deepsight closes that gap by validating the full session across three layers: perception, integrity, and behavior, so that the system can stop attacks whether they arrive as a convincing deepfake, a replay, or an injected stream.
+
+Manual review doesn’t close the gap
+
+Human review can reduce some classes of fraud, but it is not a scalable security control against synthetic media.
+
+Even trained reviewers struggle to determine real from fake as generative models improve.
+
+Today’s injection attacks invalidate the premise and undermine human judgment entirely: a session can appear legitimate while the input stream is substituted upstream. Even consensus reviews among several experts cannot establish that the capture path was authentic.
+
+The security model that holds up: trust the session, not just the pixels.
+
+If attackers can win either by improving the media or by bypassing the sensor, defenses have to validate the session across multiple layers in real time:
+
+Perception: Is the media itself manipulated?
+
+Integrity: Is the device, camera, and session authentic?
+
+Behavior: Does the interaction reflect a real human and a normal verification flow?
+
+This model creates resilience. If a high-quality deepfake evades perception, integrity and behavioral signals can still prevent a successful bypass. If media is injected, integrity checks can fail the session regardless of how realistic the pixels look.
+
+How Incode Deepsight blocks deepfakes and injection attacks in real time
+
+Attackers are scaling. They can iterate against verification flows quickly, probe edge cases, and operationalize what works. Deepfakes raise the baseline risk of false acceptance, injection removes the camera as a reliable sensor and automation increases the volume of attempts.
+
+Enterprises that treat identity verification as a one-time check rather than a real-time security process will struggle to keep pace.
+
+Incode Deepsight is designed around a simple premise: if identity workflows are being attacked at both the media layer and session layer, defenses must validate the entire verification session end-to-end.
+
+During live verification, Deepsight combines three layers in real time:
+
+Perception analysis: Multi-modal AI that evaluates video, motion, and depth signals across multiple frames to detect synthetic media and physical spoofs. Deepsight also protects ID capture by detecting AI-generated identity documents.
+
+Integrity validation: Camera and device authenticity checks to identify and block injected media sources, such as virtual cameras, emulators, and compromised environments.
+
+Behavioral risk signals: Detection of automation indicators and bot-like interaction patterns that frequently accompany scaled attacks.
+
+This layered model is what makes Deepsight resilient in practice. If a high-quality deepfake evades perception, integrity and behavioral signals can still prevent a successful bypass. If media is injected, integrity checks can fail the session regardless of how realistic the pixels look.
+
+The goal is straightforward: determine whether the entire verification session can be trusted - not only whether a face looks real, but whether a real human is present on a trusted device in a live, untampered interaction.
+
+Closing the gap between detection and deployment
+
+Defending identity workflows now requires controls that assume adversarial AI and untrusted capture environments.
+
+Deepfake defense must evolve from spotting manipulated pixels to validating the authenticity of entire verification sessions. Layered defenses across media authenticity, device integrity, and behavioral signals are the most reliable way to reduce false acceptance without adding unnecessary friction for legitimate users.
+
+Learn how Deepsight blocks deepfakes and injection attacks in real time. incode.com/deepsight
+
+Sponsored and written by Incode.
+
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/how-deepfakes-and-injection-attacks-are-breaking-identity-verification/, bleepingcomputer.com, 02.03.2026)
+
+================================================================================
+
+[6] BleepingComputer - Anthropic confirms Claude is down in a worldwide outage
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 07:23:00 -0500
 Link: https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-confirms-claude-is-down-in-a-worldwide-outage/
@@ -461,7 +615,7 @@ Anthropic: Viral Claude “Banned and reported to authorities” message isn’t
 
 ================================================================================
 
-[6] BleepingComputer - ClawJacked attack let malicious websites hijack OpenClaw to steal data
+[7] BleepingComputer - ClawJacked attack let malicious websites hijack OpenClaw to steal data
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 16:44:55 -0500
 Link: https://www.bleepingcomputer.com/news/security/clawjacked-attack-let-malicious-websites-hijack-openclaw-to-steal-data/
@@ -521,7 +675,7 @@ Zyxel warns of critical RCE flaw affecting over a dozen routers
 
 ================================================================================
 
-[7] BleepingComputer - Samsung TVs to stop collecting Texans’ data without express consent
+[8] BleepingComputer - Samsung TVs to stop collecting Texans’ data without express consent
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:23:34 -0500
 Link: https://www.bleepingcomputer.com/news/security/samsung-tvs-to-stop-collecting-texans-data-without-express-consent/
@@ -575,7 +729,41 @@ Microsoft adds Copilot data controls to all storage locations
 
 ================================================================================
 
-[8] Security Affairs - APT37 combines cloud storage and USB implants to infiltrate air-gapped systems
+[9] Security Affairs - Russia-linked APT28 exploited MSHTML zero-day CVE-2026-21513 before patch
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 14:45:52 +0000
+Link: https://securityaffairs.com/188782/security/russia-linked-apt28-exploited-mshtml-zero-day-cve-2026-21513-before-patch.html
+
+[TAM METİN - 416 kelime]
+Russia-linked APT28 exploited MSHTML zero-day CVE-2026-21513 before patch
+
+Russia-linked APT28 reportedly exploited MSHTML zero-day CVE-2026-21513 before Microsoft patched it, a high-severity bypass flaw.
+
+Akamai reports that Russia-linked APT28 may have exploited CVE-2026-21513 CVSS score of 8.8), a high-severity MSHTML vulnerability (CVSS 8.8), before Microsoft patched it in February 2026.
+
+The vulnerability is an Internet Explorer security control bypass that can lead to code execution when a victim opens a malicious HTML page or LNK file. The flaw could be triggered by opening a malicious HTML or LNK file, allowing attackers to bypass protections and potentially execute code. While Microsoft shared few details
+
+Microsoft confirmed CVE-2026-21513 was exploited in real-world zero-day attacks and credited MSTIC, MSRC, the Office Security Team, and Google’s GTIG for reporting it. Akamai found a malicious sample uploaded to VirusTotal on January 2026 tied to infrastructure linked to APT28.
+
+Akamai researchers used PatchDiff-AI to analyze the root cause of the issue and traced CVE-2026-21513 to hyperlink navigation logic in ieframe.dll. They found that poor URL validation lets attacker input reach ShellExecuteExW, enabling code execution outside the browser sandbox. Researchers reproduced the flaw using MSHTML components and identified an exploit sample, document.doc.LnK.download, uploaded in January 2026 and linked to APT28 infrastructure.
+
+“By correlating the vulnerable code path with public threat intelligence, we identified a sample that was leveraging this functionality: document.doc.LnK.download.” reads the report published by Akamai. “The sample was first submitted to VirusTotal on January 30, 2026, shortly before February’s Patch Tuesday, and is associated with infrastructure linked to APT28, an active Russian state-sponsored threat actor.”
+
+The payload uses a specially crafted Windows Shortcut (.lnk) that embeds an HTML file directly after the standard LNK structure. When executed, it connects to wellnesscaremed[.]com, a domain attributed to APT28 and widely used in the campaign’s multistage activity. The exploit relies on nested iframes and multiple DOM contexts to manipulate trust boundaries, bypassing Mark of the Web (MotW) and Internet Explorer Enhanced Security Configuration (IE ESC). By downgrading the security context, it triggers the vulnerable navigation flow, allowing attacker-controlled content to invoke ShellExecuteExW and execute code outside the browser sandbox.
+
+“While the observed campaign leverages malicious .LNK files, the vulnerable code path can be triggered through any component embedding MSHTML. Therefore, additional delivery mechanisms beyond LNK-based phishing should be expected.” concludes the report.
+
+Microsoft addressed the issue by tightening hyperlink protocol validation to prevent file://, http://, and https:// links from reaching ShellExecuteExW.
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, APT28, CVE-2026-21513)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188782/security/russia-linked-apt28-exploited-mshtml-zero-day-cve-2026-21513-before-patch.html, securityaffairs.com, 02.03.2026)
+
+================================================================================
+
+[10] Security Affairs - APT37 combines cloud storage and USB implants to infiltrate air-gapped systems
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 12:38:26 +0000
 Link: https://securityaffairs.com/188767/apt/apt37-combines-cloud-storage-and-usb-implants-to-infiltrate-air-gapped-systems.html
@@ -615,7 +803,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[9] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
+[11] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:26:25 +0000
 Link: https://securityaffairs.com/188708/cyber-crime/europols-project-compass-nets-30-arrests-in-crackdown-on-the-com.html
@@ -643,7 +831,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[10] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
+[12] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 09:42:34 +0000
 Link: https://securityaffairs.com/188749/hacking/clawjacked-flaw-exposed-openclaw-users-to-data-theft.html
@@ -695,7 +883,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[11] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
+[13] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:43:04 +0000
 Link: https://securityaffairs.com/188734/cyber-crime/ukrainian-hacker-pleads-guilty-to-running-onlyfake-ai-id-scam-site.html
@@ -725,7 +913,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[12] Security Affairs - ShinyHunters leaked the full Odido dataset
+[14] Security Affairs - ShinyHunters leaked the full Odido dataset
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 19:12:55 +0000
 Link: https://securityaffairs.com/188709/data-breach/shinyhunters-leaked-the-full-odido-dataset.html
@@ -769,7 +957,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[13] Security Affairs - Claude code abused to steal 150GB in cyberattack on Mexican agencies
+[15] Security Affairs - Claude code abused to steal 150GB in cyberattack on Mexican agencies
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 13:49:07 +0000
 Link: https://securityaffairs.com/188696/ai/claude-code-abused-to-steal-150gb-in-cyberattack-on-mexican-agencies.html
@@ -803,7 +991,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[14] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 86
+[16] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 86
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:30:16 +0000
 Link: https://securityaffairs.com/188691/malware/security-affairs-malware-newsletter-round-86.html
@@ -847,7 +1035,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[15] Security Affairs - CVE-2025-64328 exploitation impacts 900 Sangoma FreePBX instances
+[17] Security Affairs - CVE-2025-64328 exploitation impacts 900 Sangoma FreePBX instances
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 10:01:54 +0000
 Link: https://securityaffairs.com/188679/uncategorized/cve-2025-64328-exploitation-impacts-900-sangoma-freepbx-instances.html
@@ -887,7 +1075,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[16] Security Affairs - Security Affairs newsletter Round 565 by Pierluigi Paganini – INTERNATIONAL EDITION
+[18] Security Affairs - Security Affairs newsletter Round 565 by Pierluigi Paganini – INTERNATIONAL EDITION
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 00:35:00 +0000
 Link: https://securityaffairs.com/188669/security/security-affairs-newsletter-round-565-by-pierluigi-paganini-international-edition.html
@@ -975,7 +1163,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[17] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
+[19] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:13:04 GMT
 Link: https://isc.sans.edu/diary/rss/32696
@@ -1013,7 +1201,7 @@ blog.DidierStevens.com
 
 ================================================================================
 
-[18] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
+[20] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:11:45 GMT
 Link: https://isc.sans.edu/diary/rss/32758
@@ -1024,7 +1212,7 @@ Link: https://isc.sans.edu/diary/rss/32758
 
 ================================================================================
 
-[19] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
+[21] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 02:00:03 GMT
 Link: https://isc.sans.edu/diary/rss/32756
@@ -1035,7 +1223,7 @@ Link: https://isc.sans.edu/diary/rss/32756
 
 ================================================================================
 
-[20] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
+[22] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://cyberscoop.com/ai-deepfakes-olympic-athletes-political-manipulation/
@@ -1123,7 +1311,7 @@ Project Compass is Europol’s new playbook for taking on The Com
 
 ================================================================================
 
-[21] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
+[23] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://cyberscoop.com/ai-silent-probing-cyber-risk-behavioral-defense-op-ed/
@@ -1222,7 +1410,7 @@ Project Compass is Europol’s new playbook for taking on The Com
 
 ================================================================================
 
-[22] The Register - Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
+[24] The Register - Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T13:42:52.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/dubai_iran_sim_swap/
@@ -1272,7 +1460,7 @@ Iran has called its retaliation a "legitimate act of self-defense." ®
 
 ================================================================================
 
-[23] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
+[25] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T00:51:38.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/south_korea_tax_office_cryptocurrency_leak/
@@ -1354,7 +1542,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[24] TechCrunch Security - Hackers and internet outages hit Iran amid U.S. air strikes
+[26] TechCrunch Security - Hackers and internet outages hit Iran amid U.S. air strikes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 14:16:53 +0000
 Link: https://techcrunch.com/2026/03/02/hackers-and-internet-outages-hit-iran-amid-u-s-air-strikes/
@@ -1464,7 +1652,7 @@ A Meta AI security researcher said an OpenClaw agent ran amok on her inbox
 
 ================================================================================
 
-[25] TechCrunch Security - Let’s explore the best alternatives to Discord
+[27] TechCrunch Security - Let’s explore the best alternatives to Discord
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Sun, 01 Mar 2026 19:00:01 +0000
 Link: https://techcrunch.com/2026/03/01/best-discord-alternatives-age-verification-identity-privacy/
@@ -1586,7 +1774,7 @@ A Meta AI security researcher said an OpenClaw agent ran amok on her inbox
 
 ================================================================================
 
-[26] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
+[28] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://www.csoonline.com/article/4138735/innovation-without-exposure-a-cisos-secure-by-design-framework-for-business-outcomes.html
@@ -1788,7 +1976,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[27] CSO Online - A scorecard for cyber and risk culture
+[29] CSO Online - A scorecard for cyber and risk culture
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4138709/a-scorecard-for-cyber-and-risk-culture.html
@@ -2062,7 +2250,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[28] CSO Online - Hacker erpressen weniger Lösegeld
+[30] CSO Online - Hacker erpressen weniger Lösegeld
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:24:16 +0000
 Link: https://www.csoonline.com/article/4139126/hacker-erpressen-weniger-losegeld.html
@@ -2100,7 +2288,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[29] CSO Online - How CISOs can build a resilient workforce
+[31] CSO Online - How CISOs can build a resilient workforce
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4136307/how-cisos-can-build-a-resilient-workforce.html
@@ -2232,7 +2420,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[30] CSO Online - Im Fokus: RZ-Modernisierung
+[32] CSO Online - Im Fokus: RZ-Modernisierung
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 06:00:00 +0000
 Link: https://whitepaper.computerwoche.de/resources/im-fokus-warum-die-modernisierung-von-rechenzentren-not-tut/
@@ -2243,7 +2431,7 @@ Link: https://whitepaper.computerwoche.de/resources/im-fokus-warum-die-modernisi
 
 ================================================================================
 
-[31] CSO Online - Kubernetes Security: Wie Sie Ihre Cluster (besser) absichern
+[33] CSO Online - Kubernetes Security: Wie Sie Ihre Cluster (besser) absichern
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 03:47:00 +0000
 Link: https://www.csoonline.com/article/3492006/kubernetes-security-wie-sie-ihre-cluster-besser-absichern.html
