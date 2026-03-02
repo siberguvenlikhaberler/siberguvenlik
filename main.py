@@ -949,6 +949,7 @@ class HaberSistemi:
         # ═══════════════════════════════════════════
         # AŞAMA 4: Mevcut post-processing
         # ═══════════════════════════════════════════
+        self._translate_social_signals()
         html = self._inject_social_box(html)
         html = self._fix_source_dates(html, txt_content)
 
@@ -1155,6 +1156,45 @@ KURALLAR:
             print(f"   ❌ Tamamlama hatası: {e}")
             return html
 
+    def _translate_social_signals(self):
+        """
+        Sosyal sinyal başlıklarını Gemini ile resmi Türkçe tek cümleye çevirir.
+        Sonuç her öğenin 'title_tr' alanına yazılır.
+        Hata durumunda orijinal başlık kullanılmaya devam eder.
+        """
+        import re as _re
+        if not self.social_data:
+            return
+
+        lines = [f"[S{i}]: {p.get('title', '')}"
+                 for i, p in enumerate(self.social_data, 1)]
+        prompt = (
+            "Aşağıdaki sosyal medya paylaşım başlıklarını resmi Türkçe ile "
+            "birer cümleye çevir. Resmi dil zorunludur: -mıştır, -edilmiştir, "
+            "-tespit edilmiştir gibi fiil çekimleri kullan. "
+            "Sadece çevirileri ver, başka hiçbir şey yazma.\n"
+            "Format: [S1]: çeviri\n[S2]: çeviri\n\n"
+            + '\n'.join(lines)
+        )
+        try:
+            client = genai.Client(api_key=GEMINI_API_KEY)
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt,
+                config=genai_types.GenerateContentConfig(
+                    max_output_tokens=1024,
+                    temperature=0.3,
+                ),
+            )
+            text = response.text.strip()
+            for match in _re.finditer(r'\[S(\d+)\]:\s*(.+)', text):
+                idx = int(match.group(1)) - 1
+                if 0 <= idx < len(self.social_data):
+                    self.social_data[idx]['title_tr'] = match.group(2).strip()
+            print(f"   Sosyal sinyal Turkce ozetler uretildi")
+        except Exception as e:
+            print(f"   Sosyal sinyal ceviri hatasi (orijinal baslik kullanilacak): {e}")
+
     def _inject_social_box(self, html):
         """
         Sosyal medya sinyalleri kutusunu HTML'e enjekte eder.
@@ -1182,7 +1222,9 @@ KURALLAR:
         for post in self.social_data:
             platform    = post.get('platform', '')
             source      = platform_labels.get(platform, post.get('source', ''))
-            title       = post.get('title', '').replace('<', '&lt;').replace('>', '&gt;')
+            # title_tr varsa (Gemini çevirisi) onu kullan, yoksa orijinal başlık
+            raw_title   = post.get('title_tr') or post.get('title', '')
+            title       = raw_title.replace('<', '&lt;').replace('>', '&gt;')
             link        = post.get('link', '#')
             score       = post.get('score', 0)
             comments    = post.get('comments', 0)

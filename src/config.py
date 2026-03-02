@@ -516,7 +516,9 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
 ```
 
 BAŞLIK KURALLARI:
-✓ İsim-fiil yapısı: "CVE-2024-1234'ün Microsoft Exchange Sunucularını Etkilemesi"
+✓ Eylem cümlesi: "CVE-2024-1234 Microsoft Exchange Sunucularını Etkilemiştir"
+✓ Fiil zorunlu: -mıştır, -edilmiştir, -tespit edilmiştir, -açıklanmıştır
+✗ YASAK: -ması, -edilmesi, -bulunması gibi isim-fiil (mastar) yapıları
 ✓ SOMUT detaylar: Şirket/CVE/ülke adları dahil
 ✓ 7-9 kelime, her kelimenin ilk harfi büyük
 
