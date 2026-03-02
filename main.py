@@ -1178,22 +1178,27 @@ KURALLAR:
         )
         try:
             client = genai.Client(api_key=GEMINI_API_KEY)
-            response = client.models.generate_content(
+            chunks = []
+            for chunk in client.models.generate_content_stream(
                 model='gemini-2.5-flash',
                 contents=prompt,
                 config=genai_types.GenerateContentConfig(
                     max_output_tokens=1024,
                     temperature=0.3,
                 ),
-            )
-            text = response.text.strip()
+            ):
+                if chunk.text:
+                    chunks.append(chunk.text)
+            text = ''.join(chunks).strip()
+            matched = 0
             for match in _re.finditer(r'\[S(\d+)\]:\s*(.+)', text):
                 idx = int(match.group(1)) - 1
                 if 0 <= idx < len(self.social_data):
                     self.social_data[idx]['title_tr'] = match.group(2).strip()
-            print(f"   Sosyal sinyal Turkce ozetler uretildi")
+                    matched += 1
+            print(f"   Sosyal sinyal Turkce ozetler: {matched}/{len(self.social_data)}")
         except Exception as e:
-            print(f"   Sosyal sinyal ceviri hatasi (orijinal baslik kullanilacak): {e}")
+            print(f"   Sosyal sinyal ceviri hatasi (orijinal baslik): {e}")
 
     def _inject_social_box(self, html):
         """
@@ -1231,9 +1236,12 @@ KURALLAR:
             item_cls    = platform_css.get(platform, '')
 
             if platform == 'github_advisories':
-                severity   = post.get('severity', '').upper()
+                _sev_tr    = {'critical': 'KRİTİK', 'high': 'YÜKSEK',
+                              'medium': 'ORTA', 'low': 'DÜŞÜK'}
+                sev_raw    = post.get('severity', '').lower()
+                sev_label  = _sev_tr.get(sev_raw, sev_raw.upper())
                 cvss       = post.get('cvss', 0)
-                engagement = f"SEVERİTE: {severity}"
+                engagement = f"SEVERİTE: {sev_label}"
                 if cvss:
                     engagement += f"  |  CVSS: {cvss}"
             else:

@@ -111,6 +111,10 @@ def get_claude_prompt(news_content, recent_events=''):
 
 GÖREV: 130 haberi analiz et → En önemli 5'ini seç → Kalanları önem sırasına koy → HTML raporu oluştur.
 
+🚨 BAŞLIK KURALI — TÜM HABER BAŞLIKLARI İÇİN ZORUNLU:
+⛔ YASAK: "...Etkilenmesi", "...Açıklanması", "...Bulunması" → mastar/isim-fiil KULLANMA
+✅ ZORUNLU: "...Etkilemiştir", "...Açıklanmıştır", "...Tespit Edilmiştir" → eylem cümlesi
+
 🚨 KRİTİK AŞAMA 1 - HABERLERİ FİLTRELE:
 Aşağıdaki türleri ÇIKAR (raporda gösterme):
 ❌ "Podcast yayınlandı", "Webinar duyurusu", "Ürün lansmanı", "Beta sürüm" 
