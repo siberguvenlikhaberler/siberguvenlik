@@ -1,187 +1,47 @@
 
 ================================================================================
-📅 01 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
+📅 02 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
-[1] The Hacker News - ClawJacked Flaw Lets Malicious Sites Hijack Local OpenClaw AI Agents via WebSocket
+[1] BleepingComputer - ClawJacked attack let malicious websites hijack OpenClaw to steal data
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 28 Feb 2026 22:51:00 +0530
-Link: https://thehackernews.com/2026/02/clawjacked-flaw-lets-malicious-sites.html
+Tarih: Sun, 01 Mar 2026 16:44:55 -0500
+Link: https://www.bleepingcomputer.com/news/security/clawjacked-attack-let-malicious-websites-hijack-openclaw-to-steal-data/
 
-[TAM METİN - 1214 kelime]
-OpenClaw has fixed a high-severity security issue that, if successfully exploited, could have allowed a malicious website to connect to a locally running artificial intelligence (AI) agent and take over control.
+[TAM METİN - 590 kelime]
+Security researchers have disclosed a high-severity vulnerability dubbed "ClawJacked" in the popular AI agent OpenClaw that allowed a malicious website to silently bruteforce access to a locally running instance and take control over it.
 
-"Our vulnerability lives in the core system itself – no plugins, no marketplace, no user-installed extensions – just the bare OpenClaw gateway, running exactly as documented," Oasis Security said in a report published this week.
+Oasis Security discovered the issue and reported it to OpenClaw, with a fix being released in version 2026.2.26 on February 26.
 
-The flaw has been codenamed ClawJacked by the cybersecurity company.
+OpenClaw is a self-hosted AI platform that has recently surged in popularity for enabling AI agents to autonomously send messages, execute commands, and manage tasks across multiple platforms.
 
-The attack assumes the following threat model: A developer has OpenClaw set up and running on their laptop, with its gateway, a local WebSocket server, bound to localhost and protected by a password. The attack kicks in when the developer lands on an attacker-controlled website through social engineering or some other means.
+According to Oasis Security, the vulnerability is caused by the OpenClaw gateway service binding to localhost by default and exposing a WebSocket interface.
 
-The infection sequence then follows the steps below -
+Because browser cross-origin policies do not block WebSocket connections to localhost, a malicious website visited by an OpenClaw user can use JavaScript to silently open a connection to the local gateway and attempt authentication without triggering any warnings.
 
-Malicious JavaScript on the web page opens a WebSocket connection to localhost on the OpenClaw gateway port.
+While OpenClaw includes rate limiting to prevent brute-force attacks, the loopback address (127.0.0.1) is exempt by default, so local CLI sessions are not mistakenly locked out.
 
-The script brute-forces the gateway password by taking advantage of a missing rate-limiting mechanism.
+The researchers found that they could brute-force the OpenClaw management password at hundreds of attempts per second without failed attempts being throttled or logged. Once the correct password is guessed, the attacker can silently register as a trusted device, as the gateway automatically approves device pairings from localhost without requiring user confirmation.
 
-Post successful authentication with admin-level permissions, the script stealthily registers as a trusted device, which is auto-approved by the gateway without any user prompt.
+"In our lab testing, we achieved a sustained rate of hundreds of password guesses per second from browser JavaScript alone," explains Oasis.
 
-The attacker gains complete control over the AI agent, allowing them to interact with it, dump configuration data, enumerate connected nodes, and read application logs.
+"At that speed, a list of common passwords is exhausted in under a second, and a large dictionary would take only minutes. A human-chosen password doesn't stand a chance."
 
-"Any website you visit can open one to your localhost. Unlike regular HTTP requests, the browser doesn't block these cross-origin connections," Oasis Security said. "So while you're browsing any website, JavaScript running on that page can silently open a connection to your local OpenClaw gateway. The user sees nothing."
+With an authenticated session and admin permissions, the attacker can now interact directly with the AI platform, dumping credentials, listing connected nodes, stealing credentials, and reading application logs.
 
-"That misplaced trust has real consequences. The gateway relaxes several security mechanisms for local connections - including silently approving new device registrations without prompting the user. Normally, when a new device connects, the user must confirm the pairing. From localhost, it's automatic."
+Oasis says this could allow an attacker to instruct the agent to search messaging histories for sensitive information, exfiltrate files from connected devices, or execute arbitrary shell commands on paired nodes, effectively resulting in full workstation compromise triggered from a browser tab.
 
-Following responsible disclosure, OpenClaw pushed a fix in less than 24 hours with version 2026.2.25 released on February 26, 2026. Users are advised to apply the latest updates as soon as possible, periodically audit access granted to AI agents, and enforce appropriate governance controls for non-human (aka agentic) identities.
+Oasis shared a demonstration of this attack, showing how it could be used to steal sensitive data through the OpenClaw vulnerability.
 
-The development comes amid a broader security scrutiny of the OpenClaw ecosystem, primarily stemming from the fact that AI agents hold entrenched access to disparate systems and the authority to execute tasks across enterprise tools, leading to a significantly larger blast radius should they be compromised.
+Oasis reported the issue to OpenClaw, including technical details and proof-of-concept code, and it was fixed within 24 hours of disclosure.
 
-Reports from Bitsight and NeuralTrust have detailed how OpenClaw instances left connected to the internet pose an expanded attack surface, with each integrated service further broadening the blast radius and can be transformed into an attack weapon by embedding prompt injections in content (e.g., an email or a Slack message) processed by the agent to execute malicious actions.
+The fix tightens WebSocket security checks and adds additional protections to prevent attackers from abusing localhost loopback connections to brute-force logins or hijack sessions, even if those connections are configured to be exempt from rate limiting.
 
-The disclosure comes as OpenClaw also patched a log poisoning vulnerability that allowed attackers to write malicious content to log files via WebSocket requests to a publicly accessible instance on TCP port 18789.
+Organizations and developers running OpenClaw should update to version 2026.2.26 or later immediately to prevent their installations from being hijacked.
 
-Since the agent reads its own logs to troubleshoot certain tasks, the security loophole could be abused by a threat actor to embed indirect prompt injections, leading to unintended consequences. The issue was addressed in version 2026.2.13, which was shipped on February 14, 2026.
+With OpenClaw's massive popularity, security researchers have been focusing on identifying vulnerabilities and attacks targeting the platform.
 
-"If the injected text is interpreted as meaningful operational information rather than untrusted input, it could influence decisions, suggestions, or automated actions," Eye Security said. "The impact would therefore not be 'instant takeover,' but rather: manipulation of agent reasoning, influencing troubleshooting steps, potential data disclosure if the agent is guided to reveal context, and indirect misuse of connected integrations."
-
-In recent weeks, OpenClaw has also been found susceptible to multiple vulnerabilities (CVE-2026-25593, CVE-2026-24763, CVE-2026-25157, CVE-2026-25475, CVE-2026-26319, CVE-2026-26322, CVE-2026-26329), ranging from moderate to high severity, that could result in remote code execution, command injection, server-side request forgery (SSRF), authentication bypass, and path traversal. The vulnerabilities have been addressed in OpenClaw versions 2026.1.20, 2026.1.29, 2026.2.1, 2026.2.2, and 2026.2.14.
-
-"As AI agent frameworks become more prevalent in enterprise environments, security analysis must evolve to address both traditional vulnerabilities and AI-specific attack surfaces," Endor Labs said.
-
-"The infection chain begins with a normal SKILL.md that installs a prerequisite," Trend Micro said. "The skill appears harmless on the surface and was even labeled as benign on VirusTotal. OpenClaw then goes to the website, fetches the installation instructions, and proceeds with the installation if the LLM decides to follow the instructions."
-
-The instructions hosted on the website "openclawcli.vercel[.]app" include a malicious command to download a stealer payload from an external server ("91.92.242[.]30") and run it.
-
-Threat hunters have also flagged a new malware delivery campaign in which a threat actor by the name @liuhui1010 has been identified, leaving comments on legitimate skill listing pages, urging users to explicitly run a command they provided on the Terminal app if the skill "doesn't work on macOS."
-
-The command is designed to retrieve Atomic Stealer from "91.92.242[.]30," an IP address previously documented by Koi Security and OpenSourceMalware for distributing the same malware via malicious skills uploaded to ClawHub.
-
-What's more, a recent analysis of 3,505 ClawHub skills by AI security company Straiker has uncovered no less than 71 malicious ones, some of which posed as legitimate cryptocurrency tools but contained hidden functionality to redirect funds to threat actor-controlled wallets.
-
-Two other skills, bob-p2p-beta and runware, have been attributed to a multi-layered cryptocurrency scam that employs an agent-to-agent attack chain targeting the AI agent ecosystem. The skills have been attributed to a threat actor who operates under the aliases "26medias" on ClawHub and "BobVonNeumann" on Moltbook and X.
-
-"BobVonNeumann presents itself as an AI agent on Moltbook, a social network designed for agents to interact with each other," researchers Yash Somalkar and Dan Regalado said. "From that position, it promotes its own malicious skills directly to other agents, exploiting the trust that agents are designed to extend to each other by default. It's a supply chain attack with a social engineering layer built on top."
-
-What bob-p2p-beta does, however, is instruct other AI agents to store Solana wallet private keys in plaintext, purchase worthless $BOB tokens on pump.fun, and route all payments through an attacker-controlled infrastructure. The second skill claims to offer a benign image generation tool to build the developer's credibility.
-
-Given that ClawHub is becoming a new fertile ground for attackers, users are advised to audit skills before installing them, avoid providing credentials and keys unless it's essential, and monitor skill behavior.
-
-The security risks associated with self-hosted agent runtimes like OpenClaw have also prompted Microsoft to issue an advisory, warning that unguarded deployment could pave the way for credential exposure/exfiltration, memory modification, and host compromise if the agent can be tricked into retrieving and running malicious code either through poisoned skills or prompt injections.
-
-"Because of these characteristics, OpenClaw should be treated as untrusted code execution with persistent credentials," the Microsoft Defender Security Research Team said. "It is not appropriate to run on a standard personal or enterprise workstation."
-
-"If an organization determines that OpenClaw must be evaluated, it should be deployed only in a fully isolated environment such as a dedicated virtual machine or separate physical system. The runtime should use dedicated, non-privileged credentials and access only non-sensitive data. Continuous monitoring and a rebuild plan should be part of the operating model."
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/clawjacked-flaw-lets-malicious-sites.html, thehackernews.com, 28.02.2026)
-
-================================================================================
-
-[2] The Hacker News - Thousands of Public Google Cloud API Keys Exposed with Gemini Access After API Enablement
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 28 Feb 2026 15:26:00 +0530
-Link: https://thehackernews.com/2026/02/thousands-of-public-google-cloud-api.html
-
-[TAM METİN - 707 kelime]
-New research has found that Google Cloud API keys, typically designated as project identifiers for billing purposes, could be abused to authenticate to sensitive Gemini endpoints and access private data.
-
-The findings come from Truffle Security, which discovered nearly 3,000 Google API keys (identified by the prefix "AIza") embedded in client-side code to provide Google-related services like embedded maps on websites.
-
-"With a valid key, an attacker can access uploaded files, cached data, and charge LLM-usage to your account," security researcher Joe Leon said, adding the keys "now also authenticate to Gemini even though they were never intended for it."
-
-The problem occurs when users enable the Gemini API on a Google Cloud project (i.e., Generative Language API), causing the existing API keys in that project, including those accessible via the website JavaScript code, to gain surreptitious access to Gemini endpoints without any warning or notice.
-
-This effectively allows any attacker who scrapes websites to get hold of such API keys and use them for nefarious purposes and quota theft, including accessing sensitive files via the /files and /cachedContents endpoints, as well as making Gemini API calls, racking up huge bills for the victims.
-
-In addition, Truffle Security found that creating a new API key in Google Cloud defaults to "Unrestricted," meaning it's applicable for every enabled API in the project, including Gemini.
-
-"The result: thousands of API keys that were deployed as benign billing tokens are now live Gemini credentials sitting on the public internet," Leon said. In all, the company said it found 2,863 live keys accessible on the public internet, including a website associated with Google.
-
-The disclosure comes as Quokka published a similar report, finding over 35,000 unique Google API keys embedded in its scan of 250,000 Android apps.
-
-"Beyond potential cost abuse through automated LLM requests, organizations must also consider how AI-enabled endpoints might interact with prompts, generated content, or connected cloud services in ways that expand the blast radius of a compromised key," the mobile security company said.
-
-"Even if no direct customer data is accessible, the combination of inference access, quota consumption, and possible integration with broader Google Cloud resources creates a risk profile that is materially different from the original billing-identifier model developers relied upon."
-
-Although the behavior was initially deemed intended, Google has since stepped in to address the problem.
-
-"We are aware of this report and have worked with the researchers to address the issue," a Google spokesperson told The Hacker News via email. "Protecting our users' data and infrastructure is our top priority. We have already implemented proactive measures to detect and block leaked API keys that attempt to access the Gemini API."
-
-It's currently not known if this issue was ever exploited in the wild. However, in a Reddit post published two days ago, a user claimed a "stolen" Google Cloud API Key resulted in $82,314.44 in charges between February 11 and 12, 2026, up from a regular spend of $180 per month.
-
-We have reached out to Google for further comment, and we will update the story if we hear back.
-
-Users who have set up Google Cloud projects are advised to check their APIs and services, and verify if artificial intelligence (AI)-related APIs are enabled. If they are enabled and publicly accessible (either in client-side JavaScript or checked into a public repository), make sure the keys are rotated.
-
-"Start with your oldest keys first," Truffle Security said. "Those are the most likely to have been deployed publicly under the old guidance that API keys are safe to share, and then retroactively gained Gemini privileges when someone on your team enabled the API."
-
-"This is a great example of how risk is dynamic, and how APIs can be over-permissioned after the fact," Tim Erlin, security strategist at Wallarm, said in a statement. "Security testing, vulnerability scanning, and other assessments must be continuous."
-
-"APIs are tricky in particular because changes in their operations or the data they can access aren't necessarily vulnerabilities, but they can directly increase risk. The adoption of AI running on these APIs, and using them, only accelerates the problem. Finding vulnerabilities isn't really enough for APIs. Organizations have to profile behavior and data access, identifying anomalies and actively blocking malicious activity."
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/02/thousands-of-public-google-cloud-api.html, thehackernews.com, 28.02.2026)
-
-================================================================================
-
-[3] BleepingComputer - QuickLens Chrome extension steals crypto, shows ClickFix attack
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 28 Feb 2026 14:18:52 -0500
-Link: https://www.bleepingcomputer.com/news/security/quicklens-chrome-extension-steals-crypto-shows-clickfix-attack/
-
-[TAM METİN - 875 kelime]
-A Chrome extension named "QuickLens - Search Screen with Google Lens" has been removed from the Chrome Web Store after it was compromised to push malware and attempt to steal crypto from thousands of users.
-
-QuickLens was initially published as a Chrome extension that lets users run Google Lens searches directly in their browser. The extension grew to roughly 7,000 users and, at one point, received a featured badge from Google.
-
-However, on February 17, 2026, a new version 5.8 was released that contained malicious scripts that introduced ClickFix attacks and info-stealing functionality for those using the extension.
-
-The malicious QuickLens extension
-
-Security researchers at Annex first reported that the extension had recently changed ownership after being listed for sale on ExtensionHub, a marketplace where developers sell browser extensions.
-
-Annex says that on February 1, 2026, the owner changed to support@doodlebuggle.top under "LLC Quick Lens," with a new privacy policy hosted on a barely functional domain. Just over two weeks later, the malicious update was pushed to users.
-
-Annex's analysis shows that version 5.8 requested new browser permissions, including declarativeNetRequestWithHostAccess and webRequest.
-
-It also included a rules.json file that stripped browser security headers, such as  Content-Security-Policy (CSP), X-Frame-Options, and X-XSS-Protection, from all pages and frames. These headers would have made it more difficult to run malicious scripts on websites.
-
-The update also introduced communication with a command-and-control (C2) server at api.extensionanalyticspro[.]top. According to Annex, the extension generated a persistent UUID, fingerprinted the victim's country using Cloudflare's trace endpoint, identified the browser and OS, and then polled the C2 server every five minutes for instructions.
-
-BleepingComputer learned about the extension this week after seeing numerous users [1, 2] reporting fake Google Update alerts on every web page they visited.
-
-"That is appearing in every site i go, i through it could be because Chrome wasn't updated, but even after uptading it continues to appear," a user seeking help said on Reddit.
-
-"Of course i will not run the code that it copy on my clipboard on the run box but it keeps appearing in every site, making it impossible to interact with anything."
-
-BleepingComputer's analysis of the extension showed it connected to a C2 server at https://api.extensionanalyticspro[.]top/extensions/callback?uuid=[uuid]&extension=kdenlnncndfnhkognokgfpabgkgehoddto, where it received an array of malicious JavaScript scripts.
-
-These payloads were then executed on every page load using a technique that Annex described as a "1x1 GIF pixel onload trick."
-
-Because the extension stripped CSP headers on all visited sites, this inline JavaScript execution worked even on sites that would normally block it.
-
-The first payload contacts google-update[.]icu, where it receives an additional payload that displays a fake Google Update prompt. Clicking the update button would display a ClickFix attack, prompting users to perform a verification by running code on their computers.
-
-For Windows users, this led to the download of a malicious executable named "googleupdate.exe" [VirusTotal] that was signed with a certificate from "Hubei Da'e Zhidao Food Technology Co., Ltd."
-
-Upon execution, the malware launched a hidden PowerShell command that spawned a second PowerShell instance to connect to drivers[.]solutions/META-INF/xuoa.sys using a custom "Katzilla" user agent.
-
-The response was piped into Invoke-Expression for execution. However, by the time BleepingComputer analyzed the payloads, the second-stage URL was no longer serving any malicious content.
-
-Another malicious JavaScript "agent" delivered by the https://api.extensionanalyticspro[.]top C2 was used to steal cryptocurrency wallets and credentials.
-
-The extension would detect if MetaMask, Phantom, Coinbase Wallet, Trust Wallet, Solflare, Backpack, Brave Wallet, Exodus, Binance Chain Wallet, WalletConnect, and the Argon crypto wallets were installed. If so, it would attempt to steal activity and seed phrases, which would be used to hijack wallets and steal their assets.
-
-Another script captured login credentials, payment information, and other sensitive form data.
-
-Additional payloads were used to scrape Gmail inbox contents, extract Facebook Business Manager advertising account data, and collect YouTube channel information.
-
-A review of the now-removed Chrome extension page claims that macOS users were targeted with the AMOS (Atomic Stealer) infostealer. BleepingComputer has not been able to independently verify if these claims are true.
-
-Google has since removed QuickLens from the Chrome Web Store, and Chrome now automatically disables it for affected users.
-
-Users who installed QuickLens - Search Screen with Google Lens should ensure the extension is fully removed, scan their device for malware, and reset passwords for any credentials stored in the browser.
-
-If you use any of the mentioned cryptocurrency wallets, you should transfer your funds to a new wallet.
-
-This extension is not the first to be used in ClickFix attacks. Last month, Huntress discovered a browser extension that intentionally crashed browsers and then displayed fake fixes that installed the ModeloRAT malware.
+Threat actors have been seen abusing the "ClawHub" OpenClaw skills repository to promote malicious skills that deploy infostealing malware or trick users into running malicious commands on their devices.
 
 Red Report 2026: Why Ransomware Encryption Dropped 38%
 
@@ -189,49 +49,53 @@ Malware is getting smarter. The Red Report 2026 reveals how new threats use math
 
 Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
 
-Pastebin comments push ClickFix JavaScript attack to hijack crypto swaps
+Trend Micro warns of critical Apex One code execution flaws
 
-North Korean hackers use new macOS malware in crypto-theft attacks
+Critical Juniper Networks PTX flaw allows full router takeover
 
-Fake ad blocker extension crashes the browser for ClickFix attacks
+The OpenClaw Hype: Analysis of Chatter from Open-Source Deep and Dark Web
 
-Infostealer malware found stealing OpenClaw secrets for first time
+Critical SolarWinds Serv-U flaws offer root access to servers
 
-New ClickFix attack abuses nslookup to retrieve PowerShell payload via DNS
+Zyxel warns of critical RCE flaw affecting over a dozen routers
 
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/quicklens-chrome-extension-steals-crypto-shows-clickfix-attack/, bleepingcomputer.com, 28.02.2026)
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/clawjacked-attack-let-malicious-websites-hijack-openclaw-to-steal-data/, bleepingcomputer.com, 02.03.2026)
 
 ================================================================================
 
-[4] BleepingComputer - $4.8M in crypto stolen after Korean tax agency exposes wallet seed
+[2] BleepingComputer - Samsung TVs to stop collecting Texans’ data without express consent
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 28 Feb 2026 10:17:23 -0500
-Link: https://www.bleepingcomputer.com/news/security/48m-in-crypto-stolen-after-korean-tax-agency-exposes-wallet-seed/
+Tarih: Sun, 01 Mar 2026 10:23:34 -0500
+Link: https://www.bleepingcomputer.com/news/security/samsung-tvs-to-stop-collecting-texans-data-without-express-consent/
 
-[TAM METİN - 491 kelime]
-Someone jumped at the opportunity to steal $4.4 million in crypto assets after South Korea’s National Tax Service exposed publicly the mnemonic recovery phrase of a seized cryptocurrency wallet.
+[TAM METİN - 538 kelime]
+Samsung and the State of Texas have reached a settlement agreement over the alleged unlawful collection of content-viewing information through its smart TVs
 
-The funds were stored in a Ledger cold wallet seized in law enforcement raids at 124 high-value tax evaders that resulted in confiscating digital assets worth 8.1 billion won (currently approximately $5.6 million).
+As part of the agreement, the TV manufacturer will revise its privacy disclosures to clearly explain its data collection and processing practices to consumers.
 
-When announcing the success of the operation, the agency released photos of a Ledger device, a popular hardware wallet for crypto storage and management.
+Last December, Texas Attorney General Ken Paxton filed a lawsuit against several TV manufacturers, including Samsung, alleging that they use Automated Content Recognition (ACR) technology to collect and process viewing data without first obtaining their express, informed consent.
 
-However, the images also showed a handwritten note of the wallet recovery phrase, which serves as the master key that allows restoring the assets to another device.
+In January, Texas obtained a short-lived temporary restraining order (TRO) against Samsung to stop the unlawful collection of consumer data in the state, confirming a violation of the Texas Deceptive Trade Practices Act (DTPA).
 
-The authorities failed to redact that info, allowing anyone to transfer into their account the assets in the cold wallet.
+Although the order was vacated on the following day, the lawsuit remained active.
 
-Reportedly, shortly after the press release was published, 4 million Pre-Retogeum (PRTG) tokens, worth approximately $4.8 million at the time, were transferred out of the confiscated wallet to a new address.
+The allegations against Samsung were that it uses ACR technology to capture screenshots of consumers’ TVs to determine what they’re watching. The South Korean tech giant would use this information for targeted advertising.
 
-“On-chain data (Etherscan) analysis shows that the attacker first deposited a small amount of Ethereum (ETH) into the wallet to pay transaction fees (gas fees), and then meticulously transferred the 4 million PRTG tokens to their own wallet in three separate transactions,” reports Korean media.
+In support of the TRO, the Court found that there was "good cause to believe" that Samsung automatically enrolled customers in this system using "dark patterns" that included "over 200 clicks spread across four or more menus for a consumer to read the privacy statements and disclosures."
 
-Blockchain data analysis expert Cho Jae-woo, a professor at Hansung University in Seoul who observed the transfer, commented on the authorities’ blunder by comparing it to leaving a wallet open and advertising it to the entire nation for people to take the money.
+In a statement to BleepingComputer, Samsung stated that, while it does not agree that its Viewing Information Services (VIS) system violated any regulations, it has agreed to "make enhancements to further strengthen our privacy disclosures."
 
-The professor attributed the mistake to the tax authorities’ “lack of basic understanding of virtual assets,” which effectively cost the national treasury tens of billions of won that had been successfully confiscated.
+“While we maintain our original television privacy policy and notices followed existing Texas state regulations, as a trusted brand, Samsung is proud to be at the forefront of protecting consumer privacy and security,” stated a spokesperson of Samsung Electronics America.
 
-The press release has now been removed from the NTS website, and it is unclear if authorities started an investigation to determine where the stolen funds ended.
+“The settlement affirms what Samsung has said since this lawsuit was filed - Samsung TVs do not spy on consumers. In fact, Samsung allows you to control your privacy - and change your privacy settings at any time.”
 
-The case is a reminder for hardware wallet owners that their seed phrase gives complete access to their wallet without any additional protections. Anyone who has it can recreate the wallet anywhere without their device, PIN, or permission.
+“As part of the agreement, Samsung must halt any collection or processing of ACR viewing data without obtaining Texas consumers’ express consent,” announced Texas AG Ken Paxton.
 
-It is recommended to avoid digitizing seed phrases, store them in electronic notes, photos, in email messages, cloud storage, or send them over messaging apps. If a seed is exposed, all funds should be moved to a new wallet as soon as possible.
+“Additionally, it compels Samsung to promptly update its smart TVs and implement disclosures and consent screens that are clear and conspicuous to ensure that Texans can make an informed decision regarding whether their data is collected and how it’s used.”
+
+Paxton commended Samsung for agreeing to implement consumer safeguards, while he underlined that others haven’t moved with a similar fervor as of yet.
+
+Smart TV manufacturers, including Sony, LG, Hisense, and TCL Technologies, have not made any changes in response to the lawsuits yet.
 
 Red Report 2026: Why Ransomware Encryption Dropped 38%
 
@@ -239,279 +103,681 @@ Malware is getting smarter. The Red Report 2026 reveals how new threats use math
 
 Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
 
-Snail mail letters target Trezor and Ledger users in crypto-theft attacks
+Texas court blocks Samsung from tracking TV viewing, then vacates order
 
-Ledger customers impacted by third-party Global-e data breach
+California bans data broker reselling health data of millions
 
-New GlassWorm malware wave targets Macs with trojanized crypto wallets
+Marquis sues SonicWall over backup breach that led to ransomware attack
 
-Hacker arrested for KMSAuto malware campaign with 2.8 million downloads
+Ex-L3Harris exec guilty of selling cyber exploits to Russian broker
 
-QuickLens Chrome extension steals crypto, shows ClickFix attack
+Microsoft adds Copilot data controls to all storage locations
 
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/48m-in-crypto-stolen-after-korean-tax-agency-exposes-wallet-seed/, bleepingcomputer.com, 28.02.2026)
-
-================================================================================
-
-[5] Krebs on Security - Who is the Kimwolf Botmaster “Dort”?
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 28 Feb 2026 12:01:57 +0000
-Link: https://krebsonsecurity.com/2026/02/who-is-the-kimwolf-botmaster-dort/
-
-[TAM METİN - 1330 kelime]
-In early January 2026, KrebsOnSecurity revealed how a security researcher disclosed a vulnerability that was used to build Kimwolf, the world’s largest and most disruptive botnet. Since then, the person in control of Kimwolf — who goes by the handle “Dort” — has coordinated a barrage of distributed denial-of-service (DDoS), doxing and email flooding attacks against the researcher and this author, and more recently caused a SWAT team to be sent to the researcher’s home. This post examines what is knowable about Dort based on public information.
-
-A public “dox” created in 2020 asserted Dort was a teenager from Canada (DOB August 2003) who used the aliases “CPacket” and “M1ce.” A search on the username CPacket at the open source intelligence platform OSINT Industries finds a GitHub account under the names Dort and CPacket that was created in 2017 using the email address jay.miner232@gmail.com.
-
-Image: osint.industries.
-
-The cyber intelligence firm Intel 471 says jay.miner232@gmail.com was used between 2015 and 2019 to create accounts at multiple cybercrime forums, including Nulled (username “Uubuntuu”) and Cracked (user “Dorted”); Intel 471 reports that both of these accounts were created from the same Internet address at Rogers Canada (99.241.112.24).
-
-Dort was an extremely active player in the Microsoft game Minecraft who gained notoriety for their “Dortware” software that helped players cheat. But somewhere along the way, Dort graduated from hacking Minecraft games to enabling far more serious crimes.
-
-Dort also used the nickname DortDev, an identity that was active in March 2022 on the chat server for the prolific cybercrime group known as LAPSUS$. Dort peddled a service for registering temporary email addresses, as well as “Dortsolver,” code that could bypass various CAPTCHA services designed to prevent automated account abuse. Both of these offerings were advertised in 2022 on SIM Land, a Telegram channel dedicated to SIM-swapping and account takeover activity.
-
-The cyber intelligence firm Flashpoint indexed 2022 posts on SIM Land by Dort that show this person developed the disposable email and CAPTCHA bypass services with the help of another hacker who went by the handle “Qoft.”
-
-“I legit just work with Jacob,” Qoft said in 2022 in reply to another user, referring to their exclusive business partner Dort. In the same conversation, Qoft bragged that the two had stolen more than $250,000 worth of Microsoft Xbox Game Pass accounts by developing a program that mass-created Game Pass identities using stolen payment card data.
-
-Who is the Jacob that Qoft referred to as their business partner? The breach tracking service Constella Intelligence finds the password used by jay.miner232@gmail.com was reused by just one other email address: jacobbutler803@gmail.com. Recall that the 2020 dox of Dort said their date of birth was August 2003 (8/03).
-
-Searching this email address at DomainTools.com reveals it was used in 2015 to register several Minecraft-themed domains, all assigned to a Jacob Butler in Ottawa, Canada and to the Ottawa phone number 613-909-9727.
-
-Constella Intelligence finds jacobbutler803@gmail.com was used to register an account on the hacker forum Nulled in 2016, as well as the account name “M1CE” on Minecraft. Pivoting off the password used by their Nulled account shows it was shared by the email addresses j.a.y.m.iner232@gmail.com and jbutl3@ocdsb.ca, the latter being an address at a domain for the Ottawa-Carelton District School Board.
-
-Data indexed by the breach tracking service Spycloud suggests that at one point Jacob Butler shared a computer with his mother and a sibling, which might explain why their email accounts were connected to the password “jacobsplugs.” Neither Jacob nor any of the other Butler household members responded to requests for comment.
-
-The open source intelligence service Epieos finds jacobbutler803@gmail.com created the GitHub account “MemeClient.” Meanwhile, Flashpoint indexed a deleted anonymous Pastebin.com post from 2017 declaring that MemeClient was the creation of a user named CPacket — one of Dort’s early monikers.
-
-Why is Dort so mad? On January 2, KrebsOnSecurity published The Kimwolf Botnet is Stalking Your Local Network, which explored research into the botnet by Benjamin Brundage, founder of the proxy tracking service Synthient. Brundage figured out that the Kimwolf botmasters were exploiting a little-known weakness in residential proxy services to infect poorly-defended devices — like TV boxes and digital photo frames — plugged into the internal, private networks of proxy endpoints.
-
-By the time that story went live, most of the vulnerable proxy providers had been notified by Brundage and had fixed the weaknesses in their systems. That vulnerability remediation process massively slowed Kimwolf’s ability to spread, and within hours of the story’s publication Dort created a Discord server in my name that began publishing personal information about and violent threats against Brundage, Yours Truly, and others.
-
-Dort and friends incriminating themselves by planning swatting attacks in a public Discord server.
-
-Last week, Dort and friends used that same Discord server (then named “Krebs’s Koinbase Kallers”) to threaten a swatting attack against Brundage, again posting his home address and personal information. Brundage told KrebsOnSecurity that local police officers subsequently visited his home in response to a swatting hoax which occurred around the same time that another member of the server posted a door emoji and taunted Brundage further.
-
-Dort, using the alias “Meow,” taunts Synthient founder Ben Brundage with a picture of a door.
-
-Someone on the server then linked to a cringeworthy (and NSFW) new Soundcloud diss track recorded by the user DortDev that included a stickied message from Dort saying, “Ur dead nigga. u better watch ur fucking back. sleep with one eye open. bitch.”
-
-“It’s a pretty hefty penny for a new front door,” the diss track intoned. “If his head doesn’t get blown off by SWAT officers. What’s it like not having a front door?”
-
-With any luck, Dort will soon be able to tell us all exactly what it’s like.
-
-Update, 10:29 a.m.: Jacob Butler responded to requests for comment, speaking with KrebsOnSecurity briefly via telephone. Butler said he didn’t notice earlier requests for comment because he hasn’t really been online since 2021, after his home was swatted multiple times. He acknowledged making and distributing a Minecraft cheat long ago, but said he hasn’t played the game in years and was not involved in Dortsolver or any other activity attributed to the Dort nickname after 2021.
-
-“It was a really old cheat and I don’t remember the name of it,” Butler said of his Minecraft modification. “I’m very stressed, man. I don’t know if people are going to swat me again or what. After that, I pretty much walked away from everything, logged off and said fuck that. I don’t go online anymore. I don’t know why people would still be going after me, to be completely honest.”
-
-When asked what he does for a living, Butler said he mostly stays home and helps his mom around the house because he struggles with autism and social interaction. He maintains that someone must have compromised one or more of his old accounts and is impersonating him online as Dort.
-
-“Someone is actually probably impersonating me, and now I’m really worried,” Butler said. “This is making me relive everything.”
-
-But there are issues with Butler’s timeline. For example, Jacob’s voice in our phone conversation was remarkably similar to the Jacob/Dort whose voice can be heard in this Sept. 2022 Clash of Code competition between Dort and another coder (Dort lost). At around 6 minutes and 10 seconds into the recording, Dort launches into a cursing tirade that mirrors the stream of profanity in the diss rap that Dortdev posted threatening Brundage. Dort can be heard again at around 16 minutes; at around 26:00, Dort threatens to swat his opponent.
-
-Butler said the voice of Dort is not his, exactly, but rather that of an impersonator who had likely cloned his voice.
-
-“I would like to clarify that was absolutely not me,” Butler said. “There must be someone using a voice changer. Or something of the sorts. Because people were cloning my voice before and sending audio clips of ‘me’ saying outrageous stuff.”
-
-(XXXXXXX, AÇIK - https://krebsonsecurity.com/2026/02/who-is-the-kimwolf-botmaster-dort/, krebsonsecurity.com, 28.02.2026)
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/samsung-tvs-to-stop-collecting-texans-data-without-express-consent/, bleepingcomputer.com, 01.03.2026)
 
 ================================================================================
 
-[6] Security Affairs - Security Affairs newsletter Round 565 by Pierluigi Paganini – INTERNATIONAL EDITION
+[3] Security Affairs - ShinyHunters leaked the full Odido dataset
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 01 Mar 2026 00:35:00 +0000
-Link: https://securityaffairs.com/188669/security/security-affairs-newsletter-round-565-by-pierluigi-paganini-international-edition.html
+Tarih: Sun, 01 Mar 2026 19:12:55 +0000
+Link: https://securityaffairs.com/188709/data-breach/shinyhunters-leaked-the-full-odido-dataset.html
 
-[TAM METİN - 394 kelime]
-The National Police arrest a young man for cyberattacking a payment gateway and making reservations at luxury hotels for one cent
+[TAM METİN - 447 kelime]
+ShinyHunters leaked the full Odido dataset
 
-AI-augmented threat actor accesses FortiGate devices at scale
+Cybercrime group ShinyHunters leaked the full Odido dataset, the Netherlands is facing the biggest data leak in its history.
 
-Romanian National Pleads Guilty to Selling Access to Networks of Oregon State Government Office and Other U.S. Victims
+Odido is a Dutch telecommunications company and one of the largest mobile network operators in the Netherlands. It was formed when T-Mobile Netherlands and Tele2 were rebranded as Odido in 2023 after private equity firms Apax Partners and Warburg Pincus acquired the business.
 
-‘Starkiller’ Phishing Service Proxies Real Login Pages, MFA
+In mid-February, the cybercrime group ShinyHunters broke into the Dutch telecom firm Odido and accessed data from 6.2 million accounts. At the time, the company confirmed the breach and said attackers took names, addresses, phone numbers, email addresses, bank account details, dates of birth, and passport or ID numbers.
 
-Former General Manager for U.S. Defense Contractor Sentenced to 87 Months for Selling Stolen Trade Secrets to Russian Broker
+“Odido has been hit by a cyberattack, which compromised customer data. This involved personal data from a customer contact system used by Odido. No passwords, call logs, or billing information were affected.” reads a notice published by the company on its website. “The unauthorized access to the system was terminated as quickly as possible. Odido also engaged external cybersecurity experts to assist with implementing additional security measures as part of the incident response.”
 
-Olympique Marseille confirms ‘attempted’ cyberattack after data leak
+The telco said the breach did not expose My Odido account passwords, call records, location data, invoice details, or scans of ID documents.
 
-Arkanix Stealer: a C++ & Python infostealer
+Odido’s subsidiary Ben also warned its customers that hackers may have stolen their information.
 
-New Malicious npm Package “ambar-src” Targets Developers with Open Source Malware
+Now, an alleged final dump has exposed 4.6 million more unique email addresses from Dutch telecom provider Odido, bringing the total to 6.1 million across four separate releases.
 
-New Dohdoor malware campaign targets education and health care
+Dutch telecom customers of Odido have now been completely leaked online 15M former and current customers today @troyhunt @haveibeenpwned pic.twitter.com/GNb4uuCFXW
 
-Exploring Aeternum C2: a new botnet that lives on the blockchain
+“Due to recent developments regarding this telco, daily leaks will not happen anymore. Instead, you can download the Odido dataset concerning its full former and current customers below.” ShinyHunters wrote on its Tor data leak site. “Over 15m Salesforce records containing Full Names, Physical addresses, email addresses, phone numbers, and plaintext passwords, IBAN, passport numbers, driver license numbers and other internal corporate data have been compromised. This is your fault, Odido. You are the reason why an entire country is about to suffer for an unestimated amount of years. Unprecedented.”
 
-VShell and SparkRAT Observed in Exploitation of BeyondTrust Critical Vulnerability (CVE-2026-1731)
+The data breach notification service Have I Been Pwned (HIBP) added the compromised dataset to its archive. The final release includes a total of 6.1M unique addresses.
 
-Active exploitation of Cisco Catalyst SD-WAN by UAT-8616
+Compromised data includes:
 
-datapizza-ai, Yet Another Vulnerable AI Framework
+Customer service comments
 
-Caught in the Hook: RCE and API Token Exfiltration Through Claude Code
+Government issued IDs
 
-Check Point Researchers Expose Critical Claude Code Flaws
+Updated breach: Allegedly the final release, a further 4.6M unique email addresses from Dutch telco Odido were published today. The total now stands at 6.1M unique addresses across four separate releases. More: https://t.co/tIRoRWT6pC
 
-Large Reasoning Models Are Autonomous Jailbreak Agents
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-Millions of Publicly Exposed .env Files Put Internet Services at Risk: A Mysterium VPN Research
+(SecurityAffairs – hacking, ShinyHunters)
 
-MalTool: Malicious Tool Attacks on LLM Agents
+(XXXXXXX, AÇIK - https://securityaffairs.com/188709/data-breach/shinyhunters-leaked-the-full-odido-dataset.html, securityaffairs.com, 01.03.2026)
 
-Intelligence and Information Warfare
+================================================================================
 
-Cellebrite cut off Serbia citing abuse of its phone unlocking tools. Why not others?
+[4] Security Affairs - Claude code abused to steal 150GB in cyberattack on Mexican agencies
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 01 Mar 2026 13:49:07 +0000
+Link: https://securityaffairs.com/188696/ai/claude-code-abused-to-steal-150gb-in-cyberattack-on-mexican-agencies.html
 
-Russia stepping up hybrid attacks, preparing for long standoff with West, Dutch intelligence warns
+[TAM METİN - 361 kelime]
+Claude code abused to steal 150GB in cyberattack on Mexican agencies
+
+Hackers abused Claude Code to build exploits and steal 150GB of data in a cyberattack targeting Mexican government systems.
+
+Hackers abused Anthropic’s Claude Code AI assistant to develop exploits, create custom tools, and automatically exfiltrate more than 150GB of data in an attack on Mexican government systems, the Israeli cybersecurity firm Gambit Security reports. The case highlights how generative AI can be weaponized to accelerate real-world cyber operations.
+
+Attackers compromised 10 Mexican government agencies and a financial institution, starting with the tax authority in December 2025. Gambit Security found the threat actors sent over 1,000 prompts to Claude Code and used OpenAI’s GPT-4.1 to analyze stolen data.
+
+Attackers jailbroke Anthropic’s Claude and used it for about a month to target multiple Mexican government entities, including the federal tax authority, the electoral institute, state governments, Mexico City’s civil registry, and Monterrey’s water utility. By bypassing AI guardrails and framing actions as authorized, the attacker automated exploit writing and data theft, exfiltrating 150GB of records and exposing about 195 million identities.
+
+Posing as bug bounty testers, they crafted prompts to bypass safeguards. Claude initially resisted, flagging log deletion and stealth instructions as red flags before being manipulated into assisting the operation.
+
+“In total, it produced thousands of detailed reports that included ready-to-execute plans, telling the human operator exactly which internal targets to attack next and what credentials to use,” Curtis Simpson, Gambit Security’s chief strategy officer. told VentureBeat.
+
+When Claude stopped being helpful, the attackers switched to ChatGPT from OpenAI to get guidance on moving deeper into the network and organizing stolen credentials. As the breach progressed, they repeatedly asked where else government identities and related data could be found and which additional systems to target.
+
+“This reality is changing all the game rules we have ever known,” said Alon Gromakov, co-founder and CEO of Gambit Security”
+
+In November 2025, Anthropic disclosed that China-linked actors had also abused Claude Code in an espionage campaign targeting nearly 30 organizations worldwide. The AI was manipulated to perform key operational tasks.
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, Claude Code)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188696/ai/claude-code-abused-to-steal-150gb-in-cyberattack-on-mexican-agencies.html, securityaffairs.com, 01.03.2026)
+
+================================================================================
+
+[5] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 86
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 01 Mar 2026 10:30:16 +0000
+Link: https://securityaffairs.com/188691/malware/security-affairs-malware-newsletter-round-86.html
+
+[TAM METİN - 153 kelime]
+Technical Deep Dive: The Monero Mining Campaign
 
 Operation Olalampo: Inside MuddyWater’s Latest Campaign
 
+VShell and SparkRAT Observed in Exploitation of BeyondTrust Critical Vulnerability (CVE-2026-1731)
+
 Operation MacroMaze: new APT28 campaign using basic tooling and legit infrastructure
+
+Arkanix Stealer: a C++ & Python infostealer
 
 North Korean Lazarus Group Now Working With Medusa Ransomware
 
-Treasury Sanctions Exploit Broker Network for Theft and Sale of U.S. Government Cyber Tools
-
-Mercenary Akula Hits Ukraine-Supporting Financial Institution
-
-Ukraine says cyberattacks on energy grid now used to guide missile strikes
-
 Exposing the Undercurrent: Disrupting the GRIDTIDE Global Cyber Espionage Campaign
+
+New Malicious npm Package “ambar-src” Targets Developers with Open Source Malware
+
+Steaelite RAT Enables Double Extortion Attacks from a Single Panel
 
 APT37 Adds New Capabilities for Air-Gapped Networks
 
-Making frontier cybersecurity capabilities available to defenders
+New Dohdoor malware campaign targets education and health care
 
-CERT EU – Cyber Threat Intelligence Framework
+Developer-targeting campaign using malicious Next.js repositories
 
-FBI agents visited my home about an article I wrote, and now I can’t go to Mexico
+Exploring Aeternum C2: a new botnet that lives on the blockchain
 
-European DYI chain ManoMano data breach impacts 38 million customers
+An Explainable Memory Forensics Approach for Malware Analysis
 
-Exclusive: US orders diplomats to fight data sovereignty initiatives
+AndroWasm: an Empirical Study on Android Malware Obfuscation through WebAssembly
 
-CrowdStrike says attackers are moving through networks in under 30 minutes
-
-Apple iPhone and iPad Cleared for Classified NATO Use
-
-Canadian Tire Corporation E-Commerce Data Incident
-
-Anthropic refuses Pentagon’s demand in AI safeguards dispute
+Routing-Aware Explanations for Mixture of Experts Graph Models in Malware Detection
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(XXXXXXX, AÇIK - https://securityaffairs.com/188669/security/security-affairs-newsletter-round-565-by-pierluigi-paganini-international-edition.html, securityaffairs.com, 01.03.2026)
+(XXXXXXX, AÇIK - https://securityaffairs.com/188691/malware/security-affairs-malware-newsletter-round-86.html, securityaffairs.com, 01.03.2026)
 
 ================================================================================
 
-[7] Security Affairs - Canadian Tire 2025 data breach impacts 38 million users
+[6] Security Affairs - CVE-2025-64328 exploitation impacts 900 Sangoma FreePBX instances
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 28 Feb 2026 17:52:44 +0000
-Link: https://securityaffairs.com/188659/data-breach/canadian-tire-2025-data-breach-impacts-38-million-users.html
+Tarih: Sun, 01 Mar 2026 10:01:54 +0000
+Link: https://securityaffairs.com/188679/uncategorized/cve-2025-64328-exploitation-impacts-900-sangoma-freepbx-instances.html
 
-[TAM METİN - 284 kelime]
-Canadian Tire 2025 data breach impacts 38 million users
+[TAM METİN - 507 kelime]
+CVE-2025-64328 exploitation impacts 900 Sangoma FreePBX instances
 
-A data breach at Canadian Tire exposed personal data from over 38 million accounts, including contact details and encrypted passwords.
+About 900 Sangoma FreePBX systems were infected with web shells after attackers exploited a command injection flaw.
 
-More than 38 million accounts were affected by an October 2025 data breach at Canadian retail giant Canadian Tire (CTC). The incident marks one of the largest retail data breaches in Canada, raising concerns about customer privacy and the security of sensitive personal information.
+Hundreds of Sangoma FreePBX instances are still infected with web shells following attacks that began in December 2025.
 
-“On October 2, 2025, Canadian Tire Corporation (TSX: CTC) (TSX: CTC.A) (CTC or the Company) identified a data breach involving customer information in an e-commerce database.” reads the press release published by CTC. “There was no impact on in-store transactions, and all e-commerce systems are operational.”
+Sangoma FreePBX is an open-source, web-based platform for managing Asterisk-powered VoIP phone systems. Maintained by Sangoma Technologies, it allows businesses to configure extensions, call routing, voicemail, IVR menus, and SIP trunks through an easy-to-use interface.
 
-On October 2, 2025, the company discovered a data breach affecting its e-commerce database. The incident exposed basic customer details, including names, addresses, emails, year of birth, encrypted passwords, and in some cases, truncated credit card numbers.
+The campaign exploited a post-authentication command injection vulnerability, tracked as CVE-2025-64328 (CVSS score of 8.6), in the endpoint manager interface, allowing attackers to execute malicious commands and maintain persistent access to compromised systems.
 
-The company pointed out that exposed financial data cannot be used to access accounts, make transactions, or make purchases.
+“FreePBX Endpoint Manager is a module for managing telephony endpoints in FreePBX systems. In versions 17.0.2.36 and above before 17.0.3, the filestore module within the Administrative interface is vulnerable to a post-authentication command injection by an authenticated known user via the testconnection -> check_ssh_connect() function.” reads the advisory. “An attacker can leverage this vulnerability to obtain remote access to the system as an asterisk user. This issue is fixed in version 17.0.3.”
 
-Less than 150,000 accounts also included full dates of birth. The breach did not impact Canadian Tire Bank, Triangle Rewards, or in-store systems. The company identified and fixed the issue and notified regulators.
+The Shadowserver Foundation reports that around 900 FreePBX instances are still compromised and running web shells, likely due to exploitation of CVE-2025-64328 in the endpoint manager. About 400 affected systems are located in the United States, with dozens more in countries including Brazil, Canada, Germany, France, the UK, Italy, and the Netherlands, and smaller numbers spread across other regions.
 
-The Canadian firm will contact affected users and will offer them credit monitoring.
+Thanks to collaboration with the Canadian Centre for Cyber Security @cybercentre_ca we can share more comprehensive information on FreePBX instances running webshells, with still over 900 IPs seen compromised.Dashboard Victim overview (Tree map) https://t.co/BZWCm2DweV pic.twitter.com/iytMf9EVaj
 
-The data breach notification service Have I Been Pwned added the compromised records to its database. According to the platform, about 42 million records were exposed, including 38.3 million email addresses.
+In January, FortiGuard Labs identified a new web shell dubbed “EncystPHP,” capable of remote command execution, persistence, and further web shell deployment. The attacks began in early December and exploited the flaw CVE-2025-64328. Researchers link the activity to the threat group INJ3CTOR3, known for targeting past vulnerabilities in FreePBX and Elastix systems. The campaign follows a familiar pattern: exploiting a flaw and installing a PHP web shell to maintain access.
 
-HIBP states that compromised data includes:
+“The web shell was delivered via CVE-2025-64328, a post-authentication command-injection vulnerability in the administrative interface of the FreePBX Endpoint Manager.” reads the analysis published by Fortinet. “The attackers downloaded the EncystPHP dropper from the IP address 45[.]234[.]176[.]202, which resolves to the domain crm[.]razatelefonia[.]pro. “
 
-Partial credit card data
+Attackers delivered the EncystPHP dropper from 45.234.176.202, exploiting CVE-2025-64328 in FreePBX. Once installed, the malware locked key files, harvested database configs, deleted cron jobs and user accounts, and removed rival web shells. It created a root-level user, reset passwords, injected an SSH key, and ensured port 22 stayed open for persistent access.
 
-HIBP reports that the datasets include PBKDF2 password hashes.
+The dropper also fetched additional payloads, erased logs, removed the Endpoint Manager module, restored permissions to avoid detection, and deployed Base64-encoded web shells to maintain long-term control.
+
+In early February, the U.S. Cybersecurity and Infrastructure Security Agency (CISA) added the flaw in Sangoma FreePBX to its Known Exploited Vulnerabilities (KEV) catalog.
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(SecurityAffairs – hacking, CTC)
+(SecurityAffairs – hacking, CVE-2025-64328 )
 
-(XXXXXXX, AÇIK - https://securityaffairs.com/188659/data-breach/canadian-tire-2025-data-breach-impacts-38-million-users.html, securityaffairs.com, 28.02.2026)
+(XXXXXXX, AÇIK - https://securityaffairs.com/188679/uncategorized/cve-2025-64328-exploitation-impacts-900-sangoma-freepbx-instances.html, securityaffairs.com, 01.03.2026)
 
 ================================================================================
 
-[8] Security Affairs - Iran ’s Internet near-totally blacked out amid US, Israeli strikes
+[7] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 28 Feb 2026 10:37:07 +0000
-Link: https://securityaffairs.com/188648/cyber-warfare-2/iran-s-internet-near-totally-blacked-out-amid-us-israeli-strikes.html
+Tarih: Mon, 02 Mar 2026 02:00:03 GMT
+Link: https://isc.sans.edu/diary/rss/32756
 
-[TAM METİN - 416 kelime]
-Iran ’s Internet near-totally blacked out amid US, Israeli strikes
+⚠️  Tam metin çekilemedi
 
-Iran experienced a near-total internet blackout as Israel and the U.S. launched strikes, according to NetBlocks.
-
-Internet access across Iran was drastically reduced on Saturday as Israel and the United States carried out strikes against the country, according to independent and non-partisan global internet monitor NetBlocks.
-
-یک شهروند روز شنبه با ارسال ویدیویی می‌گوید که سه‌راه ضرابخانه در تهران و وزارت اطلاعات هدف گرفته شده است. pic.twitter.com/qniNzip9F9
-
-Network data indicated a near-total nationwide blackout. The national connectivity is down to about 4% of normal levels, amid ongoing military strikes by Israel and the United States.
-
-“Confirmed: Network data show #Iran is now in the midst of a near-total internet blackout with national connectivity at 4% or ordinary levels. The incident comes amid US and Israeli combat operations and matches measures used during last year’s war with Israel.” wrote NetBlocks.
-
-⚠️ Confirmed: Network data show #Iran is now in the midst of a near-total internet blackout with national connectivity at 4% or ordinary levels. The incident comes amid US and Israeli combat operations and matches measures used during last year's war with Israel. pic.twitter.com/1XunOr4Q19
-
-NetBlocks noted that the disruption resembles measures previously seen during last year’s conflict with Israel, suggesting authorities may have intentionally restricted connectivity amid escalating tensions.
-
-Cloudflare also confirmed that Internet traffic in the country has dropped to effectively zero as of 18:45 UTC (22:15 PM local time), signaling a complete shutdown in the country and disconnection from the global Internet.
-
-#Internet traffc in #Iran has dropped to effectively zero as of 18:45 UTC (22:15 PM local time), signaling a complete shutdown in the country, and disconnection from the global Internet.https://t.co/V77cj6rrQW pic.twitter.com/yZjOBqsGJm
-
-Iran’s internet shutdowns are widely viewed as tools for regime control. Teheran may use it to curb information flows, and reduce foreign pressure or cyber threats against critical infrastructure. By cutting or throttling connectivity during crises, authorities hinder external cyber operations and limit reconnaissance while also disrupting internal coordination, protest organization, and real-time reporting of damage or abuses.
-
-Large-scale cyberattacks reportedly struck Iran alongside Saturday’s military strikes by Israel and the U.S., disrupting major domestic platforms. According to local media, websites of key news agencies, including IRNA and ISNA, experienced significant outages. As state media faltered, many Iranians turned to foreign opposition sites and social media platforms such as Instagram and Telegram for updates, wherever internet access remained available.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, Iran)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/188648/cyber-warfare-2/iran-s-internet-near-totally-blacked-out-amid-us-israeli-strikes.html, securityaffairs.com, 28.02.2026)
+(XXXXXXX, AÇIK - https://isc.sans.edu/diary/rss/32756, isc.sans.edu, 02.03.2026)
 
 ================================================================================
 
-[9] Security Affairs - Microsoft warns of RAT delivered through trojanized gaming utilities
+[8] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 28 Feb 2026 07:33:39 +0000
-Link: https://securityaffairs.com/188639/malware/microsoft-warns-of-rat-delivered-through-trojanized-gaming-utilities.html
+Tarih: 2026-03-02T00:51:38.00Z
+Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/south_korea_tax_office_cryptocurrency_leak/
 
-[TAM METİN - 250 kelime]
-Microsoft warns of RAT delivered through trojanized gaming utilities
+[TAM METİN - 471 kelime]
+South Korea’s tax office apologizes for leaking seed phrase to seized crypto
 
-Attackers spread trojanized gaming tools to deliver a stealthy RAT using PowerShell, LOLBins, and Defender evasion tactics.
+Went from triumph at having busted tax dodgers to embarrassment at losing the proceeds
 
-Threat actors are tricking users into running trojanized gaming utilities shared through browsers and chat platforms to deploy a remote access trojan.
+South Korea’s National Tax Service has apologized after it leaked passwords to a stash of stolen crypto, which parties unknown used to make off with the digi-cash.
 
-“Microsoft Defender researchers uncovered a campaign that lured users into running trojanized gaming utilities (Xeno.exe or RobloxPlayerBeta.exe) distributed through browsers and chat platforms, leading to the deployment of a remote access trojan (RAT).” Microsoft Threat Intelligence team wrote on X.
+This strange story starts on February 26th when the Tax Service triumphantly announced it had busted 124 high-value tax delinquents and seized ₩8.1 billion ($5.6 million) worth of cash and luxury goods. As is often the case with seizures of this sort, the Tax Service shared photos of its haul with the media.
 
-Microsoft Defender researchers uncovered a campaign that lured users into running trojanized gaming utilities (Xeno.exe or RobloxPlayerBeta.exe) distributed through browsers and chat platforms, leading to the deployment of a remote access trojan (RAT).A malicious downloader… pic.twitter.com/87Yum5y78z
+As the Service explained in its apology, it intended that those photos would “provide more vivid information to the public.” Instead, they provided vivid information to crooks who recognized the photos included a seed phrase – a credential used to recover access to a cryptocurrency wallet if passwords and other means of logging in are lost.
 
-A malicious downloader deployed a portable Java runtime to run a harmful JAR file, using PowerShell and LOLBins like cmstp.exe for stealth. It deleted itself, added Microsoft Defender exclusions, and set up persistence via a scheduled task and startup script. The final payload was a multi-purpose malware acting as a loader, downloader, runner, and remote access trojan.
+It appears that someone spotted the seed phrase in the Tax Service’s images, because within hours of the agency publicizing its raids, funds drained from one of the crypto wallets its agents seized.
 
-“Finally, it deployed the final payload, a multi-purpose malware that acted as loader, runner, downloader, and RAT.” concludes Microsoft.
+Korean cops charge teens over bike hire breach that exposed data on 4.62M riders
 
-“The RAT connected to the IP address 79.110.49[.]15 for command and control (C2), enabling threat actors to perform various actions like data theft and additional payload deployment.”
+South Korea enlists AI to spot pump and dump schemes on social media, or in Spam
 
-Microsoft also published indicators of compromise (IoCs) for this campaign.
+Korean telco failed at femtocell security, exposed customers to snooping and fraud
 
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+Four arrested in South Korea over massive IP camera snooping spree
 
-(SecurityAffairs – hacking, RAT)
+The stolen tokens – Pre-Retogeum, aka PRTG – were apparently worth $4.8 million, or the majority of the Tax Service’s haul.
 
-(XXXXXXX, AÇIK - https://securityaffairs.com/188639/malware/microsoft-warns-of-rat-delivered-through-trojanized-gaming-utilities.html, securityaffairs.com, 28.02.2026)
+The one tiny upside in this whole mess is that the heist was of course recorded on a blockchain, so the Tax Service has asked Korea’s National Police Agency to track down whoever emptied the wallet. Despite blockchain advocates often promoting the tech as a more private way to conduct transactions, law enforcement authorities regularly identify those who conduct cryptocurrency trades so perhaps this will still end in a win for the Tax Service.
+
+The agency is nonetheless suitably contrite, and has promised to strengthen its internal controls to stop exposing credentials in public.
+
+Indeed, its apology states it has already revisited the manual it uses when seizing, storing, and disposing of virtual assets, and will ensure its team is trained on those new procedures. ®
+
+Advanced persistent threat
+
+Application Delivery Controller
+
+Center for Internet Security
+
+Common Vulnerability Scoring System
+
+Cybersecurity and Infrastructure Security Agency
+
+Cybersecurity Information Sharing Act
+
+Infrastructure Security
+
+Personally Identifiable Information
+
+Quantum key distribution
+
+Software Bill of Materials
+
+Trusted Platform Module
+
+Advanced persistent threat
+
+Application Delivery Controller
+
+Center for Internet Security
+
+Common Vulnerability Scoring System
+
+Cybersecurity and Infrastructure Security Agency
+
+Cybersecurity Information Sharing Act
+
+Infrastructure Security
+
+Personally Identifiable Information
+
+Quantum key distribution
+
+Software Bill of Materials
+
+Trusted Platform Module
+
+(XXXXXXX, AÇIK - https://go.theregister.com/feed/www.theregister.com/2026/03/02/south_korea_tax_office_cryptocurrency_leak/, go.theregister.com, 02.03.2026)
+
+================================================================================
+
+[9] TechCrunch Security - Let’s explore the best alternatives to Discord
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 01 Mar 2026 19:00:01 +0000
+Link: https://techcrunch.com/2026/03/01/best-discord-alternatives-age-verification-identity-privacy/
+
+[TAM METİN - 1114 kelime]
+Social community platform Discord is preparing to require users to verify their age by the second half of 2026, and users are concerned about the privacy of uploading a government ID or face scan to the network. While users can still access most features without verification, many remain uneasy giving more information to a company that suffered a breach last year that exposed the IDs of around 70,000 users.
+
+For some users, this is motivation enough to seek out alternative platforms that prioritize security, privacy, or simply offer a different experience. Here’s a look at the most promising Discord alternatives, from open-source and secure options to voice-first platforms built for hardcore gamers.
+
+Stoat (formerly Revolt) stands out as the closest Discord alternative in both design and usability. As an open-source project, it gives users more control over their data and appeals to those who value privacy and transparency. Overall, the platform is fairly easy for Discord users to pick up, offering similar text and voice channels as well as community servers.
+
+However, Stoat is a relatively new platform (launched in 2021), and still faces growing pains. Recently, it experienced server capacity issues and the occasional lag during user surges. Feature support isn’t yet on par with Discord’s, and onboarding can be slow at times, especially when the platform’s popularity spikes. For those willing to trade a bit of stability for increased privacy, though, Stoat could be worth a try.
+
+For users who prioritize privacy and control above all else, Element offers a compelling alternative. Built on the decentralized Matrix protocol, Element enables users to self-host servers, maintain end-to-end encryption, and federate with other Matrix-based services. This ensures that no single company controls your data.
+
+While the setup and interface require a bit more technical savvy than Discord’s, Element is a good choice for users who value secure, decentralized communication.
+
+If your primary need is high-quality, low-latency voice chat, TeamSpeak is the best alternative to Discord. While it remains popular among competitive gamers for its superior audio and private server hosting, its text chat and media sharing are quite basic. It’s also missing built-in video calls as well as emojis and gifs. So if you don’t mind not having as many features, it’s great for voice-centric groups that don’t need all the bells and whistles.
+
+Disrupt 2026: The tech ecosystem, all in one room
+
+Save up to $300 or 30% to TechCrunch Founder Summit
+
+Similar to Stoat, TeamSpeak has experienced a surge in new users, prompting the platform to expand its hosting capacity. In February, TeamSpeak introduced two new regions for community creation: “Frankfurt 3” and “Toronto 1.”
+
+Mumble is a free, open-source voice chat application. Like TeamSpeak, it provides high-quality, low-latency audio and allows users to host and customize their own servers. However, its interface is outdated and lacks some of the features found in Discord, making it more ideal for hardcore gamers focused on voice chat rather than community building through video calls, media sharing, or screen sharing.
+
+Those who prefer long-form, organized discussions over rapid-fire chat may find Discourse more appealing. As an open-source forum platform, Discourse supports threaded discussions, making it ideal for educational groups, professional teams, and communities that value in-depth conversation. However, users looking for instant messaging, voice, and casual group chats may find it less familiar than Discord.
+
+Slack, Microsoft Teams, Signal, or WhatsApp
+
+Other notable mentions include Slack and Microsoft Teams, which serve well for professional and productivity-focused communication. Signal is also a top choice for those who want end-to-end encryption and privacy. Meanwhile, WhatsApp also offers free messaging and group voice calls, though it’s not designed for gaming or large communities.
+
+What to know about age verification on Discord
+
+Discord recently announced that it will soon implement age verification measures aimed at creating a safer environment, particularly for its younger users. This initiative is designed to ensure users meet the necessary age requirements to access certain features and communities on the platform. Users may be required to verify their age through various methods, which could involve submitting an ID, completing a facial age estimation, or using a credit card.
+
+By default, all users will experience a “teen-appropriate” setting, and only those verified as adults will have the ability to modify certain settings or access age-restricted content. Adults will be required to verify their status to unblur sensitive content and to access channels and servers designated for an older audience.
+
+After a recent backlash, Discord postponed the official launch to the latter half of 2026, adding that 90% of users will not require age verification and can continue using the platform without changes, as many users do not engage with age-restricted content. The platform initially planned to roll out age verification in March.
+
+Lauren covers media, streaming, apps and platforms at TechCrunch.
+
+You can contact or verify outreach from Lauren by emailing laurenf.techcrunch@gmail.com or via encrypted message at laurenforris22.25 on Signal.
+
+Actively scaling? Fundraising? Planning your next launch?TechCrunch Founder Summit 2026 delivers tactical playbooks and direct access to 1,000+ founders and investors who are building, backing, and closing.Register by March 13 to save up to $300.
+
+The trap Anthropic built for itself
+
+
+
+Connie Loizos
+
+The trap Anthropic built for itself
+
+The trap Anthropic built for itself
+
+Why did Netflix back down from its deal to acquire Warner Bros.?
+
+
+
+Anthony Ha
+
+Why did Netflix back down from its deal to acquire Warner Bros.?
+
+Why did Netflix back down from its deal to acquire Warner Bros.?
+
+India disrupts access to popular developer platform Supabase with blocking order
+
+
+
+Jagmeet Singh
+
+India disrupts access to popular developer platform Supabase with blocking order
+
+India disrupts access to popular developer platform Supabase with blocking order
+
+Jack Dorsey just halved the size of Block’s employee base — and he says your company is next
+
+
+
+Connie Loizos
+
+Jack Dorsey just halved the size of Block’s employee base — and he says your company is next
+
+Jack Dorsey just halved the size of Block’s employee base — and he says your company is next
+
+An accountant won a big jackpot on Kalshi by betting against DOGE
+
+
+
+Julie Bort
+
+An accountant won a big jackpot on Kalshi by betting against DOGE
+
+An accountant won a big jackpot on Kalshi by betting against DOGE
+
+It’s time to pull the plug on plug-in hybrids
+
+
+
+Tim De Chant
+
+It’s time to pull the plug on plug-in hybrids
+
+It’s time to pull the plug on plug-in hybrids
+
+A Meta AI security researcher said an OpenClaw agent ran amok on her inbox 
+
+
+
+Julie Bort
+
+A Meta AI security researcher said an OpenClaw agent ran amok on her inbox
+
+A Meta AI security researcher said an OpenClaw agent ran amok on her inbox
+
+(XXXXXXX, AÇIK - https://techcrunch.com/2026/03/01/best-discord-alternatives-age-verification-identity-privacy/, techcrunch.com, 01.03.2026)
+
+================================================================================
+
+[10] CSO Online - Hacker erpressen weniger Lösegeld
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 08:24:16 +0000
+Link: https://www.csoonline.com/article/4139126/hacker-erpressen-weniger-losegeld.html
+
+[TAM METİN - 246 kelime]
+Immer weniger Unternehmen und Organisationen sind bereit, die geforderten Summen zu zahlen.
+
+immer mehr betroffene Unternehmen und Organisationen folgen dem Rat, kein Lösegeld zu zahlen
+
+fadfebrian – shutterstock.com
+
+Laut einem neuen Bericht des Analyseunternehmens Chainalysis konnten Hacker im Jahr 2025 im Zusammenhang mit Ransomware-Angriffen insgesamt 820 Millionen Dollar erbeuten.
+
+Auch wenn die Summe hoch ist, im Vergleich zum Vorjahr ist sie damit um 28 Prozent gesunken. Zudem ist zu berücksichtigen, dass die Zahl der Angriffe im Jahr 2025 um 50 Prozent gestiegen ist (gegenüber 2024).
+
+Warnung vor Lösegeldzahlungen wirken
+
+Die Analysten erklären sich den Rückgang damit, dass immer mehr betroffene Unternehmen und Organisationen dem Rat folgen, kein Lösegeld zu zahlen. Wer auf die Forderungen eingeht, läuft nämlich ein höheres Risiko, künftig erneut Ziel ähnlicher Angriffe zu werden. Hinzu kommt, dass die Zahlung von Ransomware-Lösegeldern unter Umständen strafbar sein kann.
+
+Auffällig ist jedoch, dass die durchschnittliche Höhe der Lösegeldzahlungen deutlich gestiegen ist: Während die Gesamteinnahmen stagnierten, erhöhte sich die durchschnittliche Zahlung im Vergleich zum Vorjahr um 368 Prozent auf fast 60.000 Dollar.
+
+Das deutet laut Chainalysis darauf hin, dass betroffene Unternehmen im Einzelfall höhere Beträge zahlen – offenbar in der Hoffnung, dass die Cyberkriminellen gestohlene Daten tatsächlich löschen und nicht weiterverkaufen oder mit anderen Bedrohungsakteuren teilen.
+
+Laut Bleeping Computer ist dies das vierte Jahr in Folge, in dem die Gesamtlösegeldsumme rückläufig ist. (mb)
+
+Hacker kompromittieren immer schneller
+
+Hacker stiehlt Daten von Tausenden RTL-Mitarbeitern
+
+KI und Komplexität als Brandbeschleuniger für Cyberkriminelle
+
+Von unseren Redakteuren direkt in Ihren Posteingang
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/4139126/hacker-erpressen-weniger-losegeld.html, csoonline.com, 02.03.2026)
+
+================================================================================
+
+[11] CSO Online - How CISOs can build a resilient workforce
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 07:00:00 +0000
+Link: https://www.csoonline.com/article/4136307/how-cisos-can-build-a-resilient-workforce.html
+
+[TAM METİN - 1745 kelime]
+Resilience has become the organizing principle for the cybersecurity posture of many organizations, but what about cyber workforce resilience?
+
+With ongoing skills gaps, AI reshaping roles and workforce stress as standing concerns for many CISOs, ensuring the resilience of the workforce has become top of mind. But due to budget constraints, return to office mandates and teams struggling to keep up with the threat landscape, CISOs are faced with a real challenge.
+
+Stephen Ford, VP and CISO at Rockwell Automation, knows what many CISOs face: it’s often difficult to find the properly skilled resources to deliver a strong cybersecurity program and capabilities. “So, workforce sustainability is an important consideration,” says Ford.
+
+Workforce resilience requires data-backed planning, managing the skills mix, and looking after the team as another element of risk management.
+
+How CISOs are approaching workforce planning
+
+Because the nature of cybersecurity work is unpredictable, Ford actively monitors his team to have a sense of how they’re managing. “There’s a fair amount of project work, but there’s also a lot of work that’s a reaction to events and depending on how many events or issues we run into, we could easily overwhelm the team,” he says.
+
+This concern is well founded, with the 2025 ISC2 Cybersecurity Workforce Study finding 47% of participants report feeling overwhelmed with the workload they’re expected to bear.
+
+Jon France, ISC2 CISO, agrees that workforce sustainability — managing stress, burnout and workload — is a standing concern, not a side issue.
+
+“Looking after the team and leveraging the team without killing them is on our agenda too,” says France.
+
+Ford has developed strategies to not only recruit talent but maintain their interests and get them through the ebbs and flows of daily life in cybersecurity. “I put a focus around monitoring the workforce and trying to get a good sense of the workloads that are coming in.”
+
+Having a team that’s properly staffed is important and this is where data is helpful to gauge the workload and make the argument to support resourcing. “It can sometimes be a little difficult to get your arms around it, but the right processes and ability to measure work help to calculate the expected workload and determine an acceptable resource level to support that workload,” Ford says.
+
+The challenge of quantifying workload and justifying resourcing decisions is commonplace. Only 55% of respondents believe their organizations have the resources needed to adequately address security incidents over the next two to three years, according to the ISC2 study.
+
+Burnout leads to job dissatisfaction
+
+Burnout is an ongoing concern for many CISOs and their teams, especially when unpredictable events can trigger workload spikes, burnout can escalate fast. “It’s something that can overwhelm pretty quickly,” Ford says.
+
+Industry surveys continue to flash red on persistent burnout that leads to job dissatisfaction. The ISC2 study found almost half of respondents (48%) saying they felt exhausted trying to keep on top of the latest threats and emerging technology.
+
+Ford approaches it as both a leadership and an operating-model issue, keeping in touch with workloads in the team and having a sustainable pipeline of talent to avoid overwhelming them with attrition. “I try to hire good people, empower them to operate, and delegate as much as I can.”
+
+While it’s hard to eliminate these issues entirely, using data to inform staffing levels, aiming to balance workloads as much as possible, and paying attention to the culture that surrounds the team are some of Ford’s strategies.
+
+“We spend time building good teams and we need to spend time to understand the challenges, the workload, and how they feel about the work.”
+
+AI as a force multiplier, not a headcount strategy
+
+Tooling and technology have always reshaped roles, and it’s no different with AI. This time, it’s the scale and speed of adoption, the fear, uncertainty and doubt about what it means for entry-level roles.
+
+More than two-thirds (69%) of respondents are on a path towards regular AI use, ISC2 indicates, which includes evaluating, testing and incorporating these tools into their operations.
+
+At software vendor Kantata, there’s a shift towards an AI-augmented workforce model that prioritizes automating high-volume tasks and integrating AI co-pilots to act as a force multiplier for team members. This includes high-friction areas like TPRM, security assessments such as RFP/RFI responses, and threat monitoring to significantly reduce operational noise.
+
+“By automating the first pass of data ingestion and alert triaging, our teams can focus on high-fidelity incidents and strategic decision-making rather than repetitive manual tasks,” says Taison Kearney, Kantata’s CISO and DPO.
+
+To ensure this doesn’t simply increase the workload, they reinvest the time saved into formalized upskilling, ensuring efficiency gains support team longevity and professional growth. Kearney believes that automation combined with upskilling helps reduce burnout and allows internal expertise to adapt to the threat landscape. “It secures our long-term sustainability by preserving institutional knowledge and providing our talent with a clear, high-growth career path.”
+
+France sees AI changing entry-level work but not erasing it. Citing the example of SOC analysts, he says it’s not going to replace the human in the loop. “But it’ll get them to a decision quicker, or at least get them to a more accurate picture of what’s going on.”
+
+He acknowledges fears about losing foundational experiences, but he believes we’ve been through this with other technical revolutions. “I think it’ll change some roles, but ultimately will not replace them. Coupled with that, it’s an efficiency gain,” France says.
+
+Kearney thinks AI is compressing the career ladder by automation of repetitive Tier 1 tasks that traditionally served as an entry-level apprenticeship. Consequently, junior roles are shifting from manual triage towards more complex problem solving — to the benefit of both employees and organizations.
+
+“This forces new hires to possess architectural and strategic skills much earlier in their career, ultimately potentially driving a higher reliance on AI capabilities for these individuals to be successful,” Kearney says.
+
+Staff have dedicated time for training, and the goal is for the team to develop the deep architectural knowledge with ‘human-in-the-loop’ expertise that’s increasingly required for complex defense. “This approach transforms the ‘urge to learn’ into a clear career pathway that values institutional knowledge and continuous professional evolution,” Kearney says.
+
+Building the cyber team amid a skill shortage
+
+Managing workload is a day-to-day concern but alongside this challenge is the task of building the right cyber team — using recruitment and developing existing staff. Yet it’s by no means a simple task, almost two-thirds of respondents in the ISC2 survey identified critical or significant skills shortages within their teams, underscoring that the challenge is both staffing and capability.
+
+Ford agrees it’s difficult to find top-tier talent across all the different cybersecurity disciplines, especially for a large organization like Rockwell. His strategy entails bringing in a key expert or two in different disciplines with years of experience and adding more junior, early career people. “Pairing them with seasoned experts allows you to build an effective, sustainable team over time, and I’ve seen that work extremely well for organizations with early career programs.”
+
+He also looks for experts from adjacent disciplines such as infrastructure, the data center space or application development keen to break into cyber. “I’m not recruiting for everyone. I’m recruiting for a few top experts and then building a pipeline either through early career or other similar activities from a technology space to get an effective cyber team,” he says.
+
+Rockwell has college intern and early career programs and strong relationships with local universities to bring in early talent and make them part of its projects with hopes of retaining some for full-time employment.
+
+The early career people don’t always fully grasp the different disciplines and activities that one can do in cybersecurity and Ford says they focus on helping them learn and gain an interest in cyber. “You end up with somebody that’s committed through time and a very strong employee and you can start looking at building the pipeline for senior level positions.”
+
+Where other organizations may look to fill gaps with external providers like managed service providers, Ford said Rockwell would rather cultivate the talent and expertise in-house. He finds it helps develop staff with an understanding of the critical knowledge about the organization and its operations — rather than see this valuable “thought leadership” sit outside the building.
+
+In some cases, early careers professionals are able to solve complex problems based on them being closer to new technology. “Some of the younger generations are actually more wired and suited to leverage some of the new technologies like AI, whereas some of the older, more seasoned professionals may be more of a traditionalist,” Ford tells CSO.
+
+Hiring managers and cybersecurity professionals are closely aligned, with the study showing problem solving, collaboration, communications, willingness to learn, and strategic thinking are the top non-technical skills across both groups.
+
+France widens what “good security talent” looks like, emphasizing communication skills, critical thinking, and curiosity in addition to core technical skills. Approaching it this way there is a broader talent pool to draw from. “You don’t have to come from a technical background, you can come from adjacent industries and bring those experiences in.”
+
+How CISOs can manage workforce planning
+
+1. Bake in human sustainability
+
+Treat stress and burnout like any other risk indicator.
+
+Design rotations, on‑call policies, and staffing to manage workloads.
+
+2. Use AI to redesign roles, not erase them
+
+For entry‑level roles shift tasks from:
+
+– Manual sifting → AI‑assisted triage and investigation.
+
+– Pure grunt work → judgment, escalation, and interpretation.
+
+Maintain human in the loop in job descriptions and process design.
+
+3. Protect foundational learning in an automated environment
+
+Plan structured skills pathways: simulations, labs, red/blue exercises so juniors still learn what AI automates away.
+
+Pair juniors with senior analysts to upskill and explain why the tooling is making decisions.
+
+4. Plan skills mix, not just headcount
+
+Intentionally recruit for communication, critical thinking, curiosity, not just technical certifications.
+
+Map your team to both technical depth and business‑risk communication needs.
+
+5. Treat culture as part of resilience
+
+Delegate, manage staffing pipeline, and pay attention to team workload and culture.
+
+Encourage leaders to plug into peer networks for both intel sharing and emotional support, recognizing that CISO burnout is a systemic risk.
+
+Discipline is the new power move in cybersecurity leadership
+
+The foundation problem: How a lack of accountability is destroying cybersecurity
+
+SolarWinds WHD zero-days from January are under attack
+
+From our editors straight to your inbox
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/4136307/how-cisos-can-build-a-resilient-workforce.html, csoonline.com, 02.03.2026)
+
+================================================================================
+
+[12] CSO Online - Im Fokus: RZ-Modernisierung
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 06:00:00 +0000
+Link: https://whitepaper.computerwoche.de/resources/im-fokus-warum-die-modernisierung-von-rechenzentren-not-tut/
+
+⚠️  Tam metin çekilemedi
+
+(XXXXXXX, AÇIK - https://whitepaper.computerwoche.de/resources/im-fokus-warum-die-modernisierung-von-rechenzentren-not-tut/, whitepaper.computerwoche.de, 02.03.2026)
+
+================================================================================
+
+[13] CSO Online - Kubernetes Security: Wie Sie Ihre Cluster (besser) absichern
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 02 Mar 2026 03:47:00 +0000
+Link: https://www.csoonline.com/article/3492006/kubernetes-security-wie-sie-ihre-cluster-besser-absichern.html
+
+[TAM METİN - 1020 kelime]
+Weil Kubernetes-Cluster zunehmend angegriffen werden, ist es essenziell, sie entsprechend abzusichern. Diese Best Practices können helfen.
+
+Anatoliy Eremin | shutterstock.com
+
+Kubernetes hat sich unter Enterprise-Softwareentwicklern zu einem durchschlagenden Erfolg entwickelt. Das veranlasst kriminelle Hacker zunehmend dazu, entsprechende Installationen mit speziell entwickelten Exploits anzugreifen. Dabei werden die Bedrohungsakteure immer besser darin, ihre Schadsoftware zu verstecken, (triviale) Sicherheitskontrollen zu umgehen und sich lateral durch Netzwerke zu bewegen, um weiteren Schaden anzurichten.
+
+Wie die von Sicherheitsanbietern wie Palo Alto, Wiz und Aqua Security eigens aufgesetzten Kubernetes-Honeypots demonstrieren, vergehen inzwischen im ungünstigsten Fall lediglich knapp zwanzig Minuten, bis erste Angriffsversuche auf neu erstellte Kubernetes-Cluster erfolgen. Dabei werden die bekannten TCP/IP-Ports gescannt, die etwa von Containern genutzt werden, um untereinander zu kommunizieren. Solche vorgelagerten Scans laufen demnach täglich Dutzende Male ab – was ein Hinweis darauf ist, dass die kriminellen Hacker auf automatisierte Kompromittierung setzen.
+
+Zwar gibt es einige Best Practices im Bereich Kubernetes Security – diese sind allerdings nicht weitläufig bekannt. Zudem erfordern sie teilweise spezielles Knowhow, Tools und Taktiken, die sich ganz wesentlich von dem unterscheiden, was nötig ist, um gewöhnliche Cloud-Instanzen oder virtuelle Maschinen abzusichern. Dieser Artikel analysiert zunächst ausführlich die Kubernetes-Bedrohungslandschaft. Anschließend erfahren Sie, wie Sie Ihre Cluster (besser) absichern.
+
+Die Kubernetes-Bedrohungslandschaft
+
+Wie komplex die Datenflüsse, Abhängigkeiten und Prozesse der Kubernetes-Landschaft miteinander verwoben sind, darüber gibt ein Blogbeitrag der Cloud Native Computing Foundation (CNCF) Aufschluss. Sämtliche Komponenten müssen dabei jeweils mit eigenen Methoden abgesichert werden, um:
+
+die Kommunikation zu verschlüsseln,
+
+die Kommunikation zu verschlüsseln,
+
+Container, Storage Repositories und User angemessen zu authentifizieren sowie
+
+Container, Storage Repositories und User angemessen zu authentifizieren sowie
+
+Container vor Exploits zu schützen.
+
+Container vor Exploits zu schützen.
+
+Dieses Diagramm (die Basis stammt von der CNCF, die Interpretation von Trend Micro) lässt erahnen, wie steil die Lernkurve ist, wenn es darum geht, das komplexe Kubernetes-Beziehungsgeflecht zu durchdringen.
+
+Assaf Morag, ehemals Datenanalyst bei Aqua Security, erklärt, warum das so ist: “Die Komplexität dieser Architektur wurde absichtlich geschaffen, denn Kubernetes ist darauf konzipiert, den Benutzern Freiheiten, eine offene Architektur und ein standardmäßig offenes Sicherheitsmodell zu ermöglichen.” Wie die Spezialisten von Palo Alto in ihrem “Complete Guide to Kubernetes Security” (Download gegen Daten) schreiben, ist das jedoch kein Grund zu verzweifeln. Die Tatsache, dass Kubernetes eine weitverbreitete Plattform mit vielen Integrationen sei, erleichtere es, automatisierte, systematische Prozesse zu entwickeln, die die Security zum Herzstück des Kubernetes-Build- und Deployment-Prozesses machen.
+
+Diese inhärente Offenheit von Kubernetes bedeutet jedoch auch: Es gibt kein allgemeines Security-Toolset, um das zu bewerkstelligen. Deshalb haben wir im Gespräch mit Cybersicherheitsexperten herausgefunden, wo der Schuh in Sachen Kubernetes-Sicherheit erfahrungsgemäß am meisten drückt. Leider mussten wir diesbezüglich nicht lange suchen. Denn oft fallen mit Blick auf Container bereits grundlegende Maßnahmen der Netzwerksicherheit unter den Tisch. Dabei wird zum Beispiel versäumt:
+
+Encryption Keys geheimzuhalten.
+
+Encryption Keys geheimzuhalten.
+
+komplexe Passwörter festzulegen.
+
+komplexe Passwörter festzulegen.
+
+verschiedene Segmentierungsschemata anzuwenden.
+
+verschiedene Segmentierungsschemata anzuwenden.
+
+dem Least-Privilege-Prinzip zu folgen.
+
+dem Least-Privilege-Prinzip zu folgen.
+
+Mit dem letztgenannten Basisversäumnis hängt ein weiteres zusammen, wie Nathaniel Quist, Manager of Cloud Threat Intelligence bei Palo Alto Networks, konstatiert: “Rollenbasierten Zugriff zu implementieren, kann sich diffiziler gestalten als bei anderen Cloud-Anwendungen. Das liegt am äußerst komplexen Modell von Kubernetes.”
+
+Analysten von Aqua Security konnten im April 2023 einen der ersten Backdoor-Angriffe auf Kubernetes-Cluster über rollenbasierte Zugangskontrollen beobachten. Dieser zielte laut den Experten auf mindestens sechzig unterschiedliche Cluster ab und führte zur erfolgreichen Installation von Cryptomining-Malware. Dabei wurden die Zugriffsrechte so manipuliert, dass die Schadsoftware über Admin-Rechte verfügte.
+
+Shay Berkovich, Threat Researcher bei Wiz, ordnet ein: “Diese kryptobasierten Angriffe sind auf dem Vormarsch. Vor allem, weil sich Kubernetes-Cluster als hocheffiziente Execution-Plattformen ideal für solche Workloads eignen.” Beispielhaft führt der Sicherheitsexperte die von seinem Arbeitgeber identifizierten Cryptomining-Angriffskampagnen “PyLoose” und “newhello” an. Ein neues Phänomen ist Cryptomining-Malware in Zusammenhang mit Kubernetes allerdings nicht. E-Auto-Pionier Tesla wurde bereits im Jahr 2018 mit Malware infiltriert, die Kryptowährungen schürft. Die Ursache war dabei offenbar ein unzureichend konfiguriertes Kubernetes-Dashboard.
+
+Venkat Thiruvengadam, CEO beim DevOps-Spezialisten DuploCloud, ergänzt: “Den Nutzern unter Einhaltung des Least-Privilege-Prinzips Zugriff auf die Kubernetes-API zu ermöglichen, ist eine schwierige, aber entscheidende Aufgabe. Eine standardisierte und automatisierte Methode zu etablieren, um diesen Zugang zu gewährleisten, stellt einen essenziellen Schritt dar, um Kubernetes-Umgebungen sicher zu gestalten.”
+
+Eine andere Herausforderung ergibt sich aus der verteilten Architektur von Kubernetes, wie Rani Osnat, Sicherheitsexperte bei Backslash Security, erklärt: “Auch wenn es um Code geht, gilt: Zu viele Köche verderben den Brei. Möglicherweise gibt es jeweils eigene Teams, um Cluster zu betreiben, Entwicklungs-Pipelines zu managen und Zugriffskontrollen durchzusetzen. Wenn diese Teams nicht konsequent miteinander kommunizieren, kann ein Governance-Mangel entstehen.”
+
+Laut Ami Luttwak, CTO bei Wiz, kann in einem solchen Setup auch die gemeinsame Nutzung von Code Repositories problematisch sein: “Das kann zwar zur Effektivität beitragen, birgt aber auch Risiken, wenn der gemeinsam genutzte Code kompromittiert wird. Getrennt arbeitende Teams sollten ihren Code auch in getrennten Clustern ausführen. Das ist noch lange keine gängige Praxis.”
+
+Das vielleicht größte Problem in Sachen Kubernetes-Sicherheit ist jedoch, dass es im Handumdrehen Supply-Chain-Angriffe automatisieren kann – insbesondere in Zusammenhang mit offengelegten geheimen Informationen und Schlüsseln. Sicherheitsforscher von Aqua Security konnten im Rahmen von Recherchen hunderte von Datensätzen identifizieren, die solche Geheimnisse offenlegten. Dazu durchsuchten die Experten die GitHub-API nach Anmeldeinformationen, wie sie in einem detaillierten Blogbeitrag beschreiben. “Es besteht ein klarer Bedarf für quelloffene Tools und Secrets Scanners, um die Detection-Fähigkeiten zu erhöhen, wenn es um kodierte Geheimnisse geht”, resümieren die Aqua-Experten.
+
+5 Best Practices gegen Kubernetes-Exploits
+
+Folgende Best Practices empfehlen die Experten, mit denen wir gesprochen haben, um zu verhindern, dass Kubernetes-Cluster kompromittiert werden:
+
+umfassende, rollenbasierte Zugriffskontrollen, die Netzwerk-Richtlinien und User Namespaces voneinander trennen;
+
+umfassende, rollenbasierte Zugriffskontrollen, die Netzwerk-Richtlinien und User Namespaces voneinander trennen;
+
+“In-Cluster Separation”-Sicherheitsmaßnahmen;
+
+“In-Cluster Separation”-Sicherheitsmaßnahmen;
+
+Key und Secret Management (Services);
+
+Key und Secret Management (Services);
+
+regelmäßige Cluster-Audits, um Fehlkonfigurationen zu identifizieren und zu beheben;
+
+regelmäßige Cluster-Audits, um Fehlkonfigurationen zu identifizieren und zu beheben;
+
+entsprechende Schulungen für Mitarbeiter und Entwickler.
+
+entsprechende Schulungen für Mitarbeiter und Entwickler.
+
+Das “Kubernetes Security Cheat Sheet” von OWASP enthält diverse weitere, sehr spezifische Empfehlungen, um Ihre Cluster nachhaltig abzusichern.
+
+Application Security Posture Management – ein Kaufratgeber
+
+Kritische Zero-Day-Schwachstelle in SAP NetWeaver
+
+Teams, Slack & Co. absichern: So wird das Collaboration-Tool kein Security-Albtraum
+
+Von unseren Redakteuren direkt in Ihren Posteingang
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/3492006/kubernetes-security-wie-sie-ihre-cluster-besser-absichern.html, csoonline.com, 02.03.2026)
 
 ================================================================================
 
