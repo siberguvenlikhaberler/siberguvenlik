@@ -1204,7 +1204,11 @@ KURALLAR:
         prompt = (
             "Aşağıdaki sosyal medya paylaşım başlıklarını resmi Türkçe ile "
             "birer cümleye çevir. Resmi dil zorunludur: -mıştır, -edilmiştir, "
-            "-tespit edilmiştir gibi fiil çekimleri kullan. "
+            "-tespit edilmiştir gibi fiil çekimleri kullan.\n"
+            "KRİTİK KURAL: Teknik terimler, yazılım adları, şirket/ürün/protokol isimleri, "
+            "CVE numaraları ve özel isimler (örn. Windows, Apache, Kubernetes, VMware, "
+            "LockBit, Fortinet, CVE-2024-xxxx, GitHub, RCE, SQL Injection vb.) "
+            "ASLA Türkçeye çevrilmez — orijinal haliyle bırakılır.\n"
             "Sadece çevirileri ver, başka hiçbir şey yazma.\n"
             "Format: [S1]: çeviri\n[S2]: çeviri\n\n"
             + '\n'.join(lines)

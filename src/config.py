@@ -390,8 +390,8 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             border-bottom: 2px solid #dbeafe;
         }}
         .social-signals .signal-list {{
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
         }}
         .social-signals .signal-item {{
@@ -400,47 +400,59 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             border-left: 4px solid #3b82f6;
             border-radius: 6px;
             padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }}
         .social-signals .signal-item.reddit-item {{ border-left-color: #ff4500; }}
         .social-signals .signal-item.hn-item     {{ border-left-color: #ff6600; }}
         .social-signals .signal-item.github-item {{ border-left-color: #238636; }}
-        .social-signals .signal-item.xcom-item   {{ border-left-color: #000000; }}
+        .social-signals .signal-item.xcom-item   {{ border-left-color: #1a1a1a; }}
         .social-signals .signal-meta {{
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 6px;
+            gap: 8px;
             flex-wrap: wrap;
         }}
         .social-signals .signal-platform-label {{
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
-            color: #64748b;
+            color: #ffffff;
+            background: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
         }}
+        .social-signals .reddit-item .signal-platform-label  {{ background: #ff4500; }}
+        .social-signals .hn-item .signal-platform-label      {{ background: #ff6600; }}
+        .social-signals .github-item .signal-platform-label  {{ background: #238636; }}
+        .social-signals .xcom-item .signal-platform-label    {{ background: #1a1a1a; }}
         .social-signals .signal-engagement {{
-            font-size: 12px;
+            font-size: 11px;
             color: #475569;
             background: #f1f5f9;
-            border-radius: 4px;
+            border-radius: 3px;
             padding: 2px 8px;
         }}
         .social-signals .signal-item a {{
             color: #1e293b;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-            line-height: 1.5;
+            line-height: 1.45;
             display: block;
         }}
         .social-signals .signal-item a:hover {{
             color: #1e3a8a;
             text-decoration: underline;
         }}
-        @media (max-width: 600px) {{
+        @media (max-width: 640px) {{
             .social-signals {{
                 padding: 16px;
+            }}
+            .social-signals .signal-list {{
+                grid-template-columns: 1fr;
             }}
             .social-signals .signal-meta {{
                 gap: 6px;
