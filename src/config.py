@@ -27,32 +27,36 @@ NEWS_SOURCES = {
 }
 
 # ===== SOSYAL MEDYA SİNYALLERİ AYARLARI =====
-# Reddit (unauthenticated public API), HN, GitHub Advisories, X.com (Tavily)
+# Ana havuz: HN + Mastodon + GitHub (max 2) → top 5
+# Ayrı havuz: Reddit via Tavily → top 3
+# Toplam: max 8 sinyal
 SOCIAL_SIGNAL_CONFIG = {
     'hours_back': 24,
-    'reddit': {
-        'subreddits': ['cybersecurity', 'netsec'],  # cybersecurity: ~25/gün, netsec: 1-2/gün
-        'min_score': 20,       # OAuth gerekmez; düzgün User-Agent yeterli
-        'limit': 25,
-        'top_n': 5,            # Subreddit'ler arasından en yüksek skorlu 5 post
+    'mastodon': {
+        'instance':  'infosec.exchange',
+        'hashtags':  ['cybersecurity', 'infosec', 'vulnerability'],
+        'limit':     20,       # Her hashtag için çekilecek post sayısı
+        'min_score': 2,        # Minimum engagement (favori + retweet*2 + reply)
+        'top_n':     3,        # Ana havuza eklenecek max Mastodon postu
+        'hours_back': 48,      # Mastodon için zaman penceresi (son 48 saat)
     },
     'hackernews': {
-        'min_points': 15,      # search endpoint ile daha güvenilir; 30 bazı saatlerde 0 sonuç dönderiyordu
-        'limit': 25,           # Daha fazla çek, combined score ile sırala
+        'min_points':    15,   # search endpoint ile daha güvenilir
+        'limit':         25,   # Daha fazla çek, combined score ile sırala
         'comment_weight': 3,   # combined_score = points + comments * 3
     },
     'github_advisories': {
-        # Severity öncelik sırası: critical > high > medium
         'min_severity': ['critical', 'high', 'medium'],
-        'limit': 10,           # Çekilecek max advisory sayısı
+        'limit':  10,          # Çekilecek max advisory sayısı
+        'top_n':   2,          # Ana havuza eklenecek max GitHub advisory
     },
-    'xcom': {
-        # Tavily üzerinden X.com arama; last week zaman aralığı (~2-3 gün kapsama)
-        # Engagement verisi yok — Tavily relevance skoru (0.0-1.0) kullanılır
-        'query': 'cybersecurity vulnerability exploit malware security breach',
-        'max_results': 5,      # Tavily'den çekilecek X.com sonuç sayısı
-        'min_score': 0.5,      # Minimum Tavily relevance eşiği
-        'top_n': 3,            # Sosyal sinyal kutusuna eklenecek max X.com öğe
+    'reddit': {
+        # GitHub Actions (Azure) IP'leri Reddit tarafından bloklandığı için Tavily kullanılır
+        'subreddits':   ['cybersecurity', 'netsec'],
+        'query':        'cybersecurity vulnerability exploit malware breach',
+        'max_results':  8,     # Tavily'den çekilecek max sonuç
+        'min_score':    0.3,   # Minimum Tavily relevance eşiği
+        'top_n':        3,     # Ayrı havuzdan eklenecek max Reddit postu
     },
 }
 
@@ -404,10 +408,10 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             flex-direction: column;
             gap: 6px;
         }}
-        .social-signals .signal-item.reddit-item {{ border-left-color: #ff4500; }}
-        .social-signals .signal-item.hn-item     {{ border-left-color: #ff6600; }}
-        .social-signals .signal-item.github-item {{ border-left-color: #238636; }}
-        .social-signals .signal-item.xcom-item   {{ border-left-color: #1a1a1a; }}
+        .social-signals .signal-item.reddit-item   {{ border-left-color: #ff4500; }}
+        .social-signals .signal-item.hn-item       {{ border-left-color: #ff6600; }}
+        .social-signals .signal-item.github-item   {{ border-left-color: #238636; }}
+        .social-signals .signal-item.mastodon-item {{ border-left-color: #6364ff; }}
         .social-signals .signal-meta {{
             display: flex;
             align-items: center;
@@ -424,10 +428,10 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             border-radius: 3px;
             padding: 2px 7px;
         }}
-        .social-signals .reddit-item .signal-platform-label  {{ background: #ff4500; }}
-        .social-signals .hn-item .signal-platform-label      {{ background: #ff6600; }}
-        .social-signals .github-item .signal-platform-label  {{ background: #238636; }}
-        .social-signals .xcom-item .signal-platform-label    {{ background: #1a1a1a; }}
+        .social-signals .reddit-item .signal-platform-label   {{ background: #ff4500; }}
+        .social-signals .hn-item .signal-platform-label       {{ background: #ff6600; }}
+        .social-signals .github-item .signal-platform-label   {{ background: #238636; }}
+        .social-signals .mastodon-item .signal-platform-label {{ background: #6364ff; }}
         .social-signals .signal-engagement {{
             font-size: 11px;
             color: #475569;

@@ -4,6 +4,7 @@ v2.2 - Gemini 2.5 Flash + HTML Doğrulama + Eksik Paragraf Tamamlama
 """
 
 import os
+import re
 import time
 import hashlib
 import requests
@@ -127,67 +128,87 @@ def _parse_article_date(date_str, fallback):
 def fetch_social_signals(config):
     """
     Reddit (unauthenticated public API), Hacker News, GitHub Advisories ve
-    X.com (Tavily üzerinden) kaynaklarından siber güvenlik sinyalleri çeker.
-    Reddit + HN + GitHub: karma puana göre top 5 seçilir.
-    X.com: Tavily relevance skoruna göre top 3 seçilir, ayrı eklenir.
+    HN, GitHub Advisories (max 2), Mastodon (infosec.exchange) kaynaklarından sinyal çeker.
+    Reddit via Tavily ayrı havuzda top 3 seçilir, sona eklenir.
+    Toplam: max 8 sinyal (5 ana + 3 Reddit).
     """
-    hours_back   = config.get('hours_back', 24)
-    cutoff_ts    = int((datetime.now() - timedelta(hours=hours_back)).timestamp())
-    yesterday    = (datetime.now() - timedelta(hours=hours_back)).strftime('%Y-%m-%d')
-    results      = []   # Reddit + HN + GitHub
-    xcom_results = []   # X.com via Tavily (ayrı havuz)
+    hours_back     = config.get('hours_back', 24)
+    cutoff_ts      = int((datetime.now() - timedelta(hours=hours_back)).timestamp())
+    yesterday      = (datetime.now() - timedelta(hours=hours_back)).strftime('%Y-%m-%d')
+    results        = []   # HN + Mastodon + GitHub (max 2) → ana havuz
+    reddit_results = []   # Reddit via Tavily → ayrı havuz
 
     print("\n" + "=" * 70)
     print("📡 SOSYAL MEDYA SİNYALLERİ ÇEKILIYOR")
     print("=" * 70)
 
-    # ── Reddit (Unauthenticated Public API) ─────────────────────────────────
-    # OAuth gerekmez; Reddit public JSON API düzgün User-Agent ile 200 döner.
-    # 403'ün nedeni python-requests gibi jenerik UA'lardı, OAuth değil.
-    reddit_cfg       = config.get('reddit', {})
-    reddit_min_score = reddit_cfg.get('min_score', 20)
-    reddit_limit     = reddit_cfg.get('limit', 25)
-    reddit_subs      = reddit_cfg.get('subreddits', ['cybersecurity', 'netsec'])
-    reddit_top_n     = reddit_cfg.get('top_n', 5)
-    reddit_ua        = 'siberguvenlik-haber-toplayici/1.0 (gunluk siber guvenlik haberleri)'
-    reddit_pool      = []
+    # ── Mastodon (infosec.exchange) ───────────────────────────────────────────
+    # Açık API, kimlik doğrulama gerektirmez. Hashtag timeline endpoint kullanılır.
+    # Engagement skoru: favourites_count + reblogs_count * 2 + replies_count
+    mastodon_cfg      = config.get('mastodon', {})
+    mastodon_instance = mastodon_cfg.get('instance', 'infosec.exchange')
+    mastodon_tags     = mastodon_cfg.get('hashtags', ['cybersecurity', 'infosec', 'vulnerability'])
+    mastodon_limit    = mastodon_cfg.get('limit', 20)
+    mastodon_min_eng  = mastodon_cfg.get('min_score', 2)
+    mastodon_top_n    = mastodon_cfg.get('top_n', 3)
+    mastodon_hours    = mastodon_cfg.get('hours_back', 48)
+    mastodon_cutoff   = int((datetime.now() - timedelta(hours=mastodon_hours)).timestamp())
+    mastodon_pool     = []
+    seen_mastodon_ids = set()
 
-    for sub in reddit_subs:
+    for tag in mastodon_tags:
         try:
-            url = f'https://www.reddit.com/r/{sub}/top.json?t=day&limit={reddit_limit}'
-            r   = requests.get(url, headers={'User-Agent': reddit_ua}, timeout=(5, 15))
+            url = (f'https://{mastodon_instance}/api/v1/timelines/tag/{tag}'
+                   f'?limit={mastodon_limit}')
+            r = requests.get(url, headers=HEADERS, timeout=(5, 15))
             if r.status_code != 200:
-                print(f"   Reddit r/{sub}: HTTP {r.status_code}")
-                time.sleep(1)
+                print(f"   Mastodon #{tag}: HTTP {r.status_code}")
+                time.sleep(0.5)
                 continue
-            posts = r.json().get('data', {}).get('children', [])
-            found = 0
-            for post in posts:
-                p     = post.get('data', {})
-                score = p.get('score', 0)
-                if score < reddit_min_score:
+            for s in r.json():
+                sid = s.get('id', '')
+                if sid in seen_mastodon_ids:
                     continue
-                if int(p.get('created_utc', 0)) < cutoff_ts:
+                seen_mastodon_ids.add(sid)
+                try:
+                    cdt = datetime.fromisoformat(
+                        s.get('created_at', '').replace('Z', '+00:00'))
+                    if cdt.timestamp() < mastodon_cutoff:
+                        continue
+                except Exception:
+                    pass
+                favs    = s.get('favourites_count', 0)
+                reblogs = s.get('reblogs_count', 0)
+                replies = s.get('replies_count', 0)
+                eng     = favs + reblogs * 2 + replies
+                if eng < mastodon_min_eng:
                     continue
-                link = p.get('url') or f"https://www.reddit.com{p.get('permalink', '')}"
-                reddit_pool.append({
-                    'platform': 'reddit',
-                    'source':   f"Reddit: r/{sub}",
-                    'title':    p.get('title', ''),
-                    'link':     link,
-                    'score':    score,
-                    'comments': p.get('num_comments', 0),
+                # HTML içerikten düz metin çıkar
+                raw_text = BeautifulSoup(s.get('content', ''), 'html.parser')\
+                               .get_text(' ', strip=True)
+                raw_text = re.sub(r'https?://\S+', '', raw_text).strip()
+                raw_text = ' '.join(raw_text.split())
+                if len(raw_text) < 20:
+                    continue
+                mastodon_pool.append({
+                    'platform':   'mastodon',
+                    'source':     'Mastodon',
+                    'title':      raw_text[:200],
+                    'link':       s.get('url', '#'),
+                    'score':      eng,
+                    'comments':   replies,
+                    'favourites': favs,
+                    'reblogs':    reblogs,
                 })
-                found += 1
-            print(f"   Reddit r/{sub}: {found} nitelikli post")
-            time.sleep(1)
+            print(f"   Mastodon #{tag}: {mastodon_limit} post tarandı")
+            time.sleep(0.5)
         except Exception as e:
-            print(f"   Reddit r/{sub} hatasi: {e}")
-            time.sleep(1)
+            print(f"   Mastodon #{tag} hatasi: {e}")
 
-    reddit_pool.sort(key=lambda x: x['score'], reverse=True)
-    results.extend(reddit_pool[:reddit_top_n])
-    print(f"   Reddit toplam: {len(reddit_pool)} → en iyi {min(reddit_top_n, len(reddit_pool))} eklendi")
+    mastodon_pool.sort(key=lambda x: x['score'], reverse=True)
+    results.extend(mastodon_pool[:mastodon_top_n])
+    print(f"   Mastodon toplam: {len(mastodon_pool)} nitelikli → "
+          f"en iyi {min(mastodon_top_n, len(mastodon_pool))} eklendi")
 
     # ── Hacker News (Algolia API) ────────────────────────────────────────────
     # Skor modeli: combined_score = points + (num_comments × comment_weight)
@@ -237,10 +258,12 @@ def fetch_social_signals(config):
 
     # ── GitHub Security Advisories ───────────────────────────────────────────
     # En güncel incelenmiş advisory'leri çeker; severity'ye göre önceliklendirir.
+    # top_n=2 ile ana havuzda GitHub'un ağırlığı sınırlandırılır.
     severity_rank = {'critical': 4, 'high': 3, 'medium': 2, 'low': 1}
     gh_cfg        = config.get('github_advisories', {})
     min_severity  = gh_cfg.get('min_severity', ['critical', 'high', 'medium'])
     gh_limit      = gh_cfg.get('limit', 10)
+    gh_top_n      = gh_cfg.get('top_n', 2)
     try:
         gh_url  = f"https://api.github.com/advisories?type=reviewed&per_page={gh_limit}"
         gh_hdrs = {
@@ -251,7 +274,7 @@ def fetch_social_signals(config):
         r = requests.get(gh_url, headers=gh_hdrs, timeout=(5, 15))
         if r.status_code == 200:
             advisories = r.json()
-            found = 0
+            gh_pool = []
             for adv in advisories:
                 sev = (adv.get('severity') or 'unknown').lower()
                 if sev not in min_severity:
@@ -260,7 +283,7 @@ def fetch_social_signals(config):
                 cvss_score = float(cvss_obj.get('score') or 0) if isinstance(cvss_obj, dict) else 0.0
                 rank       = severity_rank.get(sev, 0)
                 sort_score = rank * 10 + cvss_score  # nihai sıralama için karma puan
-                results.append({
+                gh_pool.append({
                     'platform':  'github_advisories',
                     'source':    'GitHub Advisory',
                     'title':     adv.get('summary') or adv.get('ghsa_id', ''),
@@ -275,70 +298,89 @@ def fetch_social_signals(config):
                     'full_text': (adv.get('description') or '')[:300],
                     'success':   True,
                 })
-                found += 1
-            print(f"   GitHub Advisories: {found} nitelikli advisory")
+            gh_pool.sort(key=lambda x: x['score'], reverse=True)
+            results.extend(gh_pool[:gh_top_n])
+            print(f"   GitHub Advisories: {len(gh_pool)} nitelikli → "
+                  f"en iyi {min(gh_top_n, len(gh_pool))} eklendi")
         else:
             print(f"   GitHub Advisories: HTTP {r.status_code}")
     except Exception as e:
         print(f"   GitHub Advisories hatasi: {e}")
 
-    # ── X.com (Tavily arama motoru üzerinden) ───────────────────────────────
-    # X.com crawler'ları engeller; Tavily Google/Bing index üzerinden erişir.
+    # ── Reddit (Tavily arama motoru üzerinden) ──────────────────────────────
+    # Reddit public API, GitHub Actions (Azure) IP'lerini blokluyor.
+    # Tavily ile include_domains=['reddit.com'] filtresi + URL doğrulaması.
     # Engagement verisi yok — Tavily relevance skoru (0-1) kullanılır.
     # Kendi havuzunda tutulur (main_results sıralamasını etkilemez).
     tavily_key = os.getenv('TAVILY_API_KEY', '')
     if tavily_key:
-        xcom_cfg       = config.get('xcom', {})
-        xcom_query     = xcom_cfg.get('query',
-                            'cybersecurity vulnerability exploit malware security breach')
-        xcom_max       = xcom_cfg.get('max_results', 5)
-        xcom_min_score = xcom_cfg.get('min_score', 0.5)
-        xcom_top_n     = xcom_cfg.get('top_n', 3)
+        reddit_cfg     = config.get('reddit', {})
+        reddit_subs    = reddit_cfg.get('subreddits', ['cybersecurity', 'netsec'])
+        reddit_query   = reddit_cfg.get('query',
+                            'cybersecurity vulnerability exploit malware breach')
+        reddit_max     = reddit_cfg.get('max_results', 8)
+        reddit_min_sc  = reddit_cfg.get('min_score', 0.3)
+        reddit_top_n   = reddit_cfg.get('top_n', 3)
         try:
             from tavily import TavilyClient
             tc       = TavilyClient(api_key=tavily_key)
             response = tc.search(
-                query           = xcom_query,
-                include_domains = ['x.com', 'twitter.com'],
-                time_range      = 'week',    # son 7 gün; 2-3 gün kapsama garantili
-                max_results     = xcom_max,
-                search_depth    = 'basic',   # 1 kredi/sorgu
+                query           = reddit_query,
+                include_domains = ['reddit.com'],
+                time_range      = 'week',
+                max_results     = reddit_max,
+                search_depth    = 'basic',
                 topic           = 'general',
             )
-            xcom_found = 0
+            found = 0
             for item in response.get('results', []):
-                tscore = item.get('score', 0)
-                if tscore < xcom_min_score:
+                url = item.get('url', '')
+                # Sadece hedef subreddit postları (yorumlar dahil)
+                if not any(f'/r/{sub}/' in url.lower() for sub in reddit_subs):
                     continue
-                xcom_results.append({
-                    'platform':     'xcom',
-                    'source':       'X.com',
-                    'title':        item.get('title', ''),
-                    'link':         item.get('url', '#'),
-                    'score':        0,
+                tscore = item.get('score', 0)
+                if tscore < reddit_min_sc:
+                    continue
+                sub = next(
+                    (s for s in reddit_subs if f'/r/{s}/' in url.lower()),
+                    'reddit')
+                # Reddit sayfa başlıklarından ": r/sub" sonekini temizle
+                title = item.get('title', '')
+                for s in reddit_subs:
+                    title = re.sub(rf'\s*:\s*r/{s}$', '', title, flags=re.IGNORECASE)
+                title = title.strip()
+                if not title:
+                    continue
+                reddit_results.append({
+                    'platform':     'reddit',
+                    'source':       f'Reddit: r/{sub}',
+                    'title':        title,
+                    'link':         url,
+                    'score':        tscore,
                     'comments':     0,
                     'tavily_score': tscore,
                 })
-                xcom_found += 1
-            xcom_results.sort(key=lambda x: x.get('tavily_score', 0), reverse=True)
-            top_xcom = xcom_results[:xcom_top_n]
-            print(f"   X.com (Tavily): {xcom_found} sonuc → en iyi {len(top_xcom)} eklendi")
+                found += 1
+            reddit_results.sort(key=lambda x: x.get('tavily_score', 0), reverse=True)
+            top_reddit = reddit_results[:reddit_top_n]
+            print(f"   Reddit (Tavily): {found} nitelikli post → "
+                  f"en iyi {len(top_reddit)} eklendi")
         except Exception as e:
-            top_xcom = []
-            print(f"   X.com/Tavily hatasi: {e}")
+            top_reddit = []
+            print(f"   Reddit/Tavily hatasi: {e}")
     else:
-        top_xcom = []
-        print("   X.com: TAVILY_API_KEY yok, atlanıyor")
+        top_reddit = []
+        print("   Reddit: TAVILY_API_KEY yok, atlanıyor")
 
-    # Reddit + HN + GitHub: karma puana göre top 5
+    # HN + Mastodon + GitHub (max 2): karma puana göre top 5
     results.sort(key=lambda x: x.get('score', 0), reverse=True)
     top_main = results[:5]
 
-    # X.com sonuçları her zaman sona eklenir (ayrı havuz)
-    final = top_main + top_xcom
+    # Reddit sonuçları her zaman sona eklenir (ayrı havuz)
+    final = top_main + top_reddit
 
     print(f"\n   Sosyal sinyal toplami: {len(final)} icerik "
-          f"({len(top_main)} ana + {len(top_xcom)} X.com)")
+          f"({len(top_main)} ana + {len(top_reddit)} Reddit)")
     return final
 
 
@@ -1252,13 +1294,13 @@ KURALLAR:
             'reddit':            'reddit-item',
             'hackernews':        'hn-item',
             'github_advisories': 'github-item',
-            'xcom':              'xcom-item',
+            'mastodon':          'mastodon-item',
         }
         platform_labels = {
             'reddit':            'Reddit',
             'hackernews':        'HackerNews',
             'github_advisories': 'GitHub Advisory',
-            'xcom':              'X.com',
+            'mastodon':          'Mastodon',
         }
 
         items_html = ''
@@ -1282,14 +1324,19 @@ KURALLAR:
                 engagement = f"ÖNEM: {sev_label}"
                 if cvss:
                     engagement += f"  |  CVSS: {cvss}"
-            elif platform == 'xcom':
-                # Tavily engagement verisi yok; relevance skoru gösterilir
+            elif platform == 'mastodon':
+                favs    = post.get('favourites', 0)
+                reblogs = post.get('reblogs', 0)
+                engagement = f"★{favs}"
+                if reblogs:
+                    engagement += f"  |  ↺{reblogs}"
+            elif platform == 'reddit':
+                # Tavily üzerinden geldiği için engagement verisi yok
                 tscore     = post.get('tavily_score', 0)
-                engagement = f"Alaka: %{round(tscore * 100)}" if tscore else "Gündem"
+                engagement = f"Alaka: %{round(tscore * 100)}" if tscore else "Reddit"
             else:
-                score_labels = {'reddit': 'upvote', 'hackernews': 'puan'}
-                s_label      = score_labels.get(platform, 'puan')
-                engagement   = f"{score} {s_label}"
+                # hackernews
+                engagement = f"{score} puan"
                 if comments > 0:
                     engagement += f"  |  {comments} yorum"
 
