@@ -3,7 +3,157 @@
 📅 03 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
-[1] The Hacker News - Microsoft Warns OAuth Redirect Abuse Delivers Malware to Government Targets
+[1] The Hacker News - AI Agents: The Next Wave Identity Dark Matter - Powerful, Invisible, and Unmanaged
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 03 Mar 2026 17:00:00 +0530
+Link: https://thehackernews.com/2026/03/ai-agents-next-wave-identity-dark.html
+
+[TAM METİN - 1490 kelime]
+The Rise of MCPs in the Enterprise
+
+The Model Context Protocol (MCP) is quickly becoming a practical way to push LLMs from “chat” into real work. By providing structured access to applications, APIs, and data, MCP enables prompt-driven AI agents that can retrieve information, take action, and automate end-to-end business workflows across the enterprise. This is already showing up in production through horizontal assistants and custom vertical agents. like Microsoft Copilot, ServiceNow, Zendesk bots, and Salesforce Agentforce, with custom and vertical agents moving fast behind them. This echoes the recent Gartner “Market Guide for Guardian Agents” report, where analysts note that the rapid enterprise adoption of these AI agents is significantly outpacing the maturity of the governance and policy controls required to manage them.
+
+We believe the primary disconnect is that these AI “colleagues” don’t look like humans.
+
+They don’t join or leave through HR
+
+They don’t submit access requests
+
+They don’t retire accounts when projects end
+
+They’re often invisible to traditional IAM, and that’s how they become identity dark matter: real identity risk outside the governance fabric. And agentic systems don’t just use access, they hunt for the path of least resistance. They’re optimized to finish the job with minimal friction: fewer approvals, fewer prompts, fewer blockers. In identity terms, that means they’ll gravitate toward whatever already works, in-app-local accounts, stale service identities, long-lived tokens, API keys, bypass auth paths, and if it works, it gets reused.
+
+Team8’s 2025 CISO Village Survey found:
+
+Nearly 70% of enterprises already run AI agents (any system that can answer and act) in production.
+
+Another 23% are planning deployments in 2026.
+
+Two-thirds are building them in-house.
+
+MCP adoption isn’t a question of if; it’s a question of how fast and wisely. It’s already here, and it’s only accelerating. Complicating this further is the reality of hybrid environments. Based on the Gartner research, it seems that organizations face significant hurdles in managing these non-human identities because native platform controls and vendor safeguards generally do not extend beyond their own cloud or platform borders. Without an independent oversight mechanism, cross-cloud agent interactions remain entirely ungoverned. The real question is whether your AI agents become trusted teammates or unmanaged identity dark matter?
+
+How Identity Dark Matter Gets Abused by Agent-AI
+
+As autonomous AI agents that can plan and execute multi-step tasks with minimal human input, Agent AI is a powerful assistant but also a major cyber risk. Interestingly, leading industry analysts seem to expect that the vast majority of unauthorized agent actions will stem from internal enterprise policy violations, such as misguided AI behavior or information oversharing, rather than malicious external attacks.
+
+The typical abuse pattern we see is similar, driven by agent automation and shortcut-seeking:
+
+Enumerate what exists: Agent crawls apps and integrations, lists users/tokens, discovers “alternate” auth paths.
+
+Try what’s easy first: Local accounts, legacy creds, long-lived tokens, anything that avoids a fresh approval.
+
+Lock onto “good enough” access: Even low privilege is enough to pivot: read configuration files, pull logs, discover secrets, map organization structure.
+
+Upgrade quietly: Find over-scoped tokens, stale entitlements, or dormant-but-privileged identities and escalate with minimal noise.
+
+Operate at machine speed: Thousands of small actions occur across many systems, too fast and too wide for humans to spot early.
+
+The real risk here is the scale of impact: one neglected identity becomes a reusable shortcut across the estate.
+
+The Dark Matter Risks
+
+In addition to abusing identity dark matter, left unchecked, MCP agents (AI Agents that use the MCP protocol to connect to apps, A2A, APIs, and data sources) introduce their own hidden exposures. Orchid uncovers these exposures every day:
+
+Over-permissioned access: Agents get “god mode” so they don’t fail, and then that privilege becomes the default operating state.
+
+Untracked usage: Agents can execute sensitive workflows through tools where logs are partial, inconsistent, or not correlated back to a sponsor.
+
+Static credentials: Hardcoded tokens don’t just “live forever”, they become shared infrastructure across agents, pipelines, and environments.
+
+Regulatory blind spots: Auditors ask, “who approved access, who used it, and what data was touched?” Dark matter makes those answers slow, or impossible.
+
+Privilege drift: Agents accumulate access over time because removing permissions is scarier than granting them, until an attacker inherits the drift.
+
+We believe addressing these blind spots aligns with Gartner’s observation that modern AI governance requires identity and access management to tightly converge with information governance. This ensures organizations can dynamically classify data sensitivity and monitor real-time agent behavior instead of relying solely on static credentials.
+
+AI agents aren’t just users without badges. They’re dark matter identities: powerful, invisible, and outside the reach of today’s IAM. And the uncomfortable part: even well-intentioned agents will exploit dark matter. They don’t understand your org chart or your governance intent; they understand what works. If an orphaned account or over-scoped token is the fastest path to completion, it becomes the “efficient” choice.
+
+Principles for Safe MCP Adoption
+
+To avoid repeating the mistakes of the past (with orphaned or overprivileged accounts, shadow IT, unmanaged keys, and invisible activity), organizations need to adapt and apply core identity principles to AI agents. Gartner introduced the concept of specialized "guardian" systems, supervisory AI solutions that continuously evaluate, monitor, and enforce boundaries on working agents.
+
+We recommend organizations follow 5 core principles as they deploy MCP-based agentic solutions.
+
+Pair AI Agents with Human Sponsors: Every agent should be tied to an accountable human operator. If the human changes roles or leaves, the agent’s access should change with them. We agree with Gartner on the necessity of ownership mapping, ensuring full lineage from creation to deployment is tracked to both the machine and its human owner.
+
+Dynamic, Context-Aware Access: AI agents should not hold standing, permanent privileges. Their entitlements should be time-bound, session-aware, and limited to least privilege.
+
+Visibility and Auditability: Gartner has been increasingly calling for organizations to maintain a centralized AI agent catalog that inventories all official, shadow, and third-party agents, alongside comprehensive posture management and tamper-evident audit trails. In our view, every action an AI agent takes should be logged, correlated back to its human sponsor, and made available for review. This ensures accountability and prepares organizations for future compliance scrutiny. Visibility isn’t just “we logged it.” You need to tie actions to data reach: what the agent accessed, what it changed, what it exported, and whether that action touched regulated or sensitive datasets. Otherwise, you can’t distinguish “useful automation” from “silent data movement”.
+
+Governance at Enterprise Scale: MCP adoption should extend across both new and legacy systems within a single, consistent governance fabric, so that security, compliance, and infrastructure teams are not working in silos. This is also where Gartner emphasizes the importance of an enterprise-owned supervisory layer, one that ensures consistent controls and reduces the risk of vendor lock-in as MCP adoption expands.
+
+Commitment to Good IAM Hygiene: As with all identities, authentication flows, authorization permissions and implemented controls, strong hygiene- on the application server as well as the MCP server- is critical to keep every user within the proper bounds.
+
+AI agents pose a unique challenge beyond mere integration. They represent a shift in how work is delegated and executed inside enterprises. Left unmanaged, they will follow the same trajectory as other hidden identities: in-app-local accounts, stale service identities, long-lived tokens, API keys, and bypass auth paths that have become identity dark matter over time. And because LLM-driven agents are optimized for efficiency, least friction and fewest steps, they will naturally gravitate to those ungoverned identities as the fastest path to success. If an orphaned local admin or an over-scoped token “just works,” the agent will use it, and reuse it.
+
+The opportunity is to get ahead of this curve.
+
+By treating AI agents as first-class identities from day one (discoverable, governable, and auditable), organizations can harness their potential without creating blind spots.
+
+Enterprises that do this will not only reduce their immediate attack surface but also position themselves for the regulatory and operational expectations that are sure to follow.
+
+In practice, most Agent-AI incidents won’t start with a zero-day. They’ll start with an identity shortcut that someone forgot to clean up, then get amplified by automation until it appears to be a systemic breach.
+
+AI agents are here. They are already changing how enterprises operate.
+
+The challenge is not whether to use them, but how to govern them.
+
+Safe MCP adoption requires applying the same principles that identity practitioners know well, least privilege, lifecycle management, and auditability, to a new class of non-human identities that follow this protocol.
+
+If identity dark matter is the sum of what we can’t see or control, then unmanaged AI agents may become its fastest-growing source. The organizations that act now to bring them into the light will be the ones who can move quickly with AI without sacrificing trust, compliance, or security. That’s why Orchid Security is building identity infrastructure to eliminate dark matter, and make Agent AI adoption safe to deploy at enterprise scale.
+
+(XXXXXXX, AÇIK - https://thehackernews.com/2026/03/ai-agents-next-wave-identity-dark.html, thehackernews.com, 03.03.2026)
+
+================================================================================
+
+[2] The Hacker News - Starkiller Phishing Suite Uses AitM Reverse Proxy to Bypass Multi-Factor Authentication
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 03 Mar 2026 16:40:00 +0530
+Link: https://thehackernews.com/2026/03/starkiller-phishing-suite-uses-aitm.html
+
+[TAM METİN - 701 kelime]
+Cybersecurity researchers have disclosed details of a new phishing suite called Starkiller that proxies legitimate login pages to bypass multi-factor authentication (MFA) protections.
+
+It's advertised as a cybercrime platform by a threat group calling itself Jinkusu, granting customers access to a dashboard that lets them select a brand to impersonate or enter a brand's real URL. It also lets users choose custom keywords like "login," "verify," "security," or "account," and integrates URL shorteners such as TinyURL to obscure the destination URL.
+
+"It launches a headless Chrome instance – a browser that operates without a visible window – inside a Docker container, loads the brand's real website, and acts as a reverse proxy between the target and the legitimate site," Abnormal researchers Callie Baron and Piotr Wojtyla said.
+
+"Recipients are served genuine page content directly through the attacker's infrastructure, ensuring the phishing page is never out of date. And because Starkiller proxies the real site live, there are no template files for security vendors to fingerprint or blocklist."
+
+This login page proxying technique obviates the need for attackers to update their phishing page templates periodically as the real pages they're impersonating get updated.
+
+Put differently, the container acts as an AitM reverse proxy, forwarding the end user's inputs entered on the spoofed live page to the legitimate site and returning the site's responses. Under the hood, every keystroke, form submission, and session token is routed through attacker-controlled infrastructure and is captured for account takeover.
+
+"The platform streamlines phishing operations by centralizing infrastructure management, phishing page deployment, and session monitoring within a single control panel," Abnormal said. "Combined with URL masking, session hijacking, and MFA bypass, it gives low-skill cybercriminals access to attack capabilities that were previously out of reach."
+
+The development comes as Datadog revealed that the 1Phish kit had evolved from a basic credential harvester in September 2025 into a multi-stage phishing kit targeting 1Password users.
+
+The updated version of the kit incorporates a pre-phishing fingerprint and validation layer, support for capturing one-time passcodes (OTPs) and recovery codes, and browser fingerprinting logic to filter out bots.
+
+"This progression reflects deliberate iteration rather than simple template reuse," security researcher Martin McCloskey said. "Each version builds upon the previous one, introducing controls designed to increase conversion rates, reduce automated analysis, and support secondary authentication harvesting."
+
+The findings show that turkey solutions like Starkiller and 1Phish are increasingly turning phishing into SaaS-style workflows, further lowering the skill barrier necessary to pull off such attacks at scale.
+
+They also coincide with a sophisticated phishing campaign targeting North American businesses and professionals by abusing the OAuth 2.0 device authorization grant flow to sidestep multi-factor authentication (MFA) and compromise Microsoft 365 accounts.
+
+To achieve this, the attacker registers on the Microsoft OAuth application and generates a unique device code, which is then delivered to the victim via a targeted phishing email.
+
+"The victim is directed to the legitimate Microsoft domain (microsoft.com/devicelogin) portal to enter an attacker-supplied device code," researchers Jeewan Singh Jalal, Prabhakaran Ravichandhiran, and Anand Bodke said. "This action authenticates the victim and issues a valid OAuth access token to the attacker's application. The real-time theft of these tokens grants the attacker persistent access to the victim's Microsoft 365 accounts and corporate data."
+
+In recent months, phishing campaigns have also targeted financial institutions, specifically U.S.-based banks and credit unions, to harvest credentials. The campaign is said to have taken place over two distinct phases, an initial wave beginning in late June 2025 and a more sophisticated set of attacks beginning in mid-November 2025.
+
+"The actors began registering [.]co[.]com domains spoofing financial institution websites, presenting credible impersonations of real financial institutions," BlueVoyant researchers Shira Reuveny and Joshua Green said. "These [.]co[.]com domains serve as the initial entry point in a refined multi-stage chain."
+
+The domain, when visited from a clickable link in a phishing email, is designed to load a fraudulent Cloudflare CAPTCHA page that mimics the targeted institution. The CAPTCHA is non-functional and creates a deliberate delay before a Base64-encoded script redirects users to the credential harvesting page.
+
+In an effort to evade detection and prevent automated scanners from flagging the malicious content, directly accessing the [.]co[.]com domains trigger a redirect to a malformed "www[.]www" URL.
+
+(XXXXXXX, AÇIK - https://thehackernews.com/2026/03/starkiller-phishing-suite-uses-aitm.html, thehackernews.com, 03.03.2026)
+
+================================================================================
+
+[3] The Hacker News - Microsoft Warns OAuth Redirect Abuse Delivers Malware to Government Targets
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 14:50:00 +0530
 Link: https://thehackernews.com/2026/03/microsoft-warns-oauth-redirect-abuse.html
@@ -35,7 +185,7 @@ Microsoft has since removed several malicious OAuth applications that were ident
 
 ================================================================================
 
-[2] The Hacker News - Google Confirms CVE-2026-21385 in Qualcomm Android Component Exploited
+[4] The Hacker News - Google Confirms CVE-2026-21385 in Qualcomm Android Component Exploited
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 12:38:00 +0530
 Link: https://thehackernews.com/2026/03/google-confirms-cve-2026-21385-in.html
@@ -63,7 +213,7 @@ The second patch level includes fixes for Kernel components, as well as those fr
 
 ================================================================================
 
-[3] The Hacker News - SloppyLemming Targets Pakistan and Bangladesh Governments Using Dual Malware Chains
+[5] The Hacker News - SloppyLemming Targets Pakistan and Bangladesh Governments Using Dual Malware Chains
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 12:23:00 +0530
 Link: https://thehackernews.com/2026/03/sloppylemming-targets-pakistan-and.html
@@ -101,7 +251,7 @@ It's worth noting that some aspects of the threat actor's tradecraft, including 
 
 ================================================================================
 
-[4] The Hacker News - New Chrome Vulnerability Let Malicious Extensions Escalate Privileges via Gemini Panel
+[6] The Hacker News - New Chrome Vulnerability Let Malicious Extensions Escalate Privileges via Gemini Panel
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 22:38:00 +0530
 Link: https://thehackernews.com/2026/03/new-chrome-vulnerability-let-malicious.html
@@ -145,7 +295,7 @@ In other words, all it takes for an attacker is to trick an unsuspecting user in
 
 ================================================================================
 
-[5] The Hacker News - Google Develops Merkle Tree Certificates to Enable Quantum-Resistant HTTPS in Chrome
+[7] The Hacker News - Google Develops Merkle Tree Certificates to Enable Quantum-Resistant HTTPS in Chrome
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 22:22:00 +0530
 Link: https://thehackernews.com/2026/03/google-develops-merkle-tree.html
@@ -179,7 +329,7 @@ Phase 3 (Q3 2027) - Google will finalize the requirements for onboarding additio
 
 ================================================================================
 
-[6] The Hacker News - ⚡ Weekly Recap: SD-WAN 0-Day, Critical CVEs, Telegram Probe, Smart TV Proxy SDK and More
+[8] The Hacker News - ⚡ Weekly Recap: SD-WAN 0-Day, Critical CVEs, Telegram Probe, Smart TV Proxy SDK and More
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 18:56:00 +0530
 Link: https://thehackernews.com/2026/03/weekly-recap-sd-wan-0-day-critical-cves.html
@@ -275,7 +425,7 @@ The takeaway is clarity, not alarm. Adversaries are improving efficiency, scalin
 
 ================================================================================
 
-[7] The Hacker News - How to Protect Your SaaS from Bot Attacks with SafeLine WAF
+[9] The Hacker News - How to Protect Your SaaS from Bot Attacks with SafeLine WAF
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 17:25:00 +0530
 Link: https://thehackernews.com/2026/03/how-to-protect-your-saas-from-bot.html
@@ -511,7 +661,7 @@ For those interested in exploring the technology firsthand, visit the SafeLine G
 
 ================================================================================
 
-[8] The Hacker News - APT28 Tied to CVE-2026-21513 MSHTML 0-Day Exploited Before Feb 2026 Patch Tuesday
+[10] The Hacker News - APT28 Tied to CVE-2026-21513 MSHTML 0-Day Exploited Before Feb 2026 Patch Tuesday
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 16:06:00 +0530
 Link: https://thehackernews.com/2026/03/apt28-tied-to-cve-2026-21513-mshtml-0.html
@@ -545,67 +695,101 @@ Akamai noted that the technique makes it possible for an attacker to bypass Mark
 
 ================================================================================
 
-[9] The Hacker News - North Korean Hackers Publish 26 npm Packages Hiding Pastebin C2 for Cross-Platform RAT
+[11] BleepingComputer - Amazon: Drone strikes damaged AWS data centers in Middle East
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 02 Mar 2026 14:14:00 +0530
-Link: https://thehackernews.com/2026/03/north-korean-hackers-publish-26-npm.html
+Tarih: Tue, 03 Mar 2026 06:44:44 -0500
+Link: https://www.bleepingcomputer.com/news/technology/amazon-drone-strikes-damaged-aws-data-centers-in-middle-east/
 
-[TAM METİN - 799 kelime]
-Cybersecurity researchers have disclosed a new iteration of the ongoing Contagious Interview campaign, where the North Korean threat actors have published a set of 26 malicious packages to the npm registry.
+[TAM METİN - 490 kelime]
+Amazon has confirmed that three Amazon Web Services (AWS) data centers in the United Arab Emirates (UAE) and one in Bahrain have been damaged by drone strikes, causing an extensive outage that is still affecting dozens of cloud computing services.
 
-The packages masquerade as developer tools, but contain functionality to extract the actual command-and-control (C2) by using seemingly harmless Pastebin content as a dead drop resolver and ultimately drop a developer-targeted credential stealer and remote access trojan. The C2 infrastructure is hosted on Vercel across 31 deployments.
+While the company didn't provide further details on the incident, the attacks are likely part of Iran's response to U.S. and Israeli strikes in the Middle East over the weekend.
 
-The campaign, discovered by Socket and kmsec.uk's Kieran Miyamoto, is being tracked under the moniker StegaBin. It's attributed to a North Korean threat activity cluster known as Famous Chollima.
+Amazon says the drone strikes have disrupted AWS Middle East (UAE) Region (ME-CENTRAL-1) and the AWS Middle East (Bahrain) Region (ME-SOUTH-1).
 
-"The loader extracts C2 URLs steganographically encoded within three Pastebin pastes, innocuous computer science essays in which characters at evenly-spaced positions have been replaced to spell out hidden infrastructure addresses," Socket researchers Philipp Burckhardt and Peter van der Zee said.
+"Due to the ongoing conflict in the Middle East, both affected regions have experienced physical impacts to infrastructure as a result of drone strikes. In the UAE, two of our facilities were directly struck, while in Bahrain, a drone strike in close proximity to one of our facilities caused physical impacts to our infrastructure," the company said in a status page update on Monday, 4:19 PM PST.
 
-The list of the malicious npm packages is as follows -
+"These strikes have caused structural damage, disrupted power delivery to our infrastructure, and in some cases required fire suppression activities that resulted in additional water damage. We are working closely with local authorities and prioritizing the safety of our personnel throughout our recovery efforts."
 
-jslint-config@10.22.2
+At the moment, three availability zones (mec1-az2 and mec1-az3) in the UAE remain "significantly impaired," while a third (mes1-az2) in Bahrain is still affected by a "localized power issue."
 
-jsnwebapptoken@8.40.2
+Amazon is now restoring physical infrastructure, while also working on "multiple software-based recovery paths" that don't require "underlying facilities being fully brought back online." The company is also prioritizing restoring services and tools that would allow customers to back up and migrate data and applications out of the impacted regions.
 
-All identified packages come with an install script ("install.js") that's automatically executed during package installation, which, in turn, runs the malicious payload located in "vendor/scrypt-js/version.js." Another common aspect that unites the 26 packages is that they explicitly declare the legitimate package they are typosquatting as a dependency, likely in an attempt to make them appear credible.
+Amazon also advised impacted customers to back up their data and migrate workloads to AWS regions unaffected by these issues.
 
-The payload serves as a text steganography decoder by contacting a Pastebin URL and extracting its contents to retrieve the actual C2 Vercel URLs. While the pastes seemingly contain a benign essay about computer science, the decoder is designed to look at specific characters in certain positions in the text and string them together to create a list of C2 domains.
+"We recommend customers exercise their disaster recovery plans, recover from remote backups stored in other regions, and update their applications to direct traffic away from the affected regions," Amazon added. "For customers requiring guidance on alternate regions, we recommend considering AWS Regions in the United States, Europe, or Asia Pacific, as appropriate for your latency and data residency requirements."
 
-"The decoder strips zero-width Unicode characters, reads a 5-digit length marker from the beginning, calculates evenly-spaced character positions throughout the text, and extracts the characters at those positions," Socket said. "The extracted characters are then split on a ||| separator (with an ===END=== termination marker) to produce an array of C2 domain names."
+On Monday, the United Kingdom's National Cyber Security Centre (NCSC) also warned British organizations of a heightened risk of Iranian cyberattacks amid the ongoing conflict in the Middle East.
 
-The malware then reaches out to the decoded domain to fetch platform-specific payloads for Windows, macOS, and Linux, a tactic widely observed in the Contagious Interview campaign. One such domain, "ext-checkdin.vercel[.]app" has been found to serve a shell script, which then contacts the same URL to retrieve a RAT component.
+Red Report 2026: Why Ransomware Encryption Dropped 38%
 
-The Trojan connects to 103.106.67[.]63:1244 to await further instructions that allow it to change the current directory and execute shell commands, through which a comprehensive intelligence collection suite is deployed. It contains nine modules to facilitate Microsoft Visual Studio Code (VS Code) persistence, keylogging and clipboard theft, browser credential harvesting, TruffleHog secret scanning, and Git repository and SSH key exfiltration -
+Malware is getting smarter. The Red Report 2026 reveals how new threats use math to detect sandboxes and hide in plain sight.
 
-vs, which uses a malicious tasks.json file to contact a Vercel domain every time a project is opened in VS Code by taking advantage of the runOn: "folderOpen" trigger. The module specifically scans the victim's VS Code config directory across all three platforms and writes the malicious tasks.json directly into it.
+Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
 
-clip, which acts as a keylogger, mouse tracker, and clipboard stealer with support for active window tracking and conducts periodic exfiltration every 10 minutes.
+Anthropic confirms Claude is down in a worldwide outage
 
-bro, which is a Python payload to steal browser credential stores.
+UK warns of Iranian cyberattack risks amid Middle-East conflict
 
-j, which is a Node.js module used for browser and cryptocurrency theft by targeting Google Chrome, Brave, Firefox, Opera, and Microsoft Edge, and extensions like MetaMask, Phantom, Coinbase Wallet, Binance, Trust, Exodus, and Keplr, among others. On macOS, it also targets the iCloud Keychain.
+Amazon: AI-assisted hacker breached 600 Fortinet firewalls in 5 weeks
 
-z, which enumerates the file system and steals files matching certain predefined patterns.
+Train for CompTIA, AWS, Cisco & more with this $40 course deal
 
-n, which acts as a RAT to grant the attacker the ability to remotely control the infected host in real-time via a persistent WebSocket connection to 103.106.67[.]63:1247 and exfiltrate data of interest over FTP.
+Microsoft Teams outage affects users in United States, Europe
 
-truffle, which downloads the legitimate TruffleHog secrets scanner from the official GitHub page to discover and exfiltrate developer secrets.
-
-git, which collects files from .ssh directories, extracts Git credentials, and scans repositories.
-
-sched, which is the same as "vendor/scrypt-js/version.js" and is redeployed as a persistence mechanism.
-
-"While previous waves of the Contagious Interview campaign relied on relatively straightforward malicious scripts and Bitbucket-hosted payloads, this latest iteration demonstrates a concerted effort to bypass both automated detection and human review," Socket concluded.
-
-"The use of character-level steganography on Pastebin and multi-stage Vercel routing points to an adversary that is refining its evasion techniques and attempting to make its operations more resilient."
-
-The disclosure comes as the North Korean actors have also been observed publishing malicious npm packages (e.g., express-core-validator) to fetch a next-stage JavaScript payload hosted on Google Drive.
-
-"Only a single package has been published with this new technique," Miyamoto said. "It is likely Famous Chollima will continue to leverage multiple techniques and infrastructure to deliver follow-on payloads. It is unlikely this signals a complete overhaul of their stager behaviour on npm."
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/03/north-korean-hackers-publish-26-npm.html, thehackernews.com, 02.03.2026)
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/technology/amazon-drone-strikes-damaged-aws-data-centers-in-middle-east/, bleepingcomputer.com, 03.03.2026)
 
 ================================================================================
 
-[10] BleepingComputer - UH Cancer Center data breach affects nearly 1.2 million people
+[12] BleepingComputer - Star Citizen game dev discloses breach affecting user data
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 03 Mar 2026 05:50:26 -0500
+Link: https://www.bleepingcomputer.com/news/security/star-citizen-game-dev-discloses-breach-affecting-user-data/
+
+[TAM METİN - 473 kelime]
+Cloud Imperium Games (CIG), the game company behind Star Citizen and Squadron 42, says attackers breached systems containing some users' personal information in January.
+
+The California-based publisher and video game developer was founded in 2012 by game developer Chris Roberts (of Wing Commander fame), and it operates five game studios with a crew of over 700 employees.
+
+In 2012, it announced the multiplayer space-simulation game Star Citizen. However, despite a Kickstarter campaign that raised over $2 million from backers, the game has still not exited its "early access" phase 14 years later.
+
+This week, in a somewhat hidden notice published on its website, CIG revealed that it discovered a breach on January 21 in which attackers gained access to the basic account information of an undisclosed number of users.
+
+"On 21 January 2026, CIG was targeted by a systematic and sophisticated attack, resulting in unauthorised access to some backup systems, including limited access to users' personal data," the game company said.
+
+"While CIG is still monitoring the situation, we do not consider that the incident poses a risk to the safety of our users. The data impacted relates only to basic account details (i.e. metadata, contact details, username, date of birth, and name)."
+
+CIG added that it has yet to find evidence that any of the accessed data was leaked online, and that the compromised systems didn't contain credentials or financial information.
+
+"No financial or payment information was stored in the affected systems and was not accessible. No passwords were impacted, and the access was read-only. No data-injection or modification occurred," it noted.
+
+"We are closely monitoring the situation and our systems to ensure that no further incidents occur. We are also taking steps to assess and detect whether any data that was accessed is released publicly. At this stage, there are no indications of any such activity."
+
+While the game studio downplayed the incident, adding that it doesn't believe the "incident will have any impact" on its users, threat actors could use the exposed personal information in phishing attacks.
+
+BleepingComputer reached out to Cloud Imperium Games to ask whether affected users had been notified and whether the attackers had made a ransom demand, but a response was not immediately available.
+
+Red Report 2026: Why Ransomware Encryption Dropped 38%
+
+Malware is getting smarter. The Red Report 2026 reveals how new threats use math to detect sandboxes and hide in plain sight.
+
+Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
+
+ShinyHunters extortion gang claims Odido breach affecting millions
+
+Ad tech firm Optimizely confirms data breach after vishing attack
+
+Data breach at fintech firm Figure affects nearly 1 million accounts
+
+PayPal discloses data breach that exposed user info for 6 months
+
+ShinyHunters launches Salesforce data leak site to extort 39 victims
+
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/star-citizen-game-dev-discloses-breach-affecting-user-data/, bleepingcomputer.com, 03.03.2026)
+
+================================================================================
+
+[13] BleepingComputer - UH Cancer Center data breach affects nearly 1.2 million people
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 04:48:51 -0500
 Link: https://www.bleepingcomputer.com/news/security/university-of-hawaii-cancer-center-ransomware-attack-affects-nearly-12-million-people/
@@ -655,7 +839,7 @@ Washington Hotel in Japan discloses ransomware infection incident
 
 ================================================================================
 
-[11] BleepingComputer - Android gets patches for Qualcomm zero-day exploited in attacks
+[14] BleepingComputer - Android gets patches for Qualcomm zero-day exploited in attacks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 03:19:53 -0500
 Link: https://www.bleepingcomputer.com/news/security/google-patches-android-zero-day-actively-exploited-in-attacks/
@@ -701,7 +885,7 @@ Ivanti warns of two EPMM flaws exploited in zero-day attacks
 
 ================================================================================
 
-[12] BleepingComputer - CyberStrikeAI tool adopted by hackers for AI-powered attacks
+[15] BleepingComputer - CyberStrikeAI tool adopted by hackers for AI-powered attacks
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 19:06:39 -0500
 Link: https://www.bleepingcomputer.com/news/security/cyberstrikeai-tool-adopted-by-hackers-for-ai-powered-attacks/
@@ -767,7 +951,7 @@ The OpenClaw Hype: Analysis of Chatter from Open-Source Deep and Dark Web
 
 ================================================================================
 
-[13] BleepingComputer - Fake Google Security site uses PWA app to steal credentials, MFA codes
+[16] BleepingComputer - Fake Google Security site uses PWA app to steal credentials, MFA codes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 15:23:41 -0500
 Link: https://www.bleepingcomputer.com/news/security/fake-google-security-site-uses-pwa-app-to-steal-credentials-mfa-codes/
@@ -855,7 +1039,7 @@ Nigerian man gets eight years in prison for hacking tax firms
 
 ================================================================================
 
-[14] BleepingComputer - Alabama man pleads guilty to hacking, extorting hundreds of women
+[17] BleepingComputer - Alabama man pleads guilty to hacking, extorting hundreds of women
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 13:54:34 -0500
 Link: https://www.bleepingcomputer.com/news/security/alabama-man-pleads-guilty-to-hacking-extorting-hundreds-of-women/
@@ -899,7 +1083,7 @@ Canada Goose investigating as hackers leak 600K customer records
 
 ================================================================================
 
-[15] BleepingComputer - Florida woman imprisoned for massive Microsoft license fraud scheme
+[18] BleepingComputer - Florida woman imprisoned for massive Microsoft license fraud scheme
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 12:30:13 -0500
 Link: https://www.bleepingcomputer.com/news/security/florida-woman-imprisoned-for-massive-microsoft-license-fraud-scheme/
@@ -945,7 +1129,7 @@ Windows 11 KB5077241 update improves BitLocker, adds Sysmon tool
 
 ================================================================================
 
-[16] BleepingComputer - UK warns of Iranian cyberattack risks amid Middle-East conflict
+[19] BleepingComputer - UK warns of Iranian cyberattack risks amid Middle-East conflict
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:54:33 -0500
 Link: https://www.bleepingcomputer.com/news/security/uk-warns-of-iranian-cyberattack-risks-amid-middle-east-conflict/
@@ -991,7 +1175,7 @@ Fake Next.js job interview tests backdoor developer's devices
 
 ================================================================================
 
-[17] BleepingComputer - How Deepfakes and Injection Attacks Are Breaking Identity Verification
+[20] BleepingComputer - How Deepfakes and Injection Attacks Are Breaking Identity Verification
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:01:11 -0500
 Link: https://www.bleepingcomputer.com/news/security/how-deepfakes-and-injection-attacks-are-breaking-identity-verification/
@@ -1145,111 +1329,7 @@ Sponsored and written by Incode.
 
 ================================================================================
 
-[18] BleepingComputer - Anthropic confirms Claude is down in a worldwide outage
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 02 Mar 2026 07:23:00 -0500
-Link: https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-confirms-claude-is-down-in-a-worldwide-outage/
-
-[TAM METİN - 296 kelime]
-Claude appears to be having a major outage, with elevated errors reported across all platforms.
-
-The incident was flagged on March 2, 2026 at 11:30 UTC, and it’s impacting users broadly rather than being limited to one app or region.
-
-According to Anthropic’s status updates, the first “Investigating” notice went out at 11:49 UTC, followed by a 12:06 UTC update saying the team was still investigating.
-
-Later in the day, Anthropic also reported elevated errors on Claude Haiku 4.5, indicating the issue resurfaced or repeated.
-
-For users, that typically shows up as failed requests, timeouts, or inconsistent responses across the web app, mobile apps, and API.
-
-According to DownDetector, approximately 2,000 users reported issues at 11:30 UTC, and hundreds of users continue to report problems.
-
-While Anthropic has said fixes were implemented, it also noted the issue repeated before returning to monitoring.
-
-Update 1: Anthropic said it implemented a fix for Claude Haiku 4.5 and began monitoring at 18:07 UTC, then reported a repeat of the issue at 18:18 UTC.
-
-Update 2: At 18:54 UTC, Anthropic again said a fix was implemented, and monitoring was underway. However, Opus 4.6 continues to have issues in our tests.
-
-Red Report 2026: Why Ransomware Encryption Dropped 38%
-
-Malware is getting smarter. The Red Report 2026 reveals how new threats use math to detect sandboxes and hide in plain sight.
-
-Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
-
-Anthropic brings Claude to healthcare with HIPAA-ready Enterprise tools
-
-Anthropic: Viral Claude “Banned and reported to authorities” message isn’t real
-
-Ukrainian man pleads guilty to running AI-powered fake ID site
-
-Arkanix Stealer pops up as short-lived AI info-stealer experiment
-
-Microsoft says bug causes Copilot to summarize confidential emails
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-confirms-claude-is-down-in-a-worldwide-outage/, bleepingcomputer.com, 02.03.2026)
-
-================================================================================
-
-[19] BleepingComputer - ClawJacked attack let malicious websites hijack OpenClaw to steal data
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 01 Mar 2026 16:44:55 -0500
-Link: https://www.bleepingcomputer.com/news/security/clawjacked-attack-let-malicious-websites-hijack-openclaw-to-steal-data/
-
-[TAM METİN - 590 kelime]
-Security researchers have disclosed a high-severity vulnerability dubbed "ClawJacked" in the popular AI agent OpenClaw that allowed a malicious website to silently bruteforce access to a locally running instance and take control over it.
-
-Oasis Security discovered the issue and reported it to OpenClaw, with a fix being released in version 2026.2.26 on February 26.
-
-OpenClaw is a self-hosted AI platform that has recently surged in popularity for enabling AI agents to autonomously send messages, execute commands, and manage tasks across multiple platforms.
-
-According to Oasis Security, the vulnerability is caused by the OpenClaw gateway service binding to localhost by default and exposing a WebSocket interface.
-
-Because browser cross-origin policies do not block WebSocket connections to localhost, a malicious website visited by an OpenClaw user can use JavaScript to silently open a connection to the local gateway and attempt authentication without triggering any warnings.
-
-While OpenClaw includes rate limiting to prevent brute-force attacks, the loopback address (127.0.0.1) is exempt by default, so local CLI sessions are not mistakenly locked out.
-
-The researchers found that they could brute-force the OpenClaw management password at hundreds of attempts per second without failed attempts being throttled or logged. Once the correct password is guessed, the attacker can silently register as a trusted device, as the gateway automatically approves device pairings from localhost without requiring user confirmation.
-
-"In our lab testing, we achieved a sustained rate of hundreds of password guesses per second from browser JavaScript alone," explains Oasis.
-
-"At that speed, a list of common passwords is exhausted in under a second, and a large dictionary would take only minutes. A human-chosen password doesn't stand a chance."
-
-With an authenticated session and admin permissions, the attacker can now interact directly with the AI platform, dumping credentials, listing connected nodes, stealing credentials, and reading application logs.
-
-Oasis says this could allow an attacker to instruct the agent to search messaging histories for sensitive information, exfiltrate files from connected devices, or execute arbitrary shell commands on paired nodes, effectively resulting in full workstation compromise triggered from a browser tab.
-
-Oasis shared a demonstration of this attack, showing how it could be used to steal sensitive data through the OpenClaw vulnerability.
-
-Oasis reported the issue to OpenClaw, including technical details and proof-of-concept code, and it was fixed within 24 hours of disclosure.
-
-The fix tightens WebSocket security checks and adds additional protections to prevent attackers from abusing localhost loopback connections to brute-force logins or hijack sessions, even if those connections are configured to be exempt from rate limiting.
-
-Organizations and developers running OpenClaw should update to version 2026.2.26 or later immediately to prevent their installations from being hijacked.
-
-With OpenClaw's massive popularity, security researchers have been focusing on identifying vulnerabilities and attacks targeting the platform.
-
-Threat actors have been seen abusing the "ClawHub" OpenClaw skills repository to promote malicious skills that deploy infostealing malware or trick users into running malicious commands on their devices.
-
-Red Report 2026: Why Ransomware Encryption Dropped 38%
-
-Malware is getting smarter. The Red Report 2026 reveals how new threats use math to detect sandboxes and hide in plain sight.
-
-Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
-
-Trend Micro warns of critical Apex One code execution flaws
-
-Critical Juniper Networks PTX flaw allows full router takeover
-
-The OpenClaw Hype: Analysis of Chatter from Open-Source Deep and Dark Web
-
-Critical SolarWinds Serv-U flaws offer root access to servers
-
-Zyxel warns of critical RCE flaw affecting over a dozen routers
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/clawjacked-attack-let-malicious-websites-hijack-openclaw-to-steal-data/, bleepingcomputer.com, 02.03.2026)
-
-================================================================================
-
-[20] Security Affairs - Android devices hit by exploited Qualcomm flaw CVE-2026-21385
+[21] Security Affairs - Android devices hit by exploited Qualcomm flaw CVE-2026-21385
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 10:03:06 +0000
 Link: https://securityaffairs.com/188823/security/android-devices-hit-by-exploited-qualcomm-flaw-cve-2026-21385.html
@@ -1289,7 +1369,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[21] Security Affairs - Chrome security flaw enabled spying via Gemini Live assistant
+[22] Security Affairs - Chrome security flaw enabled spying via Gemini Live assistant
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 08:48:14 +0000
 Link: https://securityaffairs.com/188807/security/chrome-security-flaw-enabled-spying-via-gemini-live-assistant.html
@@ -1335,7 +1415,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[22] Security Affairs - Middle east crisis prompts UK NCSC warning on potential Iranian cyber activity
+[23] Security Affairs - Middle east crisis prompts UK NCSC warning on potential Iranian cyber activity
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 20:48:02 +0000
 Link: https://securityaffairs.com/188800/apt/middle-east-crisis-prompts-uk-warning-on-potential-iranian-cyber-activity.html
@@ -1367,7 +1447,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[23] Security Affairs - Russia-linked APT28 exploited MSHTML zero-day CVE-2026-21513 before patch
+[24] Security Affairs - Russia-linked APT28 exploited MSHTML zero-day CVE-2026-21513 before patch
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 14:45:52 +0000
 Link: https://securityaffairs.com/188782/security/russia-linked-apt28-exploited-mshtml-zero-day-cve-2026-21513-before-patch.html
@@ -1401,7 +1481,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[24] Security Affairs - APT37 combines cloud storage and USB implants to infiltrate air-gapped systems
+[25] Security Affairs - APT37 combines cloud storage and USB implants to infiltrate air-gapped systems
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 12:38:26 +0000
 Link: https://securityaffairs.com/188767/apt/apt37-combines-cloud-storage-and-usb-implants-to-infiltrate-air-gapped-systems.html
@@ -1441,7 +1521,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[25] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
+[26] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:26:25 +0000
 Link: https://securityaffairs.com/188708/cyber-crime/europols-project-compass-nets-30-arrests-in-crackdown-on-the-com.html
@@ -1469,7 +1549,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[26] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
+[27] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 09:42:34 +0000
 Link: https://securityaffairs.com/188749/hacking/clawjacked-flaw-exposed-openclaw-users-to-data-theft.html
@@ -1521,7 +1601,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[27] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
+[28] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:43:04 +0000
 Link: https://securityaffairs.com/188734/cyber-crime/ukrainian-hacker-pleads-guilty-to-running-onlyfake-ai-id-scam-site.html
@@ -1551,7 +1631,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[28] SANS ISC - ISC Stormcast For Tuesday, March 3rd, 2026 https://isc.sans.edu/podcastdetail/9832, (Tue, Mar 3rd)
+[29] SANS ISC - ISC Stormcast For Tuesday, March 3rd, 2026 https://isc.sans.edu/podcastdetail/9832, (Tue, Mar 3rd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 02:00:02 GMT
 Link: https://isc.sans.edu/diary/rss/32760
@@ -1562,7 +1642,7 @@ Link: https://isc.sans.edu/diary/rss/32760
 
 ================================================================================
 
-[29] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
+[30] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:13:04 GMT
 Link: https://isc.sans.edu/diary/rss/32696
@@ -1600,7 +1680,7 @@ blog.DidierStevens.com
 
 ================================================================================
 
-[30] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
+[31] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:11:45 GMT
 Link: https://isc.sans.edu/diary/rss/32758
@@ -1611,7 +1691,7 @@ Link: https://isc.sans.edu/diary/rss/32758
 
 ================================================================================
 
-[31] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
+[32] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 02:00:03 GMT
 Link: https://isc.sans.edu/diary/rss/32756
@@ -1622,7 +1702,7 @@ Link: https://isc.sans.edu/diary/rss/32756
 
 ================================================================================
 
-[32] Recorded Future - Ongoing Iran Conflict: What You Need to Know
+[33] Recorded Future - Ongoing Iran Conflict: What You Need to Know
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 00:00:00 GMT
 Link: https://www.recordedfuture.com/blog/ongoing-iran-conflict-what-you-need-to-know
@@ -1746,7 +1826,7 @@ The situation in Iran is moving fast. Recorded Future's Insikt Group is publishi
 
 ================================================================================
 
-[33] Cyberscoop - Google addresses actively exploited Qualcomm zero-day in fresh batch of 129 Android vulnerabilities
+[34] Cyberscoop - Google addresses actively exploited Qualcomm zero-day in fresh batch of 129 Android vulnerabilities
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 22:20:18 +0000
 Link: https://cyberscoop.com/android-security-update-march-2026/
@@ -1844,7 +1924,7 @@ The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat 
 
 ================================================================================
 
-[34] Cyberscoop - The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat intelligence sharing
+[35] Cyberscoop - The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat intelligence sharing
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 20:57:21 +0000
 Link: https://cyberscoop.com/brett-leatherman-fbi-cyber-priorities-winter-shield/
@@ -1938,7 +2018,7 @@ Google addresses actively exploited Qualcomm zero-day in fresh batch of 129 Andr
 
 ================================================================================
 
-[35] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
+[36] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://cyberscoop.com/ai-deepfakes-olympic-athletes-political-manipulation/
@@ -2036,7 +2116,7 @@ The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat 
 
 ================================================================================
 
-[36] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
+[37] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://cyberscoop.com/ai-silent-probing-cyber-risk-behavioral-defense-op-ed/
@@ -2135,7 +2215,57 @@ The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat 
 
 ================================================================================
 
-[37] The Register - Phish of the day: Microsoft OAuth scams abuse redirects for malware delivery
+[38] The Register - Cybercriminals swipe 15.8M medical records from French doctors ministry
+────────────────────────────────────────────────────────────────────────────────
+Tarih: 2026-03-03T11:00:07.00Z
+Link: https://go.theregister.com/feed/www.theregister.com/2026/03/03/french_medical_leak/
+
+[TAM METİN - 427 kelime]
+Cybercriminals swipe 15.8M medical records from French doctors ministry
+
+Third-party software supplier breached leading to leak of notes
+
+Around 15.8 million administrative files were stolen after attackers breached a software supplier to France's health ministry.
+
+The supplier, Cegedim Santé, confirmed the data was compromised in late 2025. Approximately 165,000 of these files contained notes penned by doctors, which in "very limited cases" contained sensitive information about an individual's medical history.
+
+According to broadcaster France 24, which first reported the news, these medical histories included, in some cases, details of conditions such as HIV/AIDS and individuals' sexual orientations. Top politicians were reportedly among the individuals whose info was extracted.
+
+The attack targeted Cegedim's MonLogicielMedical (MLM) software, which it claims is used by 3,800 doctors across France, 1,500 of whom were affected.
+
+MLM allows patients to check their health records electronically, communicate with their physician, and offers doctors a range of administrative features.
+
+Cegedim confirmed that all the stolen information was contained in patients' administrative files. In addition to doctors' notes accessed "in free text," the files also included information such as full names, genders, dates of birth, telephone numbers, home addresses, and email addresses.
+
+"Cegedim is particularly committed to data sovereignty and security, and deeply regrets this situation," the vendor said [PDF].
+
+Gamers furious as Brit studio Cloud Imperium quietly admits to data breach
+
+Phish of the day: Microsoft OAuth scams abuse redirects for malware delivery
+
+UK businesses told to brace cyber defenses amid Iran conflict risk
+
+Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
+
+"The company is fully aware of the inconvenience that this incident may cause. Cegedim reaffirms its total commitment to the fight against cybercrime and data protection, which are major societal issues. Cegedim also reiterates that it is cooperating with the relevant authorities in the ongoing investigation."
+
+The Register contacted the health ministry for more information but it did not respond.
+
+News of the attack comes just weeks after a separate data security incident, also concerning the French government, came to light.
+
+The country's finance ministry confirmed on February 18 that in January, attackers accessed its national bank account file, which contains the details of all bank accounts in France.
+
+Attackers stole details pertaining to around 1.2 million accounts, including account numbers, account holders' addresses, and tax identification numbers.
+
+Affected individuals were notified directly and warned to be vigilant for potential phishing attempts.
+
+The government said that whoever was behind the attack impersonated a civil servant "with access rights for inter-ministerial information exchange," and accessed a portion of the file. ®
+
+(XXXXXXX, AÇIK - https://go.theregister.com/feed/www.theregister.com/2026/03/03/french_medical_leak/, go.theregister.com, 03.03.2026)
+
+================================================================================
+
+[39] The Register - Phish of the day: Microsoft OAuth scams abuse redirects for malware delivery
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-03T00:33:15.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/03/microsoft_oauth_scams/
@@ -2237,7 +2367,7 @@ Windows Subsystem for Linux
 
 ================================================================================
 
-[38] The Register - Iran's cyberwar has begun
+[40] The Register - Iran's cyberwar has begun
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T20:52:18.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/cyber_warfighters_iran/
@@ -2357,7 +2487,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[39] The Register - UK businesses told to brace cyber defenses amid Iran conflict risk
+[41] The Register - UK businesses told to brace cyber defenses amid Iran conflict risk
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T18:44:26.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/ncsc_security_iran/
@@ -2415,7 +2545,7 @@ Competition and Markets Authority
 
 ================================================================================
 
-[40] The Register - Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
+[42] The Register - Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T13:42:52.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/dubai_iran_sim_swap/
@@ -2465,7 +2595,7 @@ Iran has called its retaliation a "legitimate act of self-defense." ®
 
 ================================================================================
 
-[41] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
+[43] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T00:51:38.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/south_korea_tax_office_cryptocurrency_leak/
@@ -2547,7 +2677,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[42] TechCrunch Security - A new app alerts you if someone nearby is wearing smart glasses
+[44] TechCrunch Security - A new app alerts you if someone nearby is wearing smart glasses
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 22:40:00 +0000
 Link: https://techcrunch.com/2026/03/02/nearby-glasses-new-app-alerts-you-wearing-smart-glasses-surveillance-meta-snap-bluetooth/
@@ -2661,7 +2791,7 @@ An accountant won a big jackpot on Kalshi by betting against DOGE
 
 ================================================================================
 
-[43] TechCrunch Security - Hacktivists claim to have hacked Homeland Security to release ICE contract data
+[45] TechCrunch Security - Hacktivists claim to have hacked Homeland Security to release ICE contract data
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 16:11:56 +0000
 Link: https://techcrunch.com/2026/03/02/hacktivists-claim-to-have-hacked-homeland-security-to-release-ice-contract-data/
@@ -2774,7 +2904,7 @@ An accountant won a big jackpot on Kalshi by betting against DOGE
 
 ================================================================================
 
-[44] TechCrunch Security - Hackers and internet outages hit Iran amid US air strikes
+[46] TechCrunch Security - Hackers and internet outages hit Iran amid US air strikes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 14:16:53 +0000
 Link: https://techcrunch.com/2026/03/02/hackers-and-internet-outages-hit-iran-amid-u-s-air-strikes/
@@ -2884,7 +3014,7 @@ An accountant won a big jackpot on Kalshi by betting against DOGE
 
 ================================================================================
 
-[45] CSO Online - Studie: Hacker legen Betrieb bei vielen Unternehmen lahm
+[47] CSO Online - Studie: Hacker legen Betrieb bei vielen Unternehmen lahm
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4139159/studie-hacker-legen-betrieb-bei-vielen-unternehmen-lahm.html
@@ -2920,7 +3050,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[46] CSO Online - Epic Fury introduces new layer of enterprise risk
+[48] CSO Online - Epic Fury introduces new layer of enterprise risk
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4139550/epic-fury-introduces-new-layer-of-enterprise-risk.html
@@ -2998,7 +3128,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[47] CSO Online - 7 factors impacting the cyber skills gap
+[49] CSO Online - 7 factors impacting the cyber skills gap
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4137580/7-factors-impacting-the-cyber-skills-gap.html
@@ -3080,7 +3210,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[48] CSO Online - Das gehört in Ihr Security-Toolset
+[50] CSO Online - Das gehört in Ihr Security-Toolset
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 04:00:00 +0000
 Link: https://www.csoonline.com/article/3605017/das-gehort-in-ihr-security-toolset.html
@@ -3182,7 +3312,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[49] CSO Online - Vulnerability monitoring service secures public-sector websites faster
+[51] CSO Online - Vulnerability monitoring service secures public-sector websites faster
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 19:42:03 +0000
 Link: https://www.csoonline.com/article/4139509/vulnerability-monitoring-service-secures-public-sector-websites-faster.html
@@ -3246,7 +3376,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[50] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
+[52] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://www.csoonline.com/article/4138735/innovation-without-exposure-a-cisos-secure-by-design-framework-for-business-outcomes.html
@@ -3448,7 +3578,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[51] CSO Online - A scorecard for cyber and risk culture
+[53] CSO Online - A scorecard for cyber and risk culture
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4138709/a-scorecard-for-cyber-and-risk-culture.html
@@ -3722,7 +3852,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[52] CSO Online - Hacker erpressen weniger Lösegeld
+[54] CSO Online - Hacker erpressen weniger Lösegeld
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:24:16 +0000
 Link: https://www.csoonline.com/article/4139126/hacker-erpressen-weniger-losegeld.html
@@ -3760,7 +3890,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[53] CSO Online - How CISOs can build a resilient workforce
+[55] CSO Online - How CISOs can build a resilient workforce
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4136307/how-cisos-can-build-a-resilient-workforce.html
@@ -3892,7 +4022,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[54] CSO Online - Im Fokus: RZ-Modernisierung
+[56] CSO Online - Im Fokus: RZ-Modernisierung
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 06:00:00 +0000
 Link: https://de.resources.csoonline.com/resources/im-fokus-warum-die-modernisierung-von-rechenzentren-not-tut/
@@ -3943,4 +4073,12 @@ Link: https://github.com/advisories/GHSA-2fgq-7j6h-9rm4
 `system.run` allowed `SHELLOPTS` + `PS4` environment injection to trigger command substitution during `bash -lc` xtrace expansion before the allowlisted command body executed.
 
 ### Affecte
+
+[S6] X.com | Skor: 0 | Yorum: 0
+Baslik: Cybersol (@Cybersolbv) / Posts / X - Twitter
+Link: https://x.com/Cybersolbv
+
+[S7] X.com | Skor: 0 | Yorum: 0
+Baslik: Capxel Security (@capxel_security) / Posts / X - Twitter
+Link: https://x.com/capxel_security
 
