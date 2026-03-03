@@ -700,12 +700,12 @@ Akamai noted that the technique makes it possible for an attacker to bypass Mark
 Tarih: Tue, 03 Mar 2026 06:44:44 -0500
 Link: https://www.bleepingcomputer.com/news/technology/amazon-drone-strikes-damaged-aws-data-centers-in-middle-east/
 
-[TAM METİN - 490 kelime]
+[TAM METİN - 494 kelime]
 Amazon has confirmed that three Amazon Web Services (AWS) data centers in the United Arab Emirates (UAE) and one in Bahrain have been damaged by drone strikes, causing an extensive outage that is still affecting dozens of cloud computing services.
 
-While the company didn't provide further details on the incident, the attacks are likely part of Iran's response to U.S. and Israeli strikes in the Middle East over the weekend.
+While the company didn't provide further details on the incident, the attacks are likely part of Iran's response to U.S. (Operation Epic Fury) and Israeli (Operation Roaring Lion) strikes in Iran over the weekend.
 
-Amazon says the drone strikes have disrupted AWS Middle East (UAE) Region (ME-CENTRAL-1) and the AWS Middle East (Bahrain) Region (ME-SOUTH-1).
+Amazon said the drone strikes have disrupted AWS Middle East (UAE) Region (ME-CENTRAL-1) and the AWS Middle East (Bahrain) Region (ME-SOUTH-1).
 
 "Due to the ongoing conflict in the Middle East, both affected regions have experienced physical impacts to infrastructure as a result of drone strikes. In the UAE, two of our facilities were directly struck, while in Bahrain, a drone strike in close proximity to one of our facilities caused physical impacts to our infrastructure," the company said in a status page update on Monday, 4:19 PM PST.
 
@@ -1329,7 +1329,55 @@ Sponsored and written by Incode.
 
 ================================================================================
 
-[21] Security Affairs - Android devices hit by exploited Qualcomm flaw CVE-2026-21385
+[21] Security Affairs - Phishing campaign exploits OAuth redirection to bypass defenses
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 03 Mar 2026 11:50:55 +0000
+Link: https://securityaffairs.com/188829/hacking/phishing-campaign-exploits-oauth-redirection-to-bypass-defenses.html
+
+[TAM METİN - 639 kelime]
+Phishing campaign exploits OAuth redirection to bypass defenses
+
+Microsoft researchers warn that threat actors abuse OAuth redirects to target government users and deliver malware.
+
+Microsoft has warned of phishing campaigns targeting government and public-sector organizations by abusing OAuth URL redirection. Instead of stealing credentials or exploiting software flaws, attackers leverage OAuth’s legitimate by-design behavior to bypass email and browser defenses. The tactic redirects victims to attacker-controlled infrastructure, making it an identity-based threat rather than a traditional exploit.
+
+“Microsoft Defender researchers uncovered phishing campaigns that exploit legitimate OAuth protocol functionality to manipulate URL redirection and bypass conventional phishing defenses across email and browsers.” reads the advisory. “During the investigation, several malicious OAuth applications were identified and removed to mitigate the threat.”
+
+OAuth lets identity providers redirect users to specific pages in defined flows, such as error handling. Attackers abuse this feature by crafting URLs with trusted services like Entra ID or Google Workspace, manipulating parameters or rogue apps to send users to attacker-controlled pages. The links look legitimate but lead to malicious sites.
+
+The attack chain begins by creating a malicious OAuth application in a tenant they control, setting its redirect URI to a domain that hosts malware. They then send phishing emails with crafted OAuth links themed around documents, payments, or meetings.
+
+When victims click, the link triggers a silent OAuth flow using manipulated parameters such as prompt=none or invalid scopes to force an error.
+
+“This technique abuses the OAuth 2.0 authorization endpoint by using parameters such as prompt=none and an intentionally invalid scope. Rather than attempting successful authentication, the request is designed to force the identity provider to evaluate session state and Conditional Access policies without presenting a user interface.” continues the report. “Setting an invalid scope is one method used to trigger an error and subsequent redirect, but it is not the only mechanism observed. “
+
+Instead of completing authentication, the identity provider redirects the user to the attacker’s registered domain, leveraging trusted Microsoft or Google URLs to appear legitimate.
+
+The redirect often leads to phishing frameworks or malware downloads. In some campaigns, victims automatically receive a ZIP file containing a malicious LNK shortcut.
+
+“Among the threat actors and campaigns abusing OAuth redirection techniques with various landing pages, we identified a specific campaign that attempted to deliver a malicious payload.” continues the report. “That activity is described in more detail below.
+
+After redirection, victims were sent to a /download/XXXX path, where a ZIP file was automatically downloaded to the target device.
+
+Observed payloads included ZIP archives containing LNK shortcut files and HTML smuggling loaders.”
+
+When opened, it runs PowerShell commands, performs system reconnaissance, extracts additional files, and side-loads a rogue DLL. The final payload executes in memory and connects to a command-and-control server, moving the attack from credential targeting to full endpoint compromise and persistence.
+
+Organizations should reduce risk by tightly governing OAuth applications, limiting user consent, reviewing permissions regularly, and removing unused or overprivileged apps. Strong identity protection, Conditional Access policies, and cross-domain detection across email, identity, and endpoints can help stop attackers from abusing trusted authentication flows for phishing or malware delivery.
+
+The report highlights identity-based threats that exploit OAuth’s by-design redirect behavior rather than software flaws or stolen credentials. By deliberately triggering authorization errors, attackers can redirect users from trusted identity providers to malicious sites. As defenses against credential theft improve, adversaries increasingly target protocol trust and standard features, underscoring the need for stronger OAuth governance and coordinated security efforts.
+
+“These campaigns demonstrate that this abuse is operational, not theoretical. Malicious but standards-compliant applications can misuse legitimate error-handling flows to redirect users from trusted identity providers to attacker-controlled infrastructure.” concludes the report. “As organizations strengthen defenses against credential theft and MFA bypass, attackers increasingly target trust relationships and protocol behavior instead.”
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(SecurityAffairs – hacking, phishing)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/188829/hacking/phishing-campaign-exploits-oauth-redirection-to-bypass-defenses.html, securityaffairs.com, 03.03.2026)
+
+================================================================================
+
+[22] Security Affairs - Android devices hit by exploited Qualcomm flaw CVE-2026-21385
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 10:03:06 +0000
 Link: https://securityaffairs.com/188823/security/android-devices-hit-by-exploited-qualcomm-flaw-cve-2026-21385.html
@@ -1369,7 +1417,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[22] Security Affairs - Chrome security flaw enabled spying via Gemini Live assistant
+[23] Security Affairs - Chrome security flaw enabled spying via Gemini Live assistant
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 08:48:14 +0000
 Link: https://securityaffairs.com/188807/security/chrome-security-flaw-enabled-spying-via-gemini-live-assistant.html
@@ -1415,7 +1463,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[23] Security Affairs - Middle east crisis prompts UK NCSC warning on potential Iranian cyber activity
+[24] Security Affairs - Middle east crisis prompts UK NCSC warning on potential Iranian cyber activity
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 20:48:02 +0000
 Link: https://securityaffairs.com/188800/apt/middle-east-crisis-prompts-uk-warning-on-potential-iranian-cyber-activity.html
@@ -1447,7 +1495,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[24] Security Affairs - Russia-linked APT28 exploited MSHTML zero-day CVE-2026-21513 before patch
+[25] Security Affairs - Russia-linked APT28 exploited MSHTML zero-day CVE-2026-21513 before patch
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 14:45:52 +0000
 Link: https://securityaffairs.com/188782/security/russia-linked-apt28-exploited-mshtml-zero-day-cve-2026-21513-before-patch.html
@@ -1481,7 +1529,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[25] Security Affairs - APT37 combines cloud storage and USB implants to infiltrate air-gapped systems
+[26] Security Affairs - APT37 combines cloud storage and USB implants to infiltrate air-gapped systems
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 12:38:26 +0000
 Link: https://securityaffairs.com/188767/apt/apt37-combines-cloud-storage-and-usb-implants-to-infiltrate-air-gapped-systems.html
@@ -1521,7 +1569,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[26] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
+[27] Security Affairs - Europol’s Project Compass nets 30 arrests in crackdown on “The Com”
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:26:25 +0000
 Link: https://securityaffairs.com/188708/cyber-crime/europols-project-compass-nets-30-arrests-in-crackdown-on-the-com.html
@@ -1549,7 +1597,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[27] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
+[28] Security Affairs - ClawJacked flaw exposed OpenClaw users to data theft
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 09:42:34 +0000
 Link: https://securityaffairs.com/188749/hacking/clawjacked-flaw-exposed-openclaw-users-to-data-theft.html
@@ -1601,7 +1649,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[28] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
+[29] Security Affairs - Ukrainian hacker pleads guilty to running OnlyFake AI ID scam site
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:43:04 +0000
 Link: https://securityaffairs.com/188734/cyber-crime/ukrainian-hacker-pleads-guilty-to-running-onlyfake-ai-id-scam-site.html
@@ -1631,7 +1679,7 @@ Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
 ================================================================================
 
-[29] SANS ISC - ISC Stormcast For Tuesday, March 3rd, 2026 https://isc.sans.edu/podcastdetail/9832, (Tue, Mar 3rd)
+[30] SANS ISC - ISC Stormcast For Tuesday, March 3rd, 2026 https://isc.sans.edu/podcastdetail/9832, (Tue, Mar 3rd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 02:00:02 GMT
 Link: https://isc.sans.edu/diary/rss/32760
@@ -1642,7 +1690,7 @@ Link: https://isc.sans.edu/diary/rss/32760
 
 ================================================================================
 
-[30] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
+[31] SANS ISC - Quick Howto: ZIP Files Inside RTF, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:13:04 GMT
 Link: https://isc.sans.edu/diary/rss/32696
@@ -1680,7 +1728,7 @@ blog.DidierStevens.com
 
 ================================================================================
 
-[31] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
+[32] SANS ISC - Wireshark 4.6.4 Released, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:11:45 GMT
 Link: https://isc.sans.edu/diary/rss/32758
@@ -1691,7 +1739,7 @@ Link: https://isc.sans.edu/diary/rss/32758
 
 ================================================================================
 
-[32] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
+[33] SANS ISC - ISC Stormcast For Monday, March 2nd, 2026 https://isc.sans.edu/podcastdetail/9830, (Mon, Mar 2nd)
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 02:00:03 GMT
 Link: https://isc.sans.edu/diary/rss/32756
@@ -1702,7 +1750,7 @@ Link: https://isc.sans.edu/diary/rss/32756
 
 ================================================================================
 
-[33] Recorded Future - Ongoing Iran Conflict: What You Need to Know
+[34] Recorded Future - Ongoing Iran Conflict: What You Need to Know
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 00:00:00 GMT
 Link: https://www.recordedfuture.com/blog/ongoing-iran-conflict-what-you-need-to-know
@@ -1826,7 +1874,7 @@ The situation in Iran is moving fast. Recorded Future's Insikt Group is publishi
 
 ================================================================================
 
-[34] Cyberscoop - Google addresses actively exploited Qualcomm zero-day in fresh batch of 129 Android vulnerabilities
+[35] Cyberscoop - Google addresses actively exploited Qualcomm zero-day in fresh batch of 129 Android vulnerabilities
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 22:20:18 +0000
 Link: https://cyberscoop.com/android-security-update-march-2026/
@@ -1924,7 +1972,7 @@ The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat 
 
 ================================================================================
 
-[35] Cyberscoop - The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat intelligence sharing
+[36] Cyberscoop - The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat intelligence sharing
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 20:57:21 +0000
 Link: https://cyberscoop.com/brett-leatherman-fbi-cyber-priorities-winter-shield/
@@ -2018,7 +2066,7 @@ Google addresses actively exploited Qualcomm zero-day in fresh batch of 129 Andr
 
 ================================================================================
 
-[36] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
+[37] Cyberscoop - From fake nudes to fake quotes: AI deepfakes plagued Olympic athletes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://cyberscoop.com/ai-deepfakes-olympic-athletes-political-manipulation/
@@ -2116,7 +2164,7 @@ The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat 
 
 ================================================================================
 
-[37] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
+[38] Cyberscoop - How ‘silent probing’ can make your security playbook a liability
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://cyberscoop.com/ai-silent-probing-cyber-risk-behavioral-defense-op-ed/
@@ -2215,7 +2263,7 @@ The FBI’s cyber chief is using Winter SHIELD to accelerate China prep, threat 
 
 ================================================================================
 
-[38] The Register - Cybercriminals swipe 15.8M medical records from French doctors ministry
+[39] The Register - Cybercriminals swipe 15.8M medical records from French doctors ministry
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-03T11:00:07.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/03/french_medical_leak/
@@ -2265,7 +2313,7 @@ The government said that whoever was behind the attack impersonated a civil serv
 
 ================================================================================
 
-[39] The Register - Phish of the day: Microsoft OAuth scams abuse redirects for malware delivery
+[40] The Register - Phish of the day: Microsoft OAuth scams abuse redirects for malware delivery
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-03T00:33:15.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/03/microsoft_oauth_scams/
@@ -2367,7 +2415,7 @@ Windows Subsystem for Linux
 
 ================================================================================
 
-[40] The Register - Iran's cyberwar has begun
+[41] The Register - Iran's cyberwar has begun
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T20:52:18.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/cyber_warfighters_iran/
@@ -2487,7 +2535,7 @@ Trusted Platform Module
 
 ================================================================================
 
-[41] The Register - UK businesses told to brace cyber defenses amid Iran conflict risk
+[42] The Register - UK businesses told to brace cyber defenses amid Iran conflict risk
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T18:44:26.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/ncsc_security_iran/
@@ -2545,7 +2593,7 @@ Competition and Markets Authority
 
 ================================================================================
 
-[42] The Register - Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
+[43] The Register - Scammers try to SIM-swap Dubai citizens hours after Iranian missile strikes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T13:42:52.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/dubai_iran_sim_swap/
@@ -2595,7 +2643,7 @@ Iran has called its retaliation a "legitimate act of self-defense." ®
 
 ================================================================================
 
-[43] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
+[44] The Register - South Korea’s tax office apologizes for leaking seed phrase to seized crypto
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: 2026-03-02T00:51:38.00Z
 Link: https://go.theregister.com/feed/www.theregister.com/2026/03/02/south_korea_tax_office_cryptocurrency_leak/
@@ -2677,12 +2725,12 @@ Trusted Platform Module
 
 ================================================================================
 
-[44] TechCrunch Security - A new app alerts you if someone nearby is wearing smart glasses
+[45] TechCrunch Security - A new app alerts you if someone nearby is wearing smart glasses
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 22:40:00 +0000
 Link: https://techcrunch.com/2026/03/02/nearby-glasses-new-app-alerts-you-wearing-smart-glasses-surveillance-meta-snap-bluetooth/
 
-[TAM METİN - 844 kelime]
+[TAM METİN - 865 kelime]
 One of the chief problems with “luxury surveillance” devices, like smart glasses with baked-in video recording cameras, is that they often look indistinguishable from regular eyewear, meaning you might be recorded without knowing it.
 
 But now there is an app that can detect and alert you when someone nearby is wearing smart glasses, or potentially other always-recording tech.
@@ -2717,15 +2765,15 @@ He can be reached via encrypted message at zackwhittaker.1337 on Signal. You can
 
 Actively scaling? Fundraising? Planning your next launch?TechCrunch Founder Summit 2026 delivers tactical playbooks and direct access to 1,000+ founders and investors who are building, backing, and closing.Register by March 13 to save up to $300.
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
 
 
-Ram Iyer
+Julie Bort
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
 SaaS in, SaaS out: Here’s what’s driving the SaaSpocalypse
 
@@ -2791,12 +2839,12 @@ An accountant won a big jackpot on Kalshi by betting against DOGE
 
 ================================================================================
 
-[45] TechCrunch Security - Hacktivists claim to have hacked Homeland Security to release ICE contract data
+[46] TechCrunch Security - Hacktivists claim to have hacked Homeland Security to release ICE contract data
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 16:11:56 +0000
 Link: https://techcrunch.com/2026/03/02/hacktivists-claim-to-have-hacked-homeland-security-to-release-ice-contract-data/
 
-[TAM METİN - 725 kelime]
+[TAM METİN - 746 kelime]
 A group of hacktivists calling themselves “Department of Peace” claimed to have hacked the Department of Homeland Security (DHS), leaking allegedly stolen documents online.
 
 On Sunday, the nonprofit transparency collective DDoSecrets published data relating to contracts between DHS, Immigration and Customs Enforcement (ICE), and more than 6,000 companies, including defense contractors Anduril, L3Harris, Raytheon, and surveillance provider Palantir, as well as tech giants Microsoft and Oracle.
@@ -2830,15 +2878,15 @@ You can contact or verify outreach from Lorenzo by emailing lorenzo@techcrunch.c
 
 Actively scaling? Fundraising? Planning your next launch?TechCrunch Founder Summit 2026 delivers tactical playbooks and direct access to 1,000+ founders and investors who are building, backing, and closing.Register by March 13 to save up to $300.
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
 
 
-Ram Iyer
+Julie Bort
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
 SaaS in, SaaS out: Here’s what’s driving the SaaSpocalypse
 
@@ -2904,12 +2952,12 @@ An accountant won a big jackpot on Kalshi by betting against DOGE
 
 ================================================================================
 
-[46] TechCrunch Security - Hackers and internet outages hit Iran amid US air strikes
+[47] TechCrunch Security - Hackers and internet outages hit Iran amid US air strikes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 14:16:53 +0000
 Link: https://techcrunch.com/2026/03/02/hackers-and-internet-outages-hit-iran-amid-u-s-air-strikes/
 
-[TAM METİN - 709 kelime]
+[TAM METİN - 730 kelime]
 Early on Saturday, cities across Iran, including its capital Tehran, were rocked by a series of U.S. and Israel-led airstrikes that killed the country’s supreme leader, Ali Hosseini Khamenei, and top leadership. According to reports, the military campaign coincided with cyberattacks targeting the country, one of which flooded a popular phone app with notifications, amid an ongoing outage across the Iranian internet.
 
 The strikes came after several days of failed negotiations between Tehran and Washington. The negotiations were held after weeks of mass protests that saw thousands of people killed alongside the country’s longest internet shutdown to date.
@@ -2940,15 +2988,15 @@ He can be reached via encrypted message at zackwhittaker.1337 on Signal. You can
 
 Actively scaling? Fundraising? Planning your next launch?TechCrunch Founder Summit 2026 delivers tactical playbooks and direct access to 1,000+ founders and investors who are building, backing, and closing.Register by March 13 to save up to $300.
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
 
 
-Ram Iyer
+Julie Bort
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
-Anthropic’s Claude reports widespread outage
+MyFitnessPal has acquired Cal AI, the viral calorie app built by teens
 
 SaaS in, SaaS out: Here’s what’s driving the SaaSpocalypse
 
@@ -3014,7 +3062,63 @@ An accountant won a big jackpot on Kalshi by betting against DOGE
 
 ================================================================================
 
-[47] CSO Online - Studie: Hacker legen Betrieb bei vielen Unternehmen lahm
+[48] CSO Online - OAuth phishers make ‘check where the link points’ advice ineffective
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Tue, 03 Mar 2026 13:00:15 +0000
+Link: https://www.csoonline.com/article/4139872/oauth-phishers-make-check-where-the-link-points-advice-ineffective.html
+
+[TAM METİN - 817 kelime]
+Microsoft has identified a phishing campaign using malformed links to legitimate OAuth services to redirect to malware downloads.
+
+Microsoft has warned that phishers are exploiting a built-in behavior of the OAuth authentication protocol to redirect victims to malware, using links that point to legitimate identity provider domains such as Microsoft Entra ID and Google Workspace. The links look safe but ultimately lead somewhere that isn’t.
+
+“OAuth includes a legitimate feature that allows identity providers to redirect users to a specific landing page under certain conditions, typically in error scenarios or other defined flows,” Microsoft’s Defender Security Research Team wrote in a blog post. “Attackers can abuse this native functionality by crafting URLs with popular identity providers, such as Entra ID or Google Workspace, that use manipulated parameters or associated malicious applications to redirect users to attacker-controlled landing pages.”
+
+The company said it has disabled several malicious OAuth applications linked to the activity but warned that related campaigns are continuing and require ongoing monitoring.
+
+The attack starts with a phishing email, with observed lures impersonating e-signature requests, HR communications, Microsoft Teams meeting invites, and password reset alerts, the malicious links embedded either in the email body or inside a PDF attachment, Microsoft researchers wrote in the blog post.
+
+The link points to a real OAuth authorization endpoint but is built with deliberately broken parameters. Attackers use a “prompt=none” value, requesting a silent authentication with no login screen, and pair it with an invalid scope value. The combination is designed to fail. When it does, the identity provider redirects the user’s browser to a URI registered by the attacker.
+
+“Although this behavior is standards-compliant, adversaries can abuse it to redirect users through trusted authorization endpoints to attacker-controlled destinations,” the researchers wrote in the blog post.
+
+The technique represents a structural shift in how attackers approach identity, said Greyhound Research chief analyst Sanchit Vir Gogia. “The first hop is real. The browser is behaving correctly. The identity provider is behaving correctly. The trust signal is authentic,” he said. “This shifts phishing from deception at the brand layer to manipulation at the workflow layer.”
+
+In one campaign Microsoft detailed in the blog post, the redirect delivered a ZIP archive containing a malicious shortcut file to the victim’s device. Opening the file triggered a PowerShell script that ran reconnaissance commands and ultimately connected to an attacker-controlled server, the post said. Microsoft described the subsequent activity as consistent with pre-ransomware behavior.
+
+Context, not the URL, is the new red flag
+
+Sakshi Grover, Senior Research Manager at IDC Asia/Pacific, said the longstanding advice to hover over a link and verify its domain was built for an era of lookalike domains and that it no longer holds in environments where authentication flows routinely pass through trusted identity providers.
+
+“Organizations should shift awareness messaging from ‘check the link’ to ‘validate the context,’” she said. “Employees should be trained to question whether an authentication request was expected, whether it aligns with a current business activity, and whether the application is requesting permissions that make sense.”
+
+Gogia said enterprises need to go further and change the underlying behavior entirely. “Never initiate authentication journeys from unsolicited inbound links,” he said. “Authentication should begin from controlled starting points, not from email triggers.” He added that reporting unexpected login journeys must be made frictionless, and that speed of reporting is more valuable than confidence in personal judgment.
+
+The governance gap attackers exploit
+
+Both analysts pointed to OAuth application governance as the deeper structural gap this campaign exploits.
+
+Grover of IDC said governance maturity remains uneven across enterprises. “Broad default consent settings and limited monitoring of redirect URIs remain common, particularly in environments where cloud and SaaS adoption have outpaced identity governance controls,” she said.
+
+The scale of the problem is easy to underestimate, according to Gogia of Greyhound Research. “Every SaaS integration, automation workflow, and collaboration tool may require an application registration. Over time, tenants accumulate hundreds or thousands of registered apps. Redirect URIs are configured during setup and rarely revisited,” he said. “Telemetry exists. Interpretation does not.”
+
+Microsoft said in the blog post that organizations should restrict user consent to third-party OAuth applications, audit app permissions regularly, and remove applications that are unused or over-privileged. The post also published 16 client IDs linked to the threat actors’ malicious applications and a list of initial redirection URLs as indicators of compromise. KQL hunting queries for Microsoft Defender XDR customers are included in the post to help identify related activity across email, identity, and endpoint signals.
+
+The technique will remain effective for as long as enterprises leave these gaps unaddressed, Gogia warned. “It does not require breaking encryption,” he said. “It requires exploiting administrative complacency.”
+
+‘Silent’ Google API key change exposed Gemini AI data
+
+13 ways attackers use generative AI to exploit your systems
+
+PayPal launches latest struggle to get rid of SMS for MFA
+
+From our editors straight to your inbox
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/4139872/oauth-phishers-make-check-where-the-link-points-advice-ineffective.html, csoonline.com, 03.03.2026)
+
+================================================================================
+
+[49] CSO Online - Studie: Hacker legen Betrieb bei vielen Unternehmen lahm
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4139159/studie-hacker-legen-betrieb-bei-vielen-unternehmen-lahm.html
@@ -3050,7 +3154,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[48] CSO Online - Epic Fury introduces new layer of enterprise risk
+[50] CSO Online - Epic Fury introduces new layer of enterprise risk
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4139550/epic-fury-introduces-new-layer-of-enterprise-risk.html
@@ -3128,7 +3232,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[49] CSO Online - 7 factors impacting the cyber skills gap
+[51] CSO Online - 7 factors impacting the cyber skills gap
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4137580/7-factors-impacting-the-cyber-skills-gap.html
@@ -3210,7 +3314,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[50] CSO Online - Das gehört in Ihr Security-Toolset
+[52] CSO Online - Das gehört in Ihr Security-Toolset
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Tue, 03 Mar 2026 04:00:00 +0000
 Link: https://www.csoonline.com/article/3605017/das-gehort-in-ihr-security-toolset.html
@@ -3312,7 +3416,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[51] CSO Online - Vulnerability monitoring service secures public-sector websites faster
+[53] CSO Online - Vulnerability monitoring service secures public-sector websites faster
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 19:42:03 +0000
 Link: https://www.csoonline.com/article/4139509/vulnerability-monitoring-service-secures-public-sector-websites-faster.html
@@ -3376,7 +3480,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[52] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
+[54] CSO Online - Innovation without exposure: A CISO’s secure-by-design framework for business outcomes
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 11:00:00 +0000
 Link: https://www.csoonline.com/article/4138735/innovation-without-exposure-a-cisos-secure-by-design-framework-for-business-outcomes.html
@@ -3578,7 +3682,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[53] CSO Online - A scorecard for cyber and risk culture
+[55] CSO Online - A scorecard for cyber and risk culture
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 10:00:00 +0000
 Link: https://www.csoonline.com/article/4138709/a-scorecard-for-cyber-and-risk-culture.html
@@ -3852,7 +3956,7 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[54] CSO Online - Hacker erpressen weniger Lösegeld
+[56] CSO Online - Hacker erpressen weniger Lösegeld
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 08:24:16 +0000
 Link: https://www.csoonline.com/article/4139126/hacker-erpressen-weniger-losegeld.html
@@ -3890,7 +3994,7 @@ Von unseren Redakteuren direkt in Ihren Posteingang
 
 ================================================================================
 
-[55] CSO Online - How CISOs can build a resilient workforce
+[57] CSO Online - How CISOs can build a resilient workforce
 ────────────────────────────────────────────────────────────────────────────────
 Tarih: Mon, 02 Mar 2026 07:00:00 +0000
 Link: https://www.csoonline.com/article/4136307/how-cisos-can-build-a-resilient-workforce.html
@@ -4022,17 +4126,6 @@ From our editors straight to your inbox
 
 ================================================================================
 
-[56] CSO Online - Im Fokus: RZ-Modernisierung
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 02 Mar 2026 06:00:00 +0000
-Link: https://de.resources.csoonline.com/resources/im-fokus-warum-die-modernisierung-von-rechenzentren-not-tut/
-
-⚠️  Tam metin çekilemedi
-
-(XXXXXXX, AÇIK - https://de.resources.csoonline.com/resources/im-fokus-warum-die-modernisierung-von-rechenzentren-not-tut/, de.resources.csoonline.com, 02.03.2026)
-
-================================================================================
-
 
 ================================================================================
 SOSYAL MEDYA SİNYALLERİ — HABER DEĞİL, SADECE REFERANS KAYDI
@@ -4054,31 +4147,7 @@ For `host=node` executions, approval context could be bypassed after approval-ti
 
 ## Affected Pa
 
-[S3] GitHub Advisory | Skor: 30.0 | Yorum: 0
-Baslik: OpenClaw: Message action attachment hydration bypasses local media root checks when sandboxRoot is unset
-Link: https://github.com/advisories/GHSA-fqcm-97m6-w7rm
-## Impact
-`sendAttachment` and `setGroupIcon` message actions could hydrate media from local absolute paths when `sandboxRoot` was unset, bypassing intended local media root checks. This could allow r
-
-[S4] GitHub Advisory | Skor: 30.0 | Yorum: 0
-Baslik: OpenClaw: system.run approval identity mismatch could execute a different binary than displayed
-Link: https://github.com/advisories/GHSA-hwpq-rrpf-pgcq
-### Summary
-`system.run` approvals in OpenClaw used rendered command text as the approval identity while trimming argv token whitespace. Runtime execution still used raw argv. A crafted trailing-space
-
-[S5] GitHub Advisory | Skor: 26.6 | Yorum: 0
-Baslik: OpenClaw has system.run shell-wrapper env injection via SHELLOPTS/PS4 can bypass allowlist intent (RCE)
-Link: https://github.com/advisories/GHSA-2fgq-7j6h-9rm4
-### Summary
-`system.run` allowed `SHELLOPTS` + `PS4` environment injection to trigger command substitution during `bash -lc` xtrace expansion before the allowlisted command body executed.
-
-### Affecte
-
-[S6] X.com | Skor: 0 | Yorum: 0
-Baslik: Cybersol (@Cybersolbv) / Posts / X - Twitter
-Link: https://x.com/Cybersolbv
-
-[S7] X.com | Skor: 0 | Yorum: 0
-Baslik: Capxel Security (@capxel_security) / Posts / X - Twitter
-Link: https://x.com/capxel_security
+[S3] Reddit: r/netsec | Skor: 0.96323055 | Yorum: 0
+Baslik: Uncovering a Global macOS Malware Campaign : r/netsec - Reddit
+Link: https://www.reddit.com/r/netsec/comments/1rg3zmd/uncovering_a_global_macos_malware_campaign/
 
