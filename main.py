@@ -122,101 +122,72 @@ def _parse_article_date(date_str, fallback):
     return fallback.strftime('%d.%m.%Y')
 
 
-def _get_reddit_token():
-    """
-    Reddit OAuth2 client credentials akışıyla erişim token'ı alır.
-    REDDIT_CLIENT_ID ve REDDIT_CLIENT_SECRET env değişkenleri gerekir.
-    """
-    client_id     = os.getenv('REDDIT_CLIENT_ID', '')
-    client_secret = os.getenv('REDDIT_CLIENT_SECRET', '')
-    if not client_id or not client_secret:
-        return None
-    try:
-        r = requests.post(
-            'https://www.reddit.com/api/v1/access_token',
-            auth=(client_id, client_secret),
-            data={'grant_type': 'client_credentials'},
-            headers={'User-Agent': 'siberguvenlik-bot/1.0 by /u/script'},
-            timeout=(5, 10),
-        )
-        if r.status_code == 200:
-            return r.json().get('access_token')
-        print(f"   Reddit token hatasi: HTTP {r.status_code}")
-    except Exception as e:
-        print(f"   Reddit token exception: {e}")
-    return None
 
 
 def fetch_social_signals(config):
     """
-    Reddit, Hacker News ve GitHub'dan yüksek etkileşimli siber güvenlik
-    içeriklerini çeker. Reddit için OAuth2, diğerleri public API.
+    Reddit (unauthenticated public API), Hacker News, GitHub Advisories ve
+    X.com (Tavily üzerinden) kaynaklarından siber güvenlik sinyalleri çeker.
+    Reddit + HN + GitHub: karma puana göre top 5 seçilir.
+    X.com: Tavily relevance skoruna göre top 3 seçilir, ayrı eklenir.
     """
-    hours_back = config.get('hours_back', 24)
-    cutoff_ts  = int((datetime.now() - timedelta(hours=hours_back)).timestamp())
-    yesterday  = (datetime.now() - timedelta(hours=hours_back)).strftime('%Y-%m-%d')
-    results    = []
+    hours_back   = config.get('hours_back', 24)
+    cutoff_ts    = int((datetime.now() - timedelta(hours=hours_back)).timestamp())
+    yesterday    = (datetime.now() - timedelta(hours=hours_back)).strftime('%Y-%m-%d')
+    results      = []   # Reddit + HN + GitHub
+    xcom_results = []   # X.com via Tavily (ayrı havuz)
 
     print("\n" + "=" * 70)
     print("📡 SOSYAL MEDYA SİNYALLERİ ÇEKILIYOR")
     print("=" * 70)
 
-    # ── Reddit ──────────────────────────────────────────────────────────────
-    reddit_cfg  = config.get('reddit', {})
-    min_score   = reddit_cfg.get('min_score', 100)
-    limit       = reddit_cfg.get('limit', 15)
-    subreddits  = reddit_cfg.get('subreddits', ['netsec', 'cybersecurity'])
+    # ── Reddit (Unauthenticated Public API) ─────────────────────────────────
+    # OAuth gerekmez; Reddit public JSON API düzgün User-Agent ile 200 döner.
+    # 403'ün nedeni python-requests gibi jenerik UA'lardı, OAuth değil.
+    reddit_cfg       = config.get('reddit', {})
+    reddit_min_score = reddit_cfg.get('min_score', 20)
+    reddit_limit     = reddit_cfg.get('limit', 25)
+    reddit_subs      = reddit_cfg.get('subreddits', ['cybersecurity', 'netsec'])
+    reddit_top_n     = reddit_cfg.get('top_n', 5)
+    reddit_ua        = 'siberguvenlik-haber-toplayici/1.0 (gunluk siber guvenlik haberleri)'
+    reddit_pool      = []
 
-    reddit_token = _get_reddit_token()
-    if reddit_token:
-        reddit_base_url = 'https://oauth.reddit.com/r/{sub}/top'
-        reddit_hdrs = {
-            'Authorization': f'Bearer {reddit_token}',
-            'User-Agent':    'siberguvenlik-bot/1.0 by /u/script',
-        }
-        print("   Reddit: OAuth2 token alindi")
-    else:
-        reddit_base_url = None
-        print("   Reddit: OAuth credentials yok, atlanıyor (REDDIT_CLIENT_ID/SECRET eksik)")
-
-    if reddit_base_url:
-        for sub in subreddits:
-            try:
-                url = reddit_base_url.format(sub=sub) + f'?t=day&limit={limit}'
-                r   = requests.get(url, headers=reddit_hdrs, timeout=(5, 10))
-                if r.status_code != 200:
-                    print(f"   Reddit r/{sub}: HTTP {r.status_code}")
-                    time.sleep(1)
+    for sub in reddit_subs:
+        try:
+            url = f'https://www.reddit.com/r/{sub}/top.json?t=day&limit={reddit_limit}'
+            r   = requests.get(url, headers={'User-Agent': reddit_ua}, timeout=(5, 15))
+            if r.status_code != 200:
+                print(f"   Reddit r/{sub}: HTTP {r.status_code}")
+                time.sleep(1)
+                continue
+            posts = r.json().get('data', {}).get('children', [])
+            found = 0
+            for post in posts:
+                p     = post.get('data', {})
+                score = p.get('score', 0)
+                if score < reddit_min_score:
                     continue
-                posts = r.json().get('data', {}).get('children', [])
-                found = 0
-                for post in posts:
-                    p = post.get('data', {})
-                    if p.get('score', 0) < min_score:
-                        continue
-                    if int(p.get('created_utc', 0)) < cutoff_ts:
-                        continue
-                    link = p.get('url') or f"https://www.reddit.com{p.get('permalink', '')}"
-                    results.append({
-                        'platform': 'reddit',
-                        'source':   f"Reddit: r/{sub}",
-                        'title':    p.get('title', ''),
-                        'link':     link,
-                        'score':    p.get('score', 0),
-                        'comments': p.get('num_comments', 0),
-                        'date':     datetime.utcfromtimestamp(
-                                        int(p.get('created_utc', 0))
-                                    ).strftime('%a, %d %b %Y %H:%M:%S +0000'),
-                        'domain':   p.get('domain', 'reddit.com'),
-                        'full_text': (p.get('selftext', '') or '')[:300],
-                        'success':  True,
-                    })
-                    found += 1
-                print(f"   Reddit r/{sub}: {found} nitelikli post")
-                time.sleep(1)
-            except Exception as e:
-                print(f"   Reddit r/{sub} hatasi: {e}")
-                time.sleep(1)
+                if int(p.get('created_utc', 0)) < cutoff_ts:
+                    continue
+                link = p.get('url') or f"https://www.reddit.com{p.get('permalink', '')}"
+                reddit_pool.append({
+                    'platform': 'reddit',
+                    'source':   f"Reddit: r/{sub}",
+                    'title':    p.get('title', ''),
+                    'link':     link,
+                    'score':    score,
+                    'comments': p.get('num_comments', 0),
+                })
+                found += 1
+            print(f"   Reddit r/{sub}: {found} nitelikli post")
+            time.sleep(1)
+        except Exception as e:
+            print(f"   Reddit r/{sub} hatasi: {e}")
+            time.sleep(1)
+
+    reddit_pool.sort(key=lambda x: x['score'], reverse=True)
+    results.extend(reddit_pool[:reddit_top_n])
+    print(f"   Reddit toplam: {len(reddit_pool)} → en iyi {min(reddit_top_n, len(reddit_pool))} eklendi")
 
     # ── Hacker News (Algolia API) ────────────────────────────────────────────
     # Skor modeli: combined_score = points + (num_comments × comment_weight)
@@ -311,12 +282,64 @@ def fetch_social_signals(config):
     except Exception as e:
         print(f"   GitHub Advisories hatasi: {e}")
 
-    # Karma skora göre sırala (yüksekten düşüğe), en iyi 5 tanesini al
-    results.sort(key=lambda x: x.get('score', 0), reverse=True)
-    results = results[:5]
+    # ── X.com (Tavily arama motoru üzerinden) ───────────────────────────────
+    # X.com crawler'ları engeller; Tavily Google/Bing index üzerinden erişir.
+    # Engagement verisi yok — Tavily relevance skoru (0-1) kullanılır.
+    # Kendi havuzunda tutulur (main_results sıralamasını etkilemez).
+    tavily_key = os.getenv('TAVILY_API_KEY', '')
+    if tavily_key:
+        xcom_cfg       = config.get('xcom', {})
+        xcom_query     = xcom_cfg.get('query',
+                            'cybersecurity vulnerability exploit malware security breach')
+        xcom_max       = xcom_cfg.get('max_results', 5)
+        xcom_min_score = xcom_cfg.get('min_score', 0.5)
+        xcom_top_n     = xcom_cfg.get('top_n', 3)
+        try:
+            from tavily import TavilyClient
+            tc       = TavilyClient(api_key=tavily_key)
+            response = tc.search(
+                query           = xcom_query,
+                include_domains = ['x.com', 'twitter.com'],
+                time_range      = 'week',    # son 7 gün; 2-3 gün kapsama garantili
+                max_results     = xcom_max,
+                search_depth    = 'basic',   # 1 kredi/sorgu
+                topic           = 'general',
+            )
+            xcom_found = 0
+            for item in response.get('results', []):
+                tscore = item.get('score', 0)
+                if tscore < xcom_min_score:
+                    continue
+                xcom_results.append({
+                    'platform':     'xcom',
+                    'source':       'X.com',
+                    'title':        item.get('title', ''),
+                    'link':         item.get('url', '#'),
+                    'score':        0,
+                    'comments':     0,
+                    'tavily_score': tscore,
+                })
+                xcom_found += 1
+            xcom_results.sort(key=lambda x: x.get('tavily_score', 0), reverse=True)
+            top_xcom = xcom_results[:xcom_top_n]
+            print(f"   X.com (Tavily): {xcom_found} sonuc → en iyi {len(top_xcom)} eklendi")
+        except Exception as e:
+            top_xcom = []
+            print(f"   X.com/Tavily hatasi: {e}")
+    else:
+        top_xcom = []
+        print("   X.com: TAVILY_API_KEY yok, atlanıyor")
 
-    print(f"\n   Sosyal sinyal toplami: {len(results)} icerik (top 5)")
-    return results
+    # Reddit + HN + GitHub: karma puana göre top 5
+    results.sort(key=lambda x: x.get('score', 0), reverse=True)
+    top_main = results[:5]
+
+    # X.com sonuçları her zaman sona eklenir (ayrı havuz)
+    final = top_main + top_xcom
+
+    print(f"\n   Sosyal sinyal toplami: {len(final)} icerik "
+          f"({len(top_main)} ana + {len(top_xcom)} X.com)")
+    return final
 
 
 # ===== ANA SİSTEM =====
@@ -1224,13 +1247,14 @@ KURALLAR:
         platform_css = {
             'reddit':            'reddit-item',
             'hackernews':        'hn-item',
-            'github':            'github-item',
             'github_advisories': 'github-item',
+            'xcom':              'xcom-item',
         }
         platform_labels = {
             'reddit':            'Reddit',
             'hackernews':        'HackerNews',
             'github_advisories': 'GitHub Advisory',
+            'xcom':              'X.com',
         }
 
         items_html = ''
@@ -1254,6 +1278,10 @@ KURALLAR:
                 engagement = f"ÖNEM: {sev_label}"
                 if cvss:
                     engagement += f"  |  CVSS: {cvss}"
+            elif platform == 'xcom':
+                # Tavily engagement verisi yok; relevance skoru gösterilir
+                tscore     = post.get('tavily_score', 0)
+                engagement = f"Alaka: %{round(tscore * 100)}" if tscore else "Gündem"
             else:
                 score_labels = {'reddit': 'upvote', 'hackernews': 'puan'}
                 s_label      = score_labels.get(platform, 'puan')

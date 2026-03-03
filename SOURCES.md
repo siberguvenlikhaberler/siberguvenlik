@@ -23,10 +23,10 @@
 ## Sosyal Medya Sinyalleri
 
 ### Reddit
-- **Subredditler:** r/netsec, r/cybersecurity, r/hacking
-- **Filtreleme:** min 100 upvote, son 24 saat
-- **Sıralama:** upvote skoru (yüksekten düşüğe)
-- **Erişim:** OAuth2 client credentials — `REDDIT_CLIENT_ID` ve `REDDIT_CLIENT_SECRET` GitHub secret olarak tanımlanmalı
+- **Subredditler:** r/cybersecurity (~25 post/gün), r/netsec (~1-2 post/gün, yüksek kalite)
+- **Filtreleme:** min 20 upvote, son 24 saat
+- **Sıralama:** upvote skoru (yüksekten düşüğe); subredditler arası top 5 seçilir
+- **Erişim:** Kimlik doğrulama gerekmez; Reddit public JSON API (`/r/{sub}/top.json?t=day`) açık User-Agent ile çalışır
 
 ### Hacker News
 - **Arama terimleri:** security, cybersecurity, vulnerability, malware, breach
@@ -39,7 +39,15 @@
 - **Filtreleme:** Severity critical, high veya medium
 - **Sıralama:** Severity önceliği (critical > high > medium), eşit severity'de CVSS skoruna göre
 
-Her üç kaynaktan toplanan içerik karma skora göre sıralanır; en yüksek 5 tanesi rapora eklenir.
+### X.com
+- **Kaynak:** Tavily arama motoru (`include_domains: x.com, twitter.com`)
+- **Kapsam:** Son ~7 gün (2-3 gün tutarlı kapsama); `TAVILY_API_KEY` gerekli
+- **Sıralama:** Tavily relevance skoru (0.0–1.0); min eşik 0.5
+- **Kısıtlama:** X.com crawler'ları engeller; engagement verisi (beğeni/retweet) mevcut değil — sadece ilgililik skoru gösterilir. Günlük 1 kredi tüketir (ücretsiz plan: 1000 kredi/ay).
+
+Reddit + HN + GitHub karma puana göre top 5 olarak seçilir.
+X.com sonuçları ayrı havuzda tutulur ve top 5'in altına eklenir (karma sıralamayı etkilemez).
+Toplam sosyal sinyal sayısı: 5 (ana) + en fazla 3 (X.com) = en fazla 8.
 
 ---
 

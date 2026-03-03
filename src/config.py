@@ -2,8 +2,9 @@
 import os
 from datetime import datetime
 
-# API Key (Gemini)
+# API Keys
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+TAVILY_API_KEY = os.getenv('TAVILY_API_KEY', '')
 
 # Dosya yolları
 ARCHIVE_FILE = "data/haberler_arsiv.txt"
@@ -26,13 +27,14 @@ NEWS_SOURCES = {
 }
 
 # ===== SOSYAL MEDYA SİNYALLERİ AYARLARI =====
-# Reddit, Hacker News ve GitHub'dan yüksek etkileşimli içerik toplanır
+# Reddit (unauthenticated public API), HN, GitHub Advisories, X.com (Tavily)
 SOCIAL_SIGNAL_CONFIG = {
     'hours_back': 24,
     'reddit': {
-        'subreddits': ['netsec', 'cybersecurity', 'hacking'],
-        'min_score': 100,
-        'limit': 15,
+        'subreddits': ['cybersecurity', 'netsec'],  # cybersecurity: ~25/gün, netsec: 1-2/gün
+        'min_score': 20,       # OAuth gerekmez; düzgün User-Agent yeterli
+        'limit': 25,
+        'top_n': 5,            # Subreddit'ler arasından en yüksek skorlu 5 post
     },
     'hackernews': {
         'min_points': 15,      # search endpoint ile daha güvenilir; 30 bazı saatlerde 0 sonuç dönderiyordu
@@ -43,6 +45,14 @@ SOCIAL_SIGNAL_CONFIG = {
         # Severity öncelik sırası: critical > high > medium
         'min_severity': ['critical', 'high', 'medium'],
         'limit': 10,           # Çekilecek max advisory sayısı
+    },
+    'xcom': {
+        # Tavily üzerinden X.com arama; last week zaman aralığı (~2-3 gün kapsama)
+        # Engagement verisi yok — Tavily relevance skoru (0.0-1.0) kullanılır
+        'query': 'cybersecurity vulnerability exploit malware security breach',
+        'max_results': 5,      # Tavily'den çekilecek X.com sonuç sayısı
+        'min_score': 0.5,      # Minimum Tavily relevance eşiği
+        'top_n': 3,            # Sosyal sinyal kutusuna eklenecek max X.com öğe
     },
 }
 
@@ -394,6 +404,7 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         .social-signals .signal-item.reddit-item {{ border-left-color: #ff4500; }}
         .social-signals .signal-item.hn-item     {{ border-left-color: #ff6600; }}
         .social-signals .signal-item.github-item {{ border-left-color: #238636; }}
+        .social-signals .signal-item.xcom-item   {{ border-left-color: #000000; }}
         .social-signals .signal-meta {{
             display: flex;
             align-items: center;
