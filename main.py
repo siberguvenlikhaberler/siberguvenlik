@@ -198,6 +198,25 @@ def fetch_social_signals(config):
                                    .get_text(' ', strip=True)
                     raw_text = re.sub(r'https?://\S+', '', raw_text).strip()
                     raw_text = ' '.join(raw_text.split())
+                    if len(raw_text) < 30:
+                        continue
+                    # Dil filtresi: sadece İngilizce ağırlıklı postlar
+                    # Fransızca/diğer dil belirteci kelimeleri içeriyorsa atla
+                    _lang_skip = ('autopsie', 'dossier', 'pour les', 'avec ',
+                                  'dans ', 'selon ', 'mais ', 'sont ', 'cette ',
+                                  'une vulnérabilité', 'les hackers', ' les ',
+                                  'über ', 'wurde ', 'einer ', 'diesem ')
+                    if any(kw in raw_text.lower() for kw in _lang_skip):
+                        continue
+                    # Kalite filtresi: konferans duyurusu / günlük digest / sadece hashtag postları atla
+                    _low_quality = ('new event added', 'daily digest', 'your daily dose',
+                                    'conference', 'meetup', '📅', '📌 ', '🗓',
+                                    'read more:', 'stories you should not miss')
+                    if any(kw in raw_text.lower() for kw in _low_quality):
+                        continue
+                    # Hashtag temizleme: #tag # tag # tag → temiz metin
+                    raw_text = re.sub(r'#\w+', '', raw_text).strip()
+                    raw_text = ' '.join(raw_text.split())
                     if len(raw_text) < 20:
                         continue
                     mastodon_pool.append({
@@ -335,29 +354,40 @@ def fetch_social_signals(config):
     reddit_hours    = reddit_cfg.get('hours_back', 48)
     fetch_comments  = reddit_cfg.get('fetch_comments', True)
     max_comments    = reddit_cfg.get('max_comments', 5)
+    # PullPush notu: sort_type=score yeni postlarda düşük skor döndürür (arşiv gecikmesi).
+    # Çözüm: sort_type=created_utc → taze postları çek, yerel sıralama yap.
+    # q filtresi de bazen 0 sonuç döndürür → subreddit adı yeterli filtre sağlar.
     pp_cutoff       = int(time.time()) - reddit_hours * 3600
     pullpush_base   = 'https://api.pullpush.io/reddit/search/submission/'
     try:
         pp_pool = []
         for sub in reddit_subs:
             params = {
-                'q':          reddit_query,
                 'subreddit':  sub,
                 'size':       reddit_size,
                 'sort':       'desc',
-                'sort_type':  'score',
+                'sort_type':  'created_utc',   # score yerine tarih — taze post alır
                 'after':      pp_cutoff,
             }
             r = requests.get(pullpush_base, params=params,
                              headers=HEADERS, timeout=(5, 15))
             if r.status_code != 200:
                 print(f"   Reddit/PullPush r/{sub}: HTTP {r.status_code}")
-                time.sleep(0.5)
-                continue
+                # 2. deneme: sorgu olmadan dene
+                time.sleep(1)
+                r2 = requests.get(pullpush_base,
+                                  params={'subreddit': sub, 'size': reddit_size,
+                                          'sort': 'desc', 'sort_type': 'created_utc'},
+                                  headers=HEADERS, timeout=(5, 15))
+                if r2.status_code != 200:
+                    time.sleep(0.5)
+                    continue
+                r = r2
             data = r.json().get('data', [])
             sub_found = 0
             for post in data:
-                score = post.get('score', 0)
+                score = post.get('score', 0) or 0
+                # Çok düşük skorlu postları atla (min_upvotes=1 ile açık filtre)
                 if score < reddit_min_ups:
                     continue
                 post_id = post.get('id', '')
@@ -385,12 +415,14 @@ def fetch_social_signals(config):
                         time.sleep(0.3)   # PullPush rate limit koruması
                     except Exception:
                         pass
+                # karma puan: upvote + yorum ağırlığı (HN ile uyumlu)
+                karma = score + post.get('num_comments', 0)
                 pp_pool.append({
                     'platform':     'reddit',
                     'source':       f'Reddit: r/{sub}',
                     'title':        title,
                     'link':         url,
-                    'score':        score,
+                    'score':        karma,
                     'comments':     post.get('num_comments', 0),
                     'full_text':    (post.get('selftext') or '')[:300],
                     'top_comments': top_comments,
@@ -1022,14 +1054,19 @@ class HaberSistemi:
         if not html:
             return self._create_fallback_html(txt_content)
 
-        # HTML temizle
-        if html.startswith('```html'):
-            html = html[7:]
-        if html.startswith('```'):
-            html = html[3:]
-        if html.endswith('```'):
-            html = html[:-3]
-        html = html.strip()
+        # HTML temizle — Gemini bazen "Elbette, işte rapor: ```html" şeklinde
+        # konuşma metni ekler. DOCTYPE veya <html etiketini bulup öncesini sil.
+        import re as _re_html
+        doctype_pos = html.lower().find('<!doctype html')
+        html_tag_pos = html.lower().find('<html')
+        candidates = [p for p in [doctype_pos, html_tag_pos] if p != -1]
+        if candidates:
+            html_start = min(candidates)
+            if html_start > 0:
+                print(f"   ⚠️  HTML öncesi metin temizlendi ({html_start} karakter preamble)")
+            html = html[html_start:]
+        # Sondaki kod bloğu kapanışını temizle
+        html = _re_html.sub(r'\s*```\s*$', '', html).strip()
 
         print(f"✅ HTML oluşturuldu ({len(html)} karakter)")
 
@@ -1289,33 +1326,40 @@ KURALLAR:
             "CVE numaraları ve özel isimler (örn. Windows, Apache, Kubernetes, VMware, "
             "LockBit, Fortinet, CVE-2024-xxxx, GitHub, RCE, SQL Injection vb.) "
             "ASLA Türkçeye çevrilmez — orijinal haliyle bırakılır.\n"
+            "TÜM SATIRLARI mutlaka çevir — hiçbirini atlamadan [S1]'den [S"
+            + str(len(self.social_data)) + "]'e kadar her satır için çeviri ver.\n"
             "Sadece çevirileri ver, başka hiçbir şey yazma.\n"
             "Format: [S1]: çeviri\n[S2]: çeviri\n\n"
             + '\n'.join(lines)
         )
-        try:
-            client = genai.Client(api_key=GEMINI_API_KEY)
-            chunks = []
-            for chunk in client.models.generate_content_stream(
-                model='gemini-2.5-flash',
-                contents=prompt,
-                config=genai_types.GenerateContentConfig(
-                    max_output_tokens=1024,
-                    temperature=0.3,
-                ),
-            ):
-                if chunk.text:
-                    chunks.append(chunk.text)
-            text = ''.join(chunks).strip()
-            matched = 0
-            for match in _re.finditer(r'\[S(\d+)\]:\s*(.+)', text):
-                idx = int(match.group(1)) - 1
-                if 0 <= idx < len(self.social_data):
-                    self.social_data[idx]['title_tr'] = match.group(2).strip()
-                    matched += 1
-            print(f"   Sosyal sinyal Turkce ozetler: {matched}/{len(self.social_data)}")
-        except Exception as e:
-            print(f"   Sosyal sinyal ceviri hatasi (orijinal baslik): {e}")
+        for model_name in ['gemini-2.5-flash', 'gemini-2.0-flash']:
+            try:
+                client = genai.Client(api_key=GEMINI_API_KEY)
+                chunks = []
+                for chunk in client.models.generate_content_stream(
+                    model=model_name,
+                    contents=prompt,
+                    config=genai_types.GenerateContentConfig(
+                        max_output_tokens=2048,
+                        temperature=0.2,
+                    ),
+                ):
+                    if chunk.text:
+                        chunks.append(chunk.text)
+                text = ''.join(chunks).strip()
+                matched = 0
+                for match in _re.finditer(r'\[S(\d+)\]:\s*(.+)', text):
+                    idx = int(match.group(1)) - 1
+                    if 0 <= idx < len(self.social_data):
+                        self.social_data[idx]['title_tr'] = match.group(2).strip()
+                        matched += 1
+                print(f"   Sosyal sinyal Türkçe özetler ({model_name}): "
+                      f"{matched}/{len(self.social_data)}")
+                if matched > 0:
+                    break   # Başarılı, ikinci modeli deneme
+            except Exception as e:
+                print(f"   Sosyal sinyal çeviri hatası [{model_name}]: {e}")
+                continue
 
     def _inject_social_box(self, html):
         """

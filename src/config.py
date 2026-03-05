@@ -55,11 +55,12 @@ SOCIAL_SIGNAL_CONFIG = {
         # PullPush API kullanılıyor (Pushshift halefi) — ücretsiz, API key gerektirmez
         # Azure IP bloğu yok, tam yorum derinliği mevcut
         'subreddits':     ['cybersecurity', 'netsec'],
+        # query artık fetch'te kullanılmıyor — subreddit filtresi yeterli
         'query':          'cybersecurity vulnerability exploit malware breach',
-        'size':           30,      # Her subreddit için çekilecek max post sayısı (artırıldı)
-        'min_upvotes':    2,       # Minimum upvote — genişletildi (önceki: 3)
-        'hours_back':     48,      # Son kaç saatin postları alınsın
-        'top_n':          5,       # Ayrı havuzdan eklenecek max Reddit postu (önceki: 3)
+        'size':           30,      # Her subreddit için çekilecek max post sayısı
+        'min_upvotes':    1,       # Minimum upvote — PullPush arşiv gecikmesi için düşük tut
+        'hours_back':     72,      # Son 72 saat (arşiv gecikmesi için 48→72)
+        'top_n':          5,       # Ayrı havuzdan eklenecek max Reddit postu
         'fetch_comments': True,    # Post yorumları da çekilsin mi
         'max_comments':   5,       # Post başına max yorum sayısı
     },
