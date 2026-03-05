@@ -136,7 +136,7 @@ def fetch_social_signals(config):
     cutoff_ts      = int((datetime.now() - timedelta(hours=hours_back)).timestamp())
     yesterday      = (datetime.now() - timedelta(hours=hours_back)).strftime('%Y-%m-%d')
     results        = []   # HN + Mastodon + GitHub (max 2) → ana havuz
-    reddit_results = []   # Reddit via Tavily → ayrı havuz
+    reddit_results = []   # Reddit via PullPush → ayrı havuz
 
     print("\n" + "=" * 70)
     print("📡 SOSYAL MEDYA SİNYALLERİ ÇEKILIYOR")
@@ -155,55 +155,69 @@ def fetch_social_signals(config):
     mastodon_cutoff   = int((datetime.now() - timedelta(hours=mastodon_hours)).timestamp())
     mastodon_pool     = []
     seen_mastodon_ids = set()
+    mastodon_fallback_instances = mastodon_cfg.get(
+        'fallback_instances', ['mastodon.social', 'fosstodon.org'])
+    instances_to_try = [mastodon_instance] + [
+        i for i in mastodon_fallback_instances if i != mastodon_instance]
 
     for tag in mastodon_tags:
-        try:
-            url = (f'https://{mastodon_instance}/api/v1/timelines/tag/{tag}'
-                   f'?limit={mastodon_limit}')
-            r = requests.get(url, headers=HEADERS, timeout=(5, 15))
-            if r.status_code != 200:
-                print(f"   Mastodon #{tag}: HTTP {r.status_code}")
-                time.sleep(0.5)
-                continue
-            for s in r.json():
-                sid = s.get('id', '')
-                if sid in seen_mastodon_ids:
+        tag_fetched = False
+        for instance in instances_to_try:
+            try:
+                url = (f'https://{instance}/api/v1/timelines/tag/{tag}'
+                       f'?limit={mastodon_limit}')
+                r = requests.get(url, headers=HEADERS, timeout=(5, 15))
+                if r.status_code == 422:
+                    print(f"   Mastodon #{tag} ({instance}): HTTP 422, sonraki instance deneniyor...")
+                    time.sleep(0.5)
                     continue
-                seen_mastodon_ids.add(sid)
-                try:
-                    cdt = datetime.fromisoformat(
-                        s.get('created_at', '').replace('Z', '+00:00'))
-                    if cdt.timestamp() < mastodon_cutoff:
+                if r.status_code != 200:
+                    print(f"   Mastodon #{tag} ({instance}): HTTP {r.status_code}")
+                    time.sleep(0.5)
+                    continue
+                for s in r.json():
+                    sid = s.get('id', '')
+                    if sid in seen_mastodon_ids:
                         continue
-                except Exception:
-                    pass
-                favs    = s.get('favourites_count', 0)
-                reblogs = s.get('reblogs_count', 0)
-                replies = s.get('replies_count', 0)
-                eng     = favs + reblogs * 2 + replies
-                if eng < mastodon_min_eng:
-                    continue
-                # HTML içerikten düz metin çıkar
-                raw_text = BeautifulSoup(s.get('content', ''), 'html.parser')\
-                               .get_text(' ', strip=True)
-                raw_text = re.sub(r'https?://\S+', '', raw_text).strip()
-                raw_text = ' '.join(raw_text.split())
-                if len(raw_text) < 20:
-                    continue
-                mastodon_pool.append({
-                    'platform':   'mastodon',
-                    'source':     'Mastodon',
-                    'title':      raw_text[:200],
-                    'link':       s.get('url', '#'),
-                    'score':      eng,
-                    'comments':   replies,
-                    'favourites': favs,
-                    'reblogs':    reblogs,
-                })
-            print(f"   Mastodon #{tag}: {mastodon_limit} post tarandı")
-            time.sleep(0.5)
-        except Exception as e:
-            print(f"   Mastodon #{tag} hatasi: {e}")
+                    seen_mastodon_ids.add(sid)
+                    try:
+                        cdt = datetime.fromisoformat(
+                            s.get('created_at', '').replace('Z', '+00:00'))
+                        if cdt.timestamp() < mastodon_cutoff:
+                            continue
+                    except Exception:
+                        pass
+                    favs    = s.get('favourites_count', 0)
+                    reblogs = s.get('reblogs_count', 0)
+                    replies = s.get('replies_count', 0)
+                    eng     = favs + reblogs * 2 + replies
+                    if eng < mastodon_min_eng:
+                        continue
+                    # HTML içerikten düz metin çıkar
+                    raw_text = BeautifulSoup(s.get('content', ''), 'html.parser')\
+                                   .get_text(' ', strip=True)
+                    raw_text = re.sub(r'https?://\S+', '', raw_text).strip()
+                    raw_text = ' '.join(raw_text.split())
+                    if len(raw_text) < 20:
+                        continue
+                    mastodon_pool.append({
+                        'platform':   'mastodon',
+                        'source':     'Mastodon',
+                        'title':      raw_text[:200],
+                        'link':       s.get('url', '#'),
+                        'score':      eng,
+                        'comments':   replies,
+                        'favourites': favs,
+                        'reblogs':    reblogs,
+                    })
+                print(f"   Mastodon #{tag} ({instance}): {mastodon_limit} post tarandı")
+                tag_fetched = True
+                time.sleep(0.5)
+                break
+            except Exception as e:
+                print(f"   Mastodon #{tag} ({instance}) hatasi: {e}")
+        if not tag_fetched:
+            print(f"   Mastodon #{tag}: Tüm instancelar başarısız")
 
     mastodon_pool.sort(key=lambda x: x['score'], reverse=True)
     results.extend(mastodon_pool[:mastodon_top_n])
@@ -220,7 +234,7 @@ def fetch_social_signals(config):
     comment_weight = hn_cfg.get('comment_weight', 3)
     try:
         hn_url = (
-            "https://hn.algolia.com/api/v1/search"
+            "https://hn.algolia.com/api/v1/search_by_date"
             "?query=security+cybersecurity+vulnerability+malware+breach"
             "&tags=story"
             f"&numericFilters=points>={min_points},created_at_i>{cutoff_ts}"
@@ -307,74 +321,96 @@ def fetch_social_signals(config):
     except Exception as e:
         print(f"   GitHub Advisories hatasi: {e}")
 
-    # ── Reddit (Tavily arama motoru üzerinden) ──────────────────────────────
-    # Reddit public API, GitHub Actions (Azure) IP'lerini blokluyor.
-    # Tavily ile include_domains=['reddit.com'] filtresi + URL doğrulaması.
-    # Engagement verisi yok — Tavily relevance skoru (0-1) kullanılır.
+    # ── Reddit (PullPush API — Pushshift halefi) ────────────────────────────
+    # PullPush: ücretsiz, API key gerektirmez, Azure IP bloğu yok.
+    # Tam post içeriği + yorum derinliği mevcut.
     # Kendi havuzunda tutulur (main_results sıralamasını etkilemez).
-    tavily_key = os.getenv('TAVILY_API_KEY', '')
-    if tavily_key:
-        reddit_cfg     = config.get('reddit', {})
-        reddit_subs    = reddit_cfg.get('subreddits', ['cybersecurity', 'netsec'])
-        reddit_query   = reddit_cfg.get('query',
-                            'cybersecurity vulnerability exploit malware breach')
-        reddit_max     = reddit_cfg.get('max_results', 8)
-        reddit_min_sc  = reddit_cfg.get('min_score', 0.3)
-        reddit_top_n   = reddit_cfg.get('top_n', 3)
-        try:
-            from tavily import TavilyClient
-            tc       = TavilyClient(api_key=tavily_key)
-            response = tc.search(
-                query           = reddit_query,
-                include_domains = ['reddit.com'],
-                time_range      = 'week',
-                max_results     = reddit_max,
-                search_depth    = 'basic',
-                topic           = 'general',
-            )
-            found = 0
-            for item in response.get('results', []):
-                url = item.get('url', '')
-                # Sadece hedef subreddit postları (yorumlar dahil)
-                if not any(f'/r/{sub}/' in url.lower() for sub in reddit_subs):
+    reddit_cfg      = config.get('reddit', {})
+    reddit_subs     = reddit_cfg.get('subreddits', ['cybersecurity', 'netsec'])
+    reddit_query    = reddit_cfg.get('query',
+                        'cybersecurity vulnerability exploit malware breach')
+    reddit_size     = reddit_cfg.get('size', 25)
+    reddit_min_ups  = reddit_cfg.get('min_upvotes', 3)
+    reddit_top_n    = reddit_cfg.get('top_n', 3)
+    reddit_hours    = reddit_cfg.get('hours_back', 48)
+    fetch_comments  = reddit_cfg.get('fetch_comments', True)
+    max_comments    = reddit_cfg.get('max_comments', 5)
+    pp_cutoff       = int(time.time()) - reddit_hours * 3600
+    pullpush_base   = 'https://api.pullpush.io/reddit/search/submission/'
+    try:
+        pp_pool = []
+        for sub in reddit_subs:
+            params = {
+                'q':          reddit_query,
+                'subreddit':  sub,
+                'size':       reddit_size,
+                'sort':       'desc',
+                'sort_type':  'score',
+                'after':      pp_cutoff,
+            }
+            r = requests.get(pullpush_base, params=params,
+                             headers=HEADERS, timeout=(5, 15))
+            if r.status_code != 200:
+                print(f"   Reddit/PullPush r/{sub}: HTTP {r.status_code}")
+                time.sleep(0.5)
+                continue
+            data = r.json().get('data', [])
+            sub_found = 0
+            for post in data:
+                score = post.get('score', 0)
+                if score < reddit_min_ups:
                     continue
-                tscore = item.get('score', 0)
-                if tscore < reddit_min_sc:
+                post_id = post.get('id', '')
+                title   = post.get('title', '').strip()
+                if not title or not post_id:
                     continue
-                sub = next(
-                    (s for s in reddit_subs if f'/r/{s}/' in url.lower()),
-                    'reddit')
-                # Reddit sayfa başlıklarından ": r/sub" sonekini temizle
-                title = item.get('title', '')
-                for s in reddit_subs:
-                    title = re.sub(rf'\s*:\s*r/{s}$', '', title, flags=re.IGNORECASE)
-                title = title.strip()
-                if not title:
+                permalink = post.get('permalink', '')
+                url = f"https://www.reddit.com{permalink}" if permalink else ''
+                if not url:
                     continue
-                reddit_results.append({
+                # Opsiyonel: yorumları çek
+                top_comments = []
+                if fetch_comments and post.get('num_comments', 0) > 0:
+                    try:
+                        cr = requests.get(
+                            'https://api.pullpush.io/reddit/search/comment/',
+                            params={'link_id': post_id, 'size': max_comments},
+                            headers=HEADERS, timeout=(5, 10)
+                        )
+                        if cr.status_code == 200:
+                            for c in cr.json().get('data', [])[:max_comments]:
+                                body = c.get('body', '').strip()
+                                if body and len(body) > 15 and body not in ('[deleted]', '[removed]'):
+                                    top_comments.append(body)
+                        time.sleep(0.3)   # PullPush rate limit koruması
+                    except Exception:
+                        pass
+                pp_pool.append({
                     'platform':     'reddit',
                     'source':       f'Reddit: r/{sub}',
                     'title':        title,
                     'link':         url,
-                    'score':        tscore,
-                    'comments':     0,
-                    'tavily_score': tscore,
+                    'score':        score,
+                    'comments':     post.get('num_comments', 0),
+                    'full_text':    (post.get('selftext') or '')[:300],
+                    'top_comments': top_comments,
+                    'subreddit':    sub,
                 })
-                found += 1
-            reddit_results.sort(key=lambda x: x.get('tavily_score', 0), reverse=True)
-            top_reddit = reddit_results[:reddit_top_n]
-            print(f"   Reddit (Tavily): {found} nitelikli post → "
-                  f"en iyi {len(top_reddit)} eklendi")
-        except Exception as e:
-            top_reddit = []
-            print(f"   Reddit/Tavily hatasi: {e}")
-    else:
+                sub_found += 1
+            print(f"   Reddit/PullPush r/{sub}: {sub_found} nitelikli post")
+            time.sleep(0.5)   # Subreddit'ler arası rate limit koruması
+        pp_pool.sort(key=lambda x: x.get('score', 0), reverse=True)
+        reddit_results.extend(pp_pool)
+        top_reddit = pp_pool[:reddit_top_n]
+        print(f"   Reddit (PullPush): toplam {len(pp_pool)} post → "
+              f"en iyi {len(top_reddit)} eklendi")
+    except Exception as e:
         top_reddit = []
-        print("   Reddit: TAVILY_API_KEY yok, atlanıyor")
+        print(f"   Reddit/PullPush hatasi: {e}")
 
-    # HN + Mastodon + GitHub (max 2): karma puana göre top 5
+    # HN + Mastodon + GitHub (max 1): karma puana göre top 7
     results.sort(key=lambda x: x.get('score', 0), reverse=True)
-    top_main = results[:5]
+    top_main = results[:7]
 
     # Reddit sonuçları her zaman sona eklenir (ayrı havuz)
     final = top_main + top_reddit
@@ -1027,6 +1063,7 @@ class HaberSistemi:
         self._translate_social_signals()
         html = self._inject_social_box(html)
         html = self._fix_source_dates(html, txt_content)
+        html = self._fix_html_structure(html)   # </style> / report-header kontrolü
 
         html_index = self._add_archive_links(html, is_archive=False)
         html_archive = self._add_archive_links(html, is_archive=True)
@@ -1158,13 +1195,14 @@ HER PARAGRAF İÇİN ÇIKTI FORMATI (SADECE BU FORMATTA, BAŞKA HİÇBİR ŞEY Y
 
 <div class="news-item" id="haber-N">
     <div class="news-title"><b>Haberin Başlığı</b></div>
-    <p class="news-content">100-130 kelime paragraf özet, resmi Türkçe.</p>
+    <p class="news-content">MİNİMUM 100 kelime paragraf özet, resmi Türkçe. 5N1K sorularını kapsa, teknik detaylar ekle.</p>
     <p class="source"><b>(KAYNAK, AÇIK - <a href="LINK" target="_blank">domain.com</a>, TARİH)</b></p>
 </div>
 
 KURALLAR:
 - SADECE eksik paragrafları yaz, CSS/başlık/açıklama YAZMA
-- Her paragraf 100-130 kelime
+- Her paragraf MİNİMUM 100 kelime (kesinlikle daha kısa yazma, 100'den az kelime HATALIDIIR)
+- İdeal uzunluk: 110-150 kelime; 5N1K sorularını (kim/ne/nerede/ne zaman/nasıl/neden) kapsa
 - Resmi Türkçe (-mıştır, -edilmiştir)
 - Sıra: haber-{missing_ids[0]}'den haber-{missing_ids[-1]}'e
 - Kod bloğu (```) KULLANMA, direkt HTML yaz
@@ -1331,9 +1369,11 @@ KURALLAR:
                 if reblogs:
                     engagement += f"  |  ↺{reblogs}"
             elif platform == 'reddit':
-                # Tavily üzerinden geldiği için engagement verisi yok
-                tscore     = post.get('tavily_score', 0)
-                engagement = f"Alaka: %{round(tscore * 100)}" if tscore else "Reddit"
+                ups = post.get('score', 0)
+                num_c = post.get('comments', 0)
+                engagement = f"▲{ups}"
+                if num_c:
+                    engagement += f"  |  {num_c} yorum"
             else:
                 # hackernews
                 engagement = f"{score} puan"
@@ -1374,6 +1414,79 @@ KURALLAR:
                 body.append(_BS(box_html, 'html.parser'))
 
         return str(soup)
+
+    def _fix_html_structure(self, html):
+        """Gemini çıktısındaki yapısal HTML hatalarını otomatik düzelt.
+
+        Bilinen sorun 1 — </style> eksik:
+            Gemini bazen CSS bloğunu kapatmadan doğrudan HTML içeriğine geçer.
+            Tarayıcı tüm içeriği CSS olarak yorumlar → boş sayfa.
+
+        Bilinen sorun 2 — report-header div eksik:
+            Gemini bazen mavi başlık bölümünü atlar.
+        """
+        now = datetime.now()
+        tarih = now.strftime('%d.%m.%Y')
+
+        # ── Sorun 1: </style> etiketi eksik ────────────────────────────────
+        # Kontrol: <body> etiketi hiç yok veya <style> bloğu kapatılmamış
+        style_close_pos = html.find('</style>')
+        body_pos        = html.find('<body>')
+        first_div_pos   = html.find('<div')
+
+        style_missing = (
+            style_close_pos == -1 or           # </style> hiç yok
+            (body_pos != -1 and body_pos < style_close_pos) or  # <body> </style>'dan önce geliyor (anlamsız)
+            (body_pos == -1 and first_div_pos != -1 and
+             first_div_pos < style_close_pos)  # div'ler </style>'dan önce
+        )
+
+        if style_missing:
+            print("   ⚠️  HTML yapı hatası: </style> eksik veya yanlış konumda — otomatik düzeltiliyor")
+            # CSS yorumunu veya ilk HTML etiketini bul, öncesine kapanış ekle
+            insert_marker = None
+            for marker in [
+                '        /* YÖNETİCİ ÖZETİ */',
+                '        <div class="executive-summary">',
+                '        <div class="container">',
+                '<div class="executive-summary">',
+                '<div class="container">',
+            ]:
+                pos = html.find(marker)
+                if pos != -1:
+                    insert_marker = (pos, marker)
+                    break
+
+            if insert_marker:
+                pos, marker = insert_marker
+                # CSS bloğu yorumundan önceki gereksiz boşluğu temizle, kapanış ekle
+                before = html[:pos].rstrip()
+                after  = html[pos:]
+                # Marker CSS yorumuysa sil, HTML etiketiyse koru
+                if marker.startswith('/*'):
+                    after = after[len(marker):]
+                html = before + '\n    </style>\n</head>\n<body>\n<div class="container">\n' + after.lstrip()
+            else:
+                print("   ⚠️  Ekleme noktası bulunamadı, yapı düzeltilemiyor")
+
+        # Bozuk kapanış etiketlerini temizle
+        for bad, good in [
+            ('</html></style></head></html>', '</div>\n</body>\n</html>'),
+            ('</body>\n</div>\n</body>\n</html>', '</div>\n</body>\n</html>'),
+        ]:
+            html = html.replace(bad, good)
+
+        # ── Sorun 2: report-header eksik ───────────────────────────────────
+        if '<div class="report-header">' not in html:
+            print("   ⚠️  HTML yapı hatası: report-header eksik — otomatik ekleniyor")
+            header_html = f'<div class="report-header"><h1>{tarih} Siber Güvenlik Haber Özetleri</h1></div>\n'
+            # <div class="container"> sonrasına ekle
+            for anchor in ['<div class="container">\n', '<div class="container">']:
+                if anchor in html:
+                    html = html.replace(anchor, anchor + header_html, 1)
+                    break
+
+        return html
 
     def _fix_source_dates(self, html, txt_content):
         """Gemini'nin yazdığı hatalı tarihleri ham TXT'deki gerçek tarihlerle düzelt"""
