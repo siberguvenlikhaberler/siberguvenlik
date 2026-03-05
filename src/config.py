@@ -52,17 +52,12 @@ SOCIAL_SIGNAL_CONFIG = {
         'top_n':   1,          # Ana havuza eklenecek max GitHub advisory (önceki: 2)
     },
     'reddit': {
-        # PullPush API kullanılıyor (Pushshift halefi) — ücretsiz, API key gerektirmez
-        # Azure IP bloğu yok, tam yorum derinliği mevcut
-        'subreddits':     ['cybersecurity', 'netsec'],
-        # query artık fetch'te kullanılmıyor — subreddit filtresi yeterli
-        'query':          'cybersecurity vulnerability exploit malware breach',
-        'size':           30,      # Her subreddit için çekilecek max post sayısı
-        'min_upvotes':    1,       # Minimum upvote — PullPush arşiv gecikmesi için düşük tut
-        'hours_back':     72,      # Son 72 saat (arşiv gecikmesi için 48→72)
-        'top_n':          5,       # Ayrı havuzdan eklenecek max Reddit postu
-        'fetch_comments': True,    # Post yorumları da çekilsin mi
-        'max_comments':   5,       # Post başına max yorum sayısı
+        # RSS hot feed — API key gerektirmez, güncel veri, Azure/GH Actions uyumlu
+        # PullPush arşivi ~10 ay geride kaldığı için RSS'e geçildi
+        'subreddits': ['cybersecurity', 'netsec'],
+        'size':       25,   # RSS limit (her subreddit için)
+        'hours_back': 48,   # Son 48 saatin postları
+        'top_n':      5,    # Sosyal sinyal kutusuna eklenecek max Reddit postu
     },
 }
 

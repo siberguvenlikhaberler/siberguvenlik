@@ -354,91 +354,78 @@ def fetch_social_signals(config):
     reddit_hours    = reddit_cfg.get('hours_back', 48)
     fetch_comments  = reddit_cfg.get('fetch_comments', True)
     max_comments    = reddit_cfg.get('max_comments', 5)
-    # PullPush notu: sort_type=score yeni postlarda düşük skor döndürür (arşiv gecikmesi).
-    # Çözüm: sort_type=created_utc → taze postları çek, yerel sıralama yap.
-    # q filtresi de bazen 0 sonuç döndürür → subreddit adı yeterli filtre sağlar.
-    pp_cutoff       = int(time.time()) - reddit_hours * 3600
-    pullpush_base   = 'https://api.pullpush.io/reddit/search/submission/'
+    # ── Reddit (Resmi RSS — Hot Feed) ──────────────────────────────────────────
+    # PullPush arşivi ~10 ay geride kaldığı için kullanılamaz hale geldi.
+    # Reddit'in /r/{sub}/hot.rss endpoint'i API key gerektirmez ve güncel veri döndürür.
+    # JSON endpoint Azure/GH Actions'tan 403 alıyor; RSS daha geniş erişime sahip.
+    _ATOM = 'http://www.w3.org/2005/Atom'
+    # Düşük kalite post filtresi (kariyer/moderasyon/haftalık thread vb.)
+    _REDDIT_SKIP = ('mentorship monday', 'career thread', 'hiring thread',
+                    'monthly discussion', 'weekly thread', 'question thread',
+                    'what are you working', 'show hn', '[hiring]', '[who is hiring]',
+                    'who wants to be hired', 'megathread', 'ama:')
+    rss_cutoff_dt = datetime.now() - timedelta(hours=reddit_hours)
+
     try:
-        pp_pool = []
+        rss_pool = []
+        seen_rss_links = set()
         for sub in reddit_subs:
-            params = {
-                'subreddit':  sub,
-                'size':       reddit_size,
-                'sort':       'desc',
-                'sort_type':  'created_utc',   # score yerine tarih — taze post alır
-                'after':      pp_cutoff,
-            }
-            r = requests.get(pullpush_base, params=params,
-                             headers=HEADERS, timeout=(5, 15))
+            rss_url = f'https://www.reddit.com/r/{sub}/hot.rss?limit={reddit_size}'
+            r = requests.get(rss_url, headers=HEADERS, timeout=(5, 15))
             if r.status_code != 200:
-                print(f"   Reddit/PullPush r/{sub}: HTTP {r.status_code}")
-                # 2. deneme: sorgu olmadan dene
-                time.sleep(1)
-                r2 = requests.get(pullpush_base,
-                                  params={'subreddit': sub, 'size': reddit_size,
-                                          'sort': 'desc', 'sort_type': 'created_utc'},
-                                  headers=HEADERS, timeout=(5, 15))
-                if r2.status_code != 200:
-                    time.sleep(0.5)
-                    continue
-                r = r2
-            data = r.json().get('data', [])
+                print(f"   Reddit RSS r/{sub}: HTTP {r.status_code}")
+                time.sleep(0.5)
+                continue
+            root = ET.fromstring(r.content)
             sub_found = 0
-            for post in data:
-                score = post.get('score', 0) or 0
-                # Çok düşük skorlu postları atla (min_upvotes=1 ile açık filtre)
-                if score < reddit_min_ups:
+            for entry in root.findall(f'{{{_ATOM}}}entry'):
+                # Başlık
+                title_el = entry.find(f'{{{_ATOM}}}title')
+                title = (title_el.text or '').strip() if title_el is not None else ''
+                if not title:
                     continue
-                post_id = post.get('id', '')
-                title   = post.get('title', '').strip()
-                if not title or not post_id:
+                # Düşük kalite filtresi
+                if any(kw in title.lower() for kw in _REDDIT_SKIP):
                     continue
-                permalink = post.get('permalink', '')
-                url = f"https://www.reddit.com{permalink}" if permalink else ''
-                if not url:
+                # Link
+                link_el = entry.find(f'{{{_ATOM}}}link')
+                url = link_el.get('href', '') if link_el is not None else ''
+                if not url or url in seen_rss_links:
                     continue
-                # Opsiyonel: yorumları çek
-                top_comments = []
-                if fetch_comments and post.get('num_comments', 0) > 0:
+                # Tarih filtresi
+                updated_el = entry.find(f'{{{_ATOM}}}updated')
+                if updated_el is not None and updated_el.text:
                     try:
-                        cr = requests.get(
-                            'https://api.pullpush.io/reddit/search/comment/',
-                            params={'link_id': post_id, 'size': max_comments},
-                            headers=HEADERS, timeout=(5, 10)
-                        )
-                        if cr.status_code == 200:
-                            for c in cr.json().get('data', [])[:max_comments]:
-                                body = c.get('body', '').strip()
-                                if body and len(body) > 15 and body not in ('[deleted]', '[removed]'):
-                                    top_comments.append(body)
-                        time.sleep(0.3)   # PullPush rate limit koruması
+                        post_dt = datetime.fromisoformat(
+                            updated_el.text.replace('Z', '+00:00')).replace(tzinfo=None)
+                        if post_dt < rss_cutoff_dt:
+                            continue
                     except Exception:
-                        pass
-                # karma puan: upvote + yorum ağırlığı (HN ile uyumlu)
-                karma = score + post.get('num_comments', 0)
-                pp_pool.append({
+                        pass   # Tarih parse edilemezse geç
+                seen_rss_links.add(url)
+                # RSS'te upvote bilgisi yok; sıra indeksini ters puan olarak kullan
+                # (hot feed zaten engagement'a göre sıralı)
+                rss_pool.append({
                     'platform':     'reddit',
                     'source':       f'Reddit: r/{sub}',
                     'title':        title,
                     'link':         url,
-                    'score':        karma,
-                    'comments':     post.get('num_comments', 0),
-                    'full_text':    (post.get('selftext') or '')[:300],
-                    'top_comments': top_comments,
+                    'score':        reddit_size - sub_found,   # pozisyon puanı
+                    'comments':     0,
+                    'full_text':    '',
+                    'top_comments': [],
                     'subreddit':    sub,
                 })
                 sub_found += 1
-            print(f"   Reddit/PullPush r/{sub}: {sub_found} nitelikli post")
-            time.sleep(0.5)   # Subreddit'ler arası rate limit koruması
-        pp_pool.sort(key=lambda x: x.get('score', 0), reverse=True)
-        reddit_results.extend(pp_pool)
-        top_reddit = pp_pool[:reddit_top_n]
-        print(f"   Reddit (PullPush): toplam {len(pp_pool)} post → "
+            print(f"   Reddit RSS r/{sub}: {sub_found} nitelikli post")
+            time.sleep(0.5)
+        reddit_results.extend(rss_pool)
+        top_reddit = rss_pool[:reddit_top_n]
+        print(f"   Reddit (RSS): toplam {len(rss_pool)} post → "
               f"en iyi {len(top_reddit)} eklendi")
     except Exception as e:
         top_reddit = []
-        print(f"   Reddit/PullPush hatasi: {e}")
+        print(f"   Reddit RSS hatası: {e}")
 
     # HN + Mastodon + GitHub (max 1): karma puana göre top 7
     results.sort(key=lambda x: x.get('score', 0), reverse=True)
