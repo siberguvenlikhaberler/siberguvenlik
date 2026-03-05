@@ -34,29 +34,34 @@ SOCIAL_SIGNAL_CONFIG = {
     'hours_back': 24,
     'mastodon': {
         'instance':  'infosec.exchange',
+        'fallback_instances': ['mastodon.social', 'fosstodon.org'],
         'hashtags':  ['cybersecurity', 'infosec', 'vulnerability'],
-        'limit':     20,       # Her hashtag için çekilecek post sayısı
-        'min_score': 2,        # Minimum engagement (favori + retweet*2 + reply)
-        'top_n':     3,        # Ana havuza eklenecek max Mastodon postu
+        'limit':     30,       # Her hashtag için çekilecek post sayısı (artırıldı)
+        'min_score': 1,        # Minimum engagement — genişletildi (önceki: 2)
+        'top_n':     5,        # Ana havuza eklenecek max Mastodon postu (önceki: 3)
         'hours_back': 48,      # Mastodon için zaman penceresi (son 48 saat)
     },
     'hackernews': {
-        'min_points':    15,   # search endpoint ile daha güvenilir
-        'limit':         25,   # Daha fazla çek, combined score ile sırala
+        'min_points':    5,    # Daha geniş filtre — genişletildi (önceki: 10)
+        'limit':         30,   # Daha fazla çek, combined score ile sırala (önceki: 25)
         'comment_weight': 3,   # combined_score = points + comments * 3
     },
     'github_advisories': {
         'min_severity': ['critical', 'high', 'medium'],
         'limit':  10,          # Çekilecek max advisory sayısı
-        'top_n':   2,          # Ana havuza eklenecek max GitHub advisory
+        'top_n':   1,          # Ana havuza eklenecek max GitHub advisory (önceki: 2)
     },
     'reddit': {
-        # GitHub Actions (Azure) IP'leri Reddit tarafından bloklandığı için Tavily kullanılır
-        'subreddits':   ['cybersecurity', 'netsec'],
-        'query':        'cybersecurity vulnerability exploit malware breach',
-        'max_results':  8,     # Tavily'den çekilecek max sonuç
-        'min_score':    0.3,   # Minimum Tavily relevance eşiği
-        'top_n':        3,     # Ayrı havuzdan eklenecek max Reddit postu
+        # PullPush API kullanılıyor (Pushshift halefi) — ücretsiz, API key gerektirmez
+        # Azure IP bloğu yok, tam yorum derinliği mevcut
+        'subreddits':     ['cybersecurity', 'netsec'],
+        'query':          'cybersecurity vulnerability exploit malware breach',
+        'size':           30,      # Her subreddit için çekilecek max post sayısı (artırıldı)
+        'min_upvotes':    2,       # Minimum upvote — genişletildi (önceki: 3)
+        'hours_back':     48,      # Son kaç saatin postları alınsın
+        'top_n':          5,       # Ayrı havuzdan eklenecek max Reddit postu (önceki: 3)
+        'fetch_comments': True,    # Post yorumları da çekilsin mi
+        'max_comments':   5,       # Post başına max yorum sayısı
     },
 }
 
@@ -123,7 +128,7 @@ def get_claude_prompt(news_content, recent_events=''):
     now = datetime.now()
     return f"""Sen profesyonel siber güvenlik analistisin.
 
-GÖREV: 130 haberi analiz et → En önemli 5'ini seç → Kalanları önem sırasına koy → HTML raporu oluştur.
+GÖREV: 130 haberi analiz et → En önemli 10'unu seç (10 yoksa olduğu kadar) → Kalanları önem sırasına koy → HTML raporu oluştur.
 
 🚨 BAŞLIK KURALI — TÜM HABER BAŞLIKLARI İÇİN ZORUNLU:
 ⛔ YASAK: "...Etkilenmesi", "...Açıklanması", "...Bulunması" → mastar/isim-fiil KULLANMA
@@ -137,16 +142,24 @@ Aşağıdaki türleri ÇIKAR (raporda gösterme):
 ❌ İnceleme yazıları, röportajlar, genel tavsiye makaleleri
 ✅ SADECE aktif tehdit, açık, saldırı, veri ihlali, kritik güncelleme haberlerini AL
 
-🚨 KRİTİK AŞAMA 2 - KESINLIKLE 5 HABER SEÇ (NE FAZLA, NE AZ):
-Bu 7 kritere göre kesinlikle 5 haberi seç (ZORUNLU - DAHA AZ VEYA FAZLA OLMASIN):
+🚨 KRİTİK AŞAMA 2 - EN ÖNEMLİ 10 HABERİ SEÇ (yoksa olduğu kadar, max 10):
+Aşağıdaki kriterlere göre önem sırasına göre en önemli 10 haberi seç:
 
-1️⃣ **KRİTİK ALTYAPI SALDIRISI** 
+🔴 **[GEÇİCİ ÖNCELİK — AKTİF ÇATIŞMA DÖNEMİ]** İran-İsrail çatışması kapsamındaki SİBER haberler diğer tüm kategorilere göre ÜST ÖNCELIK alır ve ÖNEMLİ GELİŞMELER kutusunda EN ÜSTE yerleştirilir:
+   - İran veya İsrail kaynaklı siber saldırı / siber operasyon haberleri
+   - İki ülke arasındaki siber casusluk, sabotaj, hack & leak haberleri
+   - Çatışmayla bağlantılı kritik altyapı saldırıları (enerji, iletişim, finans)
+   - İlgili tehdit aktörleri: Charming Kitten, APT33, APT34, OilRig, Tortoiseshell, Unit 8200
+   - Anahtar kelimeler: "Iran cyber", "Israel cyber", "IDF cyber", "IRGC", "Gaza", "Hamas cyber", "Hezbollah cyber"
+   - Bu kategoride haber varsa, diğer kategorilerden haber çıkarılsa bile bu haber listede kalır.
+
+1️⃣ **KRİTİK ALTYAPI SALDIRISI**
    - Enerji, sağlık, finans, hükümet sektörü
    - "Critical infrastructure", "power grid", "hospital systems"
    - APT grupları + devlet destekli saldırılar
 
 2️⃣ **5 MİLYON+ KULLANICI VERİ İHLALİ**
-   - "5 million", "10 million", "data breach" 
+   - "5 million", "10 million", "data breach"
    - Büyük şirketler (Microsoft, Google, Amazon, Apple)
    - "Personal information", "credit card", "SSN"
 
@@ -170,6 +183,24 @@ Bu 7 kritere göre kesinlikle 5 haberi seç (ZORUNLU - DAHA AZ VEYA FAZLA OLMASI
 6️⃣ **YASAL DÜZENLEMELER**
    - Siber güvenlikle ilgili yeni çıkan yasalar, yasal düzenlemeler
 
+7️⃣ **KRİTİK CVE / YÜKSEK CVSS SKORU**
+   - CVSS >= 9.0 olan kritik güvenlik açıkları
+   - Aktif olarak istismar edilen zafiyetler
+   - Yaygın yazılım/donanımı (Windows, Linux, Cisco, Fortinet vb.) etkileyen açıklar
+
+8️⃣ **BÜYÜK RANSOMWARE / FİDYE SALDIRISI**
+   - Kritik hizmetleri durduran fidye saldırıları
+   - Büyük kuruluşları etkileyen ransomware grupları (LockBit, BlackCat, Cl0p vb.)
+
+9️⃣ **TEDARİK ZİNCİRİ / SUPPLY CHAIN SALDIRISI**
+   - Yazılım tedarik zinciri saldırıları
+   - Açık kaynak paketlerine enjeksiyon, geliştiricileri hedef alma
+
+🔟 **DİĞER ÖNEMLİ GELİŞMELER** (yukarıdakilerde yer almayan en etkili haber)
+   - Geniş çaplı phishing / sosyal mühendislik kampanyaları
+   - Yeni zararlı yazılım ailesi / botnet keşfi
+   - Önemli güvenlik araştırması veya ifşaatı
+
 🚨 AŞAMA 3 - YAPILANDIRILMIŞ RAPOR OLUŞTUR:
 
 RAPOR YAPISI (SIRAYLA):
@@ -178,27 +209,28 @@ RAPOR YAPISI (SIRAYLA):
 
 2️⃣ **YÖNETİCİ ÖZETİ BAŞLIĞI**
 
-3️⃣ **"ÖNEMLİ GELİŞMELER" KUTUSU**: 
-   - En kritik 5 haberin TAM CÜMLELİK özeti
+3️⃣ **"ÖNEMLİ GELİŞMELER" KUTUSU**:
+   - En kritik 10 haberin TAM CÜMLELİK özeti (10 yoksa olduğu kadar, minimum 1)
    - Her biri sayfa içi link: <a href="#haber-N">N. CVE-2024-1234 açığı Microsoft sunucularında kritik güvenlik riski oluşturmaktadır.</a>
    - ZORUNLU: Tam cümle (özne + yüklem + nesne) + nokta ile bitiş
 
 ⚠️ Ham veride [S1]-[S5] ile başlayan satırlar SOSYAL SİNYAL referansıdır.
    Bunları ASLA haber olarak sayma, numaralandırma veya paragraf yazma. Tamamen yoksay.
 
-4️⃣ **GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU**:
-   - 6. haber → id="haber-6", 7. haber → id="haber-7" vs.
+4️⃣ **GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU** (önemli 10 haber kutusuna girmeyenler):
+   - Önemli 10 haber seçildiyse: 11. haber → id="haber-11", 12. haber → id="haber-12" vs.
    - Her biri TAM CÜMLELİK özet + sayfa içi link
    - ZORUNLU: Tam cümle yapısı (özne + yüklem + nesne) + nokta ile bitiş
 
 5️⃣ **HABER PARAGRAFLARI (SIRALAMA ÖNEMLİ!)**:
-   - ÖNCE: En önemli 5 haberin 100-130 kelime paragraf özetleri (id="haber-1" dan haber-5'e)
-   - SONRA: Geri kalan TÜM haberlerin paragraf özetleri (id="haber-6"dan son habere kadar)
+   - ÖNCE: En önemli 10 haberin paragraf özetleri (id="haber-1" dan haber-10'a)
+   - SONRA: Geri kalan TÜM haberlerin paragraf özetleri (id="haber-11"den son habere kadar)
    - ⚠️ YARIDA BIRAKMAK YASAK — tabloda kaç haber varsa HEPSININ paragraf özeti olacak
    - Her news-item için news-content paragrafı ZORUNLUDUR, atlanamaz
+   - ⚠️ HER PARAGRAF MİNİMUM 100 KELİME OLMALIDIR (daha kısa yazarsan HATA sayılır!)
 
 KRİTİK KURALLALAR:
-✅ KESINLIKLE 5 ÖNEMLI HABER SEÇ (daha az veya fazla değil, tamamen 5!)
+✅ ÖNEMLİ GELİŞMELER KUTUSUNA MÜMKÜNSE 10 HABER SEÇ (haber yoksa olduğu kadar, max 10)
 ✅ Tablodaki haber sayısı = paragraf sayısı (bire bir eşit olmalı)
 ✅ Önemli gelişmelerdeki haberler tekrar etmesin tabloda
 ✅ ID numaraları: 1'den son habere kadar sürekli
@@ -282,7 +314,13 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         }}
         .important-summary {{
             display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
+        }}
+        @media (max-width: 640px) {{
+            .important-summary {{
+                grid-template-columns: 1fr;
+            }}
         }}
         .important-item {{
             background: rgba(255,255,255,0.7);
@@ -500,43 +538,48 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         <div class="executive-summary">
             <h2>Yönetici Özeti</h2>
             
-            <!-- ÖNEMLİ GELİŞMELER KUTUSU -->
+            <!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
             <div class="important-news">
                 <h2>Önemli Gelişmeler</h2>
                 <div class="important-summary">
-                    [EN ÖNEMLİ 5 HABER BURADA - HER BİRİ TAM CÜMLE:]
+                    [EN ÖNEMLİ 10 HABER BURADA (mümkünse 10) - HER BİRİ TAM CÜMLE:]
                     <div class="important-item">
                         <a href="#haber-1">1. Microsoft Exchange sunucularında CVE-2024-1234 açığı kritik güvenlik riski oluşturmaktadır.</a>
                     </div>
                     <div class="important-item">
                         <a href="#haber-2">2. LockBit 4.0 fidye yazılımı dünya genelinde sağlık kurumlarını hedef almaktadır.</a>
                     </div>
+                    <div class="important-item">
+                        <a href="#haber-3">3. ...</a>
+                    </div>
+                    [... haber-10'a kadar devam et ...]
                 </div>
             </div>
-            
-            <!-- GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU -->
+
+            <!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
             <table class="executive-table">
-                [GERİ KALAN 38 HABERİN 2 SÜTUNLU TABLOSU - TAM CÜMLE ÖRNEKLER:]
+                [GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU - TAM CÜMLE ÖRNEKLER:]
                 <tr>
-                    <td><a href="#haber-6">6. Google Chrome'da sıfır gün açığı aktif olarak istismar edilmektedir.</a></td>
-                    <td><a href="#haber-7">7. Cisco ağ cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</a></td>
+                    <td><a href="#haber-11">11. Google Chrome'da sıfır gün açığı aktif olarak istismar edilmektedir.</a></td>
+                    <td><a href="#haber-12">12. Cisco ağ cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</a></td>
                 </tr>
             </table>
         </div>
         
         <!-- HABERLER -->
         <div class="news-section">
-            [ÖNEMLİ 5 HABERİN PARAGRAF ÖZETLERİ - ÖNCE BUNLAR]
+            [ÖNEMLİ 10 HABERİN PARAGRAF ÖZETLERİ - ÖNCE BUNLAR (haber-1'den haber-10'a)]
             <div class="news-item" id="haber-1">
                 <div class="news-title"><b>Birinci Önemli Haberin Başlığı</b></div>
-                <p class="news-content">100-130 kelime paragraf özet, resmi Türkçe...</p>
+                <p class="news-content">MİNİMUM 100 kelime paragraf özet (zorunlu), resmi Türkçe. 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa. Yeterli bağlam ve teknik detay ekle.</p>
                 <p class="source"><b>(KAYNAK, AÇIK - <a href="[KAYNAK_LINK değeri]" target="_blank">[KAYNAK_DOMAIN değeri]</a>, [HABER_TARİHİ değeri])</b></p>
             </div>
-            
-            [SONRA GERİ KALAN 38 HABERİN PARAGRAF ÖZETLERİ]
-            <div class="news-item" id="haber-6">
-                <div class="news-title"><b>Altıncı Haberin Başlığı</b></div>
-                <p class="news-content">100-130 kelime paragraf özet, resmi Türkçe...</p>
+            [... haber-2'den haber-10'a kadar devam et ...]
+
+            [SONRA GERİ KALAN HABERLERİN PARAGRAF ÖZETLERİ (haber-11'den son habere)]
+            <div class="news-item" id="haber-11">
+                <div class="news-title"><b>On Birinci Haberin Başlığı</b></div>
+                <p class="news-content">MİNİMUM 100 kelime paragraf özet (zorunlu), resmi Türkçe. 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa. Yeterli bağlam ve teknik detay ekle.</p>
                 <p class="source"><b>(KAYNAK, AÇIK - <a href="[KAYNAK_LINK değeri]" target="_blank">[KAYNAK_DOMAIN değeri]</a>, [HABER_TARİHİ değeri])</b></p>
             </div>
         </div>
@@ -554,13 +597,14 @@ BAŞLIK KURALLARI:
 ✓ 7-9 kelime, her kelimenin ilk harfi büyük
 
 ÖZET PARAGRAF KURALLARI:
-✓ 100-130 kelime (MIN 100, MAX 130)
+✓ MİNİMUM 100 kelime — ZORUNLU (100'den az kelime kesinlikle kabul edilmez!)
+✓ İdeal uzunluk: 110-150 kelime aralığında yaz
 ✓ 5N1K tüm sorular cevaplansın
 ✓ Resmi Türkçe (-mıştır, -edilmiştir)
 ✓ Normal cümle yapısı (başlık değil)
 
-KRİTİK: 
-- EN ÖNEMLİ 5 HABER → Hem "Kritik Gelişmeler" kutusunda HEM de haber paragraflarının en üstünde
+KRİTİK:
+- EN ÖNEMLİ 10 HABER → Hem "Önemli Gelişmeler" kutusunda HEM de haber paragraflarının en üstünde
 - Kalan haberler → Önem sırasına göre sıralanmış
 - Her habere id="haber-N" ve sayfa içi linkler
 - Filtrelenenler (podcast/webinar/vb) raporda YOK
@@ -582,13 +626,13 @@ HAM HABERLER:
 
 ŞİMDİ SIRAYLA YAP:
 1. Filtreleme → Uygun haberleri seç (130'den ~43)
-2. KESINLIKLE 5 HABERİ SEÇ (daha az/fazla değil, tam 5!)
-   - Eğer 5 tane kritik haber bulamazsan, biraz daha düşük seviyedeki haberlerden ekle
-   - Ama TOPLAM 5 OLMASI ZORUNLU
-3. Kalanları (38 haber) önem sırasına koy
+2. ÖNEMLİ GELİŞMELER için EN FAZLA 10 HABERİ SEÇ (mümkünse 10, yoksa olduğu kadar)
+   - Yukarıdaki 10 kritere göre önceliklendir
+   - Eğer 10 tane kritik haber bulamazsan, en az kritik haber kategorisinden tamamla
+3. Kalanları önem sırasına koy (tablo için)
 4. HTML şablonunu doldur
 
 ZORUNLU:
 - Yukarıdaki şablonu AYNEN kullan
 - TÜM uygun haberleri dahil et
-- ÖNEMLİ 5 HABERİ ZORUNLU OLARAK SEÇ (eksik olmasın!)"""
+- ÖNEMLİ GELİŞMELER KUTUSUNA MÜMKÜNSE 10 HABER SEÇ (eksik bırakma!)"""
