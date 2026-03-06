@@ -1733,7 +1733,7 @@ KURALLAR:
         # ── Sorun 2: report-header eksik ───────────────────────────────────
         if '<div class="report-header">' not in html:
             print("   ⚠️  HTML yapı hatası: report-header eksik — otomatik ekleniyor")
-            header_html = f'<div class="report-header"><h1>{tarih} Siber Güvenlik Haber Özetleri</h1></div>\n'
+            header_html = f'<div class="report-header"><h1><span class="header-date">{tarih}</span> Siber Güvenlik Haber Özetleri</h1></div>\n'
             # <div class="container"> sonrasına ekle
             for anchor in ['<div class="container">\n', '<div class="container">']:
                 if anchor in html:

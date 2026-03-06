@@ -224,6 +224,7 @@ RAPOR YAPISI (SIRAYLA):
    - ⚠️ YARIDA BIRAKMAK YASAK — tabloda kaç haber varsa HEPSININ paragraf özeti olacak
    - Her news-item için news-content paragrafı ZORUNLUDUR, atlanamaz
    - ⚠️ HER PARAGRAF MİNİMUM 100 KELİME OLMALIDIR (daha kısa yazarsan HATA sayılır!)
+   - ⛔ Son cümle dahil HİÇBİR cümle "Bu olay önemini göstermektedir", "kritik önem taşımaktadır" vb. jenerik kalıp içeremez
 
 KRİTİK KURALLALAR:
 ✅ ÖNEMLİ GELİŞMELER KUTUSUNA MÜMKÜNSE 10 HABER SEÇ (haber yoksa olduğu kadar, max 10)
@@ -280,16 +281,29 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         
         /* ŞIK BAŞLIK */
         .report-header {{
-            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
-            padding: 50px 30px;
+            background: #ffffff;
+            padding: 36px 40px 30px;
             text-align: center;
-            color: white;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }}
+        .report-header::before {{
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
         }}
         .report-header h1 {{
             font-size: 26px;
             font-weight: 600;
             margin: 0;
             letter-spacing: 0.3px;
+            color: #1e293b;
+        }}
+        .header-date {{
+            color: #2563eb;
+            font-weight: 700;
         }}
         
         /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
@@ -527,7 +541,7 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
 <body>
     <div class="container">
         <div class="report-header">
-            <h1>{now.strftime('%d.%m.%Y')} Siber Güvenlik Haber Özetleri</h1>
+            <h1><span class="header-date">{now.strftime('%d.%m.%Y')}</span> Siber Güvenlik Haber Özetleri</h1>
         </div>
         
         <!-- YÖNETİCİ ÖZETİ -->
@@ -598,6 +612,17 @@ BAŞLIK KURALLARI:
 ✓ 5N1K tüm sorular cevaplansın
 ✓ Resmi Türkçe (-mıştır, -edilmiştir)
 ✓ Normal cümle yapısı (başlık değil)
+
+⛔ JENERİK SON CÜMLE YASAĞI — MUTLAK KURAL:
+Paragrafın HİÇBİR cümlesi (özellikle son cümlesi) aşağıdaki kalıplarda OLAMAZ:
+  • "Bu olay / Bu saldırı / Bu gelişme / Bu vaka / Bu durum ... önemini göstermektedir."
+  • "... kritik önem taşımaktadır."
+  • "... bir kez daha ortaya koymaktadır."
+  • "... farkındalık ihtiyacını göstermektedir."
+  • "... güvenlik açısından ne denli önemli olduğunu göstermektedir."
+  • "Bu tür saldırılar / tehditler ..." ile başlayan boş genel sonuç cümleleri
+Bunlar BOŞTUR, habere hiçbir bilgi katmaz. Paragrafın son cümlesi de somut bir
+haber detayı, teknik bulgu veya kuruma özgü etki bilgisi içermek ZORUNDADIR.
 
 KRİTİK:
 - EN ÖNEMLİ 10 HABER → Hem "Önemli Gelişmeler" kutusunda HEM de haber paragraflarının en üstünde
