@@ -168,7 +168,58 @@ def fetch_social_signals(config):
                        f'?limit={mastodon_limit}')
                 r = requests.get(url, headers=HEADERS, timeout=(5, 15))
                 if r.status_code == 422:
-                    print(f"   Mastodon #{tag} ({instance}): HTTP 422, sonraki instance deneniyor...")
+                    print(f"   Mastodon #{tag} ({instance}): HTTP 422, RSS feed deneniyor...")
+                    # API auth gerektiriyor → RSS feed fallback (/tags/{tag}.rss kimlik doğrulama istemez)
+                    try:
+                        import email.utils as _eu
+                        rss_url = f'https://{instance}/tags/{tag}.rss'
+                        rr = requests.get(rss_url, headers=HEADERS, timeout=(5, 15))
+                        if rr.status_code == 200:
+                            root = ET.fromstring(rr.content)
+                            items = root.findall('.//item')
+                            rss_added = 0
+                            for item in items:
+                                pub_date_str = item.findtext('pubDate', '')
+                                try:
+                                    ts = _eu.mktime_tz(_eu.parsedate_tz(pub_date_str))
+                                    if ts and ts < mastodon_cutoff:
+                                        continue
+                                except Exception:
+                                    pass
+                                link = item.findtext('link', '#')
+                                if link in seen_mastodon_ids:
+                                    continue
+                                seen_mastodon_ids.add(link)
+                                desc_html = item.findtext('description', '')
+                                raw_text = BeautifulSoup(desc_html, 'html.parser').get_text(' ', strip=True)
+                                raw_text = re.sub(r'https?://\S+', '', raw_text).strip()
+                                raw_text = re.sub(r'#\w+', '', raw_text).strip()
+                                raw_text = ' '.join(raw_text.split())
+                                if len(raw_text) < 30:
+                                    continue
+                                if any(kw in raw_text.lower() for kw in (
+                                        'autopsie', 'dossier', 'pour les', 'avec ', 'dans ',
+                                        'selon ', 'mais ', 'sont ', 'cette ', 'über ', 'wurde ')):
+                                    continue
+                                mastodon_pool.append({
+                                    'platform':   'mastodon',
+                                    'source':     'Mastodon',
+                                    'title':      raw_text[:200],
+                                    'link':       link,
+                                    'score':      1,
+                                    'comments':   0,
+                                    'favourites': 0,
+                                    'reblogs':    0,
+                                })
+                                rss_added += 1
+                            print(f"   Mastodon #{tag} ({instance}): RSS ile {rss_added} post eklendi")
+                            tag_fetched = True
+                            time.sleep(0.5)
+                            break
+                        else:
+                            print(f"   Mastodon #{tag} ({instance}): RSS HTTP {rr.status_code}")
+                    except Exception as rss_e:
+                        print(f"   Mastodon #{tag} ({instance}): RSS hatası: {rss_e}")
                     time.sleep(0.5)
                     continue
                 if r.status_code != 200:
@@ -252,19 +303,23 @@ def fetch_social_signals(config):
     hn_limit       = hn_cfg.get('limit', 25)
     comment_weight = hn_cfg.get('comment_weight', 3)
     try:
-        hn_url = (
-            "https://hn.algolia.com/api/v1/search_by_date"
-            "?query=security+cybersecurity+vulnerability+malware+breach"
-            "&tags=story"
-            f"&numericFilters=points>={min_points},created_at_i>{cutoff_ts}"
-            f"&hitsPerPage={hn_limit}"
-        )
-        r = requests.get(hn_url, headers=HEADERS, timeout=(5, 10))
+        # params dict kullanılarak URL encode sorunu giderildi (>= raw string sorun yapıyor)
+        # points filtresi URL'den kaldırıldı → Python'da uygulanıyor (daha güvenilir)
+        hn_params = {
+            'query':          'security cybersecurity vulnerability malware breach',
+            'tags':           'story',
+            'numericFilters': f'created_at_i>{cutoff_ts}',
+            'hitsPerPage':    hn_limit,
+        }
+        r = requests.get("https://hn.algolia.com/api/v1/search_by_date",
+                         params=hn_params, headers=HEADERS, timeout=(5, 10))
         if r.status_code == 200:
             hits  = r.json().get('hits', [])
             found = 0
             for hit in hits:
                 points   = int(hit.get('points', 0) or 0)
+                if points < min_points:
+                    continue
                 comments = int(hit.get('num_comments', 0) or 0)
                 combined = points + comments * comment_weight
                 item_url = hit.get('url') or \
