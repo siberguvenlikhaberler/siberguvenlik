@@ -923,18 +923,24 @@ class HaberSistemi:
 
         all_articles = []
         num = 0
+        skipped_no_content = 0
         for src, articles in news_data.items():
             for art in articles:
-                num += 1
                 all_articles.append(art)
+                # Tam metni olmayan haberleri Gemini'ye gönderme — sadece başlık varsa
+                # Gemini içerik üretemez ve halüsinasyon yapar, bu yüzden kesinlikle dışla
+                if not art.get('success') or art.get('word_count', 0) == 0:
+                    skipped_no_content += 1
+                    continue
+                num += 1
                 txt += f"[{num}] {src} - {art['title']}\n{'─' * 80}\n"
                 txt += f"Tarih: {art['date']}\nLink: {art['link']}\n"
-                if art.get('full_text') and art.get('word_count', 0) > 0:
-                    txt += f"\n[TAM METİN - {art['word_count']} kelime]\n{art['full_text']}\n"
-                else:
-                    txt += f"\n⚠️  Tam metin çekilemedi\n"
+                txt += f"\n[TAM METİN - {art['word_count']} kelime]\n{art['full_text']}\n"
                 art_date = _parse_article_date(art.get('date', ''), now)
                 txt += f"\n(XXXXXXX, AÇIK - {art.get('link', '')}, {art.get('domain', '')}, {art_date})\n\n{'=' * 80}\n\n"
+
+        if skipped_no_content > 0:
+            print(f"⚠️  {skipped_no_content} haber tam metin olmadığı için rapor dışı bırakıldı (halüsinasyon önleme)")
 
         # Sosyal sinyaller — haber değil, arşiv amaçlı referans kaydı
         if self.social_data:
@@ -1036,13 +1042,17 @@ class HaberSistemi:
         client = genai.Client(api_key=GEMINI_API_KEY)
 
         # ═══════════════════════════════════════════
-        # AŞAMA 1: Gemini'den HTML al (retry ile)
+        # AŞAMA 1: Gemini'den HTML al (4 deneme, 1 saat aralıkla)
         # ═══════════════════════════════════════════
         html = None
-        max_retries = 3
-        for attempt in range(max_retries):
+        max_attempts = 4
+        retry_wait_seconds = 3600  # 1 saat
+        last_error_type = None
+        last_error_message = None
+
+        for attempt in range(max_attempts):
             try:
-                print(f"   Deneme {attempt + 1}/{max_retries}...")
+                print(f"   Deneme {attempt + 1}/{max_attempts}...")
 
                 prompt = get_claude_prompt(txt_content)
 
@@ -1084,17 +1094,27 @@ class HaberSistemi:
                 html = ''.join(chunks)
                 break
             except Exception as e:
-                print(f"   ⚠️  Hata: {e}")
-                if attempt < max_retries - 1:
-                    wait_time = (attempt + 1) * 10
-                    print(f"   ⏳ {wait_time} saniye bekleyip tekrar deneniyor...")
-                    time.sleep(wait_time)
+                last_error_type = type(e).__name__
+                last_error_message = str(e)
+                print(f"   ⚠️  Hata [{last_error_type}]: {last_error_message}")
+                if attempt < max_attempts - 1:
+                    wait_minutes = retry_wait_seconds // 60
+                    print(f"   ⏳ {wait_minutes} dakika bekleniyor... ({attempt + 2}/{max_attempts}. deneme)")
+                    time.sleep(retry_wait_seconds)
                 else:
-                    print(f"   ❌ {max_retries} deneme başarısız, fallback HTML...")
-                    return self._create_fallback_html(txt_content)
+                    print(f"   ❌ {max_attempts} deneme başarısız, fallback HTML oluşturuluyor...")
+                    return self._create_fallback_html(
+                        txt_content,
+                        error_type=last_error_type,
+                        error_message=last_error_message,
+                    )
 
         if not html:
-            return self._create_fallback_html(txt_content)
+            return self._create_fallback_html(
+                txt_content,
+                error_type=last_error_type,
+                error_message=last_error_message,
+            )
 
         # HTML temizle — Gemini bazen "Elbette, işte rapor: ```html" şeklinde
         # konuşma metni ekler. DOCTYPE veya <html etiketini bulup öncesini sil.
@@ -1825,27 +1845,55 @@ KURALLAR:
         print(f"   ✅ {len(reports)} günlük arşiv linki eklendi")
         return html
 
-    def _create_fallback_html(self, txt_content):
-        """Gemini API başarısız olursa basit HTML"""
+    def _create_fallback_html(self, txt_content, error_type=None, error_message=None):
+        """Gemini API başarısız olursa — hata detaylarını içeren fallback HTML"""
         now = datetime.now()
+
+        if error_type or error_message:
+            import html as _html_escape
+            safe_type = _html_escape.escape(str(error_type or 'Bilinmiyor'))
+            safe_msg  = _html_escape.escape(str(error_message or 'Bilinmiyor'))
+            error_section = f"""
+    <div class="error-box">
+        <h2>⚠️ Gemini API Hata Detayları</h2>
+        <table class="error-table">
+            <tr><th>Hata Türü</th><td><code>{safe_type}</code></td></tr>
+            <tr><th>Hata Mesajı</th><td><code>{safe_msg}</code></td></tr>
+            <tr><th>Oluşma Zamanı</th><td>{now.strftime('%d.%m.%Y %H:%M:%S')}</td></tr>
+            <tr><th>Deneme Sayısı</th><td>4 deneme (1'er saat aralıkla) — tümü başarısız</td></tr>
+        </table>
+    </div>"""
+        else:
+            error_section = ""
+
         html = f"""<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siber Güvenlik Raporu - {now.strftime('%d %B %Y')}</title>
+    <title>Siber Güvenlik Raporu - {now.strftime('%d %B %Y')} [FALLBACK]</title>
     <style>
         body {{ font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }}
         .header {{ background: #1e3c72; color: white; padding: 40px; border-radius: 10px; margin-bottom: 20px; }}
-        .content {{ background: white; padding: 40px; border-radius: 10px; white-space: pre-wrap; }}
+        .header h1 {{ margin: 0 0 10px 0; }}
+        .header p {{ margin: 4px 0; opacity: 0.9; }}
+        .error-box {{ background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 24px 30px; margin-bottom: 20px; }}
+        .error-box h2 {{ color: #856404; margin: 0 0 16px 0; font-size: 18px; }}
+        .error-table {{ width: 100%; border-collapse: collapse; }}
+        .error-table th {{ text-align: left; padding: 8px 12px; background: #ffeeba; color: #533f03; width: 180px; font-size: 14px; }}
+        .error-table td {{ padding: 8px 12px; font-size: 14px; }}
+        .error-table tr {{ border-bottom: 1px solid #ffd875; }}
+        .error-table code {{ background: #fff; border: 1px solid #ddd; border-radius: 3px; padding: 2px 6px; font-size: 13px; word-break: break-all; }}
+        .content {{ background: white; padding: 40px; border-radius: 10px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }}
     </style>
 </head>
 <body>
     <div class="header">
         <h1>🔒 Siber Güvenlik Günlük Raporu</h1>
-        <p>{now.strftime('%d %B %Y %A')}</p>
-        <p>⚠️ Gemini API bağlantı hatası - TXT içeriği gösteriliyor</p>
+        <p>{now.strftime('%d %B %Y')}</p>
+        <p>⚠️ Gemini API 4 denemede yanıt vermedi — ham RSS içeriği gösteriliyor</p>
     </div>
+    {error_section}
     <div class="content">{txt_content}</div>
 </body>
 </html>"""
@@ -1856,7 +1904,7 @@ KURALLAR:
         with open(f"docs/raporlar/{now.strftime('%Y-%m-%d')}.html", 'w', encoding='utf-8') as f:
             f.write(html)
 
-        print("✅ Fallback HTML oluşturuldu")
+        print("✅ Fallback HTML oluşturuldu (hata detayları dahil)")
         return html
 
     def _cleanup_old_reports(self):
