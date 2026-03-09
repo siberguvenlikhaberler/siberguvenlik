@@ -1042,11 +1042,11 @@ class HaberSistemi:
         client = genai.Client(api_key=GEMINI_API_KEY)
 
         # ═══════════════════════════════════════════
-        # AŞAMA 1: Gemini'den HTML al (4 deneme, 1 saat aralıkla)
+        # AŞAMA 1: Gemini'den HTML al (3 deneme, kısa aralıkla)
+        # 1 saatlik yeniden deneme cron schedule tarafından yönetilir.
         # ═══════════════════════════════════════════
         html = None
-        max_attempts = 4
-        retry_wait_seconds = 3600  # 1 saat
+        max_attempts = 3
         last_error_type = None
         last_error_message = None
 
@@ -1098,11 +1098,12 @@ class HaberSistemi:
                 last_error_message = str(e)
                 print(f"   ⚠️  Hata [{last_error_type}]: {last_error_message}")
                 if attempt < max_attempts - 1:
-                    wait_minutes = retry_wait_seconds // 60
-                    print(f"   ⏳ {wait_minutes} dakika bekleniyor... ({attempt + 2}/{max_attempts}. deneme)")
-                    time.sleep(retry_wait_seconds)
+                    wait_time = (attempt + 1) * 15
+                    print(f"   ⏳ {wait_time} saniye bekleyip tekrar deneniyor...")
+                    time.sleep(wait_time)
                 else:
-                    print(f"   ❌ {max_attempts} deneme başarısız, fallback HTML oluşturuluyor...")
+                    print(f"   ❌ {max_attempts} deneme başarısız — fallback HTML oluşturuluyor.")
+                    print(f"   ℹ️  Bir sonraki cron çalışmasında Gemini yeniden denenecek.")
                     return self._create_fallback_html(
                         txt_content,
                         error_type=last_error_type,
@@ -1860,7 +1861,7 @@ KURALLAR:
             <tr><th>Hata Türü</th><td><code>{safe_type}</code></td></tr>
             <tr><th>Hata Mesajı</th><td><code>{safe_msg}</code></td></tr>
             <tr><th>Oluşma Zamanı</th><td>{now.strftime('%d.%m.%Y %H:%M:%S')}</td></tr>
-            <tr><th>Deneme Sayısı</th><td>4 deneme (1'er saat aralıkla) — tümü başarısız</td></tr>
+            <tr><th>Deneme Sayısı</th><td>3 deneme (bu çalışmada) — tümü başarısız; 1 saat sonra yeniden denenecek</td></tr>
         </table>
     </div>"""
         else:
@@ -1891,7 +1892,7 @@ KURALLAR:
     <div class="header">
         <h1>🔒 Siber Güvenlik Günlük Raporu</h1>
         <p>{now.strftime('%d %B %Y')}</p>
-        <p>⚠️ Gemini API 4 denemede yanıt vermedi — ham RSS içeriği gösteriliyor</p>
+        <p>⚠️ Gemini API yanıt vermedi — 1 saat sonra otomatik yeniden denenecek</p>
     </div>
     {error_section}
     <div class="content">{txt_content}</div>
@@ -1942,18 +1943,57 @@ def main():
     print(f"📅 {datetime.now().strftime('%d %B %Y %H:%M')}")
     print("=" * 70 + "\n")
 
+    now = datetime.now()
+    today_str = now.strftime('%Y-%m-%d')
+    today_report = f"docs/raporlar/{today_str}.html"
+    ham_txt_path = "data/haberler_ham.txt"
+
+    # ── Kontrol 1: Başarılı rapor zaten var mı? ────────────────────────────
+    # Fallback içermeyen bir rapor mevcutsa hiçbir şey yapma.
+    if os.path.exists(today_report):
+        try:
+            with open(today_report, encoding='utf-8') as f:
+                report_content = f.read()
+            if '[FALLBACK]' not in report_content and 'error-box' not in report_content:
+                print(f"✅ Bugünün başarılı raporu zaten mevcut: {today_report}")
+                print("   Yeniden oluşturma atlanıyor.")
+                return 0
+            else:
+                print("⚠️  Bugünün raporu fallback — Gemini yeniden denenecek.")
+        except Exception:
+            pass  # Okuma hatası varsa devam et
+
+    # ── Kontrol 2: Ham haber verisi bugüne ait mi? ─────────────────────────
+    # Eğer bugün zaten haber çekildiyse (ama Gemini başarısız olduysa),
+    # kaynaklara tekrar gitme — haberler_linkler.txt tüm haberleri
+    # "görüldü" olarak işaretlediğinden sıfır haber döner.
+    ham_exists_for_today = False
+    if os.path.exists(ham_txt_path):
+        mtime = datetime.fromtimestamp(os.path.getmtime(ham_txt_path))
+        if mtime.date() == now.date():
+            ham_exists_for_today = True
+
     sistem = HaberSistemi()
 
-    # 1. Topla
-    haberler = sistem.topla()
-    if not haberler:
-        print("❌ Haber yok!")
-        return 1
+    if ham_exists_for_today:
+        print("📄 Bugünün ham haberleri mevcut — haber çekme atlanıyor, sadece Gemini çalıştırılıyor.")
+        try:
+            with open(ham_txt_path, encoding='utf-8') as f:
+                txt = f.read()
+        except Exception as e:
+            print(f"❌ Ham TXT okunamadı: {e}")
+            return 1
+    else:
+        # 1. Topla
+        haberler = sistem.topla()
+        if not haberler:
+            print("❌ Haber yok!")
+            return 1
 
-    # 2. TXT
-    txt = sistem.save_txt(haberler)
+        # 2. TXT
+        txt = sistem.save_txt(haberler)
 
-    # 3. HTML
+    # 3. HTML (Gemini)
     sistem.create_html(txt)
 
     print("\n" + "=" * 70)
