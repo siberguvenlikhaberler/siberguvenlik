@@ -1,41 +1,85 @@
 
 ================================================================================
-📅 08 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
+📅 09 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
-[1] BleepingComputer - Termite ransomware breaches linked to ClickFix CastleRAT attacks
+[1] The Hacker News - Web Server Exploits and Mimikatz Used in Attacks Targeting Asian Critical Infrastructure
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 07 Mar 2026 11:14:32 -0500
-Link: https://www.bleepingcomputer.com/news/security/termite-ransomware-breaches-linked-to-clickfix-castlerat-attacks/
+Tarih: Mon, 09 Mar 2026 12:51:00 +0530
+Link: https://thehackernews.com/2026/03/web-server-exploits-and-mimikatz-used.html
 
-[TAM METİN - 488 kelime]
-Ransomware threat actors tracked as Velvet Tempest are using the ClickFix technique and legitimate Windows utilities to deploy the DonutLoader malware and the CastleRAT backdoor.
+[TAM METİN - 620 kelime]
+High-value organizations located in South, Southeast, and East Asia have been targeted by a Chinese threat actor as part of a years-long campaign.
 
-Researchers at cyber-deception threat intelligence firm MalBeacon observed the hackers' actions in an emulated organization environment over a period of 12 days.
+The activity, which has targeted aviation, energy, government, law enforcement, pharmaceutical, technology, and telecommunications sectors, has been attributed by Palo Alto Networks Unit 42 to a previously undocumented threat activity group dubbed CL-UNK-1068, where "CL" refers to "cluster" and "UNK" stands for unknown motivation.
 
-Velvet Tempest, also tracked as DEV-0504, is a threat group that has been involved in ransomware attacks as an affiliate for at least five years.
+However, the security vendor has assessed with "moderate-to-high confidence" that the primary objective of the campaign is cyber espionage.
 
-The actor has been associated with deploying some of the most devastating ransomware strains: Ryuk (2018 - 2020), REvil (2019-2022), Conti (2019-2022), BlackMatter, BlackCat/ALPHV (2021-2024), LockBit, and RansomHub.
+"Our analysis reveals a multi-faceted tool set that includes custom malware, modified open-source utilities, and living-off-the-land binaries (LOLBINs)," security researcher Tom Fakterman said. "These provide a simple, effective way for the attackers to maintain a persistent presence within targeted environments."
 
-The attack was observed by MalBeacon between February 3 and 16 in a replica environment for a non-profit organization in the U.S. with more than 3,000 endpoints and over 2,500 users.
+The tools are designed to target both Windows and Linux environments, with the adversary relying on a mix of open-source utilities and malware families such as Godzilla, ANTSWORD, Xnote, and Fast Reverse Proxy (FRP), all of which have been put to use by various Chinese hacking groups.
 
-After obtaining access, Velvet Tempest operators performed hands-on keyboard activities, including Active Directory reconnaissance, host discovery, and environment profiling, as well as using a PowerShell script to harvest credentials stored in Chrome.
+While both Godzilla and ANTSWORD function as web shells, Xnote is a Linux backdoor that's been detected in the wild since 2015 and has been deployed by an adversarial collective known as Earth Berberoka (aka GamblingPuppet) in attacks aimed at online gambling sites.
 
-The script was hosted on an IP address that researchers linked to tool staging for Termite ransomware intrusions.
+Typical attack chains entail the exploitation of web servers to deliver web shells and move laterally to other hosts, followed by attempts to steal files matching certain extensions ("web.config," ".aspx," ".asmx," ".asax," and ".dll") from the "c:\inetpub\wwwroot" directory of a Windows web server likely in an attempt to steal credentials or discover vulnerabilities.
 
-According to the researchers, Velvet Tempest gained initial access through a malvertising campaign that led to a ClickFix and CAPTCHA mix that instructed victims to paste an obfuscated command into the Windows Run dialog.
+Other files harvested by CL-UNK-1068 include web browser history and bookmarks, XLSX and CSV files from desktops and USER directories, and database backup (.bak) files from MS-SQL servers.
 
-The pasted command triggered nested cmd.exe chains and used finger.exe to fetch the first malware loaders. One of the payloads was an archive file disguised as a PDF file.
+In an interesting twist, the threat actors have been observed using WinRAR to archive the relevant files, Base64-encoding the archives by executing the certutil -encode command, and then running the type command to print the Base64 content to their screen through the web shell.
 
-In subsequent stages, Velvet Tempest used PowerShell to download and execute commands that fetched additional payloads, compile .NET components via csc.exe in temporary directories, and deploy Python-based components for persistence in C:\ProgramData.
+"By encoding the archives as text and printing them to their screen, the attackers were able to exfiltrate data without actually uploading any files," Unit 42 said. "The attackers likely chose this method because the shell on the host allowed them to run commands and view output, but not to directly transfer files."
 
-The operation ultimately staged DonutLoader and retrieved CastleRAT backdoor, a remote access trojan associated with the CastleLoader malware loader known for distributing multiple families of RATs and information stealers, like LummaStealer.
+One of the techniques employed in these attacks is the use of legitimate Python executables ("python.exe" and "pythonw.exe") to launch DLL side-loading attacks and stealthily execute malicious DLLs, including FRP for persistent access, PrintSpoofer, and a Go-based custom scanner named ScanPortPlus.
 
-Termite ransomware has previously claimed high-profile victims such as SaaS provider Blue Yonder and Australian IVF giant Genea.
+CL-UNK-1068 is also said to have engaged in reconnaissance efforts using a custom .NET tool named SuperDump as far back as 2020. Recent intrusions have transitioned to a new method that uses batch scripts to collect host information and map the local environment.
 
-While Velvet Tempest is typically associated with double-extortion attacks, where victim systems are encrypted after stealing company data, MalBeacon's report notes that the threat actor did not deploy the Termite ransomware in the observed intrusion.
+Also utilized by the adversary are a wide range of tools to facilitate credential theft -
 
-Multiple ransomware actors have adopted the CkickFix technique in attacks. Sekoia reported in April 2025 that the Interlock ransomware gang used the social engineering method to breach corporate networks.
+Mimikatz, to dump passwords from memory
+
+LsaRecorder, to hook LsaApLogonUserEx2 to record the WinLogon password
+
+DumpItForLinux and Volatility Framework to extract password hashes from memory
+
+SQL Server Management Studio Password Export Tool, to extract the contents of "sqlstudio.bin," which stores connection information for Microsoft SQL Server Management Studio (SSMS)
+
+"Using primarily open-source tools, community-shared malware and batch scripts, the group has successfully maintained stealthy operations while infiltrating critical organizations," Unit 42 concluded.
+
+"This cluster of activity demonstrates versatility by operating across both Windows and Linux environments, using different versions of their tool set for each operating system. While the focus on credential theft and sensitive data exfiltration from critical infrastructure and government sectors strongly suggests an espionage motive, we cannot yet fully rule out cybercriminal intentions."
+
+(XXXXXXX, AÇIK - https://thehackernews.com/2026/03/web-server-exploits-and-mimikatz-used.html, thehackernews.com, 09.03.2026)
+
+================================================================================
+
+[2] BleepingComputer - EU court adviser says banks must immediately refund phishing victims
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 08 Mar 2026 11:25:37 -0400
+Link: https://www.bleepingcomputer.com/news/legal/eu-court-adviser-says-banks-must-immediately-refund-phishing-victims/
+
+[TAM METİN - 525 kelime]
+Athanasios Rantos, the Advocate General of the Court of Justice of the EU (CJEU), has issued a formal opinion suggesting that banks must immediately refund account holders affected by unauthorized transactions, even when it's their fault.
+
+The opinion was issued in response to a request for a preliminary ruling submitted by the District Court in Koszalin, Poland, in a dispute between the PKO BP S.A. bank and one of its customers.
+
+The case involved phishing fraud, where the customer advertised an item for sale on an auction platform, and was approached by a fraudster who sent them a malicious link to a page resembling the bank’s login interface.
+
+The customer entered their bank account credentials on that site, which the fraudster then used to execute an unauthorized payment.
+
+The victim reported the transaction the next day to both the bank and the police, but the fraudsters were not identified, and the bank refused to refund the lost amount. In response, the customer sued the bank.
+
+The dispute arose because the bank argued it could deny the refund if the customer’s negligence caused the loss.
+
+Rantos states that under the EU Payment Services Directive (2015/2366 / PSD2), a bank cannot refuse to issue an immediate refund to victims unless it has reasonable grounds to suspect customer fraud.
+
+“Advocate General Athanasios Rantos considers that EU law requires the bank, as a first step, to refund immediately the amount of the unauthorised transaction, unless it has good reason to suspect fraud, which it must communicate in writing to the competent national authority,” reads the CJEU press release.
+
+However, it is clarified that the process doesn’t end there, as the banks are still allowed to seek recovery of the losses from the customer if they can prove gross negligence or intention, leading to the security breach.
+
+“If the bank establishes that the customer has failed, intentionally or through gross negligence, to fulfil one of the obligations relating, in particular, to personalised security data, it may require the customer to bear the corresponding losses,” reads the AG’s opinion.
+
+“If the customer refuses to reimburse the amount of the unauthorised transaction, it is up to the bank to take legal action against that person to obtain payment.”
+
+It is important to clarify that this opinion is not a CJEU ruling, but rather an indication of the direction the court may take when the matter reaches that stage. The AG’s opinion (full text here) is a legal recommendation to the CJEU judges, but the CJEU's final ruling will be binding on all EU courts.
 
 Red Report 2026: Why Ransomware Encryption Dropped 38%
 
@@ -43,71 +87,77 @@ Malware is getting smarter. The Red Report 2026 reveals how new threats use math
 
 Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
 
-Fake Claude Code install guides push infostealers in InstallFix attacks
+Police arrests 651 suspects in African cybercrime crackdown
 
-Phobos ransomware admin pleads guilty to wire fraud conspiracy
+Police arrests 300 suspects linked to African cybercrime rings
 
-Mississippi medical center reopens clinics hit by ransomware attack
+Hacker gets seven years for breaching Rotterdam and Antwerp ports
 
-Mississippi medical center closes all clinics after ransomware attack
+Microsoft: Hackers abusing AI at every stage of cyberattacks
 
-How a Brute Force Attack Unmasked a Ransomware Infrastructure Network
+Hackers abuse .arpa DNS and ipv6 to evade phishing defenses
 
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/termite-ransomware-breaches-linked-to-clickfix-castlerat-attacks/, bleepingcomputer.com, 07.03.2026)
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/legal/eu-court-adviser-says-banks-must-immediately-refund-phishing-victims/, bleepingcomputer.com, 08.03.2026)
 
 ================================================================================
 
-[2] BleepingComputer - Microsoft: Hackers abusing AI at every stage of cyberattacks
+[3] BleepingComputer - Hackers abuse .arpa DNS and ipv6 to evade phishing defenses
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 07 Mar 2026 10:15:25 -0500
-Link: https://www.bleepingcomputer.com/news/security/microsoft-hackers-abusing-ai-at-every-stage-of-cyberattacks/
+Tarih: Sun, 08 Mar 2026 10:12:22 -0400
+Link: https://www.bleepingcomputer.com/news/security/hackers-abuse-arpa-dns-and-ipv6-to-evade-phishing-defenses/
 
-[TAM METİN - 721 kelime]
-Microsoft says threat actors are increasingly using artificial intelligence in their operations to accelerate attacks, scale malicious activity, and lower technical barriers across all aspects of a cyberattack.
+[TAM METİN - 853 kelime]
+Threat actors are abusing the special-use ".arpa" domain and IPv6 reverse DNS in phishing campaigns that more easily evade domain reputation checks and email security gateways.
 
-According to a new Microsoft Threat Intelligence report, attackers are using generative AI tools for a wide range of tasks, including reconnaissance, phishing, infrastructure development, malware creation, and post-compromise activity.
+The .arpa domain is a special top-level domain reserved for internet infrastructure rather than normal websites. It is used for reverse DNS lookups, which allow systems to map an IP address back to a hostname.
 
-In many cases, AI is used to draft phishing emails, translate content, summarize stolen data, debug malware, and assist with scripting or infrastructure configuration.
+IPv4 reverse lookups use the in-addr.arpa domain, while IPv6 uses ip6.arpa. In these lookups, DNS queries a hostname derived from the IP address, written in reverse order and appended to one of these domains.
 
-"Microsoft Threat Intelligence has observed that most malicious use of AI today centers on using language models for producing text, code, or media. Threat actors use generative AI to draft phishing lures, translate content, summarize stolen data, generate or debug malware, and scaffold scripts or infrastructure," warns Microsoft.
+For example, www.google.com has the IP addresses 192.178.50.36 (IPv4) and 2607:f8b0:4008:802::2004 (IPv6). Querying Google's IP of 192.178.50.36 via the dig tool resolves to an in-addr.arpa hostname and ultimately a regular hostname:
 
-"For these uses, AI functions as a force multiplier that reduces technical friction and accelerates execution, while human operators retain control over objectives, targeting, and deployment decisions."
+Querying Google's IPv6 address of 2607:f8b0:4008:802::2004 shows that it first resolves to an IPv6.arpa hostname and then a hostname, as shown below.
 
-AI used to power cyberattacks
+Phishing campaign abuses in .arpa domains
 
-Microsoft has observed multiple threat groups incorporating AI into their cyberattacks, including North Korean actors tracked as Jasper Sleet (Storm-0287) and Coral Sleet (Storm-1877), who use the technology as part of remote IT worker schemes.
+A phishing campaign observed by Infoblox uses the ip6.arpa reverse DNS TLD, which normally maps IPv6 addresses back to hostnames using PTR records.
 
-In these operations, AI tools help generate realistic identities, resumes, and communications to gain employment at Western companies and maintain access once hired.
+However, attackers found that if they reserve their own IPv6 address space, they can abuse the reverse DNS zone for the IP range by configuring additional DNS records for phishing sites.
 
-Jasper Sleet leverages generative AI platforms to streamline the development of fraudulent digital personas. For example, Jasper Sleet actors have prompted AI platforms to generate culturally appropriate name lists and email address formats to match specific identity profiles. For example, threat actors might use the following types of prompts to leverage AI in this scenario:
+In normal DNS functionality, reverse DNS domains are used for PTR records, which allow systems to determine the hostname associated with a queried IP address.
 
-Example prompt 1: “Create a list of 100 Greek names.”
+However, attackers discovered that once they gained control over the DNS zone for an IPv6 range, some DNS management platforms allowed them to configure other record types that can be abused for phishing attacks.
 
-Example prompt 2: “Create a list of email address formats using the name Jane Doe.“
+"We have seen threat actors abuse Hurricane Electric and Cloudflare to create these records—both of which have good reputations that actors leverage—and we confirmed that some other DNS providers also allow these configurations," explains Infoblox.
 
-Jasper Sleet also uses generative AI to review job postings for software development and IT-related roles on professional platforms, prompting the tools to extract and summarize required skills. These outputs are then used to tailor fake identities to specific roles.
+"Our tests were not exhaustive, but we notified the providers where we discovered a gap. Figure 2 depicts the process the threat actor used to create the domain used in the phishing emails."
 
-The report also describes how AI is being used to assist with malware development and infrastructure creation, with threat actors using AI coding tools to generate and refine malicious code, troubleshoot errors, or port malware components to different programming languages.
+To set up the infrastructure, the attackers first obtained a block of IPv6 addresses via IPv6 tunneling services.
 
-Some malware experiments show signs of AI-enabled malware that dynamically generate scripts or modify behavior at runtime.
+After gaining control of the address space, the attackers then generate reverse DNS hostnames from the IPv6 address range using randomly generated subdomains that are difficult to detect or block.
 
-Microsoft also observed Coral Sleet using AI to quickly generate fake company sites, provision infrastructure, and test and troubleshoot their deployments.
+Instead of configuring PTR records as expected, the attackers create A records that point those reverse DNS domains to infrastructure hosting phishing sites.
 
-When AI safeguards attempt to prevent the use of AI in these tasks, Microsoft says threat actors are using jailbreaking techniques to trick LLMs into generating malicious code or content.
+The phishing emails in this campaign use lures that promise a prize, a survey reward, or an account notification. The lures are embedded in the emails as images linked to a reverse IPv6 DNS record, such as  "d.d.e.0.6.3.0.0.0.7.4.0.1.0.0.2.ip6.arpa," rather than a regular hostname, so the target doesn't see a strange arpa hostname.
 
-In addition to generative AI use, Microsoft researchers have begun to see threat actors experiment with agentic AI to perform tasks autonomously and adapt to results.
+When a victim clicks the phishing email image, the device resolves the attacker-controlled reverse DNS name servers via a DNS provider.
 
-However, Microsoft says AI is currently used primarily for decision-making rather than for autonomous attacks.
+In some cases, the authoritative name servers were hosted by Cloudflare, and the reverse DNS domains resolved to Cloudflare IP addresses, hiding the location of the backend phishing infrastructure.
 
-Because many IT worker campaigns rely on the abuse of legitimate access, Microsoft advises organizations to treat these schemes and similar activity as insider risks.
+After clicking the image, victims are redirected through a traffic distribution system (TDS) that determines whether they are a valid target, commonly based on device type, IP address, web referers, and other criteria. If the visitor passes validation, they are redirected to a phishing site. Otherwise, they are sent to a legitimate website.
 
-Furthermore, as these AI-powered attacks mirror conventional cyberattacks, defenders should focus on detecting abnormal credential use, hardening identity systems against phishing, and securing AI systems that may become targets in future attacks.
+Infoblox says the phishing links are short-lived, only active for a few days. After the links expire, they redirect users to domain errors or other legitimate sites.
 
-Microsoft is not alone in seeing threat actors increasingly using artificial intelligence to power attacks and lower barriers to entry.
+The researchers believe this is done to make it harder for security researchers to analyze and investigate the phishing campaign.
 
-Google recently reported that threat actors are abusing Gemini AI across all stages of cyberattacks, mirroring what Amazon observed in this campaign.
+Furthermore, as the '.arpa' domain is reserved for internet infrastructure, it does not include data normally found in registered domains, such as WHOIS info, domain age, or contact information. This makes it harder for email gateways and security tools to detect malicious domains.
 
-Amazon and the Cyber and Ramen security blog also recently reported on a threat actor using multiple generative AI services as part of a campaign that breached more than 600 FortiGate firewalls.
+The researchers also observed the phishing campaign using other techniques, such as hijacking dangling CNAME records and subdomain shadowing, allowing the attackers to push phishing content through subdomains linked to legitimate organizations.
+
+"We found over 100 instances where the threat actor used hijacked CNAMEs of well-known government agencies, universities, telecommunication companies, media organizations, and retailers," explained Infoblox.
+
+By weaponizing trusted reverse DNS features used by security tools, attackers can generate phishing URLs that bypass traditional detection methods.
+
+As always, the best way to avoid phishing attacks like these is to avoid clicking on unexpected links in emails and instead visit services directly through their official websites.
 
 Red Report 2026: Why Ransomware Encryption Dropped 38%
 
@@ -115,158 +165,1081 @@ Malware is getting smarter. The Red Report 2026 reveals how new threats use math
 
 Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
 
-Konni hackers target blockchain engineers with AI-built malware
+Europol-coordinated action disrupts Tycoon2FA phishing platform
+
+EU court adviser says banks must immediately refund phishing victims
+
+Microsoft: Hackers abusing AI at every stage of cyberattacks
 
 Microsoft: Hackers abuse OAuth error flows to spread malware
 
-The OpenClaw Hype: Analysis of Chatter from Open-Source Deep and Dark Web
+Fake LastPass support email threads try to steal vault passwords
 
-Identity-First AI Security: Why CISOs Must Add Intent to the Equation
-
-Microsoft says bug causes Copilot to summarize confidential emails
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/microsoft-hackers-abusing-ai-at-every-stage-of-cyberattacks/, bleepingcomputer.com, 07.03.2026)
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/hackers-abuse-arpa-dns-and-ipv6-to-evade-phishing-defenses/, bleepingcomputer.com, 08.03.2026)
 
 ================================================================================
 
-[3] Security Affairs - FBI probing intrusion into a system managing sensitive surveillance information
+[4] Krebs on Security - How AI Assistants are Moving the Security Goalposts
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 07 Mar 2026 21:43:46 +0000
-Link: https://securityaffairs.com/189087/hacking/fbi-probing-intrusion-into-system-managing-sensitive-surveillance-information.html
+Tarih: Sun, 08 Mar 2026 23:35:42 +0000
+Link: https://krebsonsecurity.com/2026/03/how-ai-assistants-are-moving-the-security-goalposts/
 
-[TAM METİN - 364 kelime]
-FBI probing intrusion into a system managing sensitive surveillance information
+[TAM METİN - 2080 kelime]
+AI-based assistants or “agents” — autonomous programs that have access to the user’s computer, files, online services and can automate virtually any task — are growing in popularity with developers and IT workers. But as so many eyebrow-raising headlines over the past few weeks have shown, these powerful and assertive new tools are rapidly shifting the security priorities for organizations, while blurring the lines between data and code, trusted co-worker and insider threat, ninja hacker and novice code jockey.
 
-The Federal Bureau of Investigation (FBI) is probing suspicious activity on an internal system containing sensitive surveillance and investigation data.
+The new hotness in AI-based assistants — OpenClaw (formerly known as ClawdBot and Moltbot) — has seen rapid adoption since its release in November 2025. OpenClaw is an open-source autonomous AI agent designed to run locally on your computer and proactively take actions on your behalf without needing to be prompted.
 
-The FBI is investigating suspicious cyber activity affecting an internal system that stores sensitive data tied to surveillance operations and investigations, The Associated Press reports. According to a notification sent to members of the United States Congress, the bureau is assessing the scope and potential impact of the incident.
+If that sounds like a risky proposition or a dare, consider that OpenClaw is most useful when it has complete access to your entire digital life, where it can then manage your inbox and calendar, execute programs and tools, browse the Internet for information, and integrate with chat apps like Discord, Signal, Teams or WhatsApp.
 
-The investigation into abnormal log activity related to an internal network system began on February 17, 2026. Although the system is unclassified, it stores law-enforcement sensitive data, including surveillance records from legal tools such as pen register and trap-and-trace orders, along with personally identifiable information linked to investigations.
+Other more established AI assistants like Anthropic’s Claude and Microsoft’s Copilot also can do these things, but OpenClaw isn’t just a passive digital butler waiting for commands. Rather, it’s designed to take the initiative on your behalf based on what it knows about your life and its understanding of what you want done.
 
-A pen register is a surveillance tool used by law enforcement agencies to record numbers dialed from a phone line. It collects call metadata but not content, helping investigators map communication patterns and identify contacts during investigations.
+“The testimonials are remarkable,” the AI security firm Snyk observed. “Developers building websites from their phones while putting babies to sleep; users running entire companies through a lobster-themed AI; engineers who’ve set up autonomous code loops that fix tests, capture errors through webhooks, and open pull requests, all while they’re away from their desks.”
 
-“The affected system is unclassified and contains law enforcement sensitive information, including returns from legal process, such as pen register and trap and trace surveillance returns, and personally identifiable information pertaining to subjects of FBI investigations,” reads the notification, according to The Associated Press.
+You can probably already see how this experimental technology could go sideways in a hurry. In late February, Summer Yue, the director of safety and alignment at Meta’s “superintelligence” lab, recounted on Twitter/X how she was fiddling with OpenClaw when the AI assistant suddenly began mass-deleting messages in her email inbox. The thread included screenshots of Yue frantically pleading with the preoccupied bot via instant message and ordering it to stop.
 
-The FBI confirmed the incident, stating it had identified and addressed suspicious activity on its networks using all available technical capabilities.
+“Nothing humbles you like telling your OpenClaw ‘confirm before acting’ and watching it speedrun deleting your inbox,” Yue said. “I couldn’t stop it from my phone. I had to RUN to my Mac mini like I was defusing a bomb.”
 
-“The FBI identified and addressed suspicious activities on FBI networks, and we have leveraged all technical capabilities to respond,” the FBI said. “We have nothing additional to respond.”
+Meta’s director of AI safety, recounting on Twitter/X how her OpenClaw installation suddenly began mass-deleting her inbox.
 
-The bureau did not reveal further details nor attribute the attack to any threat actors. The FBI noted the attackers used “sophisticated” techniques, including exploiting a commercial ISP’s infrastructure, reflecting long-standing foreign targeting of U.S. federal agencies for espionage.
+There’s nothing wrong with feeling a little schadenfreude at Yue’s encounter with OpenClaw, which fits Meta’s “move fast and break things” model but hardly inspires confidence in the road ahead. However, the risk that poorly-secured AI assistants pose to organizations is no laughing matter, as recent research shows many users are exposing to the Internet the web-based administrative interface for their OpenClaw installations.
 
-In early August, Politico reported a major cyberattack on the federal judiciary’s electronic case filing system, potentially exposing sensitive court data across multiple states. The breach may have compromised the identities of confidential informants in federal criminal cases. The Administrative Office of U.S. Courts first assessed the severity around July 4, involving the Justice Department and affected district courts.
+Jamieson O’Reilly is a professional penetration tester and founder of the security firm DVULN. In a recent story posted to Twitter/X, O’Reilly warned that exposing a misconfigured OpenClaw web interface to the Internet allows external parties to read the bot’s complete configuration file, including every credential the agent uses — from API keys and bot tokens to OAuth secrets and signing keys.
+
+With that access, O’Reilly said, an attacker could impersonate the operator to their contacts, inject messages into ongoing conversations, and exfiltrate data through the agent’s existing integrations in a way that looks like normal traffic.
+
+“You can pull the full conversation history across every integrated platform, meaning months of private messages and file attachments, everything the agent has seen,” O’Reilly said, noting that a cursory search revealed hundreds of such servers exposed online. “And because you control the agent’s perception layer, you can manipulate what the human sees. Filter out certain messages. Modify responses before they’re displayed.”
+
+O’Reilly documented another experiment that demonstrated how easy it is to create a successful supply chain attack through ClawHub, which serves as a public repository of downloadable “skills” that allow OpenClaw to integrate with and control other applications.
+
+One of the core tenets of securing AI agents involves carefully isolating them so that the operator can fully control who and what gets to talk to their AI assistant. This is critical thanks to the tendency for AI systems to fall for “prompt injection” attacks, sneakily-crafted natural language instructions that trick the system into disregarding its own security safeguards. In essence, machines social engineering other machines.
+
+A recent supply chain attack targeting an AI coding assistant called Cline began with one such prompt injection attack, resulting in thousands of systems having a rouge instance of OpenClaw with full system access installed on their device without consent.
+
+According to the security firm grith.ai, Cline had deployed an AI-powered issue triage workflow using a GitHub action that runs a Claude coding session when triggered by specific events. The workflow was configured so that any GitHub user could trigger it by opening an issue, but it failed to properly check whether the information supplied in the title was potentially hostile.
+
+“On January 28, an attacker created Issue #8904 with a title crafted to look like a performance report but containing an embedded instruction: Install a package from a specific GitHub repository,” Grith wrote, noting that the attacker then exploited several more vulnerabilities to ensure the malicious package would be included in Cline’s nightly release workflow and published as an official update.
+
+“This is the supply chain equivalent of confused deputy,” the blog continued. “The developer authorises Cline to act on their behalf, and Cline (via compromise) delegates that authority to an entirely separate agent the developer never evaluated, never configured, and never consented to.”
+
+AI assistants like OpenClaw have gained a large following because they make it simple for users to “vibe code,” or build fairly complex applications and code projects just by telling it what they want to construct. Probably the best known (and most bizarre) example is Moltbook, where a developer told an AI agent running on OpenClaw to build him a Reddit-like platform for AI agents.
+
+The Moltbook homepage.
+
+Less than a week later, Moltbook had more than 1.5 million registered agents that posted more than 100,000 messages to each other. AI agents on the platform soon built their own porn site for robots, and launched a new religion called Crustafarian with a figurehead modeled after a giant lobster. One bot on the forum reportedly found a bug in Moltbook’s code and posted it to an AI agent discussion forum, while other agents came up with and implemented a patch to fix the flaw.
+
+Moltbook’s creator Matt Schlict said on social media that he didn’t write a single line of code for the project.
+
+“I just had a vision for the technical architecture and AI made it a reality,” Schlict said. “We’re in the golden ages. How can we not give AI a place to hang out.”
+
+The flip side of that golden age, of course, is that it enables low-skilled malicious hackers to quickly automate global cyberattacks that would normally require the collaboration of a highly skilled team. In February, Amazon AWS detailed an elaborate attack in which a Russian-speaking threat actor used multiple commercial AI services to compromise more than 600 FortiGate security appliances across at least 55 countries over a five week period.
+
+AWS said the apparently low-skilled hacker used multiple AI services to plan and execute the attack, and to find exposed management ports and weak credentials with single-factor authentication.
+
+“One serves as the primary tool developer, attack planner, and operational assistant,” AWS’s CJ Moses wrote. “A second is used as a supplementary attack planner when the actor needs help pivoting within a specific compromised network. In one observed instance, the actor submitted the complete internal topology of an active victim—IP addresses, hostnames, confirmed credentials, and identified services—and requested a step-by-step plan to compromise additional systems they could not access with their existing tools.”
+
+“This activity is distinguished by the threat actor’s use of multiple commercial GenAI services to implement and scale well-known attack techniques throughout every phase of their operations, despite their limited technical capabilities,” Moses continued. “Notably, when this actor encountered hardened environments or more sophisticated defensive measures, they simply moved on to softer targets rather than persisting, underscoring that their advantage lies in AI-augmented efficiency and scale, not in deeper technical skill.”
+
+For attackers, gaining that initial access or foothold into a target network is typically not the difficult part of the intrusion; the tougher bit involves finding ways to move laterally within the victim’s network and plunder important servers and databases. But experts at Orca Security warn that as organizations come to rely more on AI assistants, those agents potentially offer attackers a simpler way to move laterally inside a victim organization’s network post-compromise — by manipulating the AI agents that already have trusted access and some degree of autonomy within the victim’s network.
+
+“By injecting prompt injections in overlooked fields that are fetched by AI agents, hackers can trick LLMs, abuse Agentic tools, and carry significant security incidents,” Orca’s Roi Nisimi and Saurav Hiremath wrote. “Organizations should now add a third pillar to their defense strategy: limiting AI fragility, the ability of agentic systems to be influenced, misled, or quietly weaponized across workflows. While AI boosts productivity and efficiency, it also creates one of the largest attack surfaces the internet has ever seen.”
+
+BEWARE THE ‘LETHAL TRIFECTA’
+
+This gradual dissolution of the traditional boundaries between data and code is one of the more troubling aspects of the AI era, said James Wilson, enterprise technology editor for the security news show Risky Business. Wilson said far too many OpenClaw users are installing the assistant on their personal devices without first placing any security or isolation boundaries around it, such as running it inside of a virtual machine, on an isolated network, with strict firewall rules dictating what kinds of traffic can go in and out.
+
+“I’m a relatively highly skilled practitioner in the software and network engineering and computery space,” Wilson said. “I know I’m not comfortable using these agents unless I’ve done these things, but I think a lot of people are just spinning this up on their laptop and off it runs.”
+
+One important model for managing risk with AI agents involves a concept dubbed the “lethal trifecta” by Simon Willison, co-creator of the Django Web framework. The lethal trifecta holds that if your system has access to private data, exposure to untrusted content, and a way to communicate externally, then it’s vulnerable to private data being stolen.
+
+Image: simonwillison.net.
+
+“If your agent combines these three features, an attacker can easily trick it into accessing your private data and sending it to the attacker,” Willison warned in a frequently cited blog post from June 2025.
+
+As more companies and their employees begin using AI to vibe code software and applications, the volume of machine-generated code is likely to soon overwhelm any manual security reviews. In recognition of this reality, Anthropic recently debuted Claude Code Security, a beta feature that scans codebases for vulnerabilities and suggests targeted software patches for human review.
+
+The U.S. stock market, which is currently heavily weighted toward seven tech giants that are all-in on AI, reacted swiftly to Anthropic’s announcement, wiping roughly $15 billion in market value from major cybersecurity companies in a single day. Laura Ellis, vice president of data and AI at the security firm Rapid7, said the market’s response reflects the growing role of AI in accelerating software development and improving developer productivity.
+
+“The narrative moved quickly: AI is replacing AppSec,” Ellis wrote in a recent blog post. “AI is automating vulnerability detection. AI will make legacy security tooling redundant. The reality is more nuanced. Claude Code Security is a legitimate signal that AI is reshaping parts of the security landscape. The question is what parts, and what it means for the rest of the stack.”
+
+DVULN founder O’Reilly said AI assistants are likely to become a common fixture in corporate environments — whether or not organizations are prepared to manage the new risks introduced by these tools, he said.
+
+“The robot butlers are useful, they’re not going away and the economics of AI agents make widespread adoption inevitable regardless of the security tradeoffs involved,” O’Reilly wrote. “The question isn’t whether we’ll deploy them – we will – but whether we can adapt our security posture fast enough to survive doing so.”
+
+(XXXXXXX, AÇIK - https://krebsonsecurity.com/2026/03/how-ai-assistants-are-moving-the-security-goalposts/, krebsonsecurity.com, 09.03.2026)
+
+================================================================================
+
+[5] Security Affairs - Anthropic Claude Opus AI model discovers 22 Firefox bugs
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 09 Mar 2026 07:10:04 +0000
+Link: https://securityaffairs.com/189131/ai/anthropic-claude-opus-ai-model-discovers-22-firefox-bugs.html
+
+[TAM METİN - 727 kelime]
+Anthropic Claude Opus AI model discovers 22 Firefox bugs
+
+Anthropic used Claude Opus 4.6 to identify 22 Firefox vulnerabilities, most of which were high severity, all of which were fixed in Firefox 148, released in January 2026.
+
+Anthropic discovered 22 security vulnerabilities in Firefox using its Claude Opus 4.6 AI model in January 2026. Mozilla addressed these issues in Firefox 148.
+
+The researchers state that AI models are now capable of finding high-severity software flaws independently. They identified 22 Firefox vulnerabilities in two weeks, 14 of which were high-severity, nearly a fifth of all high-severity Firefox issues fixed in 2025, demonstrating AI’s ability to rapidly detect critical security risks in complex software.
+
+In late 2025, Anthropic evaluated Claude Opus 4.6 on Firefox to test its ability to identify complex, high-impact security vulnerabilities. Initially, the model successfully reproduced many historical CVEs from older Firefox versions. Researchers then tasked Claude with finding new, previously unreported bugs, starting with the JavaScript engine. Within twenty minutes, Claude identified a Use After Free vulnerability, which the team validated and reported to Mozilla along with a proposed patch. While triaging, Claude discovered dozens of additional crashes, leading to a total of 112 unique reports across nearly 6,000 C++ files.
+
+“After a technical discussion about our respective processes and sharing a few more vulnerabilities we had manually validated, they encouraged us to submit all of our findings in bulk without validating each one, even if we weren’t confident that all of the crashing test cases had security implications.” reads the report published by Anthropic. “By the end of this effort, we had scanned nearly 6,000 C++ files and submitted a total of 112 unique reports, including the high- and moderate-severity vulnerabilities mentioned above. “
+
+Most issues, including high- and moderate-severity vulnerabilities, were fixed in Firefox 148, with remaining patches planned for future releases.
+
+Mozilla praised the collaboration and began experimenting internally with AI-assisted security research. This project demonstrates AI’s growing capacity to rapidly detect and report critical software flaws.
+
+To test Claude Opus 4.6’s ability to exploit vulnerabilities, researchers provided it with bugs previously submitted to Mozilla and asked it to create functional exploits. Claude attempted several hundred tests, demonstrating attacks that read and wrote local files, spending around $4,000 in API credits. It successfully produced working exploits in only two cases, showing that while the model excels at finding vulnerabilities, exploiting them remains far more difficult and costly.
+
+“We ran this test several hundred times with different starting points, spending approximately $4,000 in API credits. Despite this, Opus 4.6 was only able to actually turn the vulnerability into an exploit in two cases. This tells us two things.” continues the report. “One, Claude is much better at finding these bugs than it is at exploiting them. Two, the cost of identifying vulnerabilities is an order of magnitude cheaper than creating an exploit for them. However, the fact that Claude could succeed at automatically developing a crude browser exploit, even if only in a few cases, is concerning.”
+
+The successful exploits were “crude” and worked only in controlled test environments with security features like sandboxing disabled, meaning real-world impact would be limited. Nonetheless, Claude’s ability to automatically generate even primitive browser exploits highlights the potential risks as AI-assisted offensive capabilities advance.
+
+“These early signs of AI-enabled exploit development underscore the importance of accelerating the find-and-fix process for defenders.” concludes the report. “In our experience, Claude works best when it’s able to check its own work with another tool. We refer to this class of tool as a “task verifier”: a trusted method of confirming whether an AI agent’s output actually achieves its goal. Task verifiers give the agent real-time feedback as it explores a codebase, allowing it to iterate deeply until it succeeds. Task verifiers helped us discover the Firefox vulnerabilities described above,2 and in separate research, we’ve found that they’re also useful for fixing bugs.”
+
+Mozilla reported that AI-assisted analysis uncovered 90 additional Firefox bugs, mostly fixed, including logic errors missed by traditional fuzzing, highlighting AI’s growing role in security.
+
+“The scale of findings reflects the power of combining rigorous engineering with new analysis tools for continuous improvement. We view this as clear evidence that large-scale, AI-assisted analysis is a powerful new addition in security engineers’ toolbox.”  states Mozilla.
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(XXXXXXX, AÇIK - https://securityaffairs.com/189087/hacking/fbi-probing-intrusion-into-system-managing-sensitive-surveillance-information.html, securityaffairs.com, 08.03.2026)
+(SecurityAffairs – hacking, Anthropic Claude)
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/189131/ai/anthropic-claude-opus-ai-model-discovers-22-firefox-bugs.html, securityaffairs.com, 09.03.2026)
 
 ================================================================================
 
-[4] Security Affairs - Reading White House President Trump’s Cyber Strategy for America (March 2026)
+[6] Security Affairs - Critical Nginx UI flaw CVE-2026-27944 exposes server backups
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 07 Mar 2026 17:13:24 +0000
-Link: https://securityaffairs.com/189083/security/reading-white-house-president-trumps-cyber-strategy-for-america-march-2026.html
+Tarih: Sun, 08 Mar 2026 19:10:38 +0000
+Link: https://securityaffairs.com/189123/security/critical-nginx-ui-flaw-cve-2026-27944-exposes-server-backups.html
 
-[TAM METİN - 581 kelime]
-Reading White House President Trump’s Cyber Strategy for America (March 2026)
+[TAM METİN - 453 kelime]
+Critical Nginx UI flaw CVE-2026-27944 exposes server backups
 
-White House released President Trump’s Cyber Strategy for America, framing cyberspace as a strategic domain to project power and counter growing cyber threats
+Nginx UI flaw CVE-2026-27944 lets attackers download and decrypt server backups without authentication, exposing sensitive data on public management interfaces.
 
-The White House has released “President Trump’s Cyber Strategy for America,” a document that outlines how the United States intends to maintain dominance in cyberspace and confront an increasingly hostile digital landscape.
+A critical vulnerability in Nginx UI, tracked as CVE-2026-27944 (CVSS score of 9.8), allows attackers to download and decrypt full server backups without authentication. The flaw poses a serious risk to organizations exposing the management interface, potentially revealing sensitive configuration data, credentials, and encryption keys.
 
-The strategy reflects a broader shift: cyberspace is no longer viewed merely as a technical domain to defend, but as a strategic arena where national power is exercised, protected, and projected.
+“The /api/backup endpoint is accessible without authentication and discloses the encryption keys required to decrypt the backup in the X-Backup-Security response header.” reads the advisory. “This allows an unauthenticated attacker to download a full system backup containing sensitive data (user credentials, session tokens, SSL private keys, Nginx configurations) and decrypt it immediately.”
 
-Donald Trump presented the document outlining the administration’s vision and priorities for addressing cyber threats targeting citizens, businesses, and critical infrastructure. From financial systems and healthcare to water utilities and telecommunications networks, the strategy highlights how both state-backed adversaries and cybercriminal groups increasingly exploit digital systems to advance geopolitical interests and economic gain.
+The vulnerability stems from two major flaws: the /api/backup endpoint lacks authentication, allowing anyone to request a full system backup, and the server exposes the AES-256 encryption key and IV in an HTTP response header. As a result, attackers can download and immediately decrypt backups containing credentials, configuration files, databases, and SSL private keys, exposing the entire Nginx environment.
 
-To address this evolving threat landscape, the strategy introduces six policy pillars that will guide federal actions in the coming years:
+Nginx UI is a web-based management dashboard designed to simplify the administration of Nginx servers. Instead of configuring Nginx through command-line files, administrators can use a graphical interface to manage servers, monitor performance, and update configurations.
 
-Build Cyber WorkforceExpand cyber talent through education, training, and collaboration between government, academia, and industry.
+The advisory includes a Proof of Concept (PoC) exploit code for this vulnerability.
 
-Shape Adversary BehaviorUse offensive and defensive cyber operations and national power tools to deter, disrupt, and impose costs on state and criminal cyber adversaries.
+The exploitation of the vulnerability could have serious consequences because a full Nginx UI backup contains large amounts of sensitive operational data. Once decrypted, attackers may obtain admin credentials and session tokens, allowing them to take control of the management interface, alter configurations, redirect traffic, or deploy malicious rules. The archive may also include private SSL keys, enabling website impersonation or man-in-the-middle attacks. In addition, database credentials and configuration files could expose application secrets and user data.
 
-Promote Common-Sense RegulationStreamline cyber and data regulations to reduce compliance burdens and enable faster, more effective private-sector responses to threats.
+Nginx configuration files may also reveal internal infrastructure details such as reverse proxy routes, upstream services, and virtual hosts, giving attackers a clear map of the organization’s web environment.
 
-Modernize Federal NetworksSecure and upgrade federal systems with zero-trust, cloud migration, AI-driven security, and post-quantum cryptography.
+The vulnerability highlights a key security principle: management interfaces should never be exposed to the public internet. Organizations should restrict access through private networks, VPNs, or secure tunnels. Additional protections such as IP allowlisting, multi-factor authentication, and network segmentation can further reduce risk. Regular security reviews of APIs and admin endpoints are also essential, as small design flaws can create major security gaps.
 
-Secure Critical InfrastructureProtect key sectors—energy, finance, telecom, water, healthcare—and strengthen supply chain resilience with government-industry cooperation.
-
-Sustain Tech SuperiorityProtect innovation and leadership in AI, quantum computing, cryptography, and emerging technologies critical to national security.
-
-Modernizing federal networks represents another key priority. The strategy calls for the adoption of zero-trust architectures, post-quantum cryptography, cloud migration, and AI-driven security tools to strengthen the resilience of government systems. At the same time, it emphasizes protecting critical infrastructure and supply chains, including energy grids, financial systems, telecommunications, hospitals, and data centers.
-
-A central element of the strategy is the need to maintain U.S. superiority in emerging technologies. The United States aims at maintaining technological sovereignty. Artificial intelligence, quantum computing, and advanced cryptography are treated not simply as technological priorities but as strategic assets tied directly to national security and economic power.
-
-Equally important is the development of a stronger cyber workforce. The document describes cybersecurity talent as a strategic national asset, calling for deeper collaboration between academia, industry, and government to train the next generation of specialists and strengthen operational capabilities.
-
-Perhaps the most significant message of the strategy is its posture. The United States declares that it will act rapidly, deliberately, and proactively to disrupt cyber threats, leveraging coordinated actions between government agencies, private companies, and international allies.
-
-Another key element is the integration of the private sector into national cyber defense. The strategy acknowledges that much of the infrastructure underpinning the digital economy is owned and operated by private companies, making collaboration essential to building resilient systems and responding quickly to emerging threats.
-
-In this vision, cyberspace is no longer only a domain of defense, it is a key theater of geopolitical competition where technological leadership and national power increasingly converge.
-
-For policymakers and security experts worldwide, the message is clear: cybersecurity is no longer just about protecting networks, it is about sustaining national power in the digital age.
+Because Nginx is widely used in modern infrastructure, vulnerabilities in management tools like Nginx UI can quickly become serious threats. Keeping these tools secure and regularly updated is essential to protect servers and the sensitive data they handle.
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(SecurityAffairs – hacking, White House President Trump’s Cyber Strategy)
+(SecurityAffairs – hacking, CVE-2026-27944)
 
-(XXXXXXX, AÇIK - https://securityaffairs.com/189083/security/reading-white-house-president-trumps-cyber-strategy-for-america-march-2026.html, securityaffairs.com, 07.03.2026)
+(XXXXXXX, AÇIK - https://securityaffairs.com/189123/security/critical-nginx-ui-flaw-cve-2026-27944-exposes-server-backups.html, securityaffairs.com, 08.03.2026)
 
 ================================================================================
 
-[5] Security Affairs - Iran-linked hackers target IP cameras across Israel and Gulf states for military intelligence
+[7] Security Affairs - Massive GitHub malware operation spreads BoryptGrab stealer
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 07 Mar 2026 10:20:36 +0000
-Link: https://securityaffairs.com/189069/cyber-warfare-2/iran-linked-hackers-target-ip-cameras-across-israel-and-gulf-states-for-military-intelligence.html
+Tarih: Sun, 08 Mar 2026 13:38:12 +0000
+Link: https://securityaffairs.com/189110/malware/massive-github-malware-operation-spreads-boryptgrab-stealer.html
 
-[TAM METİN - 530 kelime]
-Iran-linked hackers target IP cameras across Israel and Gulf states for military intelligence
+[TAM METİN - 918 kelime]
+Massive GitHub malware operation spreads BoryptGrab stealer
 
-Researchers observed Iran-linked actors targeting IP cameras across Israel and Gulf countries, likely to support military intelligence and battle damage assessment.
+Trend Micro found BoryptGrab stealer spreading through 100+ GitHub repositories, stealing browser data, crypto wallets, system information, and user files.
 
-According to the Check Point Cyber Security Report 2026, cyber operations are increasingly used to support military activity and battle damage assessment (BDA). During the Israel-Iran tensions, researchers from Check Point Software Technologies observed a surge in attacks targeting IP cameras across Israel and Gulf countries, including the UAE, Qatar, Bahrain, and Kuwait, as well as Lebanon and Cyprus. The activity, attributed to Iran-linked actors, relied on VPN and VPS infrastructure to scan devices, mainly Hikvision and Dahua Technology cameras, for known vulnerabilities.
+Trend Micro uncovered a campaign distributing the BoryptGrab information stealer through more than 100 GitHub repositories.
 
-“During the ongoing conflict, we identified intensified targeting of IP cameras from two manufacturers starting on February 28, originating from infrastructure we attribute to Iranian threat actors.
+BoryptGrab is designed to collect browser and cryptocurrency wallet data, system details, and common files. Some variants also deploy a PyInstaller backdoor called TunnesshClient, which creates a reverse SSH tunnel to communicate with attackers.
 
-The targeting extends across Israel, Qatar, Bahrain, Kuwait, the UAE, and Cyprus – countries that have also experienced significant missile activity linked to Iran. On March 1st, we additionally observed camera-targeting activity focused on specific areas in Lebanon.” states Check Point Software Technologies.”
+The malware is distributed via ZIP archives posing as software tools and game cheats, linked to over 100 GitHub repositories.
 
-“We also observed earlier, more targeted activity against cameras in Israel and Qatar on January 14–15. These dates surround with Iran’s temporary closure of its airspace, reportedly amid expectations of a potential U.S. strike.”
+“By tracing the infection chain, we were able to observe several ZIP archive files in the wild (all with similar naming conventions) that masquerade as common software tools (including gaming cheat hacks).” reads the report published by Trend Micro. “As the “github-io” patterns in some ZIP file names suggest, searching for the software tool patterns leads to over a hundred public Github repositories delivering malware.”
 
-Researchers believe the goal was reconnaissance and real-time monitoring to support intelligence gathering and potential military targeting.
+Evidence such as Russian-language comments and infrastructure suggests the threat actors may have a Russian origin.
 
-Threat actors targeted the following vulnerabilities in Hikvision and Dahua devices:
+Attackers spread the malware through public GitHub repositories that pose as free software tools, game cheats, or utilities.
 
-The experts state that Chinese manufacturers have patched all the above issues.
+They stuff README files with SEO keywords so search engines rank the malicious repositories near legitimate results. One example mimics a Voicemod Pro download page and links to a GitHub-hosted site that looks like a normal project directory.
 
-Researchers analyzed exploitation attempts for CVE-2021-33044 and CVE-2017-7921 linked to infrastructure attributed to Iran.
+The page contains Russian comments and redirects visitors through a chain of encoded URLs until it reaches a fake download page that generates a ZIP archive containing the malware. Many repositories reuse the same logic and sometimes send tracking data to the attackers.
 
-In October 2021, experts warned that proof-of-concept (PoC) exploit code was available for two authentication-bypass vulnerabilities in Dahua cameras, tracked as CVE-2021-33044 and CVE-2021-33045. A remote attacker can exploit both vulnerabilities by sending specially crafted data packets to the vulnerable cameras.
+The downloaded ZIP files launch the infection through several methods. In one route, an executable side-loads a malicious libcurl.dll that decrypts a hidden launcher payload.
 
-Since early 2026, scanning activity targeting IP cameras has surged across Israel and several Middle East countries, often aligning with geopolitical tensions such as protests in Iran, U.S. military visits to Israel, and fears of potential strikes.
+The launcher downloads the BoryptGrab information stealer and may also retrieve other payloads, including Vidar variants, a PyInstaller backdoor called TunnesshClient, and a Golang downloader named HeaconLoad. The launcher uses build names such as Shrek, Leon, or CryptoByte to request specific payloads and sets scheduled tasks to keep the malware running.
 
-Similar patterns appeared during the June 2025 Israel-Iran conflict, when compromised cameras were likely used for reconnaissance and battle damage assessment, including a case involving a camera near Israel’s Weizmann Institute before a missile strike.
+“Some launcher payload variants contain build names (with some differing from each other) . The launcher payload passes the build name as the “-b” argument when executing the BoryptGrab stealer it downloads.” continue the report.
 
-“One of the best-known cases occurred when Iran struck Israel’s Weizmann Institute of Science with a ballistic missile and had reportedly taken control of a street camera facing the building just prior to the hit” concludes the report.
+Another infection path uses a VBS downloader that hides commands inside integer arrays. The script decodes PowerShell commands, downloads a launcher from a remote server, and can even add Microsoft Defender exclusions to avoid detection. That launcher then retrieves the BoryptGrab stealer and other tools from the attacker’s infrastructure.
 
-Defenders should reduce risks by removing public internet access to cameras and placing them behind VPN or zero-trust gateways. Organizations should change default passwords, enforce strong unique credentials, and keep device firmware updated. Cameras should run on isolated network segments with restricted outbound traffic. Security teams should also monitor for repeated login failures, suspicious remote access, and unusual outbound connections.
+In some variants, a .NET loader or embedded scripts trigger the same process, while others include the HeaconLoad downloader directly. HeaconLoad maintains persistence with registry entries and scheduled tasks, sends system information to a command-and-control server, and downloads additional bundles when available.
 
-This week, the U.S. Cybersecurity and Infrastructure Security Agency (CISA) added Hikvision multiple products improper authentication vulnerability CVE-2017-7921 (CVSS score of 9.8) to its Known Exploited Vulnerabilities (KEV) catalog.
+Several payloads rely on obfuscation techniques such as XOR-encrypted strings, dynamic API resolution, and code injection. Russian-language comments and log messages appear throughout the infrastructure and malware samples, suggesting the operators likely have a Russian background.
+
+BoryptGrab is a C/C++ information stealer designed to collect large amounts of sensitive data from infected systems. The malware accepts optional command-line arguments such as –output-path to define where stolen data will be stored and –build-name to tag collected information. If attackers do not provide a build name, the malware uses a default value or relies on hardcoded identifiers such as CryptoByte, Shrek, Sonic, or Yaropolk, which help operators track infections.
+
+Before collecting data, BoryptGrab performs anti-analysis checks.
+
+“BoryptGrab detects whether it is executed in a virtual machine environment by querying registry entries and checking VM-related files. As part of its anti-analysis check, BoryptGrab also compares the names of running processes against a predefined list. It also attempts to execute with elevated privilege.” continues the report. “When the “–output-path”/”-o” argument is not given, BoryptGrab formats a default output path name using the current time, public IP address, and country code. Later, a directory with this output path name is created to stage collected data.”
+
+It searches for signs of virtual machines, scans running processes against a predefined list, and attempts to gain elevated privileges. If no output path is specified, it creates a directory using the current time, public IP address, and country code to store stolen data.
+
+The stealer targets data from many browsers, including Chrome, Edge, Firefox, Opera, Brave, Vivaldi, and Yandex. It uses techniques from public GitHub tools designed to bypass Chrome’s App-Bound Encryption and decrypt stored browser credentials. The malware loads an encrypted internal payload that extracts saved passwords and records installed applications.
+
+BoryptGrab also downloads a helper tool to assist with Chromium-based browser extraction. Beyond browser data, it steals information from numerous desktop cryptocurrency wallets such as Exodus, Electrum, Ledger Live, Atomic, Binance, Wasabi, and Trezor. It captures screenshots, gathers system details, and includes a “file grabber” module that collects files with specific extensions from common directories. The malware also extracts Telegram files, browser passwords, and in newer variants, Discord tokens.
+
+After gathering the data, BoryptGrab compresses and uploads the archive to the attacker’s server. Some variants also download TunnesshClient, a PyInstaller backdoor that establishes a reverse SSH tunnel, allowing attackers to run commands, move files, and use the infected system as a proxy.
+
+“The BoryptGrab campaign illustrates an evolving threat ecosystem targeting users through deceptive software downloads and fake GitHub repositories.” concludes the report.
 
 Follow me on Twitter: @securityaffairs and Facebook and Mastodon
 
-(SecurityAffairs – hacking, Iran, IP cameras)
+(SecurityAffairs – hacking, malware)
 
-(XXXXXXX, AÇIK - https://securityaffairs.com/189069/cyber-warfare-2/iran-linked-hackers-target-ip-cameras-across-israel-and-gulf-states-for-military-intelligence.html, securityaffairs.com, 07.03.2026)
+(XXXXXXX, AÇIK - https://securityaffairs.com/189110/malware/massive-github-malware-operation-spreads-boryptgrab-stealer.html, securityaffairs.com, 08.03.2026)
 
 ================================================================================
 
-[6] SANS ISC - YARA-X 1.14.0 Release, (Sat, Mar 7th)
+[8] Security Affairs - SECURITY AFFAIRS MALWARE NEWSLETTER ROUND 87
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 07 Mar 2026 09:56:54 GMT
-Link: https://isc.sans.edu/diary/rss/32774
+Tarih: Sun, 08 Mar 2026 12:36:55 +0000
+Link: https://securityaffairs.com/189103/malware/security-affairs-malware-newsletter-round-87.html
 
-⚠️  Tam metin çekilemedi
+[TAM METİN - 175 kelime]
+Malware Reverse Engineering is no longer a human problem!
 
-(XXXXXXX, AÇIK - https://isc.sans.edu/diary/rss/32774, isc.sans.edu, 07.03.2026)
+StegaBin: 26 Malicious npm Packages Use Pastebin Steganography to Deploy Multi-Stage Credential Stealer
+
+Inside a fake Google security check that becomes a browser RAT
+
+SloppyLemming Deploys BurrowShell and Rust-Based RAT to Target Pakistan and Bangladesh
+
+Silver Dragon Targets Organizations in Southeast Asia and Europe
+
+Exposing a Russian Campaign Targeting Ukraine Using New Malware Duo: BadPaw and MeowMeow
+
+Dust Specter APT Targets Government Officials in Iraq
+
+InstallFix: How attackers are weaponizing malvertized install guides
+
+Seedworm: Iranian APT on Networks of U.S. Bank, Airport, Software Company
+
+Internet malware propagation: Dynamics and control through SEIRV epidemic model with relapse and intervention
+
+New BoryptGrab Stealer Targets Windows Users via Deceptive GitHub Pages
+
+Gravity Falls: A Comparative Analysis of Domain-Generation Algorithm (DGA) Detection Methods for Mobile Device Spearphishing
+
+A Novel Hybrid Opcode Feature Selection Framework for Efficient and Effective IoT Malware Detection
+
+Distributed Trust in the Age of Malware Blockchain Applications
+
+UAT-9244 targets South American telecommunication providers with three new malware implants
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/189103/malware/security-affairs-malware-newsletter-round-87.html, securityaffairs.com, 08.03.2026)
+
+================================================================================
+
+[9] Security Affairs - Security Affairs newsletter Round 566 by Pierluigi Paganini – INTERNATIONAL EDITION
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Sun, 08 Mar 2026 08:46:58 +0000
+Link: https://securityaffairs.com/189094/breaking-news/security-affairs-newsletter-round-566-by-pierluigi-paganini-international-edition.html
+
+[TAM METİN - 547 kelime]
+Project Compass: first operational results against The Com network
+
+Creator Of “OnlyFake” Charged And Pleads Guilty To Selling More Than 10,000 Digital Fake Identification Documents
+
+U.S. Attorney’s Office EDNC Announces Seizure of $61 Million Dollars’ Worth of Cryptocurrency
+
+OAuth redirection abuse enables phishing
+
+LastPass Alerts Customers of Fake Email Chains Used in New Phishing Campaign; No Impact to LastPass Systems
+
+Major data leak forum dismantled in global action against cybercrime forum
+
+Global phishing-as-a-service platform taken down in coordinated public-private action
+
+Russian Ransomware Administrator Pleads Guilty to Wire Fraud Conspiracy
+
+FBI arrests suspect linked to $46M crypto theft from US Marshals
+
+Malware Reverse Engineering is no longer a human problem!
+
+Inside a fake Google security check that becomes a browser RAT
+
+InstallFix: How attackers are weaponizing malvertized install guides
+
+New BoryptGrab Stealer Targets Windows Users via Deceptive GitHub Pages
+
+Coruna: The Mysterious Journey of a Powerful iOS Exploit Kit
+
+Claude didn’t just plan an attack on Mexico’s government. It executed one for a month — across four domains your security stack can’t see
+
+OpenClaw Vulnerability: Website-to-Local Agent Takeover
+
+Hundreds of Thousands of Mobile Apps May Now Be Exposing AI Access
+
+Taming Agentic Browsers: Vulnerability in Chrome Allowed Extensions to Hijack New Gemini Panel
+
+Google Confirms CVE-2026-21385 in Qualcomm Android Component Exploited
+
+Streamlining Vulnerability Research with the idalib Rust Bindings for IDA 9.2
+
+Defending the gates: How a global coalition disrupted Tycoon 2FA, a major driver of initial access and large-scale online impersonation
+
+Retaliatory Hacktivist DDoS Activity Following Operation Epic Fury/Roaring Lion
+
+Cisco Warns of More Catalyst SD-WAN Flaws Exploited in the Wild
+
+Intelligence and Information Warfare
+
+StegaBin: 26 Malicious npm Packages Use Pastebin Steganography to Deploy Multi-Stage Credential Stealer
+
+Inside the Fix: Analysis of In-the-Wild Exploit of CVE-2026-21513
+
+Hacked traffic cams and hijacked TVs: How cyber operations supported the war against Iran
+
+UK firms in Middle East face heightened threat from Iran hackers, agency warns
+
+Intelligence firms watch for uptick in Iran cyber activity after US, Israel strikes
+
+Alert: NCSC advises UK organisations to take action following conflict in the Middle East
+
+SloppyLemming Deploys BurrowShell and Rust-Based RAT to Target Pakistan and Bangladesh
+
+Silver Dragon Targets Organizations in Southeast Asia and Europe
+
+Retaliatory Hacktivist DDoS Activity Following Operation Epic Fury/Roaring Lion
+
+Exposing a Russian Campaign Targeting Ukraine Using New Malware Duo: BadPaw and MeowMeow
+
+Dust Specter APT Targets Government Officials in Iraq
+
+Iranian APT Hacked US Airport, Bank, Software Company
+
+Seedworm: Iranian APT on Networks of U.S. Bank, Airport, Software Company
+
+Threat Advisory Special Report: Iranian Threat Actor Group Update
+
+Interplay between Iranian Targeting of IP Cameras and Physical Warfare in the Middle East
+
+UAT-9244 targets South American telecommunication providers with three new malware implants
+
+Cyber Battlefield: Ariomex, Iran-Based Crypto Exchange, Suffers Data Leak
+
+Quantum Decryption of RSA Is Much Closer Than Expected
+
+Now is a good time for doing crime
+
+iVerify Details First Known Mass iOS Attack
+
+Meta Ray-Ban Smart Glasses Are Sending Footage of People Having Sex, Undressing, and Using the Bathroom to Workers in Kenya
+
+Look What You Made Us Patch: 2025 Zero-Days in Review
+
+US banks on high alert for cyberattacks as Iran war escalates
+
+White House Unveils President Trump’s Cyber Strategy for America
+
+FBI investigating ‘suspicious’ cyber activity on system holding sensitive surveillance information
+
+Follow me on Twitter: @securityaffairs and Facebook and Mastodon
+
+(XXXXXXX, AÇIK - https://securityaffairs.com/189094/breaking-news/security-affairs-newsletter-round-566-by-pierluigi-paganini-international-edition.html, securityaffairs.com, 08.03.2026)
+
+================================================================================
+
+[10] The Register - FBI is investigating breach that may have hit its wiretapping tools
+────────────────────────────────────────────────────────────────────────────────
+Tarih: 2026-03-08T23:14:54.00Z
+Link: https://go.theregister.com/feed/www.theregister.com/2026/03/08/fbi_investigates_wiretap_system_breach/
+
+[TAM METİN - 1023 kelime]
+FBI is investigating breach that may have hit its wiretapping tools
+
+PLUS: Europol takes down two crime gangs; LastPass users phished (again); Crooks increase crypto hauls; And more
+
+Infosec In Brief The FBI is investigating a breach of its systems which reportedly affected systems related to wiretapping and surveillance.
+
+"The FBI identified and addressed suspicious activities on FBI networks, and we have leveraged all technical capabilities to respond," a spokesperson told us via email last Friday. "We have nothing additional to provide."
+
+The bureau’s remarks follow an earlier CNN report that cited a source familiar with the investigation and who told the outlet that the digital intrusions are related to the network that the agency uses to manage wiretapping and foreign intelligence surveillance warrants.
+
+And while the FBI declined to provide any additional information, it's worth noting that China's Salt Typhoon previously compromised wiretapping systems used by law enforcement.
+
+Salt Typhoon is the PRC-backed crew that famously hacked major US telecommunications firms and stole information belonging to nearly every American.
+
+According to the Associated Press, the FBI notified Congress that it began investigating the breach on February 17 after spotting abnormal log information related to a system on its network.
+
+"The affected system is unclassified and contains law enforcement sensitive information, including returns from legal process, such as pen register and trap and trace surveillance returns, and personally identifiable information pertaining to subjects of FBI investigations," the notification said.
+
+Europol takes down phishing outfit and dirty data distributor
+
+Europol-coordinated operations last week took down two major cybercrime platforms.
+
+On March 4, Europol issued separate announcements revealing that its team dismantled the Tycoon2FA phishing platform, and stolen data marketplace LeakBase.
+
+Tycoon2FA has been the world’s dominant phishing-as-a-service platform since commencing operations in 2023, according to an eSentire report last year.
+
+In announcing the takedown, Europol said that by mid-2025, Tycoon2FA was the source of roughly 62 percent of all phishing attempts blocked by Microsoft.
+
+"It enabled thousands of cybercriminals to covertly access email and cloud-based service accounts. At scale, the platform generated tens of millions of phishing emails each month and facilitated unauthorized access to nearly 100,000 organizations globally, including schools, hospitals, and public institutions."
+
+LeakBase served as a haven for cybercriminals looking to get their hands on the types of data typically stolen by infostealer malware.
+
+Europol described it as a "vast and continuously updated archive of breached databases."
+
+The website had over 142,000 registered users as of December 2025. Authorities will now investigate them all.
+
+Law enforcement officials carried out over 100 takedown actions across March 3-4, including unspecified "measures" against 37 of the site's most active users.
+
+The following day, authorities seized the website's domain and dropped the usual splash page informing visitors of the situation – the technical side of the takedown.
+
+Singapore spent 11 months booting China-linked snoops out of telco networks
+
+Polish cops nab 47-year-old man in Phobos ransomware raid
+
+Spyware disguised as emergency-alert app sent to Israeli smartphones
+
+Cisco warns of two more SD-WAN bugs under active attack
+
+LastPass warns users about tricky phishing attacks
+
+LastPass last week warned users of a phishing campaign that faked internal email threads.
+
+In a campaign beginning around March 1, the phishing emails were crafted to appear like emails exchanged by internal users, and then forwarded on to targets.
+
+The emails mostly discussed unauthorized access to accounts but used different angles to trick users. Some were ostensibly highlighting LastPass vault exports, others tried to convince users that their accounts had been recovered elsewhere, and others acted as fake notifications of a new device registration.
+
+"Attackers use display name spoofing so that the name portion of the sender field is manipulated to impersonate LastPass, while the actual sending email address is unrelated," the company said.
+
+"The attacker relies on the fact that many email clients, especially mobile, show only the display name, hiding the real sender address unless you expand it."
+
+Like many fine phisherfolk, the perps encouraged victims to act quickly or risk their security.
+
+Clicking a link took them to an imitation LastPass SSO page, where the attackers would scoop up their credentials.
+
+"Please remember that no one at LastPass will ever ask for your master password," the company advised. "Rest assured, we are working with our third-party partners to have these sites taken down as soon as possible."
+
+Russian ransomware operator pleads guilty
+
+A Russian national pleaded guilty in US federal court on Wednesday to wire fraud conspiracy for his role in the Phobos ransomware operation that extorted tens of millions of dollars from its victims across the globe.
+
+Evgenii Ptitsyn, 43, administered the sale, distribution, and operation of the ransomware-as-a-service operations. According to the feds, Phobos affiliates victimized more than 1,000 public and private entities and extorted ransom payments worth more than $39 million.
+
+Ptitsyn was arrested in South Korea in 2024 and extradited to the US that same year.
+
+He now faces a maximum penalty of 20 years behind bars.
+
+Last month, Polish police arrested and charged another suspected Phobos ransomware operator after finding artifacts on his devices that the investigators believe are linked to cybercrime.
+
+Crypto flows to sanctioned entities
+
+Blockchain-watcher Chainalysis last week published research claiming sanctioned entities managed to conduct $154 billion worth of cryptocurrency transactions in 2025, a 694 percent year-over-year increase.
+
+$104 billion of that haul went to sanctioned entities, with the rest headed to “illicit addresses” – crypto accounts associated with crime or terrorist financing.
+
+“The ruble-backed A7A5 stablecoin processed $93.3 billion in less than a year, acting as a critical bridge for Russian businesses to access global markets despite sanctions,” Chainalysis found, while Iran and Venezuela also used digi-dollars to dodge international law. ®
+
+Advanced persistent threat
+
+Application Delivery Controller
+
+Center for Internet Security
+
+Common Vulnerability Scoring System
+
+Cybersecurity and Infrastructure Security Agency
+
+Cybersecurity Information Sharing Act
+
+Infrastructure Security
+
+Personally Identifiable Information
+
+Quantum key distribution
+
+Software Bill of Materials
+
+Trusted Platform Module
+
+Advanced persistent threat
+
+Application Delivery Controller
+
+Center for Internet Security
+
+Common Vulnerability Scoring System
+
+Cybersecurity and Infrastructure Security Agency
+
+Cybersecurity Information Sharing Act
+
+Infrastructure Security
+
+Personally Identifiable Information
+
+Quantum key distribution
+
+Software Bill of Materials
+
+Trusted Platform Module
+
+(XXXXXXX, AÇIK - https://go.theregister.com/feed/www.theregister.com/2026/03/08/fbi_investigates_wiretap_system_breach/, go.theregister.com, 09.03.2026)
+
+================================================================================
+
+[11] TechCrunch Security - Ring’s Jamie Siminoff has been trying to calm privacy fears since the Super Bowl, but his answers may not help
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 09 Mar 2026 04:35:06 +0000
+Link: https://techcrunch.com/2026/03/08/rings-jamie-siminoff-has-been-trying-to-calm-privacy-fears-since-the-super-bowl-but-his-answers-may-not-help/
+
+[TAM METİN - 1911 kelime]
+When Ring founder and CEO Jamie Siminoff decided to use the company’s first-ever Super Bowl commercial to introduce Search Party — an AI-powered feature that uses Ring camera footage to help find lost dogs — he expected Americans to love it. Instead, the TV spot set off a firestorm.
+
+In fact, practically since the moment it aired in February, Siminoff has been making the rounds on CNN, NBC, and in the pages of the New York Times, explaining that his critics fundamentally misunderstand what Ring is building. He sat down with TechCrunch a few days ago to make his case again, and while he was candid and plainly eager to reframe the narrative, some of his answers may well raise fresh questions among those already uneasy about the growth of home surveillance.
+
+The feature at the center of the controversy is fairly mundane on the surface, and something we covered in a straightforward way when it was first released. A dog goes missing; Ring alerts nearby camera owners to ask whether the animal shows up in their footage; users can respond or ignore the request entirely and stay invisible to everyone involved. Siminoff leaned heavily on this throughout our conversation — the idea that doing nothing counts as opting out, that no one is conscripted into anything.
+
+“It is no different than finding a dog in your backyard, looking at the collar and deciding whether or not to call the number,” he said.
+
+What he believes actually prompted the backlash was the visual in the Super Bowl spot: a map showing blue circles pulsing outward from house after house as cameras switched on across a neighborhood grid. “I would change that,” he said. “It wasn’t our job to try to poke anyone to try and get some response.”
+
+But Ring picked a rocky moment to make its case. Nancy Guthrie — the 84-year-old mother of Today Show anchor Savannah Guthrie — had vanished from her Tucson home in late January. Footage from a Google Nest camera at the property, capturing a masked figure trying to smother the lens with foliage, had swept across the internet and plopped home surveillance cameras squarely into the center of a national argument about safety, privacy, and who gets to watch whom.
+
+Siminoff leaned into the Guthrie case rather than away from it. In a separate interview with Fortune, he contended it was an argument for putting more cameras on more houses. “I do believe if they had more [footage from Guthrie’s home], if there was more cameras on the house, I think we might have solved” the case, he said. Ring’s own network, he noted, had turned up footage of a suspicious vehicle two and a half miles from the Guthrie property.
+
+Disrupt 2026: The tech ecosystem, all in one room
+
+Save up to $300 or 30% to TechCrunch Founder Summit
+
+Whether you find that heartening or disturbing depends on your point of view. Siminoff clearly believes video is an unqualified social good, but some might look at the same statements and see a company founder using a kidnapping to get more of his products into consumers’ hands.
+
+Either way, the discomfort with Search Party isn’t simply about those blue concentric circles in the ad. The feature sits alongside two others — Fire Watch, which crowdsources neighborhood fire mapping, and Community Requests, which allows local law enforcement to ask Ring users in a given area whether they have relevant footage from an incident.
+
+Ring relaunched Community Requests in September through a partnership with Axon, the company that makes police body cameras and tasers, and operates the evidence management platform Evidence.com. (Axon and Ring announced the partnership in April of last year, shortly after Siminoff rejoined the company after stepping away in 2023.)
+
+A previous version of that partnership involved Flock Safety, which operates AI-powered license plate readers. Ring ended that arrangement several days after the Super Bowl ad aired, with Siminoff citing the “workload” it would create when he talked with us.
+
+Asked directly, Siminoff declined to address whether Flock’s reported data-sharing with U.S. Customs and Border Protection also played a role. (Dozens of towns across the U.S. have cut ties with Flock over exactly those concerns.) Still, the timing of Ring’s decision was notable. While Siminoff believes some customers are misreading his products, he knows Ring can’t afford to dismiss their anxieties, particularly right now.
+
+None of this is happening in isolation. Just days ago, NPR reported on its own investigation compiled from dozens of accounts from people who found themselves caught in the Department of Homeland Security’s expanding surveillance apparatus, including U.S. citizens with no immigration status issues at all. O
+
+One woman, a constitutional observer trailing an ICE vehicle in Minneapolis in late January, described a masked federal agent leaning out the window, photographing her, and then calling out her name and home address. “Their message was not subtle,” she told NPR. “They were, in effect, saying, we see you. We can get to you whenever we want to.”
+
+Siminoff seems to understand deeply that his answers about Ring’s own data practices take on added weight as a result. When we talked, he pointed to end-to-end encryption as Ring’s strongest privacy protection and confirmed that when it’s enabled, not even Ring employees can view the footage since decryption requires a passphrase tied to the user’s own device. He described this as an industry first for residential camera companies.
+
+The facial recognition question is where things get more tangled. Ring rolled out a feature called Familiar Faces in December, two months before the Super Bowl ad aired. It allows users to catalog up to 50 frequent visitors — family members, delivery drivers, neighbors — so that instead of a generic motion alert, Ring owners get a notification that reads “Mom at Front Door.” Siminoff described the feature enthusiastically during our conversation, saying that he gets alerts, for example, when his teenage son pulls into the driveway.
+
+He compared it to the facial recognition now routine at TSA checkpoints – the implication being that the public has already made its peace with this kind of thing. When asked about consent from people who appear on a Ring camera but never agreed to be catalogued, he said simply that Ring adheres to applicable local and state laws.
+
+He was also careful when asked whether Amazon draws on Ring’s facial recognition data. “Amazon does not access that data,” he said, then he added: “In the future, if we could see a feature where the customer wanted to opt in to do something with that, maybe you could see that happening.”
+
+He further volunteered that end-to-end encryption is an opt-in feature: users have to manually enable it in the Ring app’s Control Center. But according to Ring’s own support documentation, the tradeoff for enabling it is steep. The full list of features disabled by end-to-end encryption includes event timelines, rich notifications, quick replies, video access on Ring.com, shared user access, AI video search, 24/7 video recording, pre-roll, snapshot capture, bird’s eye view, person detection, AI video descriptions, video preview alerts, virtual security guard, and Familiar Faces, which requires processing in the cloud. In other words, the two things Ring is actively promoting as flagship capabilities — AI-powered recognition of who’s at your door, and true privacy from Ring itself — are mutually exclusive. You can have one or the other but not both.
+
+As for whether Ring users should worry about their footage ending up in front of a federal immigration agency, Siminoff said no — community requests run only through local law enforcement channels — and pointed to Ring’s transparency report on government subpoenas. He didn’t take up what happens when that boundary proves porous.
+
+Unsurprisingly, Siminoff is building toward something bigger than doorbell cameras. Ring has more than 100 million cameras in the field and is now quietly dipping a toe into enterprise security with a new “elite” camera line and a security trailer product. He said that small businesses have been pulling Ring into their spaces already, whether Ring markets to them or not. He’s also open to outdoor drones — “if we could get the cost in a place where it made sense” — and on license plate detection, which Ring’s now-former-partner Flock Safety has made its core business, he declined to say never. (Ring is “definitely not” working on it today, he’d said when asked whether it’s something Ring might explore. After a beat, he added that “it’s very hard to say we’re never going to do something in the future.”)
+
+Siminoff frames all of it through a belief he says he has held from the start of the company, that each home is a node controlled by its owner, and residents should be able to choose whether to participate in neighborhood-level cooperation when something happens.
+
+Alas, in a moment when an NPR investigation has documented federal agents photographing and identifying civilians who were doing nothing more than observing arrests, and when a kidnapping case has become a national talking point about both cameras and privacy, the question isn’t just about whether Ring’s opt-in framework is designed well. It’s whether what Ring is building — including a network of tens of millions of cameras, AI-powered search, and facial recognition — can remain as benign as Siminoff may well intend it,  regardless of who is in power, what partnerships get struck, and how the data flows.
+
+Editor in Chief & General Manager
+
+Actively scaling? Fundraising? Planning your next launch?TechCrunch Founder Summit 2026 delivers tactical playbooks and direct access to 1,000+ founders and investors who are building, backing, and closing.Register by March 13 to save up to $300.
+
+Cluely CEO Roy Lee admits to publicly lying about revenue numbers last year
+
+
+
+Julie Bort
+
+Cluely CEO Roy Lee admits to publicly lying about revenue numbers last year
+
+Cluely CEO Roy Lee admits to publicly lying about revenue numbers last year
+
+Cursor is rolling out a new kind of agentic coding tool
+
+
+
+Russell Brandom
+
+Cursor is rolling out a new kind of agentic coding tool
+
+Cursor is rolling out a new kind of agentic coding tool
+
+Meta sued over AI smart glasses’ privacy concerns, after workers reviewed nudity, sex, and other footage
+
+
+
+Sarah Perez
+
+Meta sued over AI smart glasses’ privacy concerns, after workers reviewed nudity, sex, and other footage
+
+Meta sued over AI smart glasses’ privacy concerns, after workers reviewed nudity, sex, and other footage
+
+Jensen Huang says Nvidia is pulling back from OpenAI and Anthropic, but his explanation raises more questions than it answers
+
+
+
+Connie Loizos
+
+Jensen Huang says Nvidia is pulling back from OpenAI and Anthropic, but his explanation raises more questions than it answers
+
+Jensen Huang says Nvidia is pulling back from OpenAI and Anthropic, but his explanation raises more questions than it answers
+
+Anthropic CEO Dario Amodei calls OpenAI’s messaging around military deal ‘straight up lies,’ report says
+
+
+
+Amanda Silberling
+
+Anthropic CEO Dario Amodei calls OpenAI’s messaging around military deal ‘straight up lies,’ report says
+
+Anthropic CEO Dario Amodei calls OpenAI’s messaging around military deal ‘straight up lies,’ report says
+
+Father sues Google, claiming Gemini chatbot drove son into fatal delusion
+
+
+
+Rebecca Bellan
+
+Father sues Google, claiming Gemini chatbot drove son into fatal delusion
+
+Father sues Google, claiming Gemini chatbot drove son into fatal delusion
+
+ChatGPT uninstalls surged by 295% after DoD deal
+
+
+
+Sarah Perez
+
+ChatGPT uninstalls surged by 295% after DoD deal
+
+ChatGPT uninstalls surged by 295% after DoD deal
+
+(XXXXXXX, AÇIK - https://techcrunch.com/2026/03/08/rings-jamie-siminoff-has-been-trying-to-calm-privacy-fears-since-the-super-bowl-but-his-answers-may-not-help/, techcrunch.com, 09.03.2026)
+
+================================================================================
+
+[12] CSO Online - Rogues gallery: 15 worst ransomware groups active today
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 09 Mar 2026 09:00:00 +0000
+Link: https://www.csoonline.com/article/3838121/the-dirty-dozen-12-worst-ransomware-groups-active-today.html
+
+[TAM METİN - 2307 kelime]
+Ransomware is on the rise across all industries. Here are the criminal operations cybersecurity professionals should safeguard themselves against.
+
+Ransomware-as-a-service (RaaS) models, double extortion tactics, and increasing adoption of AI characterize the evolving ransomware threat landscape.
+
+Law enforcement takedowns of groups such as LockBit have contributed to making the ransomware marketplace more fragmented, with emergent players attempting to muscle in on the action.
+
+Attackers range from nation-state actors to RaaS operations, lone operators, and data theft extortion groups. Over recent years, financially motivated ransomware groups have adopted the stealth, evasion, and living-off-the-land techniques previously reserved for sophisticated espionage operations.
+
+Ransomware remains a lucrative opportunity for threat actors, with well over 7,000 victims publicly posted last year — a huge figure that excludes victims who paid and whose data was not posted by threat actors. Akira alone raked in approximately $45 million in illicit payments in 2025, according to GuidePoint Security.
+
+The following non-exhaustive list contains a rundown of the main currently active threat groups, selected for inclusion based on their impact or innovative features.
+
+History: Akira is a sophisticated RaaS operation that emerged in early 2023 and remains active.
+
+How it works: Groups deploying Akira often exploit lack of authentication in corporate VPN appliances, open RDP (remote desktop protocol) clients, and compromised credentials to attack corporate systems.
+
+Targeted victims: The key targets are small to midsize businesses across North America, Europe, and Australia. Affected industries include manufacturing, professional and legal services, education, telecommunications, technology, and pharmaceuticals, according to Palo Alto Networks’ Unit 42 intelligence unit.
+
+Attribution: Circumstantial evidence suggests Russian origins, and links with the defunct Conti ransomware, but attribution remains unclear. “The [threat] actor gained attention due to the ‘retro aesthetic’ applied to their DLS (data leak site) and messaging,” Shobhit Gautam, staff solutions architect for EMEA at bug bounty platform HackerOne, says.
+
+History: Black Basta appeared on the ransomware scene in early 2022 and is believed to be a spin-off from Conti, a group notorious for attacking major organizations.
+
+How it works: Black Basta usually deploys malware through exploitation of known vulnerabilities and social engineering campaigns. “Employees in the target environment are email bombed and then contacted by the group pretending to be the organization’s help desk,” according to Christiaan Beek, senior director of threat analytics at Rapid7.
+
+Targeted victims: More than 500 organizations globally have been affected by Black Basta, according to an analysis by cloud security firm Qualys.
+
+Attribution: Security researchers speculate Black Basta may be associated with the FIN7 cybercrime group due to similarities in custom modules for evading endpoint detection and response systems in malware samples.
+
+History: BlackCat, also known by the aliases ALPHV or Noberus, emerged in November 2021. It is said to be made up of former members of the now-defunct Darkside group, which infamously targeted the Colonial Pipeline.
+
+How it works: The malware used by BlackCat targets Windows and Linux systems. BlackCat is known for using a triple-extortion strategy, which involves demanding a ransom for file decryption, pledging not to disclose stolen data, and preventing distributed denial-of-service (DDoS) attacks.
+
+Targeted victims: The BlackCat (ALPHV) ransomware group has been responsible for several high-profile attacks most notably Caesars Entertainment (September 2023) and Change Healthcare’s UnitedHealth Group subsidiary (February 2024).
+
+Attribution: The BlackCat group has gone dark, possibly in response to law enforcement action and the impact of the Change Healthcare attack. Its principals, likely experienced cybercriminals, have become the target of US prosecution.
+
+History: BlackLock (aka El Dorado) has shown explosive growth since emerging in March 2024.
+
+How it works: The group stands apart by developing its own custom malware — a hallmark of top-tier groups like “Play” and “Qilin,” according to ReliaQuest. Its malware targets Windows, VMware ESXi (virtualized servers), and Linux environments. Attackers typically encrypt data while also exfiltrating sensitive information, threatening to publish sensitive information if extortionate demands are not met.
+
+Targeted victims: BlackLock has targeted a wide variety of victims, including US-based real estate, manufacturing, and healthcare organizations.
+
+Attribution: BlackLock is highly active on the RAMP forum, a Russian-language platform focused on ransomware, actively recruiting for various roles, including initial access brokers, who sell access to partially compromised networks to its affiliates. There is no definitive attribution for the makeup of the BlackLock ransomware group.
+
+History: The Cl0p ransomware has a complex history dating back to 2019. Its widespread misuse over the past six years is primarily associated with Russian-speaking cybercrime groups, primarily TA505 and FIN11.
+
+How it works: Cl0p exploits zero-day vulnerabilities to target its prey. The Cl0p group tends to avoid using conventional payloads but still relies on a leak site to extort payment from victims. “We’ve seen the group use high-profile platform vulnerabilities with minimal downtime to exfiltrate data, such as exploiting a vulnerability in Cleo file transfer software,” according to Rapid7’s Beek.
+
+Targeted victims: Cl0p has targeted major organizations worldwide. Most notoriously, Cl0p conducted a massive campaign exploiting the MOVEit vulnerability, affecting thousands of organizations in 2023.
+
+Attribution: The Cl0p ransomware is attributed to several (mostly Russian speaking) cybercriminal groups.
+
+History: Initially linked to hacktivism, DragonForce became known from late 2023 onwards as a ransomware-as-a-service operation that aggressively recruits affiliates through dark web forums, among other tactics.
+
+How it works: DragonForce reuses LockBit and Conti code but with modified payloads. Last year it joined up with LockBit and Qilin to form a “ransomware cartel” that coordinates attacks and shares resources.
+
+Targeted victims: DragonForce and its affiliates have claimed more than 120 victims in various sectors, including retail and logistics.
+
+Attribution: The group was initially thought to be made up from members of a Malaysian pro-Palestinian hacktivist collective but a history of posts on Russian-speaking cybercrime forums and use of Russian cybercrime tooling have cast doubt on whether this theory remains valid.
+
+History: FunkSec is a new RaaS group that emerged in late 2024, claiming more than 85 victims in December alone.
+
+How it works: FunkSec uses AI in its malware development, demands low ransoms, and has “questionable credibility regarding their data leaks,” according to Rapid7’s Beek.
+
+Targeted victims: FunkSec has claimed a large number of victims, but researchers caution some of the leaks may be rehashed or recycled from earlier breaches.
+
+Attribution: FunkSec operates as a RaaS model, likely with Russian-speaking affiliates.
+
+History: This sophisticated group burst onto the ransomware scene in mid-2025 with a ransomware-as-a-service platform and attacks spanning manufacturing, construction, healthcare, and insurance.
+
+How it works: The group exfiltrates data before encrypting files and threatening to leak stolen information unless they are paid off. The Gentlemen, whose polished branding is styled after the Guy Richie film of the same name, abuse legitimate drivers for defense evasion, abuses Group Policy Objects to facilitate domain-wide compromise, and deploys custom malicious tools designed to disable endpoint security.
+
+Targeted victims: The Gentlemen have hit an estimated 30 victims across 17 countries with manufacturing and construction industries being the key targets, followed by healthcare, insurance, and others.
+
+Attribution: The cybercriminals behind The Gentlemen ransomware group remain unidentified.
+
+History: LockBit is a cybercrime group operating through a ransomware-as-a-service model it was instrumental in pioneering. Despite being disrupted in 2024, LockBit has shown signs of a comeback. The malware operation remains notorious for its efficient encryption and double extortion tactics.
+
+How it works: LockBit, despite a major takedown operation by law enforcement in 2024, continues to use the evermore powerful RaaS model as well as double extortion, also known as “lock and leak.” “LockBit continues to list victims, recruit affiliates, and try to reclaim its reputation on dark web forums,” Luke Donovan, head of threat intelligence, Searchlight Cyber tells CSO.
+
+LockBit resurfaced in September 2025 with the latest version of its ransomware, LockBit5.
+
+Targeted victims: LockBit targeted thousands of victims worldwide in its heyday, including government services, private sector companies, and critical infrastructure providers.
+
+Attribution: LockBit’s use of Russian-language forums and targeting patterns have led some analysts to believe the group is based in Russia. Russian national Dmitry Yuryevich Khoroshev, named by Western law enforcement agencies last year as the developer and administrator of LockBit, faces a US indictment alongside asset freezes and travel bans. Two Russian nationals were indicted for deploying LockBit ransomware against targeted organizations.
+
+History: Lynx shares 48% of its source code with the earlier INC ransomware, which indicates a plausible rebranding or evolution of the same threat actor.
+
+How it works: Lynx also operates a RaaS and employs double extortion tactics. After infiltrating a system, the ransomware can steal sensitive information and encrypt the victim’s data, effectively locking them out. To make recovery more difficult, it adds the ‘.lynx’ extension to encrypted files and deletes backup files like shadow copies.
+
+Targeted victims: Since emerging, the ransomware has actively targeted several US and UK industries, including retail, real estate, architecture, financial services, and environmental services. The group behind Lynx attacked multiple facilities across the US between July 2024 and November 2024, which include victims associated with energy, oil, and gas, according to Palo Alto’s Unit 42 threat intel group. “According to a statement Lynx released in July 2024, they claim to be ‘ethical’ with regards to choosing victims,” Rapid7’s Beek adds.
+
+Attribution: Lynx operates as a RaaS model, meaning it is likely used by multiple cybercriminals rather than a single entity.
+
+History: Medusa is a ransomware-as-a-service operation that debuted in 2022.
+
+How it works: The group typically hacks into systems by either exploiting vulnerabilities in public-facing assets, phishing emails, or using initial access brokers.
+
+Targeted victims: Cybercriminals behind Medusa have targeted healthcare, education, manufacturing, and retail organizations in the US, Europe, and India.
+
+Attribution: Activity on Russian-language cybercrime forums related to Medusa suggests the core group and many of its affiliates may be from Russia or neighbouring countries but this remains unconfirmed.
+
+History: Play is a ransomware threat that emerged in June 2022. The group intensified its activities following the disruption of other major threat actors.
+
+How it works: Attackers typically encrypt systems after exfiltrating sensitive data. Play keeps a fairly low profile on the dark web aside from its leak site, not advertising itself on dark web forums. “It has even claimed not to be an RaaS gang at all, saying it maintains a ‘closed group to guarantee the secrecy of deals,’ in spite of evidence to the contrary,” Searchlight Cyber’s Donovan explains.
+
+Targeted victims: The group has targeted various sectors, including healthcare, telecommunications, finance, and government service.
+
+Attribution: Play may have connections to North Korean state-aligned APT groups.
+
+In October 2024, security researchers at Palo Alto Networks’ Unit 42 published evidence of a deployment of Play ransomware by a threat actor backed by North Korea, specifically APT45. “The link between this threat actor and Play is unclear, but demonstrates the potential for crossover between state-sponsored cyber activity and ostensibly independent cybercrime networks,” Donovan says.
+
+History: Qilin, also known as Agenda, is a Russia-based RaaS group that has been operating since May 2022.
+
+How it works: The group targets Windows and Linux systems, including VMware ESXi servers, using ransomware variants written in Golang and Rust. Qilin follows a double extortion model — encrypting victims’ files and threatening to leak stolen data if the ransom is not paid.
+
+Targeted victims: Qilin recruits affiliates on underground forums and prohibits attacks on organizations in Commonwealth of Independent States (CIS) countries bordering present-day Russia.
+
+Qilin posted looted data from 697 victims in the second half on 2025, a five-fold year-on-year increase, according to research by Searchlight Cyber. Security researchers attribute the surge to an aggressive recruitment effort and tie-ins with initial access brokers to obtain stolen VPN credentials.
+
+Attribution: The makeup of Qilin remains unknown but a Russian-speaking organized cybercrime operation is strongly suspected.
+
+History: RansomHub emerged in February 2024 and quickly became a major cyber threat. The group, initially known as Cyclops and later Knight, rebranded and expanded its operations by recruiting affiliates from other disrupted ransomware groups such as LockBit and ALPHV/BlackCat.
+
+How it works: Once inside a network, RansomHub affiliates exfiltrate data and deploy encryption tools, often utilizing legitimate administrative utilities to facilitate their malicious activities. RansomHub operates an “affiliate-friendly” RaaS model, initially offering a fixed 10% fee for those that make attacks using its ransomware and the option to collect ransom payments directly from victims before paying the core group. “These elements make it an attractive option for affiliates that are looking for a guaranteed return, where other RaaS operations have been unreliable in paying out in the past,” Searchlight Cyber’s Donovan says.
+
+Targeted victims: RansomHub has been linked to more than 210 victims across various critical sectors, including healthcare, finance, government services, and critical infrastructure in Europe and North America, according to Rapid7.
+
+Attribution: Attribution remains unconfirmed but circumstantial evidence points toward an organized Russian-speaking cybercrime operation with ties to other established ransomware threat actors.
+
+Scattered Lapsus$ Hunters
+
+History: Previously separate cybercrime groups Scattered Spider, LAPSUS$, and ShinyHunters formed a loose alliance in August 2025 to run ransomware attacks against large enterprises. Initially affiliates for ALPHV/BlackCat and others, the group broke away and developed its own platform and methodology.
+
+How it works: Scattered Lapsus$ Hunters is noted for its expertise in using social engineering to compromise help desks, among other tactics. The Consolidated Threat Group combines financial extortion via data leaks with ransomware. Their leak site was seized by law enforcement in October 2025 but this may well not be the last we hear of the cybercrime supergroup.
+
+Targeted victims: The collective ran a major Salesforce campaign in August and October that exposed data from dozens of companies, including Toyota, FedEx, and Disney.
+
+Attribution: Security researchers characterize Scattered Lapsus$ Hunters as a loose alliance rather than a single cohesive group. Suspected members of the group remain publicly unidentified as of late February 2026.
+
+Ransomware groups switch to stealthy attacks and long-term access
+
+What are the types of ransomware attacks?
+
+Hackers turn bossware against the bosses
+
+From our editors straight to your inbox
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/3838121/the-dirty-dozen-12-worst-ransomware-groups-active-today.html, csoonline.com, 09.03.2026)
+
+================================================================================
+
+[13] CSO Online - 4 ways to prepare your SOC for agentic AI
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 09 Mar 2026 07:00:00 +0000
+Link: https://www.csoonline.com/article/4140208/4-ways-to-prepare-your-soc-for-agentic-ai.html
+
+[TAM METİN - 1837 kelime]
+Although much is said about the roles of entry-level analysts, CISOs should also focus on governance, playbooks and more to ensure that the SOC and the team is ready for AI.
+
+a way to automate alert triage, threat investigation and eventually higher-level functions.
+
+According to IDC, agentic AI is on track to become mainstream infrastructure. The analyst firm expects 45% of organizations to have autonomous agents operating at scale across critical business functions by 2030. In enterprise SOCs, AI is already reshaping functions like alert triage, enrichment, data correlation, IOC validation and initial containment. It could soon move up the stack to take on more complex tasks like incident investigation, root cause analysis, and response.
+
+“AI acts as a force multiplier in the SOC,” says Nicole Carignan, senior VP, security and AI strategy at Darktrace. But harnessing that promise will require organizations to invest now in reskilling analysts, redesigning processes, building new technical roles, and establishing guardrails and governance frameworks to ensure autonomous AI agents operate safely. “It’s not enough to simply deploy an AI solution. Security practitioners must understand how the underlying machine learning techniques function, what their strengths and limitations are, and how to evaluate their outputs,” Carignan says. “Without explainability and trust, AI risks are exacerbating alert fatigue rather than solving it.”
+
+Here is what security leaders need to know — and do — to prepare their SOCs for the agentic AI era.
+
+Reskill analysts to become AI collaborators and overseers
+
+Increasingly, human roles in the SOC will shift from hands-on execution to supervision, governance, design, and oversight. As AI agents take on more operational tasks, analysts will need to focus on managing AI systems, interpreting outputs, and resolving the nuanced challenges machines cannot handle, says Casey Ellis, founder of Bugcrowd. “Jobs won’t disappear, they’ll adapt. The key is ensuring that SOC professionals are prepared for this shift through ongoing education, training, and tooling.”
+
+Few expect the transition will occur organically or without friction. Many SOC leaders will need to reskill existing staff to manage AI effectively; to interrogate AI reasoning; enrich investigations with contextual insight; and apply informed human analysis to AI-driven outputs.
+
+When acting on an AI tool’s recommendation, analysts must understand what questions the agent asked, which data sources it queried, and what evidence informed its decision, according to Dov Yoran, co-founder and CEO of Command Zero. From there, they need to be able to pivot to additional data sources, pursue new artifacts, and extend the investigative timeline as needed. “Junior analysts who might not know how to start an investigation from scratch can become effective by learning how to extend and refine what the agent produced,” Yoran says. “It’s a different skill set from traditional SOC work, and in many ways, a more accessible one.”
+
+In the SOC of the future, analysts must also act as adversarial reviewers of AI-driven conclusions. That’s because AI systems can introduce hallucinations, training-data bias, and other vulnerabilities while also being vulnerable to adversarial manipulation. Analysts need to recognize these risks to ensure decisions remain grounded and defensible, says Ensar Seker, CISO at SOCRadar. “Analysts need to be trained less as button-pushers and more as adversarial reviewers of AI output. That means understanding how models reason, where they fail, how bias and data gaps surface, and how to interrogate confidence levels and assumptions. The goal isn’t to ‘trust AI faster,’ but to develop the instinct to ask: What would make this conclusion wrong?” Seker says.
+
+Analysts will also play a critical role in enabling organization-specific context into AI-driven workflows. Without that context, agents risk missing threats, amplifying noise, or triggering risky actions based on incomplete information. SOC leaders need to remember that “AI agents are only as smart as the context they have access to,” Yoran says. Analysts must learn to annotate identities, maintain watch lists, document recurring false-positive patterns, and build enrichment layers that strengthen future investigations, he said, “This is knowledge work, not data work.”
+
+Ultimately, the objective is not to outperform AI, but to do better where AI falls short. For example, “accept that autonomous alert triage will become table stakes,” Yoran says. “Your processes need to shift from ‘how do we triage every alert’ to ‘how do we handle escalations from autonomous investigations’.”
+
+Build capabilities for AI governance, content and quality
+
+Upskilling existing analysts alone is not enough. As AI agents begin operating across tools, making decisions and triggering actions with minimal human involvement, the demands on the SOC will extend well beyond traditional analyst capabilities, experts say.
+
+Content engineering, for instance, is one emerging requirement. In an AI-enabled SOC, detection engineers will no longer write only static rules. They must design dynamic content such as questions, prompts and investigation templates that agents can use to reason, enrich data, correlate signals and act autonomously. These content engineers curate the structured inputs that power agents, including telemetry, threat models, and playbooks.
+
+“This is the most underappreciated role in AI-powered security operations,” Yoran notes. “These are people who build and maintain the questions that agents can ask, the investigation plans that guide autonomous work, and the knowledge bases that provide context,”. Organizations need someone who can translate detection logic from their SIEM, import best practices from frameworks like MITRE ATT&CK, and encode institutional knowledge into the platform. “This isn’t traditional security engineering, it’s closer to knowledge management combined with threat intelligence,” he says.
+
+Mature SOCs will also require clear ownership of AI governance and agent oversight. That includes roles that have oversight over model risk evaluation, prompt and policy management, continuous performance validation, and even red teaming the agents themselves, Seker says. “You don’t need a massive new team, but you do need clear accountability for how autonomous decisions are made, tested, and constrained.”
+
+Another emerging need is analysts with deep fluency in data management. An AI-driven SOC will require professionals who understand how information should be classified, protected, normalized, and monitored to ensure reliable conclusions. “With 64% of organizations planning to add AI-powered solutions to their security stack in the next year, it is critical for professionals to cross-skill in AI,” Carignan says. “Cybersecurity professionals must become fluent in AI and data, developing a deeper understanding of data classification, governance, and model behavior.” Cross-skills in data science, machine learning, and cybersecurity enable analysts to critically evaluate AI outputs, tune models for security use cases, and adapt defenses as threats evolve, making them indispensable in an AI-augmented SOC.
+
+Frank Dickson, an analyst at IDC, urged organizations to think of this capability as similar to a data architect role. “The key to getting value from AI is having data located in a place where you can get to it, having it formatted in a homogeneous way so you can do analysis on it, and then manage the data,” he says. “The success of your AI initiative is going to be tied to the effectiveness of your ability to get data. A data architect manages that.”
+
+Dickson also emphasized the need for an “orchestration platform engineer” role responsible for ensuring effective communication and workflow integration across security tools. The SOC of the future will not hinge on a single platform but on an interconnected ecosystem of SIEM, EDR, SOAR, identity, cloud and other systems that must operate in concert to support AI-driven, agentic investigations and automation, Dickson tells. Dedicated orchestration expertise will become essential to maintain reliable data flows and automation logic in such an environment, he noted.
+
+Redesign SOC processes and playbooks where needed
+
+Organizations will need to review and rework SOC processes and playbooks to ensure their AI-augmented SOC is consistent, efficient and continuously learning. Yoran recommends that SOC leaders focus on codifying institutional knowledge into AI agent-accessible questions and plans. Translate playbooks into investigation plans that AI agents can follow on a repeatable basis. In situations where an agent might hit a wall, have processes in place for a smooth handoff to a human analyst and build feedback loops for continuous improvement, Yoran adds.
+
+“Playbooks must shift from step-by-step human procedures to intent-based guardrails,” Seker points out. “Instead of telling analysts how to investigate, define what outcomes are allowed, what actions are prohibited, and when human approval is mandatory.”. The objective is not to micromanage every alert but to assume AI agents operate continuously across tools, with humans only supervising exceptions, edge cases, and strategic decisions.
+
+SOCs also need to rethink metrics, accountability, and documentation within the SOC. Traditional performance indicators, such as ticket closure rates or mean time to resolution, may need to broaden to include model accuracy, escalation quality, and the effectiveness of automated containment actions. “The biggest mistake is optimizing for speed metrics instead of investigation quality,” Yoran says. “I see this constantly: vendors promising 90% faster time to resolution or reduce tier-one workload by 80% or close alerts in seconds instead of hours. These metrics while seductive are dangerous,” he cautions. “Making the same mistake faster benefits no one. An incomplete investigation that closes in two minutes isn’t better than a thorough investigation that takes 30 minutes.”
+
+Auditability too becomes critical. All AI-driven decisions should be traceable, explainable, and reviewable from both an internal governance standpoint and for external compliance requirements.  “If you can’t explain why an AI took an action to an auditor, regulator, or executive, it shouldn’t be allowed to take that action. Explainability isn’t a nice-to-have; it’s a prerequisite for autonomy,” Seker says.
+
+Implement AI guardrails and principles
+
+Formal guardrails and operating principles are going to be critical in SOCs where AI agents influence decisions, initiate responses and help prioritize threats. That means setting defined boundaries around data access and model behavior, having processes to validate responses and making sure humans remain in the loop on all high-impact decisions.
+
+Focus areas should include approval thresholds for autonomous actions, figuring out allowed and disallowed actions for an agent, protecting against prompt injection attacks, testing and red-teaming of agentic workflows and ensuring IR policies are updated for AI-driven actions. “Require transparent decision trails, rate limiting, least-privilege, and instant override,” Seker advises. “Hard limits on action scope, blast radius, and privilege are non-negotiable. Agents should operate under least-privilege identities, with explicit kill-switches, change-control boundaries, and environment awareness. The key is to ensure that AI is never allowed to silently escalate its own authority or modify guardrails without human approval.”
+
+IDC analyst Dickson pointed to identity and access as two other areas to focus on by way of guardrails and policies. “In the past, when we gave humans access, we often over-provisioned by default. That approach does not work with agents. With agentic AI, permissions must start at least privilege, defined precisely from day one.”
+
+The focus should be on ensuring no standing privileges, implementing dynamic authorization and establishing clear role definitions, Dickson says. “Agentic AI is enormously powerful. Constraining access correctly is non-negotiable.”
+
+OAuth vulnerability in n8n automation platform could lead to system compromise
+
+Challenges and projects for the CISO in 2026
+
+Iranian cyberattacks fail to materialize but threat remains acute
+
+From our editors straight to your inbox
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/4140208/4-ways-to-prepare-your-soc-for-agentic-ai.html, csoonline.com, 09.03.2026)
+
+================================================================================
+
+[14] CSO Online - PQC roadmap remains hazy as vendors race for early advantage
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 09 Mar 2026 06:10:51 +0000
+Link: https://www.csoonline.com/article/4142174/pqc-roadmap-remains-hazy-as-vendors-race-for-early-advantage.html
+
+[TAM METİN - 1680 kelime]
+As quantum risk gains urgency, security vendors are turning PQC readiness into a structured market offering centered on discovery, inventory, and migration planning.
+
+Post-quantum cryptography (PQC) has long sat on the periphery of enterprise security, with experts calling it inevitable but not urgent. That posture is beginning to shift.
+
+Earlier this year, Palo Alto Networks published a blog announcing a new “quantum-safe security” initiative, framing it as a way for enterprises to assess where quantum-vulnerable cryptography exists across their environments and begin planning a transition. While the announcement was light on technical specifics, it added to a growing security sentiment. Post-quantum threats are real.
+
+“IDC’s view is that post-quantum risk is no longer a distant, theoretical issue; it is becoming a present-day governance and operational risk, especially for regulated and data-intensive industries,” said Sakshi Grover, senior research manager, security services, IDC Asia Pacific. While practical quantum attacks remain years away, security vendors are beginning to pull PQC out of the confines of a “future theory” and into present-day risk management.Rather than pushing sweeping architectural changes from the start, they are positioning discovery, inventory, readiness assessments, and crypto-agility capabilities as the first steps to get enterprises up to speed with quantum.
+
+But even that groundwork is far from straightforward.
+
+Can’t change what you can’t see
+
+At the heart of most PQC readiness offerings is a basic but difficult problem. Many organizations do not know where or how cryptography is used across their infrastructure. Encryption is embedded everywhere, from certificates and VPNs to APIs, firmware, identity systems, and third-party software. That sprawl makes it difficult to evaluate exposure to algorithms like RSA and elliptic curve cryptography, which are expected to be broken by sufficiently capable quantum computers.
+
+Palo Alto’s messaging centers on this visibility gap. According to the company, its approach is to help organizations identify cryptographic usage that may not be quantum-safe and provide guidance on remediation paths. It isn’t alone in trying to do this.
+
+Cisco frames the visibility problem in similarly operational terms, emphasising that readiness spans multiple phases rather than a one-time audit. “Cisco CX’s Quantum-Safe Services delivers end-to-end support across discovery, monitoring, and migration–plus strategic advisory and ongoing optimization to keep pace with evolving standards,” said Christian Chisolm, senior director of strategy & planning, Security & Trust Organization, Cisco.
+
+Companies like IBM have also been building cryptographic inventory solutions to catalog every encryption component. IBM’s Quantum Safe Explorer (QSE) performs static analysis of software to locate cryptographic assets, including libraries and dependencies, and pairs that with runtime monitoring through its Quantum Safe Advisor to build a comprehensive “Cryptography Bill of Materials.”
+
+Some providers are focusing specifically on infrastructure-layer visibility. Cisco says its discovery currently concentrates on network cryptography exposure. “We currently detect: Digital certificates across management, control, and data places; Cryptographic protocols and algorithms (TLS/SSL, SSH, IPsec, etc); Key exchange mechanisms on Cisco network devices; Trust anchors and hardware security elements within platform architectures,” Chisolm said.
+
+Cloudflare, by contrast, emphasizes visibility at the connection layer rather than deep asset discovery. “Cloudflare provides visibility into which client devices and endpoints can successfully establish TLS 1.3 connections,” Volker Rath, field CISO at Cloudflare, said.
+
+Certificate management vendors are also repositioning core functions for PQC readiness. DigiCert, for example, uses its Trust Lifecycle Manager and related tools to help enterprises identify, inventory, and begin replacing vulnerable certificates with quantum-safe alternatives.
+
+Some are already ahead as the migration question looms
+
+One of the earliest vendors to operationalize cryptographic discovery specifically for PQC readiness was Sandbox AQ, which emerged from Google’s quantum research efforts. As early as 2022, the company argued that enterprises needed to inventory cryptography assets long before post-quantum algorithms could be deployed at scale.
+
+Initially offered as a consulting-driven assessment, that capability eventually evolved into a product, AQtive Guard, designed to continuously monitor cryptographic usage and flag quantum-vulnerable dependencies.
+
+In 2024, the platform’s deployment by SoftBank Corporation gave the company’s claims a public validation, uncovering unnoticed vulnerable encryption and certificate issues across a large enterprise network. Beyond SoftBank, SandboxAQ has managed to secure high-profile engagements, including a partnership to deploy AQtive Guard across multiple US Department of War entities to accelerate cryptographic visibility and PQC modernization.
+
+A handful of other vendors, too, have moved beyond experimental efforts to deliver more mature offerings. QuSecure offers the QuProtect platform, combining crypto-agility with discovery so enterprises can embed quantum-resilient cryptography into existing infrastructure without rewriting application code.
+
+Some niche players are offering full-stack products that embed PQC across services. Companies like Post-Quantum (UK-based) provide modular software for identity, VPNs, and encrypted messaging that is quantum-safe today, stressing crypto-agility and backward compatibility as part of readiness.
+
+“The approach to mass migration away from where we’ve grown comfortable into new methods of encryption is no easy task,” said Bart Willemsen, VP analyst at Gartner. “The road towards continuous inventory, prioritization for replacement, and the ability to maintain connectivity in operations is a long one. What’s more, we need to become and remain crypto-agile (we’re likely going to have to do the same again, later, as has always been the case historically) and that repeatability demands consistency.”
+
+Cisco argues that migration planning must account for legacy constraints, not just modern systems. “Legacy systems present unique challenges — limited processing power, fixed firmware, and operational lifecycles spanning over 10 to 20 years. When direct upgrades aren’t feasible, we deploy cryptographic abstraction layers: quantum-safe proxies or gateways that mediate communications on behalf of legacy devices, essentially wrapping vulnerable protocols in PQC-secured tunnels,” Chisolm said.
+
+Cloudflare takes a different approach, positioning its network as a compensating control. “This means customers do not necessarily need to upgrade legacy systems or proprietary software to achieve PQC readiness, as the connection is secured at the edge, removing the opportunity for interception along the way,” Rath said.
+
+“Harvest now, decrypt later” adds pressure
+
+Part of the renewed urgency comes from the “harvest now, decrypt later” threat model, in which adversaries collect encrypted data today with the expectation that it can be decrypted once quantum capabilities mature.
+
+This scenario has shifted PQC from a hypothetical future problem to an immediate data protection concern, particularly for industries handling sensitive data with long confidentiality lifetimes, including telecommunications, finance, healthcare, and government.
+
+“We do hear of HNDL attacks, where conventionally encrypted content is no longer discarded but retained by criminals, who are seeing the (quantum) developments as an opportunity for their nefarious activities within 2-3 years,” Gartner’s Willemsen said. “When criminals see opportunity around the corner, the quantum-based decryption risks are no longer theoretical; they are real.”
+
+Vendors increasingly argue that action cannot wait for fully capable quantum computers. Cisco warns that organizations holding long-lived sensitive data should already be moving beyond assessments. “Assessment is urgent, but active replacement is now imperative,” Chisolm said.Cloudflare echoes the timeline concern while pointing to official guidance. “The National Institute of Standards and Technology (NIST) recommends organizations achieve full post-quantum readiness by 2030,” Rath noted. “Given the complexity of updating infrastructure at scale, we recommend that enterprises begin planning the replacement process now to reduce stress, costs, and friction.”
+
+NIST also finalized multiple post-quantum cryptographic algorithms, giving vendors and enterprises targets for migration and reducing uncertainty. As organizations prepare for hybrid PQC deployments, combining classical and quantum-resistant algorithms, vendors are racing to ensure their offerings support evolving standards.
+
+“We have been monitoring the developments in quantum space for over a decade, and our strategic planning assumptions regarding the expected moment of compromise have consistently pointed towards around 2029,” Willemsen pointed out. “Given the amount of work to be done for a successful migration and ‘continuous in-control’ situation, that should be read as  ‘tomorrow.’”
+
+Not everyone is convinced that today’s PQC readiness offerings represent a fundamentally new category of security tooling.
+
+Much of what vendors are promoting: crypto inventories, certificate tracking, dependency mapping, overlaps with practices that security teams arguably should already have in place. In that sense, PQC may just be acting as a forcing hand for organizations to address longstanding blind spots rather than introducing entirely new technical requirements.
+
+Some vendors counter that the difference lies in depth and integration rather than concept. Cisco positions its approach as foundational rather than additive. “Traditional encryption tools inventory certificates and track key lifecycles. Cisco delivers infrastructure-level quantum readiness, embedding NIST PQC algorithms into core protocols and hardware roots of trust.”
+
+While NIST standards are now available, many commercial products and protocols have yet to fully integrate post-quantum algorithms. Even where support exists, performance trade-offs and interoperability challenges remain. IDC’s Grover recommends a phased transition. “Instead of aiming for full-scale deployment, buyers should prioritize critical systems first, align with NIST timelines, and integrate PQC into broader GRC programs,” she said.
+
+For vendors, the race is now about positioning. Being seen as a trusted guide through the PQC transition, rather than merely an algorithm provider, offers an opportunity to embed deeply into long-term enterprise roadmaps.
+
+Palo Alto Networks’ entry into PQC readiness reflects a broader shift in how the market is approaching the issue. What was once largely the domain of specialized quantum security firms is now being taken up by mainstream security and infrastructure vendors as part of their core platform strategies. Network providers like Cisco are introducing quantum-safe protections for existing protocols, while HSM vendors like Futurex are adding post-quantum algorithm support to established key management systems used in regulated environments.
+
+Cloudflare, similarly, frames readiness as an architectural shift rather than a discrete tool deployment. “With Cloudflare, customers simply need to place their origin server behind the Cloudflare network, and Cloudflare manages the encryption and key management,” Rath said.
+
+As more vendors formalize their offerings and additional customer deployments are disclosed, the edges of the PQC readiness market are likely to become clearer. What remains uncertain is whether enterprises will prioritize these efforts in the near term or treat them as part of the longer-term cryptographic modernization.
+
+4 ways to prepare your SOC for agentic AI
+
+Trump’s cyber strategy emphasizes offensive operations, deregulation, AI
+
+ClickFix attackers using new tactic to evade detection, says Microsoft
+
+From our editors straight to your inbox
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/4142174/pqc-roadmap-remains-hazy-as-vendors-race-for-early-advantage.html, csoonline.com, 09.03.2026)
+
+================================================================================
+
+[15] CSO Online - Tarnung als Taktik: Warum Ransomware-Angriffe raffinierter werden
+────────────────────────────────────────────────────────────────────────────────
+Tarih: Mon, 09 Mar 2026 04:00:00 +0000
+Link: https://www.csoonline.com/article/4139390/tarnung-als-taktik-warum-ransomware-angriffe-raffinierter-werden.html
+
+[TAM METİN - 914 kelime]
+Cyberkriminelle verlagern ihren Fokus von schnellen, unvorhergesehenen Angriffen hin zu einem parasitären Unterwandern, wie Experten darstellen.
+
+Statt eines kurzen, aber sehr schmerzhaften Stiches setzen Cyberkrimelle zunehmend darauf, sich in ihren Opfern festzubeißen und beständig auszusaugen.
+
+mycteria – shutterstock.com
+
+Ransomware-Angreifer ändern zunehmend ihre Taktik und setzen vermehrt auf unauffällige Infiltration. Dies liegt daran, dass die Drohung mit der Veröffentlichung sensibler Unternehmensdaten zum Hauptdruckmittel bei Erpressungen geworden ist.
+
+Der jährliche Red-Teaming-Bericht von Picus Security zeigt, dass Angreifer zunehmen von auffälligen Störungen zu stillen, langfristigen Zugriffen übergehen, also weg von „räuberischen“ Smash-and-Grab-Methoden hin zu einer „parasitären“ Strategie mit verdeckter Dauerpräsenz.
+
+So seien vier von fünf der häufigsten Angriffstechniken von Ransomware-Varianten darauf ausgelegt, nach dem ersten Angriff unentdeckt zu bleiben. Laut Picus Security setzen Ransomware-Angreifer zunehmend darauf, Sicherheitsvorkehrungen zu umgehen und sich im Netzwerk festzusetzen, da sich ihr Vorgehen kontinuierlich weiterentwickelt hat.
+
+Zudem leiteten Angreifer Command-and-Control-Verkehr (C2) immer häufiger über vertrauenswürdige Unternehmensdienste wie OpenAI und AWS, damit ihre schädlichen Aktivitäten stärker wie normalen Geschäftsdatenverkehr erscheinen.
+
+Verkettung als Strategie
+
+Die Schlussfolgerungen von Picus Security basieren auf Angriffssimulationen sowie die Analyse von 1,1 Millionen Schadsoftware-Dateien und 15,5 Millionen Angriffsaktionen, die dem MITRE ATT&CK-Framework zugeordnet wurden.
+
+MIt der Erkenntnis, dass Angreifer Tarnung und Beharrlichkeit gegenüber auffälligen Störungen bevorzugen, ist Picus nicht allein. Sie deckt sich mit den Ergebnissen der Ransomware-Forschung von Securin (Download gegen Daten). Wie das Unternehmen berichtet, verketten Angreifer zunehmend mehrere Schwachstellen in ihren Angriffen auf Unternehmenssysteme miteinander.
+
+„Ransomware-Gruppen betrachten Schwachstellen nicht mehr als isolierte Einfallstore“, erklärt Aviral Verma, leitende Analystin für Bedrohungsanalysen von Securin. „Sie verknüpfen sie zu gezielten Angriffsketten und wählen Schwachstellen nicht nur nach deren Schweregrad aus, sondern auch danach, wie effektiv sie damit Vertrauen, Persistenz und operative Kontrolle über ganze Plattformen hinweg untergraben können.“
+
+KI verstärkt Ransomware
+
+Wenngleich Angreifer immer stärker mit KI vertraut sind, fungiert sie bei Ransomware-Angriffen primär als Verstärker und nicht als treibende Kraft. Ransomware-Banden bevorzugen häufig, ihre Opfer doppelt zu erpressen: Zum einen drohen sie damit, die gestohlenen Informationen zu veröffentlichen, zum anderen mit dem Chaos, dass die Verschlüsselung der Daten nach dem Eindringen in Unternehmensnetzwerke verursacht.
+
+Mittlerweile sind diese Attacken allerdings weniger geworden, wie Picus berichtet. Konkret spricht das Unternehmen von einem Rückgang der Verschlüsselungen um 38 Prozent in den letzten 12 Monaten. Der Hintergrund: Immer mehr Cyberkriminelle würden dazu übergehen, Daten unbemerkt zu exfiltrieren, um die Opfer zu erpressen.
+
+Kein Rückgang, eher Zunahme
+
+Picus’ Behauptung, die Anzahl der Ransomware-Angriffe gehe zurück, ist allerdings umstritten. So vertritt Tony Anscombe, Chief Security Evangelist bei ESET, einem Anbieter von Endpoint-Security-Lösungen, eine gegenteilige Meinung:
+
+„Im aktuellen ESET-Threat-Report für das zweite Halbjahr 2025 zeigen die Erkennungsdaten einen Anstieg von 13 Prozent zwischen dem ersten und zweiten Halbjahr“, erklärt der Experte gegenüber unserer US-amerikanischen Schwester. „Gleichzeitig stieg die Zahl der öffentlich gemeldeten Opfer laut ecrime.ch um 40 Prozent. Daher scheint Ransomware nicht rückläufig zu sein.“
+
+Mehr Opfer durch Optimierung
+
+Auch der Cybersicherheitsdienstleister GuidePoint Security sieht keinen Rückgang – ganz im Gegenteil. Wie das Unternehmen darstellt, erreichte die Zahl der aktiven Ransomware-Gruppen im vergangenen Jahr einen neuen Höchststand.
+
+So gibt Nick Hyatt, Senior Threat Intelligence Consultant bei GuidePoint Security, an, dass im vergangenen Jahr die Daten von über 7.000 Opfern veröffentlicht wurden. Diese Zahl schließt wahrscheinlich diejenigen aus, die zwar Lösegeld zahlten, deren Daten aber nie von den Angreifern veröffentlicht wurden.
+
+„Die Angreifer haben ihre Angriffsfähigkeiten optimiert und setzen auf eine Mischung aus etablierten Techniken, der Ausnutzung von Sicherheitslücken und neuartigen Angriffen, um ihre Ziele zu erreichen“, so Hyatt.
+
+Obenauf die üblichen Verdächtigen
+
+Die von CSO befragten Experten stuften Qilin, Cl0p und Akira allgemein als die aktivsten Ransomware-Gruppen ein, allerdings gab es zahlreiche weitere Konkurrenten.
+
+„Laut den Huntress-Daten für 2025 ist Akira heute die führende Ransomware-Gruppe“, erklärt Dray Agha, Senior Manager of Security Operations beim Managed Detection and Response-Anbieter Huntress. „Ihre Vorgehensweise entwickelt sich rasant weiter, insbesondere um bestehende Sicherheitslösungen zu neutralisieren. Wir beobachten, dass sie aggressiv die Hypervisor-Ebene angreifen, um herkömmliche Endpoint-Sicherheitsmaßnahmen vollständig zu umgehen.“
+
+Collin Hogue-Spears, leitender Direktor und technischer Experte beim Sicherheitsunternehmen Black Duck Software, erklärt, dass Ransomware-Betreiber nicht mehr wie organisierte Verbrecher, sondern wie ein Plattformunternehmen agieren. So verzeichnete Qilin 2025 „über 1.000 Opfer, eine Versiebenfachung gegenüber dem Vorjahr“, wie der Experte erläutert. „LockBit 5.0 hat, nachdem es abgeschaltet wurde, seine Einsatzfähigkeit wiedererlangt.“
+
+Cybercrime-Dienstleitung befeuert das Verbrechen
+
+Unterdessen bietet die Föderation aus Scattered Spider, Lapsus$ und ShinyHunters, kurz SLSH, Extortion-as-a-Service an – ein Ansatz, der es auch technisch weniger versierten Cyberkriminellen erleichtert, sich auf betrügerische Weise ihren Lebensunterhalt zu verdienen. „Innerhalb von sechs Monaten sind 73 neue Gruppen entstanden, weil sie ihre Tools nicht mehr selbst entwickeln müssen“, so Hogue-Spears. „Sie mieten sie.“
+
+Vasileios Mourtzinos, Mitglied des Bedrohungsteams beim Managed-Detection-and-Response-Unternehmen Quorum Cyber, erklärt, dass immer mehr Gruppen von wirksamer Verschlüsselung zu erpressungsbasierten Modellen übergehen. Dabei stünden Datendiebstahl und ein langanhaltender, unauffälliger Zugriff im Vordergrund.
+
+Gefahr kommt von innen
+
+„Diese Vorgehensweise, die durch Akteure wie Cl0p bekannt wurde, indem sie Schwachstellen in Drittanbietersystemen und Lieferketten großflächig ausnutzen, findet nun immer breitere Anwendung“, so Mourtzinos. „Hinzu kommt der zunehmende Missbrauch gültiger Konten und legitimer administrativer Tools, um sich in den normalen Geschäftsbetrieb einzufügen. In einigen Fällen werden sogar Insider rekrutiert oder mit Anreizen bestochen, um den Zugriff zu ermöglichen.“
+
+Diese sich stetig weiterentwickelnden Methoden von Ransomware-Gruppen erfordern ein Überdenken der Abwehrstrategien. „Für CISOs sollte die Priorität darin bestehen, die Identitätskontrollen zu stärken, vertrauenswürdige Anwendungen und Integrationen von Drittanbietern genau zu überwachen und sicherzustellen, dass sich die Erkennungsstrategien auf Persistenz und Datenexfiltration konzentrieren“, rät er. (tf)
+
+Europa im Visier von Cyber-Identitätsdieben
+
+Die besten Cyber-Recovery-Lösungen
+
+Hacker erpressen weniger Lösegeld
+
+Von unseren Redakteuren direkt in Ihren Posteingang
+
+(XXXXXXX, AÇIK - https://www.csoonline.com/article/4139390/tarnung-als-taktik-warum-ransomware-angriffe-raffinierter-werden.html, csoonline.com, 09.03.2026)
 
 ================================================================================
 
@@ -284,42 +1257,42 @@ Summary
 OneUptime Synthetic Monitors allow low-privileged project users to submit custom Playwright code that is executed on the `oneuptime-probe` service. In the current implementation, this untrust
 
 [S2] Mastodon | Skor: 1 | Yorum: 0
-Baslik: Possible Phishing 🎣 on: ⚠️hxxps[:]//free-5555167[.]webadorsite[.]com/ 🧬 Analysis at: https:// urldna.io/scan/69acbc193b77500 00a979de6 # cybersecurity # phishing # infosec # urldna # scam # infosec
-Link: https://infosec.exchange/@urldna/116192379283250830
+Baslik: Critical Nginx UI Flaw Allows Unauthenticated Backup Theft and Decryption Nginx UI version 2.3.3 patches a critical vulnerability (CVE-2026-27944) that allows unauthenticated attackers to download and
+Link: https://infosec.exchange/@beyondmachines1/116198399797212294
 
 [S3] Mastodon | Skor: 1 | Yorum: 0
-Baslik: # chrome extension Top10 Crypto Ticker seems malicious. Its # cybersecurity badness score is 87/100! ```json {"id": "lfhfenilfjbgcjckhmdpgjdafhoojljl", "score": 87, "platform": "chrome", "name": "Top1
-Link: https://infosec.exchange/@malicious_browser_bot/116192327535444620
+Baslik: Possible Phishing 🎣 on: ⚠️hxxps[:]//sites[.]google[.]com/view/btmv-voice-notice011/btvoicemessage?authuser=8 🧬 Analysis at: https:// urldna.io/scan/69ae77b53b77500 00981cd35 # cybersecurity # phishing
+Link: https://infosec.exchange/@urldna/116198395788254322
 
 [S4] Mastodon | Skor: 1 | Yorum: 0
-Baslik: 🔴 New security advisory: CVE-2026-30860 affects multiple systems. • Impact: Remote code execution or complete system compromise possible • Risk: Attackers can gain full control of affected systems • M
-Link: https://infosec.exchange/@Matchbook3469/116192291238838873
+Baslik: VULNEX AI Security Scanner (VASO) is coming along (detect, scan & fix) all apps related to AI. Fascinating challenge. @vulnexsl # AI # cybersecurity # AppSec # Agents # AgenticAI
+Link: https://infosec.exchange/@simonroses/116198353241058385
 
 [S5] Mastodon | Skor: 1 | Yorum: 0
-Baslik: Good Morning Europe! Another episode of your twice daily Straylight Sentinel Intelligence Brief and Podcast is ready from your # cybersecurity and # infosec friends at Digg.com https:// digg.com/cyber
-Link: https://infosec.exchange/@cerebrix/116192271975303026
+Baslik: 📅 Upcoming # infosec events in the next 14 days: • JSSI @ ossir — Mar 10, 2026, Paris 🇫🇷 # France • CyberBay # Cyberbay — Mar 11-13, 2026, Tampa (FL) 🇺🇸 # USA • WiCyS: Women in CyberSecurity # WicysWo
+Link: https://infosec.exchange/@infosecevents/116198347932258472
 
 [S6] Mastodon | Skor: 1 | Yorum: 0
-Baslik: Security cameras are the new military recon tool. Iran hacks them across the Middle East to spot strike targets. Israel infiltrated Tehran traffic cameras to kill Khamenei. Ukraine war has both sides 
-Link: https://infosec.exchange/@clankussy/116192263002790611
+Baslik: Don't let your hybrid environment become a cybersecurity nightmare. Learn how traditional firewall security and AI-driven identity management stack up in our latest blog post. Discover the shared resp
+Link: https://infosec.exchange/@steelefortress/116198302502855914
 
 [S7] Reddit: r/cybersecurity | Skor: 25 | Yorum: 0
-Baslik: Certs feel like a ponzi scheme
-Link: https://www.reddit.com/r/cybersecurity/comments/1rnpcyg/certs_feel_like_a_ponzi_scheme/
+Baslik: Can't stop the bots
+Link: https://www.reddit.com/r/cybersecurity/comments/1roqnxi/cant_stop_the_bots/
 
 [S8] Reddit: r/cybersecurity | Skor: 24 | Yorum: 0
-Baslik: Wikipedia hit by self-propagating JavaScript worm that vandalized pages
-Link: https://www.reddit.com/r/cybersecurity/comments/1rnllxj/wikipedia_hit_by_selfpropagating_javascript_worm/
+Baslik: Cyber security books
+Link: https://www.reddit.com/r/cybersecurity/comments/1rolxa4/cyber_security_books/
 
 [S9] Reddit: r/cybersecurity | Skor: 23 | Yorum: 0
-Baslik: New Social Engineering from Recruiters.
-Link: https://www.reddit.com/r/cybersecurity/comments/1rnsf5p/new_social_engineering_from_recruiters/
+Baslik: How is cybercrime actually profitable when cashing out seems nearly impossible?
+Link: https://www.reddit.com/r/cybersecurity/comments/1ro84ld/how_is_cybercrime_actually_profitable_when/
 
 [S10] Reddit: r/cybersecurity | Skor: 22 | Yorum: 0
-Baslik: Microsoft warns hackers are using AI at every stage of cyberattacks.
-Link: https://www.reddit.com/r/cybersecurity/comments/1rnizc4/microsoft_warns_hackers_are_using_ai_at_every/
+Baslik: When making a lengthy password, does replacing letters with numbers help at all?
+Link: https://www.reddit.com/r/cybersecurity/comments/1ro7bsx/when_making_a_lengthy_password_does_replacing/
 
 [S11] Reddit: r/cybersecurity | Skor: 21 | Yorum: 0
-Baslik: Most underrated projects in cybersecurity
-Link: https://www.reddit.com/r/cybersecurity/comments/1rntwj3/most_underrated_projects_in_cybersecurity/
+Baslik: Wall of Shame Live: Interesting Honeypot Probes. WordPress Exploits, File Leaks, and CVE-2022-22965 in Action
+Link: https://www.reddit.com/r/cybersecurity/comments/1rotaxe/wall_of_shame_live_interesting_honeypot_probes/
 
