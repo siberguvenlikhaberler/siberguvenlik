@@ -935,7 +935,10 @@ class HaberSistemi:
         now = datetime.now()
         os.makedirs("data", exist_ok=True)
 
-        txt = f"\n{'=' * 80}\n📅 {now.strftime('%d %B %Y').upper()} - SİBER GÜVENLİK HABERLERİ (HAM RSS)\n{'=' * 80}\n\n"
+        # SESSION_DATE ilk satırda — git checkout mtime'a güvenmek yerine
+        # içerik kontrolü için kullanılır (bkz. main() ham_exists_for_today kontrolü)
+        txt = f"SESSION_DATE: {now.strftime('%Y-%m-%d')}\n"
+        txt += f"\n{'=' * 80}\n📅 {now.strftime('%d %B %Y').upper()} - SİBER GÜVENLİK HABERLERİ (HAM RSS)\n{'=' * 80}\n\n"
 
         all_articles = []
         num = 0
@@ -1983,11 +1986,19 @@ def main():
     # Eğer bugün zaten haber çekildiyse (ama Gemini başarısız olduysa),
     # kaynaklara tekrar gitme — haberler_linkler.txt tüm haberleri
     # "görüldü" olarak işaretlediğinden sıfır haber döner.
+    #
+    # ÖNEMLİ: os.path.getmtime() kullanılmıyor — git checkout tüm dosyalara
+    # o anki zamanı damgalar, dolayısıyla dünkü ham.txt de "bugün" gibi görünür.
+    # Bunun yerine dosyanın içindeki SESSION_DATE satırı kontrol ediliyor.
     ham_exists_for_today = False
     if os.path.exists(ham_txt_path):
-        mtime = datetime.fromtimestamp(os.path.getmtime(ham_txt_path))
-        if mtime.date() == now.date():
-            ham_exists_for_today = True
+        try:
+            with open(ham_txt_path, encoding='utf-8') as _f:
+                first_line = _f.readline().strip()
+            if first_line == f"SESSION_DATE: {today_str}":
+                ham_exists_for_today = True
+        except Exception:
+            pass
 
     sistem = HaberSistemi()
 

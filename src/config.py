@@ -84,6 +84,8 @@ CONTENT_SELECTORS = {
     'TechCrunch Security': [{'class': 'article-content'}],
     'CSO Online': [{'class': 'body-copy'}],
     'Infoblox Blog': [{'class': 'entry-content'}],
+    'Cyberscoop': [{'class': 'article-body'}, {'class': 'post-content'}, {'class': 'entry-content'}],
+    'Recorded Future': [{'class': 'article-body'}, {'class': 'blog-content'}, {'class': 'entry-content'}],
 }
 
 # ===== YENİ: ÖNEM SCORING SİSTEMİ (v2.0) =====
