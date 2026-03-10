@@ -584,6 +584,98 @@ class HaberSistemi:
                 parts.append(t)
         return '\n\n'.join(parts)
 
+    def _crawl_newsletter_links(self, newsletter_urls, source_name):
+        """
+        Newsletter/digest sayfasındaki iç makale linklerini çıkarır ve
+        her birinin tam metnini çeker.
+
+        Yalnızca source domain'ine ait, sayısal ID içeren makale URL'leri
+        alınır (kategori/etiket/ana sayfa linkleri atlanır).
+        Deduplication sonraki aşamada (_filter_duplicates) yapılır.
+        """
+        import re as _re
+        crawled_articles = []
+        seen_hrefs = set()
+
+        for nl_url in newsletter_urls:
+            try:
+                print(f"   └─ 📰 Newsletter çekiliyor: {nl_url[:70]}...")
+                r = requests.get(nl_url, headers=self.headers, timeout=(5, 15))
+                if r.status_code != 200:
+                    print(f"      ⚠️  HTTP {r.status_code}")
+                    continue
+                soup = BeautifulSoup(r.content, 'html.parser')
+                nl_domain = urlparse(nl_url).netloc.replace('www.', '')
+
+                # Makale içerik alanını bul (entry-content veya article)
+                content_el = None
+                for sel in [{'class': 'entry-content'}, {'class': 'post-content'},
+                            {'class': 'article-content'}]:
+                    content_el = soup.find('div', **sel) or soup.find('article')
+                    if content_el:
+                        break
+                if not content_el:
+                    content_el = soup  # tüm sayfa fallback
+
+                found = 0
+                for a in content_el.find_all('a', href=True):
+                    href = a.get('href', '').strip()
+                    if not href or href.startswith('#'):
+                        continue
+                    # Sadece aynı domain'e ait linkler
+                    parsed = urlparse(href)
+                    link_domain = parsed.netloc.replace('www.', '')
+                    if link_domain and link_domain != nl_domain:
+                        continue
+                    # Tam URL'ye dönüştür
+                    if not parsed.scheme:
+                        href = f"https://{nl_domain}{href}"
+                    # Sayısal ID içeren makale URL'si mi? (/12345/ gibi)
+                    if not _re.search(r'/\d{4,}/', href):
+                        continue
+                    # Newsletter URL'si değil
+                    if any(pat in href.lower() for pat in SKIP_URL_PATTERNS):
+                        continue
+                    norm = _normalize_url_advanced(href)
+                    if norm in seen_hrefs:
+                        continue
+                    seen_hrefs.add(norm)
+
+                    title = a.get_text(strip=True)
+                    if not title or len(title) < 15:
+                        continue
+
+                    crawled_articles.append({
+                        'title':       title,
+                        'link':        href,
+                        'description': '',
+                        'date':        '',   # boş → _parse_article_date bugün sayar
+                        'source':      source_name,
+                    })
+                    found += 1
+
+                print(f"      ✅ {found} makale linki bulundu")
+                time.sleep(1)
+
+            except Exception as e:
+                print(f"      ❌ Newsletter crawl hatası: {e}")
+
+        if not crawled_articles:
+            return []
+
+        # Her makale için tam metin çek
+        print(f"   └─ 📄 Newsletter makaleleri ({len(crawled_articles)}) tam metin çekiliyor:")
+        result = []
+        for i, art in enumerate(crawled_articles, 1):
+            print(f"      [{i}/{len(crawled_articles)}]", end=' ', flush=True)
+            res = self.fetch_full_article(art['link'], source_name)
+            art.update(res)
+            if res['success']:
+                result.append(art)
+            time.sleep(2)
+        print(f"   └─ ✅ {len(result)}/{len(crawled_articles)} newsletter makalesi tam metin çekildi")
+        return result
+
     def fetch_rss(self, url, source_name):
         """RSS çeker — max 15 saniye timeout korumalı"""
         import threading
@@ -878,17 +970,23 @@ class HaberSistemi:
             articles = self.fetch_rss(url, src)
 
             if articles:
-                # Newsletter/digest URL'lerini filtrele — sadece başlık listesi olan
-                # sayfalar gerçek haber değil, Gemini'nin halüsinasyon yapmasına neden olur
-                before_filter = len(articles)
-                articles = [
-                    a for a in articles
-                    if not any(pat in (a.get('link') or '').lower() for pat in SKIP_URL_PATTERNS)
-                ]
-                skipped = before_filter - len(articles)
-                if skipped:
-                    print(f"   └─ 🚫 {skipped} newsletter/digest URL'si atlandı")
+                # Newsletter URL'lerini ayır: atlamak yerine içlerindeki
+                # makale linklerini çıkararak pipeline'a sok
+                regular_articles  = []
+                newsletter_urls   = []
+                for a in articles:
+                    link_lower = (a.get('link') or '').lower()
+                    if any(pat in link_lower for pat in SKIP_URL_PATTERNS):
+                        newsletter_urls.append(a['link'])
+                    else:
+                        regular_articles.append(a)
 
+                if newsletter_urls:
+                    print(f"   └─ 🔗 {len(newsletter_urls)} newsletter sayfası genişletilecek")
+                    crawled = self._crawl_newsletter_links(newsletter_urls, src)
+                    regular_articles.extend(crawled)
+
+                articles = regular_articles
                 if not articles:
                     print(f"   └─ ❌ Bulunamadı (tümü filtrelendi)")
                     time.sleep(1)
@@ -898,13 +996,15 @@ class HaberSistemi:
                 total += len(articles)
                 print(f"   └─ 📄 Tam metinler:")
                 for i, art in enumerate(articles, 1):
-                    if art['link']:
+                    if art['link'] and not art.get('success'):  # crawled makalelerde zaten çekildi
                         print(f"      [{i}/{len(articles)}]", end=' ', flush=True)
                         res = self.fetch_full_article(art['link'], src)
                         art.update(res)
                         if res['success']:
                             full_text_success += 1
                         time.sleep(2)
+                    elif art.get('success'):
+                        full_text_success += 1
                 all_news[src] = articles
             else:
                 print(f"   └─ ❌ Bulunamadı")
