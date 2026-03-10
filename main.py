@@ -19,7 +19,7 @@ from google.genai import types as genai_types
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
-    SOCIAL_SIGNAL_CONFIG
+    SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS
 )
 
 
@@ -878,6 +878,22 @@ class HaberSistemi:
             articles = self.fetch_rss(url, src)
 
             if articles:
+                # Newsletter/digest URL'lerini filtrele — sadece başlık listesi olan
+                # sayfalar gerçek haber değil, Gemini'nin halüsinasyon yapmasına neden olur
+                before_filter = len(articles)
+                articles = [
+                    a for a in articles
+                    if not any(pat in (a.get('link') or '').lower() for pat in SKIP_URL_PATTERNS)
+                ]
+                skipped = before_filter - len(articles)
+                if skipped:
+                    print(f"   └─ 🚫 {skipped} newsletter/digest URL'si atlandı")
+
+                if not articles:
+                    print(f"   └─ ❌ Bulunamadı (tümü filtrelendi)")
+                    time.sleep(1)
+                    continue
+
                 print(f"   └─ ✅ {len(articles)} haber")
                 total += len(articles)
                 print(f"   └─ 📄 Tam metinler:")

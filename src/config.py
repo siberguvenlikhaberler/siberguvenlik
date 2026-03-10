@@ -61,6 +61,17 @@ SOCIAL_SIGNAL_CONFIG = {
     },
 }
 
+# URL kara listesi — bu desenleri içeren RSS makaleleri atlanır
+# (newsletter özeti, haftalık digest gibi liste sayfaları gerçek haber değil)
+SKIP_URL_PATTERNS = [
+    'newsletter-round-',       # Security Affairs: "Security Affairs Newsletter Round 566"
+    'newsletter-edition',      # Security Affairs: "-international-edition"
+    'weekly-roundup',          # Genel haftalık özet sayfaları
+    'weekly-digest',           # Genel digest sayfaları
+    '/newsletter/',            # /newsletter/ path içeren URL'ler
+    'this-week-in-security',   # Genel "this week" özet sayfaları
+]
+
 # Scraping ayarları
 HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
 CONTENT_SELECTORS = {
