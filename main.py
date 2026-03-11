@@ -1282,6 +1282,8 @@ class HaberSistemi:
         self._translate_social_signals()
         html = self._inject_social_box(html)
         html = self._fix_source_dates(html, txt_content)
+        html = self._fix_source_links(html)
+        html = self._remove_commentary_sentences(html)
         html = self._fix_html_structure(html)   # </style> / report-header kontrolü
 
         html_index = self._add_archive_links(html, is_archive=False)
@@ -1923,6 +1925,79 @@ KURALLAR:
         fixed_html = source_pattern.sub(fix_source, html)
         print("   ✅ Kaynak tarihleri düzeltildi")
         return fixed_html
+
+    def _fix_source_links(self, html):
+        """Gemini'nin düz metin yazdığı kaynak URL'lerini tıklanabilir <a href> etiketine çevir.
+
+        Girdi  (Gemini çıktısı):
+            <p class="source"><b>(XXXXXXX, AÇIK - https://example.com/article, example.com, 10.03.2026)</b></p>
+        Çıktı:
+            <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://example.com/article" target="_blank">example.com</a>, 10.03.2026)</b></p>
+        """
+        import re
+
+        # Zaten <a href> olan satırları atlamak için negatif lookahead kullan
+        pattern = re.compile(
+            r'AÇIK - (?!<a[\s>])(https?://[^,\s<"]+),\s*([^,<)\s][^,<)]*?),\s*(\d{2}\.\d{2}\.\d{4})\)'
+        )
+
+        def replacer(m):
+            url    = m.group(1).strip()
+            domain = m.group(2).strip()
+            date   = m.group(3).strip()
+            return f'AÇIK - <a href="{url}" target="_blank">{domain}</a>, {date})'
+
+        fixed, n = pattern.subn(replacer, html)
+        if n > 0:
+            print(f"   ✅ {n} kaynak linki tıklanabilir yapıldı")
+        return fixed
+
+    def _remove_commentary_sentences(self, html):
+        """Gemini'nin haber paragraflarının sonuna eklediği yapay yorum cümlelerini sil.
+
+        Hedef kalıplar (Türkçe):
+          - "Bu olay/saldırı/durum ... göstermektedir."
+          - "Bu yaklaşım/metodoloji ... ortaya koymaktadır."
+          - "... bir kez daha ... vurgulamaktadır."
+          - "Bu gelişme ... kanıtlamaktadır."
+        Sadece <p class="news-content"> paragrafları içinde temizleme yapılır.
+        """
+        import re
+
+        # Yorum cümlesini tanıyan regex
+        COMMENTARY_RE = re.compile(
+            r'\s+Bu\s+(?:olay|saldırı|gelişme|vaka|durum|yaklaşım|metodoloji|uygulama|süreç|tür\s+\w+|çift\s+\w+|'
+            r'siber|tehdit|grup|operasyon|kampanya|teknik|yöntem|strateji|rapor|bulgu|durum|ihlal)[^<.]{0,400}?'
+            r'(?:göstermektedir|ortaya koymaktadır|vurgulamaktadır|kanıtlamaktadır|taşımaktadır|'
+            r'gözler önüne sermektedir|açıkça ortaya çıkmaktadır)\s*\.'
+            r'|'
+            r'\s+[^<.]{0,200}?bir kez daha[^<.]{0,150}?'
+            r'(?:göstermektedir|vurgulamaktadır|ortaya koymaktadır|kanıtlamaktadır)\s*\.',
+            re.IGNORECASE | re.DOTALL
+        )
+
+        cleaned_count = 0
+
+        def process_paragraph(m):
+            nonlocal cleaned_count
+            content = m.group(1)
+            cleaned = COMMENTARY_RE.sub('', content).strip()
+            # Çift boşlukları temizle
+            cleaned = re.sub(r'  +', ' ', cleaned)
+            if cleaned != content:
+                cleaned_count += 1
+            return f'<p class="news-content">{cleaned}</p>'
+
+        fixed = re.sub(
+            r'<p class="news-content">(.*?)</p>',
+            process_paragraph,
+            html,
+            flags=re.DOTALL
+        )
+
+        if cleaned_count > 0:
+            print(f"   ✅ {cleaned_count} paragraftan yorum cümlesi temizlendi")
+        return fixed
 
     def _add_archive_links(self, html, is_archive=False):
         """HTML'e son 30 günün linklerini ekle"""
