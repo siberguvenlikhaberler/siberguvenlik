@@ -925,8 +925,11 @@ class HaberSistemi:
         from datetime import timezone, timedelta as td
         TR = timezone(td(hours=3))
         today_tr = datetime.now(TR).date()
-        yesterday_tr = today_tr - td(days=1)
-        cutoff = yesterday_tr
+        # Sadece bugünün haberleri — dünkü haberlerin bir kısmı zaten önceki
+        # günün raporunda yer aldı; "yesterday_tr" kullanmak raporu %70 dünkü
+        # haberlerle dolduruyordu (önceki günün cron'u sabah çalıştığından
+        # öğleden sonra yayınlanan haberler haberler_linkler'e girmemişti).
+        cutoff = today_tr
 
         filtered = {}
         removed_count = 0
@@ -2179,6 +2182,9 @@ def main():
 
     if ham_exists_for_today:
         print("📄 Bugünün ham haberleri mevcut — haber çekme atlanıyor, sadece Gemini çalıştırılıyor.")
+        # topla() atlandığından social_data boş kalır — ayrıca çek
+        print("📡 Sosyal medya sinyalleri çekiliyor...")
+        sistem.social_data = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
         try:
             with open(ham_txt_path, encoding='utf-8') as f:
                 txt = f.read()
