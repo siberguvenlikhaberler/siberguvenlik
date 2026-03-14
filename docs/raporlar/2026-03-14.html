@@ -1,145 +1,367 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siber Güvenlik Raporu - 14 March 2026 [FALLBACK]</title>
-    <style>
-        body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
-        .header { background: #1e3c72; color: white; padding: 40px; border-radius: 10px; margin-bottom: 20px; }
-        .header h1 { margin: 0 0 10px 0; }
-        .header p { margin: 4px 0; opacity: 0.9; }
-        .error-box { background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 24px 30px; margin-bottom: 20px; }
-        .error-box h2 { color: #856404; margin: 0 0 16px 0; font-size: 18px; }
-        .error-table { width: 100%; border-collapse: collapse; }
-        .error-table th { text-align: left; padding: 8px 12px; background: #ffeeba; color: #533f03; width: 180px; font-size: 14px; }
-        .error-table td { padding: 8px 12px; font-size: 14px; }
-        .error-table tr { border-bottom: 1px solid #ffd875; }
-        .error-table code { background: #fff; border: 1px solid #ddd; border-radius: 3px; padding: 2px 6px; font-size: 13px; word-break: break-all; }
-        .content { background: white; padding: 40px; border-radius: 10px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 14.03.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        
+        /* ŞIK BAŞLIK */
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 {
+            color: #1565c0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .important-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .important-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .important-item a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+        
+        /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* HABERLER BÖLÜMÜ */
+        .news-section {
+            padding: 30px;
+        }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .news-content {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .source {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+        .source a {
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+        
+        /* BAŞA DÖN BUTONU */
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
+        .social-signals {
+            background: #f8faff;
+            border: 1px solid #c7d7fd;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .social-signals .signal-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .social-signals .signal-platform-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px;
+            color: #475569;
+            background: #f1f5f9;
+            border-radius: 3px;
+            padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.45;
+            display: block;
+        }
+        .social-signals .signal-item a:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            .social-signals {
+                padding: 16px;
+            }
+            .social-signals .signal-list {
+                grid-template-columns: 1fr;
+            }
+            .social-signals .signal-meta {
+                gap: 6px;
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🔒 Siber Güvenlik Günlük Raporu</h1>
-        <p>14 March 2026</p>
-        <p>⚠️ Gemini API yanıt vermedi — 1 saat sonra otomatik yeniden denenecek</p>
-    </div>
-    
-    <div class="error-box">
-        <h2>⚠️ Gemini API Hata Detayları</h2>
-        <table class="error-table">
-            <tr><th>Hata Türü</th><td><code>Exception</code></td></tr>
-            <tr><th>Hata Mesajı</th><td><code>Stream tamamlanmadi (finish_reason=FinishReason.PROHIBITED_CONTENT)</code></td></tr>
-            <tr><th>Oluşma Zamanı</th><td>14.03.2026 10:01:33</td></tr>
-            <tr><th>Deneme Sayısı</th><td>3 deneme (bu çalışmada) — tümü başarısız; 1 saat sonra yeniden denenecek</td></tr>
-        </table>
-    </div>
-    <div class="content">SESSION_DATE: 2026-03-14
-
-================================================================================
-📅 14 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
-================================================================================
-
-[1] BleepingComputer - Microsoft: Windows 11 users can't access C: drive on some Samsung PCs
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Mar 2026 18:11:57 -0400
-Link: https://www.bleepingcomputer.com/news/microsoft/microsoft-windows-11-users-cant-access-c-drive-on-some-samsung-pcs/
-
-[TAM METİN - 403 kelime]
-Microsoft is investigating a new issue affecting some Samsung laptops running Windows 11 after installing the February 2026 security updates, in which users lose access to their C:\ drive and are unable to launch applications.
-
-The company says it is working with Samsung to determine whether the problem is related to the Windows updates or Samsung software installed on affected devices.
-
-"Users might encounter the error, 'C:\ is not accessible – Access denied', which prevents access to files and blocks the launch of some applications including Outlook, Office apps, web browsers, system utilities and Quick Assist," explains Microsoft.
-
-Microsoft says these errors can appear during normal Windows usage on a Samsung device, such as when accessing files, launching applications, or performing administrative tasks. In some cases, the permission problems can prevent users from elevating privileges, uninstalling updates, or accessing logs.
-
-The problem has been reported mostly in Brazil, Portugal, South Korea, and India, and is primarily impacting Samsung Galaxy Book 4 and other Samsung consumer devices.
-
-Microsoft says its latest investigation suggests the issue may be related to the Samsung Share application, though the exact root cause has not yet been confirmed.
-
-At this time, the issue only impacts systems running Windows 11 version 25H2 and 24H2.
-
-While Microsoft has not shared a temporary solution, a Reddit user claiming to be a Samsung technician in Brazil has posted a workaround that some affected users say restores access to the C:\ drive.
-
-However, the workaround requires changing the ownership of the entire C:\ drive and all subfolders to the "Everyone" group, including system directories and files that are normally owned by TrustedInstaller or SYSTEM.
-
-Changing ownership of system files in this way weakens Windows' built-in security protections. Therefore, users should avoid applying the workaround unless absolutely necessary and instead wait for a fix from Microsoft.
-
-Red Report 2026: Why Ransomware Encryption Dropped 38%
-
-Malware is getting smarter. The Red Report 2026 reveals how new threats use math to detect sandboxes and hide in plain sight.
-
-Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
-
-Microsoft fixes bug causing password sign-in option to disappear
-
-Microsoft still working to fix Windows Explorer white flashes
-
-Windows 11 KB5077181 fixes boot failures linked to failed updates
-
-Microsoft fixes bug that blocked Google Chrome from launching
-
-Microsoft releases Windows 11 26H1 for select and upcoming CPUs
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/microsoft/microsoft-windows-11-users-cant-access-c-drive-on-some-samsung-pcs/, bleepingcomputer.com, 14.03.2026)
-
-================================================================================
-
-
-================================================================================
-SOSYAL MEDYA SİNYALLERİ — HABER DEĞİL, SADECE REFERANS KAYDI
-[S1]-[S5] etiketleri haber sayılmaz, Gemini bu bölümü işlemez.
-================================================================================
-
-[S1] GitHub Advisory | Skor: 37.5 | Yorum: 0
-Baslik: AutoMapper Vulnerable to Denial of Service (DoS) via Uncontrolled Recursion
-Link: https://github.com/advisories/GHSA-rvv3-g6hj-g44x
-### Summary
-
-AutoMapper is vulnerable to a Denial of Service (DoS) attack. When mapping deeply nested object graphs, the library uses recursive method calls without enforcing a default maximum depth l
-
-[S2] Mastodon | Skor: 1 | Yorum: 0
-Baslik: CrackArmor: Nine Critical Vulnerabilities in AppArmor Allow Unprivileged Users to Escalate to Full Root Privileges Qualys researchers disclosed "CrackArmor," a set of nine critical vulnerabilities in 
-Link: https://infosec.exchange/@beyondmachines1/116226477900458254
-
-[S3] Mastodon | Skor: 1 | Yorum: 0
-Baslik: Possible Phishing 🎣 on: ⚠️hxxps[:]//mailchoiceindia[.]weebly[.]com 🧬 Analysis at: https:// urldna.io/scan/69b4acec3b77500 00700e065 # cybersecurity # phishing # infosec # urldna # scam # infosec
-Link: https://infosec.exchange/@urldna/116226471325901515
-
-[S4] Mastodon | Skor: 1 | Yorum: 0
-Baslik: # vscode extension turbobase.sql-turbo-tool seems malicious. Its # cybersecurity badness score is 97/100! ```json {"id": "turbobase.sql-turbo-tool", "score": 97, "platform": "vscode"} ```
-Link: https://infosec.exchange/@malicious_browser_bot/116226447706387770
-
-[S5] Mastodon | Skor: 1 | Yorum: 0
-Baslik: # vscode extension ssgwysc.volar-vscode seems malicious. Its # cybersecurity badness score is 100/100! ```json {"id": "ssgwysc.volar-vscode", "score": 100, "platform": "vscode"} ```
-Link: https://infosec.exchange/@malicious_browser_bot/116226447280410255
-
-[S6] Mastodon | Skor: 1 | Yorum: 0
-Baslik: # vscode extension pubruncode.ccoderunner seems malicious. Its # cybersecurity badness score is 97/100! ```json {"id": "pubruncode.ccoderunner", "score": 97, "platform": "vscode"} ```
-Link: https://infosec.exchange/@malicious_browser_bot/116226446915714447
-
-[S7] Reddit: r/cybersecurity | Skor: 25 | Yorum: 0
-Baslik: I hired a bad employee and I don't know what to do
-Link: https://www.reddit.com/r/cybersecurity/comments/1rt7oq6/i_hired_a_bad_employee_and_i_dont_know_what_to_do/
-
-[S8] Reddit: r/cybersecurity | Skor: 24 | Yorum: 0
-Baslik: Meta to Shut Down Instagram End-to-End Encrypted Chat Support Starting May 2026
-Link: https://www.reddit.com/r/cybersecurity/comments/1rsva0h/meta_to_shut_down_instagram_endtoend_encrypted/
-
-[S9] Reddit: r/cybersecurity | Skor: 23 | Yorum: 0
-Baslik: Google rushes Chrome update to fix zero-days under attack
-Link: https://www.reddit.com/r/cybersecurity/comments/1rsxxiu/google_rushes_chrome_update_to_fix_zerodays_under/
-
-[S10] Reddit: r/cybersecurity | Skor: 22 | Yorum: 0
-Baslik: My 8-Year-Old Open-Source Project was a Victim of a Major Cyber Attack (because of AI)
-Link: https://www.reddit.com/r/cybersecurity/comments/1rtcdod/my_8yearold_opensource_project_was_a_victim_of_a/
-
-[S11] Reddit: r/cybersecurity | Skor: 21 | Yorum: 0
-Baslik: FBI Investigating After Malware Found Lurking in Steam PC Games - Decrypt
-Link: https://www.reddit.com/r/cybersecurity/comments/1rt5w4a/fbi_investigating_after_malware_found_lurking_in/
-
+<div class="container">
+<div class="report-header">
+<h1><span class="header-date">14.03.2026</span> Siber Güvenlik Haber Özetleri</h1>
 </div>
+<!-- YÖNETİCİ ÖZETİ -->
+<div class="executive-summary">
+<h2>Yönetici Özeti</h2>
+<!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
+<div class="important-news">
+<h2>Önemli Gelişmeler</h2>
+<div class="important-summary">
+<div class="important-item">
+<a href="#haber-1">1. Microsoft, Windows 11 Güncellemeleri Sonrası Samsung Bilgisayarlarda C: Sürücüsü Erişim Sorununu Araştırmaktadır.</a>
+</div>
+</div>
+</div>
+<!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
+<table class="executive-table">
+<!-- Hiç haber kalmadığı için bu bölüm boş bırakılmıştır. -->
+</table><div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item"> <div class="signal-meta"> <span class="signal-platform-label">GitHub Advisory</span> <span class="signal-engagement">ÖNEM: YÜKSEK  |  CVSS: 7.5</span> </div> <a href="https://github.com/advisories/GHSA-rvv3-g6hj-g44x" rel="noopener noreferrer" target="_blank">AutoMapper, kontrolsüz özyineleme (recursion) yoluyla Hizmet Reddi (DoS) saldırılarına karşı savunmasız olduğu tespit edilmiştir.</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@infosecevents/116227163846668741" rel="noopener noreferrer" target="_blank">🆕 New event added: 📌 NZ Cyber Security Summit 📅 Mar 17-18, 2026 📍 Tākina (WGN) 🇳</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@malicious_browser_bot/116227153873846314" rel="noopener noreferrer" target="_blank"># vscode extension toowespace.worksets-extension seems malicious. Its # cybersecurity badness score is 90/100! ```json {"id": "toowespace.worksets-extension", "score": 90, "platform": "vscode"} ```</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@malicious_browser_bot/116227153681834921" rel="noopener noreferrer" target="_blank"># vscode extension thing-mn.your-flow-extension-for-icons seems malicious. Its # cybersecurity badness score is 90/100! ```json {"id": "thing-mn.your-flow-extension-for-icons", "score": 90, "platform"</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@malicious_browser_bot/116227153024458035" rel="noopener noreferrer" target="_blank"># vscode extension markvalid.vscode-mdvalidator-extension seems malicious. Its # cybersecurity badness score is 94/100! ```json {"id": "markvalid.vscode-mdvalidator-extension", "score": 94, "platform"</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@malicious_browser_bot/116227152722729076" rel="noopener noreferrer" target="_blank"># vscode extension gvotcha.claude-code-extensions seems malicious. Its # cybersecurity badness score is 90/100! ```json {"id": "gvotcha.claude-code-extensions", "score": 90, "platform": "vscode"} ```</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲25</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1rt7oq6/i_hired_a_bad_employee_and_i_dont_know_what_to_do/" rel="noopener noreferrer" target="_blank">I hired a bad employee and I don't know what to do</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲24</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1rsva0h/meta_to_shut_down_instagram_endtoend_encrypted/" rel="noopener noreferrer" target="_blank">Meta to Shut Down Instagram End-to-End Encrypted Chat Support Starting May 2026</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲23</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1rtcdod/my_8yearold_opensource_project_was_a_victim_of_a/" rel="noopener noreferrer" target="_blank">My 8-Year-Old Open-Source Project was a Victim of a Major Cyber Attack (because of AI)</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲22</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1rsxxiu/google_rushes_chrome_update_to_fix_zerodays_under/" rel="noopener noreferrer" target="_blank">Google rushes Chrome update to fix zero-days under attack</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲21</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1rtb6ok/why_is_instagram_removing_the_end_to_end/" rel="noopener noreferrer" target="_blank">Why is Instagram removing the end to end encryption feature?</a></div>
+</div></div>
+</div>
+<!-- HABERLER -->
+<div class="news-section">
+<div class="news-item" id="haber-1">
+<div class="news-title"><b>Microsoft, Windows 11 Güncellemeleri Sonrası Samsung Bilgisayarlarda C: Sürücüsü Erişimini Engellemiştir</b></div>
+<p class="news-content">Microsoft, Şubat 2026 güvenlik güncellemelerinin yüklenmesinin ardından bazı Samsung dizüstü bilgisayarlarında Windows 11 kullanıcılarını etkileyen kritik bir sorunu araştırmaktadır. Bu sorun, kullanıcıların C:\ sürücüsüne erişimini kaybetmesine ve Outlook, Office uygulamaları, web tarayıcıları ve sistem yardımcı programları dahil olmak üzere çeşitli uygulamaları başlatamamasına neden olmaktadır. Kullanıcılar genellikle "C:\ is not accessible – Access denied" hata mesajıyla karşılaşmaktadır. Sorun, özellikle Brezilya, Portekiz, Güney Kore ve Hindistan'daki Samsung Galaxy Book 4 ve diğer Samsung tüketici cihazlarında yoğun bir şekilde rapor edilmiştir. Microsoft, bu erişim sorunlarının Windows güncellemeleriyle mi yoksa etkilenen cihazlara yüklenen Samsung yazılımlarıyla mı ilişkili olduğunu belirlemek için Samsung ile işbirliği yapmaktadır. İlk yapılan incelemeler, sorunun Samsung Share uygulamasıyla ilgili olabileceğini düşündürmektedir. Şu an için bu durum yalnızca Windows 11'in 25H2 ve 24H2 sürümlerini çalıştıran sistemleri etkilemektedir. Geçici bir çözüm olarak Reddit'te önerilen C:\ sürücüsünün sahipliğini "Everyone" grubuna değiştirmek gibi yöntemler, Windows'un yerleşik güvenlik korumalarını zayıflatabileceği için Microsoft tarafından önerilmemektedir; kullanıcıların resmi bir düzeltme beklenmesi tavsiye edilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/microsoft/microsoft-windows-11-users-cant-access-c-drive-on-some-samsung-pcs/" target="_blank">bleepingcomputer.com</a>, 14.03.2026)</b></p>
+</div>
+</div>
+</div>
+<a class="back-to-top" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;" title="Başa Dön">↑</a>
+
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-03-14.html" class="archive-link">14.03.2026</a>
+            <a href="./2026-03-13.html" class="archive-link">13.03.2026</a>
+            <a href="./2026-03-12.html" class="archive-link">12.03.2026</a>
+            <a href="./2026-03-11.html" class="archive-link">11.03.2026</a>
+            <a href="./2026-03-10.html" class="archive-link">10.03.2026</a>
+            <a href="./2026-03-09.html" class="archive-link">09.03.2026</a>
+            <a href="./2026-03-08.html" class="archive-link">08.03.2026</a>
+            <a href="./2026-03-07.html" class="archive-link">07.03.2026</a>
+            <a href="./2026-03-06.html" class="archive-link">06.03.2026</a>
+            <a href="./2026-03-05.html" class="archive-link">05.03.2026</a>
+            <a href="./2026-03-04.html" class="archive-link">04.03.2026</a>
+            <a href="./2026-03-03.html" class="archive-link">03.03.2026</a>
+            <a href="./2026-03-02.html" class="archive-link">02.03.2026</a>
+            <a href="./2026-03-01.html" class="archive-link">01.03.2026</a>
+            <a href="./2026-02-28.html" class="archive-link">28.02.2026</a>
+            <a href="./2026-02-27.html" class="archive-link">27.02.2026</a>
+            <a href="./2026-02-26.html" class="archive-link">26.02.2026</a>
+            <a href="./2026-02-25.html" class="archive-link">25.02.2026</a>
+            <a href="./2026-02-24.html" class="archive-link">24.02.2026</a>
+            <a href="./2026-02-23.html" class="archive-link">23.02.2026</a>
+            <a href="./2026-02-22.html" class="archive-link">22.02.2026</a>
+            <a href="./2026-02-21.html" class="archive-link">21.02.2026</a>
+            <a href="./2026-02-20.html" class="archive-link">20.02.2026</a>
+            <a href="./2026-02-19.html" class="archive-link">19.02.2026</a>
+            <a href="./2026-02-18.html" class="archive-link">18.02.2026</a>
+            <a href="./2026-02-17.html" class="archive-link">17.02.2026</a>
+            <a href="./2026-02-16.html" class="archive-link">16.02.2026</a>
+            <a href="./2026-02-15.html" class="archive-link">15.02.2026</a>
+            <a href="./2026-02-14.html" class="archive-link">14.02.2026</a>
+            <a href="./2026-02-13.html" class="archive-link">13.02.2026</a>
+        </div>
+    </div>
+
 </body>
 </html>
