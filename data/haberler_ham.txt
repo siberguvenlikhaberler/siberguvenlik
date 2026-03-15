@@ -1,34 +1,38 @@
-SESSION_DATE: 2026-03-14
+SESSION_DATE: 2026-03-15
 
 ================================================================================
-📅 14 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
+📅 15 MARCH 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
 ================================================================================
 
-[1] BleepingComputer - Microsoft: Windows 11 users can't access C: drive on some Samsung PCs
+[1] BleepingComputer - Microsoft releases Windows 11 OOB hotpatch to fix RRAS RCE flaw
 ────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 13 Mar 2026 18:11:57 -0400
-Link: https://www.bleepingcomputer.com/news/microsoft/microsoft-windows-11-users-cant-access-c-drive-on-some-samsung-pcs/
+Tarih: Sat, 14 Mar 2026 17:48:14 -0400
+Link: https://www.bleepingcomputer.com/news/microsoft/microsoft-releases-windows-11-oob-hotpatch-to-fix-rras-rce-flaw/
 
-[TAM METİN - 403 kelime]
-Microsoft is investigating a new issue affecting some Samsung laptops running Windows 11 after installing the February 2026 security updates, in which users lose access to their C:\ drive and are unable to launch applications.
+[TAM METİN - 460 kelime]
+Microsoft has released an out-of-band (OOB) update to fix a security vulnerabilities affecting Windows 11 Enterprise devices that receive hotpatch updates instead of the regular Patch Tuesday cumulative updates.
 
-The company says it is working with Samsung to determine whether the problem is related to the Windows updates or Samsung software installed on affected devices.
+The KB5084597 hotpatch update was released yesterday to fix vulnerabilities in the Windows Routing and Remote Access Service (RRAS) management tool that could allow remote code execution when connecting to a malicious server.
 
-"Users might encounter the error, 'C:\ is not accessible – Access denied', which prevents access to files and blocks the launch of some applications including Outlook, Office apps, web browsers, system utilities and Quick Assist," explains Microsoft.
+"Microsoft has identified a security issue in the Windows Routing and Remote Access Service (RRAS) management tool that could allow remote code execution when connecting to a malicious server," reads an advisory from Microsoft.
 
-Microsoft says these errors can appear during normal Windows usage on a Samsung device, such as when accessing files, launching applications, or performing administrative tasks. In some cases, the permission problems can prevent users from elevating privileges, uninstalling updates, or accessing logs.
+"This issue only applies to a limited set of scenarios involving Enterprise client devices running hotpatch updates and being used for remote server management."
 
-The problem has been reported mostly in Brazil, Portugal, South Korea, and India, and is primarily impacting Samsung Galaxy Book 4 and other Samsung consumer devices.
+The KB5084597 update is for Windows 11 versions 25H2 and 24H2, as well as Windows 11 Enterprise LTSC 2024 systems.
 
-Microsoft says its latest investigation suggests the issue may be related to the Samsung Share application, though the exact root cause has not yet been confirmed.
+Microsoft says the vulnerabilities fixed by this hotpatch are tracked as CVE-2026-25172, CVE-2026-25173, and CVE-2026-26111, which were fixed as part of the March 2026 Patch Tuesday updates.
 
-At this time, the issue only impacts systems running Windows 11 version 25H2 and 24H2.
+"An attacker authenticated on the domain could exploit this vulnerability by tricking a domain-joined user into sending a request to a malicious server via the Routing and Remote Access Service (RRAS) Snap-in," reads the description for all three flaws.
 
-While Microsoft has not shared a temporary solution, a Reddit user claiming to be a Samsung technician in Brazil has posted a workaround that some affected users say restores access to the C:\ drive.
+The company says the hotpatch update is cumulative and includes all fixes and improvements from the March 2026 Windows security update released on March 10.
 
-However, the workaround requires changing the ownership of the entire C:\ drive and all subfolders to the "Everyone" group, including system directories and files that are normally owned by TrustedInstaller or SYSTEM.
+While the vulnerabilities were already fixed on Patch Tuesday, installing cumulative updates requires devices to be rebooted. However, some devices are used for mission-critical applications and services that cannot be easily rebooted.
 
-Changing ownership of system files in this way weakens Windows' built-in security protections. Therefore, users should avoid applying the workaround unless absolutely necessary and instead wait for a fix from Microsoft.
+To protect these types of devices, hotpatch updates apply new vulnerability fixes by performing in-memory patching of running processes to deliver fixes. At the same time, they update the files on disk so that the next time the device reboots, the fixes are still present.
+
+Microsoft says it previously released hotfixes for these flaws, but re-released them yesterday "ensure comprehensive coverage across all affected scenarios."
+
+However, Microsoft says the hotpatch will only be offered to devices enrolled in the hotpatch update program and managed through Windows Autopatch, where it will be installed automatically without requiring a restart.
 
 Red Report 2026: Why Ransomware Encryption Dropped 38%
 
@@ -36,17 +40,17 @@ Malware is getting smarter. The Red Report 2026 reveals how new threats use math
 
 Download our analysis of 1.1 million malicious samples to uncover the top 10 techniques and see if your security stack is blinded.
 
-Microsoft fixes bug causing password sign-in option to disappear
+Microsoft patches actively exploited Office zero-day vulnerability
 
-Microsoft still working to fix Windows Explorer white flashes
+Microsoft to enable Windows hotpatch security updates by default
 
-Windows 11 KB5077181 fixes boot failures linked to failed updates
+Microsoft releases OOB Windows updates to fix shutdown, Cloud PC bugs
 
-Microsoft fixes bug that blocked Google Chrome from launching
+Microsoft releases emergency OOB update to fix Outlook freezes
 
-Microsoft releases Windows 11 26H1 for select and upcoming CPUs
+Microsoft: Windows 11 users can't access C: drive on some Samsung PCs
 
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/microsoft/microsoft-windows-11-users-cant-access-c-drive-on-some-samsung-pcs/, bleepingcomputer.com, 14.03.2026)
+(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/microsoft/microsoft-releases-windows-11-oob-hotpatch-to-fix-rras-rce-flaw/, bleepingcomputer.com, 15.03.2026)
 
 ================================================================================
 
@@ -64,42 +68,42 @@ Link: https://github.com/advisories/GHSA-rvv3-g6hj-g44x
 AutoMapper is vulnerable to a Denial of Service (DoS) attack. When mapping deeply nested object graphs, the library uses recursive method calls without enforcing a default maximum depth l
 
 [S2] Mastodon | Skor: 1 | Yorum: 0
-Baslik: CrackArmor: Nine Critical Vulnerabilities in AppArmor Allow Unprivileged Users to Escalate to Full Root Privileges Qualys researchers disclosed "CrackArmor," a set of nine critical vulnerabilities in 
-Link: https://infosec.exchange/@beyondmachines1/116226477900458254
+Baslik: Possible Phishing 🎣 on: ⚠️hxxps[:]//nugtgsr222[.]weebly[.]com 🧬 Analysis at: https:// urldna.io/scan/69b5fe633b77500 00449b07c # cybersecurity # phishing # infosec # urldna # scam # infosec
+Link: https://infosec.exchange/@urldna/116232015377989658
 
 [S3] Mastodon | Skor: 1 | Yorum: 0
-Baslik: Possible Phishing 🎣 on: ⚠️hxxps[:]//mailchoiceindia[.]weebly[.]com 🧬 Analysis at: https:// urldna.io/scan/69b4acec3b77500 00700e065 # cybersecurity # phishing # infosec # urldna # scam # infosec
-Link: https://infosec.exchange/@urldna/116226471325901515
+Baslik: OpenClaw AI agent flaws disclosed: prompt injection, data exfiltration risks. Agent = your access. When agent is compromised, you are too. 🤖🔓 https:// thehackernews.com/2026/03/open claw-ai-agent-flaw
+Link: https://infosec.exchange/@clankussy/116231941318571845
 
 [S4] Mastodon | Skor: 1 | Yorum: 0
-Baslik: # vscode extension turbobase.sql-turbo-tool seems malicious. Its # cybersecurity badness score is 97/100! ```json {"id": "turbobase.sql-turbo-tool", "score": 97, "platform": "vscode"} ```
-Link: https://infosec.exchange/@malicious_browser_bot/116226447706387770
+Baslik: GlassWorm attack: 72 VSX extensions compromised. IDE supply chain = developer targeting. Your extensions have access to everything. 🔧🔓 https:// thehackernews.com/2026/03/glas sworm-supply-chain-attack
+Link: https://infosec.exchange/@clankussy/116231941309221491
 
 [S5] Mastodon | Skor: 1 | Yorum: 0
-Baslik: # vscode extension ssgwysc.volar-vscode seems malicious. Its # cybersecurity badness score is 100/100! ```json {"id": "ssgwysc.volar-vscode", "score": 100, "platform": "vscode"} ```
-Link: https://infosec.exchange/@malicious_browser_bot/116226447280410255
+Baslik: Proton breach observatory: small businesses hit hardest. Attackers shift from mega-breaches to frequent targeted attacks. Same surface, fraction of the budget. 📊🎯 https:// proton.me/blog/data-breach-o
+Link: https://infosec.exchange/@clankussy/116231938072620533
 
 [S6] Mastodon | Skor: 1 | Yorum: 0
-Baslik: # vscode extension pubruncode.ccoderunner seems malicious. Its # cybersecurity badness score is 97/100! ```json {"id": "pubruncode.ccoderunner", "score": 97, "platform": "vscode"} ```
-Link: https://infosec.exchange/@malicious_browser_bot/116226446915714447
+Baslik: LexisNexis confirms breach: customer and business data accessed. Legal records, court data, corporate intel compromised. Data brokers = legal honeypots. ⚖️🔓 privacyguides.org/news/2026/03 /09/data-bre
+Link: https://infosec.exchange/@clankussy/116231938062856984
 
 [S7] Reddit: r/cybersecurity | Skor: 25 | Yorum: 0
-Baslik: I hired a bad employee and I don't know what to do
-Link: https://www.reddit.com/r/cybersecurity/comments/1rt7oq6/i_hired_a_bad_employee_and_i_dont_know_what_to_do/
+Baslik: Supply-chain attack using invisible code hits GitHub and other repositories
+Link: https://www.reddit.com/r/cybersecurity/comments/1ru7f2h/supplychain_attack_using_invisible_code_hits/
 
 [S8] Reddit: r/cybersecurity | Skor: 24 | Yorum: 0
-Baslik: Meta to Shut Down Instagram End-to-End Encrypted Chat Support Starting May 2026
-Link: https://www.reddit.com/r/cybersecurity/comments/1rsva0h/meta_to_shut_down_instagram_endtoend_encrypted/
+Baslik: Why isn't the NSA categorized as an APT?
+Link: https://www.reddit.com/r/cybersecurity/comments/1rtr4ny/why_isnt_the_nsa_categorized_as_an_apt/
 
 [S9] Reddit: r/cybersecurity | Skor: 23 | Yorum: 0
-Baslik: Google rushes Chrome update to fix zero-days under attack
-Link: https://www.reddit.com/r/cybersecurity/comments/1rsxxiu/google_rushes_chrome_update_to_fix_zerodays_under/
+Baslik: Probably a stupid question
+Link: https://www.reddit.com/r/cybersecurity/comments/1ru5e5g/probably_a_stupid_question/
 
 [S10] Reddit: r/cybersecurity | Skor: 22 | Yorum: 0
-Baslik: My 8-Year-Old Open-Source Project was a Victim of a Major Cyber Attack (because of AI)
-Link: https://www.reddit.com/r/cybersecurity/comments/1rtcdod/my_8yearold_opensource_project_was_a_victim_of_a/
+Baslik: I'm a 25 year SRE - and I fell for a shell injection
+Link: https://www.reddit.com/r/cybersecurity/comments/1rtahes/im_a_25_year_sre_and_i_fell_for_a_shell_injection/
 
 [S11] Reddit: r/cybersecurity | Skor: 21 | Yorum: 0
-Baslik: FBI Investigating After Malware Found Lurking in Steam PC Games - Decrypt
-Link: https://www.reddit.com/r/cybersecurity/comments/1rt5w4a/fbi_investigating_after_malware_found_lurking_in/
+Baslik: Redesigned Windows Recall cracked again (VBS enclaves bypassed)
+Link: https://www.reddit.com/r/cybersecurity/comments/1rtghxo/redesigned_windows_recall_cracked_again_vbs/
 
