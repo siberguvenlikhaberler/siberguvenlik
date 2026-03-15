@@ -28,7 +28,7 @@ from src.config import (
 def _calculate_content_hash(title, description):
     """Title + description'dan MD5 hash hesapla (16 karakter hex)"""
     content = f"{title or ''}{description or ''}".lower().strip()
-    return hashlib.md5(content.encode('utf-8')).hexdigest()[:16]
+    return hashlib.md5(content.encode('utf-8')).hexdigest()  # tam 32 karakter
 
 
 def _normalize_url_advanced(link):
@@ -597,7 +597,13 @@ class HaberSistemi:
         crawled_articles = []
         seen_hrefs = set()
 
-        for nl_url in newsletter_urls:
+        for nl_entry in newsletter_urls:
+            # (url, pub_date) tuple veya plain string (geriye dönük uyumluluk)
+            if isinstance(nl_entry, tuple):
+                nl_url, nl_pub_date = nl_entry
+            else:
+                nl_url, nl_pub_date = nl_entry, ''
+
             try:
                 print(f"   └─ 📰 Newsletter çekiliyor: {nl_url[:70]}...")
                 r = requests.get(nl_url, headers=self.headers, timeout=(5, 15))
@@ -649,7 +655,7 @@ class HaberSistemi:
                         'title':       title,
                         'link':        href,
                         'description': '',
-                        'date':        '',   # boş → _parse_article_date bugün sayar
+                        'date':        nl_pub_date,  # newsletter'ın yayın tarihi
                         'source':      source_name,
                     })
                     found += 1
@@ -1004,11 +1010,11 @@ class HaberSistemi:
                 # Newsletter URL'lerini ayır: atlamak yerine içlerindeki
                 # makale linklerini çıkararak pipeline'a sok
                 regular_articles  = []
-                newsletter_urls   = []
+                newsletter_urls   = []  # list of (url, pub_date) tuples
                 for a in articles:
                     link_lower = (a.get('link') or '').lower()
                     if any(pat in link_lower for pat in SKIP_URL_PATTERNS):
-                        newsletter_urls.append(a['link'])
+                        newsletter_urls.append((a['link'], a.get('date', '')))
                     else:
                         regular_articles.append(a)
 
