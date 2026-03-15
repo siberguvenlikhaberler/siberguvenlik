@@ -921,15 +921,18 @@ class HaberSistemi:
         return filtered
 
     def _filter_old_articles(self, all_news):
-        """Bugüne ait olmayan haberleri filtrele (UTC+3 Türkiye saatine göre)"""
+        """Son 30 saatte yayınlanmayan haberleri filtrele.
+
+        Tarih değil datetime karşılaştırması kullanılır:
+        - "yesterday_tr" (tarih bazlı) sabah 07 UTC çalışmasında
+          tüm dünü kabul eder → %70 dünkü haber dolardı.
+        - "today_tr" (tarih bazlı) sabah 07 UTC'de yalnızca 1-2 haber bırakır
+          (ABD iş saatlerindeki haberler henüz yayınlanmamış).
+        - 30 saatlik datetime penceresi her iki sorunu da çözer.
+        """
         from datetime import timezone, timedelta as td
-        TR = timezone(td(hours=3))
-        today_tr = datetime.now(TR).date()
-        # Sadece bugünün haberleri — dünkü haberlerin bir kısmı zaten önceki
-        # günün raporunda yer aldı; "yesterday_tr" kullanmak raporu %70 dünkü
-        # haberlerle dolduruyordu (önceki günün cron'u sabah çalıştığından
-        # öğleden sonra yayınlanan haberler haberler_linkler'e girmemişti).
-        cutoff = today_tr
+        UTC = timezone.utc
+        cutoff_dt = datetime.now(UTC) - td(hours=30)
 
         filtered = {}
         removed_count = 0
@@ -937,14 +940,39 @@ class HaberSistemi:
         for src, articles in all_news.items():
             filtered_articles = []
             for art in articles:
-                art_date_str = _parse_article_date(art.get('date', ''), datetime.now())
-                try:
-                    parsed_date = datetime.strptime(art_date_str, '%d.%m.%Y').date()
-                except:
+                raw_date = art.get('date', '')
+                art_dt = None
+
+                # Timezone-aware formatları dene
+                for fmt in [
+                    '%a, %d %b %Y %H:%M:%S %z',
+                    '%Y-%m-%dT%H:%M:%S%z',
+                    '%Y-%m-%dT%H:%M:%S.%f%z',
+                ]:
+                    try:
+                        art_dt = datetime.strptime(raw_date, fmt)
+                        break
+                    except Exception:
+                        pass
+
+                # Z sonekini dene
+                if art_dt is None and isinstance(raw_date, str) and raw_date.endswith('Z'):
+                    for fmt in ['%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ']:
+                        try:
+                            art_dt = datetime.strptime(raw_date, fmt).replace(tzinfo=UTC)
+                            break
+                        except Exception:
+                            pass
+
+                if art_dt is None:
+                    # Tarih parse edilemezse dahil et (güvenli taraf)
                     filtered_articles.append(art)
                     continue
 
-                if parsed_date >= cutoff:
+                if not art_dt.tzinfo:
+                    art_dt = art_dt.replace(tzinfo=UTC)
+
+                if art_dt >= cutoff_dt:
                     filtered_articles.append(art)
                 else:
                     removed_count += 1
@@ -953,7 +981,7 @@ class HaberSistemi:
                 filtered[src] = filtered_articles
 
         if removed_count > 0:
-            print(f"📅 {removed_count} eski tarihli haber filtrelendi")
+            print(f"📅 {removed_count} eski haber filtrelendi (>30 saat)")
 
         return filtered
 
