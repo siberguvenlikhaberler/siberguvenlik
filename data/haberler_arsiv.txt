@@ -8695,3 +8695,78 @@ Delve adlı uyum startup'ı, müşterilerini gizlilik ve güvenlik düzenlemeler
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 23 MARCH 2026 - EN ÖNEMLİ 43 HABER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Amerika Birleşik Devletleri İran Bağlantılı Propaganda Sitelerini Ele Geçirmiştir
+─────────────────────────────────────────────────────────
+Amerika Birleşik Devletleri Adalet Bakanlığı, İran'a bağlı siber gruplar tarafından kullanılan dört propaganda sitesini ele geçirerek, bu platformların operasyonlarını sonlandırmıştır. Bu sitelerden biri olan Handala-Hack[.]to, ABD merkezli medikal teknoloji firması Stryker'a yönelik gerçekleştirilen ve Microsoft Intune'daki bir güvenlik açığından faydalanılarak veri silinmesiyle sonuçlanan siber saldırının sorumluluğunu üstlenmiştir. Ayrıca, ele geçirilen siteler, İsrail Savunma Kuvvetleri (IDF) mensuplarının kişisel bilgilerinin ifşa edilmesi (doxxing) ve Sanzer Hasidik Yahudi Cemaati'nden 851 GB gizli verinin çalındığı iddiaları gibi eylemler için de kullanılmıştır. FBI Direktörü Kash Patel, bu tür siber saldırıları ve tehditleri gerçekleştiren aktörlerin peşine düşüleceğini ve Amerikan yasalarının tüm gücünün kullanılacağını ifade etmiştir. Bu ele geçirme, siber alanda devlet destekli aktörlerin faaliyetlerine karşı yürütülen küresel mücadelenin önemli bir parçası olarak değerlendirilmektedir.
+(XXXXXXX, AÇIK -go.theregister.com, 23.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] CVE-2025-32975 Açığı Quest KACE SMA Sistemlerini Etkilemiştir
+─────────────────────────────────────────────────────────
+Siber güvenlik firması Arctic Wolf, Quest KACE Systems Management Appliance (SMA) sistemlerini etkileyen ve CVSS skoru 10.0 olan kritik bir güvenlik açığının aktif olarak istismar edildiğini duyurmuştur. CVE-2025-32975 olarak takip edilen bu zafiyet, kimlik doğrulama bypassı sağlamakta ve saldırganların geçerli kimlik bilgileri olmaksızın yasal kullanıcılar gibi davranmalarına olanak tanımaktadır. Başarılı bir istismar durumunda, yönetici hesaplarının tamamen ele geçirilmesi mümkün olmaktadır. Arctic Wolf tarafından tespit edilen kötü amaçlı faaliyetlerde, tehdit aktörlerinin bu güvenlik açığını kullanarak yönetici hesaplarını kontrol altına aldığı ve harici bir sunucudan Base64 kodlu zararlı yükleri indirmek için uzaktan komutlar çalıştırdığı belirtilmiştir. Ayrıca, Mimikatz kullanılarak kimlik bilgisi toplama, keşif faaliyetleri yürütme ve yedekleme altyapılarına (Veeam, Veritas) ile alan denetleyicilerine (domain controllers) RDP erişimi sağlama gibi eylemler de gözlemlenmiştir. Quest, bu sorunu Mayıs 2025'te yayımladığı yamalarla gidermiştir ve yöneticilerin en son güncellemeleri uygulamaları şiddetle tavsiye edilmektedir.
+(XXXXXXX, AÇIK -thehackernews.com, 23.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Oracle Identity Manager'daki Kritik RCE Açığı Düzeltilmiştir
+─────────────────────────────────────────────────────────
+Oracle, Identity Manager ve Web Services Manager ürünlerini etkileyen, CVSS skoru 9.8 olan ve kimlik doğrulaması gerektirmeyen uzaktan kod çalıştırma (RCE) zafiyetini gideren güvenlik güncellemelerini yayımlamıştır. CVE-2026-21992 olarak takip edilen bu kritik güvenlik açığı, kimlik doğrulaması yapılmamış saldırganların HTTP üzerinden Oracle Identity Manager ve Web Services Manager sistemlerinin kontrolünü ele geçirmesine olanak tanımaktadır. Bu durum, veri bütünlüğü ve erişilebilirliği üzerinde ciddi etkileri olan tam sistem ele geçirme riskini barındırmaktadır. Oracle, müşterilerine bu güvenlik uyarısında belirtilen güncellemeleri veya hafifletmeleri mümkün olan en kısa sürede uygulamalarını şiddetle tavsiye etmiştir. Güvenlik açığı "kolayca istismar edilebilir" olarak nitelendirilmiştir ve Oracle Web Services Manager ile Identity Manager'ın 12.2.1.4.0 ve 14.1.2.1.0 sürümlerini etkilemektedir. Şirket, bu zafiyetin sahada aktif olarak istismar edilip edilmediği konusunda herhangi bir bilgi paylaşmamıştır, ancak kritik önemini vurgulayarak hızlı yama uygulamasının gerekliliğini belirtmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 22.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] CISA, Apple ve CMS Açıklarını KEV Kataloğuna Ekleyerek Uyarı Yapmıştır
+─────────────────────────────────────────────────────────
+Amerika Birleşik Devletleri Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Apple, Laravel Livewire ve Craft CMS'deki çeşitli güvenlik açıklarını bilinen istismar edilen zafiyetler (KEV) kataloğuna eklemiştir. KEV kataloğuna eklenen zafiyetler arasında CVE-2025-31277 (Apple, CVSS 8.8), CVE-2025-32432 (Craft CMS, CVSS 10.0), CVE-2025-43510 (Apple, CVSS 7.8), CVE-2025-43520 (Apple, CVSS 8.8) ve CVE-2025-54068 (Laravel Livewire, CVSS 9.8) bulunmaktadır. Özellikle Apple'daki üç zafiyet, DarkSword adlı bir iOS istismar kitinin parçası olarak Google Tehdit İstihbarat Grubu raporları sonrasında eklenmiştir. Craft CMS'deki kod enjeksiyonu zafiyeti CVE-2025-32432, Orange Cyberdefense tarafından sunucuların ihlal edilmesi ve veri çalınması olaylarında aktif olarak kullanıldığı tespit edilmiştir. Laravel Livewire'daki CVE-2025-54068 ise İran bağlantılı APT grubu MuddyWater'ın diplomatik ve kritik sektörleri hedef alan saldırılarıyla ilişkilendirilmiştir. CISA, federal kurumların bu zafiyetleri 3 Nisan 2026 tarihine kadar gidermelerini zorunlu kılmıştır ve özel kuruluşlara da altyapılarındaki benzer açıkları incelemelerini tavsiye etmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 22.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Rusya Destekli Aktörler WhatsApp ve Signal Hesaplarını Hedeflemiştir
+─────────────────────────────────────────────────────────
+Rusya İstihbarat Servisleri ile bağlantılı siber aktörlerin, başta ABD hükümet yetkilileri, askeri personel, siyasi figürler ve gazeteciler olmak üzere yüksek istihbarat değerine sahip kişilerin WhatsApp ve Signal hesaplarını hedef alan oltalama (phishing) kampanyaları yürüttüğü FBI tarafından bildirilmiştir. Tehdit aktörleri, mesajlaşma uygulamalarının destek hesapları gibi davranarak hedeflere özel olarak hazırlanmış oltalama mesajları göndermektedir. Bu mesajlar, kullanıcıları doğrulama bağlantılarına tıklamaya veya kimlik doğrulama kodları ile PIN'leri paylaşmaya teşvik etmektedir. Kurbanlar bu taleplere uyduğunda, saldırganlar kendi cihazlarını kurbanın hesabına bağlayarak veya hesabın tam kontrolünü ele geçirerek yetkisiz erişim sağlamaktadırlar. CISA ve FBI tarafından yayımlanan ortak kamu hizmeti duyurusunda, kampanyanın gelişmesiyle birlikte aktörlerin kurbanları enfekte etmek için zararlı yazılımlar da kullanabileceği belirtilmiştir. Hollanda istihbarat ajansları da daha önce Rusya bağlantılı aktörlerin Signal ve WhatsApp hesaplarını hedef alan küresel bir kampanyası hakkında uyarıda bulunmuştur, özellikle devlet görevlileri ve askeri personelin hassas iletişimlerinin risk altında olduğu vurgulanmıştır.
+(XXXXXXX, AÇIK -securityaffairs.com, 22.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Fransız Uçak Gemisinin Konumu Strava Üzerinden Sızdırılmıştır
+─────────────────────────────────────────────────────────
+Fransız Le Monde gazetesi tarafından yapılan bir habere göre, bir Fransız denizci, görevli olduğu uçak gemisinin güvertesinde yaptığı yedi kilometrelik koşuyu akıllı saatiyle takip etmiş ve daha sonra bu verileri egzersiz takip platformu Strava'ya yüklemiştir. Bu durum, uçak gemisinin konumunun dünya geneli ile istem dışı olarak paylaşılmasına yol açmıştır. Donanmaların gizli tutmayı tercih ettiği bu tür bilgilerin açığa çıkması, ulusal güvenlik açısından önemli bir zafiyet olarak değerlendirilmektedir. Benzer bir olay daha önce Fransa Cumhurbaşkanı Emmanuel Macron'un korumalarının da fitness uygulamaları aracılığıyla konumlarını sızdırmasıyla yaşanmıştır. Bu vaka, askeri personel arasında kişisel cihazların ve uygulamaların kullanımına ilişkin güvenlik farkındalığının artırılması gerektiğini bir kez daha ortaya koymuştur. Hassas askeri operasyonlar ve varlıkların korunması için teknoloji kullanımında daha sıkı protokollerin ve eğitimlerin uygulanması gerektiği ifade edilmiştir.
+(XXXXXXX, AÇIK -go.theregister.com, 23.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] Marquis Firmasında 670.000 Kişilik Veri İhlali Yaşanmıştır
+─────────────────────────────────────────────────────────
+Bankalara hizmet veren Marquis adlı pazarlama firması, geçen Ağustos ayında bir fidye yazılımı saldırısına uğraması sonucunda 670.000'den fazla kişinin kişisel bilgilerinin çalındığını açıklamıştır. İhlal edilen veriler arasında Sosyal Güvenlik Numaraları, vergi mükellefi kimlikleri ve hesap bilgileri gibi oldukça hassas verilerin bulunduğu bildirilmiştir. Marquis, veri ihlalinden etkilenen kişilere gönderdiği bildirimlerde, bu durumun kimlik hırsızlığı riskini artırdığını belirtmiştir. Firma, mağdurlara Epiq Privacy Solutions'tan bir aylık ücretsiz üyelik teklif ederek, kişisel bilgilerin kötüye kullanımını izleme ve kimlik hırsızlığını çözme hizmeti sunmuştur. Ayrıca, etkilenen kişilerin önümüzdeki 12 ila 24 ay boyunca hesap özetlerini ve kredi raporlarını yetkisiz faaliyetlere karşı düzenli olarak incelemeleri gerektiği tavsiye edilmiştir. Bu olay, finansal kurumlara hizmet veren üçüncü taraf sağlayıcıların siber güvenlik risklerini ve tedarik zinciri saldırılarının potansiyel etkilerini bir kez daha gözler önüne sermiştir.
+(XXXXXXX, AÇIK -go.theregister.com, 23.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] LeakNet Fidye Yazılımı Grubu ClickFix Sosyal Mühendislik Yöntemini Kullanmıştır
+─────────────────────────────────────────────────────────
+LeakNet fidye yazılımı grubu, siber güvenlik firması Reliaquest tarafından yayımlanan yeni bir rapora göre, daha önce çalınan kimlik bilgilerini satın alma taktiğinden vazgeçerek, kurbanları kötü amaçlı komutları çalıştırmaya ikna etmek için ClickFix sosyal mühendislik yöntemini kullanmaya başlamıştır. ClickFix yöntemi, tehlikeye atılmış ancak yasal web siteleri aracılığıyla sahte mesajlar göndererek kurbanları rootkit veya başka bir zararlı yazılım yükleyen komutları çalıştırmaya ikna etmektedir. LeakNet, bu yöntemi kullanarak kullanıcılara sahte bir "robot olmadığını kanıtla" diyaloğu sunmakta ve Windows Çalıştır iletişim kutusunu (Win + R kısayolu) açıp, Cloudflare Turnstile doğrulama sayfasına bir bağlantı gibi görünen ancak aslında bir msiexec komutu çalıştıran bir komutu yapıştırmalarını istemektedir. Bu komut, yasal Deno çalışma zamanına dayalı olarak ustaca gizlenmiş bir yükleyiciyi indirmekte ve kötü amaçlı kodu doğrudan bellekte çalıştırarak, dosya odaklı adli tarama tekniklerinden gizlenmesine yardımcı olmaktadır. Reliaquest, bu taktiğin LeakNet'in mevcut aylık üç kurbanlık isabet oranının ötesine geçmesine olanak tanıyabileceği konusunda uyarmıştır.
+(XXXXXXX, AÇIK -go.theregister.com, 23.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] VoidStealer Zararlı Yazılımı Chrome Anahtarını Yeni Yöntemle Çalmıştır
+─────────────────────────────────────────────────────────
+VoidStealer adlı bilgi hırsızlığı yazılımı, Chrome'un Uygulama Bağlantılı Şifreleme (ABE) yöntemini aşmak ve ana anahtarını tarayıcı belleğinden doğrudan çıkarmak için donanım kesme noktalarını kullanan yeni bir hata ayıklayıcı tabanlı teknik geliştirmiştir. Norton, Avast ve AVG gibi markaların ana şirketi Gen Digital tarafından hazırlanan bir rapora göre, bu, vahşi doğada böyle bir mekanizmayı kullanan ilk bilgi hırsızlığı yazılımı örneğidir. VoidStealer'ın yeni yöntemi, ayrıcalık yükseltme veya kod enjeksiyonu gerektirmeksizin, Chrome'un v20_master_key'inin şifre çözme işlemleri sırasında kısa bir an için düz metin olarak bellekte bulunduğu kısa anı hedeflemektedir. Zararlı yazılım, askıya alınmış ve gizli bir tarayıcı işlemi başlatmakta, bunu bir hata ayıklayıcısı olarak eklemekte ve hedef tarayıcı DLL'sinin (chrome.dll veya msedge.dll) yüklenmesini beklemektedir. Yükleme gerçekleştiğinde, DLL'yi belirli bir dize için tarayarak donanım kesme noktası hedefi olarak kullanmaktadır. Bu yenilikçi yaklaşım, tarayıcı tabanlı hassas verilerin çalınmasına karşı mevcut savunmaların yetersiz kaldığını göstermektedir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 22.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] AWS Bedrock AgentCore Sandbox Güvenlik Kontrolleri Yetersiz Bulunmuştur
+─────────────────────────────────────────────────────────
+Siber güvenlik firması BeyondTrust Phantom Labs tarafından yapılan araştırmalar, Amazon Web Services (AWS) Bedrock AgentCore kod yorumlayıcısının sandbox ortamının dış erişimi tamamen engellemediğini ve kamuya açık DNS sorgularının geçişine izin verdiğini ortaya çıkarmıştır. Amazon, bu hizmetin sandbox modunda çalıştırıldığında dış erişimin tamamen engellendiğini belirtmiş olmasına rağmen, Phantom Labs, DNS sorgularının geçişinin kötü niyetli dış aktörlerin komuta ve kontrol (C2) kanalları oluşturmasına ve hassas verileri sızdırmasına olanak tanıyabileceğini iddia etmiştir. Phantom Labs, bu güvenlik sorununu Eylül ayında AWS'ye bir HackerOne raporu aracılığıyla bildirmiş ve AWS'nin Kasım 2025'te bir düzeltme dağıttığı, ancak "diğer faktörler" nedeniyle daha sonra geri çektiği belirtilmiştir. Sonuç olarak, Aralık ayında Amazon, tüm gelen trafik üzerinde tam kontrol isteyen müşterilere sanal özel bulut (VPC) modunu kullanmalarını öneren belgelerini güncellemiştir. Bu bulgu, yapay zeka tabanlı bulut hizmetlerinin güvenlik mimarilerindeki potansiyel zayıflıkları ve derinlemesine savunma stratejilerinin önemini bir kez daha vurgulamıştır.
+(XXXXXXX, AÇIK -go.theregister.com, 23.03.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
