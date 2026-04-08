@@ -1206,10 +1206,16 @@ class HaberSistemi:
         # ═══════════════════════════════════════════
         # AŞAMA 1: Gemini'den HTML al
         # 5 deneme, üstel geri çekilme (30s→60s→120s→240s)
-        # Model sırası: gemini-2.5-flash (×2) → gemini-2.0-flash (×2) → gemini-1.5-flash (×1)
+        # Model sırası: gemini-2.5-pro (×2) → gemini-2.5-flash (×2) → gemini-2.0-flash (×1)
         # 503/yüksek yük hatalarında daha uzun bekleme + eski modele düşme.
         # ═══════════════════════════════════════════
-        _GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']
+        # Model başına parametreler — max_output_tokens model sınırını aşamaz
+        _MODEL_CFG = {
+            'gemini-2.5-pro':   {'max_output_tokens': 65000, 'accept_max_tokens': False},
+            'gemini-2.5-flash': {'max_output_tokens': 65536, 'accept_max_tokens': False},
+            'gemini-2.0-flash': {'max_output_tokens': 8192,  'accept_max_tokens': True},
+        }
+        _GEMINI_MODELS = list(_MODEL_CFG.keys())
         html = None
         max_attempts = 5
         last_error_type = None
@@ -1218,6 +1224,7 @@ class HaberSistemi:
         for attempt in range(max_attempts):
             # Her 2 başarısız denemeden sonra bir sonraki modele geç
             model = _GEMINI_MODELS[min(attempt // 2, len(_GEMINI_MODELS) - 1)]
+            cfg   = _MODEL_CFG[model]
             try:
                 print(f"   Deneme {attempt + 1}/{max_attempts} [{model}]...")
 
@@ -1230,7 +1237,7 @@ class HaberSistemi:
                     model=model,
                     contents=prompt,
                     config=genai_types.GenerateContentConfig(
-                        max_output_tokens=65536,
+                        max_output_tokens=cfg['max_output_tokens'],
                         temperature=0.7,
                         safety_settings=[
                             genai_types.SafetySetting(
@@ -1248,12 +1255,16 @@ class HaberSistemi:
                         chunks.append(chunk.text)
                     last_chunk = chunk
 
-                # finish_reason son chunk'tan al — STOP dışında her şey hata sayılır
-                # (akış ortada kesilirse kısmi HTML sessizce kabul edilmez)
+                # finish_reason son chunk'tan al
+                # STOP: tam tamamlama. MAX_TOKENS: token limiti doldu — sadece düşük
+                # limitli modelde (2.0-flash) kabul edilir; diğerlerinde hata sayılır.
                 if last_chunk and last_chunk.candidates:
                     finish_reason = last_chunk.candidates[0].finish_reason
                     print(f"   Finish reason: {finish_reason}")
-                    if str(finish_reason) not in ['STOP', 'FinishReason.STOP', '1']:
+                    ok_reasons = {'STOP', 'FinishReason.STOP', '1'}
+                    if cfg['accept_max_tokens']:
+                        ok_reasons |= {'MAX_TOKENS', 'FinishReason.MAX_TOKENS', '2'}
+                    if str(finish_reason) not in ok_reasons:
                         raise Exception(f"Stream tamamlanmadi (finish_reason={finish_reason})")
                 elif not chunks:
                     raise Exception("Stream bos dondu")
@@ -1482,10 +1493,10 @@ KURALLAR:
         try:
             client = genai.Client(api_key=GEMINI_API_KEY)
             response = client.models.generate_content(
-                model='gemini-2.5-flash',
+                model='gemini-2.5-pro',
                 contents=completion_prompt,
                 config=genai_types.GenerateContentConfig(
-                    max_output_tokens=65536,
+                    max_output_tokens=65000,
                     temperature=0.7,
                 )
             )
@@ -1572,7 +1583,7 @@ KURALLAR:
             "Format:\n[S1]: <çeviri veya orijinal metin>\n[S2]: <çeviri veya orijinal metin>\n\n"
             + '\n'.join(lines)
         )
-        for model_name in ['gemini-2.5-flash', 'gemini-2.0-flash']:
+        for model_name in ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash']:
             try:
                 client = genai.Client(api_key=GEMINI_API_KEY)
                 chunks = []
