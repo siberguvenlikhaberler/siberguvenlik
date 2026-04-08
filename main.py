@@ -1204,17 +1204,22 @@ class HaberSistemi:
         client = genai.Client(api_key=GEMINI_API_KEY)
 
         # ═══════════════════════════════════════════
-        # AŞAMA 1: Gemini'den HTML al (3 deneme, kısa aralıkla)
-        # 1 saatlik yeniden deneme cron schedule tarafından yönetilir.
+        # AŞAMA 1: Gemini'den HTML al
+        # 5 deneme, üstel geri çekilme (30s→60s→120s→240s)
+        # Model sırası: gemini-2.5-flash (×2) → gemini-2.0-flash (×2) → gemini-1.5-flash (×1)
+        # 503/yüksek yük hatalarında daha uzun bekleme + eski modele düşme.
         # ═══════════════════════════════════════════
+        _GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']
         html = None
-        max_attempts = 3
+        max_attempts = 5
         last_error_type = None
         last_error_message = None
 
         for attempt in range(max_attempts):
+            # Her 2 başarısız denemeden sonra bir sonraki modele geç
+            model = _GEMINI_MODELS[min(attempt // 2, len(_GEMINI_MODELS) - 1)]
             try:
-                print(f"   Deneme {attempt + 1}/{max_attempts}...")
+                print(f"   Deneme {attempt + 1}/{max_attempts} [{model}]...")
 
                 prompt = get_claude_prompt(txt_content)
 
@@ -1222,7 +1227,7 @@ class HaberSistemi:
                 chunks     = []
                 last_chunk = None
                 for chunk in client.models.generate_content_stream(
-                    model='gemini-2.5-flash',
+                    model=model,
                     contents=prompt,
                     config=genai_types.GenerateContentConfig(
                         max_output_tokens=65536,
@@ -1260,8 +1265,10 @@ class HaberSistemi:
                 last_error_message = str(e)
                 print(f"   ⚠️  Hata [{last_error_type}]: {last_error_message}")
                 if attempt < max_attempts - 1:
-                    wait_time = (attempt + 1) * 15
-                    print(f"   ⏳ {wait_time} saniye bekleyip tekrar deneniyor...")
+                    wait_time = min(30 * (2 ** attempt), 240)  # 30s,60s,120s,240s
+                    next_model = _GEMINI_MODELS[min((attempt + 1) // 2, len(_GEMINI_MODELS) - 1)]
+                    model_note = f" → {next_model}" if next_model != model else ""
+                    print(f"   ⏳ {wait_time}s bekleniyor{model_note}...")
                     time.sleep(wait_time)
                 else:
                     print(f"   ❌ {max_attempts} deneme başarısız — fallback HTML oluşturuluyor.")
@@ -2098,7 +2105,7 @@ KURALLAR:
             <tr><th>Hata Türü</th><td><code>{safe_type}</code></td></tr>
             <tr><th>Hata Mesajı</th><td><code>{safe_msg}</code></td></tr>
             <tr><th>Oluşma Zamanı</th><td>{now.strftime('%d.%m.%Y %H:%M:%S')}</td></tr>
-            <tr><th>Deneme Sayısı</th><td>3 deneme (bu çalışmada) — tümü başarısız; 1 saat sonra yeniden denenecek</td></tr>
+            <tr><th>Deneme Sayısı</th><td>5 deneme / 3 model (bu çalışmada) — tümü başarısız; 1 saat sonra yeniden denenecek</td></tr>
         </table>
     </div>"""
         else:
