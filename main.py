@@ -21,6 +21,7 @@ from src.config import (
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS
 )
+from src.http_utils import requests_get_with_retry as _requests_get_with_retry
 
 
 # ===== YARDIMCI FONKSİYONLAR =====
@@ -88,19 +89,6 @@ def _normalize_url_advanced(link):
         # Parse hatası durumunda orijinalini döndür
         return link.rstrip('/')
 
-
-def _requests_get_with_retry(url, headers, timeout, max_retries=3,
-                             retry_statuses=(503, 502, 504, 429), **kwargs):
-    """HTTP GET with exponential-backoff retry for transient server errors."""
-    for attempt in range(max_retries + 1):
-        r = requests.get(url, headers=headers, timeout=timeout, **kwargs)
-        if r.status_code not in retry_statuses or attempt == max_retries:
-            return r
-        wait = 2 ** attempt  # 1s, 2s, 4s
-        print(f"      ⚠️  HTTP {r.status_code} — {wait}s sonra tekrar deneniyor "
-              f"({attempt + 1}/{max_retries})...")
-        time.sleep(wait)
-    return r
 
 
 def _parse_article_date(date_str, fallback):
