@@ -2147,7 +2147,7 @@ KURALLAR:
                     # Streaming ile cevap al
                     chunks = []
                     with client.chat.completions.create(
-                        model="qwen/qwen3.6-plus-preview:free",
+                        model="qwen-max",
                         messages=[{"role": "user", "content": prompt}],
                         max_tokens=65536,
                         temperature=0.7,
