@@ -1216,8 +1216,8 @@ class HaberSistemi:
 
         # ═══════════════════════════════════════════
         # AŞAMA 1: Gemini'den HTML al (OpenRouter başarısız ise)
-        # 5 deneme, üstel geri çekilme (30s→60s→120s→240s)
-        # Model sırası: gemini-2.5-pro (×2) → gemini-2.5-flash (×2) → gemini-2.0-flash (×1)
+        # 4 deneme, üstel geri çekilme (30s→60s→120s→240s)
+        # Model sırası: gemini-2.5-pro (×2) → gemini-2.5-flash (×2)
         # 503/yüksek yük hatalarında daha uzun bekleme + eski modele düşme.
         # ═══════════════════════════════════════════
         if not html:
@@ -1231,93 +1231,88 @@ class HaberSistemi:
                 )
 
             client = genai.Client(api_key=GEMINI_API_KEY)
-        # Model başına parametreler — max_output_tokens model sınırını aşamaz
-        _MODEL_CFG = {
-            'gemini-2.5-pro':   {'max_output_tokens': 65000, 'accept_max_tokens': False},
-            'gemini-2.5-flash': {'max_output_tokens': 65536, 'accept_max_tokens': False},
-            'gemini-2.0-flash': {'max_output_tokens': 8192,  'accept_max_tokens': True},
-        }
-        _GEMINI_MODELS = list(_MODEL_CFG.keys())
-        html = None
-        max_attempts = 5
-        last_error_type = None
-        last_error_message = None
 
-        for attempt in range(max_attempts):
-            # Her 2 başarısız denemeden sonra bir sonraki modele geç
-            model = _GEMINI_MODELS[min(attempt // 2, len(_GEMINI_MODELS) - 1)]
-            cfg   = _MODEL_CFG[model]
-            try:
-                print(f"   Deneme {attempt + 1}/{max_attempts} [{model}]...")
+            # Model başına parametreler — max_output_tokens model sınırını aşamaz
+            _MODEL_CFG = {
+                'gemini-2.5-pro':   {'max_output_tokens': 65000, 'accept_max_tokens': False},
+                'gemini-2.5-flash': {'max_output_tokens': 65536, 'accept_max_tokens': False},
+            }
+            _GEMINI_MODELS = list(_MODEL_CFG.keys())
+            max_attempts = 4
+            last_error_type = None
+            last_error_message = None
 
-                prompt = get_claude_prompt(txt_content)
+            for attempt in range(max_attempts):
+                # Her 2 başarısız denemeden sonra bir sonraki modele geç
+                model = _GEMINI_MODELS[min(attempt // 2, len(_GEMINI_MODELS) - 1)]
+                cfg   = _MODEL_CFG[model]
+                try:
+                    print(f"   Deneme {attempt + 1}/{max_attempts} [{model}]...")
 
-                # Streaming kullan: büyük response'larda server disconnect riskini önler
-                chunks     = []
-                last_chunk = None
-                for chunk in client.models.generate_content_stream(
-                    model=model,
-                    contents=prompt,
-                    config=genai_types.GenerateContentConfig(
-                        max_output_tokens=cfg['max_output_tokens'],
-                        temperature=0.7,
-                        safety_settings=[
-                            genai_types.SafetySetting(
-                                category='HARM_CATEGORY_DANGEROUS_CONTENT',
-                                threshold='BLOCK_ONLY_HIGH',
-                            ),
-                            genai_types.SafetySetting(
-                                category='HARM_CATEGORY_HARASSMENT',
-                                threshold='BLOCK_ONLY_HIGH',
-                            ),
-                        ],
-                    )
-                ):
-                    if chunk.text:
-                        chunks.append(chunk.text)
-                    last_chunk = chunk
+                    prompt = get_claude_prompt(txt_content)
 
-                # finish_reason son chunk'tan al
-                # STOP: tam tamamlama. MAX_TOKENS: token limiti doldu — sadece düşük
-                # limitli modelde (2.0-flash) kabul edilir; diğerlerinde hata sayılır.
-                if last_chunk and last_chunk.candidates:
-                    finish_reason = last_chunk.candidates[0].finish_reason
-                    print(f"   Finish reason: {finish_reason}")
-                    ok_reasons = {'STOP', 'FinishReason.STOP', '1'}
-                    if cfg['accept_max_tokens']:
-                        ok_reasons |= {'MAX_TOKENS', 'FinishReason.MAX_TOKENS', '2'}
-                    if str(finish_reason) not in ok_reasons:
-                        raise Exception(f"Stream tamamlanmadi (finish_reason={finish_reason})")
-                elif not chunks:
-                    raise Exception("Stream bos dondu")
+                    # Streaming kullan: büyük response'larda server disconnect riskini önler
+                    chunks     = []
+                    last_chunk = None
+                    for chunk in client.models.generate_content_stream(
+                        model=model,
+                        contents=prompt,
+                        config=genai_types.GenerateContentConfig(
+                            max_output_tokens=cfg['max_output_tokens'],
+                            temperature=0.7,
+                            safety_settings=[
+                                genai_types.SafetySetting(
+                                    category='HARM_CATEGORY_DANGEROUS_CONTENT',
+                                    threshold='BLOCK_ONLY_HIGH',
+                                ),
+                                genai_types.SafetySetting(
+                                    category='HARM_CATEGORY_HARASSMENT',
+                                    threshold='BLOCK_ONLY_HIGH',
+                                ),
+                            ],
+                        )
+                    ):
+                        if chunk.text:
+                            chunks.append(chunk.text)
+                        last_chunk = chunk
 
-                html = ''.join(chunks)
-                break
-            except Exception as e:
-                last_error_type = type(e).__name__
-                last_error_message = str(e)
-                print(f"   ⚠️  Hata [{last_error_type}]: {last_error_message}")
-                if attempt < max_attempts - 1:
-                    wait_time = min(30 * (2 ** attempt), 240)  # 30s,60s,120s,240s
-                    next_model = _GEMINI_MODELS[min((attempt + 1) // 2, len(_GEMINI_MODELS) - 1)]
-                    model_note = f" → {next_model}" if next_model != model else ""
-                    print(f"   ⏳ {wait_time}s bekleniyor{model_note}...")
-                    time.sleep(wait_time)
-                else:
-                    print(f"   ❌ {max_attempts} deneme başarısız — Fallback HTML oluşturuluyor.")
-                    print(f"   ℹ️  Hem Qwen hem de Gemini başarısız.")
-                    return self._create_fallback_html(
-                        txt_content,
-                        error_type=last_error_type,
-                        error_message=last_error_message,
-                    )
+                    # finish_reason son chunk'tan al
+                    if last_chunk and last_chunk.candidates:
+                        finish_reason = last_chunk.candidates[0].finish_reason
+                        print(f"   Finish reason: {finish_reason}")
+                        ok_reasons = {'STOP', 'FinishReason.STOP', '1'}
+                        if str(finish_reason) not in ok_reasons:
+                            raise Exception(f"Stream tamamlanmadi (finish_reason={finish_reason})")
+                    elif not chunks:
+                        raise Exception("Stream bos dondu")
 
-        if not html:
-            return self._create_fallback_html(
-                txt_content,
-                error_type=last_error_type,
-                error_message=last_error_message,
-            )
+                    html = ''.join(chunks)
+                    break
+                except Exception as e:
+                    last_error_type = type(e).__name__
+                    last_error_message = str(e)
+                    print(f"   ⚠️  Hata [{last_error_type}]: {last_error_message}")
+                    if attempt < max_attempts - 1:
+                        wait_time = min(30 * (2 ** attempt), 240)  # 30s,60s,120s,240s
+                        next_model = _GEMINI_MODELS[min((attempt + 1) // 2, len(_GEMINI_MODELS) - 1)]
+                        model_note = f" → {next_model}" if next_model != model else ""
+                        print(f"   ⏳ {wait_time}s bekleniyor{model_note}...")
+                        time.sleep(wait_time)
+                    else:
+                        print(f"   ❌ {max_attempts} deneme başarısız — Fallback HTML oluşturuluyor.")
+                        print(f"   ℹ️  Hem Qwen hem de Gemini başarısız.")
+                        return self._create_fallback_html(
+                            txt_content,
+                            error_type=last_error_type,
+                            error_message=last_error_message,
+                        )
+
+            if not html:
+                return self._create_fallback_html(
+                    txt_content,
+                    error_type=last_error_type,
+                    error_message=last_error_message,
+                )
 
         # HTML temizle — Gemini bazen "Elbette, işte rapor: ```html" şeklinde
         # konuşma metni ekler. DOCTYPE veya <html etiketini bulup öncesini sil.
