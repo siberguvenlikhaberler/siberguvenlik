@@ -1201,20 +1201,20 @@ class HaberSistemi:
     # ═══════════════════════════════════════════════════════════════
 
     def create_html(self, txt_content):
-        """Groq (Llama 4 Scout) → Gemini fallback — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
+        """Groq (Llama 3.1 8B) → Gemini fallback — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
         html = None
 
         # ═══════════════════════════════════════════
-        # AŞAMA 0: Groq (Llama 4 Scout) — PRIMARY
+        # AŞAMA 0: Groq (Llama 3.1 8B Instant) — PRIMARY
         # 3 deneme, üstel geri çekilme (10s→20s→60s)
         # ═══════════════════════════════════════════
-        print("🤖 Groq API (Llama 4 Scout) — Primary...")
+        print("🤖 Groq API (Llama 3.1 8B Instant) — Primary...")
         if GROQ_API_KEY:
             html = self._generate_html_with_groq(txt_content)
             if html:
-                print("✅ Llama 4 Scout başarılı — devam ediliyor\n")
+                print("✅ Llama 3.1 8B başarılı — devam ediliyor\n")
             else:
-                print("⚠️  Llama 4 Scout başarısız — Gemini fallback'ine geçiliyor\n")
+                print("⚠️  Llama 3.1 8B başarısız — Gemini fallback'ine geçiliyor\n")
         else:
             print("⚠️  GROQ_API_KEY yok — Gemini'ye geçiliyor\n")
 
@@ -2123,8 +2123,8 @@ KURALLAR:
         return html
 
     def _generate_html_with_groq(self, txt_content):
-        """Groq API (Llama 4 Scout) ile HTML oluştur — Gemini fallback'i"""
-        print("🤖 Groq API (Llama 4 Scout)...")
+        """Groq API (Llama 3.1 8B Instant) ile HTML oluştur — Gemini fallback'i"""
+        print("🤖 Groq API (Llama 3.1 8B Instant)...")
         if not GROQ_API_KEY:
             print("   ⚠️  GROQ_API_KEY yok — Gemini'ye geçiliyor.")
             return None
@@ -2140,16 +2140,16 @@ KURALLAR:
 
             for attempt in range(max_attempts):
                 try:
-                    print(f"   Deneme {attempt + 1}/{max_attempts} [llama-4-scout]...")
+                    print(f"   Deneme {attempt + 1}/{max_attempts} [llama-3.1-8b-instant]...")
 
                     prompt = get_claude_prompt(txt_content)
 
                     # Streaming ile cevap al
                     chunks = []
                     with client.chat.completions.create(
-                        model="meta-llama/llama-4-scout-17b-16e-instruct",
+                        model="llama-3.1-8b-instant",
                         messages=[{"role": "user", "content": prompt}],
-                        max_tokens=1024,
+                        max_tokens=4096,
                         temperature=0.7,
                         stream=True
                     ) as stream:
@@ -2162,7 +2162,7 @@ KURALLAR:
                     if not html or len(html) < 100:
                         raise Exception("Stream boş döndü")
 
-                    print("   ✅ Llama 4 Scout başarılı!")
+                    print("   ✅ Llama 3.1 8B başarılı!")
                     break
 
                 except Exception as e:
