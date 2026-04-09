@@ -169,14 +169,14 @@ def fetch_social_signals(config):
             try:
                 url = (f'https://{instance}/api/v1/timelines/tag/{tag}'
                        f'?limit={mastodon_limit}')
-                r = _requests_get_with_retry(url, headers=HEADERS, timeout=(5, 15))
+                r = _requests_get_with_retry(url, headers=HEADERS, timeout=(3, 5))
                 if r.status_code == 422:
                     print(f"   Mastodon #{tag} ({instance}): HTTP 422, RSS feed deneniyor...")
                     # API auth gerektiriyor → RSS feed fallback (/tags/{tag}.rss kimlik doğrulama istemez)
                     try:
                         import email.utils as _eu
                         rss_url = f'https://{instance}/tags/{tag}.rss'
-                        rr = _requests_get_with_retry(rss_url, headers=HEADERS, timeout=(5, 15))
+                        rr = _requests_get_with_retry(rss_url, headers=HEADERS, timeout=(3, 5))
                         if rr.status_code == 200:
                             root = ET.fromstring(rr.content)
                             items = root.findall('.//item')
@@ -315,7 +315,7 @@ def fetch_social_signals(config):
             'hitsPerPage':    hn_limit,
         }
         r = _requests_get_with_retry("https://hn.algolia.com/api/v1/search_by_date",
-                                     headers=HEADERS, timeout=(5, 10),
+                                     headers=HEADERS, timeout=(3, 5),
                                      params=hn_params)
         if r.status_code == 200:
             hits  = r.json().get('hits', [])
@@ -363,7 +363,7 @@ def fetch_social_signals(config):
             'X-GitHub-Api-Version': '2022-11-28',
             'User-Agent':          'siberguvenlik-bot/1.0',
         }
-        r = _requests_get_with_retry(gh_url, headers=gh_hdrs, timeout=(5, 15))
+        r = _requests_get_with_retry(gh_url, headers=gh_hdrs, timeout=(3, 5))
         if r.status_code == 200:
             advisories = r.json()
             gh_pool = []
@@ -430,7 +430,7 @@ def fetch_social_signals(config):
         seen_rss_links = set()
         for sub in reddit_subs:
             rss_url = f'https://www.reddit.com/r/{sub}/hot.rss?limit={reddit_size}'
-            r = _requests_get_with_retry(rss_url, headers=HEADERS, timeout=(5, 15))
+            r = _requests_get_with_retry(rss_url, headers=HEADERS, timeout=(3, 5))
             if r.status_code != 200:
                 print(f"   Reddit RSS r/{sub}: HTTP {r.status_code}")
                 time.sleep(0.5)
@@ -518,7 +518,7 @@ class HaberSistemi:
 
         def _fetch():
             try:
-                r = _requests_get_with_retry(url, headers=self.headers, timeout=(5, 8), stream=True)
+                r = _requests_get_with_retry(url, headers=self.headers, timeout=(3, 5), stream=True)
                 _session_holder[0] = r
                 chunks = []
                 total_size = 0
@@ -610,7 +610,7 @@ class HaberSistemi:
 
             try:
                 print(f"   └─ 📰 Newsletter çekiliyor: {nl_url[:70]}...")
-                r = _requests_get_with_retry(nl_url, headers=self.headers, timeout=(5, 15))
+                r = _requests_get_with_retry(nl_url, headers=self.headers, timeout=(3, 5))
                 if r.status_code != 200:
                     print(f"      ⚠️  HTTP {r.status_code}")
                     continue
@@ -682,7 +682,7 @@ class HaberSistemi:
             art.update(res)
             if res['success']:
                 result.append(art)
-            time.sleep(2)
+            time.sleep(0.5)
         print(f"   └─ ✅ {len(result)}/{len(crawled_articles)} newsletter makalesi tam metin çekildi")
         return result
 
@@ -693,7 +693,7 @@ class HaberSistemi:
 
         def _fetch_rss():
             try:
-                r = _requests_get_with_retry(url, headers=self.headers, timeout=(5, 12))
+                r = _requests_get_with_retry(url, headers=self.headers, timeout=(3, 5))
                 if r.status_code != 200:
                     result_holder['error'] = Exception(f"HTTP {r.status_code}")
                     return
@@ -1046,7 +1046,7 @@ class HaberSistemi:
                         art.update(res)
                         if res['success']:
                             full_text_success += 1
-                        time.sleep(2)
+                        time.sleep(0.5)
                     elif art.get('success'):
                         full_text_success += 1
                 all_news[src] = articles
