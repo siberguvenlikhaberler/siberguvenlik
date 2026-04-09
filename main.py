@@ -2142,14 +2142,16 @@ KURALLAR:
                 try:
                     print(f"   Deneme {attempt + 1}/{max_attempts} [llama-3.1-8b-instant]...")
 
-                    prompt = get_claude_prompt(txt_content)
+                    # İnput'u kısalt (request too large sorunu)
+                    truncated_content = txt_content[:50000] if len(txt_content) > 50000 else txt_content
+                    prompt = get_claude_prompt(truncated_content)
 
                     # Streaming ile cevap al
                     chunks = []
                     with client.chat.completions.create(
                         model="llama-3.1-8b-instant",
                         messages=[{"role": "user", "content": prompt}],
-                        max_tokens=4096,
+                        max_tokens=512,
                         temperature=0.7,
                         stream=True
                     ) as stream:
