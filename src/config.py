@@ -6,6 +6,7 @@ from datetime import datetime
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY', '')
 OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '')
+GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
 
 # Dosya yolları
 ARCHIVE_FILE = "data/haberler_arsiv.txt"
