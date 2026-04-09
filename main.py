@@ -2149,7 +2149,7 @@ KURALLAR:
                     with client.chat.completions.create(
                         model="llama-3.3-70b-versatile",
                         messages=[{"role": "user", "content": prompt}],
-                        max_tokens=8192,
+                        max_tokens=4096,
                         temperature=0.7,
                         stream=True
                     ) as stream:
