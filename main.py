@@ -1060,7 +1060,11 @@ class HaberSistemi:
 
         # ── Sosyal medya sinyalleri (Reddit, HN, GitHub) ──
         # Haber akışından ayrı tutulur, sadece HTML enjeksiyonu için saklanır
-        self.social_data = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
+        try:
+            self.social_data = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
+        except Exception as e:
+            print(f"⚠️  Sosyal medya sinyalleri çekilemedi (network sorun): {str(e)[:100]}")
+            self.social_data = []
 
         all_news = self._filter_duplicates(all_news)
         all_news = self._filter_old_articles(all_news)
@@ -2332,9 +2336,9 @@ def main():
 
     if ham_exists_for_today:
         print("📄 Bugünün ham haberleri mevcut — haber çekme atlanıyor, sadece Gemini çalıştırılıyor.")
-        # topla() atlandığından social_data boş kalır — ayrıca çek
-        print("📡 Sosyal medya sinyalleri çekiliyor...")
-        sistem.social_data = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
+        # topla() atlandığından social_data boş kalır — sosyal medya skip et (hız için)
+        print("⏭️  Sosyal medya sinyalleri çekimi atlanıyor (fallback rapor, hız için)")
+        sistem.social_data = []
         try:
             with open(ham_txt_path, encoding='utf-8') as f:
                 txt = f.read()
