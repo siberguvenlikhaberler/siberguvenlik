@@ -18,7 +18,7 @@ from google.genai import types as genai_types
 from openai import OpenAI as OpenAIClient
 
 from src.config import (
-    GEMINI_API_KEY, OPENROUTER_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
+    GEMINI_API_KEY, GROQ_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS
 )
@@ -1201,25 +1201,25 @@ class HaberSistemi:
     # ═══════════════════════════════════════════════════════════════
 
     def create_html(self, txt_content):
-        """OpenRouter (Qwen) → Gemini fallback — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
+        """Groq (LLaMA 3.3 70B) → Gemini fallback — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
         html = None
 
         # ═══════════════════════════════════════════
-        # AŞAMA 0: OpenRouter (Qwen 3.6 Plus) — PRIMARY
+        # AŞAMA 0: Groq (LLaMA 3.3 70B) — PRIMARY
         # 3 deneme, üstel geri çekilme (10s→20s→60s)
         # ═══════════════════════════════════════════
-        print("🤖 OpenRouter (Qwen 3.6 Plus) — Primary...")
-        if OPENROUTER_API_KEY:
-            html = self._generate_html_with_openrouter(txt_content)
+        print("🤖 Groq API (LLaMA 3.3 70B) — Primary...")
+        if GROQ_API_KEY:
+            html = self._generate_html_with_groq(txt_content)
             if html:
-                print("✅ Qwen başarılı — devam ediliyor\n")
+                print("✅ Groq başarılı — devam ediliyor\n")
             else:
-                print("⚠️  Qwen başarısız — Gemini fallback'ine geçiliyor\n")
+                print("⚠️  Groq başarısız — Gemini fallback'ine geçiliyor\n")
         else:
-            print("⚠️  OPENROUTER_API_KEY yok — Gemini'ye geçiliyor\n")
+            print("⚠️  GROQ_API_KEY yok — Gemini'ye geçiliyor\n")
 
         # ═══════════════════════════════════════════
-        # AŞAMA 1: Gemini'den HTML al (OpenRouter başarısız ise)
+        # AŞAMA 1: Gemini'den HTML al (Groq başarısız ise)
         # 4 deneme, üstel geri çekilme (30s→60s→120s→240s)
         # Model sırası: gemini-2.5-pro (×2) → gemini-2.5-flash (×2)
         # 503/yüksek yük hatalarında daha uzun bekleme + eski modele düşme.
@@ -1304,7 +1304,7 @@ class HaberSistemi:
                         time.sleep(wait_time)
                     else:
                         print(f"   ❌ {max_attempts} deneme başarısız — Fallback HTML oluşturuluyor.")
-                        print(f"   ℹ️  Hem Qwen hem de Gemini başarısız.")
+                        print(f"   ℹ️  Hem Groq hem de Gemini başarısız.")
                         return self._create_fallback_html(
                             txt_content,
                             error_type=last_error_type,
@@ -2122,17 +2122,17 @@ KURALLAR:
         print(f"   ✅ {len(reports)} günlük arşiv linki eklendi")
         return html
 
-    def _generate_html_with_openrouter(self, txt_content):
-        """OpenRouter (Qwen 3.6 Plus) ile HTML oluştur — Gemini fallback'i"""
-        print("🤖 OpenRouter API (Qwen 3.6 Plus)...")
-        if not OPENROUTER_API_KEY:
-            print("   ⚠️  OPENROUTER_API_KEY yok — fallback HTML oluşturuluyor.")
+    def _generate_html_with_groq(self, txt_content):
+        """Groq API (LLaMA 3.3 70B) ile HTML oluştur — Gemini fallback'i"""
+        print("🤖 Groq API (LLaMA 3.3 70B)...")
+        if not GROQ_API_KEY:
+            print("   ⚠️  GROQ_API_KEY yok — Gemini'ye geçiliyor.")
             return None
 
         try:
             client = OpenAIClient(
-                api_key=OPENROUTER_API_KEY,
-                base_url="https://openrouter.ai/api/v1"
+                api_key=GROQ_API_KEY,
+                base_url="https://api.groq.com/openai/v1"
             )
 
             max_attempts = 3
@@ -2140,16 +2140,16 @@ KURALLAR:
 
             for attempt in range(max_attempts):
                 try:
-                    print(f"   Deneme {attempt + 1}/{max_attempts} [qwen-3.6-plus-preview]...")
+                    print(f"   Deneme {attempt + 1}/{max_attempts} [llama-3.3-70b-versatile]...")
 
                     prompt = get_claude_prompt(txt_content)
 
                     # Streaming ile cevap al
                     chunks = []
                     with client.chat.completions.create(
-                        model="openrouter/free",
+                        model="llama-3.3-70b-versatile",
                         messages=[{"role": "user", "content": prompt}],
-                        max_tokens=65536,
+                        max_tokens=16384,
                         temperature=0.7,
                         stream=True
                     ) as stream:
@@ -2162,7 +2162,7 @@ KURALLAR:
                     if not html or len(html) < 100:
                         raise Exception("Stream boş döndü")
 
-                    print("   ✅ OpenRouter başarılı!")
+                    print("   ✅ Groq başarılı!")
                     break
 
                 except Exception as e:
@@ -2187,14 +2187,14 @@ KURALLAR:
                     html = html[html_start:]
                 html = _re_html.sub(r'\s*```\s*$', '', html).strip()
 
-                print(f"✅ OpenRouter HTML oluşturuldu ({len(html)} karakter)")
+                print(f"✅ Groq HTML oluşturuldu ({len(html)} karakter)")
                 return html
             else:
                 print(f"   ❌ {max_attempts} deneme başarısız")
                 return None
 
         except Exception as e:
-            print(f"   ❌ OpenRouter hatası: {str(e)[:100]}")
+            print(f"   ❌ Groq hatası: {str(e)[:100]}")
             return None
 
     def _create_fallback_html(self, txt_content, error_type=None, error_message=None):
