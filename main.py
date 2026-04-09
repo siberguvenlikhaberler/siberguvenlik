@@ -2149,7 +2149,7 @@ KURALLAR:
                     with client.chat.completions.create(
                         model="meta-llama/llama-4-scout-17b-16e-instruct",
                         messages=[{"role": "user", "content": prompt}],
-                        max_tokens=8192,
+                        max_tokens=2048,
                         temperature=0.7,
                         stream=True
                     ) as stream:
