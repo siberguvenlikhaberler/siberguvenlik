@@ -1217,7 +1217,7 @@ class HaberSistemi:
                 return self._create_fallback_html(
                     txt_content,
                     error_type="NoAPIKey",
-                    error_message="Hem Groq hem de Gemini API key'leri mevcut değil"
+                    error_message="GEMINI_API_KEY mevcut değil"
                 )
 
             client = genai.Client(api_key=GEMINI_API_KEY)
@@ -1290,7 +1290,7 @@ class HaberSistemi:
                         time.sleep(wait_time)
                     else:
                         print(f"   ❌ {max_attempts} deneme başarısız — Fallback HTML oluşturuluyor.")
-                        print(f"   ℹ️  Hem Groq hem de Gemini başarısız.")
+                        print(f"   ℹ️  Gemini başarısız.")
                         return self._create_fallback_html(
                             txt_content,
                             error_type=last_error_type,
