@@ -1231,7 +1231,7 @@ class HaberSistemi:
                 return self._create_fallback_html(
                     txt_content,
                     error_type="NoAPIKey",
-                    error_message="Hem OpenRouter hem de Gemini API key'leri mevcut değil"
+                    error_message="Hem Groq hem de Gemini API key'leri mevcut değil"
                 )
 
             client = genai.Client(api_key=GEMINI_API_KEY)
