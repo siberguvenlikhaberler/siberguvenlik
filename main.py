@@ -15,9 +15,10 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 from google import genai
 from google.genai import types as genai_types
+from openai import OpenAI as OpenAIClient
 
 from src.config import (
-    GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
+    GEMINI_API_KEY, OPENROUTER_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS
 )
@@ -1282,13 +1283,21 @@ class HaberSistemi:
                     print(f"   ⏳ {wait_time}s bekleniyor{model_note}...")
                     time.sleep(wait_time)
                 else:
-                    print(f"   ❌ {max_attempts} deneme başarısız — fallback HTML oluşturuluyor.")
-                    print(f"   ℹ️  Bir sonraki cron çalışmasında Gemini yeniden denenecek.")
-                    return self._create_fallback_html(
-                        txt_content,
-                        error_type=last_error_type,
-                        error_message=last_error_message,
-                    )
+                    print(f"   ❌ {max_attempts} deneme başarısız — OpenRouter fallback'i deneniyor...")
+                    print(f"   ℹ️  Gemini başarısız, Qwen 3.6 Plus (OpenRouter) deneniyor.")
+                    html = self._generate_html_with_openrouter(txt_content)
+                    if html:
+                        # OpenRouter başarılı
+                        print("\n✅ OpenRouter başarılı — standart işlem akışı devam ediyor")
+                    else:
+                        # OpenRouter da başarısız → fallback HTML
+                        print(f"   ❌ OpenRouter de başarısız — fallback HTML oluşturuluyor.")
+                        return self._create_fallback_html(
+                            txt_content,
+                            error_type=last_error_type,
+                            error_message=last_error_message,
+                        )
+                    break  # OpenRouter başarılı, döngüden çık
 
         if not html:
             return self._create_fallback_html(
@@ -2100,6 +2109,81 @@ KURALLAR:
 
         print(f"   ✅ {len(reports)} günlük arşiv linki eklendi")
         return html
+
+    def _generate_html_with_openrouter(self, txt_content):
+        """OpenRouter (Qwen 3.6 Plus) ile HTML oluştur — Gemini fallback'i"""
+        print("🤖 OpenRouter API (Qwen 3.6 Plus)...")
+        if not OPENROUTER_API_KEY:
+            print("   ⚠️  OPENROUTER_API_KEY yok — fallback HTML oluşturuluyor.")
+            return None
+
+        try:
+            client = OpenAIClient(
+                api_key=OPENROUTER_API_KEY,
+                base_url="https://openrouter.ai/api/v1"
+            )
+
+            max_attempts = 3
+            html = None
+
+            for attempt in range(max_attempts):
+                try:
+                    print(f"   Deneme {attempt + 1}/{max_attempts} [qwen-3.6-plus-preview]...")
+
+                    prompt = get_claude_prompt(txt_content)
+
+                    # Streaming ile cevap al
+                    chunks = []
+                    with client.chat.completions.create(
+                        model="qwen/qwen3.6-plus-preview:free",
+                        messages=[{"role": "user", "content": prompt}],
+                        max_tokens=65536,
+                        temperature=0.7,
+                        stream=True
+                    ) as stream:
+                        for chunk in stream:
+                            if chunk.choices[0].delta.content:
+                                chunks.append(chunk.choices[0].delta.content)
+
+                    html = ''.join(chunks)
+
+                    if not html or len(html) < 100:
+                        raise Exception("Stream boş döndü")
+
+                    print("   ✅ OpenRouter başarılı!")
+                    break
+
+                except Exception as e:
+                    error_msg = str(e)
+                    print(f"   ⚠️  Hata: {error_msg[:100]}")
+
+                    if attempt < max_attempts - 1:
+                        wait_time = min(10 * (2 ** attempt), 60)  # 10s, 20s, 60s
+                        print(f"   ⏳ {wait_time}s bekleniyor...")
+                        time.sleep(wait_time)
+
+            if html:
+                # HTML temizle
+                import re as _re_html
+                doctype_pos = html.lower().find('<!doctype html')
+                html_tag_pos = html.lower().find('<html')
+                candidates = [p for p in [doctype_pos, html_tag_pos] if p != -1]
+                if candidates:
+                    html_start = min(candidates)
+                    if html_start > 0:
+                        print(f"   ⚠️  HTML öncesi metin temizlendi ({html_start} karakter preamble)")
+                    html = html[html_start:]
+                html = _re_html.sub(r'\s*```\s*$', '', html).strip()
+
+                print(f"✅ OpenRouter HTML oluşturuldu ({len(html)} karakter)")
+                return html
+            else:
+                print(f"   ❌ {max_attempts} deneme başarısız")
+                return None
+
+        except Exception as e:
+            print(f"   ❌ OpenRouter hatası: {str(e)[:100]}")
+            return None
 
     def _create_fallback_html(self, txt_content, error_type=None, error_message=None):
         """Gemini API başarısız olursa — hata detaylarını içeren fallback HTML"""
