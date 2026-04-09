@@ -1197,19 +1197,40 @@ class HaberSistemi:
     # ═══════════════════════════════════════════════════════════════
 
     def create_html(self, txt_content):
-        """Gemini ile HTML oluştur — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
-        print("🤖 Gemini API...")
-        if not GEMINI_API_KEY:
-            raise ValueError("❌ GEMINI_API_KEY yok!")
-
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        """OpenRouter (Qwen) → Gemini fallback — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
+        html = None
 
         # ═══════════════════════════════════════════
-        # AŞAMA 1: Gemini'den HTML al
+        # AŞAMA 0: OpenRouter (Qwen 3.6 Plus) — PRIMARY
+        # 3 deneme, üstel geri çekilme (10s→20s→60s)
+        # ═══════════════════════════════════════════
+        print("🤖 OpenRouter (Qwen 3.6 Plus) — Primary...")
+        if OPENROUTER_API_KEY:
+            html = self._generate_html_with_openrouter(txt_content)
+            if html:
+                print("✅ Qwen başarılı — devam ediliyor\n")
+            else:
+                print("⚠️  Qwen başarısız — Gemini fallback'ine geçiliyor\n")
+        else:
+            print("⚠️  OPENROUTER_API_KEY yok — Gemini'ye geçiliyor\n")
+
+        # ═══════════════════════════════════════════
+        # AŞAMA 1: Gemini'den HTML al (OpenRouter başarısız ise)
         # 5 deneme, üstel geri çekilme (30s→60s→120s→240s)
         # Model sırası: gemini-2.5-pro (×2) → gemini-2.5-flash (×2) → gemini-2.0-flash (×1)
         # 503/yüksek yük hatalarında daha uzun bekleme + eski modele düşme.
         # ═══════════════════════════════════════════
+        if not html:
+            print("🤖 Gemini API — Fallback...")
+            if not GEMINI_API_KEY:
+                print("⚠️  GEMINI_API_KEY yok — Fallback HTML oluşturuluyor...")
+                return self._create_fallback_html(
+                    txt_content,
+                    error_type="NoAPIKey",
+                    error_message="Hem OpenRouter hem de Gemini API key'leri mevcut değil"
+                )
+
+            client = genai.Client(api_key=GEMINI_API_KEY)
         # Model başına parametreler — max_output_tokens model sınırını aşamaz
         _MODEL_CFG = {
             'gemini-2.5-pro':   {'max_output_tokens': 65000, 'accept_max_tokens': False},
@@ -1283,21 +1304,13 @@ class HaberSistemi:
                     print(f"   ⏳ {wait_time}s bekleniyor{model_note}...")
                     time.sleep(wait_time)
                 else:
-                    print(f"   ❌ {max_attempts} deneme başarısız — OpenRouter fallback'i deneniyor...")
-                    print(f"   ℹ️  Gemini başarısız, Qwen 3.6 Plus (OpenRouter) deneniyor.")
-                    html = self._generate_html_with_openrouter(txt_content)
-                    if html:
-                        # OpenRouter başarılı
-                        print("\n✅ OpenRouter başarılı — standart işlem akışı devam ediyor")
-                    else:
-                        # OpenRouter da başarısız → fallback HTML
-                        print(f"   ❌ OpenRouter de başarısız — fallback HTML oluşturuluyor.")
-                        return self._create_fallback_html(
-                            txt_content,
-                            error_type=last_error_type,
-                            error_message=last_error_message,
-                        )
-                    break  # OpenRouter başarılı, döngüden çık
+                    print(f"   ❌ {max_attempts} deneme başarısız — Fallback HTML oluşturuluyor.")
+                    print(f"   ℹ️  Hem Qwen hem de Gemini başarısız.")
+                    return self._create_fallback_html(
+                        txt_content,
+                        error_type=last_error_type,
+                        error_message=last_error_message,
+                    )
 
         if not html:
             return self._create_fallback_html(
