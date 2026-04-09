@@ -18,7 +18,7 @@ from google.genai import types as genai_types
 from openai import OpenAI as OpenAIClient
 
 from src.config import (
-    GEMINI_API_KEY, GROQ_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
+    GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS
 )
@@ -1201,25 +1201,11 @@ class HaberSistemi:
     # ═══════════════════════════════════════════════════════════════
 
     def create_html(self, txt_content):
-        """Groq (Llama 3.1 8B) → Gemini fallback — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
+        """Gemini — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
         html = None
 
         # ═══════════════════════════════════════════
-        # AŞAMA 0: Groq (Llama 3.1 8B Instant) — PRIMARY
-        # 3 deneme, üstel geri çekilme (10s→20s→60s)
-        # ═══════════════════════════════════════════
-        print("🤖 Groq API (Llama 3.1 8B Instant) — Primary...")
-        if GROQ_API_KEY:
-            html = self._generate_html_with_groq(txt_content)
-            if html:
-                print("✅ Llama 3.1 8B başarılı — devam ediliyor\n")
-            else:
-                print("⚠️  Llama 3.1 8B başarısız — Gemini fallback'ine geçiliyor\n")
-        else:
-            print("⚠️  GROQ_API_KEY yok — Gemini'ye geçiliyor\n")
-
-        # ═══════════════════════════════════════════
-        # AŞAMA 1: Gemini'den HTML al (Groq başarısız ise)
+        # AŞAMA 1: Gemini'den HTML al (PRIMARY)
         # 4 deneme, üstel geri çekilme (30s→60s→120s→240s)
         # Model sırası: gemini-2.5-pro (×2) → gemini-2.5-flash (×2)
         # 503/yüksek yük hatalarında daha uzun bekleme + eski modele düşme.
@@ -2121,83 +2107,6 @@ KURALLAR:
 
         print(f"   ✅ {len(reports)} günlük arşiv linki eklendi")
         return html
-
-    def _generate_html_with_groq(self, txt_content):
-        """Groq API (Llama 3.1 8B Instant) ile HTML oluştur — Gemini fallback'i"""
-        print("🤖 Groq API (Llama 3.1 8B Instant)...")
-        if not GROQ_API_KEY:
-            print("   ⚠️  GROQ_API_KEY yok — Gemini'ye geçiliyor.")
-            return None
-
-        try:
-            client = OpenAIClient(
-                api_key=GROQ_API_KEY,
-                base_url="https://api.groq.com/openai/v1"
-            )
-
-            max_attempts = 3
-            html = None
-
-            for attempt in range(max_attempts):
-                try:
-                    print(f"   Deneme {attempt + 1}/{max_attempts} [llama-3.1-8b-instant]...")
-
-                    # İnput'u kısalt (request too large sorunu)
-                    truncated_content = txt_content[:50000] if len(txt_content) > 50000 else txt_content
-                    prompt = get_claude_prompt(truncated_content)
-
-                    # Streaming ile cevap al
-                    chunks = []
-                    with client.chat.completions.create(
-                        model="llama-3.1-8b-instant",
-                        messages=[{"role": "user", "content": prompt}],
-                        max_tokens=512,
-                        temperature=0.7,
-                        stream=True
-                    ) as stream:
-                        for chunk in stream:
-                            if chunk.choices[0].delta.content:
-                                chunks.append(chunk.choices[0].delta.content)
-
-                    html = ''.join(chunks)
-
-                    if not html or len(html) < 100:
-                        raise Exception("Stream boş döndü")
-
-                    print("   ✅ Llama 3.1 8B başarılı!")
-                    break
-
-                except Exception as e:
-                    error_msg = str(e)
-                    print(f"   ⚠️  Hata: {error_msg[:100]}")
-
-                    if attempt < max_attempts - 1:
-                        wait_time = min(10 * (2 ** attempt), 60)  # 10s, 20s, 60s
-                        print(f"   ⏳ {wait_time}s bekleniyor...")
-                        time.sleep(wait_time)
-
-            if html:
-                # HTML temizle
-                import re as _re_html
-                doctype_pos = html.lower().find('<!doctype html')
-                html_tag_pos = html.lower().find('<html')
-                candidates = [p for p in [doctype_pos, html_tag_pos] if p != -1]
-                if candidates:
-                    html_start = min(candidates)
-                    if html_start > 0:
-                        print(f"   ⚠️  HTML öncesi metin temizlendi ({html_start} karakter preamble)")
-                    html = html[html_start:]
-                html = _re_html.sub(r'\s*```\s*$', '', html).strip()
-
-                print(f"✅ Groq HTML oluşturuldu ({len(html)} karakter)")
-                return html
-            else:
-                print(f"   ❌ {max_attempts} deneme başarısız")
-                return None
-
-        except Exception as e:
-            print(f"   ❌ Groq hatası: {str(e)[:100]}")
-            return None
 
     def _create_fallback_html(self, txt_content, error_type=None, error_message=None):
         """Gemini API başarısız olursa — hata detaylarını içeren fallback HTML"""
