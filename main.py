@@ -20,12 +20,36 @@ from openai import OpenAI as OpenAIClient
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
-    SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS
+    SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
+    OLLAMA_BASE_URL, OLLAMA_MODEL,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
 
 
 # ===== YARDIMCI FONKSİYONLAR =====
+
+def _generate_with_ollama(prompt, base_url=None, model=None, timeout=300):
+    """
+    Ollama yerel LLM API'sine istek gönderir.
+
+    POST {base_url}/api/generate
+    Body: {"model": model, "prompt": prompt, "stream": false}
+    Döndürür: (str) model çıktısı, hata durumunda Exception fırlatır.
+    """
+    url   = f"{(base_url or OLLAMA_BASE_URL).rstrip('/')}/api/generate"
+    model = model or OLLAMA_MODEL
+    payload = {
+        "model":  model,
+        "prompt": prompt,
+        "stream": False,
+    }
+    resp = requests.post(url, json=payload, timeout=timeout)
+    resp.raise_for_status()
+    data = resp.json()
+    if not data.get("done"):
+        raise Exception(f"Ollama yanıtı tamamlanmadı: done={data.get('done')}")
+    return data["response"]
+
 
 def _calculate_content_hash(title, description):
     """Title + description'dan MD5 hash hesapla (16 karakter hex)"""
@@ -1201,11 +1225,27 @@ class HaberSistemi:
     # ═══════════════════════════════════════════════════════════════
 
     def create_html(self, txt_content):
-        """Gemini — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
+        """Ollama (önce) → Gemini (fallback) — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
         html = None
 
         # ═══════════════════════════════════════════
-        # AŞAMA 1: Gemini'den HTML al (PRIMARY)
+        # AŞAMA 0: Ollama yerel LLM (PRIMARY — varsa)
+        # OLLAMA_BASE_URL tanımlıysa önce yerel modeli dene.
+        # Başarısız olursa Gemini'ye düş.
+        # ═══════════════════════════════════════════
+        if OLLAMA_BASE_URL:
+            print(f"🦙 Ollama API deneniyor [{OLLAMA_MODEL}] — {OLLAMA_BASE_URL}...")
+            try:
+                prompt = get_claude_prompt(txt_content)
+                html   = _generate_with_ollama(prompt)
+                print(f"   ✅ Ollama başarılı ({len(html)} karakter).")
+            except Exception as e:
+                print(f"   ⚠️  Ollama hatası [{type(e).__name__}]: {e}")
+                print("   ➡️  Gemini'ye düşülüyor...")
+                html = None
+
+        # ═══════════════════════════════════════════
+        # AŞAMA 1: Gemini'den HTML al (FALLBACK)
         # 4 deneme, üstel geri çekilme (30s→60s→120s→240s)
         # Model sırası: gemini-2.5-pro (×2) → gemini-2.5-flash (×2)
         # 503/yüksek yük hatalarında daha uzun bekleme + eski modele düşme.
