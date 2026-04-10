@@ -95,19 +95,27 @@ HABERLER:
 {articles_full}"""
 
 
-def get_summary_batch_prompt(articles_brief):
+def get_summary_batch_prompt(articles_full):
     """
-    Pass 3: Bir batch haberin başlık+özet → Türkçe başlık + 80-120 kelime paragraf (JSON).
-    articles_brief: "=== HABER ID: N ===\\nKaynak: ...\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
+    Pass 3: Bir batch haberin TAM METNİ → Türkçe başlık + 100+ kelime paragraf (JSON).
+    articles_full: "=== HABER ID: N ===\\nKaynak: ...\\nTAM METİN:\\n..." formatında string.
     """
-    return f"""Sen siber güvenlik analistisin. Aşağıdaki haberlerin her biri için kısa Türkçe özet yaz.
+    return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri TAM METİN ile analiz et.
 
 Her haber için:
-1. TR_BASLIK: Türkçe eylem cümlesi başlığı (6-9 kelime, -mıştır/-edilmiştir ile biter)
-2. PARAGRAF: Resmi Türkçe, 80-120 kelime, 5N1K kapsar
-   - YASAK: "Bu olay...", "Bu gelişme...", "...önem taşımaktadır" gibi jenerik kalıplar
-   - Son cümle somut bir haber detayı olacak
-   - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir
+1. TR_BASLIK: Türkçe eylem cümlesi başlığı
+   - 6-9 kelime, her kelimenin ilk harfi büyük
+   - Fiil zorunlu: -mıştır, -edilmiştir, -tespit edilmiştir, -açıklanmıştır
+   - YASAK: -ması, -edilmesi gibi isim-fiil (mastar) yapıları
+   - Somut detay: şirket/CVE/ülke adı dahil et
+
+2. PARAGRAF: Resmi Türkçe özet
+   - MİNİMUM 100 kelime (kesinlikle daha kısa yazma)
+   - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
+   - Mevcut teknik detayları aktar (CVE, etkilenen sürümler, saldırı türü vb.)
+   - YASAK SON CÜMLELER: "Bu olay...", "Bu gelişme...", "...önem taşımaktadır", "...göstermektedir"
+   - Son cümle somut bir teknik bulgu veya haber detayı olacak
+   - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
@@ -122,7 +130,7 @@ SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 }}
 
 HABERLER:
-{articles_brief}"""
+{articles_full}"""
 
 # Haber kaynakları
 NEWS_SOURCES = {

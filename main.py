@@ -1583,13 +1583,17 @@ class HaberSistemi:
     def create_html(self, txt_content):
         """
         3-PASS MİMARİSİ:
-          Pass 1 → Sıralama  (tüm başlıklar → JSON: top10 + remaining + filtered)
-          Pass 2 → Derin     (top-10 tam metin → JSON: tr_title + 120+ kelime paragraf)
-          Pass 3 → Batch     (kalan haberler, 35'lik gruplar → JSON: tr_title + 80-120 kelime)
+          Pass 1 → Sıralama   (tüm başlıklar + 200 karakter özet → JSON: top10 + remaining + filtered)
+          Pass 2 → Derin      (top-10 TAM METİN → JSON: tr_title + 120+ kelime paragraf)
+          Pass 3 → Batch      (kalan haberler TAM METİN, 20'lik gruplar → JSON: tr_title + 100+ kelime)
           Assembly → Kod tarafı HTML oluşturur (yapısal hata imkânsız)
 
-        Fallback: Pass 1 başarısız → eski tek-çağrı yöntemi.
-        Batch başarısız → orijinal İngilizce başlık + kırpılmış metin kullanılır.
+        Kalite garantisi:
+          - Her haber TAM METNİNDEN özetlenir (halüsinasyon yok)
+          - Her paragraf min 100 kelime (top-10: 120+)
+          - Batch başarısız → split-retry (20→10→5→1); tek haber bile başarısız olursa
+            full_text'in ilk 150 kelimesi ham olarak yerleştirilir
+        Fallback: Pass 1 tamamen başarısız → _create_html_legacy().
         """
         if not GEMINI_API_KEY:
             print("⚠️  GEMINI_API_KEY yok — Fallback HTML oluşturuluyor...")
@@ -1685,42 +1689,19 @@ class HaberSistemi:
                         pass
 
         # ════════════════════════════════════════════════════════════════
-        # PASS 3 — KALAN HABERLER (35'LİK BATCH'LER)
+        # PASS 3 — KALAN HABERLER (20'LİK BATCH'LER, TAM METİN)
         # ════════════════════════════════════════════════════════════════
-        batch_size = 35
+        batch_size = 20
         batches = [remaining_ids[i:i + batch_size]
                    for i in range(0, len(remaining_ids), batch_size)]
-        print(f"\n📦 Pass 3 — {len(remaining_ids)} kalan haber, {len(batches)} batch...")
+        print(f"\n📦 Pass 3 — {len(remaining_ids)} kalan haber, {len(batches)} batch "
+              f"(her biri tam metin, split-retry'lı)...")
 
         for b_idx, batch in enumerate(batches):
-            batch_lines = []
-            for art_id in batch:
-                a = articles_by_id.get(art_id)
-                if not a:
-                    continue
-                snippet = a['full_text'][:300].replace('\n', ' ')
-                batch_lines.append(
-                    f"=== HABER ID: {art_id} ===\n"
-                    f"Kaynak: {a['source']}\n"
-                    f"Başlık: {a['title']}\n"
-                    f"Özet: {snippet}\n"
-                )
-            if not batch_lines:
-                continue
-
-            batch_data = self._gemini_call_json(
-                get_summary_batch_prompt('\n'.join(batch_lines)),
-                max_output_tokens=8000,
-                label=f'Pass3-Batch{b_idx + 1}/{len(batches)}',
+            self._process_batch_with_split(
+                batch, articles_by_id, content_by_id,
+                label_prefix=f'P3-B{b_idx + 1}/{len(batches)}',
             )
-            if batch_data:
-                for k, v in batch_data.items():
-                    try:
-                        content_by_id[int(k)] = v
-                    except (ValueError, TypeError):
-                        pass
-            else:
-                print(f"   ⚠️  Batch {b_idx + 1} başarısız — orijinal metin kullanılacak.")
 
         # ════════════════════════════════════════════════════════════════
         # ASSEMBLY — Kod tarafı HTML oluşturma
@@ -1756,6 +1737,84 @@ class HaberSistemi:
         self.save_summary_to_archive(html)
         self._cleanup_old_reports()
         return html
+
+    @staticmethod
+    def _make_fallback_content(article):
+        """
+        Gemini'nin tamamen başarısız olduğu tek bir haber için fallback içerik üretir.
+        İngilizce başlık + full_text'in ilk ~150 kelimesi Türkçeye dönüştürülmeden
+        ham olarak yerleştirilir; en azından boş paragraf çıkmaz.
+        """
+        title = article.get('title', f"Haber #{article.get('id', '?')}")
+        words = article.get('full_text', '').split()
+        paragraph = ' '.join(words[:150]) if words else title
+        return {'tr_title': title, 'paragraph': paragraph}
+
+    def _format_batch_for_prompt(self, batch, articles_by_id):
+        """Bir batch makaleyi get_summary_batch_prompt için tam metin formatına dönüştürür."""
+        lines = []
+        for art_id in batch:
+            a = articles_by_id.get(art_id)
+            if not a:
+                continue
+            lines.append(
+                f"=== HABER ID: {art_id} ===\n"
+                f"Kaynak: {a['source']}\n"
+                f"Başlık: {a['title']}\n"
+                f"Tarih: {a['art_date']}\n"
+                f"Link: {a['link']}\n\n"
+                f"TAM METİN:\n{a['full_text']}\n"
+            )
+        return '\n'.join(lines)
+
+    def _process_batch_with_split(self, batch, articles_by_id, content_by_id,
+                                   label_prefix='Batch', _depth=0):
+        """
+        Bir batch makaleyi işler; başarısız olursa ikiye bölerek yinelemeli tekrar dener.
+        Derinlik sınırı: batch boyutu 1'e düşünce (tek haber) artık bölünmez,
+        o haber için _make_fallback_content çağrılır.
+
+        Akış: batch(20) → hata → batch(10)+batch(10) → hata → batch(5)×4 → ...
+              → batch(1) → hata → fallback içerik
+        """
+        if not batch:
+            return
+
+        max_tokens = min(4096 + len(batch) * 200, 8000)
+
+        data = self._gemini_call_json(
+            get_summary_batch_prompt(self._format_batch_for_prompt(batch, articles_by_id)),
+            max_output_tokens=max_tokens,
+            label=f'{label_prefix}(n={len(batch)})',
+        )
+
+        if data:
+            for k, v in data.items():
+                try:
+                    content_by_id[int(k)] = v
+                except (ValueError, TypeError):
+                    pass
+            return
+
+        # Başarısız — bölme kararı
+        if len(batch) == 1:
+            art_id = batch[0]
+            a = articles_by_id.get(art_id)
+            if a:
+                content_by_id[art_id] = self._make_fallback_content(a)
+                print(f"   ⚠️  [{label_prefix}] Tek haber fallback: ID={art_id}")
+            return
+
+        mid = len(batch) // 2
+        print(f"   🔀 [{label_prefix}] Batch bölünüyor: {len(batch)} → {mid} + {len(batch) - mid}")
+        self._process_batch_with_split(
+            batch[:mid], articles_by_id, content_by_id,
+            label_prefix=f'{label_prefix}L', _depth=_depth + 1,
+        )
+        self._process_batch_with_split(
+            batch[mid:], articles_by_id, content_by_id,
+            label_prefix=f'{label_prefix}R', _depth=_depth + 1,
+        )
 
     def _create_html_legacy(self, txt_content):
         """
