@@ -9,6 +9,121 @@ TAVILY_API_KEY = os.getenv('TAVILY_API_KEY', '')
 # Dosya yolları
 ARCHIVE_FILE = "data/haberler_arsiv.txt"
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 3-PASS MİMARİSİ İÇİN PROMPT FONKSİYONLARI
+# Pass 1 → Sıralama (JSON)
+# Pass 2 → Top-10 derin analiz (JSON)
+# Pass 3 → Kalan haberler batch özet (JSON)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def get_ranking_prompt(articles_brief, recent_events=''):
+    """
+    Pass 1: Tüm haberlerin başlık+kısa özeti → önem sıralaması (JSON).
+    articles_brief: "=== HABER ID: N ===\\nKaynak: ...\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
+    """
+    return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri önem derecesine göre değerlendir.
+
+ADIM 1 — FILTRELE (bunları "filtered" listesine koy):
+- Podcast, webinar, konferans, etkinlik duyurusu
+- Ürün lansmanı, beta sürüm, pazar araştırması raporu
+- Genel tavsiye makalesi, röportaj, inceleme yazısı
+- Kritik olmayan rutin patch/güncelleme haberleri
+
+ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
+1. İran-İsrail siber çatışması kapsamındaki haberler → EN ÜSTTE
+2. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
+3. 5 milyon+ kullanıcı veri ihlalleri
+4. Zero-day açıkları + APT grubu aktivitesi
+5. Ulusal güvenlik / Türkiye ile ilgili haberler
+6. Kritik CVE (CVSS >= 9.0) + aktif istismar
+7. Büyük fidye yazılımı (ransomware) saldırıları
+8. Tedarik zinciri (supply chain) saldırıları
+9. Diğer önemli gelişmeler
+
+ADIM 3 — TOP 10: Sıraladığın ilk 10'u "top10" listesine koy.
+
+SON 3 GÜNDE RAPORLANAN OLAYLAR — bu olayları "filtered" listesine ekle (tekrar alma):
+{recent_events if recent_events else "(Arşiv yok)"}
+
+SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
+{{
+  "top10": [3, 7, 15, 42, 1, 8, 23, 56, 12, 67],
+  "remaining": [2, 5, 9, 11, 14],
+  "filtered": [4, 6, 13, 20]
+}}
+
+HABERLER:
+{articles_brief}"""
+
+
+def get_deep_analysis_prompt(articles_full):
+    """
+    Pass 2: Top-10 haberin TAM metni → Türkçe başlık + 120+ kelime paragraf (JSON).
+    articles_full: "=== HABER ID: N ===\\nKaynak: ...\\nTAM METİN:\\n..." formatında string.
+    """
+    return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri TAM METİN ile analiz et.
+
+Her haber için iki şey üret:
+1. TR_BASLIK: Türkçe eylem cümlesi başlığı
+   - 6-9 kelime, her kelimenin ilk harfi büyük
+   - Fiil zorunlu: -mıştır, -edilmiştir, -tespit edilmiştir, -açıklanmıştır
+   - YASAK: -ması, -edilmesi gibi isim-fiil (mastar) yapıları
+   - Somut detay: şirket/CVE/ülke adı dahil et
+
+2. PARAGRAF: Resmi Türkçe özet
+   - MİNİMUM 120 kelime (kesinlikle daha kısa yazma)
+   - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
+   - Teknik detaylar ekle (CVE numarası, etkilenen sürümler, saldırı vektörü vb.)
+   - YASAK SON CÜMLELER: "Bu olay...", "Bu saldırı...", "...önem taşımaktadır", "...göstermektedir"
+   - Son cümle somut teknik bulgu veya haber detayı olacak
+   - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
+
+SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
+{{
+  "3": {{
+    "tr_title": "Microsoft Exchange'de CVE-2024-1234 Kritik Uzaktan Kod Çalıştırma Açığı Tespit Edilmiştir",
+    "paragraph": "Microsoft, Exchange Server ürününde..."
+  }},
+  "7": {{
+    "tr_title": "...",
+    "paragraph": "..."
+  }}
+}}
+
+HABERLER:
+{articles_full}"""
+
+
+def get_summary_batch_prompt(articles_brief):
+    """
+    Pass 3: Bir batch haberin başlık+özet → Türkçe başlık + 80-120 kelime paragraf (JSON).
+    articles_brief: "=== HABER ID: N ===\\nKaynak: ...\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
+    """
+    return f"""Sen siber güvenlik analistisin. Aşağıdaki haberlerin her biri için kısa Türkçe özet yaz.
+
+Her haber için:
+1. TR_BASLIK: Türkçe eylem cümlesi başlığı (6-9 kelime, -mıştır/-edilmiştir ile biter)
+2. PARAGRAF: Resmi Türkçe, 80-120 kelime, 5N1K kapsar
+   - YASAK: "Bu olay...", "Bu gelişme...", "...önem taşımaktadır" gibi jenerik kalıplar
+   - Son cümle somut bir haber detayı olacak
+   - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir
+
+SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
+{{
+  "42": {{
+    "tr_title": "Google Chrome Sıfır Gün Açığı Aktif Olarak İstismar Edilmektedir",
+    "paragraph": "Google, Chrome tarayıcısında..."
+  }},
+  "1": {{
+    "tr_title": "...",
+    "paragraph": "..."
+  }}
+}}
+
+HABERLER:
+{articles_brief}"""
+
 # Haber kaynakları
 NEWS_SOURCES = {
     'The Hacker News': 'https://feeds.feedburner.com/TheHackersNews',

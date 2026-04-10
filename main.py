@@ -5,6 +5,7 @@ v2.2 - Gemini 2.5 Flash + HTML Doğrulama + Eksik Paragraf Tamamlama
 
 import os
 import re
+import json
 import time
 import hashlib
 import requests
@@ -20,12 +21,46 @@ from openai import OpenAI as OpenAIClient
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
-    SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS
+    SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
+    get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
 
 
 # ===== YARDIMCI FONKSİYONLAR =====
+
+def _extract_json_from_text(text):
+    """AI yanıtından JSON nesnesini güvenli biçimde çıkarır."""
+    text = text.strip()
+    # Doğrudan parse dene
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    # ```json ... ``` bloğu
+    m = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', text, re.DOTALL)
+    if m:
+        try:
+            return json.loads(m.group(1))
+        except json.JSONDecodeError:
+            pass
+    # En dıştaki { ... } çiftini bul
+    start = text.find('{')
+    if start == -1:
+        raise ValueError("Yanıtta JSON nesnesi bulunamadı")
+    depth = 0
+    for i, ch in enumerate(text[start:], start):
+        if ch == '{':
+            depth += 1
+        elif ch == '}':
+            depth -= 1
+            if depth == 0:
+                try:
+                    return json.loads(text[start:i + 1])
+                except json.JSONDecodeError:
+                    break
+    raise ValueError("Geçerli JSON çıkarılamadı")
+
 
 def _calculate_content_hash(title, description):
     """Title + description'dan MD5 hash hesapla (16 karakter hex)"""
@@ -509,6 +544,351 @@ class HaberSistemi:
         self.used_links_file = "data/haberler_linkler.txt"
         self.rss_errors_file = "data/rss_errors.txt"
         self.social_data = []  # fetch_social_signals() sonuçları; topla() tarafından doldurulur
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # 3-PASS MİMARİSİ — YARDIMCI METODLAR
+    # ─────────────────────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _parse_articles_from_txt(txt_content):
+        """
+        save_txt() çıktısını yapılandırılmış makale listesine dönüştürür.
+        Döndürür: [{'id': int, 'source': str, 'title': str, 'date': str,
+                    'link': str, 'full_text': str, 'domain': str,
+                    'art_date': str}, ...]
+        Sosyal sinyal bloğu otomatik olarak çıkarılır.
+        """
+        # Sosyal sinyal bölümünü at
+        social_sep = 'SOSYAL MEDYA SİNYALLERİ'
+        if social_sep in txt_content:
+            txt_content = txt_content[:txt_content.index(social_sep)]
+
+        articles = []
+        # Makaleler ══════ ayırıcısıyla ayrılır
+        blocks = re.split(r'\n[═=]{40,}\n', txt_content)
+
+        for block in blocks:
+            block = block.strip()
+            if not block:
+                continue
+            # Başlık satırı: [N] Kaynak - Başlık
+            header = re.match(r'\[(\d+)\] (.+?) - (.+)', block)
+            if not header:
+                continue
+            art_id  = int(header.group(1))
+            source  = header.group(2).strip()
+            title   = header.group(3).strip()
+
+            date_m  = re.search(r'Tarih:\s*(.+)', block)
+            link_m  = re.search(r'Link:\s*(\S+)', block)
+            src_m   = re.search(
+                r'\(XXXXXXX, AÇIK - (\S+),\s*(\S+),\s*(.+?)\)\s*$',
+                block, re.MULTILINE
+            )
+
+            # Full text: [TAM METİN - N kelime] ile kaynak satırı arasındaki bölüm
+            ft_start = block.find('[TAM METİN')
+            ft_end   = block.rfind('\n\n(XXXXXXX')
+            full_text = ''
+            if ft_start != -1:
+                ft_line_end = block.find('\n', ft_start)
+                raw = block[ft_line_end + 1: ft_end if ft_end != -1 else None]
+                full_text = raw.strip()
+
+            articles.append({
+                'id':       art_id,
+                'source':   source,
+                'title':    title,
+                'date':     date_m.group(1).strip()  if date_m  else '',
+                'link':     link_m.group(1).strip()  if link_m  else '',
+                'domain':   src_m.group(2).strip()   if src_m   else '',
+                'art_date': src_m.group(3).strip()   if src_m   else '',
+                'full_text': full_text,
+            })
+
+        articles.sort(key=lambda a: a['id'])
+        return articles
+
+    def _gemini_call_json(self, prompt, max_output_tokens=4096, label=''):
+        """
+        Gemini API çağrısı yapar ve JSON yanıt döndürür.
+        Retry: 4 deneme, üstel geri çekilme; model sırası pro→pro→flash→flash.
+        Başarısızlıkta None döndürür.
+        """
+        if not GEMINI_API_KEY:
+            print(f"   ⚠️  [{label}] GEMINI_API_KEY yok, atlanıyor.")
+            return None
+
+        _MODELS = ['gemini-2.5-pro', 'gemini-2.5-pro',
+                   'gemini-2.5-flash', 'gemini-2.5-flash']
+        client = genai.Client(api_key=GEMINI_API_KEY)
+
+        for attempt, model in enumerate(_MODELS):
+            try:
+                print(f"   [{label}] Deneme {attempt + 1}/4 [{model}]...")
+                response = client.models.generate_content(
+                    model=model,
+                    contents=prompt,
+                    config=genai_types.GenerateContentConfig(
+                        max_output_tokens=max_output_tokens,
+                        temperature=0.3,
+                        safety_settings=[
+                            genai_types.SafetySetting(
+                                category='HARM_CATEGORY_DANGEROUS_CONTENT',
+                                threshold='BLOCK_ONLY_HIGH',
+                            ),
+                        ],
+                    ),
+                )
+                raw = response.text or ''
+                data = _extract_json_from_text(raw)
+                print(f"   [{label}] ✅ Başarılı.")
+                return data
+            except Exception as e:
+                print(f"   [{label}] ⚠️  Hata [{type(e).__name__}]: {e}")
+                if attempt < 3:
+                    wait = min(20 * (2 ** attempt), 120)
+                    print(f"   [{label}] ⏳ {wait}s bekleniyor...")
+                    time.sleep(wait)
+
+        print(f"   [{label}] ❌ 4 deneme başarısız.")
+        return None
+
+    @staticmethod
+    def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str):
+        """
+        Yapılandırılmış içerikten tam HTML raporu üretir (kod tarafı assembly).
+        content_by_id: {art_id: {'tr_title': str, 'paragraph': str}}
+        top10_ids: sıralı ID listesi (önemli gelişmeler kutusu)
+        remaining_ids: sıralı ID listesi (tablo + kalan paragraflar)
+        """
+        articles_by_id = {a['id']: a for a in articles}
+
+        css = """
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date { color: #2563eb; font-weight: 700; }
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .important-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 640px) { .important-summary { grid-template-columns: 1fr; } }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a { color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 15px; }
+        .important-item a:hover { text-decoration: underline; color: #1565c0; }
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e; font-size: 18px; font-weight: 600;
+            margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #1a237e;
+        }
+        .executive-table { width: 100%; border-spacing: 8px; }
+        .executive-table td {
+            background: white; padding: 12px 16px; border-radius: 6px;
+            border-left: 3px solid #1a237e; vertical-align: top; width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e; text-decoration: none; font-weight: 500;
+            font-size: 14px; line-height: 1.4;
+        }
+        .executive-table a:hover { text-decoration: underline; }
+        .news-section { padding: 30px; }
+        .news-item {
+            background: #f8f9fa; margin-bottom: 25px; border-radius: 8px;
+            padding: 20px; border-left: 4px solid #1a237e;
+        }
+        .news-title { color: #1a237e; font-size: 18px; font-weight: 600; margin-bottom: 12px; line-height: 1.3; }
+        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+        .source { color: #666; font-size: 13px; margin: 0; }
+        .source a { color: #1a237e; text-decoration: none; }
+        .source a:hover { text-decoration: underline; }
+        .social-signals {
+            background: #f8faff; border: 1px solid #c7d7fd;
+            border-radius: 8px; padding: 24px 28px; margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a; font-size: 18px; font-weight: 700;
+            margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .social-signals .signal-item {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6; border-radius: 6px;
+            padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .social-signals .signal-platform-label {
+            font-size: 10px; font-weight: 700; color: #ffffff; background: #64748b;
+            text-transform: uppercase; letter-spacing: 0.05em; border-radius: 3px; padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px; color: #475569; background: #f1f5f9; border-radius: 3px; padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b; text-decoration: none; font-size: 13px;
+            font-weight: 500; line-height: 1.45; display: block;
+        }
+        .social-signals .signal-item a:hover { color: #1e3a8a; text-decoration: underline; }
+        @media (max-width: 640px) {
+            .social-signals { padding: 16px; }
+            .social-signals .signal-list { grid-template-columns: 1fr; }
+            .social-signals .signal-meta { gap: 6px; }
+        }
+        .back-to-top {
+            position: fixed; top: 50%; left: calc(50% - 450px - 48px);
+            transform: translateY(-50%); width: 36px; height: 36px;
+            background: #1a237e; color: white; border: none; border-radius: 50%;
+            font-size: 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; opacity: 0.85; transition: opacity 0.2s; z-index: 999;
+        }
+        .back-to-top:hover { opacity: 1; }
+        """
+
+        def _safe_content(art_id):
+            c = content_by_id.get(art_id, {})
+            art = articles_by_id.get(art_id, {})
+            tr_title  = c.get('tr_title')  or art.get('title', f'Haber #{art_id}')
+            paragraph = c.get('paragraph') or art.get('full_text', '')[:500]
+            return tr_title, paragraph
+
+        # ── Önemli Gelişmeler kutusu ──────────────────────────────────────
+        important_items_html = ''
+        for i, art_id in enumerate(top10_ids, 1):
+            tr_title, _ = _safe_content(art_id)
+            important_items_html += (
+                f'            <div class="important-item">\n'
+                f'                <a href="#haber-{i}">{i}. {tr_title}</a>\n'
+                f'            </div>\n'
+            )
+
+        # ── Yönetici Özeti tablosu (kalan haberler) ───────────────────────
+        table_rows_html = ''
+        offset = len(top10_ids) + 1
+        rem_pairs = [remaining_ids[i:i + 2] for i in range(0, len(remaining_ids), 2)]
+        for row_idx, pair in enumerate(rem_pairs):
+            cells = ''
+            for col_idx, art_id in enumerate(pair):
+                num = offset + row_idx * 2 + col_idx
+                tr_title, _ = _safe_content(art_id)
+                cells += f'                    <td><a href="#haber-{num}">{num}. {tr_title}</a></td>\n'
+            if len(pair) == 1:
+                cells += '                    <td></td>\n'
+            table_rows_html += f'                <tr>\n{cells}                </tr>\n'
+
+        # ── Haber paragrafları ────────────────────────────────────────────
+        news_items_html = ''
+        ordered_ids = list(top10_ids) + list(remaining_ids)
+        for global_num, art_id in enumerate(ordered_ids, 1):
+            art = articles_by_id.get(art_id, {})
+            tr_title, paragraph = _safe_content(art_id)
+            link     = art.get('link', '#')
+            domain   = art.get('domain', '')
+            art_date = art.get('art_date', '')
+            news_items_html += (
+                f'            <div class="news-item" id="haber-{global_num}">\n'
+                f'                <div class="news-title"><b>{tr_title}</b></div>\n'
+                f'                <p class="news-content">{paragraph}</p>\n'
+                f'                <p class="source"><b>(XXXXXXX, AÇIK - '
+                f'<a href="{link}" target="_blank">{domain}</a>, {art_date})</b></p>\n'
+                f'            </div>\n'
+            )
+
+        html = f"""<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber Güvenlik Raporu - {today_str}</title>
+    <style>{css}    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
+        </div>
+
+        <div class="executive-summary">
+            <h2>Yönetici Özeti</h2>
+
+            <div class="important-news">
+                <h2>Önemli Gelişmeler</h2>
+                <div class="important-summary">
+{important_items_html}                </div>
+            </div>
+
+            <table class="executive-table">
+{table_rows_html}            </table>
+        </div>
+
+        <div class="news-section">
+{news_items_html}        </div>
+    </div>
+    <a href="#" class="back-to-top" title="Başa Dön"
+       onclick="window.scrollTo({{top:0,behavior:'smooth'}});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
+</body>
+</html>"""
+        return html
 
     def fetch_full_article(self, url, source_name):
         """Tam metin çeker — max 10 saniye, sonra geç"""
@@ -1201,169 +1581,172 @@ class HaberSistemi:
     # ═══════════════════════════════════════════════════════════════
 
     def create_html(self, txt_content):
-        """Gemini — DOĞRULAMA + TAMAMLAMA MEKANİZMALI"""
-        html = None
+        """
+        3-PASS MİMARİSİ:
+          Pass 1 → Sıralama  (tüm başlıklar → JSON: top10 + remaining + filtered)
+          Pass 2 → Derin     (top-10 tam metin → JSON: tr_title + 120+ kelime paragraf)
+          Pass 3 → Batch     (kalan haberler, 35'lik gruplar → JSON: tr_title + 80-120 kelime)
+          Assembly → Kod tarafı HTML oluşturur (yapısal hata imkânsız)
 
-        # ═══════════════════════════════════════════
-        # AŞAMA 1: Gemini'den HTML al (PRIMARY)
-        # 4 deneme, üstel geri çekilme (30s→60s→120s→240s)
-        # Model sırası: gemini-2.5-pro (×2) → gemini-2.5-flash (×2)
-        # 503/yüksek yük hatalarında daha uzun bekleme + eski modele düşme.
-        # ═══════════════════════════════════════════
-        if not html:
-            print("🤖 Gemini API — Fallback...")
-            if not GEMINI_API_KEY:
-                print("⚠️  GEMINI_API_KEY yok — Fallback HTML oluşturuluyor...")
-                return self._create_fallback_html(
-                    txt_content,
-                    error_type="NoAPIKey",
-                    error_message="GEMINI_API_KEY mevcut değil"
+        Fallback: Pass 1 başarısız → eski tek-çağrı yöntemi.
+        Batch başarısız → orijinal İngilizce başlık + kırpılmış metin kullanılır.
+        """
+        if not GEMINI_API_KEY:
+            print("⚠️  GEMINI_API_KEY yok — Fallback HTML oluşturuluyor...")
+            return self._create_fallback_html(
+                txt_content, error_type="NoAPIKey",
+                error_message="GEMINI_API_KEY mevcut değil"
+            )
+
+        now      = datetime.now()
+        today_str = now.strftime('%d.%m.%Y')
+
+        # ── Makaleleri ayrıştır ──────────────────────────────────────────
+        articles = self._parse_articles_from_txt(txt_content)
+        if not articles:
+            print("⚠️  Makale ayrıştırılamadı — Fallback HTML oluşturuluyor...")
+            return self._create_fallback_html(
+                txt_content, error_type="ParseError",
+                error_message="txt_content'ten makale çıkarılamadı"
+            )
+        print(f"📋 {len(articles)} makale ayrıştırıldı.")
+
+        # ════════════════════════════════════════════════════════════════
+        # PASS 1 — SIRALAMA
+        # ════════════════════════════════════════════════════════════════
+        print("\n🔢 Pass 1 — Sıralama başlıyor...")
+        brief_lines = []
+        for a in articles:
+            snippet = a['full_text'][:250].replace('\n', ' ')
+            brief_lines.append(
+                f"=== HABER ID: {a['id']} ===\n"
+                f"Kaynak: {a['source']}\n"
+                f"Başlık: {a['title']}\n"
+                f"Özet: {snippet}\n"
+            )
+        ranking_data = self._gemini_call_json(
+            get_ranking_prompt('\n'.join(brief_lines)),
+            max_output_tokens=2048,
+            label='Pass1-Sıralama',
+        )
+
+        if ranking_data is None:
+            # Pass 1 başarısız → eski tek-çağrı yöntemine düş
+            print("⚠️  Pass 1 başarısız — eski tek-çağrı yöntemine dönülüyor...")
+            return self._create_html_legacy(txt_content)
+
+        all_ids     = {a['id'] for a in articles}
+        top10_ids   = [int(i) for i in ranking_data.get('top10', [])   if int(i) in all_ids]
+        filtered_ids = {int(i) for i in ranking_data.get('filtered', []) if int(i) in all_ids}
+        remaining_ids = [
+            int(i) for i in ranking_data.get('remaining', [])
+            if int(i) in all_ids and int(i) not in set(top10_ids) and int(i) not in filtered_ids
+        ]
+        # Sıralamada yer almayan ama filtrelenmemiş makaleleri sona ekle
+        ranked_set = set(top10_ids) | set(remaining_ids) | filtered_ids
+        for a in articles:
+            if a['id'] not in ranked_set:
+                remaining_ids.append(a['id'])
+
+        print(f"   Top-10: {top10_ids}")
+        print(f"   Kalan : {len(remaining_ids)} haber  |  Filtrelenen: {len(filtered_ids)} haber")
+
+        content_by_id = {}
+
+        # ════════════════════════════════════════════════════════════════
+        # PASS 2 — TOP-10 DERİN ANALİZ
+        # ════════════════════════════════════════════════════════════════
+        print("\n🔍 Pass 2 — Top-10 derin analiz başlıyor...")
+        articles_by_id = {a['id']: a for a in articles}
+        full_lines = []
+        for art_id in top10_ids:
+            a = articles_by_id.get(art_id)
+            if not a:
+                continue
+            full_lines.append(
+                f"=== HABER ID: {art_id} ===\n"
+                f"Kaynak: {a['source']}\n"
+                f"Başlık: {a['title']}\n"
+                f"Tarih: {a['art_date']}\n"
+                f"Link: {a['link']}\n\n"
+                f"TAM METİN:\n{a['full_text']}\n"
+            )
+        if full_lines:
+            deep_data = self._gemini_call_json(
+                get_deep_analysis_prompt('\n'.join(full_lines)),
+                max_output_tokens=16000,
+                label='Pass2-DerinAnaliz',
+            )
+            if deep_data:
+                for k, v in deep_data.items():
+                    try:
+                        content_by_id[int(k)] = v
+                    except (ValueError, TypeError):
+                        pass
+
+        # ════════════════════════════════════════════════════════════════
+        # PASS 3 — KALAN HABERLER (35'LİK BATCH'LER)
+        # ════════════════════════════════════════════════════════════════
+        batch_size = 35
+        batches = [remaining_ids[i:i + batch_size]
+                   for i in range(0, len(remaining_ids), batch_size)]
+        print(f"\n📦 Pass 3 — {len(remaining_ids)} kalan haber, {len(batches)} batch...")
+
+        for b_idx, batch in enumerate(batches):
+            batch_lines = []
+            for art_id in batch:
+                a = articles_by_id.get(art_id)
+                if not a:
+                    continue
+                snippet = a['full_text'][:300].replace('\n', ' ')
+                batch_lines.append(
+                    f"=== HABER ID: {art_id} ===\n"
+                    f"Kaynak: {a['source']}\n"
+                    f"Başlık: {a['title']}\n"
+                    f"Özet: {snippet}\n"
                 )
+            if not batch_lines:
+                continue
 
-            client = genai.Client(api_key=GEMINI_API_KEY)
+            batch_data = self._gemini_call_json(
+                get_summary_batch_prompt('\n'.join(batch_lines)),
+                max_output_tokens=8000,
+                label=f'Pass3-Batch{b_idx + 1}/{len(batches)}',
+            )
+            if batch_data:
+                for k, v in batch_data.items():
+                    try:
+                        content_by_id[int(k)] = v
+                    except (ValueError, TypeError):
+                        pass
+            else:
+                print(f"   ⚠️  Batch {b_idx + 1} başarısız — orijinal metin kullanılacak.")
 
-            # Model başına parametreler — max_output_tokens model sınırını aşamaz
-            _MODEL_CFG = {
-                'gemini-2.5-pro':   {'max_output_tokens': 65000, 'accept_max_tokens': False},
-                'gemini-2.5-flash': {'max_output_tokens': 65536, 'accept_max_tokens': False},
-            }
-            _GEMINI_MODELS = list(_MODEL_CFG.keys())
-            max_attempts = 4
-            last_error_type = None
-            last_error_message = None
+        # ════════════════════════════════════════════════════════════════
+        # ASSEMBLY — Kod tarafı HTML oluşturma
+        # ════════════════════════════════════════════════════════════════
+        print("\n🔨 HTML assembly başlıyor...")
+        html = self._build_html(
+            articles    = articles,
+            top10_ids   = top10_ids,
+            remaining_ids = remaining_ids,
+            content_by_id = content_by_id,
+            today_str   = today_str,
+        )
+        print(f"✅ HTML oluşturuldu ({len(html)} karakter, "
+              f"{len(top10_ids) + len(remaining_ids)} haber)")
 
-            for attempt in range(max_attempts):
-                # Her 2 başarısız denemeden sonra bir sonraki modele geç
-                model = _GEMINI_MODELS[min(attempt // 2, len(_GEMINI_MODELS) - 1)]
-                cfg   = _MODEL_CFG[model]
-                try:
-                    print(f"   Deneme {attempt + 1}/{max_attempts} [{model}]...")
-
-                    prompt = get_claude_prompt(txt_content)
-
-                    # Streaming kullan: büyük response'larda server disconnect riskini önler
-                    chunks     = []
-                    last_chunk = None
-                    for chunk in client.models.generate_content_stream(
-                        model=model,
-                        contents=prompt,
-                        config=genai_types.GenerateContentConfig(
-                            max_output_tokens=cfg['max_output_tokens'],
-                            temperature=0.7,
-                            safety_settings=[
-                                genai_types.SafetySetting(
-                                    category='HARM_CATEGORY_DANGEROUS_CONTENT',
-                                    threshold='BLOCK_ONLY_HIGH',
-                                ),
-                                genai_types.SafetySetting(
-                                    category='HARM_CATEGORY_HARASSMENT',
-                                    threshold='BLOCK_ONLY_HIGH',
-                                ),
-                            ],
-                        )
-                    ):
-                        if chunk.text:
-                            chunks.append(chunk.text)
-                        last_chunk = chunk
-
-                    # finish_reason son chunk'tan al
-                    if last_chunk and last_chunk.candidates:
-                        finish_reason = last_chunk.candidates[0].finish_reason
-                        print(f"   Finish reason: {finish_reason}")
-                        ok_reasons = {'STOP', 'FinishReason.STOP', '1'}
-                        if str(finish_reason) not in ok_reasons:
-                            raise Exception(f"Stream tamamlanmadi (finish_reason={finish_reason})")
-                    elif not chunks:
-                        raise Exception("Stream bos dondu")
-
-                    html = ''.join(chunks)
-                    break
-                except Exception as e:
-                    last_error_type = type(e).__name__
-                    last_error_message = str(e)
-                    print(f"   ⚠️  Hata [{last_error_type}]: {last_error_message}")
-                    if attempt < max_attempts - 1:
-                        wait_time = min(30 * (2 ** attempt), 240)  # 30s,60s,120s,240s
-                        next_model = _GEMINI_MODELS[min((attempt + 1) // 2, len(_GEMINI_MODELS) - 1)]
-                        model_note = f" → {next_model}" if next_model != model else ""
-                        print(f"   ⏳ {wait_time}s bekleniyor{model_note}...")
-                        time.sleep(wait_time)
-                    else:
-                        print(f"   ❌ {max_attempts} deneme başarısız — Fallback HTML oluşturuluyor.")
-                        print(f"   ℹ️  Gemini başarısız.")
-                        return self._create_fallback_html(
-                            txt_content,
-                            error_type=last_error_type,
-                            error_message=last_error_message,
-                        )
-
-            if not html:
-                return self._create_fallback_html(
-                    txt_content,
-                    error_type=last_error_type,
-                    error_message=last_error_message,
-                )
-
-        # HTML temizle — Gemini bazen "Elbette, işte rapor: ```html" şeklinde
-        # konuşma metni ekler. DOCTYPE veya <html etiketini bulup öncesini sil.
-        import re as _re_html
-        doctype_pos = html.lower().find('<!doctype html')
-        html_tag_pos = html.lower().find('<html')
-        candidates = [p for p in [doctype_pos, html_tag_pos] if p != -1]
-        if candidates:
-            html_start = min(candidates)
-            if html_start > 0:
-                print(f"   ⚠️  HTML öncesi metin temizlendi ({html_start} karakter preamble)")
-            html = html[html_start:]
-        # Sondaki kod bloğu kapanışını temizle
-        html = _re_html.sub(r'\s*```\s*$', '', html).strip()
-
-        print(f"✅ HTML oluşturuldu ({len(html)} karakter)")
-
-        # ═══════════════════════════════════════════
-        # AŞAMA 2: DOĞRULAMA — Paragraf sayısı kontrolü
-        # ═══════════════════════════════════════════
-        validation = self._validate_html_completeness(html)
-
-        # ═══════════════════════════════════════════
-        # AŞAMA 3: EKSİK PARAGRAF TAMAMLAMA (max 2 tur)
-        # ═══════════════════════════════════════════
-        completion_attempts = 0
-        max_completion_attempts = 2
-
-        while not validation['is_valid'] and completion_attempts < max_completion_attempts:
-            completion_attempts += 1
-            print(f"\n   🔄 Tamamlama denemesi {completion_attempts}/{max_completion_attempts}...")
-
-            html = self._complete_missing_paragraphs(html, txt_content, validation)
-            validation = self._validate_html_completeness(html)
-
-        if not validation['is_valid']:
-            print(f"   ⚠️  {max_completion_attempts} tamamlama sonrası hâlâ eksik var")
-            print(f"   📊 Final: Özet={validation['summary_count']}, Paragraf={validation['paragraph_count']}")
-        else:
-            print(f"   ✅ Tüm paragraflar tamam! ({validation['paragraph_count']} haber)")
-
-        # ═══════════════════════════════════════════
-        # AŞAMA 4: Mevcut post-processing
-        # ═══════════════════════════════════════════
+        # ── Post-processing ───────────────────────────────────────────
         self._translate_social_signals()
         html = self._inject_social_box(html)
-        html = self._fix_source_dates(html, txt_content)
-        html = self._fix_source_links(html)
         html = self._remove_commentary_sentences(html)
-        html = self._fix_html_structure(html)   # </style> / report-header kontrolü
 
-        html_index = self._add_archive_links(html, is_archive=False)
+        html_index   = self._add_archive_links(html, is_archive=False)
         html_archive = self._add_archive_links(html, is_archive=True)
 
-        # Kaydet
         os.makedirs("docs/raporlar", exist_ok=True)
-        now = datetime.now()
-
         with open("docs/index.html", 'w', encoding='utf-8') as f:
             f.write(html_index)
-
         with open(f"docs/raporlar/{now.strftime('%Y-%m-%d')}.html", 'w', encoding='utf-8') as f:
             f.write(html_archive)
 
@@ -1372,7 +1755,115 @@ class HaberSistemi:
 
         self.save_summary_to_archive(html)
         self._cleanup_old_reports()
+        return html
 
+    def _create_html_legacy(self, txt_content):
+        """
+        Eski tek-çağrı yöntemi — Pass 1 başarısız olduğunda fallback olarak kullanılır.
+        Gemini'ye tam txt gönderir, HTML döndürür; doğrulama + tamamlama mekanizmalı.
+        """
+        print("🔄 Eski tek-çağrı yöntemi (legacy) çalışıyor...")
+        html = None
+        if not GEMINI_API_KEY:
+            return self._create_fallback_html(
+                txt_content, error_type="NoAPIKey",
+                error_message="GEMINI_API_KEY mevcut değil"
+            )
+
+        client = genai.Client(api_key=GEMINI_API_KEY)
+        _MODEL_CFG = {
+            'gemini-2.5-pro':   {'max_output_tokens': 65000},
+            'gemini-2.5-flash': {'max_output_tokens': 65536},
+        }
+        _GEMINI_MODELS = list(_MODEL_CFG.keys())
+        last_error_type = last_error_message = None
+
+        for attempt in range(4):
+            model = _GEMINI_MODELS[min(attempt // 2, len(_GEMINI_MODELS) - 1)]
+            cfg   = _MODEL_CFG[model]
+            try:
+                print(f"   [Legacy] Deneme {attempt + 1}/4 [{model}]...")
+                prompt = get_claude_prompt(txt_content)
+                chunks = []
+                last_chunk = None
+                for chunk in client.models.generate_content_stream(
+                    model=model,
+                    contents=prompt,
+                    config=genai_types.GenerateContentConfig(
+                        max_output_tokens=cfg['max_output_tokens'],
+                        temperature=0.7,
+                        safety_settings=[
+                            genai_types.SafetySetting(
+                                category='HARM_CATEGORY_DANGEROUS_CONTENT',
+                                threshold='BLOCK_ONLY_HIGH',
+                            ),
+                        ],
+                    ),
+                ):
+                    if chunk.text:
+                        chunks.append(chunk.text)
+                    last_chunk = chunk
+
+                if last_chunk and last_chunk.candidates:
+                    finish_reason = last_chunk.candidates[0].finish_reason
+                    ok_reasons = {'STOP', 'FinishReason.STOP', '1'}
+                    if str(finish_reason) not in ok_reasons:
+                        raise Exception(f"Stream tamamlanmadi (finish_reason={finish_reason})")
+                elif not chunks:
+                    raise Exception("Stream bos dondu")
+
+                html = ''.join(chunks)
+                break
+            except Exception as e:
+                last_error_type = type(e).__name__
+                last_error_message = str(e)
+                print(f"   [Legacy] ⚠️  [{last_error_type}]: {last_error_message}")
+                if attempt < 3:
+                    wait_time = min(30 * (2 ** attempt), 240)
+                    time.sleep(wait_time)
+
+        if not html:
+            return self._create_fallback_html(
+                txt_content, error_type=last_error_type,
+                error_message=last_error_message,
+            )
+
+        # HTML temizle
+        doctype_pos = html.lower().find('<!doctype html')
+        html_tag_pos = html.lower().find('<html')
+        candidates = [p for p in [doctype_pos, html_tag_pos] if p != -1]
+        if candidates:
+            html = html[min(candidates):]
+        html = re.sub(r'\s*```\s*$', '', html).strip()
+
+        validation = self._validate_html_completeness(html)
+        for _ in range(2):
+            if validation['is_valid']:
+                break
+            html = self._complete_missing_paragraphs(html, txt_content, validation)
+            validation = self._validate_html_completeness(html)
+
+        self._translate_social_signals()
+        html = self._inject_social_box(html)
+        html = self._fix_source_dates(html, txt_content)
+        html = self._fix_source_links(html)
+        html = self._remove_commentary_sentences(html)
+        html = self._fix_html_structure(html)
+
+        html_index   = self._add_archive_links(html, is_archive=False)
+        html_archive = self._add_archive_links(html, is_archive=True)
+
+        now = datetime.now()
+        os.makedirs("docs/raporlar", exist_ok=True)
+        with open("docs/index.html", 'w', encoding='utf-8') as f:
+            f.write(html_index)
+        with open(f"docs/raporlar/{now.strftime('%Y-%m-%d')}.html", 'w', encoding='utf-8') as f:
+            f.write(html_archive)
+
+        print("✅ docs/index.html (legacy)")
+        print(f"✅ docs/raporlar/{now.strftime('%Y-%m-%d')}.html (legacy)")
+        self.save_summary_to_archive(html)
+        self._cleanup_old_reports()
         return html
 
     def _validate_html_completeness(self, html):
