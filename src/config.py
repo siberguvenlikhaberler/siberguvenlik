@@ -6,6 +6,10 @@ from datetime import datetime
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY', '')
 
+# Ollama (yerel LLM) ayarları
+OLLAMA_BASE_URL = os.getenv('OLLAMA_BASE_URL', 'http://10.255.0.18:11434')
+OLLAMA_MODEL    = os.getenv('OLLAMA_MODEL', 'qwen3.5:35b')
+
 # Dosya yolları
 ARCHIVE_FILE = "data/haberler_arsiv.txt"
 
