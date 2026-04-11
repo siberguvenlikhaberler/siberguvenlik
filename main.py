@@ -674,10 +674,10 @@ class HaberSistemi:
 
         from openai import OpenAI as _OpenAI
 
-        # Model sırası: 1M context'li preview önce, 235B yedek
+        # Model sırası: Qwen3.6 Plus (kararlı) → Preview (yedek)
         _MODELS = [
+            'qwen/qwen3.6-plus:free',
             'qwen/qwen3.6-plus-preview:free',
-            'qwen/qwen3-235b-a22b:free',
         ]
 
         client = _OpenAI(
