@@ -674,11 +674,15 @@ class HaberSistemi:
 
         from openai import OpenAI as _OpenAI
 
-        # Model sırası: Qwen3.6 Plus → Coder (genel amaçlı da çalışır)
-        # qwen3.6-plus-preview:free Nisan 7 2026'da sona erdi → çıkarıldı
+        # Model sırası (Nisan 2026 güncel):
+        # qwen3.6-plus:free + preview:free → deprecated/kaldırıldı
+        # qwen3-30b-a3b:free → aktif free MoE modeli
+        # qwen3-8b:free → aktif free, 128K context
+        # qwen3.6-plus → ücretli son çare (~$0.0001/1K token)
         _MODELS = [
-            'qwen/qwen3.6-plus:free',
-            'qwen/qwen3-coder:free',
+            'qwen/qwen3-30b-a3b:free',
+            'qwen/qwen3-8b:free',
+            'qwen/qwen3.6-plus',
         ]
 
         client = _OpenAI(
