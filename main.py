@@ -19,7 +19,7 @@ from google.genai import types as genai_types
 from openai import OpenAI as OpenAIClient
 
 from src.config import (
-    GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
+    GEMINI_API_KEY, OPENROUTER_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
@@ -32,6 +32,8 @@ from src.http_utils import requests_get_with_retry as _requests_get_with_retry
 def _extract_json_from_text(text):
     """AI yanıtından JSON nesnesini güvenli biçimde çıkarır."""
     text = text.strip()
+    # Qwen3 thinking bloklarını temizle (<think>...</think>)
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
     # Doğrudan parse dene
     try:
         return json.loads(text)
@@ -615,6 +617,12 @@ class HaberSistemi:
         Retry: 4 deneme, üstel geri çekilme; model sırası pro→pro→flash→flash.
         Başarısızlıkta None döndürür.
         """
+        # GEÇİCİ: OpenRouter primary test — Gemini'den önce dene
+        result = self._openrouter_call_json(prompt, max_output_tokens, label)
+        if result is not None:
+            return result
+        print(f"   [{label}] OpenRouter başarısız, Gemini'ye geçiliyor...")
+
         if not GEMINI_API_KEY:
             print(f"   ⚠️  [{label}] GEMINI_API_KEY yok, atlanıyor.")
             return None
@@ -651,7 +659,59 @@ class HaberSistemi:
                     print(f"   [{label}] ⏳ {wait}s bekleniyor...")
                     time.sleep(wait)
 
-        print(f"   [{label}] ❌ 4 deneme başarısız.")
+        print(f"   [{label}] ❌ 4 Gemini denemesi başarısız — OpenRouter fallback deneniyor...")
+        return self._openrouter_call_json(prompt, max_output_tokens, label)
+
+    def _openrouter_call_json(self, prompt, max_output_tokens=4096, label=''):
+        """
+        OpenRouter API üzerinden Qwen3 çağrısı yapar, JSON yanıt döndürür.
+        Gemini'nin tamamen başarısız olduğu durumlarda fallback olarak devreye girer.
+        openai kütüphanesi OpenAI-compat endpoint ile kullanılır.
+        """
+        if not OPENROUTER_API_KEY:
+            print(f"   ⚠️  [{label}] OPENROUTER_API_KEY yok, OpenRouter atlanıyor.")
+            return None
+
+        from openai import OpenAI as _OpenAI
+
+        # Model sırası: 1M context'li preview önce, 235B yedek
+        _MODELS = [
+            'qwen/qwen3.6-plus-preview:free',
+            'qwen/qwen3-235b-a22b:free',
+        ]
+
+        client = _OpenAI(
+            base_url='https://openrouter.ai/api/v1',
+            api_key=OPENROUTER_API_KEY,
+            default_headers={
+                'HTTP-Referer': 'https://siberguvenlikhaberler.github.io/siberguvenlik',
+                'X-Title': 'Siber Güvenlik Haberleri',
+            },
+        )
+
+        for attempt, model in enumerate(_MODELS):
+            try:
+                print(f"   [{label}] OpenRouter [{model}] deneniyor...")
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[
+                        # /no_think: Qwen3'ün thinking modunu devre dışı bırakır
+                        # (thinking bloğu <think>...</think> JSON parse'ı bozar)
+                        {'role': 'user', 'content': '/no_think\n\n' + prompt}
+                    ],
+                    max_tokens=max_output_tokens,
+                    temperature=0.3,
+                )
+                raw = response.choices[0].message.content or ''
+                data = _extract_json_from_text(raw)
+                print(f"   [{label}] OpenRouter ✅ Başarılı [{model}].")
+                return data
+            except Exception as e:
+                print(f"   [{label}] OpenRouter ⚠️  [{model}] [{type(e).__name__}]: {str(e)[:120]}")
+                if attempt < len(_MODELS) - 1:
+                    time.sleep(5)
+
+        print(f"   [{label}] OpenRouter ❌ Tüm modeller başarısız.")
         return None
 
     @staticmethod
@@ -1080,7 +1140,7 @@ class HaberSistemi:
                 root = ET.fromstring(r.content)
 
                 if root.tag.endswith('feed'):  # Atom
-                    for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:10]:
+                    for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:15]:
                         t = entry.find('{http://www.w3.org/2005/Atom}title')
                         l = entry.find('{http://www.w3.org/2005/Atom}link')
                         s = entry.find('{http://www.w3.org/2005/Atom}summary')
@@ -1094,7 +1154,7 @@ class HaberSistemi:
                                 'source': source_name
                             })
                 else:  # RSS
-                    for item in root.findall('.//item')[:10]:
+                    for item in root.findall('.//item')[:15]:
                         t = item.find('title')
                         l = item.find('link')
                         d = item.find('description')
@@ -2797,9 +2857,12 @@ def main():
 
     if ham_exists_for_today:
         print("📄 Bugünün ham haberleri mevcut — haber çekme atlanıyor, sadece Gemini çalıştırılıyor.")
-        # topla() atlandığından social_data boş kalır — sosyal medya skip et (hız için)
-        print("⏭️  Sosyal medya sinyalleri çekimi atlanıyor (fallback rapor, hız için)")
-        sistem.social_data = []
+        try:
+            sistem.social_data = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
+            print(f"📡 {len(sistem.social_data)} sosyal sinyal çekildi")
+        except Exception as e:
+            print(f"⚠️  Sosyal medya sinyalleri çekilemedi: {str(e)[:100]}")
+            sistem.social_data = []
         try:
             with open(ham_txt_path, encoding='utf-8') as f:
                 txt = f.read()

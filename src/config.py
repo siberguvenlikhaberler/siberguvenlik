@@ -3,8 +3,9 @@ import os
 from datetime import datetime
 
 # API Keys
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
-TAVILY_API_KEY = os.getenv('TAVILY_API_KEY', '')
+GEMINI_API_KEY    = os.getenv('GEMINI_API_KEY', '')
+TAVILY_API_KEY    = os.getenv('TAVILY_API_KEY', '')
+OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '')
 
 # Dosya yolları
 ARCHIVE_FILE = "data/haberler_arsiv.txt"
@@ -137,7 +138,7 @@ NEWS_SOURCES = {
     'The Hacker News': 'https://feeds.feedburner.com/TheHackersNews',
     'BleepingComputer': 'https://www.bleepingcomputer.com/feed/',
     'Krebs on Security': 'https://krebsonsecurity.com/feed/',
-    'Threatpost': 'https://threatpost.com/feed/',
+    # 'Threatpost': 'https://threatpost.com/feed/',  # Yıllardır ölü — 2022'den beri yayın yok, site erişilemez durumda
     'Security Affairs': 'https://securityaffairs.com/feed',
     'Graham Cluley': 'https://grahamcluley.com/feed/',
     'SANS ISC': 'https://isc.sans.edu/rssfeed.xml',
@@ -147,6 +148,14 @@ NEWS_SOURCES = {
     'TechCrunch Security': 'https://techcrunch.com/category/security/feed/',
     'CSO Online': 'https://www.csoonline.com/feed/',
     'Infoblox Blog': 'https://blogs.infoblox.com/feed/',
+    # Yeni eklenen kaynaklar
+    'Dark Reading': 'https://www.darkreading.com/rss.xml',
+    'SecurityWeek': 'https://feeds.feedburner.com/securityweek',
+    'Help Net Security': 'https://www.helpnetsecurity.com/feed',
+    'The Record': 'https://therecord.media/feed/',
+    'Talos Intelligence': 'https://blog.talosintelligence.com/feeds/all.atom.xml',
+    'Unit 42': 'https://unit42.paloaltonetworks.com/feed/',
+    'Sophos News': 'https://news.sophos.com/en-us/feed/',
 }
 
 # ===== SOSYAL MEDYA SİNYALLERİ AYARLARI =====
