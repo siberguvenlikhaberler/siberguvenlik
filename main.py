@@ -1080,7 +1080,7 @@ class HaberSistemi:
                 root = ET.fromstring(r.content)
 
                 if root.tag.endswith('feed'):  # Atom
-                    for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:10]:
+                    for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:15]:
                         t = entry.find('{http://www.w3.org/2005/Atom}title')
                         l = entry.find('{http://www.w3.org/2005/Atom}link')
                         s = entry.find('{http://www.w3.org/2005/Atom}summary')
@@ -1094,7 +1094,7 @@ class HaberSistemi:
                                 'source': source_name
                             })
                 else:  # RSS
-                    for item in root.findall('.//item')[:10]:
+                    for item in root.findall('.//item')[:15]:
                         t = item.find('title')
                         l = item.find('link')
                         d = item.find('description')

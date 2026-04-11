@@ -137,7 +137,7 @@ NEWS_SOURCES = {
     'The Hacker News': 'https://feeds.feedburner.com/TheHackersNews',
     'BleepingComputer': 'https://www.bleepingcomputer.com/feed/',
     'Krebs on Security': 'https://krebsonsecurity.com/feed/',
-    'Threatpost': 'https://threatpost.com/feed/',
+    # 'Threatpost': 'https://threatpost.com/feed/',  # Yıllardır ölü — 2022'den beri yayın yok, site erişilemez durumda
     'Security Affairs': 'https://securityaffairs.com/feed',
     'Graham Cluley': 'https://grahamcluley.com/feed/',
     'SANS ISC': 'https://isc.sans.edu/rssfeed.xml',
