@@ -617,6 +617,12 @@ class HaberSistemi:
         Retry: 4 deneme, üstel geri çekilme; model sırası pro→pro→flash→flash.
         Başarısızlıkta None döndürür.
         """
+        # GEÇİCİ: OpenRouter primary test — Gemini'den önce dene
+        result = self._openrouter_call_json(prompt, max_output_tokens, label)
+        if result is not None:
+            return result
+        print(f"   [{label}] OpenRouter başarısız, Gemini'ye geçiliyor...")
+
         if not GEMINI_API_KEY:
             print(f"   ⚠️  [{label}] GEMINI_API_KEY yok, atlanıyor.")
             return None
