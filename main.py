@@ -2797,9 +2797,12 @@ def main():
 
     if ham_exists_for_today:
         print("📄 Bugünün ham haberleri mevcut — haber çekme atlanıyor, sadece Gemini çalıştırılıyor.")
-        # topla() atlandığından social_data boş kalır — sosyal medya skip et (hız için)
-        print("⏭️  Sosyal medya sinyalleri çekimi atlanıyor (fallback rapor, hız için)")
-        sistem.social_data = []
+        try:
+            sistem.social_data = fetch_social_signals(SOCIAL_SIGNAL_CONFIG)
+            print(f"📡 {len(sistem.social_data)} sosyal sinyal çekildi")
+        except Exception as e:
+            print(f"⚠️  Sosyal medya sinyalleri çekilemedi: {str(e)[:100]}")
+            sistem.social_data = []
         try:
             with open(ham_txt_path, encoding='utf-8') as f:
                 txt = f.read()
