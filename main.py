@@ -674,10 +674,11 @@ class HaberSistemi:
 
         from openai import OpenAI as _OpenAI
 
-        # Model sırası: Qwen3.6 Plus (kararlı) → Preview (yedek)
+        # Model sırası: Qwen3.6 Plus → Coder (genel amaçlı da çalışır)
+        # qwen3.6-plus-preview:free Nisan 7 2026'da sona erdi → çıkarıldı
         _MODELS = [
             'qwen/qwen3.6-plus:free',
-            'qwen/qwen3.6-plus-preview:free',
+            'qwen/qwen3-coder:free',
         ]
 
         client = _OpenAI(
