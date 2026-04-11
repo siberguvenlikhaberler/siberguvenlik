@@ -685,7 +685,7 @@ class HaberSistemi:
             api_key=OPENROUTER_API_KEY,
             default_headers={
                 'HTTP-Referer': 'https://siberguvenlikhaberler.github.io/siberguvenlik',
-                'X-Title': 'Siber Güvenlik Haberleri',
+                'X-Title': 'Siber Guvenlik Haberleri',
             },
         )
 
