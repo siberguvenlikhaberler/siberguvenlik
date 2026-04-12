@@ -1,1305 +1,348 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siber Güvenlik Raporu - 12 April 2026 [FALLBACK]</title>
-    <style>
-        body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
-        .header { background: #1e3c72; color: white; padding: 40px; border-radius: 10px; margin-bottom: 20px; }
-        .header h1 { margin: 0 0 10px 0; }
-        .header p { margin: 4px 0; opacity: 0.9; }
-        .error-box { background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 24px 30px; margin-bottom: 20px; }
-        .error-box h2 { color: #856404; margin: 0 0 16px 0; font-size: 18px; }
-        .error-table { width: 100%; border-collapse: collapse; }
-        .error-table th { text-align: left; padding: 8px 12px; background: #ffeeba; color: #533f03; width: 180px; font-size: 14px; }
-        .error-table td { padding: 8px 12px; font-size: 14px; }
-        .error-table tr { border-bottom: 1px solid #ffd875; }
-        .error-table code { background: #fff; border: 1px solid #ddd; border-radius: 3px; padding: 2px 6px; font-size: 13px; word-break: break-all; }
-        .content { background: white; padding: 40px; border-radius: 10px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
-    </style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 12.04.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date { color: #2563eb; font-weight: 700; }
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .important-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 640px) { .important-summary { grid-template-columns: 1fr; } }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a { color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 15px; }
+        .important-item a:hover { text-decoration: underline; color: #1565c0; }
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e; font-size: 18px; font-weight: 600;
+            margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #1a237e;
+        }
+        .executive-table { width: 100%; border-spacing: 8px; }
+        .executive-table td {
+            background: white; padding: 12px 16px; border-radius: 6px;
+            border-left: 3px solid #1a237e; vertical-align: top; width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e; text-decoration: none; font-weight: 500;
+            font-size: 14px; line-height: 1.4;
+        }
+        .executive-table a:hover { text-decoration: underline; }
+        .news-section { padding: 30px; }
+        .news-item {
+            background: #f8f9fa; margin-bottom: 25px; border-radius: 8px;
+            padding: 20px; border-left: 4px solid #1a237e;
+        }
+        .news-title { color: #1a237e; font-size: 18px; font-weight: 600; margin-bottom: 12px; line-height: 1.3; }
+        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+        .source { color: #666; font-size: 13px; margin: 0; }
+        .source a { color: #1a237e; text-decoration: none; }
+        .source a:hover { text-decoration: underline; }
+        .social-signals {
+            background: #f8faff; border: 1px solid #c7d7fd;
+            border-radius: 8px; padding: 24px 28px; margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a; font-size: 18px; font-weight: 700;
+            margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .social-signals .signal-item {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6; border-radius: 6px;
+            padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .social-signals .signal-platform-label {
+            font-size: 10px; font-weight: 700; color: #ffffff; background: #64748b;
+            text-transform: uppercase; letter-spacing: 0.05em; border-radius: 3px; padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px; color: #475569; background: #f1f5f9; border-radius: 3px; padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b; text-decoration: none; font-size: 13px;
+            font-weight: 500; line-height: 1.45; display: block;
+        }
+        .social-signals .signal-item a:hover { color: #1e3a8a; text-decoration: underline; }
+        @media (max-width: 640px) {
+            .social-signals { padding: 16px; }
+            .social-signals .signal-list { grid-template-columns: 1fr; }
+            .social-signals .signal-meta { gap: 6px; }
+        }
+        .back-to-top {
+            position: fixed; top: 50%; left: calc(50% - 450px - 48px);
+            transform: translateY(-50%); width: 36px; height: 36px;
+            background: #1a237e; color: white; border: none; border-radius: 50%;
+            font-size: 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; opacity: 0.85; transition: opacity 0.2s; z-index: 999;
+        }
+        .back-to-top:hover { opacity: 1; }
+            </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🔒 Siber Güvenlik Günlük Raporu</h1>
-        <p>12 April 2026</p>
-        <p>⚠️ Gemini API yanıt vermedi — 1 saat sonra otomatik yeniden denenecek</p>
-    </div>
-    
-    <div class="error-box">
-        <h2>⚠️ Gemini API Hata Detayları</h2>
-        <table class="error-table">
-            <tr><th>Hata Türü</th><td><code>Exception</code></td></tr>
-            <tr><th>Hata Mesajı</th><td><code>Stream tamamlanmadi (finish_reason=FinishReason.PROHIBITED_CONTENT)</code></td></tr>
-            <tr><th>Oluşma Zamanı</th><td>12.04.2026 10:46:11</td></tr>
-            <tr><th>Deneme Sayısı</th><td>5 deneme / 3 model (bu çalışmada) — tümü başarısız; 1 saat sonra yeniden denenecek</td></tr>
-        </table>
-    </div>
-    <div class="content">SESSION_DATE: 2026-04-12
-
-================================================================================
-📅 12 APRIL 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
-================================================================================
-
-[1] The Hacker News - CPUID Breach Distributes STX RAT via Trojanized CPU-Z and HWMonitor Downloads
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 12 Apr 2026 11:24:00 +0530
-Link: https://thehackernews.com/2026/04/cpuid-breach-distributes-stx-rat-via.html
-
-[TAM METİN - 408 kelime]
-Unknown threat actors compromised CPUID ("cpuid[.]com"), a website that hosts popular hardware monitoring tools like CPU-Z, HWMonitor, HWMonitor Pro, and PerfMonitor, for less than 24 hours to serve malicious executables for the software and deploy a remote access trojan called STX RAT.
-
-The incident lasted from approximately April 9, 15:00 UTC, to about April 10, 10:00 UTC, with the download URLs for CPU-Z and HWMonitor installers replaced with links to malicious websites.
-
-In a post shared on X, CPUID confirmed the breach, attributing it to a compromise of a "secondary feature (basically a side API)" that caused the main site to randomly display malicious links. It's worth noting that the attack did not impact its signed original files.
-
-According to Kaspersky, the names of the rogue websites are as follows -
-
-cahayailmukreatif.web[.]id
-
-pub-45c2577dbd174292a02137c18e7b1b5a.r2[.]dev
-
-transitopalermo[.]com
-
-"The trojanized software was distributed both as ZIP archives and as standalone installers for the aforementioned products," the Russian cybersecurity company said. "These files contain a legitimate signed executable for the corresponding product and a malicious DLL, which is named 'CRYPTBASE.dll' to leverage the DLL side-loading technique."
-
-The malicious DLL, for its part, contacts an external server and executes additional payloads, but not before performing anti-sandbox checks to sidestep detection. The end goal of the campaign is to deploy STX RAT, a RAT with HVNC and broad infostealer capabilities.
-
-STX RAT "exposes a broad command set for remote control, follow-on payload execution, and post-exploitation actions (e.g., in-memory execution of EXE/DLL/PowerShell/shellcode, reverse proxy/tunneling, desktop interaction)," eSentire said in an analysis of the malware last week.
-
-The command-and-control (C2) server address and the connection configuration have been reused from a prior campaign that leveraged trojanized FileZilla installers hosted on bogus sites to deploy the same RAT malware. The activity was documented by Malwarebytes early last month.
-
-Kaspersky said it has identified more than 150 victims, mostly individuals who were affected by the incident. However, organizations in retail, manufacturing, consulting, telecommunications, and agriculture have also been impacted. Most of the infections are located in Brazil, Russia, and China.
-
-"The gravest mistake attackers made was to reuse the same infection chain involving STX RAT, and the same domain names for C2 communication, from the previous attack related to fake FileZilla installers," Kaspersky said. "The overall malware development/deployment and operational security capabilities of the threat actor behind this attack are quite low, which, in turn, made it possible to detect the watering hole compromise as soon as it started."
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/04/cpuid-breach-distributes-stx-rat-via.html, thehackernews.com, 12.04.2026)
-
-================================================================================
-
-[2] The Hacker News - Adobe Patches Actively Exploited Acrobat Reader Flaw CVE-2026-34621
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 12 Apr 2026 09:55:00 +0530
-Link: https://thehackernews.com/2026/04/adobe-patches-actively-exploited.html
-
-[TAM METİN - 282 kelime]
-Adobe has released emergency updates to fix a critical security flaw in Acrobat Reader that has come under active exploitation in the wild.
-
-The vulnerability, assigned the CVE identifier CVE-2026-34621, carries a CVSS score of 8.6 out of 10.0. Successful exploitation of the flaw could allow an attacker to run malicious code on affected installations.
-
-It has been described as a case of prototype pollution that could result in arbitrary code execution. Prototype pollution refers to a JavaScript security vulnerability that permits an attacker to manipulate an application'sobjects and properties.
-
-The issue impacts the following products and versions for both Windows and macOS -
-
-Acrobat DC versions 26.001.21367 and earlier (Fixed in 26.001.21411)
-
-Acrobat Reader DC versions 26.001.21367 and earlier (Fixed in 26.001.21411)
-
-Acrobat 2024 versions 24.001.30356 and earlier (Fixed in 24.001.30362 for Windows and 24.001.30360 for macOS)
-
-Adobe acknowledged that it's "aware of CVE-2026-34621 being exploited in the wild."
-
-The development comes days after security researcher and EXPMON founder Haifei Li disclosed details of zero-day exploitation of the flaw to run malicious JavaScript code when opening specially crafted PDF documents through Adobe Reader. There is evidence suggesting that the vulnerability may have been under exploitation since December 2025.
-
-"It appears that Adobe has determined the bug can lead to arbitrary code execution — not just an information leak," EXPMON said in a post on X. "This aligns with our findings and those of other security researchers over the last few days."
-
-(The story was updated after publication to reflect the change in CVSS score from 9.6 to 8.6. In a revision to its advisory on April 12, 2026, Adobe said it adjusted the attack vector from Network (AV:N) to Local (AV:L).)
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/04/adobe-patches-actively-exploited.html, thehackernews.com, 12.04.2026)
-
-================================================================================
-
-[3] BleepingComputer - Over 20,000 crypto fraud victims identified in international crackdown
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 11 Apr 2026 10:20:40 -0400
-Link: https://www.bleepingcomputer.com/news/security/police-identifies-20-000-victims-in-international-crypto-fraud-crackdown/
-
-[TAM METİN - 483 kelime]
-An international law enforcement action led by the U.K.'s National Crime Agency (NCA) has identified over 20,000 victims of cryptocurrency fraud across Canada, the United Kingdom, and the United States.
-
-Dubbed "Operation Atlantic," this joint action took place last month, and it involved the NCA, the U.S. Secret Service, the Ontario Provincial Police, the Ontario Securities Commission, and multiple private industry partners.
-
-"The NCA hosted law enforcement agencies at their London HQ and through real time intelligence sharing, technical capabilities and victim outreach, multiple fraud networks were disrupted across the world," the NCA said. "City of London Police, Financial Conduct Authority and other international law enforcement bodies also joined the weeklong action."
-
-The investigators have also frozen more than $12 million in suspected criminal proceeds obtained through "approval phishing" attacks, in which scammers trick victims into granting them access to their cryptocurrency wallets, typically via investment scams. They also identified more than $45 million in stolen cryptocurrency connected to fraud schemes worldwide.
-
-Officials said the public-private partnership model used in Operation Atlantic will be a core element of the U.K. government's recently announced Fraud Strategy, which connects industry data and law enforcement expertise to enable fraud prevention.
-
-"Operation Atlantic is a powerful example of what is possible when international agencies and private industry work side by side," added Miles Bonfield, NCA Deputy Director of Investigations.
-
-"This intensive action has led to the safeguarding of thousands of victims in the UK and overseas, stopped criminals in their tracks and helped save others from losing their funds."
-
-The NCA added that, together with law enforcement and private-sector partners, it will continue to analyze intelligence gathered during this joint action to support other victims and pursue potential criminal activity.
-
-Since January 2024, the FBI has also identified more than 8,000 victims of cryptocurrency investment fraud (also known as pig butchering) with support from the U.S. Secret Service, as part of Operation Level Up. The FBI said that roughly 77% of those victims were unaware they were being scammed and that the estimated savings to victims is $511,511,288.
-
-In its 2025 Internet Crime Report, the FBI said it received 61,559 complaints of cryptocurrency investment fraud last year, linked to $7.228 billion in losses and representing a massive 48% increase in complaints and a 25% increase in losses from 2024.
-
-Automated Pentesting Covers Only 1 of 6 Surfaces.
-
-Automated pentesting proves the path exists. BAS proves whether your controls stop it. Most teams run one without the other.
-
-This whitepaper maps six validation surfaces, shows where coverage ends, and provides practitioners with three diagnostic questions for any tool evaluation.
-
-FBI: Americans lost a record $21 billion to cybercrime last year
-
-UK sanctions Xinbi marketplace linked to Asian scam centers
-
-UK’s Companies House confirms security flaw exposed business data
-
-FBI arrests suspect linked to $46M crypto theft from US Marshals
-
-UK warns of Iranian cyberattack risks amid Middle-East conflict
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/police-identifies-20-000-victims-in-international-crypto-fraud-crackdown/, bleepingcomputer.com, 11.04.2026)
-
-================================================================================
-
-[4] Security Affairs - Censys finds 5,219 devices exposed to attacks by Iranian APTs, majority in U.S.
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 11 Apr 2026 20:39:37 +0000
-Link: https://securityaffairs.com/190646/ics-scada/censys-finds-5219-devices-exposed-to-attacks-by-iranian-apts-majority-in-u-s.html
-
-[TAM METİN - 496 kelime]
-Censys finds 5,219 devices exposed to attacks by Iranian APTs, majority in U.S.
-
-Censys researchers found 5,219 exposed Rockwell PLCs online, mostly in the U.S., urging defenders to secure or disconnect them.
-
-On April 7, 2026, U.S. agencies, including FBI, CISA, and NSA, warned of Iran-linked APTs exploiting internet-exposed Rockwell Automation PLCs.
-
-Threat actors are carrying out cyberattacks targeting internet-connected operational technology (OT) across multiple critical infrastructure sectors. Iran-linked actors are believed to be behind the activity, aiming to cause disruption in areas such as government services, water systems, and energy.
-
-The attacks involve manipulating project files and altering data shown on HMI and SCADA systems, leading in some cases to operational disruptions and financial losses. Authorities urged organizations to review indicators of compromise and apply mitigations to reduce risks. The campaign has been linked to groups like CyberAv3ngers, associated with Iran’s IRGC.
-
-Organizations are advised to assess exposed devices, follow security guidance from vendors, disconnect systems from the internet where possible, and coordinate with authorities for incident response and mitigation support.
-
-Censys researchers identified 5,219 exposed devices globally, 74.6% in the U.S., many on cellular networks. Analysis of indicators suggests multiple IPs tied to a single compromised engineering workstation, expanding the known attack surface beyond initial disclosures.
-
-“Censys identifies 5,219 internet-exposed hosts globally responding to EtherNet/IP (port 44818) and self-identifying as Rockwell Automation/Allen-Bradley devices.” reads the report published by Censys. “Geographic distribution is heavily skewed toward the United States, which accounts for 74.6% of global exposure — consistent with Rockwell’s dominant market position in North American industrial automation.”
-
-The researchers pointed out that the exposure of Rockwell Automation PLCs extends beyond the U.S., with notable concentrations in Spain, Taiwan, and Italy, while Iceland shows disproportionate exposure. According to Censys, many devices are connected via cellular networks, with providers like Verizon and AT&T accounting for a large share. This indicates field-deployed systems (e.g., utilities and substations) relying on cellular or even satellite links like Starlink, making monitoring and patching difficult.
-
-Most exposed devices belong to MicroLogix and CompactLogix families, often running outdated firmware.
-
-“EtherNet/IP identity responses expose device-level product strings, enabling granular fingerprinting of PLC model and firmware revision without authentication.” continyes the report. “The top 15 product strings are dominated by two families: MicroLogix 1400 (catalog prefix 1766-) and CompactLogix (1769-, 5069-), with one Micro820 (2080-) entry.”
-
-Since device details can be identified remotely without authentication, attackers can easily scan, identify, and prioritize vulnerable systems, increasing risks for sectors like energy and water infrastructure.
-
-Censys found that 5,219 exposed Rockwell Automation PLC hosts often run extra services beyond EtherNet/IP, increasing risk. Key exposures include VNC for remote HMI access, Telnet (cleartext legacy access), Modbus for OT communication, and Red Lion Crimson in mixed-vendor setups. These services expand attack paths and raise the risk to industrial systems.
-
-The report also provides Indicators of Compromise (IOCs) and technical details about the operator infrastructure.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, Rockwell PLCs)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/190646/ics-scada/censys-finds-5219-devices-exposed-to-attacks-by-iranian-apts-majority-in-u-s.html, securityaffairs.com, 11.04.2026)
-
-================================================================================
-
-[5] Security Affairs - GlassWorm evolves with Zig dropper to infect multiple developer tools
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 11 Apr 2026 16:27:02 +0000
-Link: https://securityaffairs.com/190638/malware/glassworm-evolves-with-zig-dropper-to-infect-multiple-developer-tools.html
-
-[TAM METİN - 352 kelime]
-GlassWorm evolves with Zig dropper to infect multiple developer tools
-
-The GlassWorm campaign uses a Zig-based dropper hidden in a fake IDE extension to infect developer tools and compromise systems.
-
-The GlassWorm campaign, active since 2025, has evolved from malicious npm packages to large-scale supply chain attacks across GitHub, npm, and VS Code, even deploying RATs via fake browser extensions.
-
-In its latest iteration, threat actors used a malicious OpenVSX extension impersonating WakaTime, bundling a Zig-compiled binary. Instead of acting as the payload, the binary serves as a stealthy dropper that infects multiple IDEs on a system, showing the group’s continuous adaptation.
-
-“This is not the first time GlassWorm resorted to using native compiled code in extensions.” reads the report published by Aikido. “However, rather than using the binary as the payload directly, it is used as a stealthy indirection for the known GlassWorm dropper, which now secretly infects all other IDEs it can find on your system.”
-
-The binary runs outside the JavaScript sandbox with full system access. It is loaded during activation and silently executes a dropper that scans the machine for IDEs like VS Code, Cursor, and VSCodium, targeting the entire ecosystem.
-
-The malware then downloads a fake extension from GitHub, disguised as a legitimate plugin, and installs it across all detected IDEs using their own tools. Afterward, it deletes traces of the installer. This technique enables stealthy, cross-IDE compromise, making it highly effective in infecting developer environments at scale.
-
-The second-stage extension is the known GlassWorm dropper. The experts noted that it avoids Russian systems and communicates with a Solana-based C2. The malicious code steals data and installs a persistent RAT, including a malicious Chrome extension.
-
-If you find the malicious extensions installed, treat the system as compromised and rotate any exposed credentials.
-
-“If you installed specstudio/code-wakatime-activity-tracker or see floktokbok.autoimport in any of your IDE extension lists, treat your machine as compromised and rotate any secrets that could have been accessed.” concludes the report.
-
-Aikido researchers also provided Indicators of Compromise (IoCs) for this campaign.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, malware)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/190638/malware/glassworm-evolves-with-zig-dropper-to-infect-multiple-developer-tools.html, securityaffairs.com, 11.04.2026)
-
-================================================================================
-
-[6] Security Affairs - CVE-2026-39987: Marimo RCE exploited in hours after disclosure
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sat, 11 Apr 2026 09:44:44 +0000
-Link: https://securityaffairs.com/190623/hacking/cve-2026-39987-marimo-rce-exploited-in-hours-after-disclosure.html
-
-[TAM METİN - 583 kelime]
-CVE-2026-39987: Marimo RCE exploited in hours after disclosure
-
-A critical flaw, tracked as CVE-2026-39987, in the open-source Python notebook tool Marimo was exploited within 10 hours of disclosure.
-
-A critical flaw in Marimo, tracked as CVE-2026-39987 (CVSS score of 9.3) was exploited just 10 hours after disclosure (On April 8, 2026). Sysdig Threat Research Team observed exploitation of the Marimo flaw within 9 hours and 41 minutes of disclosure, with credential theft completed in under 3 minutes, despite no public exploit code.
-
-Marimo is an open-source Python notebook tool used for data science, analysis, and interactive coding.
-
-The bug allows pre-authenticated remote code execution and affects versions up to 0.20.4. Version 0.23.0 addressed the issue.
-
-“Marimo (19.6k stars) has a Pre-Auth RCE vulnerability. The terminal WebSocket endpoint /terminal/ws lacks authentication validation, allowing an unauthenticated attacker to obtain a full PTY shell and execute arbitrary system commands.” reads the advisory. “Unlike other WebSocket endpoints (e.g., /ws) that correctly call validate_auth() for authentication, the /terminal/ws endpoint only checks the running mode and platform support before accepting connections, completely skipping authentication verification.”
-
-According to Sysdig , attackers built the exploit directly from the advisory, showing high speed and skill. The case highlights how threat actors now monitor even niche software and may use AI to rapidly develop exploits, accelerating attacks beyond previous cases like Langflow.
-
-“Within 9 hours and 41 minutes of the vulnerability advisory’s publication, the Sysdig Threat Research Team (TRT) observed the first exploitation attempt in the wild, and a complete credential theft operation was executed in under 3 minutes. No public proof-of-concept (PoC) code existed at the time. The attacker built a working exploit directly from the advisory description, connected to the unauthenticated terminal endpoint, and began manually exploring the compromised environment.” reads the report published by Sysdig. “This also recently happened with a Langflow flaw (CVE-2026-33017), where, with no public exploit, the vulnerability was exploited within 20 hours. This marimo vulnerability exploitation cuts that time in less than half.”
-
-What makes this case notable is that Marimo is a relatively niche tool, with approximately 20k GitHub stars, far smaller than platforms like Langflow or n8n. Despite this, the Sysdig Threat Research Team observed rapid exploitation, indicating that attackers monitor advisories broadly and can weaponize flaws within hours, likely aided by AI. Honeypots confirmed how quickly an attacker moved from access to credential theft within minutes.
-
-“Over the first 12 hours following advisory publication, we recorded exploit activity from one source IP targeting our honeypot fleet. An additional 125 unique IPs conducted reconnaissance (port scanning, HTTP probing), but only one progressed to actual exploitation of the WebSocket terminal vulnerability.” continues the advisory.
-
-The attack pattern points to a human, methodical operator rather than automation. The attacker first validated the flaw with a scripted PoC, then manually accessed systems, focusing on stealing .env credentials and SSH keys without deploying persistence or malware. Multiple sessions over 90 minutes suggest hands-on activity across targets.
-
-According to the Sysdig Threat Research Team, this reflects a broader trend: exploitation now happens within hours of disclosure. Even niche software like Marimo was quickly targeted, proving attackers monitor all advisories and may leverage AI to build exploits fast.
-
-For defenders, this means no software is “too small” to be attacked, detailed advisories can aid attackers, CVE-based detection may miss threats, and interactive shells enable faster, deeper post-exploitation.
-
-The report includes indicators of compromise  (IoCs) for these attacks.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, Marimo)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/190623/hacking/cve-2026-39987-marimo-rce-exploited-in-hours-after-disclosure.html, securityaffairs.com, 11.04.2026)
-
-================================================================================
-
-[7] Recorded Future - The Iran War: What You Need to Know
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 03 Apr 2026 00:00:00 GMT
-Link: https://www.recordedfuture.com/blog/the-iran-war-what-you-need-to-know
-
-[TAM METİN - 3905 kelime]
-The Iran War: What You Need to Know
+<div class="container">
+<div class="report-header">
+<h1><span class="header-date">12.04.2026</span> Siber Güvenlik Haber Özetleri</h1>
+</div>
+<div class="executive-summary">
+<h2>Yönetici Özeti</h2>
+<div class="important-news">
+<h2>Önemli Gelişmeler</h2>
+<div class="important-summary">
+<div class="important-item">
+<a href="#haber-1">1. The Iran War: What You Need to Know</a>
+</div>
+<div class="important-item">
+<a href="#haber-2">2. UK says it exposed Russian submarine activity near undersea cables</a>
+</div>
+<div class="important-item">
+<a href="#haber-3">3. CPUID Breach Distributes STX RAT via Trojanized CPU-Z and HWMonitor Downloads</a>
+</div>
+<div class="important-item">
+<a href="#haber-4">4. GlassWorm evolves with Zig dropper to infect multiple developer tools</a>
+</div>
+<div class="important-item">
+<a href="#haber-5">5. ‘It reads like a spy novel’: $280 million theft from Drift involved North Korean fake companies, cutouts</a>
+</div>
+<div class="important-item">
+<a href="#haber-6">6. CVE-2026-39987: Marimo RCE exploited in hours after disclosure</a>
+</div>
+<div class="important-item">
+<a href="#haber-7">7. Adobe Patches Actively Exploited Acrobat Reader Flaw CVE-2026-34621</a>
+</div>
+<div class="important-item">
+<a href="#haber-8">8. January 2026 CVE Landscape: 23 Critical Vulnerabilities Mark 5% Increase, APT28 Exploits Microsoft Office Zero-Day</a>
+</div>
+<div class="important-item">
+<a href="#haber-9">9. Senator launches inquiry into 8 tech giants for failures to adequately report CSAM</a>
+</div>
+<div class="important-item">
+<a href="#haber-10">10. Over 20,000 crypto fraud victims identified in international crackdown</a>
+</div>
+</div>
+</div>
+<table class="executive-table">
+<tr>
+<td><a href="#haber-11">11. Florida, OpenAI ChatGPT'nin Cinayetteki Rolünü Soruşturmuştur</a></td>
+<td></td>
+</tr>
+</table><div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item"> <div class="signal-meta"> <span class="signal-platform-label">GitHub Advisory</span> <span class="signal-engagement">ÖNEM: KRİTİK  |  CVSS: 10.0</span> </div> <a href="https://github.com/advisories/GHSA-9cp7-j3f8-p5jx" rel="noopener noreferrer" target="_blank">Daptin, Unauthenticated Path Traversal ve Zip Slip zafiyetlerine sahip olduğu tespit edilmiştir.</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@threatchain/116391467281411952" rel="noopener noreferrer" target="_blank">Güvenlik araçlarınız bunu gözden kaçırmış olabilir. RustyStealer şu anda ağları aktif olarak hedeflemektedir — sizin ağınızı etkilemeden önce bilmeniz gerekenler burada. Tam analiz: https:// threatchain.io/</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@rootshellonline/116391399238060454" rel="noopener noreferrer" target="_blank">New daily playlist: the latest talks and tutorials in cybersecurity and hacking. Stay sharp, stay safe. 👉 youtube.com/playlist?list=PLXq x05yil_mepehvHVynqDqeR8XeDV99X # CyberSecurity # InfoSec # Ethi</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@beyondmachines1/116391390091302155" rel="noopener noreferrer" target="_blank">Adobe Issues Emergency Patch for Actively Exploited Acrobat Reader Zero-Day Adobe released emergency patches for CVE-2026-34621, a critical prototype pollution vulnerability in Acrobat and Reader that</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@urldna/116391386164272581" rel="noopener noreferrer" target="_blank">Possible Phishing 🎣 on: ⚠️hxxps[:]//wpplpolska[.]weebly[.]com 🧬 Analysis at: https:// urldna.io/scan/69dae8523b77500 0076e36b7 # cybersecurity # phishing # infosec # urldna # scam # infosec</a></div>
+<div class="signal-item mastodon-item"> <div class="signal-meta"> <span class="signal-platform-label">Mastodon</span> <span class="signal-engagement">★0</span> </div> <a href="https://infosec.exchange/@r1cksec/116391354380878459" rel="noopener noreferrer" target="_blank">Transform LDAP filters, BaseDNs, attribute lists, and attribute entries using composable middleware chains. Zero dependencies. Works as a library or CLI tool. https:// github.com/j0hnZ3RA/ldapx-py # i</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲25</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1sj6v36/faang_security_engineer_getting_ready_for_layoffs/" rel="noopener noreferrer" target="_blank">FAANG security engineer getting ready for layoffs. For senior folks in this sub, how is my studying plan?</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲24</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1sj81ve/cpuz_and_hwmonitor_watering_hole_infection_a/" rel="noopener noreferrer" target="_blank">CPU-Z and HWMonitor watering hole infection – a copy-pasted attack</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲23</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1sj8vgs/use_of_ai_in_soc_analyst_roles/" rel="noopener noreferrer" target="_blank">Use of AI in SOC Analyst Roles</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲22</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1sihr2y/is_linkedin_actually_worth_it_or_does_it_just/" rel="noopener noreferrer" target="_blank">Is LinkedIn actually worth it, or does it just make you feel behind?</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲21</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1sitxw0/zero_data_retention_is_not_optional_anymore/" rel="noopener noreferrer" target="_blank">Zero Data Retention is not optional anymore</a></div>
+</div></div>
+</div>
+<div class="news-section">
+<div class="news-item" id="haber-1">
+<div class="news-title"><b>The Iran War: What You Need to Know</b></div>
+<p class="news-content">The Iran War: What You Need to Know
 
 Last updated: 3 April 2026 at 1700 GMT
 
-This report is updated as the situation evolves across the geopolitical, cyber, and influence operations dimensions of this conflict. It will be of greatest interest to organizations in the US, Israel, and Gulf states concerned about targeting by Iranian state-sponsored or state-aligned threat actors, as well as those with exposure to energy markets, maritime shipping, and critical infrastructure potentially impacted by regional escalation.
-
-Geopolitical Landscape
-
-The status of peace talks. Iran has publicly denied Trump's claim that it requested a ceasefire, with Foreign Minister Araghchi stating Iran would continue fighting until "full compensation is paid." Regional mediation efforts by China and Pakistan have failed to gain traction, and Iran's preconditions for ending the war - including acknowledgment of its jurisdiction over the Strait of Hormuz - remain nonstarters for the US. On April 3, Russian President Putin and Turkish President Erdogan jointly called for an immediate ceasefire and "compromise peace agreements," with the Kremlin warning that the conflict is producing "serious negative consequences" globally across energy, trade, and logistics. Their joint call represents the most significant coordinated diplomatic pressure from outside the region to date, though neither country has the direct leverage to compel either side.
-
-Iran escalating targeting of civilian and industrial infrastructure. Iran has threatened eighteen specific US technology companies operating in the Gulf, and struck Amazon's cloud computing facility in Bahrain on April 1, taking AWS Bahrain offline. IRGC-affiliated media announced further waves of strikes targeting steel industries in Abu Dhabi and Bahrain, and issued explicit threats against major bridges in Kuwait, Saudi Arabia, the UAE, and Jordan.
-
-Strait of Hormuz closure compounds pressure for negotiations. Despite public statements suggesting diplomatic progress, US-Iran negotiations remain deeply stalled. A UK-led virtual summit of 40 countries convened on April 2 to discuss non-military options to pressure Iran into reopening the chokepoint, including a UN humanitarian corridor for food security commodities. Trump's April 1 speech notably dropped explicit demands for Iran to relinquish control of the Strait, suggesting the US may end the conflict without resolving the chokepoint through force or a formal agreement. Iran, meanwhile, is drafting a protocol asserting joint Iranian-Omani oversight of Strait transit - a move that would normalize Tehran's administrative control over the waterway long-term.
-
-UAE moves toward active military involvement. The Wall Street Journal reported on April 1 that the UAE is preparing to assist the US in opening the Strait by force, which would make it the first GCC member to join the fight. Iran has struck UAE targets with over 2,000 drones and 400 missiles since February 28, and UAE authorities have begun arresting IRGC-linked financial networks operating in the country.
-
-Houthi forces enter the war directly. Houthi spokesperson Yahya Saree confirmed their entry into the conflict in late March, adding a significant new proxy dimension and increasing the risk of broader regional crisis.
-
-Cyber Threat Landscape
-
-Microsoft 365 password-spraying campaign hit 300+ organizations. An Iran-linked threat actor conducted a password-spraying campaign targeting Microsoft 365 environments across critical infrastructure sectors in Israel, the UAE, the US, the UK, Europe, and Saudi Arabia, per Check Point. Targeting correlated with cities struck by Iranian missiles, suggesting the campaign was designed to support bombing damage assessment and kinetic operations. Activity overlaps with infrastructure and targeting patterns associated with Peach Sandstorm (APT33) and Gray Sandstorm (DEV-0343).
-
-RedDelta (TA416) expanding espionage targeting the Middle East. China-aligned TA416 has been conducting cyberespionage campaigns against European and Middle Eastern government and diplomatic organizations since mid-2025, using phishing-based reconnaissance and malware delivery. Following the onset of the Iran conflict in March 2026, targeting expanded to include EU and NATO diplomatic missions — elevating the risk of credential compromise within government networks.
-
-Handala claims breach of FBI Director Kash Patel's personal email. The group published proof-of-concept data framing the operation as retaliation for the FBI's domain seizure. The claim has not been independently verified, but signals that Handala's hack-and-leak operations remain active and are now targeting senior US law enforcement leadership.
-
-Pay2Key ransomware targeted a US healthcare organization using compromised administrative credentials and living-off-the-land techniques, per Halcyon. Insikt Group assessed this as state-aligned disruption rather than a financially motivated attack — implying deliberate rather than opportunistic targeting.
-
-Nasir Security targeted Middle East energy infrastructure through supply-chain compromise combined with influence operations, per Resecurity.
-
-Iranian disinformation averaging two false claims per day. NewsGuard has identified 53 false claims since the start of Operation Epic Fury, with some posts reaching millions of views. Recent examples include a false IRGC report claiming 37 US officers were killed in a strike on Al-Minhad Air Base in the UAE on March 31.
-
-Storm-2035 confirms a fresh content pivot. As of late March, Storm-2035 shifted focus specifically to exaggerating Iranian military capabilities and complicating battlefield damage assessment — including unverified claims of shooting down a US MQ-9 Reaper drone and inflated US casualty figures.
-
-China is treating this conflict as a live case study in cyber-cognitive warfare. A Nanjing National Defense Mobilization Office assessment published in late March argued China should pre-build a wartime-capable information mobilization system able to defend networks, control domestic opinion, shape overseas narratives, and mobilize civilian resources for cyber offense and defense — citing specific examples from this conflict including Handala activity, deepfakes, and AI-enabled psychological warfare. Insikt Group assessed the article likely reflects some thinking within China's national defense mobilization system, though not necessarily formal PLA doctrine.
-
-Three Dimensions of the Conflict
-
-In addition to the latest geopolitical, cyber and influence operations updates above, earlier developments in this conflict remain relevant for understanding the current situation.
-
-Geopolitical Landscape
-
-Leadership assassinations. Supreme National Security Council Secretary Ali Larijani and Basij chief Brigadier General Gholamreza Soleimani were both confirmed killed in targeted Israeli strikes on March 16–17. Intelligence Minister Esmaeil Khatib was killed in a separate IDF strike in Tehran on March 18 — he had served since 2021 and was assessed to have led Iranian intelligence's global terror activities against Israeli and American targets worldwide. Former National Security Council Secretary Saeed Jalili is reported as the likely interim replacement for Larijani. Insikt Group does not assess that these deaths will lead to near-term regime collapse or substantially diminish Iran's internal security capacity.
-
-South Pars strike and Gulf energy threat. A US-Israeli coordinated strike on March 18 targeted Iran's South Pars gas field — the world's largest, accounting for 70–75% of Iran's natural gas production. In response, the IRGC issued explicit threats of retaliatory strikes against Gulf energy facilities, calling on Saudi Arabia, the UAE, and Qatar to evacuate specific sites including Jubail Petrochemical, SAMREF Refinery, Al Hosn Gas Field, Mesaieed Petrochemical Complex, and Ras Laffan Refinery.
-
-First combat use of the GBU-72 A5K. CENTCOM confirmed that March 17 airstrikes on Iranian coastal missile sites near the Strait of Hormuz marked the first combat use of the 5,000-pound GBU-72/B Advanced 5K deep penetrator munition. Target facilities contained anti-ship cruise missiles used against international shipping.
-
-US internal dissent. On March 17, NCTC Director Joe Kent resigned in protest of US military action against Iran — the first US official to do so publicly. DNI Tulsi Gabbard reaffirmed the administration's position. No replacement has been named.
-
-Iran's strategic fork. Two paths remain: pursue a deal with the US that normalizes economic engagement and offers a path to regime survival, or endure the bombing, crack down domestically, export enough oil to China and India to sustain the patronage system, and wait for the geopolitical environment to shift. The Strait closure and accelerating elimination of senior leadership are rapidly narrowing the window for the second option. Insikt Group assesses that diplomatic stalemate — not imminent breakthrough — is the current baseline, and that the risk of further escalation remains elevated.
-
-Leadership & Succession
-
-Mojtaba Khamenei, son of the late Supreme Leader Ali Khamenei, has been elected Supreme Leader. His election preserves hardliner continuity and underscores the IRGC's political dominance — they shaped the outcome in favor of their preferred candidate despite reported objections from some clerics. Mojtaba appears to have been wounded in the US-Israeli strikes that killed his father, mother, wife, and one son. He has not appeared in person since his televised announcement — almost certainly to avoid providing a digital or physical signature that could enable US or Israeli targeting. Any public appearance will be a significant signal of his consolidation of authority and perceived security.
-
-What this means strategically. Mojtaba is neither a credible Islamic scholar nor an experienced administrator — the two traditional prerequisites for the position. He lacks the authority his father spent two decades consolidating. Iran is effectively being run by committee. Key power brokers now include IRGC chief Vahidi, parliamentary speaker Ghalibaf, and President Pezeshkian. These individuals are realists, even if labeled hardliners, and have a broader range of options than Khamenei Senior ever permitted.
-
-Civil-military tension persists. President Pezeshkian's public apology over strikes on Iran's neighbors drew immediate backlash from hardliners and military leaders — a reflection of the weakness of the elected government relative to the security apparatus. His stated diplomatic conditions (reparations, international guarantees) now align with Mojtaba Khamenei's public statement, suggesting a coordinated political-diplomatic posture even as civil-military tensions continue beneath the surface.
-
-Regime stability signals. IRGC units have reportedly denied medical aid and supplies to regular army (Artesh) units. Group desertions have been reported, highest among conscripts. Four Iranian diplomats have applied for asylum in Western countries since early 2026. Israel has begun targeting street-level security checkpoints — a deliberate effort to degrade the regime's suppression infrastructure rather than purely its military capacity. The IRGC has explicitly threatened to deal with any street unrest "with a blow even harsher than that of January 8."
-
-Cyber Threat Landscape
-
-Insikt Group continues to observe a reduction in Iran's more advanced cyber activity since March 1, driven by the internet blackout that has impaired operational tempo and coordination among state-sponsored groups. That window is narrowing. Treat this period as one in which Iran-aligned operators are regrouping, prioritizing recovery and defense, and setting conditions for future operations — not as a sign of diminished threat.
-
-State-Sponsored Espionage
-
-GreenGolf (MuddyWater / Boggy Serpens) remains the most active Iran-nexus APT since the conflict began, attributed to Iran's Ministry of Intelligence and Security (MOIS). Palo Alto Networks reported on March 16 that GreenGolf has expanded its toolset with Rust-based malware variants LampoRAT and BlackBeard, UDP-based backdoors, and AI-assisted development techniques. The shift to Rust likely reflects efforts to evade defenses and achieve longer-term persistence with reduced visibility, particularly against diplomatic organizations and critical infrastructure in the energy, maritime, and finance sectors.
-
-APT34 and Moses Staff C2 infrastructure was degraded in Israeli operations. Insikt Group is actively monitoring for that infrastructure coming back online — when it does, expect these groups to resume operations and potentially act as C2 for other Iranian APTs. A rise in malicious traffic with Iranian source origination will signal renewed operational tempo.
-
-Conflict-themed phishing campaigns are expanding. Since March 1, ProofPoint has documented six coordinated phishing and espionage campaigns exploiting the conflict as a lure, originating from actors aligned with China, Belarus, Pakistan, Hamas, and Iran. Targets include Middle Eastern governments, European diplomatic organizations, and a US think tank. Common patterns across all campaigns include conflict-themed lures, compromised government email accounts used for legitimacy, credential harvesting as a primary objective, and geofencing to selectively target victims. Groups observed include UNK_InnerAmbush (China-aligned), TA402/Gaza Hacker Team, UNK_RobotDreams (Pakistan-aligned), UNK_NightOwl, TA473/TAG-70 (Belarus-aligned), and TA453/APT35 (Iran-aligned). Security and IT teams should treat any conflict-themed email referencing Iran, the Strait of Hormuz, or the strikes as a high-suspicion lure regardless of apparent sender.
-
-Nasir Security Group, a suspected pro-Iranian threat group claimed to have breached the Dubai International Airport on its extortion blog website, Nasir Security Blog. According to the threat group, they have obtained the capability of accessing classified information from the Dubai International Airport within the past months. According to the sample passport photos released, they include citizens of the United Arab Emirates, Indonesia, and the US. Insikt Group cannot verify whether these passport photos are real and related to travelers passing through the Dubai International Airport. This same group targeted Middle East energy infrastructure through supply-chain compromise combined with influence operations, per Resecurity. This reflects an increasingly integrated approach in which network intrusion and narrative manipulation are executed as complementary operations.
-
-Handala Hack Team infrastructure was seized by the FBI on March 19. Primary websites handala-hack[.]to and handala-redwanted[.]to are now displaying seizure banners. Two Iranian officials linked to the group were killed in military strikes: Mohammad Mehdi Farhadi Ramin (DOJ-charged in 2020 for cyber theft and defacement) and Seyed Yahya Hosseiny Panjaki, assessed as the government curator of Handala, Homeland Justice, and related hacking groups. Handala's primary social media profiles have also been suspended. Handala has acknowledged the seizures and declared continued operations, with plans for a new domain. Insikt Group assesses the group will likely continue operating in a distributed structure; coordination may be temporarily degraded but should not be assumed disrupted.
-
-Prior to the seizure, Handala's most significant action was a destructive attack against a major US-based medical device manufacturer — a meaningful shift from their historical focus on Israeli targets. That attack used compromised credentials and abuse of legitimate business software rather than a custom wiper or novel payload. The implication is direct: prioritize identification and remediation of compromised credentials, as the core TTP is credential-based access, not novel exploitation. Researchers have previously connected Handala to Iranian threat clusters Void Manticore and potentially Banished Kitten, suggesting a possible link to Iranian state-sponsored activity. Insikt Group cannot corroborate that attribution at this time, though it is likely the group serves as a cutout or deniable proxy for Iranian offensive cyber operations.
-
-The Conquerors Electronic Army operates in a similar hybrid space — blending hacktivism, intrusions, and influence operations — with typical activity including web defacements, DDoS targeting government and critical infrastructure, hack-and-leak operations, and doxing.
-
-Ransomware & Extortionist Activity
-
-Pay2Key ransomware targeted a US healthcare organization using compromised administrative credentials and living-off-the-land techniques, per Halcyon. Insikt Group assessed this as state-aligned disruption rather than a financially motivated attack — implying deliberate rather than opportunistic targeting. This follows Handala's earlier destructive attack against a US medical device manufacturer, reinforcing a pattern of Iran-aligned actors pivoting toward US healthcare.
-
-State-sponsored: Insikt Group is actively monitoring Green Bravo (APT42), GreenGolf, Cotton Sandstorm, and Cyber Avengers. These groups are capable of advanced network and vulnerability scanning, opportunistic exploitation of known vulnerabilities, deployment of disruptive and destructive malware, and satellite or television broadcast hijacks — the latter particularly likely given their psychological impact.
-
-Hacktivist fronts: The Handala Hack Team and the Conquerors Electronic Army operate in a hybrid space blending hacktivism, cyber intrusions, and influence operations. These groups are likely to be the first to resume traditional operational tempo as the blackout lifts.
-
-Also watch: Peach Sandstorm, APT34, MuddyWater, and Moses Staff each have established patterns for initial access and lateral movement. Watch for new hacktivist fronts emerging — this is typically a signal of where Iran is directing its efforts, as seen with Homeland Justice in Albania and Moses Staff targeting Israel.
-
-China is watching — and learning. A Nanjing National Defense Mobilization Office assessment published in late March treated the US-Israel-Iran war as a live case study in cyber-enabled warfare and cognitive operations, arguing China should pre-build a wartime-capable information mobilization system. The document cited specific examples from this conflict — including Handala activity, broadcast hijacking, deepfakes, and AI-enabled psychological warfare — as evidence that future conflicts are decided as much in cyber and cognitive domains as on the battlefield. Insikt Group assessed the article likely reflects some thinking within China's national defense mobilization system, though not necessarily formal PLA doctrine. The significance is less about any single document than the pattern it represents: this conflict is actively shaping foreign military thinking on the integration of cyber and cognitive warfare, with implications that extend well beyond the Middle East.
-
-Inside Iran - Background and Context
-
-Iran has shifted away from early reactionary messaging - including tactical battlefield updates - and moved toward overarching threat rhetoric, escalation narratives, and proxy alignment, particularly with Hezbollah, the Houthis, and the Islamic Resistance in Iraq. US and Israeli messaging has remained focused on projecting overwhelming military force and coalition resolve.
-
-Phase assessment: Influence operations are currently between Phase 1 and Phase 2. Strategic narrative shaping is active at every level of the conflict. Covert networks are pivoting toward the conflict, but the anticipated surge has not yet fully materialized — likely due to degraded capabilities from ongoing kinetic strikes.
-
-Three Phases of Iran's IO Approach - Early Conflict Patterns
-
-Phase 1 — Strategic Narrative Shaping (Active). Iran is attempting to shape narratives down to the tactical battlefield level, capitalizing on the fog of war to inflate perceived military capabilities and complicate damage assessment. Key patterns include unverified claims of civilian casualties, exaggerated reports of US military losses, and viral AI-generated imagery. One AI-generated image related to USS Abraham Lincoln claims reportedly reached over 5 million views before being debunked.
-
-Phase 2 — Covert Network Surge (Initiating). Known influence operation networks are pivoting focus to the conflict. Expect coordinated inauthentic behavior on social media — sock puppet accounts impersonating journalists and activists — amplifying false narratives and attempting to delegitimize US-Israeli strikes.
-
-Phase 3 — Psychological Deterrence (Weeks to Months). This will be a hybrid campaign targeting both international audiences to shape deterrence perceptions, and Iran's domestic population to reinforce a narrative of regime survivability.
-
-Operations Targeting Iranian Domestic Audiences
-
-Insikt Group has also observed influence activity directed at the Iranian population itself: a seizure of Islamic Republic of Iran Broadcasting's live broadcast — notably, the IRIB facility was itself the target of a kinetic strike — with messaging focused on defections and targeting supporters of Mojtaba Khamenei. Precision message delivery within Iran via a popular mobile application has also been observed, with messaging along the lines of "help has arrived" and calls to resist the regime.
-
-Active Threat Networks
-
-Storm-2035 (ION-24) remains one of the most prolific Iranian IO networks, previously active in 2024 targeting US elections. As of late March, a fresh deliberate content pivot was confirmed — the network is now focused specifically on exaggerating Iranian military capabilities and complicating battlefield damage assessment. Claims observed include unverified reports of shooting down a US MQ-9 Reaper drone and inflated US casualty figures from strikes on US bases.
-
-ION-79, affiliated with the IRGC Basij and previously tracked producing counter-protest narratives during Iran's nationwide protests, has inauthentic accounts actively producing content tied to the current conflict.
-
-Operation Overload. Monitor for Russian influence operation activity impersonating legitimate entities in France and Germany under cover of the Middle East conflict. Other nation-state actors are actively exploiting this conflict to advance separate geopolitical interests.
-
-ION-82 physical threat recruitment via Telegram bots continues openly offering financial compensation for physical threat activities targeting US and Israeli interests across channels in the US, Australia, New Zealand, and other countries. Intent levels following Khamenei's death are assessed as likely unprecedented.
-
-Expert Assessment: What Happens Next
-
-Based on analysis from Dr. Christopher Ahlberg’s conversation with former MI6 Director Sir Alex Younger on 9 March. Listen to the full webinar recording here.
-
-Three scenarios are in play — not mutually exclusive, and each with distinct implications for organizations managing risk.
-
-Scenario 1 — Bomb, Declare Victory, and Leave
-
-The US achieves air supremacy, conducts a sustained campaign of precision strikes against remaining target sets, forces the Strait of Hormuz open using naval power, and exits. CENTCOM has confirmed the Iranian Navy is now "combat ineffective," and the US has struck over 5,000 targets inside Iran — including 60 ships — while actively targeting Iran's defense industrial base. The suppressive effect on Iranian will and capacity should not be underestimated, particularly once B-52s can operate over Iran with impunity. Trump has reportedly given Israel roughly a week to bring down the regime. This scenario has a faster resolution timeline but risks leaving unresolved instability.
-
-Resilience question: What is the operational and financial impact of a 30- to 60-day Strait closure across our critical dependencies?
-
-Scenario 2 — A “Venezuela-Style” Deal
-
-This is assessed as the scenario Trump is most actively angling for. Iran's new leadership — cornered economically, facing military degradation, and aware that 80% of government revenue derives from hydrocarbons now at risk — has strong incentives to negotiate. Pezeshkian's public apology, the IRGC's repudiation of it, and Trump's calls for unconditional surrender may be the opening moves of a negotiation rather than signs of irreconcilable positions. Any deal would almost certainly require zero enrichment and the transfer of Iran's 400-plus kilograms of highly enriched uranium.
-
-Resilience question: If a deal emerges within weeks, how does your organization's risk posture need to shift — and are your stakeholders prepared for rapid de-escalation as well as escalation?
-
-Scenario 3 — Revolution or Fragmentation
-
-US intelligence and Israeli officials assessed as of March 12 that the regime is not at risk of imminent collapse and maintains domestic control. That said, early friction signals are emerging: IRGC units are reportedly denying aid to regular army units, group desertions are being reported at the conscript level, and four Iranian diplomats have applied for asylum in Western countries since early 2026. Israel has begun targeting street-level security checkpoints — a deliberate effort to degrade suppression infrastructure rather than just military capacity. Revolutions always appear unthinkable before they happen and inevitable afterward. This remains the highest-uncertainty, highest-consequence scenario.
-
-Resilience question: Are we prepared for high-impact, low-probability incidents such as sudden infrastructure disruption, terrorist violence, or regional fragmentation affecting operations across Iraq, the Gulf, and beyond?
-
-How Recorded Future Can Help
-
-Following standard operation procedure for high-priority global events, the Insikt Group published same-day flash analysis on both the kinetic strikes and the emerging cyber threat landscape.
-
-Upon log-in, customers are directed to resources within the platform via an updated Middle East Resource Center, which includes pre-built queries and alerts to complement Insikt Group finished intelligence — covering suggested threat actors to track, generative AI prompts for continually generating situation reports, and specific recommended actions across cyber, threat actor, and tactical hunting dimensions.
-
-Customers have immediate access to:
-
-Iran War and Middle East Regional Conflict Intelligence Kits
-
-Threat Maps: automatically updated based on the latest cyber attacks and targets, including relevant hacktivist groups
-
-Threat Actor Profiles for IRGC-affiliated APT groups including GreenGolf (APT42), Green Golf, Cotton Sandstorm, and others — covering TTPs, known infrastructure, and recent victim activity
-
-Recorded Future AI: generate a daily situation report filtered to Insikt Group research across geopolitical, cyber, and influence operations tracks
-
-New Threat Leads: involving Iranian nation-state groups, with hunting packages to help identify associated network activity in your SIEM
-
-Identity Intelligence: monitor for compromised employee credentials in malware logs; integrate with Okta or Microsoft for automated password resets
-
-To provide extra support to customers in the region, Recorded Future's support team automatically enabled Geopolitical Intelligence access on February 28. Other customers interested in a free Geopolitical Intelligence trial should contact their account team.
-
-To learn how Recorded Future can give your team the intelligence to stay ahead of this and future geopolitical crises, contact us to speak with one of our threat intelligence experts. Explore top use cases by visiting our demo center.
-
-(XXXXXXX, AÇIK - https://www.recordedfuture.com/blog/the-iran-war-what-you-need-to-know, recordedfuture.com, 03.04.2026)
-
-================================================================================
-
-[8] Recorded Future - February 2026 CVE Landscape: 13 Critical Vulnerabilities Mark 43% Drop from January
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Thu, 12 Mar 2026 00:00:00 GMT
-Link: https://www.recordedfuture.com/blog/february-2026-cve-landscape
-
-[TAM METİN - 1706 kelime]
-February 2026 CVE Landscape:13 Critical Vulnerabilities Mark 43% Drop from January
-
-February 2026 saw a 43% decrease in high-impact vulnerabilities, with Recorded Future's Insikt Group® identifying 13 vulnerabilities requiring immediate remediation, down from 23 in January 2026. All 13 carried a ‘Very Critical’ Recorded Future Risk Score.
-
-What security teams need to know:
-
-Microsoft dominates: Six of 13 vulnerabilities affected Microsoft products, accounting for 46% of February's findings; all were added to CISA's KEV catalog on the same day
-
-Supply-chain attack on Notepad++: Lotus Blossom, a suspected China state-sponsored threat actor, exploited CVE-2025-15556 to hijack Notepad++'s update channel and deliver a Cobalt Strike Beacon and the Chrysalis backdoor
-
-APT28 exploits MSHTML flaw: The Russian state-sponsored group leveraged CVE-2026-21513 via malicious Windows Shortcut files for multi-stage payload delivery
-
-Public exploits available: Four of 13 vulnerabilities have publicly available proof-of-concept code; an alleged exploit for a fifth is being advertised for sale
-
-Bottom line: Despite a 43% drop in volume, February's vulnerabilities include named threat actor exploitation and five RCE-enabling flaws, making prioritized, intelligence-driven remediation as important as ever.
-
-Quick Reference: February 2026 Vulnerability Table
-
-All 13 vulnerabilities below were actively exploited in February 2026.
-
-Table 1: List of vulnerabilities that were actively exploited in February based on Recorded Future data. *An alleged exploit for CVE-2026-21533 is being advertised for sale across Github. Recorded Future Triage was used to browse the website advertising the exploit, which can be viewed here via the Replay Monitor. (Source: Recorded Future)
-
-Key Trends: February 2026
-
-Vendors Most Affected
-
-Microsoft led with six vulnerabilities across Windows, Windows Server, Office, and Microsoft 365 products
-
-BeyondTrust faced a critical OS command injection flaw in Remote Support (RS) versions 25.3.1 and earlier, and Privileged Remote Access (PRA) versions 24.3.4 and earlier
-
-Cisco saw active exploitation of an authentication bypass in Catalyst SD-WAN infrastructure
-
-Additional affected vendors: Notepad++, Apple, Soliton Systems K.K., Google, and Dell
-
-Most Common Weakness Types
-
-CWE-78 – OS Command Injection (tied for most common)
-
-CWE-693 – Protection Mechanism Failure (tied for most common)
-
-CWE-476 – NULL Pointer Dereference
-
-CWE-843 – Type Confusion
-
-CWE-807 – Reliance on Untrusted Inputs in a Security Decision
-
-Exploitation Activity
-
-Vulnerabilities associated with malware campaigns:
-
-Lotus Blossom (suspected China state-sponsored) exploited CVE-2025-15556 to hijack Notepad++ update traffic between June and December 2025. The campaign rotated C2 servers across three attack chains to deliver a Metasploit loader, Cobalt Strike Beacon, and a custom backdoor called Chrysalis.
-
-APT28 (Russian state-sponsored) exploited CVE-2026-21513 using malicious Windows Shortcut (.lnk) files with embedded HTML payloads for multi-stage payload delivery, with observed network communication to infrastructure associated with the threat group.
-
-UNC6201 (suspected China-nexus) exploited CVE-2026-22769 to compromise Dell RecoverPoint for VMs appliances, deploying the SLAYSTYLE web shell, BRICKSTORM backdoor, and GRIMBOLT, a C#-based backdoor with native AOT compilation to complicate detection.
-
-Long-running exploitation activity:
-
-UAT-8616 exploited CVE-2026-20127, chaining it with CVE-2022-20775 to achieve root-level access on Cisco Catalyst SD-WAN systems, with Cisco Talos attributing the activity to a sophisticated threat actor and assessing that the activity dates back to at least 2023.
-
-Priority Alert: Active Exploitation
-
-These vulnerabilities demand immediate attention due to confirmed exploitation in the wild.
-
-CVE-2025-15556 | Notepad++
-
-Risk Score: 99 (Very Critical) | CISA KEV: Added February 12, 2026
-
-Why this matters: Lotus Blossom exploited this flaw to replace legitimate Notepad++ update packages with malicious installers, deploying Cobalt Strike and the Chrysalis backdoor to targeted users over a six-month period. The vulnerability affects the WinGUp updater used by Notepad++ versions prior to 8.8.9, which fails to cryptographically verify downloaded update metadata and installers.
-
-Affected versions: Notepad++ versions prior to 8.8.9 (version 8.9.1 recommended)
-
-Update to Notepad++ version 8.9.1, released January 26, 2026
-
-Hunt for the malicious update.exe sample (SHA256: 4d4aec6120290e21778c1b14c94aa6ebff3b0816fb6798495dc2eae165db4566) in your environment
-
-Monitor for GUP.exe spawning unexpected child processes
-
-Review network connections for traffic to 45[.]76[.]155[.]202, 45[.]77[.]31[.]210, 45[.]32[.]144[.]255, or 95[.]179[.]213[.]0
-
-Check for directories named ProShow under %APPDATA% or unexpected files in %APPDATA%\Adobe\Scripts\
-
-Block or alert on curl.exe uploading files to temp[.]sh
-
-Known C2 infrastructure: 45[.]76[.]155[.]202, 45[.]77[.]31[.]210, cdncheck[.]it[.]com, safe-dns[.]it[.]com, 95[.]179[.]213[.]0
-
-Detection resources: Insikt Group created Sigma rules to detect update.exe's execution of reconnaissance commands (whoami, tasklist, systeminfo, and netstat -ano) and curl commands for system information exfiltration, available to Recorded Future customers.
-
-CVE-2026-1731 | BeyondTrust Remote Support and Privileged Remote Access
-
-Risk Score: 99 (Very Critical) | CISA KEV: Added February 13, 2026
-
-Why this matters: Unauthenticated attackers can execute arbitrary OS commands over a WebSocket connection, enabling remote shell access and full system compromise, with no credentials required.
-
-Affected versions: BeyondTrust Remote Support (RS) versions 25.3.1 and earlier; Privileged Remote Access (PRA) versions 24.3.4 and earlier
-
-Upgrade to BeyondTrust RS version 25.3.2 or later and PRA version 25.1 or later
-
-Monitor WebSocket connections to the /nw endpoint for crafted version strings containing subshell syntax (e.g., a[$(command)]0)
-
-Review logs for unexpected OS command execution originating from wsusservice or web service processes
-
-Restrict network access to BeyondTrust appliances to authorized management systems only
-
-CVE-2026-20127 | Cisco Catalyst SD-WAN Controller and Manager
-
-Risk Score: 99 (Very Critical) | CISA KEV: Added February 25, 2026
-
-Why this matters: UAT-8616 exploited this authentication bypass to gain high-privileged access to Cisco SD-WAN infrastructure, chaining it with CVE-2022-20775 to achieve root-level access and maintain persistent, covert footholds. CISA issued Emergency Directive 26-03, requiring federal civilian agencies to immediately remediate.
-
-Affected products: Cisco Catalyst SD-WAN Controller (formerly vSmart) and Cisco Catalyst SD-WAN Manager (formerly vManage) in on-premises deployments and SD-WAN Cloud installations
-
-Update to patched release versions 20.9.8.2, 20.12.6.1, 20.12.5.3, 20.15.4.2, or 20.18.2.1
-
-Monitor SD-WAN logs for unexpected control-connection-state-change new-state:up events and unrecognized peer-system-ip values
-
-Audit SSH authorized_keys files at /home/root/.ssh/authorized_keys and /home/vmanage-admin/.ssh/authorized_keys/ for unauthorized entries
-
-Check /etc/ssh/sshd_config for PermitRootLogin yes
-
-Review logs for path traversal strings related to CVE-2022-20775, such as /../../ and /\n&../\n&../
-
-Hunt for cleared or truncated logs from syslog, wtmp, lastlog, cli-history, bash_history, and files in /var/log/, which may indicate log clearing
-
-Technical Deep Dive: Exploitation Analysis
-
-Notepad++ Supply-Chain Attack (CVE-2025-15556)
-
-Three-chain attack evolution: Lotus Blossom ran three distinct attack chains between July and October 2025, each evolving to evade detection:
-
-Chain 1 (July–August 2025): Replaced the legitimate Notepad++ update package with a malicious NSIS installer (update.exe) that abused a legitimate ProShow.exe file to launch an exploit payload containing shellcode. The shellcode decrypted and launched a Metasploit downloader, which retrieved a Cobalt Strike Beacon shellcode from hxxps://45[.]77[.]31[.]210/users/admin and executed it.
-
-Chain 2 (September 2025): Reused the same update channel with a modified update.exe that dropped legitimate Lua interpreter files alongside a malicious alien.ini script. The compiled Lua script allocated and executed shellcode via the EnumWindowStationsW API, ultimately delivering Cobalt Strike Beacon. Threat actors later split reconnaissance commands into multiple steps to evade detection logic tied to combined command-line patterns.
-
-Chain 3 (October 2025): Shifted to a new distribution server and delivered a malicious update.exe file that dropped a legitimate Bitdefender Submission Wizard renamed as BluetoothService.exe, a malicious DLL named log.dll, and an encrypted shellcode file. Update.exe executed BluetoothService.exe, which sideloaded log.dll. Log.dll then decrypted the shellcode and injected it into the BluetoothService.exe process.
-
-Why this matters: The sustained, multi-month nature of this exploitation activity, with iterative evasion improvements across three attack chains, reflects the hallmarks of a disciplined, state-sponsored operation. Organizations that rely on Notepad++ in managed environments should treat any network activity initiated by GUP.exe as suspect.
-
-APT28 MSHTML Exploitation (CVE-2026-21513)
-
-Browser trust boundary abuse: The vulnerability resides in ieframe.dll hyperlink navigation logic, where insufficient URL validation in _AttemptShellExecuteForHlinkNavigate() allows threat actor-controlled input to invoke ShellExecuteExW outside the intended browser security context.
-
-Akamai identified a malicious .lnk file (document.doc.LnK) associated with APT28 infrastructure. The exploit uses nested iframes and multiple DOM contexts to manipulate browser trust boundaries, bypassing both Mark of the Web (MotW) and Internet Explorer Enhanced Security Configuration (IE ESC) before triggering the vulnerable navigation flow. The .lnk initiates network communication with wellnesscaremed[.]com as part of APT28's multistage payload delivery.
-
-SHA256 for document.doc.LnK.download: aefd15e3c395edd16ede7685c6e97ca0350a702ee7c8585274b457166e86b1fa
-
-Why this matters: APT28's use of a weaponized .lnk file exploiting a patched MSHTML flaw underscores the group's continued targeting of Windows environments and its willingness to operationalize browser-based vulnerabilities for initial access.
-
-UNC6201 Dell RecoverPoint Campaign (CVE-2026-22769)
-
-Persistence through VMware infrastructure: UNC6201 exploited hard-coded credentials stored in /home/kos/tomcat9/tomcat-users.xml to authenticate to the Apache Tomcat Manager and upload a malicious WAR file, deploying the SLAYSTYLE web shell and enabling RCE with root privileges.
-
-After establishing access, UNC6201 deployed the BRICKSTORM backdoor for C2, then replaced it with GRIMBOLT in September 2025. GRIMBOLT uses native ahead-of-time (AOT) compilation to convert to machine-native code, removing common intermediate language metadata and complicating static analysis. UNC6201 then pivoted into VMware virtual infrastructure, creating temporary "Ghost NIC" network ports on ESXi-hosted VMs for stealthy lateral movement and implementing Single Packet Authorization (SPA) via iptables commands to gate access to their backdoor infrastructure.
-
-Why this matters: The progression from web shell to persistent backdoors, and then the pivot to VMware infrastructure to support lateral movement demonstrates a mature, multi-stage intrusion methodology. Organizations running Dell RecoverPoint for VMs should assume default credentials have been compromised and hunt for SLAYSTYLE and GRIMBOLT indicators immediately.
-
-Detection & Remediation Resources
-
-Detection Artifacts from Insikt Group®
-
-Recorded Future customers can access the following from Insikt Group®:
-
-CVE-2025-15556 – Sigma rules to detect reconnaissance commands (whoami, tasklist, systeminfo, netstat -ano) and curl-based exfiltration associated with the Notepad++ supply-chain attack
-
-CVE-2026-23760 (SmarterTools SmarterMail) – Nuclei template for authentication bypass detection, created in February (previously highlighted in January 2026 CVE Monthly)
-
-Note: All detection artifacts are intended for use in authorized environments only.
-
-Recorded Future Product Integrations
-
-Vulnerability Intelligence – Prioritize vulnerabilities based on real-world exploitation data, not just severity scores
-
-Attack Surface Intelligence – Identify exposed BeyondTrust, Cisco SD-WAN, and Dell RecoverPoint assets in your environment
-
-Third-Party Intelligence – Monitor vendor vulnerability exposure across your supply chain
-
-Ready to see how Recorded Future can help your team detect active exploitation, prioritize patching, and reduce attack surface risk? Explore our demo center to see these capabilities in action, or dive deeper into Insikt Group research for more threat intelligence insights.
-
-About Insikt Group®:Recorded Future's Insikt Group® threat research team is comprised of analysts, linguists, and security researchers with deep government and industry experience. Insikt Group® publishes threat intelligence to the Recorded Future analyst community in blog posts and analyst notes.
-
-(XXXXXXX, AÇIK - https://www.recordedfuture.com/blog/february-2026-cve-landscape, recordedfuture.com, 12.03.2026)
-
-================================================================================
-
-[9] Recorded Future - Latin America's Cybersecurity Turning Point: From Reactive Defense to Threat Intelligence
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Tue, 03 Mar 2026 00:00:00 GMT
-Link: https://www.recordedfuture.com/blog/latin-america-cybersecurity-turning-point
-
-[TAM METİN - 1184 kelime]
-Latin America's Cybersecurity Turning Point: From Reactive Defense to Threat Intelligence
-
-Latin America faces a distinct and evolving cyber threat landscape, from PIX payment fraud to ransomware hitting critical infrastructure.
-
-Most LATAM security teams are still reactive by necessity, and that posture is costing organizations in downtime, data, and trust.
-
-Recorded Future offers LATAM-specific threat intelligence, automation, and 100+ integrations to help stretched teams get ahead of attacks before they land.
-
-Meet us at RSA Booth N-6090 to see how intelligence-led security can transform your team's posture, from response to prevention.
-
-Join our upcoming webinar to learn what proactive intelligence looks like for your region.Understanding the Dark Covenant, Its Evolution, and Impact
-
-Ask any CISO in Latin America what keeps them up at night and you'll hear the same answers: ransomware, payment fraud, credential theft, supply chain attacks. Then ask them what they're doing about it, and too many will describe a team that's reactive by necessity, drowning in alerts, and always one step behind.
-
-That's not a talent problem. It's an intelligence problem.
-
-I've spent the last decade in cybersecurity marketing, focused almost entirely on Latin America. What I've heard consistently is that resourcefulness is embedded in how this region operates. We adapt, we survive, we make things work with what we have. But in cybersecurity, that "we'll deal with it when it happens" mindset is costing us in downtime, in data, in trust. That experience is what convinced me this region needs a different conversation about security.
-
-Our Threats Are Not Generic - They're Ours
-
-The threats targeting our region are anything but generic. Ransomware groups like Qilin and Nova have been actively hitting Brazilian industrial companies, Argentine energy firms, and Mexican organizations throughout 2024 and 2025. These actors are often familiar with our infrastructure, our vulnerabilities, and our local context.
-
-Latin America has its own threat landscape shaped by our payment systems, our platforms, our regulatory realities, and our local context. From PIX payment fraud in Brazil to supply chain attacks targeting Mexico's nearshoring boom, threat actors have learned to exploit what's uniquely ours. Regulatory pressure is mounting across the board, new cybersecurity laws, mandatory incident reporting, and sector-specific compliance requirements are raising the stakes further. Our defenses need to be just as specialized as the threats we face.
-
-The Uncomfortable Truth: We're Still Mostly Reactive
-
-Here's what I've had to sit with as a marketer and as someone from this region: we are still, overwhelmingly, a reactive market.
-
-Picture this: a security analyst at a mid-sized Brazilian bank starts her Monday morning with 3,000 unread alerts. She spends four hours triaging manually, translating English-only reports for her team. By the time she flags a suspicious credential dump on a Brazilian Telegram channel, the attackers have already moved.
-
-Now picture the same analyst with intelligence tuned to her environment. She gets an alert Friday afternoon: a threat actor just posted fresh PIX account credentials on a dark web forum. By Monday, her team has already acted. The attack never lands.
-
-That's the difference between reactive and proactive. Most organizations in our region are still living in the first scenario, buying threat intelligence after an incident, detecting what's already happened, and treating breaches as something to recover from rather than prevent. The question is how we change that in a way that fits LATAM's real constraints."Threat intelligence is solely about the number of incidents we've prevented. The energy sector requires 100% uptime, and we are able to prevent attacks by using Recorded Future. Mitigating a single cyber attack or a data breach is already a win for us and a return on investment." — Dusan Vignjevic, Head of Threat Intelligence and Threat Hunting, Siemens Energy
-
-Why Recorded Future's Approach Changes the Equation for Our Region
-
-What I've come to understand, talking with security teams across the region, is that the gap isn't usually capability or talent. It's having intelligence that's relevant to their threats, in their environment, that their teams can realistically act on.
-
-That's the core of what Recorded Future does differently. Insikt Group, Recorded Future's dedicated team of threat analysts, publishes specific reporting on the Latin American and Caribbean threat landscape, covering everything from ransomware trends in Brazil and Mexico to banking trojans built specifically to target our financial systems. That regional depth isn't common in this industry, and it matters. The Intelligence Graph, with 200+ billion nodes of real-time data across the open web, dark web, and technical sources, is built not just for breadth but for precision. The goal isn't to give analysts more data to sift through. It's to surface the right signal at the right time, so teams can move from insight to action without losing hours in the process.
-
-For our region specifically, a few things stand out:
-
-Coverage that includes our threats. The Intelligence Graph indexes across the open web, dark web, technical sources, and customer telemetry in real time. That means the Brazilian Telegram channels, the dark web forums where LAC fraud campaigns originate, the credential markets that feed attacks on our financial institutions.
-
-Automation that multiplies small teams. When alert triage, indicator enrichment, and threat hunting can be automated, a team of five can operate like a team of fifteen. In a region where security teams are stretched thin and alert fatigue is real, this isn't a feature, it's a survival mechanism.
-
-Intelligence that lives in your existing tools. With 100+ out-of-the-box integrations across SIEM, SOAR, EDR, firewall, and more, Recorded Future works inside the security ecosystems our organizations have already invested in, like CrowdStrike, Splunk, Palo Alto, Microsoft.
-
-A shift from detection to prevention. This is the most important piece. For our financial institutions tracking fraud campaigns before they launch. For our manufacturers protecting nearshoring supply chains from lateral movement attacks. For our government agencies trying to defend critical infrastructure with limited resources. The goal is to be the early warning system that changes the posture permanently.
-
-The Shift Is Already Underway
-
-Across the region, security teams that used to be purely reactive are starting to ask different questions: not just "what happened?" but "what's coming, and how do we get ahead of it?"
-
-Recorded Future wants to be part of making that happen. In 2026, we're committed to helping organizations across the region become truly intelligence-led. Watch for our LATAM-focused team, join our webinars, visit our events and connect with our dedicated support — we're here, we're invested in this market, and we're ready to help.
-
-See It in Action at RSA Conference 2026
-
-If you're building or scaling a CTI program for Latin American markets — this is the conversation to have.
-
-Stop by Booth N-6090 at RSA 2026 to see how Recorded Future delivers intelligence that acts, helping security teams move faster from insight to defense. Our team will be there to talk through what proactive intelligence looks like for your specific market, your industry, and your threat landscape.
-
-Need a free expo pass? We've got you covered. Register below and enter code 52E1761XP:
-
-👉 Register for your free RSA 2026 Expo Pass
-
-See you in San Francisco.
-
-(XXXXXXX, AÇIK - https://www.recordedfuture.com/blog/latin-america-cybersecurity-turning-point, recordedfuture.com, 03.03.2026)
-
-================================================================================
-
-[10] Recorded Future - Recorded Future Expands Coverage of Scams and Financial Fraud with Money Mule Intelligence from CYBERA
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Thu, 26 Feb 2026 00:00:00 GMT
-Link: https://www.recordedfuture.com/blog/recorded-future-money-mule-intelligence-cybera
-
-[TAM METİN - 801 kelime]
-Recorded Future Expands Coverage of Scams and Financial Fraud with Money Mule Intelligence from CYBERA
-
-Recorded Future is expanding its payment fraud prevention capabilities through a partnership with CYBERA, the industry leader in detecting and verifying data on scam-linked bank accounts.
-
-Available for purchase now via the Recorded Future Platform, Money Mule Intelligence helps fraud teams identify the accounts criminals use to extract and move stolen funds—addressing a critical gap as scams increasingly become banks' most pressing fraud challenge.
-
-The Growing Threat of Authorized Push Payment Fraud
-
-Authorized Push Payment (APP) fraud is accelerating. In the U.S., APP fraud losses are projected to reach nearly $15B by 2028, up from $8.3B in 2024, according to Deloitte. While traditional card fraud continues to decline, APP fraud is climbing, fueled by AI-generated deepfakes, personalized scam scripts, and instant payment systems like FedNow and Zelle that move money faster than conventional fraud controls can intercept it.
-
-Mule accounts, or money mules, are part of the critical infrastructure that makes these scams possible. They provide the bridge that converts stolen payments into untraceable cash or cryptocurrency. Without them, most APP fraud would collapse because criminals cannot risk receiving funds directly into their own accounts. By the time victims realize they've been scammed, mule accounts have already moved the money through multiple layers, typically ending in cash withdrawals or crypto conversions.
-
-Additionally, the sophistication of mule operations is increasing. Criminal organizations now employ "mule herders" who manage hundreds of accounts at once, using AI to simulate normal transaction behavior (grocery purchases, streaming subscriptions, etc.) so accounts don't appear dormant or suspicious. This makes detection through traditional pattern analysis increasingly difficult.
-
-Regulators are responding by shifting liability to banks, often viewing those allowing mule accounts to operate as part of the criminal infrastructure itself. For example, the UK now requires banks to reimburse scam victims and allows them to delay suspicious payments for investigation, while U.S. regulators are signaling that banks may be held liable for failing to detect mule accounts.
-
-Detecting mule accounts is fundamentally difficult. They’re designed to blend in with legitimate activity, and traditional fraud controls can struggle to distinguish between a genuine customer payment and a scam transfer until it's too late.
-
-CYBERA's Approach to Mule Intelligence
-
-The challenge of detecting and disrupting mule account networks is what led CYBERA's founders to build their solution. Coming from legal practice and law enforcement, CYBERA's leadership team worked scam cases where they witnessed how recovery becomes impossible once funds move through the financial system. They realized that money mule networks represent a central vulnerability in the scam economy, one that banks had limited visibility into.
-
-Today, CYBERA helps banks and payment networks disrupt scams at the point where funds are extracted. CYBERA's AI-powered Scam Engagement System generates intelligence on bank accounts and payment endpoints actively used by scam networks.
-
-Unlike probabilistic risk scoring, CYBERA verifies each account, providing evidence and contextual metadata to enable proactive prevention across both internal accounts and outbound payments while minimizing false positives.
-
-CYBERA supports two core use cases:
-
-On-Us Mule Detection, which helps identify mule accounts held at your institution that are already linked to confirmed scam activity. This enables early detection and disruption of high-risk accounts, reducing downstream fraud, repeat victimization, and regulatory exposure within a bank’s accountholders.
-
-Off-Us Screening, which screens outbound payments to external beneficiary accounts before execution, helping to prevent customers from sending funds to scammer-controlled accounts. This is particularly valuable for high-value transfers, social engineering attacks, and customer-initiated payments where traditional controls are limited.
-
-Large financial institutions have already prevented multiple six-figure losses by embedding CYBERA’s intelligence into their transaction monitoring workflows. CYBERA has also been accepted as a member of the Mastercard Start Path program, making it the first Recorded Future partner to achieve this distinction and further validating its role in the payments ecosystem.
-
-How Money Mule Intelligence Expands Payment Fraud Intelligence
-
-Payment Fraud Intelligence (PFI) correlates the widest set of disparate, pre-monetization indicators of fraud to help teams act before their customers are impacted. Money Mule Intelligence extends that capability, giving fraud teams the verified intelligence needed to make high-confidence decisions that disrupt scams by flagging accounts that have been confirmed as mule infrastructure through direct investigation. Together, they provide coverage from initial compromise through attempted cash-out, helping fraud teams prevent losses at multiple intervention points.
-
-Chief Product Officer at Recorded Future
-
-As regulators increasingly expect banks to prevent scam-enabled transfers, Money Mule Intelligence provides the verified data needed to comply with emerging reimbursement requirements while reducing the operational burden of post-incident investigation and remediation.
-
-PFI users that purchase this capability, can now act on both sides of the transaction—compromised payment instruments and scam-linked receiving accounts—with evidence-backed intelligence that minimizes false positives and aligns with the industry's shift toward proactive fraud prevention.
-
-(XXXXXXX, AÇIK - https://www.recordedfuture.com/blog/recorded-future-money-mule-intelligence-cybera, recordedfuture.com, 26.02.2026)
-
-================================================================================
-
-[11] Recorded Future - January 2026 CVE Landscape: 23 Critical Vulnerabilities Mark 5% Increase, APT28 Exploits Microsoft Office Zero-Day
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Tue, 24 Feb 2026 00:00:00 GMT
-Link: https://www.recordedfuture.com/blog/january-2026-cve-landscape
-
-[TAM METİN - 1340 kelime]
-January 2026 CVE Landscape: 23 Critical Vulnerabilities Mark 5% Increase, APT28 Exploits Microsoft Office Zero-Day
-
-January 2026 saw a modest 5% increase in high-impact vulnerabilities, with Recorded Future's Insikt Group® identifying 23 vulnerabilities requiring immediate remediation, up from 22 in December 2025. Noteworthy trends last month included Russian state-sponsored exploitation of a Microsoft Office zero-day and critical authentication bypass flaws affecting enterprise infrastructure.
-
-What security teams need to know:
-
-APT28's Operation Neusploit: Russian state-sponsored actors exploited CVE-2026-21509 (Microsoft Office) via weaponized RTF files, delivering MiniDoor, PixyNetLoader, and Covenant Grunt implants
-
-Microsoft and SmarterTools lead concerns: These vendors accounted for 30% of January's vulnerabilities, with multiple critical authentication bypass and RCE flaws
-
-Public exploits proliferate: Fourteen of the 23 vulnerabilities reported have public proof-of-concept exploit code available
-
-Code Injection dominates: CWE-94 (Code Injection) was the most common weakness type, followed by CWE-288 (Authentication Bypass Using an Alternate Path or Channel) and CWE-200 (Exposure of Sensitive Information to an Unauthorized Actor)
-
-Bottom line: The slight increase masks significant threats. APT28's zero-day exploitation and multiple critical authentication bypass flaws demonstrate that threat actors continue targeting enterprise communication and management platforms for initial access and persistence.
-
-Quick Reference Table
-
-All 23 vulnerabilities below were actively exploited in January 2026.
-
-Table 1: List of vulnerabilities that were actively exploited in January based on Recorded Future data (Source: Recorded Future)
-
-Key Trends in January 2026
-
-Microsoft faced four critical vulnerabilities across Windows and Office products, including APT28's zero-day exploitation of CVE-2026-21509
-
-SmarterTools accounted for three critical vulnerabilities affecting SmarterMail, all enabling authentication bypass or RCE
-
-Cisco saw two critical flaws in Identity Services Engine and Unified Communications Manager
-
-Ivanti dealt with two pre-authentication RCE vulnerabilities in Endpoint Manager Mobile
-
-Additional affected vendors/projects: Fortinet, SolarWinds, Broadcom, Synacor, Versa, Hewlett Packard Enterprise, GNU, Linux, Vite, Prettier, Gogs, and Modular DS
-
-Most Common Weakness Types
-
-CWE-94 – Code Injection
-
-CWE-288 – Authentication Bypass Using an Alternate Path or Channel
-
-CWE-200 – Exposure of Sensitive Information to an Unauthorized Actor
-
-Threat Actor Activity
-
-APT28's Operation Neusploit marked January's most sophisticated campaign:
-
-Exploited CVE-2026-21509 (Microsoft Office) via weaponized RTF files
-
-Deployed MiniDoor, a malicious Outlook VBA project designed to collect and forward victim emails to hardcoded addresses
-
-Deployed PixyNetLoader, which staged additional components and culminated in a Covenant Grunt implant
-
-Abused Filen API as a C2 bridge between the implant and actor-controlled Covenant listener
-
-Priority Alert: Active Exploitation
-
-These vulnerabilities demand immediate attention due to confirmed exploitation in the wild.
-
-CVE-2026-21509 | Microsoft Office
-
-Risk Score: 99 (Very Critical) | Active exploitation by APT28
-
-Why this matters: Zero-day exploitation by Russian state-sponsored actors bypasses Office security features, enabling delivery of email collection implants and backdoors. The vulnerability stems from reliance on untrusted inputs in security decisions, allowing unauthorized attackers to bypass OLE mitigations.
-
-Affected versions: Microsoft 365 and Microsoft Office (versions not specified in advisory)
-
-Install Microsoft's out-of-band update released January 26, 2026
-
-Search email systems for RTF attachments with embedded malicious droppers
-
-Check for modifications to %appdata%\Microsoft\Outlook\VbaProject.OTM
-
-Review registry keys: HKCU\Software\Microsoft\Office\16.0\Outlook\Security\Level, Software\Microsoft\Office\16.0\Outlook\Options\General\PONT_STRING, and Software\Microsoft\Office\16.0\Outlook\LoadMacroProviderOnBoot
-
-Monitor for connections to 213[.]155[.]157[.]123:443 and remote connectivity to Microsoft Office CDN endpoints
-
-Hunt for scheduled tasks named "OneDriveHealth" and suspicious files in %programdata%\Microsoft\OneDrive\setup\Cache\SplashScreen.png
-
-Block email addresses: ahmeclaw2002@outlook[.]com and ahmeclaw@proton[.]me
-
-CVE-2026-23760 | SmarterTools SmarterMail
-
-Risk Score: 99 (Very Critical) | CISA KEV: Added January 26, 2026
-
-Why this matters: Unauthenticated attackers can reset system administrator passwords without any credentials or prior access, enabling complete administrative takeover and potential RCE through volume mount command injection.
-
-Affected versions: SmarterTools SmarterMail prior to build 9511
-
-Upgrade to build 9511 or later immediately
-
-Review administrator account activity logs for unauthorized password resets
-
-Check Volume Mounts configuration for suspicious command entries (this one IS correct for SmarterMail)
-
-Review administrator access patterns and session logs
-
-Audit system for unauthorized changes made with compromised admin access
-
-CVE-2026-1281 & CVE-2026-1340 | Ivanti Endpoint Manager Mobile
-
-Risk Score: 99 (Very Critical) | CISA KEV: CVE-2026-1281 added January 29, 2026
-
-Why this matters: Pre-authentication RCE vulnerabilities in EPMM enable unauthenticated attackers to execute arbitrary code by exploiting Apache RewriteMap helper scripts that pass attacker-controlled strings to Bash.
-
-Affected versions: Ivanti EPMM 12.5.0.0 and earlier, 12.5.1.0 and earlier, 12.6.0.0 and earlier, 12.6.1.0 and earlier, and 12.7.0.0 and earlier
-
-Install temporary fixes via RPM packages: EPMM_RPM_12.x.0 - Security Update - 1761642-1.0.0S-5.noarch.rpm and EPMM_RPM_12.x.1 - Security Update - 1761642-1.0.0L-5.noarch.rpm
-
-Plan migration to EPMM 12.8.0.0 (scheduled for Q1 2026 release)
-
-Monitor for unusual Apache RewriteMap activity
-
-Review logs for crafted HTTP parameters to app store retrieval routes
-
-Check for unauthorized code execution attempts via RewriteRule handling
-
-Exposure: EPMM instances accessible over corporate networks or VPN connections
-
-Technical Deep Dive: Exploitation Analysis
-
-APT28's Operation Neusploit (CVE-2026-21509)
-
-The multi-stage attack chain: CVE-2026-21509 enables bypass of Office OLE mitigations through weaponized RTF files:
-
-Initial delivery – Specially-crafted RTF file exploits CVE-2026-21509
-
-Server-side evasion – Malicious DLL returned only for requests from targeted geographies with an expected HTTP User-Agent
-
-Dropper variants – Two distinct infection paths deployed based on targeting:
-            
-Variant 1 (MiniDoor): Writes VBA project to Outlook, modifies registry settings to enable macro execution, forwards emails to hardcoded recipient addresses
-Variant 2 (PixyNetLoader): Creates mutex asagdugughi41, decrypts embedded payloads using rolling XOR key, establishes persistence via COM hijacking
-
-Variant 1 (MiniDoor): Writes VBA project to Outlook, modifies registry settings to enable macro execution, forwards emails to hardcoded recipient addresses
-
-Variant 2 (PixyNetLoader): Creates mutex asagdugughi41, decrypts embedded payloads using rolling XOR key, establishes persistence via COM hijacking
-
-Why this matters: APT28 demonstrates sophisticated exploitation combining zero-day vulnerabilities with anti-analysis techniques, targeting government and business users for email collection and persistent access.
-
-Modular DS WordPress Plugin Exploitation (CVE-2026-23550 & CVE-2026-23800)
-
-The authentication bypass chain: CVE-2026-23550 enables administrator-level access without authentication:
-
-Plugin treats requests as trusted based on request-supplied indicators rather than cryptographic verification
-
-/api/modular-connector/login flow grants access based on site connector enrollment state
-
-If no user identifier is supplied, the code selects an existing administrative user and establishes a privileged session
-
-CVE-2026-23800 represents the second exploitation path via REST API user creation: /?rest_route=/wp/v2/users&origin=mo&type=x
-
-Known IoCs associated with CVE-2026-23550:
-
-Known IoCs associated with CVE-2026-23800:
-
-backup[@]wordpress[.]com
-
-backup1[@]wordpress[.]com
-
-Why this matters: WordPress plugin vulnerabilities enable threat actors to compromise multiple sites from a single centralized management platform, amplifying attack impact.
-
-SmarterMail Authentication Bypass (CVE-2026-23760)
-
-The password reset flaw: CVE-2026-23760 exposes privileged password reset to anonymous callers:
-
-ForceResetPassword controller attribute explicitly permits unauthenticated access
-
-Backend ForcePasswordReset routine branches on client-supplied IsSysAdmin boolean rather than deriving account type from server-side context
-
-System administrator branch performs basic checks, then sets Password directly from the supplied NewPassword
-
-Logic fails to validate OldPassword, lacks an authenticated session requirement, and omits authorization controls
-
-Why this matters: Complete administrative takeover without credentials enables threat actors to deploy web shells, modify configurations, and establish persistent access to mail server infrastructure.
-
-Detection & Remediation Resources
-
-Nuclei Templates from Insikt Group®
-
-Recorded Future customers can access Nuclei templates for:
-
-CVE-2025-8110 (Gogs) - Version detection and fingerprinting check
-
-CVE-2026-23760 (SmarterMail) - Authentication bypass validation
-
-Recorded Future Product Integrations
-
-Vulnerability Intelligence – Prioritize based on active exploitation data, including APT28 targeting
-
-Attack Surface Intelligence – Discover exposed SmarterMail, Ivanti EPMM, and Modular DS assets
-
-Third-Party Intelligence – Monitor vendor vulnerabilities across your supply chain
-
-State-sponsored zero-days return. APT28's exploitation of CVE-2026-21509 demonstrates continued Russian interest in email collection and persistent access through Office vulnerabilities.
-
-Authentication bypass dominates enterprise risk. Multiple critical flaws in SmarterMail, Modular DS, and Cisco products enable complete administrative takeover without credentials.
-
-Legacy vulnerabilities persist. CVE-2009-0556 (Microsoft Office) highlights how threat actors continue targeting unretired systems where patching has lagged for over a decade.
-
-Ready to see how Recorded Future can help your team detect state-sponsored exploitation, prioritize authentication bypass fixes, and reduce enterprise attack surface? Explore our demo center for live examples, or dive deeper with Insikt Group research for technical threat intelligence.
-
-Recorded Future's Insikt Group® is a team of elite analysts, linguists, and security researchers providing actionable intelligence to protect organizations worldwide. Our research combines human expertise with AI-powered analytics to deliver timely, relevant threat intelligence on emerging vulnerabilities and threat actor campaigns.
-
-(XXXXXXX, AÇIK - https://www.recordedfuture.com/blog/january-2026-cve-landscape, recordedfuture.com, 24.02.2026)
-
-================================================================================
-
-[12] The Record - Senator launches inquiry into 8 tech giants for failures to adequately report CSAM
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 10 Apr 2026 18:05:00 GMT
-Link: https://therecord.media/senator-launches-inquiry-into-tech-giants-csam
-
-[TAM METİN - 810 kelime]
-Senator launches inquiry into 8 tech giants for failures to adequately report CSAM
-
-Senate Judiciary Committee chair Chuck Grassley (R-IA) has launched a congressional inquiry into eight tech giants for allegedly neglecting to supply adequate information to a cyber tipline aimed at detecting the exchange of child sexual abuse materials (CSAM) on their platforms.
-
-Grassley said his inquiry follows reports from the National Center for Missing and Exploited Children (NCMEC) that allege the tech giants are deficient in their reporting of CSAM and data related to generative AI generally.
-
-Meta, Amazon AI Services, TikTok, Snapchat, Discord, X.AI, Grindr and Roblox submitted more than 17 million reports of suspected online child exploitation in 2025, Grassley said in a press release, but allegedly failed to provide NCMEC with important location data and other information on users and suspects.
-
-NCMEC says the tech giants also failed to share CSAM in AI training and did not report “sadistic online exploitation targeting children,” according to the press release.
-
-The tech giants’ role in reporting suspected CSAM is vital to efforts to combat it. NCMEC said 81% of the reports received through NCMEC’s Cyber Tipline in 2025 came from the eight companies.
-
-“For almost thirty years, NCMEC has worked tirelessly to combat online child sexual exploitation by attempting to persuade [platforms] to detect, report and remove child sexual exploitation on their platforms and improve the quality and substance of their CyberTipline reports,” NCMEC said in a statement provided to Grassley.
-
-Many big tech firms “regularly tout the number of reports they submit to the CyberTipline, but fail to disclose that millions of reports lack basic information,” NCMEC added. “This leaves children unprotected online, subjects survivors to revictimization, enables sexual offenders to remain freely online and wastes valuable and limited law enforcement resources.”
-
-Grassley is compelling the eight tech firms to respond to NCMEC’s charges and offer detailed reports on their plans to evolve their handling of cyber tips this year.
-
-The press release said Grassley is “alarmed” by the information NCMEC shared with him.
-
-The senator included detailed statistics showing how each tech giant worked with NCMEC in 2025. Findings include that:
-
-Meta turned over nearly 11 million reports involving suspected online child exploitation to NCMEC’s CyberTipline in 2025, but many of them allegedly contained “consistency and quality” issues which kept them from being useful to law enforcement investigators.
-
-Amazon AI Services submitted more than 1.1 million tips in 2025, but none of them could allegedly be acted upon because Amazon failed to provide location or suspect information.
-
-TikTok turned over 3.6 million reports, but allegedly consistently reported incidents that did not relate to child exploitation. TikTok allegedly told NCMEC they “are working on other high-priority items and could not commit to a timeframe to correct this reporting issue.”
-
-Roblox’s chief safety officer issued a statement saying that the company is currently reviewing Grassley’s letter.
-
-“We are committed to a productive dialogue with the Senator’s office and NCMEC regarding our shared goal of keeping children safe online,” the statement said.
-
-A Meta spokesperson said in a statement that “child exploitation is a horrific crime and we work tirelessly to protect children from it, and to help bring the criminals involved to justice.”
-
-“We're committed to constant improvement and appreciate feedback, which has already led us to make some improvements, as NCMEC has acknowledged.”
-
-A spokesperson for Discord said the company has a “longstanding, collaborative relationship with the National Center for Missing and Exploited Children (NCMEC) and we remain in regular communication with them to ensure we fulfill our reporting obligations and support their important work.”
-
-Snap issued a statement saying that it takes Grassley’s concerns seriously.
-
-“We have taken steps to strengthen our reporting processes, improve data quality, and help ensure law enforcement receives actionable information,” the statement said. “We all share the goal of helping to protect teens online and we all want perpetrators brought to justice.”
-
-A Grindr spokesperson said the company appreciates Senator Grassley’s concerns and “welcome the opportunity to detail the protections and policies we have in place to proactively monitor for, identify, and report CSAM to NCMEC.”
-
-“Grindr is exclusively for adults aged 18 or over, and we take preventing CSAM with the utmost seriousness, including maintaining a substantial moderation team to identify and ban accounts at the device level if they appear to discuss topics related to minors, and deployment of AI and machine learning technology to proactively identify and ban similar accounts.”
-
-None of the other involved tech companies immediately responded to a request for comment.
-
-is a reporter covering digital privacy, surveillance technologies and cybersecurity policy for The Record. She was previously a cybersecurity reporter at CyberScoop. Earlier in her career Suzanne covered the Boston Police Department for the Boston Globe and two presidential campaign cycles for Newsweek. She lives in Washington with her husband and three children.
-
-(XXXXXXX, AÇIK - https://therecord.media/senator-launches-inquiry-into-tech-giants-csam, therecord.media, 10.04.2026)
-
-================================================================================
-
-[13] The Record - UK government threatens tech bosses with jail time if they do not adequately fight nudification tools
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 10 Apr 2026 17:35:00 GMT
-Link: https://therecord.media/uk-threatens-tech-bosses-with-jail-ai-nudification
-
-[TAM METİN - 365 kelime]
-UK government threatens tech bosses with jail time if they do not adequately fight nudification tools
-
-The U.K. government on Friday announced it has formally submitted a proposed change to a crime bill that would allow tech executives who fail to remove nonconsensual intimate images published on their platforms to be imprisoned.
-
-A U.K. communications regulator, Ofcom, has said it will be cracking down on the spread of the images in the aftermath of the Grok scandal, which led to millions of “nudified” images of women and children to be circulated worldwide.
-
-The scandal led to a worldwide backlash and condemnation from multiple national governments, which pledged to stop the practice.
-
-“Tech execs could be held personally liable if platforms fail to comply with Ofcom’s enforcement decisions to remove people’s intimate images that have been shared without consent,” according to a government press release.
-
-“This would mean senior execs who commit the offense without a reasonable excuse could be liable to imprisonment or a fine, or both.”
-
-In February, U.K. Prime Minister Keir Starmer said the crime law containing the new amendment would mandate that tech companies take down nonconsensual intimate images within two days or face fines and the blockage of services. Imprisonment was not mentioned as a potential penalty at the time, making Friday’s announcement a significant escalation in the government’s approach to the issue.
-
-On January 13, about three weeks after Grok started spreading millions of nudified images, Ofcom announced a probe of the chatbot’s practices. Grok is owned by Elon Musk’s xAI.
-
-In a Guardian opinion piece published at the time. Starmer wrote that the mass distribution of nonconsensual intimate images is a “national emergency.”
-
-“We are putting tech companies on notice,” he added. “The burden of tackling abuse must no longer fall on victims. It must fall on perpetrators – and on the companies that enable harm.”
-
-is a reporter covering digital privacy, surveillance technologies and cybersecurity policy for The Record. She was previously a cybersecurity reporter at CyberScoop. Earlier in her career Suzanne covered the Boston Police Department for the Boston Globe and two presidential campaign cycles for Newsweek. She lives in Washington with her husband and three children.
-
-(XXXXXXX, AÇIK - https://therecord.media/uk-threatens-tech-bosses-with-jail-ai-nudification, therecord.media, 10.04.2026)
-
-================================================================================
-
-[14] The Record - ‘It reads like a spy novel’: $280 million theft from Drift involved North Korean fake companies, cutouts
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 10 Apr 2026 17:33:00 GMT
-Link: https://therecord.media/drift-crypto-theft-post-mortem-north-korea
-
-[TAM METİN - 1152 kelime]
-‘It reads like a spy novel’: $280 million theft from Drift involved North Korean fake companies, cutouts
-
-The Drift cryptocurrency platform published its full post-mortem this week describing an extensive, months-long operation by North Korean hackers that culminated in the theft of more than $280 million.
-
-Drift officials said the operation began six months ago, when they were approached at a cryptocurrency conference by members of a company claiming to focus on quantitative trading. The company is never named in the post-mortem but was linked to UNC4736, a North Korean state-affiliated group also tracked as AppleJeus or Citrine Sleet.
-
-The people who approached Drift workers were technically fluent, had a deep knowledge of Drift and had “verifiable professional backgrounds.” Drift said their investigation revealed that North Korean officials sought out Drift contributors “at multiple major industry conferences in multiple countries over the following six months.”
-
-Drift said the individuals who met them in person were not North Korean. The country’s government allegedly used intermediaries to conduct face-to-face relationship building.
-
-“The investigation has shown so far that the profiles used in this third party targeted operation had fully constructed identities including employment histories, public-facing credentials and professional networks,” Drift said.
-
-“The people Drift contributors met in person appeared to have spent months building profiles, both personal and professional, that could withstand scrutiny during a business or counterparty relationship.”
-
-Drift officials created a Telegram group after their first meeting with the alleged quantitative trading firm and had months of conversations around trading strategies and potential vault integrations — which they said is typical of how trading firms interact and onboard with Drift.
-
-Drift officially onboarded the company in December 2025 and January 2026, engaging multiple alleged contributors and forcing them to fill out multiple forms detailing their strategy. The company deposited $1 million of their own capital into Drift.
-
-“Integration conversations continued through February and March 2026. Various Drift contributors met individuals from this group again, face-to-face, at multiple major industry conferences,” Drift explained.
-
-“By this point, the relationship was nearly half a year old. These were not strangers; they were people Drift contributors had worked with and met in person.”
-
-The two sides continued to share information on projects and other apps they claimed to be building until April 1, when the $280 million theft was launched. Drift’s initial review of all affected devices led them back to their interactions with this trading group.
-
-One key piece of evidence is that the trading company scrubbed the entire Telegram chat with Drift after the exploit was launched.
-
-The investigation revealed several potential attack vectors. A contributor may have been compromised after copying a code repository shared by the trading firm. Another contributor was urged by the trading company to download a TestFlight application that may have been malicious. Drift shared a longer technical breakdown of the potential intrusion vectors.
-
-Drift said it is working with law enforcement and cybersecurity firm Mandiant on the investigation.
-
-All of the Drift’s functions have been frozen and the attacker’s wallets have been flagged across multiple exchanges and bridge operators.
-
-Investigators linked the Drift attack to the October 2024 theft of $50 million from crypto firm Radiant Capital based on where the stolen funds were sent and the overlaps in personas used during the operations.
-
-Michael Barnhart, an expert on North Korean cyber operations, told Recorded Future News that the Drift incident is intertwined with several other Pyongyang-led schemes to generate revenue.
-
-Barnhart, who spent years working on Mandiant’s investigation team and now leads nation-state threat intelligence at DTEX, said they have several people who were involved in the Drift investigation.
-
-“In this situation, we have three individuals that were duped, but one of them seems to be a little bit more malicious. They had the cutouts and three front guys, but what makes this one so interesting is that usually they would have front men — facilitators, laptop farmers, and people doing the analysis – typical things that a facilitator would do,” Barnhart said.
-
-“Based on our connections that are close to the Drift findings, they seem to think that two of the three people didn't realize what they were getting into. One of the three likely infected [Drift] with the malicious code intentionally due to the fact that he wiped his Telegram accounts afterwards, which shows that he knew what he was doing, but the other two seemed to be unwitting participants.”
-
-While Barnhart said the incident is “shocking to everyone,” the use of stand-ins and cutouts is in line with several previous North Korean operations.
-
-Barnhart compared the Drift operation to the 2017 assassination of Kim Jong-nam, the older half-brother of North Korean leader Kim Jong Un. Two women were duped into thinking they were participating in a prank show and agreed to spray liquid on Jong-nam’s face. The liquid was a VX nerve agent that ended up killing him about 30 minutes later.
-
-“We’ve seen cutouts but we’ve never seen the cutouts at this extreme, since North Korea has historically had their proxies do their dirty work,” he said.
-
-Barnhart noted that North Korea has become even more adept at schemes like that, often tricking Americans and other allies into participating in the long running IT worker scheme.
-
-U.S. officials, Microsoft and Google have long warned of attacks launched by AppleJeus, and attributed several incidents to the operation. The supply chain attack on enterprise phone company 3CX in 2023 was also attributed to the same group.
-
-The Justice Department and FBI said in 2021 North Korea has used websites that appeared to host legitimate cryptocurrency trading platforms to infect victims with AppleJeus malware since at least 2018.
-
-Google’s Threat Analysis Group published a report in 2022 on Operation AppleJeus, which involved the same exploit kit being used to target more than 85 users in the cryptocurrency and fintech industries.
-
-In 2024, Microsoft said it saw Citrine Sleet, their name for AppleJeus, targeting the cryptocurrency industry with a zero-day affecting the Chromium browser.
-
-The FBI has repeatedly said North Korea is earning billions through its targeting of the cryptocurrency industry, in some cases using the money stolen to fund its ballistics weapons program. North Korean groups stole more than $2 billion from crypto firms last year and netted $3 billion from attacks between 2017 and 2023, according to United Nations investigators.
-
-But unlike other operations, Barnhart called the Drift operation “the most sophisticated of all the situations” because it was such a long con.
-
-“The fact that the Drift incident is the magnitude that we're seeing is really interesting,” Barnhart said. “Because, I mean, it reads like a spy novel."
-
-is a Breaking News Reporter at Recorded Future News. Jonathan has worked across the globe as a journalist since 2014. Before moving back to New York City, he worked for news outlets in South Africa, Jordan and Cambodia. He previously covered cybersecurity at ZDNet and TechRepublic.
-
-(XXXXXXX, AÇIK - https://therecord.media/drift-crypto-theft-post-mortem-north-korea, therecord.media, 10.04.2026)
-
-================================================================================
-
-[15] The Record - Florida investigates OpenAI for role ChatGPT may have played in deadly shooting
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 10 Apr 2026 14:07:00 GMT
-Link: https://therecord.media/florida-investigates-openai-chatgpt-deadly-shooting
-
-[TAM METİN - 519 kelime]
-Florida investigates OpenAI for role ChatGPT may have played in deadly shooting
-
-Florida Attorney General James Uthmeier announced Thursday that he plans to probe OpenAI’s ChatGPT chatbot for potentially playing a role in a mass shooting at Florida State University last year.
-
-Last week, the family of one of two victims in the attack announced it plans to sue OpenAI because the gunman allegedly constantly communicated with ChatGPT in the days leading to the shootings. A lawyer for the victim’s family told a Florida TV station he has “reason to believe that ChatGPT may have advised the shooter how to commit these heinous crimes.”
-
-Uthmeier posted a statement on X announcing his office’s investigation, saying that legislators and AI companies must do more to ensure their products don’t threaten individuals’ safety.
-
-“ChatGPT may likely have been used to assist the murderer in the recent mass school shooting at Florida State University that tragically took two lives,” Uthmeier said in a videotaped announcement. “AI should exist to supplement, support and advance mankind, not lead to an existential crisis or our ultimate demise.”
-
-Uthmeier said that he plans to issue subpoenas in the coming days.
-
-An OpenAI spokesperson said in a statement that more than 900 million people use ChatGPT each week to learn new skills or get health care advice.
-
-“Our ongoing safety work continues to play an important role in delivering these benefits to everyday people, as well as supporting scientific research and discovery,” the statement said. “We build ChatGPT to understand people's intent and respond in a safe and appropriate
-
-way, and we continue improving our technology.”
-
-OpenAI will cooperate with the investigation, the statement said.
-
-AI chatbots have allegedly played a role in a number of suicides and murders, according to victims’ families.
-
-Psychologists have said they believe ChatGPT and similar technologies can lead to so-called AI psychosis by amplifying delusions in users who communicate with chatbots about irrational fears or their desire to kill themselves.
-
-In one such case, Connecticut man Stein-Erik Soelberg, who had a history of mental illness, reportedly killed his mother and himself after ChatGPT allegedly egged on his paranoia that he was being surveilled.
-
-“Erik, you’re not crazy,” OpenAI allegedly told Soelberg. “Your instincts are sharp and your vigilance here is fully justified.”
-
-In January, relatives of a Colorado man who took his own life in November claimed that ChatGPT encouraged him to kill himself. The case is one of multiple instances of relatives saying ChatGPT encouraged their loved ones to commit suicide.
-
-Kentucky filed a lawsuit against a different chatbot company, Character.AI, in January for allegedly endangering children, saying in a complaint that chatbots are “dangerous technology that induces users into divulging their most private thoughts and emotions and manipulates them with too frequently dangerous interactions and advice.”
-
-is a reporter covering digital privacy, surveillance technologies and cybersecurity policy for The Record. She was previously a cybersecurity reporter at CyberScoop. Earlier in her career Suzanne covered the Boston Police Department for the Boston Globe and two presidential campaign cycles for Newsweek. She lives in Washington with her husband and three children.
-
-(XXXXXXX, AÇIK - https://therecord.media/florida-investigates-openai-chatgpt-deadly-shooting, therecord.media, 10.04.2026)
-
-================================================================================
-
-[16] The Record - UK says it exposed Russian submarine activity near undersea cables
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Fri, 10 Apr 2026 13:03:00 GMT
-Link: https://therecord.media/uk-says-it-exposed-russian-submarine-activity
-
-[TAM METİN - 596 kelime]
-UK says it exposed Russian submarine activity near undersea cables
+This report is updated as the situation evolves across the geopolitical, cyber, and influence operations dimensions of this conflict. It will be of greatest interest to organizations in the US, Israel, and Gulf states concerned about targeting by Iranian state-sponsored or state-aligned threat actors, as well as those with exposure to energy markets, maritime shipping, and critical infrastructure potentially impacted by</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.recordedfuture.com/blog/the-iran-war-what-you-need-to-know" target="_blank">recordedfuture.com</a>, 03.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-2">
+<div class="news-title"><b>UK says it exposed Russian submarine activity near undersea cables</b></div>
+<p class="news-content">UK says it exposed Russian submarine activity near undersea cables
 
 The British government said Thursday it had exposed what it described as a covert Russia submarine operation around pipelines and cables in waters north of the United Kingdom.
 
 A Russian attack submarine and vessels from the country’s Main Directorate of Deep Sea Research (GUGI) were involved in what the UK Ministry of Defence called “nefarious activity over critical undersea infrastructure elsewhere.”
 
-The MoD said GUGI operates specialized deep-sea units that survey underwater infrastructure during peacetime in preparation for sabotage during a conflict.
-
-UK Defense Secretary John Healey said British ships, aircraft and allied forces tracked the three Russian submarines over several weeks and dropped sonobuoys to inform the submarine units they were being monitored and their mission was “no longer covert as Putin had planned.”
-
-The Russian vessels “subsequently retreated home, having failed to complete their operation in secrecy,” said the MoD.
-
-Officials did not report any damage to undersea infrastructure.
-
-Healey said the Russian activity threatened both pipelines and cables but declined to specify where it took place. There are no pipelines north of the United Kingdom, with the most critical energy connections running through the North Sea on the country’s east coast to Norway.
-
-The Defense Secretary stated: “To Putin, I say this: we see you, we see your activity over our underwater infrastructure. You should know that any attempt to damage it will not be tolerated and would have serious consequences.”
-
-The British government said the activity formed part of a wider effort by Russia to operate in areas where critical seabed infrastructure is located. It said it disclosed the details to draw attention to the potential risks such activity poses to the UK’s connectivity.
-
-“Undersea fibre-optic cables connect the UK to the world,” the Ministry of Defence said in a statement. “Over 99% of international data — from communications to trade — travels through subsea infrastructure. Protecting it is vital to the UK’s economic security, global connectivity and national resilience.”
-
-John Hardie, the Russia program deputy director at the Foundation for Defense of Democracies, said: “GUGI, which has dedicated seabed warfare capabilities, has long engaged in suspicious activity near undersea cables. Russia can use these vessels to place wiretaps or collect intelligence to support contingency planning to disrupt NATO communications in the event of war.”
-
-The UK is not only itself dependent on subsea cables for its own connectivity to the rest of the world but also a major hub for transatlantic data, with cables linking North America and Europe landing at a limited number of British coastal sites, making the country both strategically vital and potentially vulnerable.
-
-Western officials have increasingly warned that such infrastructure could be targeted as part of so-called hybrid warfare, particularly since Russia’s full-scale invasion of Ukraine in 2022. A spate of data cable breaks in the Baltic Sea have provoked concerns about sabotage, although European officials are increasingly certain these have been accidental.
-
-The latest developments highlight the intersection of physical and cyber security, as damage to undersea cables could disrupt financial systems, communications and essential services far beyond the immediate area of any incident.
-
-British officials say they will continue to increase surveillance and cooperation with allies to safeguard undersea infrastructure, which they describe as a cornerstone of national security in an increasingly contested maritime environment.
-
-is the UK Editor for Recorded Future News. He was previously a technology reporter for Sky News and a fellow at the European Cyber Conflict Research Initiative, now Virtual Routes. He can be reached securely using Signal on: AlexanderMartin.79
-
-(XXXXXXX, AÇIK - https://therecord.media/uk-says-it-exposed-russian-submarine-activity, therecord.media, 10.04.2026)
-
-================================================================================
-
-
-================================================================================
-SOSYAL MEDYA SİNYALLERİ — HABER DEĞİL, SADECE REFERANS KAYDI
-[S1]-[S5] etiketleri haber sayılmaz, Gemini bu bölümü işlemez.
-================================================================================
-
-[S1] GitHub Advisory | Skor: 50.0 | Yorum: 0
-Baslik: Daptin has Unauthenticated Path Traversal and Zip Slip
-Link: https://github.com/advisories/GHSA-9cp7-j3f8-p5jx
-### Impact
-The `cloudstore.file.upload` action in `server/actions/action_cloudstore_file_upload.go` writes user-supplied filenames directly to disk without proper validation. 
-
-This allows unauthentic
-
-[S2] Mastodon | Skor: 1 | Yorum: 0
-Baslik: Possible Phishing 🎣 on: ⚠️hxxps[:]//docs[.]google[.]com/presentation/d/e/2PACX-1vQmOg5XZdPssyqYb71EEAE06-VUBU0T7hwOUTn82TbpQShS1l20FhKanOtrEDx-9B2G9WHotUW7LNpZ/pub?start=false&amp;loop=false&amp;delay
-Link: https://infosec.exchange/@urldna/116390678331213413
-
-[S3] Mastodon | Skor: 1 | Yorum: 0
-Baslik: Possible Phishing 🎣 on: ⚠️hxxp[:]//www[.]metamsklogunexx[.]godaddysites[.]com/ 🧬 Analysis at: https:// urldna.io/scan/69db128f3b77500 0076e39da # cybersecurity # phishing # infosec # urldna # scam # i
-Link: https://infosec.exchange/@urldna/116390560462939543
-
-[S4] Mastodon | Skor: 1 | Yorum: 0
-Baslik: Possible Phishing 🎣 on: ⚠️hxxps[:]//g81ykq[.]webwave[.]dev 🧬 Analysis at: https:// urldna.io/scan/69dac4853b77500 003d9235e # cybersecurity # phishing # infosec # urldna # scam # infosec
-Link: https://infosec.exchange/@urldna/116390442341297516
-
-[S5] Mastodon | Skor: 1 | Yorum: 0
-Baslik: The OT/IT collision is here. This week’s Cyber Mind Brief covers the 10PB NSCC data heist, Iranian actors targeting Rockwell PLCs, and active Adobe zero-days. Is your iron ready? Read the full forensi
-Link: https://infosec.exchange/@thecybermind/116390433801448976
-
-[S6] Mastodon | Skor: 1 | Yorum: 0
-Baslik: DesckVB RAT Uses Windows' Own Tools to Stay Hidden and Leaves Almost Nothing Behind https:// hackingpassion.com/desckvb-rat -fileless-malware-2026/ Read on HackerWorkspace: https:// hackerworkspace.co
-Link: https://infosec.exchange/@hackerworkspace/116390425735805182
-
-[S7] Reddit: r/cybersecurity | Skor: 25 | Yorum: 0
-Baslik: FAANG security engineer getting ready for layoffs. For senior folks in this sub, how is my studying plan?
-Link: https://www.reddit.com/r/cybersecurity/comments/1sj6v36/faang_security_engineer_getting_ready_for_layoffs/
-
-[S8] Reddit: r/cybersecurity | Skor: 24 | Yorum: 0
-Baslik: Is LinkedIn actually worth it, or does it just make you feel behind?
-Link: https://www.reddit.com/r/cybersecurity/comments/1sihr2y/is_linkedin_actually_worth_it_or_does_it_just/
-
-[S9] Reddit: r/cybersecurity | Skor: 23 | Yorum: 0
-Baslik: CPU-Z and HWMonitor watering hole infection – a copy-pasted attack
-Link: https://www.reddit.com/r/cybersecurity/comments/1sj81ve/cpuz_and_hwmonitor_watering_hole_infection_a/
-
-[S10] Reddit: r/cybersecurity | Skor: 22 | Yorum: 0
-Baslik: Zero Data Retention is not optional anymore
-Link: https://www.reddit.com/r/cybersecurity/comments/1sitxw0/zero_data_retention_is_not_optional_anymore/
-
-[S11] Reddit: r/cybersecurity | Skor: 21 | Yorum: 0
-Baslik: Blue team question: How would you detect a low-and-slow attacker blending into normal traffic?
-Link: https://www.reddit.com/r/cybersecurity/comments/1siixkw/blue_team_question_how_would_you_detect_a/
-
+The MoD said GUGI operate</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/uk-says-it-exposed-russian-submarine-activity" target="_blank">therecord.media</a>, 10.04.2026)</b></p>
 </div>
+<div class="news-item" id="haber-3">
+<div class="news-title"><b>CPUID Breach Distributes STX RAT via Trojanized CPU-Z and HWMonitor Downloads</b></div>
+<p class="news-content">Unknown threat actors compromised CPUID ("cpuid[.]com"), a website that hosts popular hardware monitoring tools like CPU-Z, HWMonitor, HWMonitor Pro, and PerfMonitor, for less than 24 hours to serve malicious executables for the software and deploy a remote access trojan called STX RAT.
+
+The incident lasted from approximately April 9, 15:00 UTC, to about April 10, 10:00 UTC, with the download URLs for CPU-Z and HWMonitor installers replaced with links to malicious websites.
+
+In a post shared on</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/04/cpuid-breach-distributes-stx-rat-via.html" target="_blank">thehackernews.com</a>, 12.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-4">
+<div class="news-title"><b>GlassWorm evolves with Zig dropper to infect multiple developer tools</b></div>
+<p class="news-content">GlassWorm evolves with Zig dropper to infect multiple developer tools
+
+The GlassWorm campaign uses a Zig-based dropper hidden in a fake IDE extension to infect developer tools and compromise systems.
+
+The GlassWorm campaign, active since 2025, has evolved from malicious npm packages to large-scale supply chain attacks across GitHub, npm, and VS Code, even deploying RATs via fake browser extensions.
+
+In its latest iteration, threat actors used a malicious OpenVSX extension impersonating WakaTime,</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/190638/malware/glassworm-evolves-with-zig-dropper-to-infect-multiple-developer-tools.html" target="_blank">securityaffairs.com</a>, 11.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-5">
+<div class="news-title"><b>‘It reads like a spy novel’: $280 million theft from Drift involved North Korean fake companies, cutouts</b></div>
+<p class="news-content">‘It reads like a spy novel’: $280 million theft from Drift involved North Korean fake companies, cutouts
+
+The Drift cryptocurrency platform published its full post-mortem this week describing an extensive, months-long operation by North Korean hackers that culminated in the theft of more than $280 million.
+
+Drift officials said the operation began six months ago, when they were approached at a cryptocurrency conference by members of a company claiming to focus on quantitative trading. The compan</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/drift-crypto-theft-post-mortem-north-korea" target="_blank">therecord.media</a>, 10.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-6">
+<div class="news-title"><b>CVE-2026-39987: Marimo RCE exploited in hours after disclosure</b></div>
+<p class="news-content">CVE-2026-39987: Marimo RCE exploited in hours after disclosure
+
+A critical flaw, tracked as CVE-2026-39987, in the open-source Python notebook tool Marimo was exploited within 10 hours of disclosure.
+
+A critical flaw in Marimo, tracked as CVE-2026-39987 (CVSS score of 9.3) was exploited just 10 hours after disclosure (On April 8, 2026). Sysdig Threat Research Team observed exploitation of the Marimo flaw within 9 hours and 41 minutes of disclosure, with credential theft completed in under 3 minu</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/190623/hacking/cve-2026-39987-marimo-rce-exploited-in-hours-after-disclosure.html" target="_blank">securityaffairs.com</a>, 11.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-7">
+<div class="news-title"><b>Adobe Patches Actively Exploited Acrobat Reader Flaw CVE-2026-34621</b></div>
+<p class="news-content">Adobe has released emergency updates to fix a critical security flaw in Acrobat Reader that has come under active exploitation in the wild.
+
+The vulnerability, assigned the CVE identifier CVE-2026-34621, carries a CVSS score of 8.6 out of 10.0. Successful exploitation of the flaw could allow an attacker to run malicious code on affected installations.
+
+It has been described as a case of prototype pollution that could result in arbitrary code execution. Prototype pollution refers to a JavaScript</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/04/adobe-patches-actively-exploited.html" target="_blank">thehackernews.com</a>, 12.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-8">
+<div class="news-title"><b>January 2026 CVE Landscape: 23 Critical Vulnerabilities Mark 5% Increase, APT28 Exploits Microsoft Office Zero-Day</b></div>
+<p class="news-content">January 2026 CVE Landscape: 23 Critical Vulnerabilities Mark 5% Increase, APT28 Exploits Microsoft Office Zero-Day
+
+January 2026 saw a modest 5% increase in high-impact vulnerabilities, with Recorded Future's Insikt Group® identifying 23 vulnerabilities requiring immediate remediation, up from 22 in December 2025. Noteworthy trends last month included Russian state-sponsored exploitation of a Microsoft Office zero-day and critical authentication bypass flaws affecting enterprise infrastructure.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.recordedfuture.com/blog/january-2026-cve-landscape" target="_blank">recordedfuture.com</a>, 24.02.2026)</b></p>
+</div>
+<div class="news-item" id="haber-9">
+<div class="news-title"><b>Senator launches inquiry into 8 tech giants for failures to adequately report CSAM</b></div>
+<p class="news-content">Senator launches inquiry into 8 tech giants for failures to adequately report CSAM
+
+Senate Judiciary Committee chair Chuck Grassley (R-IA) has launched a congressional inquiry into eight tech giants for allegedly neglecting to supply adequate information to a cyber tipline aimed at detecting the exchange of child sexual abuse materials (CSAM) on their platforms.
+
+Grassley said his inquiry follows reports from the National Center for Missing and Exploited Children (NCMEC) that allege the tech gia</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/senator-launches-inquiry-into-tech-giants-csam" target="_blank">therecord.media</a>, 10.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-10">
+<div class="news-title"><b>Over 20,000 crypto fraud victims identified in international crackdown</b></div>
+<p class="news-content">An international law enforcement action led by the U.K.'s National Crime Agency (NCA) has identified over 20,000 victims of cryptocurrency fraud across Canada, the United Kingdom, and the United States.
+
+Dubbed "Operation Atlantic," this joint action took place last month, and it involved the NCA, the U.S. Secret Service, the Ontario Provincial Police, the Ontario Securities Commission, and multiple private industry partners.
+
+"The NCA hosted law enforcement agencies at their London HQ and throu</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/police-identifies-20-000-victims-in-international-crypto-fraud-crackdown/" target="_blank">bleepingcomputer.com</a>, 11.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-11">
+<div class="news-title"><b>Florida, OpenAI ChatGPT'nin Cinayetteki Rolünü Soruşturmuştur</b></div>
+<p class="news-content">Florida Başsavcısı James Uthmeier, geçtiğimiz yıl Florida Eyalet Üniversitesi'nde meydana gelen ve iki kişinin hayatını kaybettiği toplu silahlı saldırıda OpenAI'nin ChatGPT sohbet robotunun potansiyel rolünü soruşturma kararı almıştır. Kurbanlardan birinin ailesi, saldırganın cinayetlerden önceki günlerde ChatGPT ile sürekli iletişim halinde olduğunu iddia ederek OpenAI'ye dava açmayı planladığını duyurmuştur. Ailenin avukatı, ChatGPT'nin saldırgana "bu iğrenç suçları nasıl işleyeceği konusunda tavsiyede bulunmuş olabileceğine" inandığını belirtmiştir. Başsavcı Uthmeier, X platformunda yaptığı açıklamada ve video duyurusunda, yasa koyucuların ve yapay zeka şirketlerinin ürünlerinin bireylerin güvenliğini tehdit etmemesini sağlamak için daha fazlasını yapması gerektiğini vurgulamıştır. OpenAI sözcüsü ise, ChatGPT'nin her hafta 900 milyondan fazla kişi tarafından kullanıldığını, güvenli ve uygun bir şekilde yanıt vermek üzere tasarlandığını ve soruşturmayla işbirliği yapacağını açıklamıştır.
+
+Bu olay, yapay zeka sohbet robotlarının intiharlar ve cinayetler gibi ciddi vakalarda oynadığı iddia edilen rollerle ilgili endişeleri yeniden gündeme getirmiştir. Psikologlar, ChatGPT ve benzeri teknolojilerin, kullanıcıların sanrılarını güçlendirerek "yapay zeka psikozu"na yol açabileceğine inanmaktadır. Daha önce Connecticut'ta Stein-Erik Soelberg'in, ChatGPT'nin paranoyasını körüklemesi sonucu annesini ve kendisini öldürdüğü iddia edilmiştir. Benzer şekilde, Ocak ayında Colorado'da bir adamın intihar etmesinde ChatGPT'nin teşvik edici rol oynadığı öne sürülmüştür. Ayrıca Kentucky eyaleti, çocukları tehlikeye attığı iddiasıyla farklı bir sohbet robotu şirketi olan Character.AI'ye dava açmıştır. Başsavcı Uthmeier, soruşturma kapsamında önümüzdeki günlerde celp çıkaracağını belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/florida-investigates-openai-chatgpt-deadly-shooting" target="_blank">therecord.media</a>, 10.04.2026)</b></p>
+</div>
+</div>
+</div>
+<a class="back-to-top" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;" title="Başa Dön">↑</a>
+
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-04-12.html" class="archive-link">12.04.2026</a>
+            <a href="./2026-04-10.html" class="archive-link">10.04.2026</a>
+            <a href="./2026-04-08.html" class="archive-link">08.04.2026</a>
+            <a href="./2026-04-07.html" class="archive-link">07.04.2026</a>
+            <a href="./2026-04-06.html" class="archive-link">06.04.2026</a>
+            <a href="./2026-04-05.html" class="archive-link">05.04.2026</a>
+            <a href="./2026-04-04.html" class="archive-link">04.04.2026</a>
+            <a href="./2026-04-03.html" class="archive-link">03.04.2026</a>
+            <a href="./2026-04-02.html" class="archive-link">02.04.2026</a>
+            <a href="./2026-04-01.html" class="archive-link">01.04.2026</a>
+            <a href="./2026-03-31.html" class="archive-link">31.03.2026</a>
+            <a href="./2026-03-30.html" class="archive-link">30.03.2026</a>
+            <a href="./2026-03-29.html" class="archive-link">29.03.2026</a>
+            <a href="./2026-03-28.html" class="archive-link">28.03.2026</a>
+            <a href="./2026-03-27.html" class="archive-link">27.03.2026</a>
+            <a href="./2026-03-26.html" class="archive-link">26.03.2026</a>
+            <a href="./2026-03-25.html" class="archive-link">25.03.2026</a>
+            <a href="./2026-03-24.html" class="archive-link">24.03.2026</a>
+            <a href="./2026-03-23.html" class="archive-link">23.03.2026</a>
+            <a href="./2026-03-22.html" class="archive-link">22.03.2026</a>
+            <a href="./2026-03-21.html" class="archive-link">21.03.2026</a>
+            <a href="./2026-03-20.html" class="archive-link">20.03.2026</a>
+            <a href="./2026-03-19.html" class="archive-link">19.03.2026</a>
+            <a href="./2026-03-18.html" class="archive-link">18.03.2026</a>
+            <a href="./2026-03-17.html" class="archive-link">17.03.2026</a>
+            <a href="./2026-03-16.html" class="archive-link">16.03.2026</a>
+            <a href="./2026-03-15.html" class="archive-link">15.03.2026</a>
+            <a href="./2026-03-14.html" class="archive-link">14.03.2026</a>
+        </div>
+    </div>
+
 </body>
 </html>
