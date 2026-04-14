@@ -639,9 +639,26 @@ class HaberSistemi:
                                 category='HARM_CATEGORY_DANGEROUS_CONTENT',
                                 threshold='BLOCK_ONLY_HIGH',
                             ),
+                            genai_types.SafetySetting(
+                                category='HARM_CATEGORY_HARASSMENT',
+                                threshold='BLOCK_ONLY_HIGH',
+                            ),
+                            genai_types.SafetySetting(
+                                category='HARM_CATEGORY_HATE_SPEECH',
+                                threshold='BLOCK_ONLY_HIGH',
+                            ),
+                            genai_types.SafetySetting(
+                                category='HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                                threshold='BLOCK_ONLY_HIGH',
+                            ),
                         ],
                     ),
                 )
+                # PROHIBITED_CONTENT: içerik filtresi tetiklendi, retry faydasız
+                if (response.candidates and
+                        response.candidates[0].finish_reason.name == 'PROHIBITED_CONTENT'):
+                    print(f"   [{label}] ⚠️  İçerik filtresi (PROHIBITED_CONTENT) — sonraki model deneniyor.")
+                    continue
                 raw = response.text or ''
                 data = _extract_json_from_text(raw)
                 print(f"   [{label}] ✅ Başarılı.")
