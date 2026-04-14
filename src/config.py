@@ -64,6 +64,8 @@ def get_deep_analysis_prompt(articles_full):
     """
     return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri TAM METİN ile analiz et.
 
+⚠️ DİL KURALI: Tüm çıktılar YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile yanıt kesinlikle Türkçe yazılacak.
+
 Her haber için iki şey üret:
 1. TR_BASLIK: Türkçe eylem cümlesi başlığı
    - 6-9 kelime, her kelimenin ilk harfi büyük
@@ -101,6 +103,8 @@ def get_summary_batch_prompt(articles_full):
     articles_full: "=== HABER ID: N ===\\nKaynak: ...\\nTAM METİN:\\n..." formatında string.
     """
     return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri TAM METİN ile analiz et.
+
+⚠️ DİL KURALI: Tüm çıktılar YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile yanıt kesinlikle Türkçe yazılacak.
 
 Her haber için:
 1. TR_BASLIK: Türkçe eylem cümlesi başlığı
