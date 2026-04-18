@@ -12473,3 +12473,148 @@ OpenAI, en son amiral gemisi modeli GPT-5.4'ün özellikle savunma siber güvenl
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 18 APRIL 2026 - EN ÖNEMLİ 43 HABER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] İran Kaynaklı Siber Riskler Artış Göstermiştir ve Kritik Altyapılar Hedeflenmiştir.
+─────────────────────────────────────────────────────────
+Unit 42'nin raporu, İran ile ilişkili siber risklerin önemli ölçüde yükseldiğini belirtmiştir. Tehdit aktörleri, Rockwell Automation'ın operasyonel teknoloji (OT) ve endüstriyel kontrol sistemleri (ICS) ekipmanlarını hedef almıştır. Bu durum, fidye yazılımları, veri silme saldırıları ve kimlik avı kampanyaları gibi çok yönlü tehditleri içermektedir. Özellikle CL-STA-1128 olarak izlenen yeni bir tehdit kümesi, FactoryTalk yazılımındaki güvenlik açıklarını kullanarak istismar faaliyetlerini genişletmiştir. CISA da bu bulguları teyit ederek Allen-Bradley PLC'lerinin istismar edildiğini açıklamıştır. Rapor, İran'ın 47 günlük internet kesintisinin ardından sınırlı erişimi restore etmeye başladığını ve bu süreçte dışarıdan destekli hacktivist grupların faaliyetlerini artırdığını vurgulamıştır. Hedefler arasında finansal kurumlar, telekomünikasyon sağlayıcıları ve kritik enerji şirketleri bulunmaktadır. Ayrıca, bölgedeki gerginliğin artmasıyla birlikte, saldırganların yanıltıcı bağış kampanyaları ve kripto para dolandırıcılıkları gibi finansal sahtekarlıklara da başvurduğu gözlemlenmiştir. Unit 42, bu tür tehditlere karşı çok katmanlı savunma stratejilerinin uygulanmasını, veri yedekleme ve kurtarma prosedürlerinin test edilmesini önermiştir.
+(XXXXXXX, AÇIK -unit42.paloaltonetworks.com, 18.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] ZionSiphon Zararlı Yazılımı İsrail Su Sistemlerini Hedef Almıştır.
+─────────────────────────────────────────────────────────
+Darktrace tarafından analiz edilen ZionSiphon adlı yeni bir zararlı yazılım, İsrail'deki su arıtma ve tuzdan arındırma sistemlerini hedef almıştır. Bu kötü amaçlı yazılım, hidrolik basıncı değiştirmek ve klor seviyelerini tehlikeli düzeylere çıkarmak suretiyle operasyonel kesintilere yol açmayı amaçlamıştır. Zararlı yazılım, ayrıcalık yükseltme, kalıcılık sağlama ve çıkarılabilir medyalar aracılığıyla yayılma gibi yaygın teknikleri, operasyonel teknoloji (OT) ortamlarına özgü mantıkla birleştirmektedir. ZionSiphon, ağları OT hizmetleri için taramakta, konfigürasyonları değiştirmekte ve kodunda yer alan siyasi mesajlar ile hardcoded IP aralıkları kullanarak İsrail hedeflerine odaklanmaktadır. Ancak, uygulamanın bazı bölümlerinin eksik olduğu, bu durumun yazılımın hala geliştirme aşamasında olabileceğini düşündürmüştür. Özellikle, zararlı yazılımın hedef ülke doğrulama mantığında bir hata bulunmuştur; bu hata nedeniyle yazılım, geçerli hedeflerde bile yükünü etkinleştirememektedir. Buna rağmen, ZionSiphon'un kritik altyapıyı hedefleyen OT odaklı zararlı yazılımların artan trendini temsil ettiği belirtilmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Üç Microsoft Defender Sıfır Gün Açığı Aktif Olarak İstismar Edilmiştir.
+─────────────────────────────────────────────────────────
+Huntress, tehdit aktörlerinin Microsoft Defender'daki yakın zamanda açıklanan üç güvenlik açığını aktif olarak istismar ettiğini bildirmiştir. Bu açıklar, BlueHammer (CVE-2026-33825), RedSun ve UnDefend olarak kodlanmıştır. BlueHammer ve RedSun, yerel ayrıcalık yükseltme (LPE) zafiyetleri olarak tanımlanırken, UnDefend ise hizmet reddi (DoS) koşulunu tetikleyerek güvenlik tanımı güncellemelerini etkili bir şekilde engelleyebilmektedir. Microsoft, BlueHammer açığını bu hafta yayımlanan Patch Tuesday güncellemeleriyle gidermiştir; ancak RedSun ve UnDefend için henüz bir yama bulunmamaktadır. Huntress, bu üç zafiyetin de 10 Nisan 2026 tarihinden itibaren aktif olarak kullanıldığını gözlemlemiştir. Saldırganların, sistemlerde "whoami /priv" gibi tipik keşif komutlarını çalıştırdığı ve ardından bu zafiyetleri kullanarak ayrıcalıklarını yükseltmeye çalıştığı belirtilmiştir. Bu durum, siber güvenlik araştırmacısı Chaotic Eclipse'in Microsoft'un zafiyet açıklama sürecini eleştirmesi üzerine bu açıkların detaylarını kamuoyuyla paylaşmasının ardından meydana gelmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Ukrayna, APT28 Grubunun Savcıları ve Yolsuzlukla Mücadele Kurumlarını Hedef Aldığını Doğrulamıştır.
+─────────────────────────────────────────────────────────
+Ukraynalı siber güvenlik yetkilileri, Rusya destekli APT28 (Fancy Bear, BlueDelta veya Forest Blizzard olarak da bilinen) hacker grubunun, ülkedeki savcıları ve yolsuzlukla mücadele kurumlarını hedef alan uzun süreli bir siber casusluk kampanyası yürüttüğünü doğrulamıştır. Ukrayna Devlet Özel İletişim ve Bilgi Koruma Servisi (SSSCIP) başkanı Taras Dzyuba, bu saldırıların 2023'ten beri takip edildiğini ve üç ayrı saldırı dalgasından oluştuğunu belirtmiştir. Saldırganlar, açık kaynaklı Roundcube webmail platformundaki güvenlik açıklarını istismar ederek, kurbanların e-postalarını açmasıyla kötü amaçlı kod çalıştırmıştır. Bu sayede, bağlantılara tıklama veya ek indirme gibi ek eylemlere gerek kalmadan sistemlere sızılmıştır. Çalındığı iddia edilen bazı bilgilerin Mart ayında çevrimiçi olarak yayımlandığı, ancak bunların gizli veriler içerme ihtimalinin düşük olduğu ifade edilmiştir. Ukrayna makamları, Rusya'nın bu olayları dezenformasyon kampanyalarında kullanarak Ukrayna kurumlarını itibarsızlaştırma amacı güdebileceği konusunda uyarıda bulunmuştur.
+(XXXXXXX, AÇIK -therecord.media, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Londra'daki Sağlık Hizmetleri Fidye Yazılımı Saldırısından İki Yıl Sonra Bile Etkilenmeye Devam Etmiştir.
+─────────────────────────────────────────────────────────
+Qilin fidye yazılımı grubunun Haziran 2024'te Synnovis'e düzenlediği siber saldırıdan on sekiz aydan fazla bir süre sonra, Londra'daki sağlık hizmetleri hala ciddi aksaklıklar yaşamaktadır. Dahili belgelere göre, en az bir NHS (Ulusal Sağlık Sistemi) kurumu, sistemleri tam olarak restore edilemediği için çalışmaya devam etmiş ve gecikmiş test sonuçlarının büyük birikimleriyle mücadele etmiştir. Bu gecikmeler, kritik test sonuçlarının klinisyenler tarafından zamanında erişilememesine yol açarak hastaların teşhis ve tedavisinde riskleri artırmıştır. Saldırı, Güneydoğu Londra'daki kan testlerini olumsuz etkilemiş, hastanelerin ameliyatları iptal etmesine ve tedavileri ertelemesine neden olmuştur. Ayrıca, yaklaşık bir milyon NHS hastasına ait hassas verilerin çalındığı ve yayımlandığı bildirilmiştir. Bilgi Komisyonu Ofisi, olayla ilgili soruşturmasının devam ettiğini belirtmiştir.
+(XXXXXXX, AÇIK -therecord.media, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Popüler Thymeleaf Java Şablon Motorunda Kritik Bir Sandbox Bypass Güvenlik Açığı Giderilmiştir.
+─────────────────────────────────────────────────────────
+Yaygın olarak kullanılan Thymeleaf Java şablon motorunun bakıcıları, kimlik doğrulaması yapılmamış saldırganların sunucularda kötü amaçlı kod çalıştırmasına olanak tanıyan kritik bir güvenlik açığını gidermiştir. CVE-2026-40478 olarak izlenen bu zafiyet, CVSS ölçeğinde 9.1 puan almıştır ve Sunucu Tarafı Şablon Enjeksiyonu (SSTI) sorunu olarak tanımlanmıştır. Thymeleaf, kullanıcı girdisinin tehlikeli ifadeler çalıştırmasını önleyen bir sandbox benzeri koruma sağlamasına rağmen, bu açık saldırganların bu korumaları atlamasına izin vermiştir. Endor Labs araştırmacılarına göre, istismar basittir ve özel ayrıcalıklar veya koşullar gerektirmemektedir; saldırganların yalnızca Thymeleaf'in ifade motoruna ulaşan girdiyi kontrol etmesi yeterlidir. Zafiyet, Spring Expression Language (SpEL) ayrıştırıcısının ASCII boşluk (0x20) karakteri dışında tab (0x09) ve yeni satır (0x0A) gibi diğer kontrol karakterlerini de kabul etmesinden kaynaklanmıştır. Bu durum, saldırganların dosya oluşturma ve uzaktan kod yürütme gibi eylemler gerçekleştirmesine olanak tanımaktadır. Bu tür kolay istismar edilebilir zafiyetlerin, saldırganlar tarafından hızla benimseneceği öngörülmüştür.
+(XXXXXXX, AÇIK -csoonline.com, 18.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] CISA, Apache ActiveMQ Açığının Aktif Olarak İstismar Edildiğini Belirtmiştir.
+─────────────────────────────────────────────────────────
+ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), bu ayın başlarında yamalanan yüksek önem dereceli bir Apache ActiveMQ güvenlik açığının aktif olarak saldırılarda istismar edildiği konusunda uyarıda bulunmuştur. CVE-2026-34197 olarak izlenen bu zafiyet, 13 yıldır tespit edilememiş olup Horizon3 araştırmacısı Naveen Sunkavally tarafından bir yapay zeka asistanı kullanılarak keşfedilmiştir. Zafiyet, hatalı girdi doğrulamasından kaynaklanmakta ve kimliği doğrulanmış tehdit aktörlerinin enjeksiyon saldırıları yoluyla rastgele kod yürütmesine olanak tanımaktadır. Apache geliştiricileri, bu açığı 30 Mart'ta ActiveMQ Classic'in 6.2.3 ve 5.19.4 sürümlerinde yamalamıştır. CISA, bu zafiyeti Bilinen İstismar Edilen Zafiyetler (KEV) kataloğuna eklemiş ve Federal Sivil Yürütme Organı (FCEB) ajanslarına ActiveMQ sunucularını 30 Nisan'a kadar yamalama talimatı vermiştir. Horizon3 araştırmacıları, istismar belirtilerinin ActiveMQ aracı günlükleri analiz edilerek tespit edilebileceğini belirtmiştir. Bu tür zafiyetlerin siber tehdit aktörleri için sıkça kullanılan bir saldırı vektörü olduğu vurgulanmıştır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Payouts King Fidye Yazılımı, Uç Nokta Güvenliğini Aşmak İçin QEMU Sanal Makinelerini Kullanmıştır.
+─────────────────────────────────────────────────────────
+Payouts King fidye yazılımı, tehlikeye atılmış sistemlerde uç nokta güvenliğini atlatmak amacıyla QEMU öykünücüsünü ters SSH arka kapısı olarak kullanmaktadır. Bu yöntem, gizli sanal makinelerin (VM) çalıştırılmasına olanak tanımaktadır. QEMU, açık kaynaklı bir CPU öykünücüsü ve sistem sanallaştırma aracıdır; bu sayede işletim sistemleri ana bilgisayarda sanal makineler olarak çalıştırılabilir. Güvenlik çözümleri sanal makinelerin içini tarayamadığı için, saldırganlar bu yöntemi kötü amaçlı yükleri yürütmek, zararlı dosyaları depolamak ve SSH üzerinden gizli uzaktan erişim tünelleri oluşturmak için kullanabilmektedir. Sophos araştırmacıları, Payouts King fidye yazılımı operasyonuyla bağlantılı STAC4713 kampanyasında ve CitrixBleed 2 (CVE‑2025‑5777) zafiyetini istismar eden STAC3725 kampanyasında QEMU'nun kullanıldığını belgelemiştir. STAC4713 kampanyasında, tehdit aktörleri Alpine Linux VM'lerini çalıştırarak AdaptixC2, Chisel ve Rclone gibi araçları kullanmıştır. Saldırganların başlangıç erişimini açıkta kalan SonicWall VPN'leri üzerinden sağladığı ve daha sonra SolarWinds Web Help Desk zafiyetini (CVE-2025-26399) istismar ettiği gözlemlenmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Grinex Kripto Borsası, 13.7 Milyon Dolarlık Siber Soygundan Batı İstihbaratını Sorumlu Tutmuştur.
+─────────────────────────────────────────────────────────
+Kırgızistan merkezli kripto para borsası Grinex, 13.7 milyon dolarlık bir siber soygunun ardından faaliyetlerini askıya almıştır. Borsa, bu saldırıdan Batı istihbarat teşkilatlarını sorumlu tuttuğunu açıklamıştır. Çalınan fonlar, platformda Rus kullanıcılara ait kripto cüzdanlarından elde edilmiştir. Grinex, Rus işletmeleri ve bireyleri arasında kripto-ruble değişim operasyonlarını mümkün kılan bir platformdur. Geçtiğimiz yıl ABD Hazine Bakanlığı, Grinex'e yaptırım uygulamıştır; çünkü borsa, yasa dışı işlemler ve para aklama iddiaları nedeniyle yönetimi tutuklanan Rus kripto borsası Garantex'in devamı niteliğinde değerlendirilmiştir. Grinex, saldırının tipinin ve dijital ayak izinin "düşman devletlerin erişebileceği benzeri görülmemiş kaynaklara ve teknolojiye sahip yabancı istihbarat teşkilatlarıyla" ilişkili bir tehdit aktörünü işaret ettiğini belirtmiştir. Blockchain analiz firması Elliptic, çalınan fonların TRON ve Ethereum adreslerine gönderildiğini ve ardından SunSwap protokolü aracılığıyla TRX ve ETH'ye dönüştürüldüğünü rapor etmiştir. TRM Labs, Grinex ile bağlantılı başka bir Kırgızistan merkezli borsa olan TokenSpot'ta da ikinci bir hack tespit etmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Operation PowerOFF Kapsamında 53 DDoS Alan Adı Ele Geçirilmiş ve 3 Milyon Suçlu Hesap Tespit Edilmiştir.
+─────────────────────────────────────────────────────────
+Operation PowerOFF adı altında uluslararası bir kolluk kuvvetleri operasyonu düzenlenmiştir. Bu operasyon kapsamında, 53 adet DDoS kiralama hizmeti alan adı ele geçirilmiş ve 3 milyondan fazla suçlu kullanıcı hesabına ait veriye erişim sağlanmıştır. Operasyona 21 ülke katılmış, dört şüpheli tutuklanmış ve 25 arama emri uygulanmıştır. DDoS kiralama hizmetleri, kullanıcıların web sitelerini veya sunucuları trafikle boğarak hizmet kesintilerine neden olan saldırılar başlatmak için ödeme yapmalarına olanak tanıyan yasa dışı platformlardır. Europol'a göre, bu platformlar 75.000'den fazla siber suçlu tarafından kullanılmıştır. Ele geçirilen veritabanlarına erişim, siber suçlulara karşı küresel çapta koordineli eylemlerin yürütülmesine ve bu hizmetlerin yasa dışılığı konusunda farkındalığın artırılmasına yardımcı olmuştur. Yetkililer, DDoS saldırılarını durdurmak için güçlü bir önleme aşamasıyla operasyona devam etmektedir. Bu operasyon, okullar, hükümet kurumları, oyun platformları ve kritik altyapı dahil olmak üzere ABD ve yurtdışındaki çeşitli kurbanları hedef alan DDoS hizmetlerine karşı yürütülmüştür. Kolluk kuvvetleri, DDoS hizmetlerinin siber suç faaliyetlerine düşük giriş bariyeri sunması nedeniyle yayılmaya devam ettiğini kabul etmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] Hatalı Bir Cisco Güncellemesi Erişim Noktalarının Daha Fazla Yama Almasını Engellemiştir.
+─────────────────────────────────────────────────────────
+Cisco yöneticileri, 200'den fazla Cisco Systems IOS XE tabanlı kablosuz erişim noktası (AP) modelini etkileyen kritik bir flash bellek taşması zafiyetini gidermek için yoğun çaba sarf etmiştir. Bu zafiyet, yakın zamanda yayımlanan hatalı bir yazılım güncellemesinden kaynaklanmaktadır. Sorun hızla düzeltilmezse, AP'nin belleği o kadar dolacak ki, yeni yazılım güncellemeleri engellenecek ve AP güvensiz hale gelecek veya hatta kullanılamaz duruma gelecektir. Sorunlu kütüphane güncellemesi, etkilenen erişim noktalarının flash belleğindeki belirli bir günlük dosyasının günde yaklaşık 5MB büyümesine neden olmuştur. Zamanla, bu durum mevcut bellek alanının büyük bir kısmını tüketebilmektedir. Uzmanlar, bu durumun bir Catch-22 yarattığını belirtmiştir: hatayı düzeltmek için yazılımı yükseltmek gerekmekte, ancak hatanın kendisi cihazın düzeltmeyi indirecek kadar yeterli alana sahip olmasını engellemektedir. Etkilenen AP'ler arasında Cisco Catalyst 9130AX serisi ve diğer Wi-Fi 6 Outdoor AP'ler bulunmaktadır. Cisco, bu sorunu çözmek için WLANPoller adlı bir araç veya manuel müdahale yöntemleri sunmuştur. Siber güvenlik uzmanları, bu tür hatalı güncellemelerin tedarik zinciri bütünlüğü sorunları yarattığını ve donanım sağlık metriklerinin sürekli izlenmesinin önemini vurgulamıştır.
+(XXXXXXX, AÇIK -csoonline.com, 18.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] ABD Kongresi, Gözetim Yasası Section 702'yi Yeniden Yetkilendirme Konusunda Çözüme Ulaşamamıştır.
+─────────────────────────────────────────────────────────
+ABD Kongresi, bu ayın sonunda süresi dolacak olan Yabancı İstihbarat Gözetim Yasası'nın (FISA) 702. Bölümü'nün yenilenmesi konusunda bir çıkmaza girmiştir. Bu yasa, ABD istihbarat teşkilatlarına yabancı hedeflerin elektronik iletişimlerini mahkeme kararı olmaksızın izleme yetkisi vermektedir. Ancak en tartışmalı yönü, yasanın ABD yetkililerine, Amerikalıların kişisel bilgilerini kullanarak bu iletişim veritabanlarını arama (sorgulama) imkanı tanımasıdır, yeter ki Amerikalı kişi yurtdışındaki biriyle iletişim halinde olsun. Bu durum, önemli gizlilik endişeleri yaratmıştır. Yasanın destekçileri, 2024 tarihli "Reforming Intelligence and Securing America Act (RISAA)" adlı yasanın 702. Bölüm'e getirilen 56 değişikliğe işaret etmektedir. Ancak eleştirmenler, bu değişikliklerin gerçekte ne kadar etkili olduğunu ve bazı genişleme korkularının gerçekleşip gerçekleşmediğini bilmek için güvenilir bilgi olmadığını belirtmiştir. Temsilciler Meclisi, yasanın süresini 10 gün uzatan bir geçici yasayı onaylamış, Senato da aynı kararı almıştır. Bu durum, Trump yönetiminin 180 günlük 'temiz' bir yeniden yetkilendirme talebine karşı bir yenilgi olarak değerlendirilmiştir.
+(XXXXXXX, AÇIK -cyberscoop.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] Beyaz Saray, Federal Kurumlara Anthropic'in Claude Mythos Modeline Erişim Sağlamıştır.
+─────────────────────────────────────────────────────────
+ABD hükümeti, Anthropic'in Claude Mythos modelinin federal ajanslar tarafından kullanımına izin vermeye hazırlanmaktadır. Bu yapay zeka modelinin siber güvenlik zafiyetlerini hızla tespit etme ve potansiyel olarak istismar etme yeteneği nedeniyle endişeler bulunmaktadır. Beyaz Saray Yönetim ve Bütçe Ofisi (OMB) Federal Baş Bilgi Sorumlusu Gregory Barbaccia, Bloomberg'e sızdırılan dahili bir notta, OMB'nin federal ajansların modeli kullanmaya başlaması için korumalar oluşturduğunu belirtmiştir. Ancak notta, belirli ajansların konuşlandırılması veya bir zaman çizelgesi hakkında taahhütte bulunulmamıştır. Savunma Bakanlığı'nın Anthropic'e karşı 3 Mart'ta yayınladığı tedarik zinciri risk tanımı yürürlükte kalmasına rağmen, sivil ajanslara erişim sağlanması, modelin potansiyel faydaları ile güvenlik riskleri arasındaki dengeyi yansıtmaktadır. Uzmanlar, modelin federal dağıtımı için yazılım kod tabanının izole bir ortamda kalması ve verilerin temel modelin yeniden eğitilmesi için kullanılmaması gibi belirli güvence boyutlarını karşılaması gerektiğini belirtmiştir.
+(XXXXXXX, AÇIK -csoonline.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] Google, 2025 Yılında 8.3 Milyar Politika İhlali Yapan Reklamı Engellemiş ve Android 17 Gizlilik Yeniliklerini Başlatmıştır.
+─────────────────────────────────────────────────────────
+Google, 2025 yılında dünya genelinde 8.3 milyardan fazla politika ihlali yapan reklamı engellediğini ve 24.9 milyon hesabı askıya aldığını açıklamıştır. Bu süreçte, şirket kullanıcı gizliliğini güçlendirmek ve işletmeleri dolandırıcılığa karşı korumak amacıyla yeni Play Store politika güncellemelerini duyurmuştur. Yeni politikalar, Android'deki iletişim ve konum izinleriyle ilgilidir ve üçüncü taraf uygulamaların kullanıcıların kişi listelerine ve konumlarına daha gizlilik dostu bir şekilde erişmesine olanak tanımaktadır. Android 17 ile tanıtılan yeni Kişi Seçici (Contact Picker) özelliği, uygulamaların yalnızca seçilen belirli kişilere erişim izni vermesini sağlamıştır. Ayrıca, Google, kötü amaçlı reklamları tespit etmek ve engellemek için yapay zeka modeli Gemini'nin yeteneklerinden yararlandığını belirtmiştir. Gemini'nin niyet odaklı yeni modelleri, eski anahtar kelime tabanlı sistemlere göre daha karmaşık ve kaçamak tehditleri tespit etme konusunda daha başarılı olmuştur. Şirket, 2025 yılında 602 milyon dolandırıcılıkla ilişkili reklamı ve 4 milyon hesabı engellediğini veya kaldırdığını bildirmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] Ünlü Bir Şarkıcı, Apple App Store'dan İndirilen Sahte Kripto Cüzdan Uygulamasıyla Tüm Birikimini Kaybetmiştir.
+─────────────────────────────────────────────────────────
+G. Love olarak tanınan şarkıcı Garrett Dutton, Apple'ın resmi App Store'undan indirdiğine inandığı sahte bir Ledger Live uygulaması nedeniyle yaklaşık 440.000 ABD doları değerindeki 5.9 Bitcoin'ini kaybetmiştir. Dolandırıcı uygulama, şarkıcıyı kripto para birikimlerinin ana anahtarı olan "seed phrase"ini girmeye ikna etmiştir. Kripto para araştırmacısı ZackXBT, aynı sahte Ledger Live uygulamasının 7-13 Nisan tarihleri arasında 50'den fazla kurbandan yaklaşık 9.5 milyon ABD doları çalınmasıyla bağlantılı olduğunu ortaya koymuştur. Apple, uygulamayı 12 Nisan'da çevrimiçi mağazasından kaldırmıştır, ancak zarar çoktan meydana gelmiştir. Bu olay, Apple'ın App Store'daki uygulama denetimlerinin ne kadar kapsamlı olduğu konusunda ciddi soruları gündeme getirmiştir. Şarkıcı, kripto para konusunda acemi olmadığını belirtmiş ve Apple'a ulaşmaya çalışmış, ancak henüz bir yanıt alamamıştır. Uzmanlar, kullanıcıların seed phrase'lerini asla hiçbir uygulamaya veya web sitesine girmemeleri ve yeni bir cihaz kurarken özellikle dikkatli olmaları konusunda uyarmıştır.
+(XXXXXXX, AÇIK -bitdefender.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] Bluesky, Uygulama Kesintilerinin Devam Eden Bir DDoS Saldırısından Kaynaklandığını Doğrulamıştır.
+─────────────────────────────────────────────────────────
+Bluesky'nin web sitesi ve uygulaması, devam eden bir siber saldırı nedeniyle 15 Nisan akşamı başlayan hizmet kesintileriyle mücadele etmeye devam etmiştir. Sosyal medya şirketi, sorunların "sofistike bir Dağıtık Hizmet Reddi (DDoS) saldırısından" kaynaklandığını doğrulamıştır. DDoS saldırıları, genellikle uygulamaları veya web sitelerini büyük miktarda gereksiz web trafiğiyle bombardımana tutarak sunucuları aşırı yüklemeyi ve çevrimdışı bırakmayı amaçlamaktadır. Bluesky, özel verilere yetkisiz erişime dair herhangi bir kanıt tespit etmediğini belirtmiştir. Kesintiler aralıklı olarak yaşanmış, site ve uygulama bazen yavaş yüklenirken, bazen de hata mesajları göstermiştir. Bu durum, Discover veya resmi Bluesky Ekibi gibi popüler akışlarda sıkça görülmüştür. Bluesky protokol mühendisi Bryan Newbold, hizmetlerinin "bu gece oldukça sert bir darbe aldığını" ifade etmiştir. Kesintiler Bluesky'yi etkilemekle birlikte, merkezi olmayan sosyal ağı destekleyen temel protokol üzerinde kendi altyapılarını çalıştıran Blacksky gibi diğer topluluklar işlevselliğini sürdürmüştür.
+(XXXXXXX, AÇIK -techcrunch.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] ABD Yüksek Mahkemesi Dosyalama Sistemini Hackleyen Kişi Şartlı Tahliye Edilmiştir.
+─────────────────────────────────────────────────────────
+ABD Yüksek Mahkemesi'nin elektronik belge dosyalama sistemine aylarca düzinelerce kez sızdığını itiraf eden Nicholas Moore, bir yıl şartlı tahliye cezasına çarptırılmıştır. Moore ayrıca, bir hükümet kurumu olan AmeriCorps'un ağına ve askeri gazilere sağlık hizmeti sunan Gazi İşleri Bakanlığı'nın sistemlerine de sızmıştır. Moore, @ihackedthegovernment adlı Instagram hesabında hacklediği kişilerin kişisel bilgilerini yayımlayarak başarılarıyla övünmüştür. Bir kurbanının kimlik bilgilerini kullanarak ABD Yüksek Mahkemesi'nin elektronik belge dosyalama sistemine, AmeriCorps'a ve Gazi İşleri Bakanlığı'na erişim sağlamıştır. Başlangıçta bir yıl hapis ve 100.000 dolarlık para cezasıyla karşı karşıya kalmasına rağmen, savcılar daha sonra sadece şartlı tahliye talep etmiştir. Moore, mahkeme duruşması sırasında "Bir hata yaptım. Gerçekten üzgünüm. Yasalara saygı duyuyorum ve iyi bir vatandaş olmak istiyorum" şeklinde ifade vermiştir. Bu vaka, hükümet sistemlerinin güvenliği ve siber suçlulara verilen cezaların caydırıcılığı hakkında tartışmaları beraberinde getirmiştir.
+(XXXXXXX, AÇIK -techcrunch.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] DraftKings Hackerı Hapis Cezasına Çarptırılmış ve 1.4 Milyon Dolar Ödemeye Mahkum Edilmiştir.
+─────────────────────────────────────────────────────────
+Kamerin Stokes adlı 23 yaşındaki bir hacker, 2022 yılında DraftKings'e karşı gerçekleştirilen kimlik bilgisi doldurma (credential stuffing) saldırısındaki rolü nedeniyle 30 ay hapis cezasına çarptırılmıştır. Mahkeme ayrıca, üç yıl denetimli serbestlik, 125.000 dolar müsadere ve 1.3 milyon dolar tazminat ödemesine hükmetmiştir. Stokes, karanlık ağdan satın aldığı çalınan kullanıcı adları ve şifreleri kullanarak yaklaşık 60.000 DraftKings hesabına erişim sağlamıştır. Saldırganlar, bazı durumlarda yeni ödeme yöntemleri eklemiş, doğrulamak için küçük miktarlar yatırmış ve ardından tam bakiyeyi kendi kontrol ettikleri hesaplara çekmiştir. Stokes, çalınan DraftKings hesaplarına erişimi kendi "TheMFNPlug" takma adlı çevrimiçi mağazası aracılığıyla satmıştır. Suçunu kabul etmesine rağmen, çevrimiçi mağazasını yeniden açmış ve "dolandırıcılık eğlencelidir" sloganıyla çalınan hesapları satmaya devam etmiştir. Yetkililer, serbest bırakılma koşullarını ihlal ettiği için onu tekrar tutuklamıştır. Bu vaka, parola yeniden kullanımının tehlikelerini ve saldırganların ele geçirilmiş kimlik bilgilerini büyük ölçekte nasıl istismar edebileceğini ortaya koymuştur.
+(XXXXXXX, AÇIK -securityaffairs.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] Mirai Varyantı Nexcorium, CVE-2024-3721 Açığını İstismar Ederek TBK DVR'ları DDoS Botnetine Dahil Etmiştir.
+─────────────────────────────────────────────────────────
+Tehdit aktörleri, Fortinet FortiGuard Labs ve Palo Alto Networks Unit 42'nin bulgularına göre, ele geçirilmiş cihazlara Mirai botnet varyantları dağıtmak için TBK DVR'larındaki ve kullanım ömrü dolmuş TP-Link Wi-Fi yönlendiricilerindeki güvenlik açıklarını istismar etmektedir. TBK DVR cihazlarını hedef alan saldırıda, TBK DVR-4104 ve DVR-4216 dijital video kayıt cihazlarını etkileyen orta önem dereceli bir komut enjeksiyonu zafiyeti olan CVE-2024-3721 (CVSS skoru: 6.3) kullanılmıştır. Bu istismar, Nexcorium adlı bir Mirai varyantının dağıtılmasına yol açmıştır. Zararlı yazılım, Linux sistem mimarisine göre botnet yükünü başlatan bir indirici betiği bırakmaktadır. Yürütüldükten sonra "nexuscorp has taken control" mesajını gösteren Nexcorium, XOR kodlu yapılandırma tablosu başlatma, gözlemci modülü ve DDoS saldırı modülü dahil olmak üzere Mirai varyantına benzer bir mimariye sahiptir. Zararlı yazılım ayrıca, Huawei HG532 cihazlarını hedeflemek için CVE-2017-17215 istismarını içermekte ve kurbanın ana bilgisayarlarını Telnet bağlantısı üzerinden kaba kuvvet saldırılarıyla hedeflemek için sabit kodlanmış kullanıcı adları ve parolalar listesini barındırmaktadır.
+(XXXXXXX, AÇIK -thehackernews.com, 18.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[20] Apple AirTag Takibi, Tekrarlanan Bluetooth Sinyalleriyle Yanıltılabilmiştir.
+─────────────────────────────────────────────────────────
+Apple'ın AirTag cihazları, kayıp eşyaların takibini kolaylaştırmak için yakındaki Apple cihazlarının geniş ağından yararlanmaktadır. Ancak yeni bir araştırma, bu sistemin AirTag'in hiç bulunmadığı konumları gösterecek şekilde manipüle edilebildiğini ortaya koymuştur. Araştırmacılar, bir test AirTag'inden Bluetooth Düşük Enerji (BLE) sinyallerini Android cihazlar, Linux sistemleri ve küçük gömülü donanımlar kullanarak yakalamıştır. Kaydedilen sinyaller, orijinal AirTag'in bataryası çıkarıldıktan sonra farklı bir konumdan özel vericiler kullanılarak tekrar oynatılmıştır. Tekrarlanan sinyalin yakınındaki Apple cihazları, bu sinyali orijinal AirTag'den geliyormuş gibi algılamış ve bu yeni konuma dayalı konum raporları üretmiştir. Aynı yaklaşım, yakalanan verilerin internet üzerinden başka bir ülkeye gönderilmesi ve orada tekrar oynatılmasıyla uzun mesafelerde de işe yaramıştır. Sistem, hem orijinal hem de tekrarlanan sinyaller aktif olduğunda iki konum arasında geçiş yapabilmektedir. Araştırmacılar, AirTag'in "Find My" protokolünün pratik röle saldırılarına karşı savunmasız olduğunu göstermiştir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 17.04.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
