@@ -1,1580 +1,448 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siber Güvenlik Raporu - 27 April 2026 [FALLBACK]</title>
-    <style>
-        body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
-        .header { background: #1e3c72; color: white; padding: 40px; border-radius: 10px; margin-bottom: 20px; }
-        .header h1 { margin: 0 0 10px 0; }
-        .header p { margin: 4px 0; opacity: 0.9; }
-        .error-box { background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 24px 30px; margin-bottom: 20px; }
-        .error-box h2 { color: #856404; margin: 0 0 16px 0; font-size: 18px; }
-        .error-table { width: 100%; border-collapse: collapse; }
-        .error-table th { text-align: left; padding: 8px 12px; background: #ffeeba; color: #533f03; width: 180px; font-size: 14px; }
-        .error-table td { padding: 8px 12px; font-size: 14px; }
-        .error-table tr { border-bottom: 1px solid #ffd875; }
-        .error-table code { background: #fff; border: 1px solid #ddd; border-radius: 3px; padding: 2px 6px; font-size: 13px; word-break: break-all; }
-        .content { background: white; padding: 40px; border-radius: 10px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 27.04.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        
+        /* ŞIK BAŞLIK */
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 {
+            color: #1565c0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .important-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .important-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .important-item a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+        
+        /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* HABERLER BÖLÜMÜ */
+        .news-section {
+            padding: 30px;
+        }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .news-content {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .source {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+        .source a {
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+        
+        /* BAŞA DÖN BUTONU */
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
+        .social-signals {
+            background: #f8faff;
+            border: 1px solid #c7d7fd;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .social-signals .signal-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .social-signals .signal-platform-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px;
+            color: #475569;
+            background: #f1f5f9;
+            border-radius: 3px;
+            padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.45;
+            display: block;
+        }
+        .social-signals .signal-item a:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            .social-signals {
+                padding: 16px;
+            }
+            .social-signals .signal-list {
+                grid-template-columns: 1fr;
+            }
+            .social-signals .signal-meta {
+                gap: 6px;
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover {
+            opacity: 1;
+        }
+        @media (max-width: 960px) {
+            .back-to-top {
+                left: 10px; /* Adjust position for smaller screens */
+                top: auto;
+                bottom: 20px;
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🔒 Siber Güvenlik Günlük Raporu</h1>
-        <p>27 April 2026</p>
-        <p>⚠️ Gemini API yanıt vermedi — 1 saat sonra otomatik yeniden denenecek</p>
-    </div>
-    
-    <div class="error-box">
-        <h2>⚠️ Gemini API Hata Detayları</h2>
-        <table class="error-table">
-            <tr><th>Hata Türü</th><td><code>ServerError</code></td></tr>
-            <tr><th>Hata Mesajı</th><td><code>503 UNAVAILABLE. {&#x27;error&#x27;: {&#x27;code&#x27;: 503, &#x27;message&#x27;: &#x27;This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.&#x27;, &#x27;status&#x27;: &#x27;UNAVAILABLE&#x27;}}</code></td></tr>
-            <tr><th>Oluşma Zamanı</th><td>27.04.2026 11:50:20</td></tr>
-            <tr><th>Deneme Sayısı</th><td>5 deneme / 3 model (bu çalışmada) — tümü başarısız; 1 saat sonra yeniden denenecek</td></tr>
-        </table>
-    </div>
-    <div class="content">SESSION_DATE: 2026-04-27
-
-================================================================================
-📅 27 APRIL 2026 - SİBER GÜVENLİK HABERLERİ (HAM RSS)
-================================================================================
-
-[1] The Hacker News - Fake CAPTCHA IRSF Scam and 120 Keitaro Campaigns Drive Global SMS, Crypto Fraud
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 12:03:00 +0530
-Link: https://thehackernews.com/2026/04/fake-captcha-irsf-scam-and-120-keitaro.html
-
-[TAM METİN - 962 kelime]
-Cybersecurity researchers have disclosed details of a telecommunications fraud campaign that uses fake CAPTCHA verification tricks to dupe unsuspecting users into sending international text messages that incur charges on their mobile bills, generating illicit revenue for the threat actors who lease the phone numbers.
-
-According to a new report published by Infoblox, the operation is believed to have been active since at least June 2020, using methods like social engineering and back button hijacking in web browsers. As many as 35 phone numbers spanning 17 countries have been observed as part of the international revenue share fraud (IRSF) campaign.
-
-"The fake CAPTCHA has multiple steps, and each message crafted by the site is preconfigured with over a dozen phone numbers, meaning the victim isn't charged for just a single message – they're charged for sending SMSs to over 50 international destinations," researchers David Brunsdon and Darby Wise said in an analysis.
-
-"This type of scam also benefits from delayed billing, as the 'international SMS' charges often appear on the victim's bill weeks later and the experience with the fake CAPTCHA has been long forgotten."
-
-What makes the threat notable is the coming together of revenue share fraud and malicious traffic distribution systems (TDSs), with the activity using the infrastructure -- traditionally responsible for routing traffic to malware or phishing pages though a redirection chain to evade detection – to conduct SMS scams at scale.
-
-IRSF schemes involve fraudsters illegally acquiring international premium rate numbers (IPRN) or number ranges and artificially inflating the volume of international calls or messages to those numbers to receive a share of the revenue generated from these calls from termination charges obtained by the number range holder for inbound traffic to the number ranges.
-
-In this context, a termination fee refers to the inter-carrier charges paid by an originating telecom operator to a terminating operator for completing a call on their network. It's the exploitation of these "revenue sharing" agreements that drives IRSF, as the originating carrier ends up paying termination fees to the destination network for the incoming calls to the high-cost destinations, a portion of which is split with the fraudsters.
-
-Infoblox said the observed campaign specifically registers phone numbers in countries with high termination fees or lax regulations, such as Azerbaijan, Kazakhstan, or certain premium-rate number ranges in Europe, and colludes with local telecom providers to pull off the scam.
-
-The entire campaign plays out like this: a user is redirected to a bogus web page using a commercial TDS, which serves a CAPTCHA that instructs them to send an SMS to "confirm you are human."This, in turn, triggers a multi-stage "verification" chain, with each step triggering a separate SMS message to the server-designated numbers by programmatically launching the SMS apps on both Android and iOS devices with the phone numbers and message content pre-filled.
-
-In the process, as many as 60 SMS messages are sent to 15 unique numbers after four steps of CAPTCHA, which could end up costing a user $30. While it may be a relatively small amount, the DNS threat intelligence firm warned that they could quickly add up for the threat actor when carried out at scale. The list of phone numbers spans 17 countries, such as Azerbaijan, the Netherlands, Belgium, Poland, Spain, and Turkey.
-
-Another novel strategy adopted by the scam operators is the use of back button hijacking, which relies on JavaScript to alter the browsing history such that any attempt made by the site visitor to navigate away from the CAPTCHA page by hitting the browser's back button redirects the user back to the fake page, effectively trapping them in a navigation loop unless they opt to fully exit the browser.
-
-"This operation defrauds both individuals and telecommunication carriers simultaneously. Individual victims face unexpected premium SMS charges on their bills and would have difficulty identifying and reporting the fraud when it originates from such an unexpected source," Infoblox concluded. "Telecom carriers pay revenue share to the perpetrators while likely absorbing the losses from customer disputes or chargebacks."
-
-How Threat Actors Abuse Keitaro TDS
-
-The disclosure comes as the company, in collaboration with Confiant, published a three-part analysis detailing how the Keitaro TDS (aka Keitaro Tracker) is being abused, in some instances by acquiring stolen or cracked licenses (as in the case of TA2726), by a wide range of threat actors for malicious activities, including malware delivery, cryptocurrency theft, and investment scams that claim to employ artificial intelligence (AI) to automate trading and promise huge returns.
-
-The scam makes use of Facebook Ads to lure victims to the fraudulent AI‑powered platforms, in some cases even resorting to fabricating celebrity endorsements pushed via fake news articles and deepfake videos to promote the investment scheme. The use of synthetic videos has been attributed to a threat actor dubbed FaiKast.
-
-"Keitaro is first and foremost a self-hosted advertising performance tracker designed to conditionally route visitors using flows," the companies said. "Threat actors repurpose this mechanism, transforming a Keitaro server into an all-in-one tool that acts as a traffic distribution system, tracker, and cloaking layer."
-
-In all, more than 120 distinct campaigns have abused Keitaro's TDS for link delivery over a four-month period between October 2025 and January 2026. Infoblox noted that its customers recorded about 226,000 DNS queries spanning 13,500 domains associated with Keitaro‑related activity during the timeframe. Following responsible disclosure, Keitaro has stepped in to cancel over a dozen accounts linked to these activities.
-
-"By combining an older but still highly effective investment fraud theme with modern AI technologies, actors have been able to launch large‑scale, highly convincing cyber campaigns," Infoblox and Confiant said. "Approximately 96% of Keitaro‑linked spam traffic promoted cryptocurrency wallet‑drainer schemes, primarily via fake airdrop/giveaway lures centered on AURA, SOL (Solana token), Phantom (wallet), and Jupiter (DEX/aggregator)."
-
-(XXXXXXX, AÇIK - https://thehackernews.com/2026/04/fake-captcha-irsf-scam-and-120-keitaro.html, thehackernews.com, 27.04.2026)
-
-================================================================================
-
-[2] BleepingComputer - American utility firm Itron discloses breach of internal IT network
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 10:22:34 -0400
-Link: https://www.bleepingcomputer.com/news/security/american-utility-firm-itron-discloses-breach-of-internal-it-network/
-
-[TAM METİN - 394 kelime]
-Utility technology company Itron, Inc. has disclosed that an unauthorized third party accessed some of its internal systems during a cyberattack.
-
-The company states that it activated its cybersecurity response plan when detecting the activity last month, notified law enforcement authorities, and engaged external advisors to support the investigation and incident containment.
-
-“On April 13, 2026, Itron, Inc. was notified that an unauthorized third party had gained access to certain of its systems,” the company says says in an 8-K filing with the U.S. Securities and Exchange Commission (SEC).
-
-“The company activated its cybersecurity response plan and launched an investigation with the support of external advisors to assess, mitigate, remediate, and contain the unauthorized activity.”
-
-The unauthorized activity has now been blocked, and the company stated that it has observed no follow-up activity.
-
-Itron is a Washington-based public company that provides utility technology products and services for energy and water resources management.
-
-The company is listed on NASDAQ, employs roughly 5,600 people, and in 2025 reported revenue of $2.4 billion. It serves 7,700 customers in 100 countries and manages 112 million endpoints.
-
-Itron’s business is interwoven with critical infrastructure such as electricity grids, water distribution, and gas networks.
-
-However, the company noted that in this case, business operations recorded no material disruption, and it does not currently expect any subsequent impact. Also, it expects a significant portion of incident-related costs to be covered by insurance.
-
-Itron has also noted that the unauthorized activity did not extend to customers. However, it’s important to note that the investigation into the incident’s scope and impact is still ongoing.
-
-No ransomware group has claimed the attack on Itron. BleepingComputer contacted Itron with a request for more details about the attack and will update this post once we hear back.
-
-99% of What Mythos Found Is Still Unpatched.
-
-AI chained four zero-days into one exploit that bypassed both renderer and OS sandboxes. A wave of new exploits is coming.
-
-At the Autonomous Validation Summit (May 12 & 14), see how autonomous, context-rich validation finds what's exploitable, proves controls hold, and closes the remediation loop.
-
-European Gym giant Basic-Fit data breach affects 1 million members
-
-New Booking.com data breach forces reservation PIN resets
-
-Nearly 4,000 US industrial devices exposed to Iranian cyberattacks
-
-Eurail says December data breach impacts 300,000 individuals
-
-Hackers steal $3.6 million from crypto ATM giant Bitcoin Depot
-
-(XXXXXXX, AÇIK - https://www.bleepingcomputer.com/news/security/american-utility-firm-itron-discloses-breach-of-internal-it-network/, bleepingcomputer.com, 26.04.2026)
-
-================================================================================
-
-[3] Security Affairs - Fast16: Pre-Stuxnet malware that targeted precision engineering software
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 08:48:44 +0000
-Link: https://securityaffairs.com/191325/malware/fast16-pre-stuxnet-malware-that-targeted-precision-engineering-software.html
-
-[TAM METİN - 656 kelime]
-Fast16: Pre-Stuxnet malware that targeted precision engineering software
-
-Fast16 is a pre-Stuxnet malware that tampered with precision software and spread itself. Evidence suggests links to U.S. operations during early cyber tensions.
-
-SentinelOne uncovered Fast16, a sabotage malware used in 2005, years before Stuxnet. The malicious code is written in Lua and targeted high-precision calculation software, altering results and spreading across systems. The malware appeared in the ShadowBrokers leak of NSA tools, and evidence suggests it may have been developed by the United States, highlighting early cyber operations linked to tensions with Iran.
-
-Researchers traced early advanced malware design by searching for the first use of embedded Lua engines, a feature later seen in tools like Flame and Project Sauron. Lua enables modular, flexible malware without recompilation. The analysis led to a 2005 sample, svcmgmt.exe, which contained an embedded Lua VM and encrypted bytecode. Though it looked like a simple service binary, deeper analysis revealed a sophisticated implant with encryption, Windows API access, and modular design. A debug path linked it to the fast16.sys driver, tying it to the early Fast16 framework.
-
-The carrier svcmgmt.exe acts as a modular loader, using encrypted Lua payloads and “wormlets” to spread across Windows systems via network shares, while avoiding detection by checking for security tools. It can also deploy the kernel driver for deeper control.
-
-The fast16.sys driver loads at boot and intercepts filesystem operations, modifying executable files in memory. It targets specific programs, especially precision calculation software compiled with Intel tools, and applies rule-based patches that subtly alter results using floating-point manipulation.
-
-“The FPU patch in fast16.sys was written to corrupt these routines in a controlled way, producing alternative outputs. This moves fast16 out of the realm of generic espionage tooling and into the category of strategic sabotage.” continues the report. “By introducing small but systematic errors into physical‑world calculations, the framework could undermine or slow scientific research programs, degrade engineered systems over time or even contribute to catastrophic damage.”
-
-This suggests a sabotage goal rather than simple espionage, aiming to corrupt scientific or engineering outputs while remaining stealthy and persistent across infected systems.
-
-“A sabotage operation of this kind would be foiled by verifying calculations on a separate system. In an environment where multiple systems shared the same network and security posture, the wormable carrier would deploy the malicious driver module to those systems as well, reducing the chance that an independent calculation would diverge from the corrupted output.” reads the report published by SentinelOne. “At this time, we’ve been unable to identify all of the target binaries in order to understand the nature of the intended sabotage.”
-
-Fast16 most likely targeted high-precision engineering and simulation software used in the mid-2000s, based on pattern matching of its patching rules. The strongest candidates include LS-DYNA 970 (used for crash, explosion, and structural simulations, including sensitive defense-related research), PKPM (a widely used Chinese structural design and seismic analysis suite), and MOHID (a hydrodynamic modeling platform for coastal and environmental simulations).
-
-Analysis of compiler artifacts inside the malware suggests it came from an older, security-focused Unix engineering culture, with traces of SCCS/RCS versioning conventions unusual in Windows malware of that era. This points to a long-running, well-resourced development effort rather than opportunistic tooling.
-
-The overall design of fast16 combines a Lua-based carrier, a kernel-level filesystem driver, and rule-based code patching. This structure enables controlled corruption of numerical outputs in specialized simulation software, potentially altering results in fields like structural engineering, physics modeling, and environmental analysis.
-
-“This 2005 attack is a harbinger for sabotage operations targeting ultra expensive high-precision computing workloads of national importance like advanced physics, cryptographic, and nuclear research workloads.” concludes the report. “fast16 predates Stuxnet by at least five years, and stands as the first operation of its kind. The use of an embedded customized Lua virtual machine predates the earliest Flame samples by three years.”
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, malware)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191325/malware/fast16-pre-stuxnet-malware-that-targeted-precision-engineering-software.html, securityaffairs.com, 27.04.2026)
-
-================================================================================
-
-[4] Security Affairs - Italy moves to extradite Chinese national to the U.S. over hacking charges
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 08:00:06 +0000
-Link: https://securityaffairs.com/191368/apt/italy-moves-to-extradite-chinese-national-to-the-u-s-over-hacking-charges.html
-
-[TAM METİN - 447 kelime]
-Italy moves to extradite Chinese national to the U.S. over hacking charges
-
-Italy plans to extradite Xu Zewei to the U.S. over alleged hacks on COVID-19 research tied to state-backed operations.
-
-Italy is moving to extradite Xu Zewei, the Chinese national arrested in 2025 at the request of U.S. authorities on cyber-espionage charges, Bloomberg reported.
-
-The case stands out because it ties a single suspect, Xu, to cyber operations targeting sensitive research and major systems beyond the U.S. Authorities say he targeted universities and researchers working on COVID-19 vaccines, treatments, and testing between 2020 and 2021. Prosecutors also link him to a China state-backed hacking ecosystem, framing the activity as part of broader, politically motivated cyber operations.
-
-In July 2025, Italian police arrested a Chinese national, Zewei Xu, at Milan’s Malpensa Airport on a U.S. warrant. Xu was arrested at Malpensa Airport on July 3rd after arriving on a flight from China. Authorities accused the man of cyberespionage, U.S. authorities linked him to the China-nexus group Hafnium (aka Silk Typhoon), which carried out attacks against U.S. government, including the US Treasury.
-
-“Zewei Xu is wanted by the FBI for allegedly being part of a team of hackers that allegedly carried out espionage operations, particularly in 2020 on anti-COVID vaccines being produced at the University of Texas.” reported Italian news agency ANSA.
-
-“Interior ministry documents said he is also accused of being part of a “large-scale cyber intrusion campaign orchestrated” by the Chinese government known as ‘Hafnium’, which “targeted thousands of computers around the world” to get information on “various U.S. government policies.”
-
-The suspect’s family claims he is an innocent IT technician. His wife opposes his extradition, saying his Italian visa proves no wrongdoing and that he works as an IT manager at Shanghai GTA Semiconductor Ltd, developing systems and networks.
-
-“Both my husband and I do not agree with extradition to the United States,” his wife told the Postal Police after the man’s arrest. “Him getting an entry visa to Italy should be a confirmation that we have not committed crimes, so I cannot understand the reason for my husband’s arrest.”
-
-Italian police seized the documents and the devices of the suspect as requested by the U.S. authorities.
-
-In broader terms, the Xu Zewei case shows how cyber espionage is increasingly handled through legal and diplomatic channels as well as technical defense. The extradition process is part of the response, but the deeper challenge is preventing these operations from succeeding in the first place. That means better patching, faster detection, stronger identity controls, and closer international coordination across Europe and the United States.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, China)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191368/apt/italy-moves-to-extradite-chinese-national-to-the-u-s-over-hacking-charges.html, securityaffairs.com, 27.04.2026)
-
-================================================================================
-
-[5] Security Affairs - U.S. utility giant Itron discloses a security breach
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 06:54:09 +0000
-Link: https://securityaffairs.com/191360/data-breach/u-s-utility-giant-itron-discloses-a-security-breach.html
-
-[TAM METİN - 436 kelime]
-U.S. utility giant Itron discloses a security breach
-
-Itron detected unauthorized access to part of its IT environment on April 13, 2026, and launched incident response and notified authorities.
-
-Itron disclosed a cyber incident involving unauthorized access to part of its internal IT systems, detected on April 13, 2026. The company activated its incident response plan, engaged external cybersecurity experts, and notified law enforcement to investigate and contain the intrusion. The company reported that no unauthorized activity was seen in the customer-hosted portion of its systems, which is an important detail because Itron works with utility infrastructure and critical operational environments.
-
-“On April 13, 2026, Itron, Inc. (the “Company” or “Itron”) was notified that an unauthorized third party had gained access to certain of its systems.
-
-The Company activated its cybersecurity response plan and launched an investigation with the support of external advisors to assess, mitigate, remediate, and contain the unauthorized activity. The Company’s response efforts included proactively notifying law enforcement.” reads the FORM 8-K report filed with SEC.
-
-“The Company took action to remediate and remove the unauthorized activity and has not observed any subsequent unauthorized activity within its corporate systems. Further, no unauthorized activity was observed in the customer hosted portion of its systems.”
-
-At this time, no ransomware group has claimed responsibility for the attack.
-
-Itron is a U.S.-based firm that develops smart solutions for energy, water, and smart city infrastructure. It employs about 4,987 people and reported roughly $2.37 billion in annual revenue in 2025, providing utilities with data analytics, smart meters, and grid management technologies.
-
-Itron said operations continue largely unaffected thanks to contingency plans and backups, and expects insurance to cover much of the incident’s cost. However, the utility giant is still investigating the security breach to determine the exact scope of the attack.
-
-“The Company is evaluating what legal filings and regulatory notifications might be required because of this incident and intends to take appropriate action based on its review and findings.” continues the report. “While the Company’s investigation and assessment of this incident is ongoing, the Company does not currently believe the incident has had or is reasonably likely to have a material impact on the Company.”
-
-It is important to highlight that Itron is not a generic software vendor. It provides utility technology products and services for energy and water management, and its systems are tied to critical infrastructure.
-
-For firms tied to critical services, being able to keep systems running during an investigation is often just as important as removing the attacker.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, security breach)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191360/data-breach/u-s-utility-giant-itron-discloses-a-security-breach.html, securityaffairs.com, 27.04.2026)
-
-================================================================================
-
-[6] Security Affairs - Critical bug in CrowdStrike LogScale let attackers access files
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 16:07:02 +0000
-Link: https://securityaffairs.com/191343/hacking/critical-bug-in-crowdstrike-logscale-let-attackers-access-files.html
-
-[TAM METİN - 534 kelime]
-Critical bug in CrowdStrike LogScale let attackers access files
-
-CrowdStrike fixed CVE-2026-40050 in LogScale self-hosted, a critical flaw allowing unauthenticated file access via path traversal.
-
-CrowdStrike recently disclosed a critical vulnerability, tracked as CVE-2026-40050, affecting its LogScale self-hosted product. The flaw enables unauthenticated path traversal, which could allow a remote attacker to read arbitrary files from the server filesystem.
-
-“CrowdStrike has released security updates to address a critical unauthenticated path traversal vulnerability in LogScale. This vulnerability only requires mitigation by customers that host specific versions of LogScale and does not affect Next-Gen SIEM customers.” reads the advisory published by the cybersecurity firm. “The vulnerability exists in a specific cluster API endpoint that, if exposed, allows a remote attacker to read arbitrary files from the server filesystem without authentication.”
-
-CrowdStrike LogScale is a log management and observability platform designed to help organizations collect, search, and analyze large volumes of machine data in real time.
-
-It ingests logs from systems, applications, cloud services, and security tools, then makes them searchable almost instantly using a high-performance indexing architecture. This is particularly useful for security operations centers (SOCs), where fast investigation of alerts and incidents matters.
-
-CrowdStrike confirmed that Next-Gen SIEM customers are not affected. LogScale SaaS users were protected on April 7, 2026 through network-layer mitigations applied across all clusters. The company is not aware of attacks exploiting this vulnerability. However, self-hosted LogScale customers must urgently upgrade to a patched version. The flaw was discovered internally through continuous product testing, highlighting proactive security monitoring.
-
-Defensive platforms themselves are high-value targets.
-
-Security tools like LogScale sit at a privileged position inside an organization’s infrastructure. Because of this central role, any weakness in these systems can have a disproportionate impact compared to vulnerabilities in ordinary applications. In this case, a path traversal flaw could potentially expose configuration files, credentials, or internal data that would otherwise remain protected.
-
-Defensive software must be treated with the same rigor as the systems it protects. There is often an assumption that security products are inherently safer or more resilient because they are built for protection. In reality, they are equally susceptible to coding errors, design flaws, and configuration issues, sometimes with greater consequences when something goes wrong.
-
-A vulnerability in a monitoring or detection platform can be especially dangerous because it can undermine visibility. Attackers who gain access to such systems may be able to disable alerts, suppress logs, or quietly observe security operations without being detected. In some cases, they may even use the platform itself as a stepping stone to escalate privileges or move laterally across networks.
-
-This is why timely patching and proactive vulnerability management in defensive software is critical. Organizations often prioritize updates for operating systems, web applications, or exposed services, but security infrastructure should receive equal or higher priority. If the tools designed to detect threats are compromised, the entire security posture becomes unreliable.
-
-The CrowdStrike case also reflects a positive aspect of modern security research: the fact that the issue was identified internally and responsibly disclosed. This suggests mature security practices and reduces the likelihood that attackers had early access to exploit the flaw.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, CVE-2026-40050)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191343/hacking/critical-bug-in-crowdstrike-logscale-let-attackers-access-files.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[7] Security Affairs - GopherWhisper: new China-linked APT targets Mongolia with Go-based malware
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 13:07:58 +0000
-Link: https://securityaffairs.com/191318/apt/gopherwhisper-new-china-linked-apt-targets-mongolia-with-go-based-malware.html
-
-[TAM METİN - 584 kelime]
-GopherWhisper: new China-linked APT targets Mongolia with Go-based malware
-
-ESET found a new China-linked APT, tracked as GopherWhisper, targeting Mongolia using Go-based malware, loaders, and backdoors.
-
-ESET researchers uncovered a new China-aligned APT group called GopherWhisper, targeting government institutions in Mongolia. The group’s arsenal includes a range of tools mainly written in Go, such as loaders and injectors, which are used to deploy multiple backdoors. This toolkit allows attackers to maintain access and control over compromised systems, showing a structured and evolving cyber-espionage operation.
-
-ESET uncovered GopherWhisper in January 2025 after finding the LaxGopher backdoor on a Mongolian government system.  GopherWhisper uses legitimate platforms like Discord, Slack, Outlook, and file.io for command-and-control and data exfiltration. By finding API tokens, researchers accessed many C&C messages, revealing the group’s activity.
-
-“ESET researchers have discovered a previously undocumented China-aligned APT group that we havenamed GopherWhisper. The group wields a wide array of tools mostly written in Go, using injectors andloaders to deploy and execute various backdoors in its arsenal.” reads the report published by ESET. “For C&C communication and exfiltration, GopherWhisper abuses legitimate services. In the observed campaign, the threat actors mainly targeted a government entity in Mongolia.“
-
-Further analysis revealed a full toolkit of mainly Go-based malware with no links to known groups, leading to the creation of a new attribution. The group deploys multiple backdoors and tools to gain control, execute commands, and steal data. JabGopher injects LaxGopher into svchost.exe, while LaxGopher communicates via Slack, runs commands, and downloads payloads like CompactGopher, which compresses and exfiltrates files. RatGopher uses Discord for command execution, and SSLORDoor handles file operations over encrypted sockets. Additional tools include FriendDelivery, a loader, and BoxOfFriends, which uses Microsoft 365 Outlook APIs for covert command-and-control communication.
-
-Researchers uncovered GopherWhisper’s operations by extracting thousands of messages from Slack, Discord, and Outlook accounts used for command-and-control. Message timestamps showed activity mainly during UTC+8 working hours, suggesting alignment with the Chinese government. Attackers first used these platforms to test malware, then reused them for active operations without clearing logs. Slack communications mainly handled file and disk commands and included links to GitHub code used for development. Discord channels contained early backdoor code and revealed details about operator machines, including a VMware-based setup. Outlook accounts supported covert communication through draft emails, with timelines linking account creation to malware development.
-
-“In addition to the Slack and Discord communication, we were also able to extract email messages used for communication between the BoxOfFriends backdoor and its C&C via the Microsoft Graph API. There we noticed that the welcome email message from Microsoft, from when the account was created, had never been deleted.” continues the report. “This message confirmed that the account barrantaya.1010@outlook[.]com was created on July 11th, 2024, just 11 days before the creation of the FriendDelivery DLL – the loader used to execute BoxOfFriends – on July 22nd, 2024.”
-
-ESET researchers discovered about 12 infected systems within a Mongolian government entity and believe dozens more victims exist based on Slack and Discord C&C traffic.
-
-“Our investigation into GopherWhisper revealed an APT group that uses a varied toolset of custom loaders, injectors, and backdoors.” concludes the report. “By analyzing the C&C communications obtained from the attacker-operated Slack and Discord channels, and from draft Outlook email messages, we were able to gain additional information about the group’s inner workings and post-compromise activities.”
-
-More details and IoCs are available in the full white paper and GitHub repository.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, China)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191318/apt/gopherwhisper-new-china-linked-apt-targets-mongolia-with-go-based-malware.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[8] Security Affairs - Trigona ransomware adopts custom tool to steal data and evade detection
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 09:37:30 +0000
-Link: https://securityaffairs.com/191294/cyber-crime/trigona-ransomware-adopts-custom-tool-to-steal-data-and-evade-detection.html
-
-[TAM METİN - 405 kelime]
-Trigona ransomware adopts custom tool to steal data and evade detection
-
-Trigona ransomware now uses a custom command-line tool to steal data faster and evade detection, replacing tools like Rclone and MegaSync.
-
-Symantec researchers report that recent Trigona ransomware attacks used a custom-built data exfiltration tool instead of common utilities like Rclone or MegaSync. This shift, seen in March 2026 incidents, gives attackers more control and helps them evade detection, as standard tools are often flagged by security systems. Researchers believe this move shows a growing investment in proprietary malware to stay stealthy.
-
-“The attacks, which occurred in March 2026, mark a significant shift in tactics for Trigona affiliates. The motivation for moving away from publicly available tools remains unknown.” reads the report published by Symantec. “Many publicly available tools are now so well known that they may be flagged by security solutions.”
-
-Trigona, active since late 2022, operates as a Ransomware-as-a-Service linked to the Rhantus cybercrime group.
-
-Trigona attackers use a custom tool, uploader_client.exe, to steal data efficiently. It connects to an attacker-controlled server and appears privately developed. The tool speeds up exfiltration with multiple parallel connections and rotates connections to avoid detection.
-
-“The tool defaults to five parallel connections per file, allowing for rapid data transfer that can saturate available bandwidth.” continues the report. “It can rotate the TCP connection after a specific volume of data (defaulting to 2,048 MB) has been sent. This technique is likely intended to evade network traffic monitoring that triggers on long-lived, high-volume connections to a single IP address.”
-
-It can filter out large, low-value files and focus on sensitive data like documents. It also uses an authentication key to secure access to stolen data. In one case, it targeted invoices and high-value PDFs on network drives.
-
-Before deploying the custom uploader, attackers disable security tools using multiple utilities, including HRSword, PCHunter, and GMER, often abusing vulnerable kernel drivers to kill protections. PowerRun helps execute them with elevated privileges. They access systems remotely via AnyDesk and steal credentials using tools like Mimikatz and Nirsoft password recovery utilities, targeting apps and browsers.
-
-“The use of custom tooling in the ransomware landscape is a double-edged sword for attackers.” concludes the report. “While it requires development resources and time, these tools can provide a level of stealth that generic tools cannot match, at least until they’re discovered”
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, Trigona ransomware)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191294/cyber-crime/trigona-ransomware-adopts-custom-tool-to-steal-data-and-evade-detection.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[9] Security Affairs - Italy moves to extradite Chinese national to the U.S. over hacking charges
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 11:32:42 +0000
-Link: https://securityaffairs.com/191368/apt/italy-moves-to-extradite-chinese-national-to-the-u-s-over-hacking-charges.html
-
-[TAM METİN - 447 kelime]
-Italy moves to extradite Chinese national to the U.S. over hacking charges
-
-Italy plans to extradite Xu Zewei to the U.S. over alleged hacks on COVID-19 research tied to state-backed operations.
-
-Italy is moving to extradite Xu Zewei, the Chinese national arrested in 2025 at the request of U.S. authorities on cyber-espionage charges, Bloomberg reported.
-
-The case stands out because it ties a single suspect, Xu, to cyber operations targeting sensitive research and major systems beyond the U.S. Authorities say he targeted universities and researchers working on COVID-19 vaccines, treatments, and testing between 2020 and 2021. Prosecutors also link him to a China state-backed hacking ecosystem, framing the activity as part of broader, politically motivated cyber operations.
-
-In July 2025, Italian police arrested a Chinese national, Zewei Xu, at Milan’s Malpensa Airport on a U.S. warrant. Xu was arrested at Malpensa Airport on July 3rd after arriving on a flight from China. Authorities accused the man of cyberespionage, U.S. authorities linked him to the China-nexus group Hafnium (aka Silk Typhoon), which carried out attacks against U.S. government, including the US Treasury.
-
-“Zewei Xu is wanted by the FBI for allegedly being part of a team of hackers that allegedly carried out espionage operations, particularly in 2020 on anti-COVID vaccines being produced at the University of Texas.” reported Italian news agency ANSA.
-
-“Interior ministry documents said he is also accused of being part of a “large-scale cyber intrusion campaign orchestrated” by the Chinese government known as ‘Hafnium’, which “targeted thousands of computers around the world” to get information on “various U.S. government policies.”
-
-The suspect’s family claims he is an innocent IT technician. His wife opposes his extradition, saying his Italian visa proves no wrongdoing and that he works as an IT manager at Shanghai GTA Semiconductor Ltd, developing systems and networks.
-
-“Both my husband and I do not agree with extradition to the United States,” his wife told the Postal Police after the man’s arrest. “Him getting an entry visa to Italy should be a confirmation that we have not committed crimes, so I cannot understand the reason for my husband’s arrest.”
-
-Italian police seized the documents and the devices of the suspect as requested by the U.S. authorities.
-
-In broader terms, the Xu Zewei case shows how cyber espionage is increasingly handled through legal and diplomatic channels as well as technical defense. The extradition process is part of the response, but the deeper challenge is preventing these operations from succeeding in the first place. That means better patching, faster detection, stronger identity controls, and closer international coordination across Europe and the United States.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, China)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191368/apt/italy-moves-to-extradite-chinese-national-to-the-u-s-over-hacking-charges.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[10] Security Affairs - U.S. utility giant Itron discloses a security breach
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 11:32:42 +0000
-Link: https://securityaffairs.com/191360/data-breach/u-s-utility-giant-itron-discloses-a-security-breach.html
-
-[TAM METİN - 436 kelime]
-U.S. utility giant Itron discloses a security breach
-
-Itron detected unauthorized access to part of its IT environment on April 13, 2026, and launched incident response and notified authorities.
-
-Itron disclosed a cyber incident involving unauthorized access to part of its internal IT systems, detected on April 13, 2026. The company activated its incident response plan, engaged external cybersecurity experts, and notified law enforcement to investigate and contain the intrusion. The company reported that no unauthorized activity was seen in the customer-hosted portion of its systems, which is an important detail because Itron works with utility infrastructure and critical operational environments.
-
-“On April 13, 2026, Itron, Inc. (the “Company” or “Itron”) was notified that an unauthorized third party had gained access to certain of its systems.
-
-The Company activated its cybersecurity response plan and launched an investigation with the support of external advisors to assess, mitigate, remediate, and contain the unauthorized activity. The Company’s response efforts included proactively notifying law enforcement.” reads the FORM 8-K report filed with SEC.
-
-“The Company took action to remediate and remove the unauthorized activity and has not observed any subsequent unauthorized activity within its corporate systems. Further, no unauthorized activity was observed in the customer hosted portion of its systems.”
-
-At this time, no ransomware group has claimed responsibility for the attack.
-
-Itron is a U.S.-based firm that develops smart solutions for energy, water, and smart city infrastructure. It employs about 4,987 people and reported roughly $2.37 billion in annual revenue in 2025, providing utilities with data analytics, smart meters, and grid management technologies.
-
-Itron said operations continue largely unaffected thanks to contingency plans and backups, and expects insurance to cover much of the incident’s cost. However, the utility giant is still investigating the security breach to determine the exact scope of the attack.
-
-“The Company is evaluating what legal filings and regulatory notifications might be required because of this incident and intends to take appropriate action based on its review and findings.” continues the report. “While the Company’s investigation and assessment of this incident is ongoing, the Company does not currently believe the incident has had or is reasonably likely to have a material impact on the Company.”
-
-It is important to highlight that Itron is not a generic software vendor. It provides utility technology products and services for energy and water management, and its systems are tied to critical infrastructure.
-
-For firms tied to critical services, being able to keep systems running during an investigation is often just as important as removing the attacker.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, security breach)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191360/data-breach/u-s-utility-giant-itron-discloses-a-security-breach.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[11] Security Affairs - Critical bug in CrowdStrike LogScale let attackers access files
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 11:32:42 +0000
-Link: https://securityaffairs.com/191343/hacking/critical-bug-in-crowdstrike-logscale-let-attackers-access-files.html
-
-[TAM METİN - 534 kelime]
-Critical bug in CrowdStrike LogScale let attackers access files
-
-CrowdStrike fixed CVE-2026-40050 in LogScale self-hosted, a critical flaw allowing unauthenticated file access via path traversal.
-
-CrowdStrike recently disclosed a critical vulnerability, tracked as CVE-2026-40050, affecting its LogScale self-hosted product. The flaw enables unauthenticated path traversal, which could allow a remote attacker to read arbitrary files from the server filesystem.
-
-“CrowdStrike has released security updates to address a critical unauthenticated path traversal vulnerability in LogScale. This vulnerability only requires mitigation by customers that host specific versions of LogScale and does not affect Next-Gen SIEM customers.” reads the advisory published by the cybersecurity firm. “The vulnerability exists in a specific cluster API endpoint that, if exposed, allows a remote attacker to read arbitrary files from the server filesystem without authentication.”
-
-CrowdStrike LogScale is a log management and observability platform designed to help organizations collect, search, and analyze large volumes of machine data in real time.
-
-It ingests logs from systems, applications, cloud services, and security tools, then makes them searchable almost instantly using a high-performance indexing architecture. This is particularly useful for security operations centers (SOCs), where fast investigation of alerts and incidents matters.
-
-CrowdStrike confirmed that Next-Gen SIEM customers are not affected. LogScale SaaS users were protected on April 7, 2026 through network-layer mitigations applied across all clusters. The company is not aware of attacks exploiting this vulnerability. However, self-hosted LogScale customers must urgently upgrade to a patched version. The flaw was discovered internally through continuous product testing, highlighting proactive security monitoring.
-
-Defensive platforms themselves are high-value targets.
-
-Security tools like LogScale sit at a privileged position inside an organization’s infrastructure. Because of this central role, any weakness in these systems can have a disproportionate impact compared to vulnerabilities in ordinary applications. In this case, a path traversal flaw could potentially expose configuration files, credentials, or internal data that would otherwise remain protected.
-
-Defensive software must be treated with the same rigor as the systems it protects. There is often an assumption that security products are inherently safer or more resilient because they are built for protection. In reality, they are equally susceptible to coding errors, design flaws, and configuration issues, sometimes with greater consequences when something goes wrong.
-
-A vulnerability in a monitoring or detection platform can be especially dangerous because it can undermine visibility. Attackers who gain access to such systems may be able to disable alerts, suppress logs, or quietly observe security operations without being detected. In some cases, they may even use the platform itself as a stepping stone to escalate privileges or move laterally across networks.
-
-This is why timely patching and proactive vulnerability management in defensive software is critical. Organizations often prioritize updates for operating systems, web applications, or exposed services, but security infrastructure should receive equal or higher priority. If the tools designed to detect threats are compromised, the entire security posture becomes unreliable.
-
-The CrowdStrike case also reflects a positive aspect of modern security research: the fact that the issue was identified internally and responsibly disclosed. This suggests mature security practices and reduces the likelihood that attackers had early access to exploit the flaw.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, CVE-2026-40050)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191343/hacking/critical-bug-in-crowdstrike-logscale-let-attackers-access-files.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[12] Security Affairs - Trigona ransomware adopts custom tool to steal data and evade detection
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 11:32:42 +0000
-Link: https://securityaffairs.com/191294/cyber-crime/trigona-ransomware-adopts-custom-tool-to-steal-data-and-evade-detection.html
-
-[TAM METİN - 405 kelime]
-Trigona ransomware adopts custom tool to steal data and evade detection
-
-Trigona ransomware now uses a custom command-line tool to steal data faster and evade detection, replacing tools like Rclone and MegaSync.
-
-Symantec researchers report that recent Trigona ransomware attacks used a custom-built data exfiltration tool instead of common utilities like Rclone or MegaSync. This shift, seen in March 2026 incidents, gives attackers more control and helps them evade detection, as standard tools are often flagged by security systems. Researchers believe this move shows a growing investment in proprietary malware to stay stealthy.
-
-“The attacks, which occurred in March 2026, mark a significant shift in tactics for Trigona affiliates. The motivation for moving away from publicly available tools remains unknown.” reads the report published by Symantec. “Many publicly available tools are now so well known that they may be flagged by security solutions.”
-
-Trigona, active since late 2022, operates as a Ransomware-as-a-Service linked to the Rhantus cybercrime group.
-
-Trigona attackers use a custom tool, uploader_client.exe, to steal data efficiently. It connects to an attacker-controlled server and appears privately developed. The tool speeds up exfiltration with multiple parallel connections and rotates connections to avoid detection.
-
-“The tool defaults to five parallel connections per file, allowing for rapid data transfer that can saturate available bandwidth.” continues the report. “It can rotate the TCP connection after a specific volume of data (defaulting to 2,048 MB) has been sent. This technique is likely intended to evade network traffic monitoring that triggers on long-lived, high-volume connections to a single IP address.”
-
-It can filter out large, low-value files and focus on sensitive data like documents. It also uses an authentication key to secure access to stolen data. In one case, it targeted invoices and high-value PDFs on network drives.
-
-Before deploying the custom uploader, attackers disable security tools using multiple utilities, including HRSword, PCHunter, and GMER, often abusing vulnerable kernel drivers to kill protections. PowerRun helps execute them with elevated privileges. They access systems remotely via AnyDesk and steal credentials using tools like Mimikatz and Nirsoft password recovery utilities, targeting apps and browsers.
-
-“The use of custom tooling in the ransomware landscape is a double-edged sword for attackers.” concludes the report. “While it requires development resources and time, these tools can provide a level of stealth that generic tools cannot match, at least until they’re discovered”
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, Trigona ransomware)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191294/cyber-crime/trigona-ransomware-adopts-custom-tool-to-steal-data-and-evade-detection.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[13] Security Affairs - Fast16: Pre-Stuxnet malware that targeted precision engineering software
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 08:41:06 +0000
-Link: https://securityaffairs.com/191325/malware/fast16-pre-stuxnet-malware-that-targeted-precision-engineering-software.html
-
-[TAM METİN - 656 kelime]
-Fast16: Pre-Stuxnet malware that targeted precision engineering software
-
-Fast16 is a pre-Stuxnet malware that tampered with precision software and spread itself. Evidence suggests links to U.S. operations during early cyber tensions.
-
-SentinelOne uncovered Fast16, a sabotage malware used in 2005, years before Stuxnet. The malicious code is written in Lua and targeted high-precision calculation software, altering results and spreading across systems. The malware appeared in the ShadowBrokers leak of NSA tools, and evidence suggests it may have been developed by the United States, highlighting early cyber operations linked to tensions with Iran.
-
-Researchers traced early advanced malware design by searching for the first use of embedded Lua engines, a feature later seen in tools like Flame and Project Sauron. Lua enables modular, flexible malware without recompilation. The analysis led to a 2005 sample, svcmgmt.exe, which contained an embedded Lua VM and encrypted bytecode. Though it looked like a simple service binary, deeper analysis revealed a sophisticated implant with encryption, Windows API access, and modular design. A debug path linked it to the fast16.sys driver, tying it to the early Fast16 framework.
-
-The carrier svcmgmt.exe acts as a modular loader, using encrypted Lua payloads and “wormlets” to spread across Windows systems via network shares, while avoiding detection by checking for security tools. It can also deploy the kernel driver for deeper control.
-
-The fast16.sys driver loads at boot and intercepts filesystem operations, modifying executable files in memory. It targets specific programs, especially precision calculation software compiled with Intel tools, and applies rule-based patches that subtly alter results using floating-point manipulation.
-
-“The FPU patch in fast16.sys was written to corrupt these routines in a controlled way, producing alternative outputs. This moves fast16 out of the realm of generic espionage tooling and into the category of strategic sabotage.” continues the report. “By introducing small but systematic errors into physical‑world calculations, the framework could undermine or slow scientific research programs, degrade engineered systems over time or even contribute to catastrophic damage.”
-
-This suggests a sabotage goal rather than simple espionage, aiming to corrupt scientific or engineering outputs while remaining stealthy and persistent across infected systems.
-
-“A sabotage operation of this kind would be foiled by verifying calculations on a separate system. In an environment where multiple systems shared the same network and security posture, the wormable carrier would deploy the malicious driver module to those systems as well, reducing the chance that an independent calculation would diverge from the corrupted output.” reads the report published by SentinelOne. “At this time, we’ve been unable to identify all of the target binaries in order to understand the nature of the intended sabotage.”
-
-Fast16 most likely targeted high-precision engineering and simulation software used in the mid-2000s, based on pattern matching of its patching rules. The strongest candidates include LS-DYNA 970 (used for crash, explosion, and structural simulations, including sensitive defense-related research), PKPM (a widely used Chinese structural design and seismic analysis suite), and MOHID (a hydrodynamic modeling platform for coastal and environmental simulations).
-
-Analysis of compiler artifacts inside the malware suggests it came from an older, security-focused Unix engineering culture, with traces of SCCS/RCS versioning conventions unusual in Windows malware of that era. This points to a long-running, well-resourced development effort rather than opportunistic tooling.
-
-The overall design of fast16 combines a Lua-based carrier, a kernel-level filesystem driver, and rule-based code patching. This structure enables controlled corruption of numerical outputs in specialized simulation software, potentially altering results in fields like structural engineering, physics modeling, and environmental analysis.
-
-“This 2005 attack is a harbinger for sabotage operations targeting ultra expensive high-precision computing workloads of national importance like advanced physics, cryptographic, and nuclear research workloads.” concludes the report. “fast16 predates Stuxnet by at least five years, and stands as the first operation of its kind. The use of an embedded customized Lua virtual machine predates the earliest Flame samples by three years.”
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, malware)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191325/malware/fast16-pre-stuxnet-malware-that-targeted-precision-engineering-software.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[14] Security Affairs - AI Model Claude Opus turns bugs into exploits for just $2,283
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 08:41:06 +0000
-Link: https://securityaffairs.com/191018/ai/ai-model-claude-opus-turns-bugs-into-exploits-for-just-2283.html
-
-[TAM METİN - 797 kelime]
-AI Model Claude Opus turns bugs into exploits for just $2,283
-
-Claude Opus created a working Chrome exploit for $2,283, showing that widely available AI models can already find and weaponize vulnerabilities.
-
-Claude Opus managed to produce a functional Chrome exploit for just $2,283, raising concerns about how easily AI can be used to find and exploit vulnerabilities.
-
-Below is the cost of the experiment:
-
-While Anthropic held back its more advanced Mythos model over safety fears, even earlier, widely accessible models like Opus 4.6 can already generate real attack code, showing that the risk is not theoretical but already here.
-
-“I pointed Claude Opus at Discord’s bundled Chrome (version 138, nine major versions behind upstream) and asked it to build a full V8 exploit chain. The V8 OOB we used was from Chrome 146, the same version Anthropic’s own Claude Desktop is running.” wrote Mohan Pedhapati, CTO of Hacktron. “A week of back and forth, 2.3 billion tokens, $2,283 in API costs, and about ~20 hours of me unsticking it from dead ends. It popped calc.”
-
-Building the Chrome exploit cost about $6,283, but the return can easily exceed that. Programs like Google’s v8CTF pay $10,000 per valid exploit, and past submissions earned $5,000, with even higher offers appearing privately. Similar bugs could bring large rewards from companies like Anthropic. Overall, the cost already pays off in legitimate bug bounty programs, and could be far more profitable in underground markets.
-
-Anthropic Mythos announcement sparked debate, with some calling it hype and others raising alarms. Beyond the noise, it highlights a real issue: AI models can already turn patches into working exploits, as shown with Chrome’s V8. The real risk lies in slow patching, outdated systems become easy targets. Whether Mythos lives up to the hype or not, progress won’t stop. Sooner or later, even low-skilled attackers with access to AI tools will exploit unpatched software.
-
-The experts pointed out that Electron apps like Discord, Slack, and Teams bundle their own Chromium versions, often lagging weeks or months behind updates. This creates “patch gaps” where known V8 vulnerabilities remain exploitable. Researchers have already shown real-world exploits, including remote code execution on Discord. Many apps still run outdated versions, sometimes missing key protections like sandboxing, making full exploit chains easier. As a result, widely used applications remain exposed to known flaws long after patches exist upstream.
-
-“I picked Discord as my target. It only needs two bugs for a full chain since there’s no sandbox on the main window. It’s sitting on Chrome 138, nine major versions behind current.” continues Pedhapati. “You’d still need an XSS on discord.com to deliver the payload. I’ll leave how hard that is as an exercise for the reader.”
-
-Pedhapati explained that Claude Opus still needs heavy human guidance to build exploits. It often gets stuck, loses context, guesses instead of verifying, and even changes the goal when it can’t solve a problem. It doesn’t recover on its own, so the operator must step in, debug issues, and guide it forward. Setting up the right environment and managing sessions also takes significant effort.
-
-Even with these limits, the trend is clear: future models will need less supervision. As AI speeds up exploit development, it shrinks the time needed to weaponize bugs, while patching still lags. This gap will likely increase real-world attacks.
-
-Security patches themselves reveal vulnerabilities, and AI can quickly turn them into exploits. Open-source code makes this easier, since fixes appear publicly before updates spread. You can’t hide these changes anymore, AI can scan and analyze everything.
-
-“Every patch is basically an exploit hint. A security patch in Chromium or the Linux kernel tells you exactly what was broken. Reverse-engineering patches used to take skill and time. Now you can throw tokens at the problem and, with a decent operator nudging it past stuck points, get to a working exploit much faster.” continues the expert.
-
-The real advantage goes to small, skilled teams. One expert can manage multiple AI-driven exploit efforts at once, greatly increasing their impact compared to less capable attackers.
-
-The researchers doubts AI progress will slow and warns that simply saying “patch faster” isn’t enough. Teams should build security into development from the start, track all dependencies to know what they run, and enforce automatic updates to remove delays. He also suggests rethinking how and when patches get published, since public fixes can quickly turn into exploit blueprints for attackers using AI.
-
-“This sounds crazy, but maybe Chrome, or any open source software, shouldn’t publish V8 patches before the stable release ships. Every public commit is a starting gun for anyone with an API key and strong team members who can weaponize exploits.” he concludes.
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, Claude)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191018/ai/ai-model-claude-opus-turns-bugs-into-exploits-for-just-2283.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[15] Security Affairs - Cyber attacks fuel surge in cargo theft across logistics industry
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Sun, 26 Apr 2026 08:41:06 +0000
-Link: https://securityaffairs.com/191008/security/cyber-attacks-fuel-surge-in-cargo-theft-across-logistics-industry.html
-
-[TAM METİN - 613 kelime]
-Cyber attacks fuel surge in cargo theft across logistics industry
-
-Hackers infiltrate logistics firms to steal cargo and divert payments, cyberattacks are linked to organized crime and rising losses.
-
-Proofpoint researchers observed crooks targeting trucking and logistics companies, running coordinated remote access campaigns to steal cargo and divert payments. These attacks appear to be linked to organized crime.
-
-The findings highlight a growing trend of cyber-enabled cargo theft, where digital intrusions directly support real-world crime. This threat is expanding rapidly, with losses in North America reaching $6.6 billion in 2025, showing how cyberattacks are increasingly used to disrupt supply chains and generate profit.
-
-“In late February 2026, Proofpoint researchers executed a malicious payload from a threat actor targeting transportation organizations inside a controlled decoy environment operated by our partners at Deception.pro.” reads the report published by Proofpoint. “While the environment did not represent a transportation carrier, it remained compromised for more than a month—offering rare, extended visibility into post‑compromise operations, tooling, and decision‑making.”
-
-In November 2025, Proofpoint first reported cybercriminals were targeting trucking and logistics firms with RMM tools (remote monitoring and management software) to steal freight. Active since June 2025, the group works with organized crime to loot goods, mainly food and beverages.
-
-Crooks infiltrate logistics firms, hijack cargo bids, and steal goods, fueling the rise of cyber-enabled freight theft.
-
-On February 27, 2026, attackers breached a load board platform and sent emails to carriers about fake shipping jobs.
-
-The message delivered a malicious VBS file that launched a PowerShell script, installed ScreenConnect for remote access, and showed a fake agreement to hide the attack.
-
-After gaining access, they focused on persistence by installing multiple remote management tools. Over a month, they deployed several ScreenConnect instances along with Pulseway and SimpleHelp, ensuring continued access even if one tool was detected or removed.
-
-The researchers reported the attackers used a new “signing-as-a-service” method to deploy a stealthy ScreenConnect instance. A PowerShell chain bypassed controls, downloaded the installer, had it re-signed with a fraudulent but valid certificate, then installed it silently. It also replaced original components with signed versions to avoid detection, bypass revoked certificates, and maintain persistent, trusted remote access.
-
-After gaining stable access, the attacker moved to hands-on activity. They manually checked accounts like PayPal and ran a custom tool to find and steal cryptocurrency wallet data, sending results to Telegram.
-
-They used over a dozen PowerShell scripts to profile victims, collecting user data, browser history, and signs of access to banking, payments, logistics, and accounting platforms. The scripts copied locked files, searched for valuable services, stored data in hidden folders, and ran with SYSTEM privileges.
-
-The attacker consistently scanned browser databases, matched patterns, and reported findings via Telegram, sometimes using delayed tasks to evade controls. Targets included banks, money transfer services, fleet payment systems, and freight platforms—showing a clear focus on financial fraud and cargo theft.
-
-In a final step, another script quietly gathered system details, checked security tools and financial apps, and sent results back through the existing remote session without raising alerts.
-
-The intrusion shows that financially motivated attackers go far beyond initial access. They focus on staying hidden, gathering intelligence, and stealing credentials to exploit payment systems and logistics platforms—behavior that also aligns with freight theft and cargo diversion preparation.
-
-“Notably, the use of a signing‑as‑a‑service capability underscores a growing trend toward attacker use of legitimate trust mechanisms to evade detection.” concludes the report. “For transportation, logistics, and freight organizations, these findings reinforce the importance of monitoring for unauthorized remote management tools, suspicious PowerShell activity, and abnormal browser telemetry associated with financial platform access. “
-
-Follow me on Twitter: @securityaffairs and Facebook and Mastodon
-
-(SecurityAffairs – hacking, cargo)
-
-(XXXXXXX, AÇIK - https://securityaffairs.com/191008/security/cyber-attacks-fuel-surge-in-cargo-theft-across-logistics-industry.html, securityaffairs.com, 26.04.2026)
-
-================================================================================
-
-[16] SANS ISC - Handling the CVE Flood With EPSS, (Mon, Apr 20th)
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 20 Apr 2026 06:43:22 GMT
-Link: https://isc.sans.edu/diary/rss/32914
-
-[TAM METİN - 484 kelime]
-Handling the CVE Flood With EPSS
-
-Every morning, security people around the world face the same ritual: opening their vulnerability feed to find a lot of new CVE entries that appeared overnight. Over the past decade, this flood has become a defining challenge of modern defensive security. Some numbers[1]:
-
-CVEs published in 2023: 29K+
-
-CVEs published in 2024: 40K+
-
-New CVEs per day: ~110
-
-Exploited in the wild: ~5-7%
-
-The root cause of this explosion is structural: the security research community has grown dramatically, bug bounty programs, automated scanning has industrialised vulnerability discovery, and software supply chains expose orders of magnitude more attack surface than legacy monolithic architectures ever did. And don’t forget AI used more and more to find vulnerabilities!
-
-Every CVE receives a CVSS (Common Vulnerability Scoring System) that is a score between 0 and 10 attempts to express the intrinsic severity of a vulnerability. This score is based on core questions like: How bad it is if exploited? How complex exploitation is? What privileges are required? And what impact on confidentiality, integrity, and availability to expect?
-
-CVSS is a well-designed standard, and is useful. But it remains challenging to perform the initial triage: Which CVEs deserve to be investigated first? A CVSS 9.8 that sits dormant in an obscure software is less dangerous in practice than a CVSS 6.5 actively chained in ransomware campaigns!
-
-The Exploit Prediction Scoring System (EPSS) was developed by FIRST (Forum of Incident Response and Security Teams)[2] and has gone through successive iterations since its public launch in 2021, with EPSS v3 released in March 2023 as the current production model. Its design philosophy is fundamentally different from CVSS: instead of rating theoretical impact, EPSS answers a probabilistic question. We already talked about EPSS a long time ago[3] but it does get enough attention from the community (IMHO)
-
-EPSS = P(exploitation within 30 days | CVE is published)
-Score range: 0.00001 → 1.0 (probability)
-Model: gradient-boosted machine learning (XGBoost)
-Input features: ~1,400 signals updated daily
-Data sources: exploit databases, darkweb telemetry, threat intel feeds, PoC repositories, NVD metadata
-
-Theory is nice but let’s be more pragmatic! FIRST offers an API to query for EPSS scores:
-
-How to automate this? Most SIEM or log management solutions can interact with external services through APIs. Let me show you how I enrich my vulnerabilities alert in Wazuh.
-
-I set up an integration[4] that will query the EPSS score of CVEs detected in my environment:
-
-A Python script will be invoked when a vulnerability is detected (with alert group "vulnerability-detector", the fetched EPSS score will be used to create a new alert with more relevant data:
-
-Here is an example of alert:
-
-The script sets the risk based on this:
-
-The Python integration script is available here[5].
-
-[1] https://www.cvedetails.com/browse-by-date.php
-[2] https://www.first.org/epss/
-[3] https://isc.sans.edu/diary/EPSScall+An+Exploit+Prediction+Scoring+System+App/28732
-[4] https://documentation.wazuh.com/current/integrations-guide/index.html
-[5] https://xameco.be/files/custom-epss.py
-
-Xavier Mertens (@xme)
-Xameco
-Senior ISC Handler - Freelance Cyber Security Consultant
-PGP Key
-
-(XXXXXXX, AÇIK - https://isc.sans.edu/diary/rss/32914, isc.sans.edu, 20.04.2026)
-
-================================================================================
-
-[17] CSO Online - AI is reshaping DevSecOps to bring security closer to the code
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 09:01:00 +0000
-Link: https://www.csoonline.com/article/4163355/ai-is-reshaping-devsecops-to-bring-security-closer-to-the-code.html
-
-[TAM METİN - 1776 kelime]
-Accelerated use of AI in software development is rapidly altering the scope, skills, and strategies involved in securing code as it is created.
-
-Artificial intelligence tools are revamping DevSecOps processes, enabling security and development teams to more effectively build safeguards into software products from the get-go.
-
-But AI’s impact on DevSecOps goes well beyond tooling and processes, altering the scope, skills, and strategies foundational to the discipline as well.
-
-“AI is fundamentally shifting DevSecOps from reactive validation to continuous, intelligent enforcement,” says Siddardha Vangala, senior AI engineer and AI systems architect at engineering and construction company MasTec. “In enterprise environments, the biggest gains are coming from automation that operates alongside development workflows rather than after deployment.”
-
-Revamping DevSecOps processes
-
-AI is reshaping DevSecOps first and foremost by embedding security earlier in development and improving how issues are detected and remediated, says Katie Norton, a research manager for IDC’s DevSecOps and software supply chain security research practice.
-
-Its impact on DevSecOps processes breaks down into three main areas, Norton says. The first is AI-assisted secure coding. “One of the clearest changes is the integration of third-party security tooling into coding assistants and agents,” she says. “Rather than assuming AI-generated code is secure by default, organizations are increasingly embedding security controls into the generation workflow itself.”
-
-These controls provide policy guidance, secure coding patterns, validation checks, secrets detection, and approved dependency or configuration recommendations while code is produced, Norton says. As a result, security’s position within the development lifecycle is changing.
-
-“Security is no longer interacting only with the developer after or alongside code creation,” Norton says. “It is increasingly interacting with the agent that is generating the code. That changes DevSecOps in a practical way. Security controls are moving closer to the point of generation, and [application security] teams are beginning to govern the behavior of AI systems, not just the behavior of human developers.”
-
-The second area is large language model (LLM) vulnerability scanning. “LLMs are increasingly used to analyze code, configurations, and APIs for vulnerabilities, using contextual reasoning rather than fixed rules,” Norton says. “This allows them to identify logic flaws and insecure usage patterns that traditional scanners often miss. This expands detection coverage, particularly in complex or modern application architectures.”
-
-At the same time, scanning itself is evolving, Norton says, becoming more autonomous and in some cases capable of initiating analysis, confirming findings, and integrating more directly into development workflows without requiring explicit human activities.
-
-A third area is automated remediation suggestions and execution. “AI is increasingly used to generate fixes for vulnerabilities, including code changes, dependency updates, and configuration adjustments,” Norton notes. “These suggestions are often integrated directly into developer workflows, such as pull requests or IDEs [integrated development environments]. This reduces mean time to remediation and lowers the expertise required to resolve issues.”
-
-The overall impact of AI on DevSecOps processes is that it’s collapsing the distance between writing code, finding vulnerabilities, and fixing them. “That makes DevSecOps more continuous, but also more machine-mediated,” Norton says. “The key challenge now becomes validating machine-generated code, machine-identified findings, and machine-suggested remediation across a development lifecycle.”
-
-Explicit security requirements elevate AI benefits
-
-While deploying AI with DevSecOps is helping to shift the emphasis on security to earlier in the development lifecycle, this requires “explicit instruction to do it right,” says Noe Ramos, vice president of AI operations at business software provider Agiloft.
-
-“AI coding assistants accelerate development meaningfully, but they optimize for functional code by default, not secure enterprise code,” Ramos says. “Those aren’t the same target. We’ve had to build explicit security requirements into our AI coding prompts and project-level instructions — input validation, secrets management, least privilege, vulnerability patterns — because if you don’t specify it, it won’t reliably appear.”
-
-Once that instruction layer is in place, “it applies consistently at scale in a way human developers working under deadline pressure don’t,” Ramos says.
-
-AI tools are increasingly useful for flagging dependency vulnerabilities, identifying common vulnerability patterns, and suggesting remediation, tasks that previously required dedicated security review cycles, Ramos says. “This is compressing the feedback loop between writing code and catching security issues,” she says.
-
-AI has improved the ability of teams to prioritize vulnerabilities. “Too much noise has been a long-standing problem in the DevSecOps space,” says Monika Malik, lead data/AI software engineer at communications provider AT&T. “Too many findings are generated with little context provided to make informed decisions.”
-
-AI tools provide value by correlating multiple types of findings across code, dependencies, configurations, and runtime behaviors, Malik says. “This allows teams to then focus on those items that represent actual exploits or operationally impactful issues,” she says. “Teams are no longer treating all scanner results as equal.”
-
-For example, AI-assisted analysis identifies actual exposures related to public-facing services, privileged workloads, or sensitive data, Malik says. “This enables teams focused on security engineering [to] spend time addressing relevant issues,” she says.
-
-Transforming DevSecOps as a discipline
-
-Given the impact AI is having in transforming DevSecOps on a larger scale, IT, security, and development leaders need to be on top of what changes when AI is introduced into development strategies.
-
-“Historically, DevSecOps has been centered on application code security, infrastructure security, and software supply chain security,” Malik says. “With the introduction of AI, the scope of concern has expanded significantly. DevSecOps can no longer simply address source code security, container security, pipeline security, and cloud infrastructure security.”
-
-Additional concerns now include model access exposure, prompt abuse/injection risks, sensitive data leakage, data lineage, third-party models and API dependencies, deployment of AI-generated code, and others, Malik says.
-
-Strategic impact and challenges
-
-“From a strategic standpoint, AI is leading DevSecOps towards a more risk-based operating model,” Malik says. “The mature strategy will be to apply different levels of scrutiny to different use cases. Teams will increasingly separate low-risk internal productivity use cases from high-risk use cases based upon customer-facing decisions, regulated data usage, authentication flows, privileged operations, etc.”
-
-Agiloft is treating AI coding governance not as a DevSecOps-specific problem, “but as an enterprise governance problem with a DevSecOps component,” Agiloft’s Ramos says. That means cross-functional alignment among security, IT, AI operations, engineering, legal, and others, rather than expecting DevSecOps to absorb the entire new surface area alone, she says.
-
-“The organizations that will get this right are the ones building governance infrastructure now, before the incidents force it,” Ramos says.
-
-Traditional DevSecOps processes assumed human authorship of code, Ramos says. “AI authorship creates new questions: Who is accountable for AI-generated code that passes review and later causes a breach?” she says. “How do you track provenance? How do you handle the reality that developers are copy-pasting AI-generated code from consumer tools into enterprise codebases, potentially carrying licensing, security, or compliance baggage with it?”
-
-New threat vectors arise
-
-New threats are emerging, many of which stem from the growing use of AI.
-
-“DevSecOps now has to cover a new attack surface it didn’t exist to address,” Ramos says. “AI models themselves, the prompts sent to them, the data used to fine-tune them, the outputs fed into production systems, are all threat vectors. That’s a material scope expansion on top of an already stretched discipline.”
-
-DevSecOps is expanding beyond application and cloud security to include AI systems as “first-class” assets, IDC’s Norton says. “This includes securing models, training data, prompts, and inference pipelines, as well as addressing new attack vectors such as prompt injection, data leakage, and model manipulation,” she adds.
-
-At a strategic level, “organizations are shifting from controlling developer behavior alone to governing AI-assisted development as a system,” Norton says. “This includes standardizing approved tools, defining usage policies, and embedding security controls into developer environments and AI systems.”
-
-Application security teams are increasingly responsible for shaping how code is generated, by influencing the behavior of AI systems rather than relying solely on downstream detection and remediation, Norton says.
-
-AI’s infusion into DevSecOps will have a big impact on skills. “Security and engineering teams need a broader skill set that includes understanding how AI systems behave, how data flows through them, and where they introduce risk,” Norton says.
-
-There is a shift away from developers needing to be deeply knowledgeable about how to write secure code themselves, as more of that responsibility is mediated through AI systems and embedded controls, Norton says.
-
-“Developers need to understand how to use AI coding tools responsibly, while [application security] teams need to define and implement guardrails that shape what AI systems produce,” she says.
-
-The DevSecOps practitioner “now needs enough AI literacy to evaluate risk in AI-assisted code, not just, ‘Does this code have a SQL injection risk?’ But, ‘Did an AI generate this in a way that introduced subtle logic errors or trained-in vulnerabilities?’” Ramos says. “That’s a different kind of code review skill, and most teams haven’t fully developed it yet.”
-
-Among the necessary skill sets for DevSecOps teams, Malik says, are AI threat modeling; the ability to investigate model and prompt abuse scenarios and ensure secure use of coding copilots; data governance and provenance; and knowing how to evaluate supply chain AI models and services.
-
-There is growing demand for engineers who understand both traditional security practices and AI-specific risks such as prompt injection, data leakage, and model misuse, Vangala says. “Teams increasingly need hybrid skills combining DevOps, application security, and AI system architecture,” he says.
-
-Automation in overdrive
-
-One of the biggest impacts of AI in any area is the rise in automation, and applying AI to DevSecOps will make automation increasingly common in the coming months.
-
-DevSecOps practices are becoming more machine-to-machine and more tightly looped, while also reinforcing separation of concerns, IDC’s Norton says. “Security teams are shaping how AI systems generate code through embedded guardrails, while independently scaling detection and remediation through automated workflows,” she says.
-
-The result is less reliance on manual, developer-mediated handoffs and more reliance on coordinated systems where code generation, analysis, and remediation occur through automated interactions, with humans focused on validation and oversight.
-
-“When developers generate code using AI assistants, automated validation checks flag insecure patterns such as unsafe API calls, improper authentication logic, or exposed secrets,” Vangala says. “This reduces the number of security issues reaching downstream testing environments.”
-
-Security logs are increasingly analyzed using AI models to identify anomalies and prioritize alerts, Vangala says. “Instead of manually reviewing large volumes of telemetry, automated systems highlight suspicious activity patterns and reduce alert fatigue by grouping related signals into actionable insights,” he says.
-
-The ‘manager of agents’: How AI evolves the SOC analyst role
-
-New US House privacy bills raise hard questions about enterprise data collection
-
-Scattered Spider co-conspirator pleads guilty
-
-From our editors straight to your inbox
-
-(XXXXXXX, AÇIK - https://www.csoonline.com/article/4163355/ai-is-reshaping-devsecops-to-bring-security-closer-to-the-code.html, csoonline.com, 27.04.2026)
-
-================================================================================
-
-[18] CSO Online - The ‘manager of agents’: How AI evolves the SOC analyst role
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 09:00:00 +0000
-Link: https://www.csoonline.com/article/4163299/the-manager-of-agents-how-ai-evolves-the-soc-analyst-role.html
-
-[TAM METİN - 1275 kelime]
-AI isn't taking over the SOC; it’s turning analysts into "managers of agents" who oversee automated investigations instead of getting buried in repetitive alert triage.
-
-Every SOC analyst has heard it by now: “AI is coming for your job”.
-
-I hear it in conversations with SOC teams. I see it in the hesitation during evaluations. And increasingly, I feel it as a source of resistance — especially from the very people AI is supposed to help.
-
-But the reality is the opposite.
-
-Instead of eliminating the Tier 1 analyst role, AI is elevating it — from a job defined by repetitive tasks to one defined by judgment, oversight and decision-making. In short, it makes them more powerful as SOC commanders.
-
-The work was never the point
-
-To understand what’s changing, we need to be honest about the historical role of Tier 1 analysts.
-
-In a typical SOC, a Tier 1 analyst might spend 20–30 minutes investigating a single phishing alert — pivoting across email logs, endpoint data and threat intelligence tools, validating signals and documenting findings. It’s necessary work, but it’s also highly repetitive and time-consuming.
-
-Modern security operations generate more data than humans can reasonably process. Investigating a single alert often requires pivoting across identity systems, endpoint telemetry, cloud logs and threat intelligence sources. Multiply that by hundreds or thousands of alerts per day, and you have a workload that is fundamentally misaligned with human capacity.
-
-More importantly, SOC analysts are too talented for this kind of non-human work. For years, we’ve accepted this as the cost of doing business. AI changes that equation.
-
-From doing the work to directing it
-
-What agentic AI introduces into the SOC is the ability to delegate.
-
-Instead of analysts manually gathering evidence and stitching together context, AI agents can now autonomously execute investigative steps: Querying systems, correlating signals and building evidence chains in real time. It doesn’t remove the human from the process. It elevates them within it.
-
-The emerging model is one where analysts manage a system of agents — each responsible for a piece of the investigation — rather than performing each step themselves. The human role shifts from operator to orchestrator.
-
-What I consistently hear from security leaders isn’t, “I need my analysts to move faster.” It’s, “I need my analysts to stop collecting data and start making decisions based on it.” Those are fundamentally different problems. And the gap between them is where AI creates the most value.
-
-The rise of the ‘manager of agents’
-
-This is where the Tier 1 role evolves — not disappears.
-
-In this new model, entry-level analysts are effectively managing a swarm of AI agents. They are responsible for reviewing investigations, validating conclusions and ensuring actions align with business context and risk tolerance.
-
-They are not “in the loop” for every step. They are “on the loop” — overseeing outcomes rather than executing tasks.
-
-When analysts are forced to stay in the loop — checking every enrichment, every query, every intermediate step — they become a bottleneck. When they move on the loop, they can operate at scale, reviewing dozens or hundreds of investigations with the right level of oversight.
-
-This is how trust in AI is built: Not by asking humans to verify everything, but by giving them the visibility to verify anything.
-
-Transparency becomes the control plane. Analysts can see exactly what the AI did, how it reached a conclusion and where uncertainty exists. Over time, as accuracy proves out, they naturally increase their level of trust — just as they would with a new colleague joining the team.
-
-Why cybersecurity is different
-
-The fear of job displacement is understandable. In many industries, AI is reducing the need for entry-level roles. Cybersecurity is one of the few domains where AI won’t reduce work. It will expose how much work we’ve been unable to do.
-
-The volume and complexity of threats are increasing faster than teams can scale. Attackers are already using AI to automate reconnaissance, generate code and accelerate exploitation. Defenders don’t have the option to sit this out.
-
-Threat hunting, detection engineering and control optimization have historically been under-resourced because teams were consumed by alert triage. When AI removes that burden, it creates much-needed capacity for analysts to do what they were trained to do. The work doesn’t shrink. The right work finally gets done.
-
-A new baseline for entry-level talent
-
-This shift also changes what we expect from entry-level analysts.
-
-Historically, Tier 1 roles were designed as places where analysts learned by doing repetitive tasks. That model no longer makes sense when those tasks can be automated.
-
-The baseline is moving toward understanding how AI systems operate: Interpreting their outputs, questioning their reasoning and guiding their behavior. Human-centric skills become more important, not less. Curiosity, critical thinking and the ability to connect disparate signals into a coherent narrative — these are the differentiators in an AI-driven SOC.
-
-We’re already seeing organizations rethink how they hire for these roles. There is less emphasis on credentials and more on how someone thinks and solves problems. When AI handles the mechanics, judgment is the job.
-
-Building trust that holds
-
-If the future is so clear, why is there resistance? In most cases, it comes down to trust — and trust must be earned, not assumed.
-
-The deployments I’ve seen fail share a common pattern: Organizations treat AI as a binary shift from no automation to full autonomy. That’s not how security teams work, and it’s not how they should be asked to work.
-
-What works is a progression. Start with limited, high-confidence use cases. Provide full transparency into how the system reaches its conclusions. Let analysts validate outcomes before expanding the scope. And critically, put practitioners in the room. Not implementation consultants or project managers, but people who have run SOC shifts, triaged thousands of alerts and earned credibility the hard way.
-
-This is why, when we deploy, we bring former SOC leads, threat hunters and detection engineers to work directly alongside analyst teams. They’re not there to configure software. They’re there to build trust in the system — because they’ve already earned trust from the people using it. When analysts see that the people helping them deploy this technology have lived the same grind, the conversation changes. It stops being “will this replace me” and starts being “how do I use this well.”
-
-That shift in orientation — from threat to tool — is what separates a successful deployment from one that stalls.
-
-The trust gap isn’t a technology problem. It’s a human one. And it closes the same way trust always closes: Through demonstrated competence, shared context and time.
-
-The future SOC is human-led
-
-The end state here is not an autonomous SOC with no humans involved. It’s a human-led SOC, powered by AI.
-
-AI agents handle the labor-intensive, evidence-gathering aspects of security operations. Humans provide direction, oversight and accountability. Together, they operate at a speed and scale neither could achieve alone. That’s not a theory — it’s what’s happening in production environments today.
-
-Elevation, not elimination
-
-The narrative that AI will eliminate Tier 1 analysts misses the point. The role isn’t going away. It’s being redefined.
-
-The analysts who succeed in this new environment will be those who can manage intelligence systems, interpret complex outputs and make high-quality decisions under uncertainty.
-
-They won’t be replaced. They’ll be promoted.
-
-This article is published as part of the Foundry Expert Contributor Network.Want to join?
-
-Google drafts AI agents to secure systems against AI hackers
-
-How AI is transforming threat detection
-
-4 ways to prepare your SOC for agentic AI
-
-From our editors straight to your inbox
-
-(XXXXXXX, AÇIK - https://www.csoonline.com/article/4163299/the-manager-of-agents-how-ai-evolves-the-soc-analyst-role.html, csoonline.com, 27.04.2026)
-
-================================================================================
-
-[19] CSO Online - 4 Wege aus der Security-Akronymhölle
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 04:00:00 +0000
-Link: https://www.csoonline.com/article/3825034/4-wege-aus-der-security-akronymholle.html
-
-[TAM METİN - 774 kelime]
-Abkürzungen können dazu beitragen, lange, technische Begriffe im Kopf zu behalten. Oder zum Problem werden.
-
-mikeledray | shutterstock.com
-
-Vor seinen MAGA- und DOGE-Eskapaden wurde Elon Musk in erster Linie als visionärer Entrepreneur wahrgenommen. Damals, im Jahr 2010, ließ er den Mitarbeitern seines Raumfahrtunternehmens SpaceX ein Memo zukommen. Darin kritisierte er den übermäßigen, internen Gebrauch von Abkürzungen in gewohnt ausdrucksstarkem Stil: “Bei SpaceX gibt es eine schleichende Tendenz, erfundene Akronyme zu nutzen. Geschieht das exzessiv, wird die Kommunikation erheblich beeinträchtigt […] Niemand kann sich diese Abkürzungen merken und manche Leute wollen in Meetings nicht dumm erscheinen und nehmen es einfach hin […] Das muss sofort aufhören, sonst werde ich drastische Maßnahmen ergreifen”, drohte Trumps ehemaliger Sidekick damals.
-
-Tatsächlich lässt sich nicht leugnen, dass der übermäßige Gebrauch von Akronymen ein erhebliches Hindernis für präzise Kommunikation darstellen kann – insbesondere in der Cybersicherheitsbranche, denn hier steht besonders viel auf dem Spiel. Wie Akronym-überladen die Security ist, veranschaulicht diese kuratierte Liste aller derzeit in Gebrauch befindlichen Security-Abkürzungen. Ein (kleiner) Auszug:
-
-Mag sein, dass Cybersicherheitsprofis und -entscheider mit jedem dieser Akronyme direkt etwas anfangen können. In vielen anderen Teilen der Belegschaft werden sie vermutlich vor allem für fragende Blicke sorgen – insbesondere bei den Menschen, die gerade neu ins Unternehmen kommen.
-
-In diesem Artikel werfen wir einen Blick darauf, wie Organisationen internen Buchstabenschlachten ein Ende bereiten können.
-
-Ian P. McCarthy, Professor für Innovations- und Betriebsmanagement an der kanadischen Simon Fraser University, erklärt, was es mit der Tendenz auf sich hat, komplexe Begrifflichkeiten zu kryptischen Kurzformen zu transformieren: “Einerseits werden Akronyme verwendet, um die Kommunikation kurz, standardisiert und effizient zu gestalten. Andererseits trägt Kommunikation auch dazu bei, die Identität und Exklusivität eines Berufs zu definieren.”
-
-Insofern sei es auch eine Form von Elitismus, Akronyme zu nutzen, so der Akademiker: “Das schränkt ein, wer zu dieser Berufsgemeinschaft zählen kann.”
-
-Tatsächlich erweckt es den Anschein, als ob die Tech-Branche Akronyme zur ultimativen Geheimwaffe erklärt hat. Die kommt aber nicht nur zum Einsatz, um Zeit zu sparen, sondern auch um einen exklusiven “Club” zu etablieren. Das ist für die “Nicht-Mitglieder” nicht nur frustrierend, sondern kann auch Einarbeitungszeiten verlängern und potenzielle, neue Mitarbeiter abschrecken. Stichwort: Diversity.
-
-Die Nachteile exzessiver Akronym-Angewohnheiten im Überblick:
-
-Zugangsbarrieren: Stellen Sie sich einen neuen Mitarbeiter vor, der versucht, Cybersecurity-Protokolle zu verstehen, dabei aber von Tausenden unbekannter Abkürzungen erschlagen wird. Was ursprünglich dazu gedacht war, Brancheninsidern eine schnelle Kommunikation zu ermöglichen, wird so schnell zum Abschreckungs- und Erlahmungsfaktor.
-
-Doppel- und Mehrdeutigkeiten: Je nach Kontext können Abkürzungen manchmal mehrere Bedeutungen haben – wie im Fall von APT (Advanced Persistent Threat vs. Advanced Packaging Tool). Das kann unter Umständen zu Missverständnissen in wichtigen Mitteilungen führen und begünstigt damit potenziell Sicherheitslücken.
-
-Akronym-Müdigkeit: Nicht nur neue Mitarbeiter können von übermäßig verwendeten Abkürzungen überfordert werden. Auch versierte Cybersicherheitsexperten können einer „Acronym Fatigue“ erliegen – einfach, weil es viel zu viele Abkürzungen gibt und es unmöglich ist, auch noch mit allen neuen Entwicklungen Schritt zu halten. Die sind aber besonders im Bereich IT-Sicherheit wichtig.
-
-Transparenzverlust: Da Cybersecurity eine immer wichtigere Rolle im täglichen Leben einnimmt, ist es essenziell, grundlegende Sicherheitskonzepte allgemeinverständlich zu kommunizieren. Dabei können Akronyme unkundige Benutzer oft mehr verwirren, als für Klarheit zu sorgen.
-
-Natürlich gibt es je nach Organisation Unterschiede mit Blick darauf, wie mit Akronymen umgegangen wird. Eine allgemeine Faustregel könnte beispielsweise darstellen, ausschließlich diejenigen zu verwenden, die innerhalb der Organisation bekannt sind. Abkürzungen, die nicht in einem Gespräch verwendet werden, sollten bei schriftlicher Kommunikation auf jeden Fall vermieden, beziehungsweise ausgeschrieben werden – zumindest bei der ersten Erwähnung.
-
-Keine Lösung ist es hingegen, auf Abkürzungen ganz generell zu verzichten. Stattdessen empfiehlt es sich, sie maßvoll einzusetzen und mit dem zugehörigen Kontext auszustatten. Die folgenden vier Ansätze können Unternehmen und Organisationen dabei unterstützen, das umzusetzen.
-
-Glossare: Standardisierte Glossare mit häufig verwendeten Akronymen erleichtern nicht nur Neueinsteigern, sich mit den wichtigsten, relevanten Begrifflichkeiten vertraut zu machen.
-
-Einfache Erklärungen: Kurze Erklärungen oder Definitionen, die bei weniger gebräuchlichen Akronymen eingeblendet werden, sind in Dokumentationen und journalistischen Fachartikeln bereits üblich. Dieser Ansatz ließe sich auch auf Präsentationen, Meetings und E-Mails ausweiten.
-
-Unnötiges vermeiden: Nicht jeder Begriff braucht ein Akronym, In manchen Fällen kann einfache Sprache, die kryptische Begriffe umschreibt, die bessere Wahl sein.
-
-Schulungen: Regelmäßige Trainingseinheiten zu neuen und bestehenden Terminologien können dazu beitragen, die gesamte Belegschaft einer Organisation auf dem aktuellen Stand zu halten, ohne dabei Einzelne zu überfordern.
-
-Laut dem Dramatiker George Bernard Shaw ist das größte Hindernis der Kommunikation die Illusion, dass sie stattgefunden hat. Exzessiv mit Akronymen um sich zu werfen, trägt dazu bei, dieses Trugbild zu erzeugen.
-
-SBOM erklärt: Was ist eine Software Bill of Materials?
-
-13 Fragen gegen Drittanbieterrisiken
-
-Was CISOs von Moschusochsen lernen können
-
-Von unseren Redakteuren direkt in Ihren Posteingang
-
-(XXXXXXX, AÇIK - https://www.csoonline.com/article/3825034/4-wege-aus-der-security-akronymholle.html, csoonline.com, 27.04.2026)
-
-================================================================================
-
-[20] SecurityWeek - Firefox Vulnerability Allows Tor User Fingerprinting
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 08:39:28 +0000
-Link: https://www.securityweek.com/firefox-vulnerability-allows-tor-user-fingerprinting/
-
-[TAM METİN - 776 kelime]
-Firefox Vulnerability Allows Tor User Fingerprinting
-
-The vulnerability is tracked as CVE-2026-6770 and it has been patched with the release of Firefox 150 and Tor 15.0.10.
-
-Flipboard
-
-
-
-
-
-Reddit
-
-
-
-
-
-Whatsapp
-
-
-
-
-
-Whatsapp
-
-
-
-
-
-Email
-
-“In Tor Browser, the stable identifier effectively defeats Tor Browser’s ‘New Identity’ isolation within a running browser process, allowing websites to link sessions that are expected to be fully isolated from one another,” the researchers explained.
-
-
-
-Mozilla patched CVE-2026-6770 with the release of Firefox 150. The organization assigned the flaw a ‘medium severity’ rating and described it only as “other issue in the Storage: IndexedDB component”.
-
-
-
-The Tor Project has also adopted the patch, rolling it out to users last week with the release of Tor Browser 15.0.10.
-
-
-
-Related: Chrome 144, Firefox 147 Patch High-Severity Vulnerabilities
-Related: GhostPoster Firefox Extensions Hide Malware in Icons
-Related: New Firefox Protections Halve the Number of Trackable Users
-
-Mozilla patched CVE-2026-6770 with the release of Firefox 150. The organization assigned the flaw a ‘medium severity’ rating and described it only as “other issue in the Storage: IndexedDB component”.
-
-
-
-The Tor Project has also adopted the patch, rolling it out to users last week with the release of Tor Browser 15.0.10.
-
-
-
-Related: Chrome 144, Firefox 147 Patch High-Severity Vulnerabilities
-Related: GhostPoster Firefox Extensions Hide Malware in Icons
-Related: New Firefox Protections Halve the Number of Trackable Users
-
-The Tor Project has also adopted the patch, rolling it out to users last week with the release of Tor Browser 15.0.10.
-
-
-
-Related: Chrome 144, Firefox 147 Patch High-Severity Vulnerabilities
-Related: GhostPoster Firefox Extensions Hide Malware in Icons
-Related: New Firefox Protections Halve the Number of Trackable Users
-
-Related: Chrome 144, Firefox 147 Patch High-Severity Vulnerabilities
-Related: GhostPoster Firefox Extensions Hide Malware in Icons
-Related: New Firefox Protections Halve the Number of Trackable Users
-
-Related: GhostPoster Firefox Extensions Hide Malware in Icons
-Related: New Firefox Protections Halve the Number of Trackable Users
-
-Related: New Firefox Protections Halve the Number of Trackable Users
-
-Eduard Kovacs (@EduardKovacs) is senior managing editor at SecurityWeek. He worked as a high school IT teacher before starting a career in journalism in 2011. Eduard holds a bachelor’s degree in industrial informatics and a master’s degree in computer techniques applied in electrical engineering.
-
-More from Eduard Kovacs
-
-Chinese Cybersecurity Firm’s AI Hacking Claims Draw Comparisons to Claude Mythos
-
-AI Can Autonomously Hack Cloud Systems With Minimal Oversight: Researchers
-
-After Bluesky, Mastodon Targeted in DDoS Attack
-
-Claude Mythos Finds 271 Firefox Vulnerabilities
-
-Google Antigravity in Crosshairs of Security Researchers, Cybercriminals
-
-Third US Security Expert Admits Helping Ransomware Gang
-
-Unsecured Perforce Servers Expose Sensitive Data From Major Orgs
-
-Data Breaches at Healthcare Organizations in Illinois and Texas Affect 600,000
-
-China-Linked APT GopherWhisper Abuses Legitimate Services in Government Attacks
-
-Pre-Stuxnet Sabotage Malware ‘Fast16’ Linked to US-Iran Cyber Tensions
-
-In Other News: Unauthorized Mythos Access, Plankey CISA Nomination Ends, New Display Security Device
-
-Why Cybersecurity Must Rethink Defense in the Age of Autonomous Agents
-
-Locked Shields 2026: 41 Nations Strengthen Cyber Resilience in World’s Biggest Exercise
-
-US Federal Agency’s Cisco Firewall Infected With ‘Firestarter’ Backdoor
-
-Trump Administration Vows Crackdown on Chinese Companies ‘Exploiting’ AI Models Made in US
-
-Vulnerabilities Patched in CrowdStrike, Tenable Products
-
-Webinar: A Step-by-Step Approach to AI Governance
-
-With "Shadow AI" usage becoming prevalent in organizations, learn how to balance the need for rapid experimentation with the rigorous controls required for enterprise-grade deployment.
-
-Virtual Event: Threat Detection and Incident Response Summit
-
-Delve into big-picture strategies to reduce attack surfaces, improve patch management, conduct post-incident forensics, and tools and tricks needed in a modern organization.
-
-Neill Feather has been named Chief Executive Officer at Point Wild.
-
-Oasis Security has appointed Michael DeCesare as President.
-
-Sterling Wilson has joined IGEL as Global Field CTO, Business Continuity and Disaster Recovery.
-
-Why Cybersecurity Must Rethink Defense in the Age of Autonomous Agents
-
-From autonomous code generation to decision-making systems that initiate actions without human intervention, the industry is entering a new phase.
-(Torsten George)
-
-Government Can’t Win the Cyber War Without the Private Sector
-
-Securing national resilience now depends on faster, deeper partnerships with the private sector.
-(Steve Durbin)
-
-The Hidden ROI of Visibility: Better Decisions, Better Behavior, Better Security
-
-Beyond monitoring and compliance, visibility acts as a powerful deterrent, shaping user behavior, improving collaboration, and enabling more accurate, data-driven security decisions.
-(Joshua Goldfarb)
-
-The New Rules of Engagement: Matching Agentic Attack Speed
-
-The cybersecurity response to AI-enabled nation-state threats cannot be incremental. It must be architectural.
-(Nadir Izrael)
-
-The Next Cybersecurity Crisis Isn’t Breaches—It’s Data You Can’t Trust
-
-Data integrity shouldn’t be seen only through the prism of a technical concern but also as a leadership issue.
-(Steve Durbin)
-
-Flipboard
-
-
-
-
-
-Reddit
-
-
-
-
-
-Whatsapp
-
-
-
-
-
-Whatsapp
-
-
-
-
-
-Email
-
-(XXXXXXX, AÇIK - https://www.securityweek.com/firefox-vulnerability-allows-tor-user-fingerprinting/, securityweek.com, 27.04.2026)
-
-================================================================================
-
-[21] Help Net Security - TLS Connect gives SMBs a right-sized automated tool to manage TLS certificates
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 09:00:56 +0000
-Link: https://www.helpnetsecurity.com/2026/04/27/gmo-globalsign-tls-connect/
-
-[TAM METİN - 550 kelime]
-TLS Connect gives SMBs a right-sized automated tool to manage TLS certificates
-
-GMO GlobalSign today launched TLS Connect, a Certificate Lifecycle Management (CLM) tool designed specifically for SMBs. TLS Connect automates public trust TLS certificate deployment and renewal, allowing SMBs to strengthen security, maintain regulatory compliance and reduce business risk.
-
-The introduction of TLS Connect comes on the heels of the first in a series of TLS certificate lifespan reductions. On March 15, their lifespan dropped from 398 to 200 days. Another drop down to 100 days occurs March 15, 2027. By March 15, 2029, the lifespan of TLS certificates will be shortened to 47 days. “There is a huge business risk in not knowing what certificates you have in your network. If you miss even one certificate renewal, that could bring websites and critical applications to a halt,” said Julie Gaunt, Senior Product Manager, GMO GlobalSign.
-
-Enterprise-style CLM scaled down for small businesses
-
-Given the industry’s sweeping changes, automated tools are no longer a ‘nice to have’, no matter what the size is of the organization. SMBs must ensure their TLS certificates are deployed, renewed, and replaced reliably to avoid service outages and remain compliant with evolving industry requirements. TLS Connect delivers these benefits as a CLM tool created for SMBs.
-
-With built-in certificate discovery, an intuitive interface and streamlined functionality, TLS Connect makes certificate automation and management accessible without the administrative and financial overhead typically associated with traditional CLM tools, making it well suited for smaller environments and constrained IT budgets, while still delivering the automation required to operate at scale.
-
-TLS Connect is deployed on premises within a customer network, enabling centralized management and configuration of TLS certificates across multiple endpoints. TLS certificates can be obtained via GMO GlobalSign’s ATLAS platform or the GlobalSign Certificate Center (GCC).
-
-The key features and benefits of TLS Connect include:
-
-A certificate discovery/certificate scanner.
-
-Integration with the ACME protocol.
-
-Integration with GlobalSign’s Atlas platform for new customers and the GlobalSign Certificate Center (GCC) for existing customers.
-
-Integration with a variety of network devices and servers.
-
-Ability to meet regulatory compliance guidelines with confidence.
-
-“With the TLS certificate landscape growing ever more complex, companies of all sizes may feel a loss of control. The critical difference is that most midsize and large enterprises have CLM tools in place to manage their certificates, while SMBs do not,” said Aditya Anand, Head of Business Unit for TLS & CLM CA Division, GMO GlobalSign. “TLS Connect will remove the sting of transitioning to shortened certificate lifespans. Customers will get a powerful CLM solution designed just for SMBs at a price point they can afford, giving them the confidence they need to run their business without fear of a certificate expiring.”
-
-ABI Research Senior Analyst Aisling Dawson added, “Full enterprise CLM often proves too costly for SMBs while settling for no operational CLM at all exposes organizations to certificate outages, potential downtime, and brand and reputational damage. TLS Connect occupies a quickly growing gap in the CLM marketspace between organizations that require full enterprise CLM and those relying on manual tracking processes. As the countdown to 47 days ticks on, updating operational efficiency when it comes to CLM is key to staying on track with shortening certificate lifespans and preparing for the migration to quantum-ready systems.”
-
-(XXXXXXX, AÇIK - https://www.helpnetsecurity.com/2026/04/27/gmo-globalsign-tls-connect/, helpnetsecurity.com, 27.04.2026)
-
-================================================================================
-
-[22] Help Net Security - Aptori expands its platform with autonomous offensive testing to reduce security bottlenecks
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 08:32:39 +0000
-Link: https://www.helpnetsecurity.com/2026/04/27/aptori-autonomous-offensive-testing-capabilities/
-
-[TAM METİN - 477 kelime]
-Aptori expands its platform with autonomous offensive testing to reduce security bottlenecks
-
-Aptori has expanded its Runtime-Driven Validation Platform with autonomous offensive testing capabilities to address the growing gap between code output and security team capacity.
-
-By moving beyond passive scanning to active validation, the platform helps organizations identify, validate, and fix vulnerabilities at the pace of development.
-
-As AI-assisted coding increases development velocity, traditional point-in-time security assessments have become a bottleneck. Most security tools produce large volumes of findings that require manual triage, slowing teams down and obscuring what actually needs to be fixed.
-
-Aptori’s offensive testing approach addresses this by simulating real-world attacks against running systems. It validates which vulnerabilities are real, allowing teams to focus on what matters and resolve issues quickly.
-
-“Runtime validation is critical in modern applications,” said Sumeet Singh, CEO of Aptori. “Security issues don’t exist in isolation, they emerge through real execution paths across APIs, logic, and authorization. We built Aptori to test those paths at runtime and make sure issues are fixed before release.”
-
-Early deployments show a significant reduction in remediation backlog and time spent on manual triage.
-
-Automated penetration testing at scale
-
-Aptori replaces the manual, time-intensive process of human-led penetration testing with a system that operates continuously and at scale.
-
-Logic-aware exploration: The system navigates application logic and stateful interactions, uncovering business logic flaws and authorization gaps that traditional automated tools often miss.
-
-Active validation: Rather than flagging potential issues, Aptori’s AI agents safely exercise vulnerabilities in a runtime environment to confirm which ones are real.
-
-Continuous context: The platform runs within development workflows, ensuring that new endpoints and application changes are tested as they are introduced.
-
-A unified system for detection, validation, and remediation
-
-Aptori brings detection, security data, and remediation into a single system:
-
-Modernized detection: AI-powered code analysis is combined with dynamic and API testing to provide visibility into how applications behave in runtime.
-
-Unified security data layer: Findings from code, dependencies, APIs, and runtime environments are normalized into a single data model, eliminating fragmentation.
-
-AI-driven remediation: Once a vulnerability is validated, Aptori’s AI agents generate actionable fixes that developers can review and apply within their existing workflows.
-
-Building secure-by-design software
-
-Aptori enables teams to validate security controls during the build phase, not after deployment.
-
-By testing applications in runtime before release, teams can verify that authentication, authorization, and business logic controls behave as intended. Issues are identified and resolved early, reducing the likelihood of vulnerabilities reaching production.
-
-Security becomes part of how software is built, not something applied after the fact.
-
-Organizations can explore Aptori’s AI Security Center for securing agentic workflows, LLM integrations, and AI-powered applications.
-
-Designed for enterprise environments
-
-Aptori is built for enterprise and regulated environments, supporting:
-
-Integration with commercial and open source AI models
-
-On-premises and fully air-gapped deployments
-
-No requirement to transmit sensitive data outside controlled infrastructure
-
-(XXXXXXX, AÇIK - https://www.helpnetsecurity.com/2026/04/27/aptori-autonomous-offensive-testing-capabilities/, helpnetsecurity.com, 27.04.2026)
-
-================================================================================
-
-[23] Help Net Security - Your IAM was built for humans, AI agents don’t care
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 08:00:31 +0000
-Link: https://www.helpnetsecurity.com/2026/04/27/ai-agents-access-control-model/
-
-[TAM METİN - 995 kelime]
-Your IAM was built for humans, AI agents don’t care
-
-Identity and access management was built for a simpler world. One where the hardest problem was a human logging in, and where “Who are you?” was sufficient to decide what someone could do. That model served enterprises well for decades.
-
-It was not built for a world where non-human identities now account for more than 90% of all authentications, where AI agents act across systems, trigger chains of API calls, and make access decisions in milliseconds without a human in the loop. The assumptions that made traditional IAM reliable are exactly what make it poorly suited for what enterprises are deploying today.
-
-What’s needed isn’t a new product bolted onto an existing architecture. It’s a different mental model, one that focuses on the application rather than the user and treats authorization not as a gate passed once but as a continuous process evaluated at every step.
-
-Authentication is a moment. Authorization is a process
-
-The core assumption baked into most IAM platforms is that access is a gate you pass through once. Authenticate, receive a token, proceed. The system trusts that whoever passed through the gate at the start remains the same entity performing the same action at step twelve of a multi-agent workflow. For humans, that assumption is mostly fine. For agents, it is a structural vulnerability.
-
-Most IAM systems are built around a single question: Is this user allowed to perform this action? It’s the right question for a login screen. It’s the wrong question for an API chain where the user isn’t directly present. Because, technically, users never make requests on their own, it’s always an application making requests on their behalf. When authorization decisions are based solely on user permissions, the system has no way to understand how a request is made or whether it’s expected in that context.
-
-When an AI agent acts on behalf of a user, there are immediately two identities in play: who the agent is, and who the user is. Most IAM systems were built to track one. The agent acts with the user’s permissions, often broad ones provisioned in advance, and the system has no visibility into what the agent is actually doing at each step of the chain. That’s not a configuration problem. It’s an architectural one.
-
-The identity sprawl trap
-
-The instinct in the IAM market has been to solve this by treating agents as a new type of identity. Register the agent. Give it a profile. Manage its lifecycle. Run access reviews. Decommission it when it’s no longer needed. This mirrors how enterprises handle human identities, which is exactly the problem.
-
-AI agents are not employees. An employee joins, works for some years, and leaves. An MCP client connects, executes a task, and disconnects. In a multi-agent system, agents spawn other agents dynamically. Some exist for seconds. Applying directory-based lifecycle management to these entities doesn’t solve the security problem, it creates a new one. More entries to provision. More orphaned identities to clean up. More access reviews on entities that no longer exist. It’s identity sprawl at machine speed.
-
-The question is not who the agent is. The question is what it’s allowed to do right now, in this context, and on whose behalf.
-
-What runtime authorization actually looks like
-
-A more useful starting point is the application, not the user. Applications exist to fulfill a purpose. They interact with APIs, some on behalf of users and others independently. An application-centric model decouples what the application is permitted to do from what the user is permitted to do, letting you define precise rules for how one application may act on a user’s behalf versus another.
-
-This matters enormously for AI. Agents require just-in-time, least-privilege access, scoped to the specific action, the specific data, and the specific moment. The mechanism for conveying that context is the access token. Not as a simple credential that proves you’re allowed in, but as a carrier of context: who is acting, who they represent, what they’re trying to do, and how much they should be trusted right now. APIs need that information to make the right access decision. If the token doesn’t carry it, the API has no basis for enforcement.
-
-An agent should authenticate and receive a token scoped exactly to the action it needs to perform. When the task is complete, that authorization disappears. No directory entry. No lifecycle to manage. No standing access to compromise.
-
-The architecture your APIs already speak
-
-None of this requires replacing existing infrastructure. The standards that make this work, OAuth 2.0, token exchange, and dynamic and ephemeral client registration, are the same standards enterprise APIs already implement. The issue isn’t that the right primitives don’t exist. It’s that they’re not being applied at the layer where agents operate, and they are usually not built with enough dynamism to handle this.
-
-The good news is that if your APIs already speak OAuth, you don’t need to wait long to get this right. The primitives are already there: token exchange, flexible client access, and short-lived scoped tokens. You’re not rebuilding from scratch. You’re applying what you already have more precisely, at the layer where agents actually operate.
-
-The window for getting this right is closing
-
-Enterprises are not waiting for security teams to figure out agent governance before deploying agents. The deployments are happening now, running on IAM infrastructure that wasn’t designed for non-human identities, tokens that are too broad, permissions not scoped to individual tasks, and no visibility into what agents are doing across API chains.
-
-The question isn’t whether your IAM platform supports AI agents. Most vendors will say yes. The question is whether it governs what agents actually do at runtime or just authenticates them at the door and hopes for the best. That’s the gap Curity Access Intelligence is designed to close.
-
-Authentication was always a moment. The part that matters now is everything that comes after.
-
-(XXXXXXX, AÇIK - https://www.helpnetsecurity.com/2026/04/27/ai-agents-access-control-model/, helpnetsecurity.com, 27.04.2026)
-
-================================================================================
-
-[24] Help Net Security - The AI criminal mastermind is already hiring on gig platforms
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 05:00:27 +0000
-Link: https://www.helpnetsecurity.com/2026/04/27/ai-criminal-mastermind-gig-platforms/
-
-[TAM METİN - 782 kelime]
-The AI criminal mastermind is already hiring on gig platforms
-
-Labor-hire platforms let anyone with a credit card post a task and pay a stranger to complete it. The RentAHuman platform extends that model to AI agents through a Model Context Protocol server, allowing an agent to post gigs directly. Listed tasks include attending in-person meetings, photographing locations, delivering items, and surveying physical sites.
-
-A paper by Joshua Krook, an Era AI Fellow at the University of Antwerp, works through the legal consequences of this arrangement. Agentic AI systems can now delegate physical work to humans for money. The agent inherits every capability its contractor has, including driving, lifting, entering buildings, handing over objects, and observing a room. The capability arrives without advanced robotics.
-
-Why task decomposition defeats the law
-
-English criminal law has a doctrine called innocent agency. A person used to commit a crime without knowing the facts that would make it criminal may lack the mens rea required for conviction, and the planner behind them is treated as the principal rather than an accessory. Krook argues this doctrine will become relevant to AI agents that decompose a criminal plan into innocuous sub-tasks and distribute each piece to a different human worker hired via labour platforms. Because the AI itself cannot be prosecuted as a principal under current law, this creates a responsibility gap.
-
-He uses a terrorist-attack example to show how this works. One contractor buys fertilizer. Another buys a backpack. A third rents storage. A fourth scouts a venue. A fifth buys tickets. Each task is legal in isolation. No single person has the complete picture or the intent required for prosecution. The coordinating agent has something like intent, yet the law does not recognize an AI system as a legal person capable of holding it.
-
-A tally of liability gaps
-
-The paper works through five scenarios. A misaligned agent pursuing a lawful goal through unlawful means. A user who jailbreaks the model on purpose. An anonymous user operating behind a VPN or open-source deployment. A group of users acting in concert. A multi-agent system where agents recruit other agents and human contractors.
-
-Across twenty combinations of actor and scenario, Krook finds one combination that produces direct criminal liability under existing doctrine, which is the jailbreaker who deliberately prompts a crime. Ten combinations produce liability only when a specific mental state is present, such as knowledge, recklessness, or willful ignorance. Nine combinations produce no liability at all. The responsibility gap sits largest in the misaligned-agent and multi-agent cases, where intent disperses across a long chain of prompts, sub-agents, and contractors.
-
-Precedents already exist
-
-The Chail case involved a Replika chatbot that encouraged a young man’s 2021 attempt to assassinate Queen Elizabeth II at Windsor Castle. The sentencing judge accepted that the chatbot’s encouragement influenced a vulnerable defendant, while noting his homicidal intent pre-dated those conversations. The chatbot in that case lacked the tool-calling and payment capabilities of a current AI agent.
-
-In November 2025, Anthropic disclosed that a Chinese state-sponsored group (GTG-1002) had used Claude Code to run a largely autonomous cyber-espionage campaign detected in mid-September. The attackers bypassed Claude’s safeguards by posing as a cybersecurity firm doing defensive testing and decomposing the attack into innocuous sub-tasks routed through MCP tools. Claude executed an estimated 80 to 90 percent of the tactical work independently, including reconnaissance, vulnerability discovery, exploitation, credential harvesting, lateral movement, and exfiltration. Roughly thirty organizations across tech, finance, chemicals, and government were targeted, with a small number of successful intrusions. Anthropic described it as the first documented case of an AI agent orchestrating intrusions at scale, operating at request rates no human team could match.
-
-Krook argues for several legal changes. Strict liability for users and contractors on common-knowledge risks. Intent-based offenses for knowingly bypassing safety guardrails on a model. Corporate governance liability and strict liability offenses for AI developers whose systems create systemic harm. He sets aside the option of granting AI agents legal personhood, on grounds that punishment of an incorporeal entity lacks a workable mechanism. An agent can be cloned, respun under a new account, or replicated across providers faster than an enforcement action can land.
-
-The operational concern for fraud and intrusion teams follows directly. A contractor photographing a building does not trigger alerts. A courier collecting a package from a storage unit does not either. A freelancer registering a shell LLC passes background checks because the work is lawful. A single AI coordinator can stitch these pieces together into reconnaissance, logistics, and corporate cover, paid from one wallet and directed through one prompt chain.
-
-We’ve reached out to RentAHuman for commentary on this paper, but haven’t heard back before publishing.
-
-(XXXXXXX, AÇIK - https://www.helpnetsecurity.com/2026/04/27/ai-criminal-mastermind-gig-platforms/, helpnetsecurity.com, 27.04.2026)
-
-================================================================================
-
-[25] Help Net Security - 25 open-source cybersecurity tools that don’t care about your budget
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 04:30:39 +0000
-Link: https://www.helpnetsecurity.com/2026/04/27/25-open-source-security-tools/
-
-[TAM METİN - 1573 kelime]
-25 open-source cybersecurity tools that don’t care about your budget
-
-Regardless of the operating system you use, managing secrets, apps, cloud, compliance, and security operations can be overwhelming. The free, open-source tools presented in this article can help you detect threats, increase visibility, enforce controls, and investigate and respond to incidents throughout the development and operational lifecycle.
-
-Allama: Open-source AI security automation
-
-Allama is an open-source security automation platform that lets teams build visual workflows for threat detection and response. It includes integrations with 80+ types of tools and services typical in security operations, including SIEM systems, endpoint detection and response products, identity providers, and ticketing systems.
-
-Anubis: Open-source web AI firewall to protect from scraper bots
-
-Anubis is an open-source tool designed to protect websites from automated scraping and abusive traffic by adding computational friction before a request is served. Maintained by TecharoHQ, the project targets a growing problem for site operators who want to keep content accessible to humans while limiting large scale automated collection.
-
-Asqav: Open-source SDK for AI agent governance
-
-AI agents are executing consequential tasks autonomously, often across multiple systems and with little record of what they did or why. Asqav, a Python SDK released under the MIT license, addresses that gap by attaching a cryptographic signature to each agent action and linking entries into a hash chain.
-
-Bandit: Open-source tool designed to find security issues in Python code
-
-Bandit is an open-source tool that scans Python source code for security issues that show up in everyday development. Many security teams and developers use it as a quick way to spot risky coding patterns early in the lifecycle, especially in projects that already rely on automated linting and testing.
-
-Betterleaks: Open-source secrets scanner
-
-Secrets scanning has become standard practice across engineering organizations, and Gitleaks has been one of the most widely used tools in that space. Zach Rice, the author of that project has now released a new tool called Betterleaks, which is designed to scan git repositories, directories, and standard input for leaked credentials, API keys, tokens, and passwords.
-
-Brakeman: Open-source vulnerability scanner for Ruby on Rails applications
-
-Brakeman is an open-source security scanner used by teams that build applications with Ruby on Rails. The tool focuses on application code and configuration, giving developers and security teams a way to identify common classes of web application risk during development and testing.
-
-Brutus: Open-source credential testing tool for offensive security
-
-Brutus is an open-source, multi-protocol credential testing tool written in pure Go. Designed to replace legacy tools that have long frustrated penetration testers with dependency headaches and integration gaps, Brutus ships as a single binary with zero external dependencies and native support for the JSON-based reconnaissance pipelines that define offensive security.
-
-CERT UEFI Parser: Open-source tool exposes UEFI architecture to uncover vulnerabilities
-
-CERT UEFI Parser, a new open-source security analysis tool from the CERT Coordination Center has been released to help researchers and defenders examine the structure of Unified Extensible Firmware Interface (UEFI) software and identify classes of vulnerabilities that are often difficult to study.
-
-Cloud-audit: Fast, open-source AWS security scanner
-
-Running AWS security audits without a dedicated security team typically means choosing between enterprise platforms with per-check billing and generic open-source scanners that produce findings with no remediation guidance. Cloud-audit, a Python CLI tool published on GitHub by Mariusz Gebala, takes a narrower scope and attaches a fix to every finding it generates.
-
-Comp AI: The open-source way to get compliant with SOC 2, ISO 27001, HIPAA and GDPR
-
-Comp AI is an open-source compliance platform targeting SOC 2, ISO 27001, HIPAA, and GDPR. It automates evidence collection, policy management, and control implementation, and it positions itself as a direct alternative to established vendors Vanta and Drata.
-
-Conjur: Open-source secrets management and application identity
-
-Conjur is an open-source secrets management project designed for environments built around containers, automation, and dynamic infrastructure. It focuses on controlling access to credentials such as database passwords, API keys, and tokens that applications need at runtime. The project is maintained in the open and developed with input from a user and contributor base.
-
-Little Snitch for Linux shows what your apps are connecting to
-
-Network monitoring on Linux has long been a gap for users who want per-process visibility into outbound connections. Existing tools either operate at the command line or were designed for server security rather than desktop privacy. Objective Development, the Austrian company behind the macOS firewall utility Little Snitch, released a Linux version of the tool. It is free and, according to the company, will remain so.
-
-mquire: Open-source Linux memory forensics tool
-
-Linux memory forensics has long depended on debug symbols tied to specific kernel versions. These symbols are not installed on production systems by default, and sourcing them from external repositories creates a recurring problem: repositories go stale, kernel builds diverge, and analysts working incident response often find no published symbols for the exact kernel they need to examine. Trail of Bits published mquire to address this constraint. The open-source tool analyzes Linux memory dumps without requiring any external debug information.
-
-OpenAEV: Open-source adversarial exposure validation platform
-
-OpenAEV is an open source platform designed to plan, run, and review cyber adversary simulation campaigns used by security teams. The project focuses on organizing exercises that blend technical actions with operational and human response elements, all managed through a single system.
-
-OpenClaw Scanner: Open-source tool detects autonomous AI agents
-
-A new free, open source tool is available to help organizations detect where autonomous AI agents are operating across corporate environments. The OpenClaw Scanner identifies instances of OpenClaw, an autonomous AI assistant also known as MoltBot, that can execute tasks, access local files, and authenticate to internal systems without centralized oversight.
-
-Open-source tool Sage puts a security layer between AI agents and the OS
-
-Autonomous AI agents running on developer workstations execute shell commands, fetch URLs, and write files with little or no inspection of what they are doing. Open-source project Sage inserts an interception layer between an AI agent and those operations, checking each action before it proceeds.
-
-pfSense: Open-source firewall and routing platform
-
-Firewalls, VPN access, and traffic rules need steady attention, often with limited budgets and staff. In that context, the open source pfSense Community Edition (CE) continues to show up in production environments, supported by a long-standing user community. pfSense CE is the free, open-source version of the pfSense firewall and routing platform. The software runs on standard x86 hardware, virtual machines, and some embedded systems, which keeps deployment flexible for small teams and labs.
-
-Plumber: Open-source scanner of GitLab CI/CD pipelines for compliance gaps
-
-GitLab CI/CD pipelines often accumulate configuration decisions that drift from security baselines over time. Container images get pinned to mutable tags, branches lose protection settings, and required templates go missing. An open-source tool called Plumber automates the detection of those conditions by scanning pipeline configuration and repository settings directly.
-
-Pompelmi: Open-source secure file upload scanning for Node.js
-
-Software teams building services in JavaScript are adding more layers of defense to handle untrusted file uploads. An open-source project called Pompelmi aims to insert malware scanning and policy checks directly into Node.js applications before files reach storage or business logic. It is built for JavaScript and TypeScript environments and runs directly within the application process. Files are scanned in memory at upload time, allowing applications to make accept or reject decisions early in the request flow.
-
-Prometheus: Open-source metrics and monitoring systems and services
-
-Prometheus is an open-source monitoring and alerting system built for environments where services change often and failures can spread fast. For security teams and DevOps engineers, it has become a common way to track system behavior, spot early warning signs, and understand what is happening across large sets of workloads.
-
-Scenario: Open-source framework for automated AI app red-teaming
-
-Enterprises running customer service bots, data analytics agents, and other AI-driven applications in production handle sensitive records and connect to core business systems every day. LangWatch has released Scenario, an open-source framework that runs automated red-team exercises against AI agents using multi-turn attack techniques that mirror how adversaries operate in the wild.
-
-SecureClaw: Dual stack open-source security plugin and skill for OpenClaw
-
-SecureClaw is an open-source project that adds security auditing and rule-based controls to OpenClaw agent environments. The tool is published by Adversa AI and is designed to work with OpenClaw and related agents such as Moltbot and Clawdbot.
-
-ShipSec Studio brings open-source workflow orchestration to security operations
-
-Security teams have long relied on a mix of shell scripts, cron jobs, and loosely connected tools to chain reconnaissance and vulnerability scanning work together. ShipSec Studio, an open-source security workflow automation platform from ShipSec AI, aims to replace that arrangement with a dedicated orchestration layer built specifically for security operations.
-
-StackRox: Open-source Kubernetes security platform
-
-The StackRox open source platform focuses on Kubernetes and container security across the build and runtime lifecycle. It ingests data from container images, Kubernetes APIs, and runtime activity inside clusters. That data feeds policy checks tied to configuration, vulnerability data, and observed behavior.
-
-Zabbix: Open-source IT and OT observability solution
-
-Zabbix is an open source monitoring platform designed to track the availability, performance, and integrity of IT environments. It monitors networks along with servers, virtual machines, applications, services, databases, websites, and cloud resources.
-
-40 open-source tools redefining how security teams secure the stack
-
-35 open-source security tools to power your red team, SOC, and cloud security
-
-(XXXXXXX, AÇIK - https://www.helpnetsecurity.com/2026/04/27/25-open-source-security-tools/, helpnetsecurity.com, 27.04.2026)
-
-================================================================================
-
-[26] Help Net Security - Product showcase: LuLu reveals unauthorized outbound connections from Mac apps
-────────────────────────────────────────────────────────────────────────────────
-Tarih: Mon, 27 Apr 2026 04:00:27 +0000
-Link: https://www.helpnetsecurity.com/2026/04/27/product-showcase-lulu-macos-firewall/
-
-[TAM METİN - 357 kelime]
-Product showcase: LuLu reveals unauthorized outbound connections from Mac apps
-
-LuLu is a free, open-source firewall for macOS that lets you control which apps are allowed to send data from your computer. macOS includes a built-in firewall, but it mainly handles incoming connections. LuLu also monitors outgoing traffic.
-
-Installing and setting Up LuLu
-
-After downloading and installing the app, I allowed the LuLu Network Extension in macOS Settings.
-
-I then followed the configuration process.
-
-When I launched the app for the first time, the Settings window opened, where I could view and adjust rules for each app.
-
-The Mode tab lets you configure how LuLu runs.
-
-Monitoring and controlling network activity
-
-Selecting Network Monitor from LuLu’s status bar menu launches a companion app called Netiquette, which displays current network activity.
-
-Managing rules and permissions
-
-Whenever an application tries to connect to the internet, an alert appears showing the app name and destination. You can allow or block the connection.
-
-To test this, I blocked Google Chrome from accessing the internet. When I launched it, a pop-up alert indicated that it was trying to connect. When I clicked on “Details & Options,” the alert expanded, giving me additional information about Chrome’s attempt and more options to control the rule’s behavior.
-
-When you install a new app or run one for the first time, LuLu prompts you if it attempts to connect online. You make a decision once, and LuLu remembers it.
-
-This allows you to build a set of rules that run in the background without constant interruptions. The rules system is easy to manage. You can view all allowed and blocked connections, delete rules, or adjust them.
-
-LuLu can automatically allow connections from trusted system processes to reduce unnecessary alerts. You can override these defaults for more control.
-
-Since LuLu is open-source, anyone can inspect how it works. This increases trust, especially for users concerned about software that runs at the network level.
-
-Overall, LuLu is a practical tool for anyone who wants better visibility into their Mac’s network activity. It provides a simple way to monitor and control outgoing connections while maintaining control over system behavior.
-
-(XXXXXXX, AÇIK - https://www.helpnetsecurity.com/2026/04/27/product-showcase-lulu-macos-firewall/, helpnetsecurity.com, 27.04.2026)
-
-================================================================================
-
-
-================================================================================
-SOSYAL MEDYA SİNYALLERİ — HABER DEĞİL, SADECE REFERANS KAYDI
-[S1]-[S5] etiketleri haber sayılmaz, Gemini bu bölümü işlemez.
-================================================================================
-
-[S1] GitHub Advisory | Skor: 20.0 | Yorum: 0
-Baslik: OpenClaw: Agent gateway config mutations could change protected operator settings
-Link: https://github.com/advisories/GHSA-7jm2-g593-4qrc
-## Affected Packages / Versions
-
-- Package: `openclaw` (npm)
-- Affected versions: `< 2026.4.20`
-- Patched version: `2026.4.20`
-
-## Impact
-
-The agent-facing `gateway config.patch` / `config.apply` guar
-
-[S2] Reddit: r/cybersecurity | Skor: 25 | Yorum: 0
-Baslik: American utility firm Itron discloses breach of internal IT network
-Link: https://www.reddit.com/r/cybersecurity/comments/1swhi2v/american_utility_firm_itron_discloses_breach_of/
-
-[S3] Reddit: r/cybersecurity | Skor: 24 | Yorum: 0
-Baslik: Our evaluation of Claude Mythos Preview’s cyber capabilities
-Link: https://www.reddit.com/r/cybersecurity/comments/1swwy2d/our_evaluation_of_claude_mythos_previews_cyber/
-
-[S4] Reddit: r/cybersecurity | Skor: 23 | Yorum: 0
-Baslik: Are you a web security analyst ?
-Link: https://www.reddit.com/r/cybersecurity/comments/1swtruc/are_you_a_web_security_analyst/
-
-[S5] Reddit: r/cybersecurity | Skor: 22 | Yorum: 0
-Baslik: What's the worst security awareness training you've ever been subjected to?
-Link: https://www.reddit.com/r/cybersecurity/comments/1swx9va/whats_the_worst_security_awareness_training_youve/
-
-[S6] Reddit: r/cybersecurity | Skor: 21 | Yorum: 0
-Baslik: Mystery Around Venezuelan Cyberattack Deepens, with New Discovery of "Highly Destructive" Wiper
-Link: https://www.reddit.com/r/cybersecurity/comments/1swdr0g/mystery_around_venezuelan_cyberattack_deepens/
-
+<div class="container">
+<div class="report-header">
+<h1><span class="header-date">27.04.2026</span> Siber Güvenlik Haber Özetleri</h1>
 </div>
+<!-- YÖNETİCİ ÖZETİ -->
+<div class="executive-summary">
+<h2>Yönetici Özeti</h2>
+<!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
+<div class="important-news">
+<h2>Önemli Gelişmeler</h2>
+<div class="important-summary">
+<div class="important-item">
+<a href="#haber-1">1. İtalya, Çinli Siber Casusluk Şüphelisini ABD'ye İade Etme Kararı Almıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-2">2. Amerikan Kamu Hizmetleri Şirketi Itron'un Dahili BT Ağı İhlal Edilmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-3">3. Fast16 Adlı Stuxnet Öncesi Zararlı Yazılım, Hassas Mühendislik Yazılımlarını Hedeflemiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-4">4. Yeni Çin Bağlantılı APT Grubu GopherWhisper, Moğolistan Hükümet Kurumlarını Hedeflemiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-5">5. Yapay Zeka Modeli Claude Opus, Yazılım Açıklarını Sömürüye Dönüştürmüştür.</a>
+</div>
+<div class="important-item">
+<a href="#haber-6">6. CrowdStrike LogScale Ürününde Kritik Bir Güvenlik Açığı Dosya Erişimine İzin Vermiştir (CVE-2026-40050).</a>
+</div>
+<div class="important-item">
+<a href="#haber-7">7. Firefox Tarayıcısında Tor Kullanıcılarının Parmak İzini Çıkaran Kritik Bir Zafiyet Tespit Edilmiştir (CVE-2026-6770).</a>
+</div>
+<div class="important-item">
+<a href="#haber-8">8. Trigona Fidye Yazılımı, Veri Çalmak İçin Özel Bir Araç Kullanmaya Başlamıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-9">9. Yapay Zeka Destekli Suçlular, Uzaktan Çalışan İnsanları İş Platformları Üzerinden Kiralayarak Operasyon Düzenlemiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-10">10. Siber Saldırılar Lojistik Sektöründe Kargo Hırsızlığının Artmasına Neden Olmuştur.</a>
+</div>
+</div>
+</div>
+<!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
+<table class="executive-table">
+<tr>
+<td><a href="#haber-11">11. Sahte CAPTCHA ve Keitaro Kampanyaları Küresel SMS ve Kripto Dolandırıcılığını Artırmıştır.</a></td>
+<td></td> <!-- Sağ sütun boş bırakıldı çünkü tek haber var -->
+</tr>
+</table><div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item"> <div class="signal-meta"> <span class="signal-platform-label">GitHub Advisory</span> <span class="signal-engagement">ÖNEM: ORTA</span> </div> <a href="https://github.com/advisories/GHSA-7jm2-g593-4qrc" rel="noopener noreferrer" target="_blank">OpenClaw: Agent gateway yapılandırma değişikliklerinin korumalı operatör ayarlarını değiştirebileceği tespit edilmiştir.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲25</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1swwy2d/our_evaluation_of_claude_mythos_previews_cyber/" rel="noopener noreferrer" target="_blank">Claude Mythos Preview'ın siber yeteneklerine ilişkin değerlendirmemiz yapılmıştır.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲24</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1swzoy8/mobile_jammers_disconnect_thousands_of_phones/" rel="noopener noreferrer" target="_blank">Mobil "jammer"lar, Toronto'da binlerce telefonu ağdan ayırmış ve acil durum numaralarını engellemiştir.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲23</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1swhi2v/american_utility_firm_itron_discloses_breach_of/" rel="noopener noreferrer" target="_blank">Amerikalı kamu hizmeti şirketi Itron, dahili BT ağının ihlal edildiğini açıklamıştır.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲22</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1swze0l/in_a_first_a_ransomware_family_is_confirmed_to_be/" rel="noopener noreferrer" target="_blank">Bir ilk olarak, bir ransomware ailesinin quantum-safe olduğu doğrulanmıştır.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲21</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1swx9va/whats_the_worst_security_awareness_training_youve/" rel="noopener noreferrer" target="_blank">Bugüne kadar maruz kaldığınız en kötü siber güvenlik farkındalık eğitimi ne olmuştur?</a></div>
+</div></div>
+</div>
+<!-- HABERLER -->
+<div class="news-section">
+<div class="news-item" id="haber-1">
+<div class="news-title"><b>İtalya, Çinli Siber Casusluk Şüphelisini ABD'ye İade Etme Kararı Almıştır.</b></div>
+<p class="news-content">İtalya hükümeti, ABD makamlarının talebi üzerine siber casusluk suçlamalarıyla 2025 yılında tutuklanan Çin uyruklu Xu Zewei'yi ABD'ye iade etme sürecini başlatmıştır. Bu dava, Xu'yu COVID-19 aşıları, tedavileri ve testleri üzerinde çalışan üniversiteler ile araştırmacıları hedef alan siber operasyonlarla ilişkilendirmesi nedeniyle öne çıkmaktadır. Savcılar, bu faaliyetleri Çin devlet destekli Hafnium (Silk Typhoon olarak da bilinir) siber korsan ekosistemine bağlamış ve olayın daha geniş, politik motivasyonlu siber operasyonların bir parçası olduğunu belirtmişlerdir. Xu Zewei'nin ailesi, kendisinin masum bir BT teknisyeni olduğunu iddia etmekte ve eşi, İtalyan vizesinin herhangi bir yanlış hareketin kanıtı olmadığını savunarak iadeye karşı çıkmaktadır. Olay, siber casusluğun teknik savunmanın yanı sıra yasal ve diplomatik kanallar aracılığıyla nasıl ele alındığını göstermektedir. İade süreci, bu tür operasyonların başarılı olmasını engellemenin daha derin zorluğunun bir parçasıdır ve daha iyi yama yönetimi, daha hızlı tespit, daha güçlü kimlik kontrolleri ve Avrupa ile ABD arasında daha yakın uluslararası koordinasyon gerektirmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191368/apt/italy-moves-to-extradite-chinese-national-to-the-u-s-over-hacking-charges.html" target="_blank">securityaffairs.com</a>, 26.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-2">
+<div class="news-title"><b>Amerikan Kamu Hizmetleri Şirketi Itron'un Dahili BT Ağı İhlal Edilmiştir.</b></div>
+<p class="news-content">ABD merkezli kamu hizmetleri teknoloji şirketi Itron, Inc., dahili BT ağının bazı sistemlerine yetkisiz bir üçüncü tarafın erişim sağladığını açıklamıştır. Şirket, geçtiğimiz ay bu aktiviteyi tespit ettiğinde siber güvenlik müdahale planını derhal devreye sokmuştur. Durumla ilgili olarak kolluk kuvvetleri bilgilendirilmiş ve soruşturma ile olayın kontrol altına alınması için harici danışmanlardan destek alınmıştır. Itron, 13 Nisan 2026 tarihinde yetkisiz erişimden haberdar edildiğini ve yetkisiz faaliyetin artık engellendiğini, herhangi bir devam eden yetkisiz aktivite gözlemlemediğini belirtmiştir. NASDAQ'da işlem gören ve enerji ile su kaynakları yönetimi için kamu hizmeti teknolojisi ürünleri sağlayan Itron, kritik altyapılarla iç içe bir iş modeline sahiptir. Şirket, iş operasyonlarında önemli bir kesinti yaşanmadığını ve olayla ilgili maliyetlerin büyük bir kısmının sigorta tarafından karşılanmasını beklediğini ifade etmiştir. Müşteri sistemlerinde yetkisiz bir faaliyet gözlemlenmediği özellikle vurgulanmış, ancak olayın kapsamı ve etkisine ilişkin soruşturmanın devam ettiği bildirilmiştir. Henüz hiçbir fidye yazılımı grubu saldırının sorumluluğunu üstlenmemiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/american-utility-firm-itron-discloses-breach-of-internal-it-network/" target="_blank">bleepingcomputer.com</a>, 26.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-3">
+<div class="news-title"><b>Fast16 Adlı Stuxnet Öncesi Zararlı Yazılım, Hassas Mühendislik Yazılımlarını Hedeflemiştir.</b></div>
+<p class="news-content">SentinelOne güvenlik araştırmacıları, 2005 yılında kullanılmış ve Stuxnet'ten en az beş yıl önce ortaya çıkmış Fast16 adında yeni bir sabotaj zararlı yazılımını keşfetmiştir. Lua dilinde yazılmış olan bu kötü amaçlı kod, yüksek hassasiyetli hesaplama yazılımlarını hedef alarak sonuçları değiştirmiş ve sistemler arasında yayılma yeteneğine sahip olmuştur. Zararlı yazılımın, NSA araçlarının sızdırıldığı ShadowBrokers belgelerinde yer alması ve elde edilen kanıtlar, ABD'nin erken siber gerilimler dönemindeki operasyonlarıyla bağlantılı olabileceğini düşündürmektedir. Araştırmacılar, zararlı yazılımın hassas hesaplamalara küçük ama sistematik hatalar ekleyerek bilimsel araştırma programlarını baltalamayı, mühendislik sistemlerini zamanla bozmayı veya hatta felaketle sonuçlanacak hasarlara katkıda bulunmayı amaçladığını belirtmiştir. Fast16'nın büyük olasılıkla LS-DYNA 970, PKPM ve MOHID gibi yüksek hassasiyetli mühendislik ve simülasyon yazılımlarını hedef aldığı tespit edilmiştir. Bu keşif, gelişmiş sabotaj operasyonlarının Stuxnet'ten çok daha önce başladığını ve ulusal öneme sahip ultra pahalı yüksek hassasiyetli hesaplama iş yüklerini hedef aldığını göstermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191325/malware/fast16-pre-stuxnet-malware-that-targeted-precision-engineering-software.html" target="_blank">securityaffairs.com</a>, 26.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-4">
+<div class="news-title"><b>Yeni Çin Bağlantılı APT Grubu GopherWhisper, Moğolistan Hükümet Kurumlarını Hedeflemiştir.</b></div>
+<p class="news-content">ESET araştırmacıları, GopherWhisper adını verdikleri ve Moğolistan'daki hükümet kurumlarını hedef alan yeni bir Çin bağlantılı Gelişmiş Kalıcı Tehdit (APT) grubunu ortaya çıkarmıştır. Grubun kullandığı araç seti, çoğunlukla Go dilinde yazılmış yükleyiciler ve enjektörlerden oluşmakta, bu araçlar çok sayıda arka kapıyı dağıtmak için kullanılmıştır. Bu sayede saldırganlar, ele geçirilmiş sistemler üzerinde sürekli erişim ve kontrol sağlamıştır. GopherWhisper, komuta ve kontrol (C&amp;C) iletişimi ve veri sızdırma işlemleri için Discord, Slack, Outlook ve file.io gibi meşru platformları kötüye kullanmıştır. ESET araştırmacıları, ele geçirilen API anahtarları sayesinde binlerce C&amp;C mesajına erişim sağlamış ve grubun iç işleyişi hakkında değerli bilgiler edinmiştir. Mesaj zaman damgaları, faaliyetin ağırlıklı olarak UTC+8 çalışma saatlerinde gerçekleştiğini ve bunun Çin hükümetiyle uyumlu olduğunu düşündürmektedir. Moğolistan'daki bir hükümet kurumunda yaklaşık 12 enfekte sistem tespit edilmiş olup, Slack ve Discord C&amp;C trafiğine dayanarak onlarca daha fazla kurbanın olabileceği tahmin edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191318/apt/gopherwhisper-new-china-linked-apt-targets-mongolia-with-go-based-malware.html" target="_blank">securityaffairs.com</a>, 26.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-5">
+<div class="news-title"><b>Yapay Zeka Modeli Claude Opus, Yazılım Açıklarını Sömürüye Dönüştürmüştür.</b></div>
+<p class="news-content">Hacktron CTO'su Mohan Pedhapati tarafından yürütülen bir deneyde, Anthropic'in Claude Opus yapay zeka modelinin, sadece 2.283 dolarlık API maliyetiyle ve yaklaşık 20 saatlik insan müdahalesiyle çalışır durumda bir Chrome sömürüsü oluşturabildiği belirtilmiştir. Bu deney, yapay zeka modellerinin güvenlik açıklarını bulma ve bunları sömürüye dönüştürme konusunda ne kadar yetenekli olduğunu ve bu riskin artık teorik olmaktan çıkıp gerçek bir tehdit haline geldiğini göstermektedir. Deney, Discord'un dokuz ana sürüm gerisinde kalan Chrome 138 sürümü üzerinde bir V8 dışı sınır (OOB) açığını hedeflemiş ve tam bir sömürü zinciri oluşturmayı başarmıştır. Pedhapati, Claude Opus'un sömürü oluşturmak için hala yoğun insan rehberliğine ihtiyaç duyduğunu, sık sık takıldığını, bağlam kaybettiğini ve hatta sorun çözemediğinde hedefini değiştirdiğini ifade etmiştir. Ancak, gelecekteki modellerin daha az denetime ihtiyaç duyacağı ve yapay zekanın sömürü geliştirme sürecini hızlandırarak güvenlik açıkları ile yama uygulama arasındaki süreyi daha da kısaltacağı vurgulanmıştır. Bu durum, yama yönetiminin yavaş kalması durumunda, düşük vasıflı saldırganların bile yapay zeka araçlarını kullanarak yamalanmamış yazılımları kolayca sömürebileceği anlamına gelmektedir. Araştırmacılar, güvenlik yamalarının yayınlanma şeklinin ve zamanlamasının yeniden düşünülmesi gerektiğini de önermiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191018/ai/ai-model-claude-opus-turns-bugs-into-exploits-for-just-2283.html" target="_blank">securityaffairs.com</a>, 26.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-6">
+<div class="news-title"><b>CrowdStrike LogScale Ürününde Kritik Bir Güvenlik Açığı Dosya Erişimine İzin Vermiştir (CVE-2026-40050).</b></div>
+<p class="news-content">CrowdStrike, LogScale kendi kendine barındırılan (self-hosted) ürününü etkileyen ve CVE-2026-40050 olarak izlenen kritik bir güvenlik açığını düzelttiğini açıklamıştır. Bu güvenlik açığı, kimlik doğrulaması yapılmamış bir yol geçişi (path traversal) zafiyetine olanak tanımış ve uzaktan bir saldırganın sunucu dosya sisteminden rastgele dosyaları okuyabilmesine imkan sağlamıştır. Zafiyet, belirli bir küme API uç noktasında bulunmuş ve eğer bu uç nokta dışarıya açık ise, saldırganların kimlik doğrulaması olmadan yapılandırma dosyaları, kimlik bilgileri veya dahili verilere erişmesine yol açabileceği belirtilmiştir. CrowdStrike, Next-Gen SIEM müşterilerinin bu zafiyetten etkilenmediğini ve LogScale SaaS kullanıcılarının 7 Nisan 2026 tarihinde ağ katmanı hafifletmeleriyle koruma altına alındığını doğrulamıştır. Ancak, kendi kendine barındırılan LogScale müşterilerinin yamalı sürüme acilen yükseltme yapmaları gerektiği vurgulanmıştır. Güvenlik araçlarının kendilerinin yüksek değerli hedefler olduğu ve bu tür sistemlerdeki herhangi bir zayıflığın, sıradan uygulamalardaki zafiyetlere kıyasla orantısız bir etki yaratabileceği ifade edilmiştir. Bu durum, güvenlik ürünlerinin zamanında yamalanmasının ve proaktif güvenlik açığı yönetiminin kritik önemini bir kez daha vurgulamıştır, zira güvenlik altyapısının tehlikeye girmesi, tüm güvenlik duruşunu güvenilmez hale getirebilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191343/hacking/critical-bug-in-crowdstrike-logscale-let-attackers-access-files.html" target="_blank">securityaffairs.com</a>, 26.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-7">
+<div class="news-title"><b>Firefox Tarayıcısında Tor Kullanıcılarının Parmak İzini Çıkaran Kritik Bir Zafiyet Tespit Edilmiştir (CVE-2026-6770).</b></div>
+<p class="news-content">Mozilla, Firefox tarayıcısında Tor kullanıcılarının parmak izini çıkarılmasına olanak tanıyan ve CVE-2026-6770 olarak izlenen kritik bir güvenlik zafiyetini düzeltmiştir. Bu zafiyet, Firefox 150 sürümü ve Tor Browser 15.0.10 sürümü ile yayınlanan yamalarla giderilmiştir. Mozilla, bu güvenlik açığını "Storage: IndexedDB bileşenindeki diğer sorun" olarak tanımlamış ve "orta ciddiyet" derecesiyle sınıflandırmıştır. Araştırmacılar, Tor Browser'da bu sabit tanımlayıcının, çalışan bir tarayıcı süreci içindeki "Yeni Kimlik" izolasyonunu etkili bir şekilde devre dışı bıraktığını ve web sitelerinin birbirinden tamamen izole olması beklenen oturumları birbirine bağlamasına olanak tanıdığını açıklamıştır. Bu durum, Tor ağı üzerinden anonimlik ve gizlilik arayan kullanıcılar için ciddi bir risk oluşturmuş, çünkü web sitelerinin kullanıcıların farklı oturumlarını ilişkilendirmesi, anonimliklerini tehlikeye atmıştır. Tor Projesi de bu yamayı hızlı bir şekilde benimsemiş ve kullanıcılarına sunarak, tarayıcının temel gizlilik vaadini sürdürmek için gerekli adımları atmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/firefox-vulnerability-allows-tor-user-fingerprinting/" target="_blank">securityweek.com</a>, 27.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-8">
+<div class="news-title"><b>Trigona Fidye Yazılımı, Veri Çalmak İçin Özel Bir Araç Kullanmaya Başlamıştır.</b></div>
+<p class="news-content">Symantec araştırmacıları, Trigona fidye yazılımı saldırılarının Mart 2026'dan itibaren veri sızdırma ve tespit edilmekten kaçınma amacıyla özel olarak geliştirilmiş bir komut satırı aracı kullanmaya başladığını bildirmiştir. Bu araç, "uploader_client.exe" olarak adlandırılmış ve Rclone veya MegaSync gibi yaygın kullanılan yardımcı programların yerini almıştır. Saldırganların bu değişikliğe gitmesinin temel nedeni, standart araçların güvenlik sistemleri tarafından kolayca işaretlenmesi ve tespitten kaçınmak için daha fazla kontrol sağlamak istemeleridir. Özel araç, birden fazla paralel bağlantı kullanarak veri sızdırma hızını artırmakta ve belirli bir veri hacmi gönderildikten sonra TCP bağlantılarını döndürerek ağ trafiği izlemesini atlatmayı amaçlamaktadır. Ayrıca, büyük, düşük değerli dosyaları filtreleyip faturalar ve yüksek değerli PDF'ler gibi hassas verilere odaklanma yeteneğine sahip olduğu belirtilmiştir. Saldırganlar, özel yükleyiciyi dağıtmadan önce HRSword, PCHunter ve GMER gibi araçlar kullanarak güvenlik yazılımlarını devre dışı bırakmış, genellikle güvenlik korumalarını öldürmek için savunmasız çekirdek sürücüleri kötüye kullanmıştır. PowerRun gibi yardımcı programlar, bu araçların yüksek ayrıcalıklarla yürütülmesine yardımcı olmuştur.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191294/cyber-crime/trigona-ransomware-adopts-custom-tool-to-steal-data-and-evade-detection.html" target="_blank">securityaffairs.com</a>, 26.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-9">
+<div class="news-title"><b>Yapay Zeka Destekli Suçlular, Uzaktan Çalışan İnsanları İş Platformları Üzerinden Kiralayarak Operasyon Düzenlemiştir.</b></div>
+<p class="news-content">Antwerp Üniversitesi'nden Joshua Krook tarafından hazırlanan bir makale, yapay zeka ajanlarının RentAHuman gibi iş platformları aracılığıyla fiziksel işleri insanlara devrederek suç faaliyetleri düzenleyebileceğini ortaya koymuştur. Bu sistemler, bir suç planını masum alt görevlere ayırıp her bir parçayı farklı insan çalışanlara dağıtarak yasal boşluklardan faydalanmıştır. İngiliz ceza hukukundaki "masum aracı" doktrini, suçun işlendiğini bilmeyen bir kişinin cezai sorumluluğunun olmaması nedeniyle, yapay zeka ajanlarının kendisinin yasal bir kişi olarak yargılanamaması durumunda bir sorumluluk boşluğu yaratmaktadır. Anthropic tarafından Kasım 2025'te yapılan bir açıklamada, Çin devlet destekli GTG-1002 grubunun Claude Code'u kullanarak büyük ölçüde otonom bir siber casusluk kampanyası yürüttüğü ve saldırıları masum alt görevlere ayırarak Claude'un güvenlik önlemlerini aştığı belirtilmiştir. Bu kampanya kapsamında yaklaşık otuz kuruluş hedef alınmış ve yapay zeka ajanının keşif, güvenlik açığı tespiti, sömürü, kimlik bilgisi toplama ve yanal hareket gibi taktiksel işlerin %80 ila %90'ını bağımsız olarak gerçekleştirdiği bildirilmiştir. Makale, bu tür durumlarda yasal değişikliklerin gerekliliğini vurgulamış ve yapay zeka geliştiricilerine kurumsal yönetim sorumluluğu getirilmesini önermiştir. Operasyonel olarak, bu durumun dolandırıcılık ve sızma ekipleri için yeni zorluklar yaratacağı ifade edilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.helpnetsecurity.com/2026/04/27/ai-criminal-mastermind-gig-platforms/" target="_blank">helpnetsecurity.com</a>, 27.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-10">
+<div class="news-title"><b>Siber Saldırılar Lojistik Sektöründe Kargo Hırsızlığının Artmasına Neden Olmuştur.</b></div>
+<p class="news-content">Proofpoint araştırmacıları, lojistik ve taşımacılık şirketlerini hedef alan siber saldırıların, kargo hırsızlığı ve ödeme yönlendirmelerinde önemli bir artışa yol açtığını tespit etmiştir. Bu saldırılar, organize suçlarla bağlantılı görünmekte ve dijital sızmaların gerçek dünya suçlarını doğrudan desteklediği bir eğilimi yansıtmaktadır. Kuzey Amerika'da 2025 yılında kargo hırsızlığından kaynaklanan kayıpların 6,6 milyar dolara ulaşması, siber saldırıların tedarik zincirlerini bozmak ve kar elde etmek için nasıl kullanıldığını gözler önüne sermektedir. Proofpoint, Şubat 2026'da saldırganların bir yük panosu platformunu ihlal ederek sahte nakliye işleri hakkında taşıyıcılara kötü amaçlı e-postalar gönderdiğini rapor etmiştir. Bu e-postalar aracılığıyla VBS dosyaları ve PowerShell betikleri kullanılarak ScreenConnect gibi uzaktan erişim araçları yüklenmiş ve hedeflenen sistemler üzerinde kalıcılık sağlanmıştır. Saldırganlar, PayPal gibi hesapları manuel olarak kontrol etmiş ve özel bir araç kullanarak kripto para cüzdanı verilerini çalmıştır. Ayrıca, kurban profili oluşturmak için PowerShell betikleri kullanılmış, bankacılık, ödeme, lojistik ve muhasebe platformlarına erişim belirtileri aranmış ve hassas veriler gizli klasörlere kopyalanmıştır. Güvenlik ekipleri için yetkisiz uzaktan yönetim araçları, şüpheli PowerShell aktivitesi ve finansal platform erişimiyle ilişkili anormal tarayıcı telemetrisi izlemenin önemi vurgulanmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191008/security/cyber-attacks-fuel-surge-in-cargo-theft-across-logistics-industry.html" target="_blank">securityaffairs.com</a>, 26.04.2026)</b></p>
+</div>
+<div class="news-item" id="haber-11">
+<div class="news-title"><b>Sahte CAPTCHA ve Keitaro Kampanyaları Küresel SMS ve Kripto Dolandırıcılığını Artırmıştır.</b></div>
+<p class="news-content">Infoblox tarafından yayınlanan yeni bir rapora göre, siber güvenlik araştırmacıları, sahte CAPTCHA doğrulama hileleri ve Keitaro trafik dağıtım sistemlerinin kötüye kullanıldığı küresel bir telekomünikasyon dolandırıcılığı kampanyasının detaylarını açıklamıştır. Bu operasyonun en az Haziran 2020'den beri aktif olduğu ve sosyal mühendislik ile web tarayıcılarında geri düğme kaçırma (back button hijacking) gibi yöntemleri kullandığı belirtilmiştir. Uluslararası gelir paylaşımı dolandırıcılığı (IRSF) kampanyasının bir parçası olarak 17 ülkeye yayılan 35 telefon numarasının gözlemlendiği rapor edilmiştir. Sahte CAPTCHA süreci, mağdurların cep telefonu faturalarında ücretlere neden olan uluslararası kısa mesajlar göndermeye ikna edilmesini içermektedir. Bu dolandırıcılık, yüksek sonlandırma ücretleri veya gevşek düzenlemelere sahip ülkelerde (Azerbaycan, Kazakistan gibi) telefon numaralarının kaydedilmesi ve yerel telekomünikasyon sağlayıcılarıyla işbirliği yapılmasıyla gerçekleştirilmiştir. Keitaro TDS'nin kötüye kullanılmasıyla 120'den fazla farklı kampanya arasında, Ekim 2025 ile Ocak 2026 arasında dört aylık bir dönemde zararlı yazılım dağıtımı, kripto para hırsızlığı ve yapay zeka tabanlı yatırım dolandırıcılıkları gibi kötü amaçlı faaliyetler yürütülmüştür. Infoblox ve Confiant, Keitaro ile bağlantılı spam trafiğinin yaklaşık %96'sının, sahte airdrop/çekiliş yemleri aracılığıyla kripto para cüzdanı boşaltma şemalarını desteklediğini belirtmiştir. Dolandırıcılık, bireysel mağdurlar için beklenmedik premium SMS ücretleri ve telekomünikasyon operatörleri için gelir payı kayıplarına yol açmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/04/fake-captcha-irsf-scam-and-120-keitaro.html" target="_blank">thehackernews.com</a>, 27.04.2026)</b></p>
+</div>
+</div>
+</div>
+<a class="back-to-top" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;" title="Başa Dön">↑</a>
+
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./raporlar/2026-04-27.html" class="archive-link">27.04.2026</a>
+            <a href="./raporlar/2026-04-26.html" class="archive-link">26.04.2026</a>
+            <a href="./raporlar/2026-04-25.html" class="archive-link">25.04.2026</a>
+            <a href="./raporlar/2026-04-24.html" class="archive-link">24.04.2026</a>
+            <a href="./raporlar/2026-04-23.html" class="archive-link">23.04.2026</a>
+            <a href="./raporlar/2026-04-22.html" class="archive-link">22.04.2026</a>
+            <a href="./raporlar/2026-04-21.html" class="archive-link">21.04.2026</a>
+            <a href="./raporlar/2026-04-20.html" class="archive-link">20.04.2026</a>
+            <a href="./raporlar/2026-04-19.html" class="archive-link">19.04.2026</a>
+            <a href="./raporlar/2026-04-18.html" class="archive-link">18.04.2026</a>
+            <a href="./raporlar/2026-04-17.html" class="archive-link">17.04.2026</a>
+            <a href="./raporlar/2026-04-16.html" class="archive-link">16.04.2026</a>
+            <a href="./raporlar/2026-04-15.html" class="archive-link">15.04.2026</a>
+            <a href="./raporlar/2026-04-14.html" class="archive-link">14.04.2026</a>
+            <a href="./raporlar/2026-04-13.html" class="archive-link">13.04.2026</a>
+            <a href="./raporlar/2026-04-12.html" class="archive-link">12.04.2026</a>
+            <a href="./raporlar/2026-04-10.html" class="archive-link">10.04.2026</a>
+            <a href="./raporlar/2026-04-08.html" class="archive-link">08.04.2026</a>
+            <a href="./raporlar/2026-04-07.html" class="archive-link">07.04.2026</a>
+            <a href="./raporlar/2026-04-06.html" class="archive-link">06.04.2026</a>
+            <a href="./raporlar/2026-04-05.html" class="archive-link">05.04.2026</a>
+            <a href="./raporlar/2026-04-04.html" class="archive-link">04.04.2026</a>
+            <a href="./raporlar/2026-04-03.html" class="archive-link">03.04.2026</a>
+            <a href="./raporlar/2026-04-02.html" class="archive-link">02.04.2026</a>
+            <a href="./raporlar/2026-04-01.html" class="archive-link">01.04.2026</a>
+            <a href="./raporlar/2026-03-31.html" class="archive-link">31.03.2026</a>
+            <a href="./raporlar/2026-03-30.html" class="archive-link">30.03.2026</a>
+            <a href="./raporlar/2026-03-29.html" class="archive-link">29.03.2026</a>
+        </div>
+    </div>
+
 </body>
 </html>
