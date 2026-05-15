@@ -31,7 +31,10 @@ ADIM 1 — FILTRELE (bunları "filtered" listesine koy):
 - Kritik olmayan rutin patch/güncelleme haberleri
 
 ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
-1. NATO Türkiye Zirvesi (Temmuz 2026) kapsamındaki siber haberler → EN ÜSTTE (APT faaliyetleri, zirveye yönelik saldırılar, ilgili siber/teknik gelişmeler)
+1. NATO Türkiye Zirvesi (Temmuz 2026) kapsamındaki haberler → EN ÜSTTE
+   Kapsam GENİŞ tutulur: gerçekleşen saldırı/kampanya ZORUNLU DEĞİL; şüpheli faaliyet, uyarı,
+   dolaylı/ilişkili gelişme, istihbarat paylaşımı, güvenlik önlemi, kritik altyapı hazırlığı,
+   diplomatik/siber gerilim veya zirveyle bağlantılı olabilecek her türlü teknik gelişme dahildir.
 2. İran-İsrail siber çatışması kapsamındaki haberler
 3. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
 4. 5 milyon+ kullanıcı veri ihlalleri
@@ -229,8 +232,8 @@ CONTENT_SELECTORS = {
 IMPORTANCE_WEIGHTS = {
     'nato_turkey_summit': {
         'weight': 130,
-        'description': 'NATO Türkiye Zirvesi (Temmuz 2026) ile ilgili siber güvenlik haberleri',
-        'keywords': ['nato summit', 'nato turkey', 'nato türkiye', 'nato antalya', 'nato 2026', 'nato zirvesi', 'alliance cyber', 'summit security', 'nato cyber']
+        'description': 'NATO Türkiye Zirvesi (Temmuz 2026) — gerçekleşen saldırı, şüpheli faaliyet, dolaylı/ilişkili her türlü gelişme',
+        'keywords': ['nato summit', 'nato turkey', 'nato türkiye', 'nato antalya', 'nato 2026', 'nato zirvesi', 'alliance cyber', 'summit security', 'nato cyber', 'nato defence', 'nato member']
     },
     'infrastructure_attack': {
         'weight': 100,
@@ -295,13 +298,19 @@ Aşağıdaki türleri ÇIKAR (raporda gösterme):
 🚨 KRİTİK AŞAMA 2 - EN ÖNEMLİ 10 HABERİ SEÇ (yoksa olduğu kadar, max 10):
 Aşağıdaki kriterlere göre önem sırasına göre en önemli 10 haberi seç:
 
-🔴 **[1. ÖNCELİK — NATO TÜRKİYE ZİRVESİ — TEMMUZ 2026]** NATO Türkiye Zirvesi kapsamındaki SİBER haberler TÜM kategorilerin üzerinde ÜST ÖNCELİK alır ve ÖNEMLİ GELİŞMELER kutusunda KESİNLİKLE EN ÜSTE yerleştirilir:
-   - Zirveye yönelik APT faaliyetleri, siber casusluk, siber saldırı haberleri
-   - NATO üyesi ülkeleri veya Türk kurumlarını hedef alan zirveyle bağlantılı siber operasyonlar
-   - Zirve altyapısını, iletişim sistemlerini veya katılımcıları hedef alan tehditler
-   - Zirveyle ilişkili dezenformasyon kampanyaları, hack & leak operasyonları
+🔴 **[1. ÖNCELİK — NATO TÜRKİYE ZİRVESİ — TEMMUZ 2026]** NATO Türkiye Zirvesi kapsamındaki haberler TÜM kategorilerin üzerinde ÜST ÖNCELİK alır ve ÖNEMLİ GELİŞMELER kutusunda KESİNLİKLE EN ÜSTE yerleştirilir.
+
+   ⚠️ KAPSAM GENİŞTİR — sadece gerçekleşmiş saldırı değil, aşağıdakilerin TAMAMI bu kategoriye girer:
+   - Zirveye yönelik APT faaliyetleri, siber casusluk, siber saldırı ve siber operasyonlar
+   - Şüpheli faaliyet, keşif (reconnaissance), hazırlık veya ön istihbarat haberleri
+   - Zirve güvenliğine yönelik uyarılar, açıklamalar, tehdit değerlendirmeleri
+   - NATO üyesi ülkelerin veya Türk kurumlarının zirveyle bağlantılı güvenlik önlemleri
+   - Zirve altyapısını, iletişim sistemlerini, lojistiğini veya katılımcıları hedef alabilecek her türlü tehdit
+   - Zirveyle dolaylı ilişkili jeopolitik siber gerilimler ve diplomatik krizler
+   - Zirveyle bağlantılı dezenformasyon kampanyaları, hack & leak, etki operasyonları
+   - İstihbarat paylaşımı, siber savunma işbirliği, NATO siber kapasitesine ilişkin gelişmeler
    - İlgili tehdit aktörleri: Rusya (APT28, APT29, Sandworm), Çin (APT10, APT40), İran, Kuzey Kore bağlantılı gruplar
-   - Anahtar kelimeler: "NATO summit", "NATO Turkey", "NATO Türkiye", "NATO Antalya", "NATO 2026", "NATO zirvesi", "alliance cyber", "summit security"
+   - Anahtar kelimeler: "NATO summit", "NATO Turkey", "NATO Türkiye", "NATO Antalya", "NATO 2026", "NATO zirvesi", "alliance cyber", "summit security", "NATO cyber", "NATO defence", "NATO member"
    - Bu kategoride haber varsa, diğer tüm kategorilerden haber çıkarılsa bile bu haber listede kalır ve 1. sıradadır.
 
 🟠 **[2. ÖNCELİK — AKTİF ÇATIŞMA DÖNEMİ]** İran-İsrail çatışması kapsamındaki SİBER haberler NATO zirvesi haberleri hariç diğer tüm kategorilere göre ÜST ÖNCELİK alır ve ÖNEMLİ GELİŞMELER kutusunda NATO haberlerinin hemen ardına yerleştirilir:
