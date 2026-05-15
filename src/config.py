@@ -31,15 +31,16 @@ ADIM 1 — FILTRELE (bunları "filtered" listesine koy):
 - Kritik olmayan rutin patch/güncelleme haberleri
 
 ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
-1. İran-İsrail siber çatışması kapsamındaki haberler → EN ÜSTTE
-2. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
-3. 5 milyon+ kullanıcı veri ihlalleri
-4. Zero-day açıkları + APT grubu aktivitesi
-5. Ulusal güvenlik / Türkiye ile ilgili haberler
-6. Kritik CVE (CVSS >= 9.0) + aktif istismar
-7. Büyük fidye yazılımı (ransomware) saldırıları
-8. Tedarik zinciri (supply chain) saldırıları
-9. Diğer önemli gelişmeler
+1. NATO Türkiye Zirvesi (Temmuz 2026) kapsamındaki siber haberler → EN ÜSTTE (APT faaliyetleri, zirveye yönelik saldırılar, ilgili siber/teknik gelişmeler)
+2. İran-İsrail siber çatışması kapsamındaki haberler
+3. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
+4. 5 milyon+ kullanıcı veri ihlalleri
+5. Zero-day açıkları + APT grubu aktivitesi
+6. Ulusal güvenlik / Türkiye ile ilgili haberler
+7. Kritik CVE (CVSS >= 9.0) + aktif istismar
+8. Büyük fidye yazılımı (ransomware) saldırıları
+9. Tedarik zinciri (supply chain) saldırıları
+10. Diğer önemli gelişmeler
 
 ADIM 3 — TOP 10: Sıraladığın ilk 10'u "top10" listesine koy.
 
@@ -226,6 +227,11 @@ CONTENT_SELECTORS = {
 # ===== YENİ: ÖNEM SCORING SİSTEMİ (v2.0) =====
 # Bu ağırlıklar haberleri kategorize etmek için kullanılır
 IMPORTANCE_WEIGHTS = {
+    'nato_turkey_summit': {
+        'weight': 130,
+        'description': 'NATO Türkiye Zirvesi (Temmuz 2026) ile ilgili siber güvenlik haberleri',
+        'keywords': ['nato summit', 'nato turkey', 'nato türkiye', 'nato antalya', 'nato 2026', 'nato zirvesi', 'alliance cyber', 'summit security', 'nato cyber']
+    },
     'infrastructure_attack': {
         'weight': 100,
         'description': 'Enerji, sağlık, finans, hükümet altyapısına saldırı',
@@ -289,7 +295,16 @@ Aşağıdaki türleri ÇIKAR (raporda gösterme):
 🚨 KRİTİK AŞAMA 2 - EN ÖNEMLİ 10 HABERİ SEÇ (yoksa olduğu kadar, max 10):
 Aşağıdaki kriterlere göre önem sırasına göre en önemli 10 haberi seç:
 
-🔴 **[GEÇİCİ ÖNCELİK — AKTİF ÇATIŞMA DÖNEMİ]** İran-İsrail çatışması kapsamındaki SİBER haberler diğer tüm kategorilere göre ÜST ÖNCELIK alır ve ÖNEMLİ GELİŞMELER kutusunda EN ÜSTE yerleştirilir:
+🔴 **[1. ÖNCELİK — NATO TÜRKİYE ZİRVESİ — TEMMUZ 2026]** NATO Türkiye Zirvesi kapsamındaki SİBER haberler TÜM kategorilerin üzerinde ÜST ÖNCELİK alır ve ÖNEMLİ GELİŞMELER kutusunda KESİNLİKLE EN ÜSTE yerleştirilir:
+   - Zirveye yönelik APT faaliyetleri, siber casusluk, siber saldırı haberleri
+   - NATO üyesi ülkeleri veya Türk kurumlarını hedef alan zirveyle bağlantılı siber operasyonlar
+   - Zirve altyapısını, iletişim sistemlerini veya katılımcıları hedef alan tehditler
+   - Zirveyle ilişkili dezenformasyon kampanyaları, hack & leak operasyonları
+   - İlgili tehdit aktörleri: Rusya (APT28, APT29, Sandworm), Çin (APT10, APT40), İran, Kuzey Kore bağlantılı gruplar
+   - Anahtar kelimeler: "NATO summit", "NATO Turkey", "NATO Türkiye", "NATO Antalya", "NATO 2026", "NATO zirvesi", "alliance cyber", "summit security"
+   - Bu kategoride haber varsa, diğer tüm kategorilerden haber çıkarılsa bile bu haber listede kalır ve 1. sıradadır.
+
+🟠 **[2. ÖNCELİK — AKTİF ÇATIŞMA DÖNEMİ]** İran-İsrail çatışması kapsamındaki SİBER haberler NATO zirvesi haberleri hariç diğer tüm kategorilere göre ÜST ÖNCELİK alır ve ÖNEMLİ GELİŞMELER kutusunda NATO haberlerinin hemen ardına yerleştirilir:
    - İran veya İsrail kaynaklı siber saldırı / siber operasyon haberleri
    - İki ülke arasındaki siber casusluk, sabotaj, hack & leak haberleri
    - Çatışmayla bağlantılı kritik altyapı saldırıları (enerji, iletişim, finans)
