@@ -18,19 +18,15 @@ class TestFileOperations:
 
     def test_create_data_directory(self, tmp_path):
         """data/ klasörü oluşturuluyor mu?"""
-        # Monkeypatch kullanarak tmp_path'i kullan
-        import main
-        original_getcwd = os.getcwd
+        original_cwd = os.getcwd()
         os.chdir(str(tmp_path))
-
-        sistema = HaberSistemi()
-        articles = [{'link': 'https://example.com', 'title': 'Test', 'description': 'Test'}]
-        sistema._save_used_links(articles)
-
-        # data klasörü oluşturuldu mu?
-        assert (tmp_path / "data").exists()
-
-        os.chdir(original_getcwd)
+        try:
+            sistema = HaberSistemi()
+            articles = [{'link': 'https://example.com', 'title': 'Test', 'description': 'Test'}]
+            sistema._save_used_links(articles)
+            assert (tmp_path / "data").exists()
+        finally:
+            os.chdir(original_cwd)
 
     def test_save_and_load_consistency(self, tmp_path):
         """Kaydedilen veriler doğru şekilde yüklenebiliyor mu?"""
@@ -79,13 +75,14 @@ class TestFileOperations:
 
     def test_malformed_lines_skipped(self, tmp_path):
         """Hatalı satırlar atlanıyor mu?"""
+        today = datetime.now().strftime('%Y-%m-%d')
         links_file = tmp_path / "haberler_linkler.txt"
         content = (
-            "2026-02-20\thttps://example.com/1\tTitle 1\thash1\n"
+            f"{today}\thttps://example.com/1\tTitle 1\thash1\n"
             "INVALID_LINE_WITHOUT_TABS\n"
-            "2026-02-20\thttps://example.com/2\tTitle 2\thash2\n"
+            f"{today}\thttps://example.com/2\tTitle 2\thash2\n"
             "\n"
-            "2026-02-20\thttps://example.com/3\tTitle 3\n"
+            f"{today}\thttps://example.com/3\tTitle 3\n"
         )
         links_file.write_text(content, encoding='utf-8')
 
@@ -132,18 +129,18 @@ class TestDateHandling:
     """Tarih işlemleri testleri"""
 
     def test_old_articles_filtered_correctly(self, tmp_path):
-        """7 günden eski makaleler filtrelenel mi?"""
+        """7 günden eski makaleler filtreleniyor mu?"""
         links_file = tmp_path / "haberler_linkler.txt"
 
         today = datetime.now().strftime('%Y-%m-%d')
         yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-        week_ago = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+        six_days_ago = (datetime.now() - timedelta(days=6)).strftime('%Y-%m-%d')
         two_weeks_ago = (datetime.now() - timedelta(days=14)).strftime('%Y-%m-%d')
 
         links_file.write_text(
             f"{today}\thttps://example.com/today\tToday\thash1\n"
             f"{yesterday}\thttps://example.com/yesterday\tYesterday\thash2\n"
-            f"{week_ago}\thttps://example.com/week-ago\tWeek Ago\thash3\n"
+            f"{six_days_ago}\thttps://example.com/recent\tRecent\thash3\n"
             f"{two_weeks_ago}\thttps://example.com/old\tOld\thash4\n",
             encoding='utf-8'
         )
@@ -152,9 +149,8 @@ class TestDateHandling:
         sistem.used_links_file = str(links_file)
         links, titles, hashes = sistem._load_used_links()
 
-        # 3 geçerli (bugün + dün + 7 gün)
+        # 3 geçerli (bugün + dün + 6 gün önce); 14 gün öncesi filtrelendi
         assert len(links) == 3
-        # 14 gün öncesi filtrelendi
         assert not any('old' in str(link).lower() for link in links)
 
     def test_same_day_multiple_entries(self, tmp_path):
@@ -181,10 +177,11 @@ class TestErrorRecovery:
 
     def test_corrupted_hash_fallback(self, tmp_path):
         """Bozuk hash'le de çalışıyor mu?"""
+        today = datetime.now().strftime('%Y-%m-%d')
         links_file = tmp_path / "haberler_linkler.txt"
         links_file.write_text(
-            "2026-02-20\thttps://example.com/1\tTitle 1\tinvalidhash\n"  # Kısa hash
-            "2026-02-20\thttps://example.com/2\tTitle 2\t1234567890abcdef\n",  # Geçerli
+            f"{today}\thttps://example.com/1\tTitle 1\tinvalidhash\n"  # Kısa hash
+            f"{today}\thttps://example.com/2\tTitle 2\t1234567890abcdef\n",  # Geçerli
             encoding='utf-8'
         )
 

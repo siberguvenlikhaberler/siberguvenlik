@@ -18,6 +18,7 @@ class TestImportanceWeights:
     def test_all_categories_defined(self):
         """Tüm kategoriler tanımlanmış mı?"""
         expected_categories = [
+            'nato_turkey_summit',
             'infrastructure_attack',
             'large_breach',
             'zero_day_apt',
@@ -36,12 +37,12 @@ class TestImportanceWeights:
             assert data['weight'] > 0
 
     def test_weights_ordered_correctly(self):
-        """En yüksek ağırlık geopolitical_critical mi?"""
+        """En yüksek ağırlık nato_turkey_summit mi?"""
         weights = [(k, v['weight']) for k, v in IMPORTANCE_WEIGHTS.items()]
         weights.sort(key=lambda x: x[1], reverse=True)
         highest = weights[0]
-        assert highest[0] == 'geopolitical_critical'
-        assert highest[1] == 120
+        assert highest[0] == 'nato_turkey_summit'
+        assert highest[1] == 130
 
     def test_each_category_has_description(self):
         """Her kategorinin açıklaması mı var?"""

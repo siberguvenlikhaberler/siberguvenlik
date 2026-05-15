@@ -97,7 +97,7 @@ def _normalize_url_advanced(link):
                 r = requests.head(link, allow_redirects=True, timeout=5)
                 if r.url and r.url != link:
                     link = r.url
-            except:
+            except Exception:
                 pass
 
         parsed = urlparse(link)
@@ -109,7 +109,7 @@ def _normalize_url_advanced(link):
 
         # UTM ve tracking parametrelerini kaldır
         utm_params = {'utm_source', 'utm_medium', 'utm_campaign', 'utm_term',
-                      'utm_content', 'ref', 'source', 'mc_cid', 'mc_eid'}
+                      'utm_content', 'ref', 'source', 'medium', 'mc_cid', 'mc_eid'}
         qs = parse_qs(parsed.query, keep_blank_values=False)
         filtered_qs = {k: v for k, v in qs.items() if k.lower() not in utm_params}
 
@@ -123,8 +123,7 @@ def _normalize_url_advanced(link):
         normalized = normalized.rstrip('/')
 
         return normalized
-    except:
-        # Parse hatası durumunda orijinalini döndür
+    except Exception:
         return link.rstrip('/')
 
 
@@ -140,25 +139,25 @@ def _parse_article_date(date_str, fallback):
     for fmt in ['%a, %d %b %Y %H:%M:%S %z', '%Y-%m-%dT%H:%M:%S%z', '%Y-%m-%dT%H:%M:%S.%f%z']:
         try:
             return datetime.strptime(date_str, fmt).astimezone(TR).strftime('%d.%m.%Y')
-        except:
+        except Exception:
             pass
     # Z sonekini +00:00 ile değiştirip tekrar dene
     if date_str.endswith('Z'):
         try:
             return datetime.strptime(date_str[:-1], '%Y-%m-%dT%H:%M:%S.%f').replace(
                 tzinfo=timezone.utc).astimezone(TR).strftime('%d.%m.%Y')
-        except:
+        except Exception:
             pass
         try:
             return datetime.strptime(date_str[:-1], '%Y-%m-%dT%H:%M:%S').replace(
                 tzinfo=timezone.utc).astimezone(TR).strftime('%d.%m.%Y')
-        except:
+        except Exception:
             pass
     # Timezone-naive formatlar: olduğu gibi al
     for fmt in ['%a, %d %b %Y %H:%M:%S %Z', '%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d']:
         try:
             return datetime.strptime(date_str, fmt).strftime('%d.%m.%Y')
-        except:
+        except Exception:
             pass
     return fallback.strftime('%d.%m.%Y')
 
@@ -769,6 +768,11 @@ class HaberSistemi:
             padding: 20px; border-left: 4px solid #1a237e;
         }
         .news-title { color: #1a237e; font-size: 18px; font-weight: 600; margin-bottom: 12px; line-height: 1.3; }
+        .nato-star {
+            display: inline-block; font-size: 13px; color: #ffffff; background: #003087;
+            border-radius: 3px; padding: 1px 6px; margin-right: 7px; vertical-align: middle;
+            letter-spacing: 0.5px; font-weight: 700; line-height: 1.6;
+        }
         .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
         .source { color: #666; font-size: 13px; margin: 0; }
         .source a { color: #1a237e; text-decoration: none; }
@@ -1217,7 +1221,7 @@ class HaberSistemi:
                             date = datetime.strptime(date_str, '%Y-%m-%d')
                             if date >= cutoff:
                                 existing.append(line)
-                        except:
+                        except Exception:
                             pass
             except IOError:
                 pass
@@ -1257,7 +1261,7 @@ class HaberSistemi:
                         date = datetime.strptime(date_str, '%Y-%m-%d %H:%M')
                         if date >= cutoff:
                             existing.append(line)
-                    except:
+                    except Exception:
                         pass
 
         timestamp = now.strftime('%Y-%m-%d %H:%M')
@@ -1269,10 +1273,6 @@ class HaberSistemi:
             f.write('\n'.join(existing) + '\n')
 
         print(f"⚠️  {len(self.rss_errors)} RSS hatası kaydedildi: {self.rss_errors_file}")
-
-    def _normalize_link(self, link):
-        """Link normalizasyonu (DEPRECATED - _normalize_url_advanced() kullan)"""
-        return _normalize_url_advanced(link)
 
     def _filter_duplicates(self, all_news):
         """
@@ -2758,7 +2758,7 @@ KURALLAR:
                 if file_date < cutoff:
                     os.remove(filepath)
                     deleted += 1
-            except:
+            except Exception:
                 pass
 
         if deleted > 0:
