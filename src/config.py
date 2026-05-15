@@ -571,6 +571,19 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
             margin-bottom: 12px;
             line-height: 1.3;
         }}
+        .nato-star {{
+            display: inline-block;
+            font-size: 13px;
+            color: #ffffff;
+            background: #003087;
+            border-radius: 3px;
+            padding: 1px 6px;
+            margin-right: 7px;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            line-height: 1.6;
+        }}
         .news-content {{
             color: #2c3e50;
             font-size: 15px;
@@ -746,11 +759,11 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
         <div class="news-section">
             [ÖNEMLİ 10 HABERİN PARAGRAF ÖZETLERİ - ÖNCE BUNLAR (haber-1'den haber-10'a)]
             <div class="news-item" id="haber-1">
-                <div class="news-title"><b>Birinci Önemli Haberin Başlığı</b></div>
+                <div class="news-title"><span class="nato-star">★ NATO</span><b>NATO Zirvesiyle İlgili Haberin Başlığı [SADECE NATO haberleri için ikonu ekle]</b></div>
                 <p class="news-content">MİNİMUM 100 kelime paragraf özet (zorunlu), resmi Türkçe. 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa. Yeterli bağlam ve teknik detay ekle.</p>
                 <p class="source"><b>(KAYNAK, AÇIK - <a href="[KAYNAK_LINK değeri]" target="_blank">[KAYNAK_DOMAIN değeri]</a>, [HABER_TARİHİ değeri])</b></p>
             </div>
-            [... haber-2'den haber-10'a kadar devam et ...]
+            [... haber-2'den haber-10'a kadar devam et — NATO dışı haberlerde nato-star KULLANMA ...]
 
             [SONRA GERİ KALAN HABERLERİN PARAGRAF ÖZETLERİ (haber-11'den son habere)]
             <div class="news-item" id="haber-11">
@@ -764,6 +777,14 @@ ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
 </body>
 </html>
 ```
+
+NATO YILDIZI İKONU KURALI — KRİTİK:
+✓ SADECE NATO Türkiye Zirvesi (Temmuz 2026) ile doğrudan ilgili haberlerde, başlıktan ÖNCE şu HTML ekle:
+   <span class="nato-star">★ NATO</span>
+✓ Örnek: <div class="news-title"><span class="nato-star">★ NATO</span><b>NATO Zirvesine Yönelik APT28 Siber Operasyonu Tespit Edilmiştir</b></div>
+⛔ NATO ile ilgisi olmayan haberlere KESİNLİKLE ekleme — tek bir hatalı kullanım bile kabul edilmez
+⛔ İran-İsrail, ransomware, CVE vb. haberler dahil diğer tüm kategorilerde kullanma
+⛔ "Önemli Gelişmeler" kutusundaki linklere ekleme — sadece news-title div'ine ekle
 
 BAŞLIK KURALLARI:
 ✓ Eylem cümlesi: "CVE-2024-1234 Microsoft Exchange Sunucularını Etkilemiştir"
