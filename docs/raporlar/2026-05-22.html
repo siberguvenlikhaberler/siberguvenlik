@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 22.05.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        
+        /* ŞIK BAŞLIK */
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 {
+            color: #1565c0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .important-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .important-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .important-item a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+        
+        /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* HABERLER BÖLÜMÜ */
+        .news-section {
+            padding: 30px;
+        }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .nato-star {
+            display: inline-block;
+            font-size: 13px;
+            color: #ffffff;
+            background: #003087;
+            border-radius: 3px;
+            padding: 1px 6px;
+            margin-right: 7px;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+        .news-content {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .source {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+        .source a {
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+        
+        /* BAŞA DÖN BUTONU */
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
+        .social-signals {
+            background: #f8faff;
+            border: 1px solid #c7d7fd;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .social-signals .signal-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .social-signals .signal-platform-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px;
+            color: #475569;
+            background: #f1f5f9;
+            border-radius: 3px;
+            padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.45;
+            display: block;
+        }
+        .social-signals .signal-item a:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            .social-signals {
+                padding: 16px;
+            }
+            .social-signals .signal-list {
+                grid-template-columns: 1fr;
+            }
+            .social-signals .signal-meta {
+                gap: 6px;
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover {
+            opacity: 1;
+        }
+        @media (max-width: 992px) {
+            .back-to-top {
+                left: 20px; /* Adjust position for smaller screens */
+                top: auto;
+                bottom: 20px;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="report-header">
+<h1><span class="header-date">22.05.2026</span> Siber Güvenlik Haber Özetleri</h1>
+</div>
+<!-- YÖNETİCİ ÖZETİ -->
+<div class="executive-summary">
+<h2>Yönetici Özeti</h2>
+<!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
+<div class="important-news">
+<h2>Önemli Gelişmeler</h2>
+<div class="important-summary">
+<div class="important-item">
+<a href="#haber-1">1. CISA, Langflow ve Trend Micro Apex One Zafiyetlerinin Aktif İstismar Edildiğini Bildirmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-2">2. Latin Amerika'daki Hükümetler ve Finans Kuruluşları Yapay Zeka Odaklı Siber Saldırılarla Hedef Alınmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-3">3. Çin Bağlantılı Showboat Linux Zararlı Yazılımı Orta Doğu Telekomünikasyon Şirketlerini Etkilemiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-4">4. Sandworm APT Grubu Endüstriyel Ortamlara Yönelik Siber Saldırılarını Sürdürmüştür.</a>
+</div>
+<div class="important-item">
+<a href="#haber-5">5. Cisco, Secure Workload REST API'sindeki Kritik CVSS 10.0 Zafiyetini Gidermişti.</a>
+</div>
+<div class="important-item">
+<a href="#haber-6">6. Google, Chromium'daki Giderilmemiş Bir Sıfır Gün Zafiyetinin Detaylarını Yanlışlıkla Açıklamıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-7">7. Microsoft, Aktif Olarak İstismar Edilen İki Defender Zafiyetine Karşı Uyarıda Bulunmuştur.</a>
+</div>
+<div class="important-item">
+<a href="#haber-8">8. Grafana, TanStack Tedarik Zinciri Saldırısı Sonucunda Kaynak Kodunun Çalındığını Bildirmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-9">9. Storm-2949, Azure Veri Hırsızlığı Saldırıları İçin Self-Service Parola Sıfırlamayı Kötüye Kullanmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-10">10. Kimwolf DDoS Botnet Operatörü Kanada'da Tutuklanmıştır.</a>
+</div>
+</div>
+</div>
+<!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
+<table class="executive-table">
+<tr>
+<td><a href="#haber-11">11. Yama Yayınlanmamış ChromaDB Zafiyeti Sunucuları Uzaktan Kod Yürütmeye Açık Bırakmıştır.</a></td>
+<td><a href="#haber-12">12. Drupal, Web Sitelerini Hacklemeye Açık Bırakan Yüksek Derecede Kritik Zafiyeti Gidermişti.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-13">13. Lüksemburg'daki Ulusal Telekomünikasyon Kesintisi Huawei Yönlendirici Sıfır Gün Zafiyetine Bağlanmıştır.</a></td>
+<td><a href="#haber-14">14. Saldırganlar, SonicWall VPN'lerdeki Çok Faktörlü Kimlik Doğrulamayı Atlatmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-15">15. ROADtools Kullanılarak Bulut Ortamlarında Ulus Devlet Taktikleri Tespit Edilmiştir.</a></td>
+<td><a href="#haber-16">16. Çinli Webworm APT Grubu, Avrupa Hükümetlerini Hedeflemek İçin Discord ve Microsoft Graph'ı Kullanmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-17">17. Başkan Trump, ABD'nin Çin Üzerindeki Casusluk Faaliyetlerini Kabul Etmiştir.</a></td>
+<td><a href="#haber-18">18. CISA Yüklenicisi, AWS GovCloud Anahtarlarını GitHub'da Açıkta Bırakmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-19">19. CISA Direktörü, Açık Kaynak Zafiyetleri ve Güvenlik İyileştirmelerindeki Gecikmeler Hakkında Endişelerini Dile Getirmiştir.</a></td>
+<td><a href="#haber-20">20. Polonya, Hükümet Yetkililerini Yerel Şifreli Mesajlaşma Uygulaması Kullanmaya Teşvik Etmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-21">21. Trump, Yapay Zeka Güvenliğine Odaklanan Yürütme Emrini Ertelemiştir.</a></td>
+<td><a href="#haber-22">22. İki Partiden Yasa Koyucular CISA Bütçe Kesintilerinin Aşırıya Kaçtığını İfade Etmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-23">23. İngiltere'nin Siber Suç Yasası Reform Planları Güvenlik Araştırmacılarını Koruyamamıştır.</a></td>
+<td><a href="#haber-24">24. Teknoloji Devleri, İngiliz Düzenleyiciye Çocukları Çevrimiçi Korumak İçin Platformlarını Değiştirmeyi Vaat Etmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-25">25. B1ack's Stash, 4.6 Milyon Çalınan Kredi Kartı Kaydını Ücretsiz Olarak Yayınlamıştır.</a></td>
+<td><a href="#haber-26">26. İçerik Dağıtım Açığı, Web Sitelerini Marka Gaspına Açık Hale Getirmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-27">27. Art-Template NPM Paketi, Coruna iOS İstismar Kitini Dağıtmak İçin Ele Geçirilmiştir.</a></td>
+<td><a href="#haber-28">28. Go Typosquat Kütüphanesi, Komuta ve Kontrol İçin DNS TXT Kayıtlarını Kullanmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-29">29. Packagist, GitHub Actions Token Sızıntısı Sonrası Composer Güncellemesi Çağrısında Bulunmuştur.</a></td>
+<td><a href="#haber-30">30. Yeni Bir Çapraz Platform NPM Bilgi Hırsızı Tespit Edilmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-31">31. Google API Anahtarları Silindikten Sonra Bile Aktif Kalmaya Devam Etmiştir.</a></td>
+<td><a href="#haber-32">32. Microsoft 365 Kullanıcıları, Çok Faktörlü Kimlik Doğrulamayı Atlayan Yeni Bir Kimlik Avı Tehdidiyle Hedef Alınmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-33">33. Telegram Smishing Kampanyası Hesap Ele Geçirmeyi Kolaylaştırmıştır.</a></td>
+<td><a href="#haber-34">34. Dolandırıcılar, Microsoft'un Dahili Hesabını Kötüye Kullanarak Spam Bağlantıları Göndermiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-35">35. Üretken Yapay Zeka Destekli Saldırılar, Bireyleri Sosyal Medya Verileri Üzerinden Hedeflemiştir.</a></td>
+<td><a href="#haber-36">36. Keepnet, 2026 Verizon DBIR'a Sesli ve SMS Kimlik Avı Verileriyle Katkıda Bulunmuştur.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-37">37. Premium Deception Android Taşıyıcı Faturalandırma Dolandırıcılığı Kampanyası Ortaya Çıkarılmıştır.</a></td>
+<td><a href="#haber-38">38. Banana RAT Zararlı Yazılımı Brezilya Bankalarını Hedef Almıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-39">39. Kimlik Avı Kampanyası, PureLogs Bilgi Hırsızını Yaygınlaştırmıştır.</a></td>
+<td><a href="#haber-40">40. Yeni CypherLoc Tarayıcı Kilitleme Korkutma Yazılımı Ortaya Çıkmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-41">41. Steam, Zararlı Yazılım Barındıran Oyunu Platformdan Kaldırmıştır.</a></td>
+<td><a href="#haber-42">42. Microsoft MSHTA, Zararlı Yazılım Kampanyalarında Hala Kullanılmaktadır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-43">43. OrBit Linux Zararlı Yazılımı Aktif Olarak Geliştirilmeye Devam Etmiştir.</a></td>
+<td><a href="#haber-44">44. Outlaw / Shellbot Kampanyası Yeni SSH İstemci Kütüphanesi Sürümlerini Kullanmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-45">45. TamperedChef Zararlı Yazılımı Kümeleri Trojanize Edilmiş Üretkenlik Yazılımlarıyla Dağıtılmıştır.</a></td>
+<td><a href="#haber-46">46. HP, Linux Görüntüleme ve Yazdırma Yazılımındaki Kritik Zafiyeti Gidermişti.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-47">47. Gunra Fidye Yazılımı Güney Kore'deki Beş Şirketi Hedef Almıştır.</a></td>
+<td><a href="#haber-48">48. Pwn2Own Berlin 2026 Yarışmasında 47 Sıfır Gün Zafiyeti Ortaya Çıkarılmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-49">49. Orta Doğu'daki Aktif Komuta ve Kontrol Altyapısının Çoğu Tek Bir Telekom Sağlayıcısı Tarafından Barındırılmıştır.</a></td>
+<td><a href="#haber-50">50. CISA'nın Yeni KEV Adaylık Formu Tedarikçilere ve Araştırmacılara Raporlama İmkanı Sunmuştur.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-51">51. NIST NVD Zenginleştirme Politikası Değişikliği, Saldırgan Davranışı Sinyallerini Önceliklendirmiştir.</a></td>
+<td></td>
+</tr>
+</table><div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item"> <div class="signal-meta"> <span class="signal-platform-label">GitHub Advisory</span> <span class="signal-engagement">ÖNEM: KRİTİK  |  CVSS: 10.0</span> </div> <a href="https://github.com/advisories/GHSA-g6ww-w5j2-r7x3" rel="noopener noreferrer" target="_blank">BoxLite: Permission Bypass, salt okunur dosyaların değiştirilmesine olanak sağlamıştır.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲25</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tjuqf2/microsoft_warns_hackers_are_exploiting_password/" rel="noopener noreferrer" target="_blank">Microsoft, saldırganların kullanıcı hesaplarına erişim sağlamak amacıyla parola sıfırlamalarını istismar ettiğini belirtmiştir.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲24</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tkdedb/millions_of_nginx_servers_face_fresh_zeroday/" rel="noopener noreferrer" target="_blank">Milyonlarca NGINX sunucusu, yakın zamanda "nginx-poolslip" olarak ad</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲23</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tk1emo/google_api_keys_remain_active_after_deletion/" rel="noopener noreferrer" target="_blank">Google API Keys Remain Active After Deletion</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲22</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tjdysb/microsoft_warns_of_new_defender_zerodays/" rel="noopener noreferrer" target="_blank">Microsoft warns of new Defender zero-days exploited in attacks</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲21</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tjowgo/cve202640369_twelve_bytes_to_escape_the_browser/" rel="noopener noreferrer" target="_blank">CVE-2026-40369: Twelve Bytes to Escape the Browser Sandbox</a></div>
+</div></div>
+</div>
+<!-- HABERLER -->
+<div class="news-section">
+<div class="news-item" id="haber-1">
+<div class="news-title"><b>CISA, Langflow ve Trend Micro Apex One Zafiyetlerinin Aktif İstismar Edildiğini Bildirmiştir</b></div>
+<p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Langflow ve Trend Micro Apex One ürünlerini etkileyen iki kritik güvenlik zafiyetini Bilinen İstismar Edilen Zafiyetler (KEV) kataloğuna eklemiştir. Bu zafiyetler, aktif olarak istismar edildiğine dair kanıtlar barındırmaktadır. Langflow'daki CVE-2025-34291 (CVSS puanı: 9.4) olarak izlenen açık, yanlış kaynak doğrulama hatasından kaynaklanmakta ve saldırganların rastgele kod yürütmesine ve tam sistem ele geçirmesine olanak tanımaktadır. Obsidian Security tarafından Aralık 2025'te yayınlanan bir rapora göre, bu zafiyet aşırı hoşgörülü CORS, CSRF korumasının olmaması ve tasarımsal olarak kod yürütmeye izin veren bir uç noktanın birleşiminden kaynaklanmaktadır. Ctrl-Alt-Intel'in Mart 2026 analizine göre, İran devleti destekli MuddyWater hacking grubu, hedef ağlara ilk erişimi sağlamak için CVE-2025-34291'i aktif olarak kullanmıştır. Trend Micro Apex One'ın şirket içi sürümlerini etkileyen CVE-2026-34926 (CVSS puanı: 6.7) ise bir dizin geçişi zafiyetidir. Bu zafiyet, kimlik doğrulaması yapılmış yerel bir saldırganın sunucudaki anahtar tablosunu değiştirerek etkilenen aracılara kötü amaçlı kod enjekte etmesine olanak tanımaktadır. Trend Micro, bu zafiyetin aktif olarak istismar edildiğine dair en az bir örnek gözlemlediğini belirtmiştir. Federal Sivil Yürütme Organı (FCEB) ajanslarının, ağlarını güvence altına almak için 4 Haziran 2026 tarihine kadar gerekli düzeltmeleri uygulamaları zorunlu kılınmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/cisa-adds-exploited-langflow-and-trend.html" target="_blank">thehackernews.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-2">
+<div class="news-title"><b>Latin Amerika'daki Hükümetler ve Finans Kuruluşları Yapay Zeka Odaklı Siber Saldırılarla Hedef Alınmıştır</b></div>
+<p class="news-content">Latin Amerika'daki hükümet kuruluşları ve finansal organizasyonlar, SHADOW-AETHER-040 ve SHADOW-AETHER-064 olarak adlandırılan iki yeni ve gelişmekte olan yapay zeka destekli siber saldırı kampanyasıyla karşı karşıya kalmıştır. Trend Micro'ya göre, bu kampanyalar "çarpıcı derecede benzer taktikler" kullanarak hedef sistemlere trafik tünelleri kurmuş ve yapay zeka ajanlarının ProxyChains ve SSH aracılığıyla doğrudan iç ağ ortamlarına saldırılar düzenlemesine olanak sağlamıştır. Yapay zeka ajanları, önceden hazırlanmış hacking araçlarına güvenmek yerine dinamik olarak birden fazla hacking aracı ve betik oluşturmuştur. Bu durum, geleneksel güvenlik çözümlerinin bilinen araç imzalarına dayanarak tespitte zorlanmasına yol açmıştır. Saldırganlar, isteklerini yetkilendirilmiş penetrasyon testleri ve kırmızı takım tatbikatları olarak çerçeveleyerek yapay zeka güvenlik kontrollerini atlatmıştır. İspanyolca konuşan bir tehdit aktörü tarafından yürütülen SHADOW-AETHER-040, 27 Aralık 2025 ile 4 Ocak 2026 tarihleri arasında Meksika'daki altı hükümet kuruluşunu tehlikeye atmıştır. Bu faaliyet, Anthropic'in Claude ve OpenAI'nin GPT yapay zeka modellerini kullanarak çok sayıda Meksika hükümet kuruluşunun büyük ölçekli ele geçirilmesiyle ilgili Gambit Security raporuyla tutarlıdır. Dragos'un TAT26-12 olarak izlediği bu saldırılardan biri, Ocak 2026'da bir belediye su ve drenaj hizmetini hedeflemiş, operasyonel teknoloji (OT) ortamına sızma girişimi başarısız olmuştur. İkinci kampanya olan SHADOW-AETHER-064 ise Portekizce konuşan bir hacking grubuyla bağlantılı olup Nisan ayından bu yana aktif olarak Brezilya'daki finans kuruluşlarını hedef almıştır. Yapay zeka modelleri, günler veya haftalar sürecek manuel geliştirme çabalarını saatlere indirerek operasyonel olarak önemli bir hız kazanımı sağlamıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-3">
+<div class="news-title"><b>Çin Bağlantılı Showboat Linux Zararlı Yazılımı Orta Doğu Telekomünikasyon Şirketlerini Etkilemiştir</b></div>
+<p class="news-content">Siber güvenlik araştırmacıları, en az 2022 ortalarından bu yana Orta Doğu'daki bir telekomünikasyon sağlayıcısını hedef alan "Showboat" adlı yeni bir Linux zararlı yazılımının detaylarını açıklamıştır. Lumen Technologies Black Lotus Labs'ın The Hacker News ile paylaştığı rapora göre, Showboat, Linux sistemleri için tasarlanmış modüler bir post-exploitation çerçevesidir ve uzaktan kabuk oluşturma, dosya transferi ve SOCKS5 proxy olarak işlev görme yeteneklerine sahiptir. Zararlı yazılımın, Çin ile bağlantılı en az bir, muhtemelen daha fazla tehdit aktör grubu tarafından kullanıldığı değerlendirilmektedir. Komuta ve kontrol (C2) düğümleri ile Çin'in Sichuan eyaletinin başkenti Chengdu'ya coğrafi olarak konumlandırılmış IP adresleri arasında korelasyonlar tespit edilmiştir. Bu tehdit aktörlerinden biri olan Calypso (diğer adıyla Bronze Medley ve Red Lamassu), en az Eylül 2016'dan beri aktif olduğu bilinmekte ve Brezilya, Hindistan, Kazakistan, Rusya, Tayland ve Türkiye'deki devlet kurumlarını hedef almıştır. Zararlı yazılım, bir C2 sunucusuyla iletişim kurmak, sistem bilgilerini toplamak ve bu bilgileri şifreli ve Base64 kodlu bir dize olarak bir PNG alanında sunucuya geri iletmek üzere tasarlanmıştır. Ayrıca, ana bilgisayardan dosya yükleme ve indirme, işlem listesinden varlığını gizleme ve C2 sunucularını yönetme yeteneklerine de sahiptir. Kendini ana bilgisayarda gizlemek için Showboat, Pastebin'de barındırılan bir kod parçacığını alır. Zararlı yazılım ayrıca diğer cihazları tarayabilir ve SOCKS5 proxy aracılığıyla onlara bağlanabilir. Bu durum, Showboat'un temel amacının ele geçirilmiş sistemlerde bir dayanak noktası oluşturmak olduğunu düşündürmektedir. Bu, saldırganların genel ağa açık olmayan ve yalnızca LAN aracılığıyla erişilebilen makinelerle etkileşim kurmasına olanak sağlamaktadır. Daha fazla altyapı analizi, Afganistan merkezli bir internet servis sağlayıcısı (ISP) ve Azerbaycan'da bulunan başka bir bilinmeyen varlık olmak üzere iki kurbanı ortaya çıkarmıştır. Calypso tarafından Afganistan'daki telekomünikasyon sağlayıcısını hedef alan kampanyada, DLL yan yüklemesi yoluyla dağıtılan JFMBackdoor adlı tam özellikli bir Windows implantı da kullanılmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/showboat-linux-malware-hits-middle-east.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-4">
+<div class="news-title"><b>Sandworm APT Grubu Endüstriyel Ortamlara Yönelik Siber Saldırılarını Sürdürmüştür</b></div>
+<p class="news-content">Operasyonel teknoloji güvenlik şirketi Nozomi Networks, Temmuz 2025 ile Ocak 2026 arasında "kesin olarak Sandworm faaliyeti olarak tanımlanan" 29 olay tespit ettiğini açıklamıştır. Müşteri ve iş ortağı etkileşimlerinden, bal peteği araştırmalarından ve telemetri verilerinden toplanan verilere göre, bu faaliyet bürokratik bir yürütme modelini takip etmekte ve "hafta ortası ile öğle sonrası iş saatlerinde zirveye ulaşmaktadır; Çarşamba günü Moskova saatiyle yaklaşık 14:00'te en yüksek uyarı hacmi gözlemlenmiştir." Veri setinde, 10 müşteri arasında 17 Sandworm bulaşmış makine tespit edilmiştir. Bu sistemler, 923 benzersiz dahili hedefe karşı yanal hareket gerçekleştirmiştir. Nozomi Networks, "Yaygın farkındalığa ve yama bulunabilirliğine rağmen, Sandworm EternalBlue, DoublePulsar ve WannaCry gibi daha eski ama kanıtlanmış istismar zincirlerine güvenmeye devam etmiştir" demiştir. Belki de en kritik bulgu şudur: Sandworm bulaşmış her sistem, Sandworm faaliyetinden 20 ila 155 gün önce uyarılar üretmiştir. Nozomi Networks'ün bulguları, kritik altyapı sektörlerindeki kuruluşlar için siber güvenlik önlemlerinin sürekli olarak gözden geçirilmesi ve güncellenmesi gerektiğini vurgulamaktadır. Özellikle bilinen zafiyetlerin dahi uzun süre istismar edilebildiği</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-5">
+<div class="news-title"><b>Cisco, Secure Workload REST API'sindeki Kritik CVSS 10.0 Zafiyetini Gidermişti</b></div>
+<p class="news-content">Cisco, Secure Workload ürününü etkileyen ve kimlik doğrulaması yapılmamış uzaktan bir saldırganın hassas verilere erişmesine olanak tanıyan maksimum ciddiyetteki bir güvenlik zafiyeti için güncellemeler yayınlamıştır. CVE-2026-20223 (CVSS puanı: 10.0) olarak izlenen bu zafiyet, REST API uç noktalarına erişilirken yetersiz doğrulama ve kimlik doğrulamadan kaynaklanmaktadır. Cisco, bir saldırganın etkilenen bir uç noktaya özel olarak hazırlanmış bir API isteği göndermesi durumunda bu zafiyeti istismar edebileceğini belirtmiştir. Başarılı bir istismar, saldırganın Site Yöneticisi kullanıcısının ayrıcalıklarıyla hassas bilgileri okumasına ve kiracı sınırları arasında yapılandırma değişiklikleri yapmasına olanak sağlayabilir. Bu eksiklik, cihaz yapılandırmasından bağımsız olarak SaaS ve şirket içi dağıtımlardaki Cisco Secure Workload Küme Yazılımını etkilemektedir. Cisco, zafiyeti gideren herhangi bir geçici çözümün bulunmadığını ifade etmiştir. Sorun, Cisco Secure Workload Sürüm 3.10 (3.10.8.3 sürümünde düzeltilmiştir) ve Sürüm 4.0 (4.0.3.17 sürümünde düzeltilmiştir) gibi belirli sürümlerde ele alınmıştır. Ağ ekipmanı devi, zafiyeti dahili güvenlik testleri sırasında bulduğunu ve sahada istismar edildiğine dair herhangi bir kanıt olmadığını belirtmiştir. Bu açıklama, Cisco'nun Catalyst SD-WAN Denetleyicisi'ndeki (CVE-2026-20182, CVSS puanı: 10.0) başka bir maksimum ciddiyetteki kimlik doğrulama bypass zafiyetinin UAT-8616 olarak bilinen bir tehdit aktörü tarafından SD-WAN sistemlerine yetkisiz erişim sağlamak için istismar edildiğini açıklamasından bir hafta sonra gelmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/cisco-patches-cvss-100-secure-workload.html" target="_blank">thehackernews.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-6">
+<div class="news-title"><b>Google, Chromium'daki Giderilmemiş Bir Sıfır Gün Zafiyetinin Detaylarını Yanlışlıkla Açıklamıştır</b></div>
+<p class="news-content">Google, Chromium tabanlı tarayıcılarda henüz giderilmemiş bir zafiyetin detaylarını yanlışlıkla sızdırmıştır. Bu zafiyet, tarayıcı kapatıldıktan sonra bile JavaScript kodunun arka planda çalışmasına olanak tanımakta ve cihazda uzaktan kod yürütme potansiyeli taşımaktadır. Güvenlik araştırmacısı Lyra Rebane tarafından bildirilen ve Aralık 2022'de geçerli olduğu kabul edilen bu açık, bir saldırganın Service Worker kullanarak kötü amaçlı bir web sayfası oluşturmasına ve bu görevin asla sona ermemesini sağlamasına olanak tanımaktadır. Rebane, bu durumun saldırganın ziyaretçilerin cihazlarında JavaScript kodu çalıştırmasına izin verebileceğini belirtmiştir. Potansiyel istismar senaryoları arasında ele geçirilmiş tarayıcıların dağıtılmış hizmet reddi (DDoS) saldırıları başlatmak, kötü amaçlı trafiği proxy yapmak ve trafiği hedef sitelere keyfi olarak yönlendirmek bulunmaktadır. Sorun, Google Chrome, Microsoft Edge, Brave, Opera, Vivaldi ve Arc dahil olmak üzere tüm Chromium tabanlı tarayıcıları etkilemektedir. 26 Ekim 2024'te bir Google geliştiricisi, sorunun hala açık olduğunu fark etmiş ve "ciddi bir güvenlik açığı" olarak nitelendirerek ilerleme kaydedilmesi gerektiğini belirtmiştir. Bu yıl 10 Şubat'ta sorun düzeltildi olarak işaretlenmiş, ancak birkaç dakika sonra çeşitli endişeler nedeniyle tekrar açılmıştır. Güvenlik sorunu olması nedeniyle, hata etiketleri Chrome Zafiyet Ödül Programı (VRP) Paneli'nden geçecek şekilde güncellenmiş ve 12 Şubat'ta düzeltildi olarak işaretlenmesine rağmen bir yama gönderilmemiştir. Sorun tekrar özel hale getirilmiş olsa da, ifşaat bilgilerin sızması için yeterince uzun sürmüştür. Rebane, Google'ın bu ifşaatının istismarı "oldukça kolay" hale getireceğini, ancak bunu büyük bir botnet'e dönüştürmenin daha karmaşık olduğunu belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/google-accidentally-exposed-details-of-unfixed-chromium-flaw/" target="_blank">bleepingcomputer.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-7">
+<div class="news-title"><b>Microsoft, Aktif Olarak İstismar Edilen İki Defender Zafiyetine Karşı Uyarıda Bulunmuştur</b></div>
+<p class="news-content">Microsoft, Defender'da ayrıcalık yükseltme ve hizmet reddi zafiyetlerinin aktif olarak istismar edildiğini açıklamıştır. CVE-2026-41091 olarak izlenen ayrıcalık yükseltme zafiyeti, CVSS puanlama sisteminde 7.8 olarak derecelendirilmiştir ve başarılı bir istismar, saldırganın SYSTEM ayrıcalıkları elde etmesine olanak tanıyabilir. Microsoft, bu zafiyetin "Microsoft Defender'da dosya erişiminden önce uygunsuz bağlantı çözünürlüğünden ('bağlantı takibi') kaynaklandığını ve yetkili bir saldırganın yerel olarak ayrıcalıkları yükseltmesine izin verdiğini" belirtmiştir. İstismar edilen ikinci zafiyet ise CVE-2026-45498 (CVSS puanı: 4.0) olarak izlenen ve Defender'ı etkileyen bir hizmet reddi hatasıdır. Bu iki zafiyet, Microsoft Defender Antimalware Platform sürümleri 1.1.26040.8 ve 4.18.26040.7'de giderilmiştir. Microsoft, resmi olarak doğrulamasa da, CVE-2026-41091 ve CVE-2026-45498'in zafiyet açıklamaları, geçen ay Chaotic Eclipse (diğer adıyla Nightmare-Eclipse) tarafından açıklanan RedSun ve UnDefend adlı iki Defender sıfır gün zafiyetinin açıklamalarıyla örtüşmektedir. Huntress, her iki zafiyetin de BlueHammer (CVE-2026-33825) ile birlikte istismar edildiğini gözlemlemiştir. Ayrıca, 1.1.26040.8 sürümünde, yetkisiz bir saldırganın uzaktan kod yürütme elde etmek için istismar edebileceği Defender'daki bir yığın tabanlı arabellek taşması zafiyeti (CVE-2026-45584, CVSS puanı: 8.1) de giderilmiştir. Bu zafiyetin sahada istismar edildiğine dair herhangi bir kanıt bulunmamaktadır. ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), hem CVE-2026-41091 hem de CVE-2026-45498'i Bilinen İstismar Edilen Zafiyetler (KEV) kataloğuna eklemiş ve Federal Sivil Yürütme Organı (FCEB) ajanslarının 3 Haziran 2026 tarihine kadar düzeltmeleri uygulamalarını zorunlu kılmıştır. Bu son gelişmeyle birlikte, bir hafta içinde toplam üç Microsoft zafiyeti istismar edilmiş olarak işaretlenmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/microsoft-warns-of-two-actively.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-8">
+<div class="news-title"><b>Grafana, TanStack Tedarik Zinciri Saldırısı Sonucunda Kaynak Kodunun Çalındığını Bildirmiştir</b></div>
+<p class="news-content">Grafana, bu hafta Grafana Labs GitHub depolarına yetkisiz erişimin, TanStack tedarik zinciri saldırısının bir sonucu olduğunu açıklamıştır. 11 Mayıs'ta TanStack ve diğer yüksek profilli NPM ve PyPI projeleri, kurbanların bilgisayarlarına kendini yayan bilgi çalan zararlı yazılımların dağıtılmasına neden olan bir Mini Shai-Hulud tedarik zinciri saldırısına uğramıştır. Grafana, saldırıyla ilişkili kötü amaçlı etkinliği 11 Mayıs'ta tespit ettiğini ve GitHub iş akışı tokenlarını derhal değiştirdiğini belirtmiştir. Ancak, bir tokenın iptal edilmemesi nedeniyle, TanStack saldırısının arkasındaki tehdit aktörü Grafana'nın GitHub depolarına erişim sağlamıştır. Grafana, "Daha sonra yapılan bir inceleme, başlangıçta etkilenmediğini düşündüğümüz belirli bir GitHub iş akışının aslında tehlikeye atıldığını doğrulamıştır" demiştir. 16 Mayıs'ta Grafana, saldırganlardan bir fidye talebi almış ancak ödemeyi reddetmiştir. Eş zamanlı olarak, ek hafifletme çabaları başlatmış, GitHub duruşunu güçlendirmiş ve kolluk kuvvetlerini bilgilendirmiştir. Mevcut bulgular, Bu depolar, genel ve özel kaynak kodunun yanı sıra dahili GitHub depolarını da içermektedir. Müşteri üretim sistemleri veya operasyonları etkilenmemiş olsa da, hackerlar Grafana'nın kaynak kodunu ve dahili operasyonel bilgileri ile diğer iş detaylarını depolayan depoları çalmıştır. Grafana'nın üretim sistemlerini veya Grafana Cloud platformunu etkilememiştir. Ayrıca, Grafana, kaynak kodunun indirildiğini ancak değiştirilmediğini ve müşterilerden veya açık kaynak kullanıcılarından herhangi bir işlem yapılmasına gerek olmadığını belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/grafana-says-codebase-and-other-data-stolen-via-tanstack-supply-chain-attack/" target="_blank">securityweek.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-9">
+<div class="news-title"><b>Storm-2949, Azure Veri Hırsızlığı Saldırıları İçin Self-Service Parola Sıfırlamayı Kötüye Kullanmıştır</b></div>
+<p class="news-content">Microsoft, Storm-2949 adlı tehdit aktörü tarafından düzenlenen "metodik, sofistike ve çok katmanlı bir saldırı" hakkında bilgi paylaşmıştır. Bu saldırının amacı, adı açıklanmayan bir kuruluşun yüksek değerli varlıklarından hassas verileri sızdırmaktır. Saldırı, Microsoft'un Self-Service Parola Sıfırlama (SSPR) sürecini kötüye kullanarak hedefi çok faktörlü kimlik doğrulama (MFA) istemlerini tamamlaması için kandırmasıyla dikkat çekmektedir. Bu durum, Microsoft 365 uygulamalarından, dosya barındırma hizmetlerinden ve Azure'da barındırılan üretim ortamlarından veri sızdırmasına yol açmıştır. Sosyal mühendislik saldırısı, IT personelini ve üst düzey liderliği hedef alarak, ele geçirme sonrası eylemler için kimliklerini tehlikeye atmayı amaçlamıştır. Saldırganın ayrıca keşif faaliyetleri yürüttüğü, ScreenConnect kurduğu ve Microsoft Defender Antivirus korumalarını devre dışı bırakmaya çalıştığı da belirtilmiştir. Microsoft, Storm-2949'un geleneksel zararlı yazılımlara ve diğer şirket içi taktiklere, tekniklere ve prosedürlere (TTP'ler) güvenmediğini açıklamıştır. Bunun yerine, kontrol düzlemi ve veri düzlemi erişimi elde etmek için meşru bulut ve Azure yönetim özelliklerini kullanmışlardır. Daha sonra bu erişimi, sanal makinelerde uzaktan kod yürütmek ve Key Vault'lar ve depolama hesapları gibi hassas bulut kaynaklarına erişmek için kullanmışlardır. Bu faaliyetler, saldırganların bulut ve uç nokta ortamları arasında yanal hareket etmelerine ve beklenen yönetim davranışlarına karışmalarına olanak sağlamıştır. Bu olay, kimlik tabanlı saldırıların artan karmaşıklığını ve bulut ortamlarında güvenlik kontrollerinin ne kadar önemli olduğunu bir kez daha gözler önüne sermiştir. Kuruluşların, kimlik ve erişim yönetimi süreçlerini güçlendirmeleri ve sosyal mühendislik saldırılarına karşı farkındalıklarını artırmaları kritik önem taşımaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-10">
+<div class="news-title"><b>Kimwolf DDoS Botnet Operatörü Kanada'da Tutuklanmıştır</b></div>
+<p class="news-content">Kanada'da 23 yaşındaki Jacob Butler, Kimwolf adlı büyük bir dağıtılmış hizmet reddi (DDoS) botnetini işlettiği iddiasıyla tutuklanmıştır. Kanada makamları tarafından Ottawa'da tutuklanan Butler, ABD'ye iade edilmeyi beklemektedir ve bilgisayar korsanlığına yardım ve yataklık etmekle suçlanmaktadır. Açıklanan mahkeme belgelerine göre, Kimwolf, DDoS-as-a-service modeliyle faaliyet göstermiş ve siber suçlular tarafından saniyede neredeyse 30 terabit'e ulaşan saldırılar başlatmak için kullanılmıştır. Bu, o zamana kadar kamuya açıklanmış en büyük DDoS saldırısı olarak kaydedilmiştir. Butler, dijital fotoğraf çerçeveleri ve web kameralarından Android tabanlı TV kutularına ve akış cihazlarına kadar uzanan, ele geçirilmiş yaklaşık iki milyon cihazdan oluşan devasa bir ağa erişimi satmıştır. Botnet, dünya genelinde bilgisayar ve sunucuları (Savunma Bakanlığı Bilgi Ağı IP adresleri dahil) hedef alan 25.000'den fazla saldırıda kullanılmış ve bazı kurbanlar için bir milyon doları aşan finansal kayıplara neden olmuştur. Şubat 2026'da bağımsız güvenlik gazetecisi Brian Krebs, Butler'ın Kimwolf botnetinin arkasındaki kişi olduğunu ilk kez ifşa etmiştir. Mart 2026'da ABD makamları, Kanada ve Almanya ile işbirliği yaparak Kimwolf, AISURU, JackSkid ve Mossad ile ilişkili komuta ve kontrol (C2) altyapısını çökertmiştir. Adalet Bakanlığı'na göre, Kimwolf'un 25.000'den fazla saldırı komutu yayınladığı tahmin edilmektedir. Butler'ın tutuklanmasının yanı sıra, 45 DDoS-as-a-service platformunu destekleyen çevrimiçi hizmetleri hedef alan el koyma kararları da açılmış ve kolluk kuvvetlerinin bunları dağıtmasına olanak sağlanmıştır. Bu operasyon, siber suçlulara karşı uluslararası işbirliğinin önemini bir kez daha ortaya koymuştur.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/kimwolf-ddos-botnet-operator-arrested.html" target="_blank">thehackernews.com</a>, 22.05.2026)</b></p>
+
+            [SONRA GERİ KALAN HABERLERİN PARAGRAF ÖZETLERİ (haber-11'den son habere)]
+            <div class="news-item" id="haber-11">
+<div class="news-title"><b>Yama Yayınlanmamış ChromaDB Zafiyeti Sunucuları Uzaktan Kod Yürütmeye Açık Bırakmıştır</b></div>
+<p class="news-content">Araştırmacılar, açık kaynaklı vektör veritabanı ChromaDB'de kritik bir zafiyetin detaylarını kamuya açıklamıştır. Bu zafiyet, kimlik doğrulaması yapılmamış saldırganların sunucularda rastgele kod yürütmesine ve hassas verilere erişmesine olanak tanımaktadır. CVE-2026-45829 olarak izlenen "ChromaToast" adlı bu açık, ChromaDB'nin API sunucusunda bulunmaktadır. HiddenLayer araştırmacıları tarafından tespit edilen bu sorun, ChromaDB geliştiricileriyle iletişime geçme girişimlerinin başarısız olmasının ardından kamuoyuna duyurulmuştur. Zafiyet, ChromaDB'nin gömülü model referanslarını ayrıştırmak için kullandığı kod ile kimlik doğrulama kontrolünü gerçekleştiren kod arasındaki bir yarış durumundan kaynaklanmaktadır. Saldırganlar, Hugging Face'de barındırılan kötü amaçlı model yapılandırmalarını yüklemek için istekler göndererek bu açığı istismar edebilirler. HiddenLayer'a göre, zafiyet ChromaDB'nin 1.0.0 sürümünden 1.5.8 sürümüne kadar tüm versiyonlarında mevcuttur. Şubat ayından bu yana geliştiricilere farklı iletişim kanalları aracılığıyla birden fazla bildirimde bulunulmasına rağmen yanıt alınamamıştır. Shodan arama motoru aracılığıyla herkese açık olan ChromaDB örneklerinin %73'ünden fazlası savunmasız bir sürüm çalıştırmaktadır. Bir yama yayınlanana kadar araştırmacılar, Rust uygulamasını kullanan ChromaDB sunucularının dağıtılmasını tavsiye etmektedir, çünkü bu uygulama etkilenmemektedir. Ayrıca, ChromaDB portuna ağ erişimi yalnızca güvenilir IP adresleriyle sınırlandırılmalıdır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4175958/unpatched-chromadb-flaw-leaves-servers-open-to-remote-code-execution.html" target="_blank">csoonline.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-12">
+<div class="news-title"><b>Drupal, Web Sitelerini Hacklemeye Açık Bırakan Yüksek Derecede Kritik Zafiyeti Gidermişti</b></div>
+<p class="news-content">Drupal, açık kaynaklı içerik yönetim sistemi (CMS) tarafından desteklenen web sitelerinin saldırıya uğramasına olanak tanıyabilecek yüksek derecede kritik bir zafiyeti gidermiştir. CVE-2026-9082 olarak izlenen ve NIST CMSS puanı 25 üzerinden 20 olarak derecelendirilen bu zafiyet, veritabanı sorgularının SQL enjeksiyon saldırılarını önlemek için temizlenmesini sağlamak üzere tasarlanmış bir API'yi etkilemektedir. Drupal, bu API'deki bir zafiyetin, bir saldırganın özel olarak hazırlanmış istekler göndermesine ve PostgreSQL veritabanlarını kullanan sitelerde rastgele SQL enjeksiyonuna neden olmasına olanak tanıdığını açıklamıştır. Açıklamada, zafiyetin kimlik doğrulaması yapılmadan bilgi ifşası için ve bazı durumlarda ayrıcalık yükseltme ve uzaktan kod yürütme için istismar edilebileceği uyarısı yapılmıştır. Drupal yüz binlerce web sitesini güçlendirse de, CVE-2026-9082 yalnızca PostgreSQL kullanan siteleri etkilemektedir. Drupal geliştiricileri, web sitelerinin %5'inden daha azının etkilendiğini düşünmektedir. Drupal'ın 11.3, 11.2, 10.6 ve 10.5.x sürümleri için yamalar mevcuttur. En son güncellemeler ayrıca Symfony ve Twig'deki Drupal'ı etkileyen 'önemli' zafiyetleri de ele almaktadır. Drupal, SQL Enjeksiyonu zafiyetinden etkilenip etkilenmediğinize bakılmaksızın bu bağımlılıkların güncellenmesini şiddetle tavsiye etmektedir. Bu tür kritik zafiyetlerin hızla giderilmesi, web sitelerinin güvenliğini sağlamak için büyük önem taşımaktadır, çünkü istismar potansiyeli yüksek olan bu tür açıklar geniş çaplı saldırılara yol açabilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/drupal-patches-highly-critical-vulnerability-exposing-websites-to-hacking/" target="_blank">securityweek.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-13">
+<div class="news-title"><b>Lüksemburg'daki Ulusal Telekomünikasyon Kesintisi Huawei Yönlendirici Sıfır Gün Zafiyetine Bağlanmıştır</b></div>
+<p class="news-content">The Record'un bu hafta bildirdiğine göre, Lüksemburg'da 23 Temmuz 2025 tarihinde yaşanan ulusal telekomünikasyon kesintisi, Huawei kurumsal yönlendirici yazılımındaki bir sıfır gün zafiyetinin istismarından kaynaklanmıştır. Olay, mobil, sabit hat ve acil durum iletişimlerini üç saatten fazla kesintiye uğratmıştır. Saldırının, Huawei kurumsal yönlendiricilerinin sürekli yeniden başlatma döngüsüne girmesine neden olarak POST Luxembourg'un altyapısının bazı bölümlerini çökerttiği belirtilmiştir. Zafiyet hakkında şu anda herhangi bir detay bulunmamakta ve sorunun Huawei tarafından yamanıp yamanmadığı belirsizliğini korumaktadır. Bu tür sıfır gün zafiyetlerinin kritik altyapı sistemlerinde yarattığı risk, telekomünikasyon ağlarının ülke çapında aksamasına neden olabileceği için oldukça ciddidir. Özellikle ulusal düzeyde iletişim hizmetlerinin kesintiye uğraması, hem ekonomik hem de sosyal açıdan ciddi sonuçlar doğurabilir. Ayrıca, uluslararası düzeyde bu tür zafiyetlerin paylaşılması ve giderilmesi için işbirliğinin artırılması gerekliliği de ortaya çıkmaktadır, zira bu tür saldırılar ulusal sınırları aşan geniş çaplı etkilere sahip olabilir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-14">
+<div class="news-title"><b>Saldırganlar, SonicWall VPN'lerdeki Çok Faktörlü Kimlik Doğrulamayı Atlatmıştır</b></div>
+<p class="news-content">ReliaQuest araştırmacıları, Şubat ve Mart 2026 arasında SonicWall Gen6 SSL-VPN cihazlarındaki CVE-2024-12802 zafiyetinin sahada aktif olarak istismar edildiğini gözlemlemiştir. Bu kimlik doğrulama bypass zafiyeti, çok faktörlü kimlik doğrulamanın (MFA) tek faktörlü erişime indirilmesine neden olmuştur. Gen6 cihazlar için bellenim güncellemeleri mevcut olsa da, tam düzeltme altı ek manuel adımı gerektirmektedir. Bu adımlar, standart yama uygulama iş akışlarında sıklıkla atlanmakta ve sistemlerin düzeltilmiş gibi görünmesine rağmen savunmasız kalmasına yol açmaktadır. Saldırganlar, VPN hesaplarına kaba kuvvet saldırıları düzenlemiş, MFA'yı atlatmış ve ağlar içinde hızla ilerlemiştir, bazı durumlarda dosya sunucularına 30 dakikadan kısa sürede ulaşmıştır. ReliaQuest'in gözlemlediği saldırıların, fidye yazılımı ekosisteminde faaliyet gösteren aktörlerle tutarlı olduğu belirtilmiştir. Zafiyet, SonicWall'ın iki farklı Active Directory oturum açma biçimini (UPN ve SAM) nasıl işlediğinden kaynaklanmaktadır. MFA uygulaması, her oturum açma biçimine bağımsız olarak uygulanmakta, ancak kullanıcı kimliğine uygulanmamaktadır. Bu durum, geçerli kimlik bilgilerine sahip bir saldırganın, MFA yapılandırılmış olsa bile UPN yoluyla kimlik doğrulaması yapmasına olanak tanımıştır. SonicWall, bu durumu danışmanlık belgesinde (SNWLID-2025-0001) belirtmiş, ancak standart yama yönetimi iş akışları manuel yeniden yapılandırma adımlarını doğrulamak üzere tasarlanmamıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192477/hacking/attackers-are-bypassing-mfa-on-sonicwall-vpns-because-something-was-wrong-with-previous-fix.html" target="_blank">securityaffairs.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-15">
+<div class="news-title"><b>ROADtools Kullanılarak Bulut Ortamlarında Ulus Devlet Taktikleri Tespit Edilmiştir</b></div>
+<p class="news-content">ROADtools, hem saldırı hem de savunma amaçlı güvenlik için geliştirilmiş açık kaynaklı bir araç takımıdır, ancak son zamanlarda saldırganlar tarafından bulut saldırılarında kötüye kullanıldığı tespit edilmiştir. Palo Alto Networks Unit 42'nin araştırmasına göre, bu araç, Entra ID'de cihazları kaydetmek, Microsoft Entra ID tokenlarını almak, değiştirmek ve manipüle etmek için tasarlanmıştır. ROADtools, meşru Microsoft API'leri aracılığıyla çalışmakta ve tipik trafiği taklit ederek tespitten kaçınabilmektedir. Kullanıcı-aracı dizeleri gibi istek özniteliklerini yapılandırarak daha fazla savunma kaçınması sağlanabilmektedir. Bu yetenekler, ROADtools'u saldırganlar için değerli bir varlık haline getirmiştir. Ulus devlet tehdit aktörleri, son bulut saldırılarında keşif, kalıcılık ve savunma kaçınması için bu aracı kullanmıştır. Örneğin, Microsoft, 2021'in sonlarında Cloaked Ursa (Midnight Blizzard veya APT29 olarak da bilinir) tarafından yürütülen faaliyetleri raporlamıştır. Bu grup, ilk erişimi elde etmek için yüksek hedefli oltalama (spear phishing) kampanyaları başlatmış ve ardından Azure AD (şimdi Entra ID) ortamlarını keşfetmek ve numaralandırmak için ROADtools'u kullanmıştır. Microsoft ayrıca, İran devleti destekli tehdit aktörü Curious Serpens'in (Peach Sandstorm, APT33) 2023'teki kötü amaçlı operasyonlarında ROADtools kullandığını bildirmiştir. Volexity ise 2025'te, UTA0355 olarak adlandırdığı devlet bağlantılı bir tehdit aktörünün, hedefli bir oltalama kampanyası sırasında Entra ID'ye sahte bir cihaz kaydettiğini ve Microsoft Graph API'ye tam erişime sahip yeni bir token elde ettiğini raporlamıştır. Kuruluşların, kimlik tabanlı savunmalarını güçlendirmeleri ve bulut ortamlarındaki anormal davranışları izlemeleri kritik önem taşımaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://unit42.paloaltonetworks.com/roadtools-cloud-attacks/" target="_blank">unit42.paloaltonetworks.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-16">
+<div class="news-title"><b>Çinli Webworm APT Grubu, Avrupa Hükümetlerini Hedeflemek İçin Discord ve Microsoft Graph'ı Kullanmıştır</b></div>
+<p class="news-content">Çin destekli bir kalıcı tehdit aktörü olan Webworm, Avrupa'daki hükümet kuruluşlarını hedef almakta ve bunu alışılmadık komuta ve kontrol (C2) mekanizmaları kullanarak gerçekleştirmektedir. ESET'in bu hafta yayınladığı araştırma, 2022'de ilk kez rapor edilen Webworm'un son dönemdeki faaliyetlerini detaylandırmaktadır. Grup başlangıçta Asya'daki kuruluşları hedeflemiş olsa da, ESET araştırmacısı Eric Howard, tehdit aktörünün odağını Belçika, İtalya, Sırbistan, İspanya ve Polonya'daki hükümet kuruluşları da dahil olmak üzere Avrupa'ya kaydırdığını belirtmiştir. Güney Afrika'da da ek faaliyetler tespit edilmiştir. Araştırma, Webworm'un 2024 başları ile 2025 başları arasındaki faaliyetlerini ve taktiklerinin, tekniklerinin ve prosedürlerinin (TTP'ler) 2022'den bu yana nasıl geliştiğini kapsamaktadır. Tehdit aktörü başlangıçta McRat ve Trochilus gibi bilinen zararlı yazılım ailelerine güvenmiş, ancak daha yakın zamanda mevcut ve özel proxy araçlarına yönelmiştir. 2025'te Webworm, repertuarına iki yeni arka kapı eklemiştir: C2 iletişimlerini kolaylaştırmak için popüler sohbet uygulaması Discord'u kullanan EchoCreep ve C2 için Microsoft Graph API'ye dayanan GraphWorm. ESET ayrıca Webworm'un zararlı yazılım ve araçlarını GitHub depolarında hazırladığını, böylece saldırganların zararlı yazılımları kurbanın makinesine kolayca indirebildiğini gözlemlemiştir. Webworm'un bu yaratıcı C2 yaklaşımları, tehdit aktörlerinin tespit edilmekten kaçınmak için sürekli olarak yeni yöntemler geliştirdiğini göstermektedir. Kuruluşların, ağlarındaki anormal iletişim faaliyetlerini izlemeleri ve açık kaynak zafiyetlerini düzenli olarak yamamaları,</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/endpoint-security/chinas-webworm-discord-microsoft-graphs" target="_blank">darkreading.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-17">
+<div class="news-title"><b>Başkan Trump, ABD'nin Çin Üzerindeki Casusluk Faaliyetlerini Kabul Etmiştir</b></div>
+<p class="news-content">ABD Başkanı Donald Trump, geçtiğimiz hafta Çin Devlet Başkanı Xi Jinping ile yaptığı ikili görüşmelerde, her iki ulus tarafından yürütülen siber saldırılar ve casusluk faaliyetlerini tartıştıklarını belirtmiştir. Trump, ABD'ye dönüş uçuşu sırasında gazetecilere yaptığı açıklamada, "Casusluktan bahsediyorlar. Biz de yapıyoruz," demiştir. "Onlara karşı da cehennem gibi casusluk yapıyoruz," diye ekleyen Trump, "Ona, 'size bilmediğiniz birçok şey yapıyoruz ve siz de muhtemelen bildiğimiz şeyleri bize yapıyorsunuz' dedim" ifadelerini kullanmıştır. Trump, Çin'e karşı yürütülen saldırılar hakkında detay vermemiş olsa da, bu kabul, Çin'in ABD ağlarına geniş çaplı sızmalar gerçekleştirmekle suçlandığı bir döneme denk gelmiştir. Bu açıklama, ulus devletler arasındaki siber casusluk faaliyetlerinin açıkça kabul edilmesi açısından dikkat çekicidir ve siber uzaydaki jeopolitik gerilimlerin bir yansımasıdır. Liderlerin Ayrıca, Gelecekte, siber casusluk faaliyetlerinin artarak devam etmesi ve bu tür faaliyetlerin uluslararası ilişkilerde daha sık gündeme gelmesi beklenmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-18">
+<div class="news-title"><b>CISA Yüklenicisi, AWS GovCloud Anahtarlarını GitHub'da Açıkta Bırakmıştır</b></div>
+<p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA) için çalışan bir yüklenici, Kasım 2025'ten bu yana birçok yüksek ayrıcalıklı AWS GovCloud hesabına ve çok sayıda dahili CISA sistemine ait kimlik bilgilerini herkese açık bir GitHub deposunda (ironik bir şekilde "Private-CISA" olarak adlandırılmıştır) açıkta bırakmıştır. Depo, GitGuardian tarafından 14 Mayıs 2026 tarihinde keşfedilmiştir. Depo, ajansa ait 844 MB boyutunda düz metin parolaları, AWS tokenlarını ve Entra ID SAML sertifikalarını barındırmıştır. Depo, sorumlu ifşaatın ardından çevrimdışı duruma getirilmiştir. Bu olay sonucunda herhangi bir hassas verinin tehlikeye atıldığına dair bir kanıt bulunmamaktadır. Özellikle devlet kurumları ve kritik altyapılarla ilişkili verilerin korunması, en üst düzeyde dikkat ve sıkı güvenlik protokolleri gerektirmektedir. CISA gibi ulusal güvenlikten sorumlu bir kurumla ilişkili bu tür bir ihlal, potansiyel olarak çok daha geniş kapsamlı siber saldırılara zemin hazırlayabilir ve ulusal güvenliği tehlikeye atabilir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-19">
+<div class="news-title"><b>CISA Direktörü, Açık Kaynak Zafiyetleri ve Güvenlik İyileştirmelerindeki Gecikmeler Hakkında Endişelerini Dile Getirmiştir</b></div>
+<p class="news-content">Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA) Vekil Direktörü Nick Andersen, tüm modern dijital altyapının belkemiğini oluşturan açık kaynak teknolojilerinin güvenliğinin sağlanmasının, artan zararlı yazılım saldırıları dalgası karşısında "zor kararlar" gerektireceğini belirtmiştir. Andersen, Ulusal Siber İnovasyon Forumu'nda yaptığı konuşmada, "Zafiyet keşfinin hızlı bir şekilde artmasını düşündüğümüzde, açık kaynak topluluğu özellikle endişe duyduğum bir alandır" ifadelerini kullanmıştır. Yakın zamanda yaşanan bir saldırıda, bir hacker, popüler axios yazılım geliştirici paketinin tek bir açık kaynak proje bakımcısının hesabını ele geçirerek kötü amaçlı güncellemeler yayınlamış ve bu durum, daha geniş çaplı saldırı potansiyelini artırmıştır. Kuzey Kore bağlantılı bir hacking grubu olduğundan şüphelenilen TeamPCP, açık kaynak saldırılarında geniş çaplı bir faaliyet yürütmektedir. Andersen, "Mimariyi yeniden düzenlemek, eksik kaldığımız alanlara yatırım yapmak ve insanların risk profillerinin farklı olduğunu düşündükleri yerlerde bazı zor güvenlik kararlarını almaya zorlamak için muazzam bir fırsat var" demiştir. CISA'nın, "geleneksel mekanizmaları kullanarak yetişemeyecekleri açık bir anlayışla" zafiyet yönetimi, koordineli zafiyet ifşası ve iyileştirme yaklaşımlarını değiştirmek için endüstri ve diğer paydaşlarla çalıştığını ifade etmiştir. Genel olarak, ABD'nin çok fazla gerekli güvenlik iyileştirmesini ertelediğini de sözlerine eklemiştir. Bu durum, açık kaynak yazılımların yaygın kullanımı ve bu alandaki güvenlik açıklarının potansiyel sistemik riskleri nedeniyle ulusal güvenlik için ciddi bir tehdit oluşturmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/cisa-chief-frets-about-open-source-vulnerabilities-delayed-security-improvements/" target="_blank">cyberscoop.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-20">
+<div class="news-title"><b>Polonya, Hükümet Yetkililerini Yerel Şifreli Mesajlaşma Uygulaması Kullanmaya Teşvik Etmiştir</b></div>
+<p class="news-content">Polonya hükümeti, kamu görevlilerini ve "Ulusal Siber Güvenlik Sistemi içindeki kuruluşları" Signal uygulamasını kullanmayı bırakmaya ve bunun yerine önde gelen bir Polonya araştırma kuruluşu tarafından geliştirilen mSzyfr adlı şifreli bir mesajlaşma uygulamasını kullanmaya yönlendirmektedir. Bu çağrı, gelişmiş kalıcı tehdit (APT) grupları tarafından düzenlenen sosyal mühendislik saldırılarıyla ilgili endişelerden kaynaklanmaktadır. Bu gelişme, birçok hükümetin, tehdit aktörlerinin Signal desteğini taklit ederek kurbanların hesaplarını ele geçirme çabaları da dahil olmak üzere, sosyal mühendislik saldırılarında bir artış konusunda uyarıda bulunduğu bir döneme denk gelmiştir. Polonya hükümetinin bu adımı, ulusal güvenlik açısından kritik öneme sahip kişisel ve hassas iletişimlerin dış kaynaklı platformlar yerine ulusal kontrol altındaki çözümlerle korunması gerektiğini düşündüğünü göstermektedir. Özellikle APT gruplarının hedefli saldırılarında sosyal mühendislik tekniklerini kullanarak yüksek profilli kişilerin hesaplarını ele geçirme eğilimi, devletlerin kendi iç güvenliklerini sağlamak adına bu tür önlemleri almasını zorunlu kılmaktadır. Yerel olarak geliştirilen bir şifreli mesajlaşma uygulamasının kullanılması, veri egemenliği ve iletişim güvenliği konularında ulusal düzeyde bağımsızlığı artırma çabasının bir parçası olarak değerlendirilmektedir. Bu, diğer ülkelerin de benzer güvenlik kaygılarına sahip olabileceğini ve benzer yerel çözümlere yönelebileceğini düşündürmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-21">
+<div class="news-title"><b>Trump, Yapay Zeka Güvenliğine Odaklanan Yürütme Emrini Ertelemiştir</b></div>
+<p class="news-content">Başkan Donald Trump, Beyaz Saray'ın kamuoyuna imzalamayı duyurmasından saatler önce, yapay zeka modelleri için 90 günlük bir test ve doğrulama rejimi oluşturacak bir yürütme emrinin yayınlanmasını erteleyeceğini belirtmiştir. Trump, Oval Ofis'te gazetecilere yaptığı açıklamada, "Bazı yönlerini beğenmediğim için" emri erteleme kararı aldığını ve bunun ABD'nin Çin gibi ülkelerle yapay zeka endüstrisi rekabetine zarar verebileceği endişesini dile getirmiştir. Birden fazla kaynağa göre, son 24 saat içinde dolaşan emrin taslak versiyonu, ABD federal hükümeti ile önde gelen yapay zeka şirketleri arasında, modellerin kamuya açıklanmasından 90 gün önce hükümetin yeni modelleri incelemesine olanak tanıyan gönüllü bir test rejimi oluşturacaktı. Taslak emir, Ulusal Güvenlik Ajansı'nı (NSA) önde gelen yapay zeka modellerinin gizli değerlendirmelerini yapma konusunda yetkilendirirken, Hazine Bakanlığı yapay zeka şirketleri ve kritik altyapı sektörlerindeki (finans ve sağlık gibi) siber güvenlik savunucuları arasında yeni bir bilgi paylaşım anlaşması kuracaktı. Diğer ajanslar, Ulusal Siber Direktörlük Ofisi, Siber Güvenlik ve Altyapı Güvenliği Ajansı ve Ulusal Standartlar ve Teknoloji Enstitüsü de doğrulama rejimi kapsamına giren modelleri tanımlamada yer alacaktı. Bu erteleme, yapay zeka güvenliği politikaları üzerindeki devam eden tartışmaları ve ulusal güvenlik ile endüstriyel rekabet arasındaki dengeyi bulma zorluğunu yansıtmaktadır. Uzmanlar, mevcut modellerin yazılım hatalarını ve zafiyetleri bulmada oldukça iyi olduğunu, Anthropic'in Mythos ve OpenAI'nin Daybreak gibi yeni modellerin ise daha sofistike saldırılar düzenlemek için birden fazla istismarı bir araya getirebildiğini belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/trump-postpones-executive-order-focused-on-ai-security/" target="_blank">cyberscoop.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-22">
+<div class="news-title"><b>İki Partiden Yasa Koyucular CISA Bütçe Kesintilerinin Aşırıya Kaçtığını İfade Etmiştir</b></div>
+<p class="news-content">İki siber güvenlik odaklı Kongre üyesi, Siber Güvenlik ve Altyapı Güvenliği Ajansı'na (CISA) yapılan kesintilerin, ajansın sivil ağları yabancı düşmanlara karşı savunmak için gerekli olan kapasitesine çok fazla zarar verdiğini belirtmiştir. Temsilci Don Bacon (R-Neb.) ve Temsilci James Walkinshaw (D-Va.), Ulusal Siber İnovasyon Forumu'nda bir panelde konuşmuşlardır. Farklı partileri temsil etmelerine ve farklı kongre komitelerinde görev yapmalarına rağmen, iki yasa koyucu, CISA'nın rolü ve son kesintilerin sonuçları hakkında benzer değerlendirmeler sunmuşlardır. Bacon, ajansı yerel ağları, enerji şebekelerini ve benzeri şeyleri korumak için merkezi bir kurum olarak çerçevelendirmiştir. Walkinshaw, bu görüşü desteklemiş ve doğrudan tehdit tablosuna bağlamıştır. Salt Typhoon gibi Çin bağlantılı sızma kampanyalarına atıfta bulunarak, ABD'nin "yurt dışında kritik altyapıya sızan ve burada kendi kritik altyapı endüstrimizin büyük kısımlarını hedef alan" düşmanlarla mücadele ettiğini belirtmiştir. CISA'nın bilgi paylaşım işlevinin ve kamu hizmetleri ile yerel yönetimlerle olan ilişkilerinin, merkezi bir sivil savunmayı işler hale getiren unsurlardan biri olduğunu ifade etmiştir. Başkan Donald Trump'ın 2027 mali yılı bütçesi, geçen ay yayınlanan bir özete göre CISA'yı 707 milyon dolar kesintiye uğratacakken, ayrı bir bütçe belgesi 361 milyon dolarlık daha küçük bir kesintiye işaret etmektedir. Her iki rakam da ajansı, yönetimin başında sahip olduğu yaklaşık 3 milyar dolardan düşerek, biraz 2 milyar dolardan fazla takdir yetkili fonla bırakacaktır. Bu kesintiler, CISA'nın personelinin yaklaşık üçte birini kaybetmesine, tüm bölümlerini kapatmasına ve Senato tarafından onaylanmış bir direktör olmadan faaliyet göstermesine neden olmuştur. Eski yetkililer, endüstri ortakları ve her iki partiden yasa koyucular, eyalet ve yerel yönetimlerle azalan koordinasyonu, özel sektörle zayıflayan ilişkileri ve ajansın büyük bir siber krizi yönetme kapasitesini koruyup korumadığına dair artan endişeleri dile getirmişlerdir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/lawmakers-bipartisan-cisa-budget-cuts/" target="_blank">cyberscoop.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-23">
+<div class="news-title"><b>İngiltere'nin Siber Suç Yasası Reform Planları Güvenlik Araştırmacılarını Koruyamamıştır</b></div>
+<p class="news-content">İngiliz hükümetinin ülkenin ana siber suç yasasını elden geçirme planlarının, çoğu güvenlik araştırmacısını bugünkü konumlarında bırakacak kadar dar hukuki korumalar sunacağı konusunda, teklifler hakkında bilgilendirilen birden fazla kaynak Recorded Future News'e bilgi vermiştir. Bilgisayarın Kötüye Kullanılması Yasası 1990'ı (Computer Misuse Act 1990) değiştirme planları, sektörün sıradan siber güvenlik faaliyetlerini yasakladığı için eleştirdiği bir yasayı modernize etmek amacıyla yıllarca süren kampanyaların ardından geçen hafta Kraliyet Konuşması'nda duyurulmuştur. Geçtiğimiz Aralık ayında Güvenlik Bakanı Dan Jarvis, hükümetin araştırmacıları mahkemede mahkumiyetten koruyan yasal bir savunma – yasaya yazılmış resmi bir yasal koruma – getireceğini taahhüt etmiştir, "belirli güvenceleri karşıladıkları sürece". Ancak, daha önce rapor edilmeyen planlar hakkında bilgi sahibi kaynaklar, bu güvencelerin son derece sınırlı olduğunu belirtmektedir. Hükümet, yasal savunmayı yalnızca araştırmacıların internete açık sistemleri tarama nedeniyle yargılandığı davalarla sınırlamayı planlamaktadır. Tarama, Shodan ve Censys gibi ticari platformlar tarafından büyük ölçüde zaten sürekli olarak ve İngiliz yargı yetkisi dışından gerçekleştirilen siber savunma faaliyetlerinin bir alt kümesidir. Teklifler, araştırmacıların bir zafiyet tespit edildiği anda faaliyetlerini durdurmasını gerektirecektir, bu da zafiyetin gerçekliğini doğrulayamayacakları, ciddiyetini değerlendiremeyecekleri veya istismar edilebilirliğini belirleyemeyecekleri anlamına gelmektedir. Sektör profesyonelleri, bunun herhangi bir ifşayı neredeyse değersiz hale getirdiğini, çünkü sistem sahiplerinin bir zafiyetin gerçek olduğuna dair kanıt istemeden harekete geçmediğini belirtmektedir. Akredite araştırmacıların testleri bizzat yapmaları gerekecek ve başkalarını kendi adlarına faaliyet yürütmeye yönlendiremeyeceklerdir. Bu hüküm, kıdemli profesyonellerin genç personeli veya otomatik araçları denetlediği standart ticari modeli sekteye uğratacaktır. Teklifler ayrıca yasal savunma için nitelikli olabilecek kişileri, İngiltere Siber Güvenlik Konseyi'nden akreditasyon sahibi İngiliz vatandaşlarıyla sınırlayacaktır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/uk-plans-for-cybercrime-law-reform-limited-protections" target="_blank">therecord.media</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-24">
+<div class="news-title"><b>Teknoloji Devleri, İngiliz Düzenleyiciye Çocukları Çevrimiçi Korumak İçin Platformlarını Değiştirmeyi Vaat Etmiştir</b></div>
+<p class="news-content">Birçok büyük teknoloji firması, İngiliz düzenleyici Ofcom'a çocukları daha iyi korumak amacıyla platformlarında önemli değişiklikler yapacaklarını taahhüt etmiştir. Ofcom, Roblox, Snapchat, Instagram, Facebook, YouTube ve TikTok'tan zararlı algoritmaları kaldırma, çocukların yaşlarını kontrol etme ve onları cinsel avcılardan koruma çabaları hakkında Nisan ayı sonuna kadar yanıt vermelerini istemiştir. YouTube ve TikTok hariç tüm şirketler, belirli değişiklikler yapma taahhüdünde bulunmuştur. Snap, Ofcom'a Yasadışı Zararlar Kodları'nda belirtilen her bir bakım koruma adımını uygulayacağını bildirmiştir. Örneğin, platform, yetişkinlerin Snapchat'te çocuklarla iletişim kurmasını kısıtlayacak ve çocukları tanımadıkları kişilerle arkadaşlık kurmaya teşvik etmeyi bırakacaktır. Yeni korumalar yalnızca İngiltere'deki Snapchat'e erişen çocuklar için geçerlidir. Roblox, Ofcom'a 16 yaşın altındaki çocuklar için doğrudan sohbetleri kapatma olanağı sunacağını belirtirken, Meta, Instagram'da gençlerin bağlantı listelerini varsayılan olarak gizleyecek yeni bir ayar oluşturacağını açıklamıştır. Meta ayrıca, "yetişkinler ve gençler arasındaki olası cinselleştirilmiş sohbetleri Instagram direkt mesajlarında bulmak için yapay zeka kullanmaya başlayacaktır." Teknoloji devi, tespit ettiği herhangi bir suçu Ulusal Kayıp ve İstismar Edilen Çocuklar Merkezi'ne bildireceğini ve suçlulara karşı harekete geçeceğini Ofcom'a bildirmiştir. Ofcom, Meta'dan daha fazla koruma sağlamasını istemiş ve teknoloji devini Yasadışı Zararlar Kodları'nda belirtilen ek güvenlik önlemlerine uymaya zorlamaktadır. Düzenleyici ayrıca TikTok ve YouTube'dan aldığı yanıtlardan memnun olmadığını belirtmiştir. Bu taahhütler ve düzenleyici baskılar, çocukların çevrimiçi güvenliğinin küresel bir öncelik haline geldiğini ve teknoloji şirketlerinin bu alandaki sorumluluklarını artırması gerektiğini göstermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/tech-giants-promise-ofcom-regulator-changes-child-access" target="_blank">therecord.media</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-25">
+<div class="news-title"><b>B1ack's Stash, 4.6 Milyon Çalınan Kredi Kartı Kaydını Ücretsiz Olarak Yayınlamıştır</b></div>
+<p class="news-content">Kötü şöhretli dark web kart dolandırıcılığı pazarı B1ack's Stash, 4.6 milyon çalınan kredi kartı kaydını ücretsiz olarak indirmeye sunduğunu duyurmuştur. SOCRadar'a göre, yayınlanan veriler tam kart numaralarını, son kullanma tarihlerini, CVV2 kodlarını, kart sahibinin adlarını, fatura adreslerini, e-posta adreslerini, telefon numaralarını ve IP adreslerini içermektedir. Bu kayıtların 4.3 milyonu yeni ve yasa dışı faaliyetler için kullanılabilir görünmektedir. Kayıtların çoğu ABD, Kanada, İngiltere, Fransa ve Malezya'daki kurbanlara aittir. Bu büyük ölçekli veri ihlali, siber suçluların finansal verilere erişim sağlama ve bunları kar amaçlı kullanma konusundaki sürekli çabalarını gözler önüne sermektedir. Özellikle dark web platformları, çalınan verilerin alım satımı için önemli bir pazar yeri sağlamaktadır. Kredi kartı bilgilerinin bu kadar geniş çapta ifşa edilmesi, bireyler ve finans kuruluşları için ciddi riskler oluşturmaktadır. Tüketicilerin, finansal hesaplarını düzenli olarak kontrol etmeleri ve şüpheli işlemleri derhal bankalarına bildirmeleri gerekmektedir. Finans kuruluşlarının ise veri güvenliği önlemlerini sürekli olarak güçlendirmesi, dolandırıcılık tespit sistemlerini geliştirmesi ve müşterilerini Ayrıca, kolluk kuvvetlerinin dark web faaliyetlerini izlemesi ve bu tür pazarları çökertmek için uluslararası işbirliğini artırması da kritik bir rol oynamaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-26">
+<div class="news-title"><b>İçerik Dağıtım Açığı, Web Sitelerini Marka Gaspına Açık Hale Getirmiştir</b></div>
+<p class="news-content">Araştırmacılar, internet altyapısının kendisinde bulunan ve basit bir çözümü olmayan bir istismar sınıfı hakkında alarm vermektedir. Dünya genelindeki web sitelerinin neredeyse yarısı bu risk altındadır. "Underminr" olarak adlandırılan bu yeni sorun, 2010'ların ortalarında popüler olan "domain fronting"in bir devamı niteliğindedir. Domain fronting, web kullanıcılarının bir web sitesini ziyaret ettiklerini DNS ve CDN sağlayıcılarına bildirirken, aslında HTTP Host başlığını değiştirerek başka bir siteye yönlendirilmelerine olanak tanımıştır. ADAMnetworks'teki analistler, Underminr'ın bu hafifletmeleri aşarak aynı etkiyi yarattığını ve sansür bypassından daha kötü niyetli kullanımına dikkat çekmektedir: saldırganların meşru web sitelerinin marka itibarını kullanarak kötü niyetli faaliyetlerini çevrimiçi olarak gizlemesine olanak tanımasıdır. ADAMnetworks, hackerların Underminr'ı zaten istismar ettiğini ve web sitelerinin %42'sinin savunmasız olduğunu, ABD'de bu oranın %51'e çıktığını bildirmektedir. Saldırgan, meşru bir alan adı için bir DNS sorgusu gerçekleştirebilir, bu sorgu koruyucu DNS filtreleri tarafından meşru olarak görülebilir. Daha sonra, CDN tarafından okunan alanlarda, saldırgan tamamen farklı bir web sitesini ziyaret etmek istediğini belirtebilir. Ne DNS ne de CDN sağlayıcıları, diğerinin aynı isteği farklı yorumladığını göremeyecektir. Ve değiştirilen web sitesi kötü niyetli olsa bile, büyük CDN'ler genellikle bunu anlayamaz ve herhangi bir kırmızı bayrak veya uyarıyı tetiklemez. Bu durum, saldırganların trafiği güvenilir bir site üzerinden kötü amaçlı bir siteye filtrelemesine olanak tanımakta ve DNS, imza ve davranış tabanlı tespitlerden kaçınmalarını sağlamaktadır. Kuruluşların, bu tür altyapısal zafiyetlere karşı dikkatli olmaları ve CDN sağlayıcılarının güvenlik politikalarını gözden geçirmeleri gerekmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/cyber-risk/content-delivery-exploit-websites-brand-hijacking" target="_blank">darkreading.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-27">
+<div class="news-title"><b>Art-Template NPM Paketi, Coruna iOS İstismar Kitini Dağıtmak İçin Ele Geçirilmiştir</b></div>
+<p class="news-content">Haftalık yaklaşık 26.000 indirmeye sahip bir JavaScript şablon motoru olan art-template npm paketi, bir bakımcı hesabının ele geçirilmesiyle kötü amaçlı sürümler (4.13.3'ten 4.13.6'ya kadar) dağıtmak üzere tehlikeye atılmıştır. SafeDep'in bildirdiğine göre, template-web.js dosyasındaki yetkisiz kod, üçüncü taraf alan adlarından harici JavaScript kodunu kullanan herhangi bir sayfaya enjekte etmektedir. Harici alan adı (v3.jiathis[.]com), bir Referer başlığı içeren istek geldiğinde çok aşamalı bir yük dağıtmaktadır. Bu yük, tüm ziyaretçilere Baidu Analytics takibi enjekte etmekte ve iPhone kullanıcılarını, gizlenmiş bir iframe zinciri aracılığıyla obfuscate edilmiş bir JavaScript yüküne, yani Coruna istismar kitine yönlendirmektedir. Bir bakımcının hesabının ele geçirilmesi, geniş bir kullanıcı tabanına kötü amaçlı kod dağıtmak için kritik bir vektör sağlamıştır. Geliştiricilerin, kullandıkları bağımlılıkları dikkatle incelemeleri ve sürekli olarak güncellemeleri, Ayrıca, güvenlik firmalarının bu tür tedarik zinciri saldırılarını erken aşamada tespit etmek için proaktif önlemler geliştirmesi gerekmektedir, zira bu tür olaylar geniş çaplı veri ihlallerine ve sistem ele geçirmelerine yol açabilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-28">
+<div class="news-title"><b>Go Typosquat Kütüphanesi, Komuta ve Kontrol İçin DNS TXT Kayıtlarını Kullanmıştır</b></div>
+<p class="news-content">GitHub'da yayınlanan github.com/shopsprint/decimal adlı kötü amaçlı bir Go modülü, yaygın olarak kullanılan github.com/shopspring/decimal adlı keyfi hassasiyetli aritmetik kütüphanesinin bir typosquat'ı olarak işaretlenmiştir. Bu modül, ilk olarak Kasım 2017'de yayınlanmış ve Ağustos 2023'te v1.3.3 sürümüyle kötü amaçlı işlevsellik eklenerek silahlandırılmıştır. Socket'e göre, bu sürüm "ücretsiz bir dinamik DNS sağlayıcısında tehdit aktörü kontrollü bir alt alana bir DNS TXT kaydı komuta ve kontrol kanalı açmaktadır." GitHub deposu ve shopsprint sahibi hesabı kaldırılmış olsa da, kütüphane proxy.golang[.]org tarafından hala sunulmaktadır. Zararlı yük, her beş dakikada bir net.LookupTXT("dnslog-cdn-images.freemyip.com") adresini sorgulamakta ve DNS hatasında günlük kaydı veya hata sinyali vermeden uyku moduna geçmektedir. Döndürülen her TXT değeri doğrudan os/exec.Command'e iletilmekte ve yürütülmektedir. Geliştiricilerin, kullandıkları kütüphanelerin kaynaklarını dikkatle doğrulamaları ve bilinen güvenilir depoları tercih etmeleri, Ayrıca, DNS trafiğinin izlenmesi ve anormal TXT kayıtı sorgularının tespit edilmesi, bu tür gizli C2 kanallarının ortaya çıkarılmasına yardımcı olabilir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-29">
+<div class="news-title"><b>Packagist, GitHub Actions Token Sızıntısı Sonrası Composer Güncellemesi Çağrısında Bulunmuştur</b></div>
+<p class="news-content">PHP programlama dili için bir bağımlılık yöneticisi olan Composer, kullanıcılarını Composer'ı 2.9.8 veya 2.2.28 (LTS) sürümlerine güncellemeleri konusunda uyarmıştır. Composer, "Yeni sürümler, Composer'ın GitHub Actions tarafından verilen GITHUB_TOKEN'lerin veya GitHub Uygulama kurulum tokenlarının tam içeriğini GitHub Actions günlüklerine sızdırmasına neden olan bir zafiyeti düzeltmektedir" demiştir. Zafiyete CVE-2026-45793 (CVSS puanı: 7.5) CVE tanımlayıcısı atanmıştır. Bu gelişme, GitHub'ın geçen ayın sonlarında bu tokenlar için yeni bir format tanıtmasından sonra ortaya çıkmıştır. Composer, "Tire (-) içeren yeni format, Composer'ın doğrulamasını başarısız kılmakta ve GITHUB_TOKEN'in günlüklere ifşa olmasına yol açmaktadır" demiştir. Geçici çözümler olarak, Composer güncellenene kadar Composer komutlarını çalıştıran herhangi bir GitHub Actions iş akışını devre dışı bırakmak tavsiye edilmektedir. Yazılım geliştirme süreçlerinde kullanılan araçlardaki zafiyetler, tedarik zinciri saldırıları için potansiyel giriş noktaları oluşturabilir ve hassas verilerin sızdırılmasına yol açabilir. Geliştiricilerin, kullandıkları araçları düzenli olarak güncellemeleri ve güvenlik uygulamalarını gözden geçirmeleri, Özellikle otomatikleştirilmiş iş akışlarında kullanılan kimlik bilgilerinin korunması, geniş çaplı ihlalleri önlemek adına büyük önem taşımaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-30">
+<div class="news-title"><b>Yeni Bir Çapraz Platform NPM Bilgi Hırsızı Tespit Edilmiştir</b></div>
+<p class="news-content">SANS ISC'den gelen bir rapora göre, oldukça iyi gizlenmiş yeni bir Node.js bilgi hırsızı tespit edilmiştir. Bu zararlı yazılım, Windows (WSL), macOS ve Linux gibi çapraz platform sistemlerini hedef almaktadır. Dosya, VirusTotal'a "extracted-decoded.js" olarak yüklendiği için kutudan çıktığı gibi çalışmamıştır, ancak statik analiz gerçekleştirilebilmiştir. Zararlı yazılımın anahtar noktası, çapraz platform olmasıdır. Yalnızca yürütmeden sorumlu "sarıcı" gizlenmiş olsa da, kötü amaçlı yükler düz metin olarak gömülüdür. Gizleme tekniği, obfuscation.io tarafından üretilen koda benzemektedir ve küçük Base64 kodlu dizelerin çok uzun bir dizisini içermektedir. Üç ana yük modülü bulunmaktadır: ilki, Chrome, Brave, Edge, Opera, Opera GX, Vivaldi, Kiwi, Yandex, Iridium, Comodo Dragon, SRWare Iron ve Chromium gibi tarayıcı kimlik bilgilerini çalmaktadır. Ayrıca zararlı yazılım, ilginç cüzdan Chrome uzantılarını da aramaktadır. İkinci modül, kurbanın dosya sistemini tarayan ve ad/uzantılarına göre hassas dosyaları arayan özyinelemeli bir dosya sızdırma tarayıcısıdır. Son olarak, üçüncü modül, ters kabuk yetenekleriyle C2 sunucusuyla bir WebSocket bağlantısı kurmaktadır. Bu yeni bilgi hırsızı, NPM ekosistemindeki tedarik zinciri saldırıları riskini bir kez daha gündeme getirmektedir. Geliştiricilerin, kullandıkları NPM paketlerini dikkatle incelemeleri ve güvenlik çözümlerini güncel tutmaları, Özellikle açık kaynaklı yazılımların yaygın kullanımı, bu tür çapraz platform zararlı yazılımlarının daha geniş bir kitleye ulaşmasına olanak tanımaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://isc.sans.edu/diary/rss/33006" target="_blank">isc.sans.edu</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-31">
+<div class="news-title"><b>Google API Anahtarları Silindikten Sonra Bile Aktif Kalmaya Devam Etmiştir</b></div>
+<p class="news-content">Belçikalı startup Aikido Security'den araştırmacı Joe Leon, Google API anahtarlarının kullanıcılar tarafından silindikten sonra bile tamamen devre dışı kalmadığını ve saldırganlara bunları kötüye kullanmaya devam etmeleri için küçük ama önemli bir zaman dilimi sunduğunu tespit etmiştir. Leon, yayınladığı bir blog yazısında, Google Cloud Platform (GCP) müşterilerinin API erişiminin anahtar silindikten hemen sonra sona ermesini beklediğini, ancak durumun böyle olmadığını belirtmiştir. Yapılan testlerde, API anahtarlarının ortalama iptal süresinin yaklaşık 16 dakika olduğu, en uzun sürenin ise 23 dakikaya kadar çıktığı gözlemlenmiştir. Leon, bu sürenin API anahtarlarının başarılı bir şekilde kimlik doğrulaması yapmaya devam etmesi için "inanılmaz derecede uzun bir süre" olduğunu ifade etmiştir. Bu gecikmelerin kuruluşlar için ciddi sonuçları bulunmaktadır. Silinmiş anahtara sahip bir saldırgan, bir sunucu henüz güncellemeyi almamışken istek göndermeye devam edebilir. Eğer Gemini projede etkinse, yüklenen dosyaları ve önbelleğe alınmış konuşmaları boşaltabilir. GCP konsolu anahtarı göstermeyecek ve anahtarın hala çalıştığını bildirmeyecektir. Bu durum, olay müdahale ekipleri için karmaşıklık yaratmaktadır, çünkü sızdırılmış kimlik bilgilerine yanıt verirken "sil" düğmesine tıklandığında kimlik bilgisinin artık çalışmadığı varsayılmaktadır. Aikido, güvenlik ekiplerinin ve IR personelinin Google API anahtar silme işlemleri için 30 dakikalık bir pencere kullanmasını önermiştir. Ayrıca, kuruluşların API isteklerini kimlik bilgilerine göre izlemeleri ve silindikten sonra beklenmeyen kullanımları incelemeleri tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/identity-access-management-security/google-api-keys-active-after-deletion" target="_blank">darkreading.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-32">
+<div class="news-title"><b>Microsoft 365 Kullanıcıları, Çok Faktörlü Kimlik Doğrulamayı Atlayan Yeni Bir Kimlik Avı Tehdidiyle Hedef Alınmıştır</b></div>
+<p class="news-content">FBI, Microsoft 365 kullanıcılarını hedef alan ve çok faktörlü kimlik doğrulamayı (MFA) atlayabilen Kali365 adlı yeni bir Kimlik Avı Hizmeti (PhaaS) platformuna karşı uyarıda bulunmuştur. Nisan 2026'da ilk kez gözlemlenen Kali365, Telegram aracılığıyla dağıtılmıştır ve siber suçluların kullanıcı kimlik bilgilerini çalmadan Microsoft 365 erişim tokenlarını elde etmelerine ve MFA'yı atlamalarına olanak tanımıştır. FBI, "Kali365, daha az teknik bilgiye sahip saldırganlara yapay zeka tarafından oluşturulan kimlik avı yemlerine, otomatik kampanya şablonlarına, gerçek zamanlı hedefli bireysel/kurumsal takip panolarına ve OAuth token yakalama yeteneklerine erişim sağlayarak giriş engelini düşürmektedir" demiştir. Bu tür saldırı, cihaz kodu oltalama (device code phishing) olarak bilinmektedir. Saldırganlar, kullanıcıları meşru bir kimlik doğrulama akışı aracılığıyla hesaplarına giriş yapmaya ikna etmekte ve ardından erişim ve yenileme tokenlarını çalmaktadır. Saldırı, güvenilir bulut veya belge paylaşım hizmetlerini taklit eden ve meşru bir Microsoft doğrulama sayfasını ziyaret etme talimatlarıyla birlikte bir cihaz kodu içeren bir kimlik avı e-postasıyla başlamaktadır. Kurban kodu girdikten sonra, farkında olmadan saldırganın cihazını yetkilendirmektedir. Saldırgan daha sonra OAuth erişim ve yenileme tokenlarını yakalayarak, Outlook, Teams ve OneDrive gibi Microsoft 365 hizmetlerine parola veya ek MFA istemleri gerektirmeden sürekli erişim sağlamaktadır. FBI, duyurusunda kullanıcıların ve kuruluşların cihaz kodu oltalama saldırılarından kendilerini korumak için izleyebilecekleri birkaç ipucunu özetlemiştir. Kuruluşların, kullanıcı eğitimlerini artırmaları ve gelişmiş kimlik avı tespit çözümlerine yatırım yapmaları kritik önem taşımaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.helpnetsecurity.com/2026/05/22/kali365-microsoft-365-phishing-fbi-warning/" target="_blank">helpnetsecurity.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-33">
+<div class="news-title"><b>Telegram Smishing Kampanyası Hesap Ele Geçirmeyi Kolaylaştırmıştır</b></div>
+<p class="news-content">AhnLab, Telegram hesaplarını ele geçirmek ve hesap bilgilerini çalmak için tasarlanmış yeni bir Telegram odaklı smishing kampanyası hakkında uyarıda bulunmuştur. Smishing, SMS (kısa mesaj) ve phishing (kimlik avı) kelimelerinin birleşimidir ve kötü niyetli aktörlerin SMS mesajları aracılığıyla kurbanları kandırarak kişisel bilgilerini veya kimlik bilgilerini ele geçirmeyi amaçladığı bir sosyal mühendislik saldırısı türüdür. Bu kampanyada, tehdit aktörleri, mevcut olmayan güvenlik sorunları hakkında SMS mesajları göndererek kullanıcıları oltalama sitelerine telefon numaralarını ve giriş kodlarını girmeye ikna etmektedir. AhnLab, "Tehdit aktörleri, kullanıcıları oltalama sitelerine telefon numaralarını ve giriş kodlarını girmeye ikna ederek Telegram hesaplarını ele geçirmektedir" demiştir. Bir hesap ele geçirildiğinde, kişisel bilgilerin ve sohbetlerin sızdırılmasına, ayrıca ikincil zararlara yol açabileceği belirtilmiştir. Kullanıcıların, bilinmeyen kaynaklardan gelen SMS mesajlarına karşı dikkatli olmaları, şüpheli bağlantılara tıklamamaları ve hesap bilgilerini girmeden önce web sitesinin meşruiyetini doğrulamaları hayati önem taşımaktadır. Kuruluşların ise çalışanlarını bu tür smishing tehditlerine karşı düzenli olarak eğitmeleri ve mobil cihaz güvenliği çözümlerini uygulamaları gerekmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-34">
+<div class="news-title"><b>Dolandırıcılar, Microsoft'un Dahili Hesabını Kötüye Kullanarak Spam Bağlantıları Göndermiştir</b></div>
+<p class="news-content">Aylardır dolandırıcılar, Microsoft'un genellikle meşru hesap uyarıları göndermek için kullandığı dahili bir e-posta adresini kötüye kullanarak spam içerikli e-postalar göndermeye devam etmektedir. TechCrunch'ın haberine göre, dolandırıcıların sistemi nasıl kötüye kullandığı net olmasa da, yeni müşterilermiş gibi yeni Microsoft hesapları oluşturabilmiş ve bu erişimi kullanarak teknoloji devinden geliyormuş gibi görünen e-postalar göndermişlerdir. Bu durum, insanları bu e-postaların gerçek olduğuna inandırmayı amaçlamıştır. Microsoft'un bu sorunu henüz çözemediği anlaşılmaktadır. Geçen hafta, TechCrunch'a farklı e-posta hesapları aracılığıyla Microsoft'tan benzer yapıda, spam içerikli sitelere bağlantılar içeren e-postalar ulaşmıştır. Bu basitçe hazırlanmış e-postalar, Microsoft'un kullanıcılara iki faktörlü kimlik doğrulama kodları ve çevrimiçi hesaplarıyla ilgili diğer kritik uyarılar gibi önemli bildirimler göndermek için kullandığı msonlineservicesteam@microsoftonline.com adresinden gönderilmiştir. Bu e-postaların bazı konu satırları, kullanıcıları sahte işlemlere karşı uyaracak resmi e-postalara benzemiş, diğerleri ise alıcıyı e-posta gövdesinde belirtilen bir web adresinde özel bir mesajın beklediğini iddia etmiştir. Spam karşıtı kar amacı gütmeyen kuruluş The Spamhaus Project, Salı günü yaptığı bir sosyal medya paylaşımında, Microsoft'un hesap bildirim e-posta adresinin spam göndermek amacıyla kötüye kullanıldığını ve bu faaliyetin "birkaç ay öncesine" dayandığını belirtmiştir. Kuruluşların, e-posta güvenliklerini güçlendirmeleri, iç hesapların kötüye kullanımını tespit etmek için izleme sistemleri kurmaları ve kullanıcılarını kimlik avı saldırılarına karşı sürekli olarak eğitmeleri gerekmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://techcrunch.com/2026/05/21/scammers-are-abusing-an-internal-microsoft-account-to-send-spam/" target="_blank">techcrunch.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-35">
+<div class="news-title"><b>Üretken Yapay Zeka Destekli Saldırılar, Bireyleri Sosyal Medya Verileri Üzerinden Hedeflemiştir</b></div>
+<p class="news-content">Yeni bir araştırma, "herkese açık sosyal medya verilerinin ve üretken yapay zekanın (GenAI), yüksek düzeyde kişiselleştirilmiş, bağlamdan haberdar oltalama kampanyalarını otomatikleştirmek ve ölçeklendirmek için kötüye kullanılabileceğini" göstermiştir. Arlington'daki Texas Üniversitesi ve Baton Rouge'daki Louisiana Eyalet Üniversitesi'nden araştırmacılar, yapay zeka modellerinin ilgi alanlarını ve bağlamsal ipuçlarını çıkarmak için "hedef başına az miktarda kamu etkinliğinin" yeterli olduğunu ve bunların hedefin tarzını yansıtan ikna edici oltalama kampanyaları yürütmek için istismar edilebileceğini belirtmiştir. Bulgular, kötü niyetli aktörlerin hedefli oltalama kampanyaları yürütmek için çalınan veritabanlarına veya kapsamlı keşiflere güvenmek zorunda olmadığını göstermektedir. Sosyal medya platformlarında paylaşılan kişisel verilerin, yapay zeka algoritmaları tarafından analiz edilerek, bireylere özel olarak tasarlanmış saldırı senaryoları oluşturulabileceği endişesini artırmaktadır. Kullanıcıların, sosyal medyada paylaştıkları bilgilerin potansiyel risklerini anlamaları ve gizlilik ayarlarını dikkatli bir şekilde yönetmeleri büyük önem taşımaktadır. Ayrıca, yapay zeka destekli oltalama saldırılarına karşı gelişmiş tespit ve önleme mekanizmalarının geliştirilmesi de siber güvenlik topluluğu için acil bir görev haline gelmiştir. Bu tür saldırılar, geleneksel oltalama yöntemlerinden çok daha ikna edici olabileceği için, kullanıcıların bu yeni tehditlere karşı farkındalıklarının artırılması gerekmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-36">
+<div class="news-title"><b>Keepnet, 2026 Verizon DBIR'a Sesli ve SMS Kimlik Avı Verileriyle Katkıda Bulunmuştur</b></div>
+<p class="news-content">Genişletilmiş İnsan Riski Yönetimi (xHRM) platformu Keepnet, sesli ve SMS kimlik avı simülasyon verilerinin 2026 Verizon Veri İhlalleri Araştırma Raporu'na (DBIR) katkıda bulunduğunu duyurmuştur. 2026 baskısı, bu ölçekte sesli ve SMS kimlik avı simülasyon verilerini içeren ilk rapordur. DBIR, telefon merkezli ve e-posta tabanlı simülasyonlar arasında "medyan tıklama oranında %40'lık bir artış" kaydetmiştir. Rapora göre, telefon merkezli kimlik avı simülasyonları %2'lik bir medyan tıklama oranı gösterirken, e-posta simülasyonları için bu oran %1.4'tür. DBIR ekibi, raporun aynı sayfasında "sesli ve kısa mesaj tabanlı kampanyaların simülasyonlarını yapan şirketleri bulmakta zorlandıklarını" belirtmiştir. Kimlik avı, e-postanın ötesine geçmiştir ve saldırganlar artık sesli, SMS ve e-postayı koordineli kampanyalarda birleştirmektedir. Ses klonlamanın ucuzlaması, gerçek zamanlı konuşmaların düzinelerce dilde, klonlanmış yönetici sesleriyle gerçekleşmesine olanak tanımıştır. MGM Resorts'un Eylül 2023'teki ihlali, sesli kimlik avının bireysel bir sorundan kurumsal bir soruna dönüştüğünü göstermiştir. Yapay zeka, artık betikleri yazmakta ve aramaları seslendirmekte, konuşma sırasında uyum sağlamaktadır. Çoğu farkındalık eğitimi hala sadece e-posta tarafına odaklanmaktadır. Telefon merkezli kimlik avının ölçülmesindeki bu eksiklik, güvenlik ekipleri için önemli bir kör nokta oluşturmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.helpnetsecurity.com/2026/05/22/keepnet-verizon-dbir-2026/" target="_blank">helpnetsecurity.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-37">
+<div class="news-title"><b>Premium Deception Android Taşıyıcı Faturalandırma Dolandırıcılığı Kampanyası Ortaya Çıkarılmıştır</b></div>
+<p class="news-content">Zimperium zLabs'tan gelen bir rapora göre, Mart 2025 ile Ocak 2026 arasında Malezya, Tayland, Romanya ve Hırvatistan'da "Premium Deception" adlı yeni ve sofistike bir Android zararlı yazılım kampanyasının, premium SMS kötüye kullanımı yoluyla taşıyıcı faturalandırma dolandırıcılığı yaptığı gözlemlenmiştir. Bu faaliyet, mobil operatörlerine göre kullanıcıları seçici olarak hedefleyen 250'den fazla kötü amaçlı uygulamayı içermektedir. Zararlı yazılım, Google'ın SMS Retriever API'sini kötüye kullanarak faturalandırma onayı için tek kullanımlık şifreleri (OTP) yakalamakta ve kullanıcıları bilgisi veya rızası olmadan premium hizmetlere gizlice abone etmektedir. Cihaz meta verileri ve abonelik onayları, Telegram tabanlı bir sızdırma kanalı aracılığıyla operatörlere gönderilmektedir. Zimperium zLabs, "Hedeflenmeyen operatörlere sahip cihazlarda dağıtıldığında, zararlı yazılım iyi huylu içerik göstermek için bir geri dönüş mekanizması kullanır, böylece tespitten kaçınır ve kalıcılığını sürdürür" demiştir. Her biri farklı sofistikasyon seviyelerine sahip üç farklı zararlı yazılım varyantı tespit edilmiştir. Bu uygulamaların Google Play Store aracılığıyla dolaşıma sokulduğuna dair bir kanıt bulunmamaktadır. Bunun yerine, dolandırıcılık Facebook ve TikTok gibi sosyal medya platformları aracılığıyla dağıtılmaktadır. Kullanıcıların, bilinmeyen kaynaklardan uygulama indirmemeleri ve cihazlarındaki uygulama izinlerini dikkatle kontrol etmeleri hayati önem taşımaktadır. Ayrıca, mobil güvenlik çözümlerinin kullanımı da bu tür tehditlere karşı ek bir koruma katmanı sağlayabilir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-38">
+<div class="news-title"><b>Banana RAT Zararlı Yazılımı Brezilya Bankalarını Hedef Almıştır</b></div>
+<p class="news-content">Banana RAT adlı yeni bir Brezilya bankacılık Truva atı, bölgedeki finans kuruluşlarını hedef alan en son zararlı yazılım olmuştur. Genellikle Delphi dilinde yazılan diğer Latin Amerika bankacılık zararlı yazılımlarından farklı olarak, Banana RAT, Python (FastAPI) sunucu tarafı polimorfizm motoru tarafından yönetilen yalnızca PowerShell tabanlı bir istemcidir. Aktif hale geldiğinde, uzaktan giriş kontrolü, tuş kaydedici, panoya izleme, ekran akışı, sahte kaplamalar ve Brezilya bankalarını hedef alan Pix QR kodu engellemesi yoluyla operatör odaklı dolandırıcılığa olanak tanımaktadır. Ayrıca, ön plandaki pencere başlıklarını izlemekte ve bir kurban, 30'dan fazla banka ve kripto para borsasını içeren hedef listesiyle eşleşen bir web sitesi açtığında sahte bir kimlik bilgisi toplama kaplaması sunmaktadır. Trend Micro, SHADOW-WATER-063 adı altında bu faaliyeti izlemekte ve tasarımın Grandoreiro, Mekotio, Casbaneiro, Guildma ve CHAVECLOAK'u içeren bankacılık zararlı yazılım ekosistemiyle tarihsel olarak ilişkili Delphi ikili mimarisinden "anlamlı ölçüde" ayrıldığını belirtmiştir. TrendAI'nin AI Güvenliği ve Tehdit Araştırmaları Başkan Yardımcısı Tom Kellermann, "Brezilya siber suç kartelleri çok sofistike ve organize, ve 2000'den beri finans sektörünün baş belası olmuşlardır" demiştir. Bankaların,</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-39">
+<div class="news-title"><b>Kimlik Avı Kampanyası, PureLogs Bilgi Hırsızını Yaygınlaştırmıştır</b></div>
+<p class="news-content">Yeni bir kimlik avı kampanyasının, PureLogs bilgi hırsızı zararlı yazılımını dağıtmak için fatura temalı yemler kullandığı gözlemlenmiştir. Bu kampanya, kötü amaçlı arşivleri dağıtarak JavaScript kodunun yürütülmesini tetiklemekte, kötü amaçlı komutları gizlemek için ortam değişkenlerini kullanmakta ve PureLogs bilgi hırsızı zararlı yazılımını dağıtmak için "PawsRunner" adlı bir steganografik yükleyiciyi kullanmaktadır. Fortinet, "Gömülü JavaScript, çözülmüş kötü amaçlı komutları ortam değişkenlerinde depolamak için sofistike bir teknik kullanır, bu da şifresi çözülmüş bir steganografik .NET yükleyicisini tetikler" demiştir. Bu yükleyici, şifreli verileri bir kedi resminin içine gizlenmiş olarak çıkararak nihai yükü alır. PureLogs'un bu sürümü, görev verimliliğini artırmak ve analizi zorlaştırmak için kapsamlı async/await desenleri kullanmaktadır. Benzer bir kampanya, İsviçre Posta Siber Güvenliği tarafından Ocak 2026'da detaylandırılmıştır. Steganografi gibi yöntemler, geleneksel güvenlik çözümlerinin tespitini zorlaştırmakta ve saldırıların daha uzun süre fark edilmeden kalmasına olanak tanımaktadır. Kuruluşların, e-posta güvenliklerini güçlendirmeleri, kullanıcı eğitimlerini artırmaları ve gelişmiş tehdit tespit çözümlerine yatırım yapmaları, Ayrıca, dosya ve ağ trafiğinin derinlemesine analizi de bu tür gizli yükleyicileri tespit etmekte önemli bir rol oynamaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-40">
+<div class="news-title"><b>Yeni CypherLoc Tarayıcı Kilitleme Korkutma Yazılımı Ortaya Çıkmıştır</b></div>
+<p class="news-content">CypherLoc adlı yeni bir web tabanlı korkutma yazılımı kiti, "gelişmiş kaçınma, agresif tarayıcı kontrolleri ve psikolojik manipülasyonu" birleştirerek kurbanları sahte teknik destek telefon numaralarını aramaya yönlendirme yeteneğine sahiptir. Barracuda Networks, 2026'nın başından bu yana bu kiti içeren yaklaşık 2.8 milyon saldırı gözlemlediğini belirtmiştir. Saldırı genellikle, kurbanı e-posta gövdesine veya bir eke yerleştirilmiş bir bağlantı aracılığıyla kötü amaçlı bir web sayfasına yönlendiren bir kimlik avı e-postasıyla başlamaktadır. Web sayfası başlangıçta zararsız görünmekle birlikte, belirli koşullar karşılandığında tam kontrollü bir korkutma yazılımı ortamına kademeli olarak geçiş yapmaktadır. Sonuç olarak, tarayıcıyı kilitleyen ve kurbanları derhal destekle iletişime geçmeye çağıran sahte güvenlik mesajları görüntüleyen tam ekran bir korkutma yazılımı arayüzü ortaya çıkmaktadır. Bu yeni scareware, siber suçluların sosyal mühendislik ve psikolojik manipülasyon tekniklerini kullanarak kurbanları dolandırma konusundaki yaratıcılıklarını göstermektedir. Özellikle tarayıcı kilitleme özelliği, kullanıcıların panikleyerek dolandırıcıların talimatlarına uymasına neden olabilir. Kullanıcıların, bilinmeyen kaynaklardan gelen e-postalara ve bağlantılara karşı dikkatli olmaları, tarayıcılarında anormal davranışlar gözlemlediklerinde hemen tarayıcıyı kapatmaları ve güvenilir güvenlik yazılımları kullanmaları hayati önem taşımaktadır. Ayrıca, teknik destek numaralarını aramadan önce resmi web sitelerinden doğrulama yapılması da bu tür dolandırıcılıkları önlemeye yardımcı olabilir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-41">
+<div class="news-title"><b>Steam, Zararlı Yazılım Barındıran Oyunu Platformdan Kaldırmıştır</b></div>
+<p class="news-content">Steam üzerinden dağıtılan kötü amaçlı bir oyun, oyuncuların sistemlerini profillemesi ve ikincil yükleri dağıtmasına olanak tanıyan harici altyapı ile iletişim kurması nedeniyle Valve tarafından platformdan kaldırılmıştır. "Beyond The Dark" başlıklı oyun, Steam'de ücretsiz bir bağımsız korku oyunu olarak kendini gizlemiştir. Bu keşif, YouTuber Eric Parker tarafından belgelenmiştir. Özellikle ücretsiz oyunlar, kullanıcıları çekmek ve zararlı yazılımları yaymak için cazip bir yöntem olarak kullanılabilmektedir. Oyunların, oyuncuların sistemlerini profillemesi ve harici sunucularla iletişim kurması, bilgi hırsızlığı veya daha gelişmiş saldırılar için zemin hazırlayabilir. Kullanıcıların, oyun indirme kaynaklarına dikkat etmeleri, bilinmeyen veya şüpheli geliştiricilerin oyunlarından kaçınmaları ve sistemlerinde güncel güvenlik yazılımları bulundurmaları hayati önem taşımaktadır. Ayrıca, oyun platformlarının da yayınlanan içerikleri daha sıkı bir şekilde denetlemesi ve kötü amaçlı yazılımları hızla tespit edip kaldırması gerekmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-42">
+<div class="news-title"><b>Microsoft MSHTA, Zararlı Yazılım Kampanyalarında Hala Kullanılmaktadır</b></div>
+<p class="news-content">Bitdefender, saldırganların Windows sistemlerinde varsayılan olarak bulunan eski bir yardımcı program olan Microsoft HTML Uygulama Ana Bilgisayarı'nı (MSHTA) zararlı yazılım kampanyaları için kötüye kullanmaya devam ettiğini açıklamıştır. MSHTA, bir Living-off-the-Land (LOLBIN) ikilisi olarak yaygın bir şekilde kötüye kullanılmaktadır. Saldırganlar, emtia bilgi hırsızlarından gelişmiş tehditlere kadar birçok zararlı yazılım kategorisinde MSHTA'yı kullanmaktadır. Kampanyalar genellikle PowerShell ve HTA betiklerini içeren çok aşamalı, dosyasız yürütme zincirlerine güvenmektedir. MSHTA, Lumma Stealer ve Amatera gibi emtia bilgi hırsızları, CountLoader ve Emmenhtal Loader (PEAKLIGHT olarak da bilinir) gibi yükleyiciler, kırpıcı zararlı yazılımlar ve Purple Fox gibi daha gelişmiş tehditler için dağıtım zincirlerinde kötüye kullanılmıştır. LOLBIN'lerin kullanılması, saldırganların güvenlik çözümleri tarafından tespit edilmekten kaçınmasını zorlaştırmaktadır, çünkü bu araçlar sistemde meşru olarak bulunmaktadır ve normal operasyonel davranışlarla karışabilmektedir. Ayrıca, sistem yöneticilerinin, MSHTA gibi eski yardımcı programların kullanımını düzenli olarak denetlemesi ve gereksiz kullanımlarını kısıtlaması, saldırı yüzeyini azaltmak için önemlidir. Bu tür tehditler, geleneksel imza tabanlı tespit yöntemlerinin ötesine geçen daha sofistike savunma stratejileri gerektirmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-43">
+<div class="news-title"><b>OrBit Linux Zararlı Yazılımı Aktif Olarak Geliştirilmeye Devam Etmiştir</b></div>
+<p class="news-content">Siber güvenlik firması Intezer, Temmuz 2022'de gelişmiş kaçınma teknikleri uygulayan, anahtar işlevleri kancalayarak makinede kalıcılık sağlayan, tehdit aktörlerine SSH üzerinden uzaktan erişim yetenekleri sunan, kimlik bilgilerini toplayan ve TTY komutlarını kaydeden OrBit adlı bir Linux zararlı yazılımını detaylandırmıştı. Yaklaşık dört yıl sonra, kullanıcı alanı rootkit'inin birkaç yeni örneği tespit edilmiştir, bu da zararlı yazılımın operatörleri tarafından aktif olarak geliştirilmeye ve sürdürülmeye devam edildiğini göstermektedir. Araştırmacı Nicole Fishbein, "İki paralel soy keşfettik: 2022 orijinaliyle yakından uyumlu tam özellikli bir 'Soy A' yapısı ve daha küçük bir ayak izi karşılığında tüm yetenek alanlarını (PAM, pcap, TCP-port gizleme) bırakan hafif bir 'Soy B' çatalı" demiştir. OrBit, Embargo fidye yazılımı kampanyaları yürüten Blockade Spider adlı siber suç grubu tarafından kullanılmıştır. OrBit'in, ilk olarak Aralık 2022'de kamuoyuna çıkan Medusa adlı açık kaynaklı bir rootkit'in bir çatalı olduğu değerlendirilmektedir. Linux tabanlı sistemlerin güvenliğinin sağlanması, gelişmiş tespit ve analiz araçlarının kullanımını ve tehdit istihbaratının sürekli olarak takip edilmesini gerektirmektedir. Özellikle rootkit'ler, sistemde gizlenerek uzun süreli erişim sağlayabildikleri için tespiti zorlaştırmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-44">
+<div class="news-title"><b>Outlaw / Shellbot Kampanyası Yeni SSH İstemci Kütüphanesi Sürümlerini Kullanmıştır</b></div>
+<p class="news-content">Yedi yıldır aktif olan Outlaw / Shellbot kampanyasının, hassh tabanlı tespit kurallarını atlatmak için üçüncü bir libssh istemci sürümünü kullanmaya başladığı tespit edilmiştir. SANS ISC'den gelen bir rapora göre, 14 Nisan 2026 ile 21 Nisan 2026 tarihleri arasında, DShield sensörleri, /root/.ssh/authorized_keys dosyasına aynı SHA-256 (a8460f446be540410004b1a8db4083773fa46f7fe76fa84219c93daa1669f8f2) yazan 24 benzersiz kaynak IP'si kaydetmiştir. Bu küme, 1.230 SSH oturumu boyunca 229 authorized_keys değişikliği gerçekleştirmiş ve 4.133 kimlik doğrulama sonrası komut yürütmüştür. En önemlisi, Nisan 2026 kümesindeki 24 IP'nin tamamı SSH istemci başlığı SSH-2.0-libssh_0.11.1'i duyurmuş ve 03a80b21afa810682a776a7d42e5e6fb hassh parmak izini üretmiştir. Bu hassh, port22.dk'nin daha önce yayınladığı değerlerle eşleşmemektedir, bu da kampanyanın libssh sürümünü güncellediğini göstermektedir. Hassh, SSH istemcisinin duyurduğu şifre, MAC, anahtar değişimi ve sıkıştırma algoritması listelerinin bir karmasıdır. Farklı libssh ana sürümleri farklı varsayılan algoritma tercihleriyle gelir, bu nedenle bir kampanyanın benimsediği her yeni libssh sürümü yeni bir hassh üretmektedir. Savunmacıların, kampanya operatörünün temel istemci kütüphanesini yaşlandırmaya devam ederken hedefleme altyapısını istikrarlı tuttuğunu varsayması gerekmektedir. Bu nedenle, tespit kurallarını SHA-256, genel anahtar blobu, mdrfckr yorum dizesi ve keşif komut dizisi gibi değişmeyen göstergelere sabitlemeleri tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://isc.sans.edu/diary/rss/32986" target="_blank">isc.sans.edu</a>, 15.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-45">
+<div class="news-title"><b>TamperedChef Zararlı Yazılımı Kümeleri Trojanize Edilmiş Üretkenlik Yazılımlarıyla Dağıtılmıştır</b></div>
+<p class="news-content">Palo Alto Networks Unit 42, TamperedChef (EvilAI) olarak bilinen tehditle ilişkili 4.000 örnek ve 100 benzersiz varyant tespit ettiğini açıklamıştır. Bu tehdit, kötü amaçlı reklamlar aracılığıyla kullanıcılara sunulan trojanize edilmiş üretkenlik yazılımları kullanarak kötü amaçlı yükleri dağıtmaktadır. Unit 42'ye göre, TamperedChef tarzı zararlı yazılım örnekleri, potansiyel olarak istenmeyen programlar (PUP'lar) ve reklam yazılımlarıyla benzer özellikler taşımaktadır. Bunlar arasında kalıcılığı sürdürmek için sağlam mekanizmalar ve yazılımın şüpheli eylemlerini yasal olarak kapsama girişiminde bulunan son kullanıcı lisans sözleşmeleri (EULA'lar) bulunmaktadır. Ancak, TamperedChef tarzı zararlı yazılım, PUP'lar veya reklam yazılımlarından çok daha gizlidir ve haftalarca veya aylarca dormant kalarak sonra aktif hale gelmektedir. Bu, saldırganların bilgi hırsızları, proxy araçları veya uzaktan erişim Truva atları (RAT'lar) gibi ek yükleri almalarına olanak tanıyan sürekli komuta ve kontrol (C2) yöntemlerini içermektedir. Faaliyet, 2023'ün başından bu yana kötü amaçlı uygulamalar dağıtan üç farklı kümeye atfedilmiştir: CL-CRI-1089 (Calendaromatic, DocuFlex ve AppSuite PDF), CL-UNK-1090 (CrystalPDF, Easy2Convert ve PDF-Ezy) ve CL-UNK-1110 (JustAskJacky, GoCookMate, RocketPDFPro, ManualReaderPro). CL-CRI-1089, kimlik bilgilerini hedeflemekte ve reklam yazılımı ile proxy tarzı yükleri dağıtmaktadır, diğer iki kümenin motivasyonları ise bilinmemektedir. Kullanıcıların, yazılım indirmelerini yalnızca güvenilir ve resmi kaynaklardan yapmaları hayati önem taşımaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-46">
+<div class="news-title"><b>HP, Linux Görüntüleme ve Yazdırma Yazılımındaki Kritik Zafiyeti Gidermişti</b></div>
+<p class="news-content">HP, HPLIP'de (Linux Imaging and Printing) ayrıcalık yükseltme ve/veya rastgele kod yürütmeye izin verebilecek CVE-2026-8631 (CVSS puanı: 9.3) olarak izlenen kritik bir yığın tabanlı arabellek taşması zafiyeti için düzeltmeler yayınlamıştır. Zafiyeti keşfeden güvenlik araştırmacısı Mohamed Lemine Ahmed Jidou, "HPLIP, standart Linux yazdırma mimarisine (CUPS) derinlemesine entegre olduğundan, bu açık milyonlarca Linux uç noktasını ve kurumsal yazdırma sunucusunu savunmasız bırakmaktadır" demiştir. Jidou, kimlik doğrulaması yapılmamış bir saldırganın ağ üzerinden veya düşük ayrıcalıklı yerel bir kullanıcının, kötü amaçlı olarak hazırlanmış bir yazdırma işi göndererek bu açığı sessizce istismar edebileceğini belirtmiştir. Başarılı bir istismar, saldırgana ana bilgisayarda rastgele komut yürütme yeteneği sağlamaktadır. Bu durum, anında sistem ele geçirmesine, yazdırma biriktiricisinden geçen hassas belgelere yetkisiz erişime ve kurumsal ağlar arasında yanal hareket için gizli bir dayanak noktası sağlamaktadır. HP, bu kritik zafiyetin giderilmesi için güncellemeler sunmuştur. Kullanıcıların ve kuruluşların, Linux sistemlerindeki HPLIP yazılımlarını derhal güncellemeleri, Özellikle yazdırma hizmetleri gibi temel altyapı bileşenlerindeki zafiyetler, geniş çaplı sistem ele geçirmelerine ve veri ihlallerine yol açabilir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-47">
+<div class="news-title"><b>Gunra Fidye Yazılımı Güney Kore'deki Beş Şirketi Hedef Almıştır</b></div>
+<p class="news-content">S2W'nin bildirdiğine göre, Gunra fidye yazılımı ailesi, Nisan 2025'te ilk kez keşfedildiğinden bu yana Güney Kore'deki beş şirketi hedef almıştır. S2W, "Gunra fidye yazılımı ilk keşfedildiğinde, Conti tabanlı fidye yazılımını kullanmıştır" demiştir. "Ancak, bir RaaS (Hizmet Olarak Fidye Yazılımı) modeline geçtikten sonra, grup kendi fidye yazılımını geliştirmiş ve kullanmıştır." Mart 2026 itibarıyla, grup 32 kurbanın sorumluluğunu üstlenmiştir. RaaS modeli, daha az teknik bilgiye sahip siber suçluların dahi fidye yazılımı saldırıları düzenlemesine olanak tanıyarak tehdit ortamını daha da karmaşık hale getirmektedir. Güney Kore'deki şirketlerin hedef alınması, fidye yazılımı saldırılarının coğrafi sınır tanımadığını ve her sektörden kuruluşu etkileyebileceğini vurgulamaktadır. Kuruluşların, fidye yazılımı saldırılarına karşı kapsamlı savunma stratejileri geliştirmeleri, düzenli yedeklemeler almaları, ağ segmentasyonunu uygulamaları ve çalışanlarını Ayrıca, siber güvenlik çözümlerinin güncel tutulması ve tehdit istihbaratının aktif olarak kullanılması da bu tür saldırıların tespit ve önlenmesinde kritik bir rol oynamaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-48">
+<div class="news-title"><b>Pwn2Own Berlin 2026 Yarışmasında 47 Sıfır Gün Zafiyeti Ortaya Çıkarılmıştır</b></div>
+<p class="news-content">Pwn2Own Berlin 2026 hacking yarışması, güvenlik araştırmacılarının Windows, Linux, VMware ve NVIDIA gibi çeşitli ürünlerde 47 sıfır gün zafiyetini istismar etmesiyle sona ermiş ve toplamda 1.298.250 dolar ödül toplanmıştır. DEVCORE, Microsoft SharePoint, Microsoft Exchange, Microsoft Edge ve Windows 11'i hackleyerek üç günlük yarışma boyunca 50.5 Master of Pwn puanı ve 505.000 dolar ödülle etkinliği kazanmıştır. STARLabs SG ve Out Of Bounds sırasıyla 242.500 dolar (25 puan) ve 95.750 dolar (12.75 puan) ile onları takip etmiştir. Bu yarışma, henüz kamuya açık olmayan veya yaması bulunmayan güvenlik açıklarının (sıfır gün zafiyetleri) keşfedilmesi ve gösterilmesi için önemli bir platform sağlamaktadır. Ortaya çıkarılan bu zafiyetler, yazılım ve donanım üreticilerine ürünlerini daha güvenli hale getirmeleri için kritik bilgiler sunmaktadır. Pwn2Own gibi etkinlikler, siber güvenlik araştırmacılarının yeteneklerini sergilemelerine ve endüstri için değerli güvenlik açığı istihbaratı sağlamalarına olanak tanımaktadır. Bu kadar çok sıfır gün zafiyetinin tek bir etkinlikte ortaya çıkarılması, yazılımların karmaşıklığı ve sürekli olarak yeni güvenlik açıklarının keşfedilme potansiyelini vurgulamaktadır. Kuruluşların,</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/threatsday-bulletin-linux-rootkits.html" target="_blank">thehackernews.com</a>, 21.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-49">
+<div class="news-title"><b>Orta Doğu'daki Aktif Komuta ve Kontrol Altyapısının Çoğu Tek Bir Telekom Sağlayıcısı Tarafından Barındırılmıştır</b></div>
+<p class="news-content">Hunt.io'nun yeni raporu, tehdit istihbaratının sadece zararlı yazılım ailelerine ve oltalama alan adlarına odaklanmak yerine, hosting altyapısına daha fazla dikkat etmesi gerektiğini ortaya koymuştur. Yaklaşık üç ay boyunca Orta Doğu'daki kötü amaçlı altyapıyı haritalandıran araştırmacılar, 14 ülkede 98 sağlayıcıya yayılmış 1.350'den fazla komuta ve kontrol (C2) sunucusu tespit etmiştir. Dikkat çekici olan, faaliyetin ne kadar yoğunlaştığıdır. Analiz edilen dönemde, tek bir sağlayıcı olan Suudi Telekom Şirketi (STC), gözlemlenen tüm bölgesel C2 faaliyetinin %72'sinden fazlasını oluşturmuştur. Bu altyapının çoğu, kasıtlı olarak kötü amaçlı barındırma yerine, ele geçirilmiş müşteri sistemlerinden oluşuyor gibi görünmektedir, ancak sonuç aynıdır: nispeten küçük bir altyapı dilimi üzerinden büyük miktarda saldırgan trafiği akmaktadır. Hunt.io tarafından yayınlanan raporda, "Aynı sağlayıcılar, tamamen ilgisiz kampanyalar ve zararlı yazılım aileleri arasında sürekli olarak ortaya çıkmaktadır" ifadelerine yer verilmiştir. "Sağlayıcı düzeyinde izleme, günlük olarak değişen bireysel göstergeleri takip etmekten daha etkilidir." Rapor ayrıca, farklı sağlayıcıların farklı türde faaliyetleri çekme eğiliminde olduğunu vurgulamaktadır. Örneğin, Türk Telekom, veri setindeki en yüksek zararlı yazılım çeşitliliğini göstermiş, birden fazla C2 uç noktasında altı ayrı zararlı yazılım ailesiyle ilişkili altyapıyı barındırmıştır. Regxa adlı bir Irak sağlayıcısı da analizde en yüksek "kurşun geçirmez hosting" profiline sahip olarak işaretlenmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192518/hacking/one-telecom-provider-hosted-most-of-the-middle-east-s-active-c2-infrastructure.html" target="_blank">securityaffairs.com</a>, 22.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-50">
+<div class="news-title"><b>CISA'nın Yeni KEV Adaylık Formu Tedarikçilere ve Araştırmacılara Raporlama İmkanı Sunmuştur</b></div>
+<p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), araştırmacılar, tedarikçiler ve endüstri ortaklarının Bilinen İstismar Edilen Zafiyetler (KEV) kataloğuna eklenecek istismar edilmiş zafiyetleri bildirmelerine olanak tanıyan yeni bir adaylık formu başlatmıştır. CISA, bu yeni raporlama yeteneğinin, kritik tehdit bilgilerini tanımlama, doğrulama ve hızla paylaşma yeteneğini artırdığını belirtmiştir. CISA Siber Güvenlik Vekil İcra Direktör Yardımcısı Chris Butera, "Erken tespit ve koordineli zafiyet ifşası, riski büyük ölçekte azaltmak için sahip olduğumuz en güçlü araçlar arasındadır" demiştir. Uzmanlar artık zafiyetleri bir adaylık formu aracılığıyla veya e-posta yoluyla gönderebilmekte ve hata hakkında bilgi ile istismar edildiğine dair kanıt sağlamak zorundadırlar. KEV kataloğu, federal hükümet içindeki siber güvenlik savunucularına, belirli bir zaman dilimi içinde – genellikle üç hafta – yamalanması gereken yazılım ve donanım zafiyetlerinin yetkili bir listesini sunmayı amaçlamaktadır. CISA'nın yeni gönderim formu, ajansın siber güvenlik araştırma topluluğu ile ortaklığını çok pratik bir şekilde operasyonelleştirmesinin bir yoludur. Qualys'ten Mayuresh Dani, CISA'nın daha önce e-posta yoluyla gönderimleri kabul ettiğini ancak bu e-posta adresine yapılan gönderimlere dayanarak KEV'e kaç zafiyetin eklendiğine dair dış raporların bulunmadığını belirtmiştir. Yeni form, göndericileri kritik, detaylı bilgi eklemeye zorlamaktadır. CISA'nın bu adımı, KEV kataloğunun güncelliğini ve etkinliğini artırarak siber savunmayı güçlendirmeyi amaçlamaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/cisa-to-allow-researchers-to-report-vulnerabilities-kev" target="_blank">therecord.media</a>, 23.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-51">
+<div class="news-title"><b>NIST NVD Zenginleştirme Politikası Değişikliği, Saldırgan Davranışı Sinyallerini Önceliklendirmiştir</b></div>
+<p class="news-content">Ulusal Standartlar ve Teknoloji Enstitüsü (NIST), 15 Nisan 2026 itibarıyla Ulusal Zafiyet Veritabanı (NVD) zenginleştirme politikasını değiştirerek, artık yalnızca CISA Bilinen İstismar Edilen Zafiyetler (KEV) kataloğunda yer alan, federal hükümet yazılımlarındaki veya 14028 sayılı Yürütme Emri kapsamında kritik olarak belirlenen zafiyetleri önceliklendireceğini açıklamıştır. Diğer tüm zafiyetler "En Düşük Öncelik" statüsünde yer alacaktır: CVSS puanı, etkilenen ürün eşleştirmeleri ve zafiyet sınıflandırması bulunmayacaktır. NIST, 2025 yılında yaklaşık 42.000 CVE'yi zenginleştirmişti ve 2026'nın başlarında gönderimler bir önceki yıla göre yaklaşık üçte bir oranında artış göstermektedir. Endüstri tahminleri, öncelikli kategorilerin gelecekte beklenen CVE hacminin yalnızca %15-20'sini kapsayacağını göstermektedir. Bu durum, zafiyet yönetimi iş akışları NVD'den alınan CVSS puanlarına bağlı olan ekipler için operasyonel bir boşluk yaratabilir. Zenginleştirilmemiş birikmiş CVE'ler, gerçek yazılımları etkileyen gerçek zafiyetleri işaret edebilir. NIST'in onlara ulaşmaması, onların önemini kaybettikleri anlamına gelmemektedir. Recorded Future, çözümün CVSS puanlarını daha hızlı elde etmek olduğuna inanmamaktadır. Bunun yerine, Recorded Future, saldırgan davranışlarını gerçekten yansıtan sinyalleri sağlamaya çalışmaktadır. CVSS, bir zafiyetin teknik özelliklerini (saldırı vektörü, karmaşıklık, gerekli ayrıcalıklar, potansiyel etki) karakterize etmek için tasarlanmıştır. CVSS, yama önceliklendirmeyi ana endişe olarak tasarlanmamıştır. Bu ayrım her zaman var olmuştur; NVD zenginleştirmesindeki artan boşluk, saldırgan davranışlarını gerçek zamanlı olarak yakalayabilen doğru istihbarat ve içgörülerin önemini artırmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.recordedfuture.com/blog/nist-nvd-enrichment" target="_blank">recordedfuture.com</a>, 14.05.2026)</b></p>
+</div>
+</div>
+</div>
+<a class="back-to-top" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;" title="Başa Dön">↑</a>
+</div>
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-05-21.html" class="archive-link">21.05.2026</a>
+            <a href="./2026-05-20.html" class="archive-link">20.05.2026</a>
+            <a href="./2026-05-19.html" class="archive-link">19.05.2026</a>
+            <a href="./2026-05-18.html" class="archive-link">18.05.2026</a>
+            <a href="./2026-05-17.html" class="archive-link">17.05.2026</a>
+            <a href="./2026-05-16.html" class="archive-link">16.05.2026</a>
+            <a href="./2026-05-15.html" class="archive-link">15.05.2026</a>
+            <a href="./2026-05-14.html" class="archive-link">14.05.2026</a>
+            <a href="./2026-05-13.html" class="archive-link">13.05.2026</a>
+            <a href="./2026-05-12.html" class="archive-link">12.05.2026</a>
+            <a href="./2026-05-11.html" class="archive-link">11.05.2026</a>
+            <a href="./2026-05-10.html" class="archive-link">10.05.2026</a>
+            <a href="./2026-05-09.html" class="archive-link">09.05.2026</a>
+            <a href="./2026-05-08.html" class="archive-link">08.05.2026</a>
+            <a href="./2026-05-07.html" class="archive-link">07.05.2026</a>
+            <a href="./2026-05-06.html" class="archive-link">06.05.2026</a>
+            <a href="./2026-05-05.html" class="archive-link">05.05.2026</a>
+            <a href="./2026-05-04.html" class="archive-link">04.05.2026</a>
+            <a href="./2026-05-03.html" class="archive-link">03.05.2026</a>
+            <a href="./2026-05-02.html" class="archive-link">02.05.2026</a>
+            <a href="./2026-05-01.html" class="archive-link">01.05.2026</a>
+            <a href="./2026-04-30.html" class="archive-link">30.04.2026</a>
+            <a href="./2026-04-29.html" class="archive-link">29.04.2026</a>
+            <a href="./2026-04-28.html" class="archive-link">28.04.2026</a>
+            <a href="./2026-04-27.html" class="archive-link">27.04.2026</a>
+            <a href="./2026-04-26.html" class="archive-link">26.04.2026</a>
+            <a href="./2026-04-25.html" class="archive-link">25.04.2026</a>
+            <a href="./2026-04-24.html" class="archive-link">24.04.2026</a>
+            <a href="./2026-04-23.html" class="archive-link">23.04.2026</a>
+        </div>
+    </div>
+
+</body>
+</html>
