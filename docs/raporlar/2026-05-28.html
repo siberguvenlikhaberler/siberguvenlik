@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 28.05.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        
+        /* ŞIK BAŞLIK */
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 {
+            color: #1565c0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .important-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .important-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .important-item a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+        
+        /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* HABERLER BÖLÜMÜ */
+        .news-section {
+            padding: 30px;
+        }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .nato-star {
+            display: inline-block;
+            font-size: 13px;
+            color: #ffffff;
+            background: #003087;
+            border-radius: 3px;
+            padding: 1px 6px;
+            margin-right: 7px;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+        .news-content {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .source {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+        .source a {
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+        
+        /* BAŞA DÖN BUTONU */
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
+        .social-signals {
+            background: #f8faff;
+            border: 1px solid #c7d7fd;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .social-signals .signal-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .social-signals .signal-platform-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px;
+            color: #475569;
+            background: #f1f5f9;
+            border-radius: 3px;
+            padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.45;
+            display: block;
+        }
+        .social-signals .signal-item a:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            .social-signals {
+                padding: 16px;
+            }
+            .social-signals .signal-list {
+                grid-template-columns: 1fr;
+            }
+            .social-signals .signal-meta {
+                gap: 6px;
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="report-header">
+<h1><span class="header-date">28.05.2026</span> Siber Güvenlik Haber Özetleri</h1>
+</div>
+<!-- YÖNETİCİ ÖZETİ -->
+<div class="executive-summary">
+<h2>Yönetici Özeti</h2>
+<!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
+<div class="important-news">
+<h2>Önemli Gelişmeler</h2>
+<div class="important-summary">
+<div class="important-item">
+<a href="#haber-1">1. RevEng.AI, NATO İnovasyon Fonu liderliğinde 15 Milyon Dolar Yatırım Almıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-2">2. 2026 Dünya Kupası Siber Saldırılara Karşı Geniş Bir Tehdit Yüzeyi Oluşturmaktadır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-3">3. LA Metro Saldırısı İran İstihbarat Servisi Tarafından Gerçekleştirilmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-4">4. ESET, APT Kampanyalarının Petrol Taşımacılığı ve Kritik Altyapıyı Hedeflediğini Açıklamıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-5">5. CISA, LiteSpeed cPanel Eklentisindeki Kritik Bir Güvenlik Açığını KEV Kataloğuna Eklenmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-6">6. İngiliz Siber İstihbarat Şefi Yapay Zekayı Durdurulamaz Bir Güç Olarak Nitelendirmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-7">7. FBI, Hukuk Firmalarını Hedefleyen Veri Hırsızlığı Saldırılarına Karşı Uyarmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-8">8. İnternette 19.6 Milyar Dosya Parola Koruması Olmadan Erişime Açık Tespit Edilmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-9">9. Glassworm Botneti Tedarik Zinciri Saldırı Altyapısı Başarılı Bir Şekilde Çökertilmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-10">10. Siber Gasp Ekonomisi Evrilerek Veri Hırsızlığına Odaklanmıştır.</a>
+</div>
+</div>
+</div>
+<!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
+<table class="executive-table">
+<tr>
+<td><a href="#haber-11">11. Yapay Zeka Destekli Yaptırım Kaçakçılığı Yeni Bir Yönetim Sorunu Oluşturmuştur.</a></td>
+<td><a href="#haber-12">12. Cisco, Yapay Zeka Modellerinin Çok Turlu Saldırılara Karşı Zafiyet Gösterdiğini Açıklamıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-13">13. Google, Yapay Zeka Destekli Siber Saldırılarla Mücadele İçin Yeni Bir Platform Tanıtmıştır.</a></td>
+<td><a href="#haber-14">14. Sömürünün Sanayileşmesi Siber Savunucular İçin Yeni Zorluklar Ortaya Koymuştur.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-15">15. OpenAI, 2026 Ara Seçimleri İçin Siber Güvenlik Önlemleri Planlarını Duyurmuştur.</a></td>
+<td><a href="#haber-16">16. JINX-0164, Sahte İş İlanlarıyla Kripto Para Firmalarını Hedeflemiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-17">17. Kötü Niyetli npm Paketi Claude Yapay Zeka Kullanıcı Dizininden Dosyaları Çalmıştır.</a></td>
+<td><a href="#haber-18">18. Grandoreiro ve BTMOB RAT Kampanyaları Windows ve Android Kullanıcılarını Hedeflemiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-19">19. Gitea Güvenlik Açığı Özel Konteyner İmajlarını Kimlik Doğrulaması Olmadan Açığa Çıkarmıştır.</a></td>
+<td><a href="#haber-20">20. Starlette Çerçevesindeki Bir Güvenlik Açığı FastAPI Tabanlı Yapay Zeka Araçlarını Etkilemiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-21">21. GPU Madencilik Kötü Amaçlı Yazılımı SEO Zehirlenmesi ve Yapay Zeka Sohbet Botları Aracılığıyla Yayılmıştır.</a></td>
+<td><a href="#haber-22">22. Popüler Konferans Yazılımındaki Bir Güvenlik Açığı Saldırganlara %100 Konuşma Kabul Oranı Sağlamıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-23">23. Akira Fidye Yazılımı Saldırı Zinciri Günlüklerden Yeniden İnşa Edilmiştir.</a></td>
+<td><a href="#haber-24">24. Çocukları Hedef Alan Seks Şantajcısı 33 Yıl Hapis Cezasına Çarptırılmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-25">25. Oregon Eyalet Ağına Saldıran Rumen Hacker ABD'de Hapis Cezası Almıştır.</a></td>
+<td><a href="#haber-26">26. Hollanda Polisi Ajax Futbol Kulübü Veri İhlali Şüphelisini Tutuklamıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-27">27. Lastwall, Kuantum Dirençli Kimlik Platformu İçin 11.5 Milyon Dolar Yatırım Toplamıştır.</a></td>
+<td><a href="#haber-28">28. Microsoft'un Yeni Bulut Bilgisayarları Yapay Zeka Ajanlarını Kurumsal Kontroller Altına Almıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-29">29. Rudd, Siber Komutanlık İncelemelerini Emretmiştir.</a></td>
+<td><a href="#haber-30">30. Tehdit Faaliyetlerini Destekleyen Aktörler Siber Tehdit Ortamının Omurgasını Oluşturmaktadır.</a></td>
+</tr>
+<tr>
+<td colspan="2"><a href="#haber-31">31. Yapay Zeka Yönetişimi Zorunluluğu Kurumlar İçin Göz Ardı Edilemez Bir Durumdur.</a></td>
+</tr>
+</table><div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item"> <div class="signal-meta"> <span class="signal-platform-label">GitHub Advisory</span> <span class="signal-engagement">ÖNEM: KRİTİK  |  CVSS: 9.8</span> </div> <a href="https://github.com/advisories/GHSA-vmwp-vh32-rj75" rel="noopener noreferrer" target="_blank">Yamcs, Mission Database algoritma geçersiz kılma aracılığıyla Remote Code Execution'a karşı savunmasız bulunmuştur.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲25</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tp7mcv/i_went_to_prison_for_internet_piracy_and_hacking/" rel="noopener noreferrer" target="_blank">I went to prison for internet piracy and hacking; my FBI profiler sent me a message on LinkedIn when I got out, and now we’re presenting at SLEUTHCON. I'm Josh Brody and I ran</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲24</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tpitdk/websites_have_a_new_way_to_spy_on_visitors/" rel="noopener noreferrer" target="_blank">Websites have a new way to spy on visitors: analyzing their SSD activity</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲23</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tpitdx/12_years_in_secops_military_to_vendor_then/" rel="noopener noreferrer" target="_blank">12 years in secops, military to vendor then internal. Internal feels like all loss and no win. Is this normal?</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲22</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tppo81/reddit_spear_phishing/" rel="noopener noreferrer" target="_blank">Reddit spear phishing</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲21</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tpublw/developers_working_on_antifraud_systems_deserve/" rel="noopener noreferrer" target="_blank">Developers working on anti-fraud systems deserve more credit</a></div>
+</div></div>
+</div>
+<!-- HABERLER -->
+<div class="news-section">
+<div class="news-item" id="haber-1">
+<div class="news-title"><span class="nato-star">★ NATO</span><b>RevEng.AI, NATO İnovasyon Fonu Liderliğinde 15 Milyon Dolar Yatırım Almıştır</b></div>
+<p class="news-content">Siber güvenlik girişimi RevEng.AI, yazılım ikili dosyalarındaki güvenlik açıklarını ve arka kapıları tespit etmek amacıyla BinNet adlı bir yapay zeka modeli kullanmaktadır. Şirket, A Serisi finansman turunda NATO İnovasyon Fonu liderliğinde 15 milyon dolar yatırım almıştır. Bu yatırım, şirketin toplam fonunu 19.5 milyon dolara çıkarmıştır. RevEng.AI'nin platformu, kaynak koduna erişim gerektirmeden derlenmiş yazılımları ikili düzeyde analiz edebilme yeteneği ile öne çıkmaktadır. Özellikle yapay zeka tabanlı kodlama ajanlarının otonom yazılım geliştirmesinde artış gösterdiği bir dönemde, bu teknoloji yazılım tedarik zincirini güvence altına almayı hedeflemektedir. Şirket, platformunun saniyeler içinde yazılımı analiz ederek organizasyonlara eserler, bağımlılıklar ve bütünlük konusunda görünürlük sağladığını belirtmektedir. Çözüm, kapalı kaynaklı, kurum içinde geliştirilen ve üçüncü taraf yazılımların proaktif doğrulamasını gerçekleştirmek için mevcut güvenlik ve yazılım dağıtım iş akışlarıyla entegre olmaktadır. Bu yatırım, NATO'nun siber güvenlik kapasitesini artırma ve yeni nesil tehditlere karşı savunma yeteneklerini güçlendirme stratejisinin bir parçası olarak değerlendirilmektedir. RevEng.AI'nin kurucusu ve CEO'su James Patrick-Evans, yapay zekanın kodu giderek daha fazla yazdığı bir dünyada, makinelerde çalışan yürütülebilir ikili dosyaların tek evrensel doğruluk kaynağı olduğunu ifade etmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/reveng-ai-raises-15-million-to-hunt-for-flaws-and-backdoors-in-software-binaries/" target="_blank">securityweek.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-2">
+<div class="news-title"><span class="nato-star">★ NATO</span><b>2026 Dünya Kupası Siber Saldırılara Karşı Geniş Bir Tehdit Yüzeyi Oluşturmaktadır</b></div>
+<p class="news-content">2026 FIFA Dünya Kupası, 16 ev sahibi şehirde 3 ulus tarafından düzenlenecek ve tahmini beş ila altı milyon seyirci ağırlayacak tarihin en büyük spor etkinliği olarak öne çıkmaktadır. Unit 42 tarafından yapılan değerlendirmeye göre, bu ölçekteki bir etkinlik, geçmişteki benzer mega etkinliklere karşı gerçekleştirilen siber operasyonlar göz önüne alındığında, yıkıcı saldırılar, büyük ölçekli dolandırıcılık ve siyasi amaçlı dağıtılmış hizmet reddi (DDoS) ile hack ve sızıntı operasyonlarının yüksek olasılıkla gerçekleşeceğini göstermektedir. Özellikle ABD-İsrail-İran arasındaki kinetik çatışma ve Rusya-Ukrayna savaşı, tehdit ortamını önemli ölçüde değiştirmiştir. İran bağlantılı aktörler, ABD'nin kritik altyapısındaki Rockwell Automation ve Allen-Bradley PLC'lerini hedef almaktadır. Rusya bağlantılı hacktivist gruplar ise NATO üyesi ülkelerdeki hükümetlere ve kritik sektörlere karşı 3.700'den fazla doğrulanmış DDoS saldırısı gerçekleştirmiştir. Finansal motivasyonlu siber suçlar, sahte bilet siteleri, sosyal medya dolandırıcılıkları ve QR kodu sahtekarlıkları gibi yöntemlerle taraftarları ve ağırlama tedarik zincirini hedef almaktadır. Raporda, turnuva organizasyonları ve ev sahibi şehir komitelerinin, ABD CISA, Kanada Siber Güvenlik Merkezi ve Meksika CERT-MX ile işbirliği yaparak tek bir çok yargı alanlı siber operasyon merkezi kurmaları gerektiği vurgulanmaktadır. Ayrıca, kritik altyapı operatörleri için internete açık PLC'lerin denetlenmesi ve 24/7 olay müdahale kapsamı sağlanması önerilmektedir. Bu kapsamlı tehdit değerlendirmesi, etkinliğin siber güvenliğinin sağlanması için geniş çaplı ve koordineli önlemler alınmasının zorunlu olduğunu ortaya koymaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://unit42.paloaltonetworks.com/fifa-world-cup-attack-surface/" target="_blank">unit42.paloaltonetworks.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-3">
+<div class="news-title"><b>LA Metro Saldırısı İran İstihbarat Servisi Tarafından Gerçekleştirilmiştir</b></div>
+<p class="news-content">Los Angeles County Metropolitan Transportation Authority (LACMTA) sistemine Mart ayında düzenlenen siber saldırının arkasında İran istihbarat servisinin olduğu tespit edilmiştir. İsrailli güvenlik firması Gambit Security'nin raporuna göre, kendisini "Ababil of Minab" olarak adlandıran hacker grubu, aslında İran İstihbarat ve Güvenlik Bakanlığı (MOIS) ile bağlantılıdır. Grup, LACMTA ihlalinin sorumluluğunu üstlenerek transit sistemin verilerini çaldığını ve altyapısını yok ettiğini iddia etmiştir. Gambit araştırmacıları, adli kanıtların Ababil of Minab'ı daha önceki İran destekli saldırılarla ilişkilendirdiğini belirtmiştir. Bu saldırıların, İsrail Ulusal Siber Müdürlüğü tarafından İran istihbarat servisine atfedilen faaliyetleri içerdiği ifade edilmiştir. Saldırganlar, sanal makineleri ve depolama birimlerini otomatik komut dosyaları ve manuel klavye erişimiyle silerek kurtarmayı engelleme amacı gütmüştür. Ayrıca, saldırganların ChatGPT kullanarak yıkım komut dosyalarını geliştirdiği de ortaya çıkmıştır. Raporda, İsrail medya sektörü, bir İsrail yüksek öğretim kurumu, bir Türk sigorta brokerliği ve çeşitli restoran, kültür, dijital hizmetler ve haber sektöründeki web siteleri dahil olmak üzere ek kurbanların verilerinin çalındığı ancak yok edilmediği bilgisi de yer almıştır. Bu durum, grubun en dramatik saldırıları kamuoyuna duyururken diğerlerini sessizce yağmaladığını düşündürmektedir. Saldırının hızı ve derinliği, modern siber saldırganların ilk erişimden doğrudan kurtarma katmanına geçerek yıkımı maksimize etme eğilimini yansıtmaktadır. Yapay zeka yeteneklerinin yaygınlaşmasıyla, bu tür kampanyaların daha az yetenekli aktörler tarafından bile kolayca yürütülebileceği öngörülmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/iranian-intelligence-behind-hack-of-la-transit-system" target="_blank">therecord.media</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-4">
+<div class="news-title"><b>ESET, APT Kampanyalarının Petrol Taşımacılığı ve Kritik Altyapıyı Hedeflediğini Açıklamıştır</b></div>
+<p class="news-content">ESET'in son APT Faaliyet Raporu, Ekim 2025 ile Mart 2026 arasındaki dönemde jeopolitik baskıların devlet destekli siber faaliyetleri büyük ölçüde yönlendirdiğini ortaya koymuştur. Çin, Kuzey Kore, Rusya ve İran ile bağlantılı casusluk grupları, hükümetlerinin ekonomik ve güvenlik endişelerine uygun olarak hedeflerini ayarlamışlardır. Raporda, Çin ile bağlantılı FamousSparrow grubunun Ocak 2026'da Venezuela'nın denizcilik işlerinden sorumlu bir hükümet kurumunu hedef aldığı belirtilmiştir; bu durum, ABD askeri müdahalesinin ardından Venezuela petrol sevkiyatlarının dayanıklılığını izleme amacı taşıdığı değerlendirilmektedir. SteppeDriver ise Şubat 2026'da Suriye hükümet ağına sızarak Çin'in Suriye'nin yeniden inşasına yönelik ticari ilgisini yansıtmıştır. Kuzey Kore'ye bağlı Lazarus grubunun, npm kayıt defterindeki yaygın olarak kullanılan 'axios' paketini ele geçirerek tedarik zinciri saldırısı gerçekleştirdiği tespit edilmiştir. Rusya ile bağlantılı Sandworm grubunun, Ukrayna'ya karşı yıkıcı faaliyetlerini artırdığı ve Polonya'daki bir enerji şirketine (bir NATO üye devleti) yönelik veri yıkım saldırısı gerçekleştirdiği bildirilmiştir; bu saldırının Ukrayna'nın kış aylarında elektrik şebekesi üzerindeki baskıyı artırmayı hedeflemiş olabileceği düşünülmektedir. İran'daki çatışmanın başlamasıyla birlikte, İran'a bağlı APT gruplarının faaliyetlerinde düşüş gözlemlenirken, pro-İranlı ve hacktivist grupların İsrail ve ABD'ye yönelik saldırılarını artırdığı ifade edilmiştir. Özellikle Rusty Boots'un İsrailli cihaz üreticilerine karşı bootkit tarzı bir wiper kullandığı kaydedilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.helpnetsecurity.com/2026/05/28/eset-apt-activity-report/" target="_blank">helpnetsecurity.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-5">
+<div class="news-title"><b>CISA, LiteSpeed cPanel Eklentisindeki Kritik Bir Güvenlik Açığını KEV Kataloğuna Eklenmiştir</b></div>
+<p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), LiteSpeed cPanel Eklentisindeki kritik bir güvenlik açığı olan CVE-2026-48172'yi Bilinen İstismar Edilen Güvenlik Açıkları (KEV) kataloğuna eklemiştir. CVSS skoru 10.0 olarak belirlenen bu zafiyet, LiteSpeed User-End cPanel eklentisinin 2.4.5 sürümü öncesindeki tüm versiyonlarını etkilemektedir. Güvenlik açığı, Redis etkinleştirme/devre dışı bırakma işlevlerinin yanlış işlenmesinden kaynaklanmaktadır ve ayrıcalık yükselmesine, potansiyel olarak kök ayrıcalıklarına kadar ulaşılmasına olanak tanımaktadır. Saldırganlar, bu zafiyeti etkilenen sunucularda yetkisiz eylemler gerçekleştirmek için aktif olarak kötüye kullanmışlardır. CISA, federal kurumların bu güvenlik açığını 29 Mayıs 2026 tarihine kadar gidermelerini zorunlu kılmıştır. Tespit için cPanel günlüklerinde şüpheli Redis ile ilgili API çağrılarının aranması önerilmektedir. Güvenlik açığının giderilmesi için en az 2.4.7 sürümüne yükseltme yapılması ve günlüklerin ve IP etkinliğinin olası uzlaşma belirtileri açısından incelenmesi gerekmektedir. Geçici bir çözüm olarak, yama yapılamıyorsa Gitea yapılandırmasında `[service].REQUIRE_SIGNIN_VIEW=true` ayarının yapılması tavsiye edilmektedir. Ancak, bu yaklaşımın bazı konteynerlerin kasıtlı olarak herkese açık olması amaçlandığında ideal olmadığı belirtilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192795/hacking/u-s-cisa-adds-litespeed-cpanel-plugin-flaw-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-6">
+<div class="news-title"><b>İngiliz Siber İstihbarat Şefi Yapay Zekayı Durdurulamaz Bir Güç Olarak Nitelendirmiştir</b></div>
+<p class="news-content">İngiltere'nin siber istihbarat teşkilatı GCHQ'nun direktörü Anne Keast-Butler, yapay zekayı "durdurulamaz bir güç" olarak nitelendirmiş ve teknolojinin geleneksel savaşın eşiğinin hemen altında silahlandırılabileceği konusunda uyarmıştır. Keast-Butler, Rusya'nın Batı'ya karşı "günlük hibrit faaliyetlerini" artırmasıyla İngiltere ve müttefiklerinin "barış ile savaş arasında bir alanda" bulunduğunu ifade etmiştir. Siber güvenlik uzmanları, diplomatlar ve üst düzey yetkililerden oluşan bir dinleyici kitlesine hitaben yaptığı konuşmada, Batı'nın Rusya ve diğer rakiplere karşı siber uzaydaki çatışmayı kaybetme riski taşıdığını belirtmiştir. Keast-Butler, özellikle Rusya'yı kritik altyapıyı, demokratik süreçleri, tedarik zincirlerini ve kamu güvenini hedef almakla suçlamıştır. Ayrıca, Çin'in teknoloji süper gücü olarak yükselişine ve yapay zeka ile büyük miktardaki verilerin birleşiminin değerini tanımasına dikkat çekmiştir. GCHQ'nun, ajan tabanlı yapay zekayı makine hızında siber savunmaya entegre etme planları geliştirdiğini ve yapay zekanın casusların algoritmaları geliştirmesine, yabancı dilleri çevirmesine ve büyük veri kümelerinde iğne aramasını hızlandırmasına yardımcı olabileceğini vurgulamıştır. Konuşma, yapay zekanın hem siber saldırı hem de savunma yeteneklerini nasıl dönüştürdüğüne dair önemli bir bakış açısı sunmuştur. Keast-Butler, uluslararası ortaklıkların önemini de vurgulayarak, ABD Başkanı Donald Trump'ın "Önce Amerika" dış politikasının müttefiklerle olan ilişkileri zorlamasına rağmen İngiltere-ABD istihbarat ortaklığının her iki ulusun güvenliği için temel olduğunu belirtmiştir. Bu uyarılar, yapay zekanın siber güvenlik üzerindeki dönüştürücü etkisini ve devlet destekli aktörlerin artan tehditlerini kapsamlı bir şekilde ele almaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/uk-cyberspying-chief-calls-ai-an-unstoppable-force-and-warns-about-russia/" target="_blank">securityweek.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-7">
+<div class="news-title"><b>FBI, Hukuk Firmalarını Hedefleyen Veri Hırsızlığı Saldırılarına Karşı Uyarmıştır</b></div>
+<p class="news-content">Federal Soruşturma Bürosu (FBI), Silent Ransom Group (SRG) adlı siber gasp çetesinin ABD merkezli hukuk firmalarını hedef aldığını ve bu saldırıların artık şahsen veri hırsızlığı yöntemlerini de içerdiğini açıklamıştır. Salı günü yayınlanan bir flaş uyarıda FBI, SRG aktörlerinin 2026 baharından itibaren kendilerini kurbanın BT departmanından bir çalışan gibi gösteren sosyal mühendislik yöntemleri kullandıklarını belirtmiştir. Bu aktörler, çalışanları doğrudan arayarak veya oltalama e-postaları göndererek, kendilerini BT desteği olarak tanıtmışlardır. Telefon görüşmesi sırasında, SRG aktörü çalışandan uzak masaüstü oturumuna erişim izni vermesini istemektedir. Eğer bu girişim başarısız olursa, SRG bir tehdit aktörünü kurbanın konumuna göndererek bir depolama cihazını kurbanın bilgisayarına takıp veri çalmaya çalışmaktadır. FBI, şirket bilgisayarlarına harici sabit sürücülerin veya USB sürücülerin yetkisiz kurulumunu ve kendisini BT desteği olarak tanıtan kimliği belirsiz veya yetkisiz kişilerin bilgisayarlara erişim girişimlerini SRG saldırısının olası göstergeleri olarak listelemiştir. SRG, çalınan verileri kurbanları fidye ödemeye zorlamak için kullanmaktadır; verilerin sızdırılacağı veya sızıntı sitelerinde yayınlanacağı tehdidinde bulunmakta ve fidye müzakerelerini başlatmaları için kurbanların çalışanlarını veya müşterilerini aramaktadır. Luna Moth, Chatty Spider ve UNC3753 olarak da bilinen bu siber suç çetesi, en az 2022'den beri aktif olup, 2023 başından beri ABD'deki hukuk ve finans kuruluşlarını hedef almaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4177864/employees-are-unknowingly-inviting-tech-support-impersonators-into-firms-says-fbi.html" target="_blank">csoonline.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-8">
+<div class="news-title"><b>İnternette 19.6 Milyar Dosya Parola Koruması Olmadan Erişime Açık Tespit Edilmiştir</b></div>
+<p class="news-content">Mysterium VPN araştırmacıları, Amazon S3, Google Cloud, Azure, DigitalOcean ve Alibaba'daki 535.480 genel olarak listelenebilir bulut depolama kovasında toplam 19.6 milyar dosyanın herkes tarafından bir tarayıcı ve URL ile erişilebilir olduğunu tespit etmiştir. Bu dosyaların erişimi için herhangi bir giriş veya güvenlik açığı istismarı gerekmemektedir. Araştırma ekibi, Mart 2026'da yakalanan kova meta verilerini analiz etmiş ve dosya türüne ve dosya adına göre kategorize etmiştir; herhangi bir içeriğe erişim veya indirme işlemi gerçekleştirilmemiştir. Açık depolamada bu tür dosyaların varlığı, başlı başına ciddi bir güvenlik sorununu temsil etmektedir. Bu 19.6 milyar dosyanın çoğu sıradan görüntüler, belgeler ve günlükler olsa da, 685.047 kimlik bilgisi ve anahtar dosyası (.env dosyaları, özel anahtarlar, parola kasası veritabanları) ile neredeyse 1 milyon veritabanı yedeği (.sql ve .bak dosyaları) halka açık kovalarda bulunmaktadır. Bu tür dosyalar, saldırganlara canlı sistemlere doğrudan erişim sağlayabilen veya hassas verileri tamamen korumasız bir şekilde ifşa edebilen "ana anahtarlar" niteliğindedir. Araştırmacılar, "secret", "salary", "kyc" ve "credentials" kelimelerini içeren yüz binlerce dosya bulmuştur. "Password", "passport", "invoice" ve "backup" gibi isimlere sahip dosyaların her biri bir milyonu aşan sayılara ulaşmıştır. Kuruluşlara, tüm depolamayı varsayılan olarak özel ayarlara getirmeleri, sırları nesne depolamada saklamamaları, her yedeklemeyi şifrelemeleri ve kendi ayak izlerini bir saldırgan gibi taramaları tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192787/security/19-6-billion-files-are-sitting-open-on-the-internet-no-password-required.html" target="_blank">securityaffairs.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-9">
+<div class="news-title"><b>Glassworm Botneti Tedarik Zinciri Saldırı Altyapısı Başarılı Bir Şekilde Çökertilmiştir</b></div>
+<p class="news-content">CrowdStrike, Google ve Shadowserver Foundation işbirliğiyle Glassworm botnetinin tüm komuta ve kontrol (C2) kanallarını eş zamanlı olarak çökerttiğini duyurmuştur. Glassworm, 2025 başlarından itibaren yazılım geliştiricilerini hedef alan kalıcı bir yazılım tedarik zinciri kampanyasıdır ve kötü niyetli paketler ile uzantılar aracılığıyla yayılmıştır. Geliştiriciler, kaynak kodu depolarına, bulut platformlarına, CI/CD işlem hatlarına ve paket kayıt defterlerine erişimleri nedeniyle giderek daha cazip hedefler haline gelmişlerdir. Glassworm, trojanlanmış VS Code uzantıları ve kötü niyetli npm ve Python paketleri kullanarak çok yönlü bir kampanya yürütmüştür. Saldırıların nihai amacı, kimlik bilgisi toplama, kripto para cüzdanı sızdırma ve sistem profil oluşturma yeteneklerine sahip bir veri hırsızlığı çerçevesi sunmaktır. Glassworm operatörlerinin, saldırılara karşı dayanıklı olacak şekilde dört farklı C2 kanalı kullandığı tespit edilmiştir: Solana blok zinciri, BitTorrent Dağıtılmış Karma Tablosu (DHT) eşler arası ağı, Google Takvim ve ticari VPS sağlayıcılarında barındırılan doğrudan C2 altyapısı. Bu kanalların eş zamanlı olarak etkisiz hale getirilmesi, enfekte makinelerin yeni talimatlar veya yükler almasını engellemiştir. CrowdStrike, Glassworm operatörlerini "iyi kaynaklara sahip ve kalıcı" olarak tanımlamış ve faaliyetleri Rusya merkezli siber suçlulara atfetmiştir; zira kötü amaçlı yazılım, Bağımsız Devletler Topluluğu (CIS) ülkelerindeki sistemlerde yürütmeyi sonlandırmaktadır ve Rusça yorumlar içermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192749/cyber-crime/how-cybersecurity-firms-took-down-glassworm-botnet-in-one-shot.html" target="_blank">securityaffairs.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-10">
+<div class="news-title"><b>Siber Gasp Ekonomisi Evrilerek Veri Hırsızlığına Odaklanmıştır</b></div>
+<p class="news-content">Unit 42 tarafından yayımlanan "Out of the Crypt: The Evolving Cyber Extortion Economy" başlıklı rapor, siber gasp faaliyetlerinde fidye yazılımı kullanımının azaldığını ve bunun yerine veri hırsızlığına dayalı şantajın arttığını belirtmektedir. 2025 yılında fidye yazılımı kullanılan olayların oranı %78'e düşerken, 2021-2024 yılları arasındaki %90'ın üzerindeki seviyelerin altında kalmıştır. Bu değişimin dört ana nedeni bulunmaktadır: gelişmiş yedekleme ve kurtarma yetenekleri, uç nokta güvenliğindeki olgunluk, veri sızdırma hızındaki artış ve düzenleyici çerçevelerden kaynaklanan baskı. Özellikle SEC'in 4 günlük ve GDPR'ın 72 saatlik bildirim süreleri, tehdit aktörlerine hızlı müzakereler için zaman baskısı yaratmaktadır. Veri hırsızlığı kampanyaları, 2025 yılında özellikle profesyonel hizmetler, sağlık ve tüketici hizmetleri firmalarını hedeflemiştir. TGR-CRI-1135 (TeamPCP olarak da bilinir) gibi tehdit aktörleri, yazılım tedarik zinciri ihlalleri yoluyla sızmakta ve çalınan verileri fidye yazılımı-hizmet olarak (RaaS) ve gasp-hizmet olarak (EaaS) operatörleriyle işbirliği yaparak paraya çevirmektedir. Bling Libra (ShinyHunters olarak da bilinir) ise vishing (sesli oltalama) tekniklerini kullanarak SaaS müşteri hesaplarına sızmakta ve veri hırsızlığına ek olarak DDoS saldırıları ve medyaya bilgi sızdırma gibi çift şantaj yöntemlerini uygulamaktadır. Rapor, gelecekteki tehdit aktörlerinin, Anthropic'in Mythos gibi gelişmiş yapay zeka modellerini kullanarak güvenlik açıklarını bulma ve zincirleme süreçlerini hızlandıracağını ve ilk erişimden veri sızdırmaya kadar geçen sürenin 25 dakikaya kadar düşebileceğini öngörmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://unit42.paloaltonetworks.com/cyber-extortion-economy/" target="_blank">unit42.paloaltonetworks.com</a>, 28.05.2026)</b></p>
+<div class="news-item" id="haber-11">
+<div class="news-title"><b>Yapay Zeka Destekli Yaptırım Kaçakçılığı Yeni Bir Yönetim Sorunu Oluşturmuştur</b></div>
+<p class="news-content">Royal United Services Institute (RUSI) tarafından yayımlanan yeni bir araştırma makalesi, önümüzdeki üç ila beş yıl içinde hükümetlerin ve özel sektörün, yapay zeka destekli yaptırım kaçakçılığı ve nükleer silahların yayılmasının finansmanına karşı kimlik belirleme ve azaltma protokollerini hızla adapte etmeleri gerektiğini belirtmektedir. Rapor, Kuzey Kore ve İran gibi rejimlerin, siber operasyonları gerçekleştirmek ve tespit edilmekten kaçınmak için yapay zeka modellerini geliştirdiğini ve kullandığını vurgulamaktadır. Yapay zekanın, yüksek kaliteli sahte belgeler üretme ve kapsamlı paravan şirket ağlarını yönetme gibi idari süreçleri otomatikleştirme yeteneğine sahip olduğu ifade edilmektedir. Ayrıca, yapay zeka destekli sistemlerin, kripto para karıştırma stratejilerini dinamik olarak ayarlamak için blok zinciri modellerini gerçek zamanlı olarak analiz edebildiği ve böylece tespit araçlarını atlatabildiği kaydedilmiştir. Rapora göre, yapay zeka, özellikle Kuzey Kore'nin batılı şirketlere karşı oltalama saldırıları düzenlemesine yardımcı olmuştur. Uzmanlar, bu durumun geleneksel insan odaklı güvenlik sınırlarının otomatik teknolojilerle aşıldığı bir ortamda, savunma stratejilerinin güncellenmesini zorunlu kıldığını belirtmektedir. IT yöneticileri için, savunmacı yapay zeka kullanımı, davranış tabanlı analitikler, API veya MCP'lerin yoğun kullanımında "devre kesiciler", personel eğitimlerinin güncellenmesi ve özellikle uzaktan işe alımlarda kimlik doğrulamasının güçlendirilmesi gibi önlemlerin alınması tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4177936/another-it-governance-headache-ai-enabled-sanction-evasion-3.html" target="_blank">csoonline.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-12">
+<div class="news-title"><b>Cisco, Yapay Zeka Modellerinin Çok Turlu Saldırılara Karşı Zafiyet Gösterdiğini Açıklamıştır</b></div>
+<p class="news-content">Cisco araştırmacıları, önde gelen yapay zeka modellerinin gerçekçi çok turlu saldırılar karşısında önemli ölçüde daha kötü performans gösterdiğini ortaya koyan yeni bir çalışma yayımlamıştır. Bu durum, satıcıların tek istemli güvenlik kıyaslama testlerinin değerini sorgulatmaktadır. Çalışma, OpenAI, Anthropic, Google, xAI ve Amazon'dan 15 kapalı amiral gemisi model üzerinde tek turlu ve çok turlu değerlendirmeler yapmıştır. Yaklaşık 30.000 tek turlu istem ve 1.400'den fazla konuşmaya yayılan yaklaşık 7.000 çok turlu saldırı test edilmiştir. Kohort genelinde, çok turlu saldırı başarı oranları %88'e kadar yükselmiştir; bu, grubun en düşük sonucunun bir kat üzerindedir. Tek turlu ve çok turlu testler farklı sıralamalar, farklı hata haritaları ve farklı kuyruk riski profilleri üretmiştir. Özellikle OpenAI'nin GPT-5.4'ü, tek turlu ASR'si düşük tek hanelerdeyken, yinelemeli baskı altında yaklaşık dokuz kat artarak neredeyse %25'e yükselmiştir. Google'ın Gemini 3 Pro'su ise yaklaşık %18'den %73'e çıkmıştır. Araştırmacılar, bu bulguların yapay zeka modellerinin güvenlik kararlarında tek turlu skorlara güvenen CISO'lar için bir uyandırma çağrısı olduğunu belirtmektedir. Ayrıca, farklı model yapılandırmalarının güvenliği etkileyebileceği ve bu varyasyonların mevcut resmi model kartlarında veya kamuya açık güvenlik kıyaslamalarında yer almadığı vurgulanmıştır. Cisco ekibi, yapay zeka satın alan veya dağıtan kuruluşlar için üç operasyonel adım önermektedir: her model sürümünde strateji ailesine göre ASR yayımlanması, en iyi üç prosedür ve içerik türündeki regresyonlara ilişkin dağıtımların 3 puanlık bir eşik kullanılarak engellenmesi ve çapraz rejim farkı 15 puanın üzerinde olan modellerin manuel inceleme için işaretlenmesi.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.helpnetsecurity.com/2026/05/28/cisco-multi-turn-ai-attacks/" target="_blank">helpnetsecurity.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-13">
+<div class="news-title"><b>Google, Yapay Zeka Destekli Siber Saldırılarla Mücadele İçin Yeni Bir Platform Tanıtmıştır</b></div>
+<p class="news-content">Google Cloud, yapay zeka destekli siber saldırıların artan dalgasına karşı işletmeleri korumak üzere tasarlanmış, sürekli çalışan otonom bir platform olan AI Tehdit Savunma platformunu tanıtmıştır. Bu yeni siber güvenlik çözümü, makine destekli tehditleri daha hızlı tespit etmek ve zarar vermeden önce durdurmak için yapay zekadan yararlanmaktadır. Google'a göre, platform kritik gerçek dünya risklerini sürekli olarak önceliklendirmekte ve kuruluşların saldırı yollarını tahmin eden ve proaktif olarak iyileştirmeyi uygulayan savunmalar geliştirmelerine yardımcı olmaktadır. Google AI Tehdit Savunma, Mandiant'ın ön saflardaki ve olay müdahale deneyimini, Google tarafından yakın zamanda satın alınan Wiz'in bulut güvenlik platformunu ve Gemini ile CodeMender tarafından desteklenen Gemini'nin muhakeme ve kod düzeltme yeteneklerini birleştirmektedir. Google, bu platformun gerçek dünya açıklarını doğrudan otonom olarak yama oluşturma ve önceliklendirme ile birleştirerek, kuruluşların saldırı yollarını aktif olarak tahmin etmelerine, en önemli tehditleri önceliklendirmelerine ve doğrulanan düzeltmeleri saldırganlardan daha hızlı dağıtmalarına yardımcı olduğunu belirtmektedir. Platform, varlık görünürlüğü için ortamın haritalanması, derinlemesine değerlendirmeler ve yapay zeka odaklı duruş doğrulaması, hızlı ve otonom güvenlik açığı giderme iş akışlarının uygulanması ve makine hızında tespit ve yanıtın uygulanması olmak üzere dört adımlı bir çerçeve kullanmaktadır. Bu yeni platform, siber güvenlik alanında yapay zekanın hem saldırı hem de savunma tarafında nasıl kritik bir rol oynadığını ve proaktif, otonom savunma mekanizmalarının geliştirilmesinin zorunluluğunu vurgulamaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/google-unveils-ai-threat-defense-platform-to-fight-ai-powered-cyberattacks/" target="_blank">securityweek.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-14">
+<div class="news-title"><b>Sömürünün Sanayileşmesi Siber Savunucular İçin Yeni Zorluklar Ortaya Koymuştur</b></div>
+<p class="news-content">CSO Online'da yer alan bir makale, yapay zekanın kötüye kullanımının sömürüyü sanayileştirdiğini ve bu durumun siber savunucular için yeni mimari zorluklar yarattığını belirtmektedir. Onlarca yıldır siber güvenlik, elit saldırganlar ile elit savunucular arasındaki bir beceri savaşı olarak görülmekteydi. Ancak bu dönem sona ermiş ve yapay zeka, keşif, silahlandırma, yanal hareket ve kalıcılık yönetimi için teknik olarak sofistike tehdit aktörlerinin koordineli bir ekibini gerektiren süreçleri artık otonom olarak, makine hızında ve binlerce ortama eş zamanlı olarak uygulayabilmektedir. Tehdit aktörlerinin artık derin teknik uzmanlığa ihtiyacı olmadığı, sadece bilgi işlem gücüne, sermayeye ve ticarileşmiş yapay zeka araçlarına erişime ihtiyaç duyduğu ifade edilmektedir. Kurumsal ortamların bulut, OT, kimlik altyapısı ve üçüncü taraf entegrasyonları arasında genişlemesiyle birlikte, güvenlik organizasyonları araçları katmanlayarak yanıt vermiştir. Ancak bu durum, aynı anda karmaşık ve parçalanmış bir güvenlik mimarisi yaratmıştır; bu da büyük miktarda sinyal üretirken, gerçek riskin nerede olduğuna dair sınırlı netlik sağlamaktadır. Makale, savunucuların zihniyetlerini değiştirmeleri gerektiğini ve "hangi güvenlik açıkları var?" sorusu yerine "bir saldırgan şu anda ortamımdaki verilerle gerçekte ne yapabilir?" sorusunu sormaları gerektiğini vurgulamaktadır. Bu yeniden çerçevelendirme, programların nasıl yürütüldüğü üzerinde gerçek sonuçlar doğurmaktadır. Olay müdahale hızı önemli olsa da, asıl soru, yapısal boşluklardan ve kusurlardan kaynaklanan olayların olasılığını nasıl azaltılacağıdır; bu da ortamı bir saldırganın gözünden, yani zincirlenebilecek ilişkiler ağı olarak anlamayı gerektirmektedir. Bu, siber güvenlikte proaktif bir yaklaşımın ve sürekli tehdit maruziyeti yönetiminin önemini göstermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4177308/what-the-industrialization-of-exploitation-means-for-defenders.html" target="_blank">csoonline.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-15">
+<div class="news-title"><b>OpenAI, 2026 Ara Seçimleri İçin Siber Güvenlik Önlemleri Planlarını Duyurmuştur</b></div>
+<p class="news-content">OpenAI, 2026 ara seçimlerinde bilgi güvenliğini sağlamak ve siber güvenlik savunucularına yardımcı olmak amacıyla planlarını açıklamıştır. Bu planlar, deepfake'ler ve yapay zekanın diğer kötüye kullanım biçimleriyle mücadele çalışmalarını içermektedir. Şirket, 2024'teki büyük teknoloji şirketlerinin seçimleri yapay zeka destekli seçim müdahalelerinden koruma taahhütlerini temel alarak bu duyuruyu yapmıştır. OpenAI'nin planı beş ana unsuru içermektedir: oylama ve seçim sonuçları hakkında güvenilir bilginin yayılması, siber güvenliğe destek olunması, deepfake'lerin filigranlanması, araçlarının seçim müdahalesi için kullanılmasını yasaklayan politikaların uygulanması ve modellerindeki siyasi önyargıların ayıklanması. Şirket, Codex Security ajan tabanlı çerçevesini ve Siber için Güvenilir Erişim çerçevesini seçim yetkililerinin kullanımına sunduğunu ve Ulusal Eyalet Sekreterleri Birliği ile Ulusal Eyalet Seçim Direktörleri Birliği'ne araçları hakkında brifing verdiğini vurgulamıştır. OpenAI, yapay zekanın dijital altyapıyı, özellikle seçimleri destekleyen sistemleri güçlendirmede kritik bir rol oynadığına inanmaktadır. Planın bazı unsurları yeni olmaktan çok, geçen hafta SynthID ile yapılan ortaklık gibi daha önceki duyuruların bir araya getirilmiş hali olarak değerlendirilmektedir; bu ortaklık, ChatGPT ile üretilen görüntülere filigran ekleyerek bir şeyin gerçek mi yoksa deepfake mi olduğunu değerlendirmeye yardımcı olmayı amaçlamaktadır. Yeni bir unsur ise OpenAI'nin seçim verilerini paylaşmak üzere Associated Press ile bir ortaklık kurmasıdır. Bu adımlar, yapay zekanın seçim süreçleri üzerindeki potansiyel olumsuz etkilerine karşı proaktif önlemler alınmasının önemini göstermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/openai-2026-election-security-plans/" target="_blank">cyberscoop.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-16">
+<div class="news-title"><b>JINX-0164, Sahte İş İlanlarıyla Kripto Para Firmalarını Hedeflemiştir</b></div>
+<p class="news-content">Daha önce belgelenmemiş bir tehdit aktörü tarafından düzenlenen yeni bir kampanya, kripto para kuruluşlarını hedef almıştır. Bu kampanya, işe alım temalı sosyal mühendislik ve özel macOS kötü amaçlı yazılımlar kullanarak dijital varlık hırsızlığını kolaylaştırmayı amaçlamıştır. Wiz araştırmacıları, bu kampanyaların gelişmiş sosyal mühendislik teknikleri, özel macOS kötü amaçlı yazılımlar ve CI/CD altyapısının derinlemesine hedef alınması yoluyla yürütüldüğünü belirtmiştir. Google'a ait bulut güvenlik şirketi, bu faaliyeti JINX-0164 koduyla takip etmektedir. Tehdit aktörünün en az 2025 ortalarından beri aktif olduğu ve finansal kazanç motivasyonuyla hareket ettiği değerlendirilmektedir. Saldırganlar, kurbanları sanal bir toplantıya yönlendirmek için güvenilir LinkedIn profilleri kullanmaktadır. Toplantı daveti, hedefi bir telekonferans sağlayıcısı gibi görünen sahte bir alana yönlendirmek üzere tasarlanmıştır. Kurbanlar, programı indirmeye ve yüklemeye ikna edilmektedir. Bu durum, sahte bir sürücü mağazası alanında barındırılan bir bash betiği kullanarak Python tabanlı bir macOS bilgi hırsızı ve uzaktan erişim truva atı olan AUDIOFIX'in alınmasını tetiklemektedir. AUDIOFIX, parolaların, web tarayıcılarının ve iCloud Anahtar Zinciri dosyalarından kimlik bilgilerinin çalınması gibi hassas verileri hedeflemektedir. Tehdit aktörü, ayrıca yazılım geliştiricilerini işe alımcı gibi taklit ederek ve aynı sosyal mühendislik tekniğini kullanarak hedef almıştır. JINX-0164'ün Astrill VPN gibi VPN hizmetlerini kullanması ve kripto para ile geliştiricilere odaklanması, BlueNoroff gibi Kuzey Kore tehdit kümelerinin kullandığı yöntemleri anımsatmaktadır. Ancak, Wiz bu aşamada JINX-0164 ile Pyongyang arasında altyapı çakışması olmadığını belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/jinx-0164-targets-cryptocurrency-firms.html" target="_blank">thehackernews.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-17">
+<div class="news-title"><b>Kötü Niyetli npm Paketi Claude Yapay Zeka Kullanıcı Dizininden Dosyaları Çalmıştır</b></div>
+<p class="news-content">Siber güvenlik araştırmacıları, npm kayıt defterinde bilgi hırsızlığı yeteneklerine sahip yeni bir kötü niyetli paket keşfetmiştir. OX Security'ye göre, "mouse5212-super-formatter" adlı bu paket, Anthropic'in Claude yapay zeka aracının arka planda yüklemeleri ve çıktıları işlemek için kullandığı "/mnt/user-data" adlı özel dizinden dosyaları yüklemek üzere tasarlanmıştır. Bu faaliyet "Malware-Slop" olarak kodlanmıştır. Araştırmacılar, kötü amaçlı yazılımı analiz ettiklerinde, betiğin kendisini dahili bir "arşiv dağıtım senkronizasyon" yardımcı programı olarak sunduğunu, bir GitHub deposunu doğruladığını veya başlattığını, hafif bir "ağ durumu" anlık görüntüsü yakaladığını ve ardından yerel çalışma alanı dosyalarını uzak bir izleme ağacına yapılandırılmış bir senkronizasyon gerçekleştirdiğini belirtmişlerdir. Gerçekte ise, postinstall aşamasında GitHub'a kimlik doğrulama yapmakta, kurbanın ortamında bulunan bir GitHub erişim belirtecini veya yedek olarak sabit kodlanmış bir belirteci kullanmakta, hedef deponun var olup olmadığını kontrol etmekte ve eğer yoksa oluşturmakta, ardından her dosyayı tehdit aktörü tarafından kontrol edilen bir GitHub hesabına özyinelemeli olarak yüklemektedir. Çalınan dosyalar, operatörün farklı hırsızlık oturumlarını ayırt etmesine yardımcı olmak için rastgele adlandırılmış klasörlerde saklanmaktadır. Kötü amaçlı yazılım, ayrıca tanısal bilgi gönderiyormuş izlenimi vermek için sahte bir "ağ bağlantıları" günlüğü yazmaktadır. Paket hala npm'den indirilebilir durumdadır ve 676 kez indirildiği tahmin edilmektedir. Ancak, bunların kaçının gerçek yüklemelere karşılık geldiği belirsizliğini korumaktadır. Kampanyayla bağlantılı GitHub hesabı artık mevcut değildir, ancak OX, hesabın ilk kötü amaçlı sürümün npm'e yüklenmesinden birkaç saat önce, 26 Mayıs 2026'da oluşturulduğunu belirtmiştir. Bu paketle ilgili dikkat çekici nokta, GitHub hesabının detaylarını, özel belirteci de dahil olmak üzere sızdırmasıdır; bu durum, tehdit aktörünün temel operasyonel güvenlik (OPSEC) en iyi uygulamalarını uygulamadan kötü amaçlı yazılım üretmek için yapay zekayı kullandığı olasılığını artırmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/malicious-npm-package-stole-files-from.html" target="_blank">thehackernews.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-18">
+<div class="news-title"><b>Grandoreiro Malware ve BTMOB RAT Kampanyaları Windows ve Android Kullanıcılarını Hedeflemiştir</b></div>
+<p class="news-content">Latin Amerika ve Avrupa, Grandoreiro ve BTMOB kötü amaçlı yazılımlarıyla Windows ve Android cihazlarını enfekte etmek üzere tasarlanmış iki bankacılık truva atı kampanyasının hedefi haline gelmiştir. WatchGuard ve ESET'in yeni bulgularına göre, bu iki kötü amaçlı yazılım ailesi, İspanya, Portekiz ve Meksika'daki şirketleri ve Brezilya'daki mobil kullanıcıları hedef almıştır. Grandoreiro kampanyası, Portekiz'deki bankaları hedef alarak dört farklı yazılımı kötüye kullanan DLL Yan Yükleme tekniğini kullanmaktadır. 2016'dan beri aktif olan Grandoreiro, 45 ülke ve bölgedeki binlerce finans kurumunun kimlik bilgilerini çalabilen, sürekli gelişen bir bankacılık kötü amaçlı yazılımıdır. Genellikle oltalama e-postaları aracılığıyla dağıtılmaktadır. ESET'in raporu ise, Şubat 2025'te ortaya çıkan ve cihazları kilitleyebilen, ekran görüntüsü alabilen, tuş vuruşlarını kaydedebilen, belirli uygulamalar açıldığında HTML enjeksiyonları yoluyla kimlik bilgisi hırsızlığını otomatikleştirebilen ve uzaktan kontrol sağlayabilen bir Android uzaktan erişim truva atı (RAT) olan BTMOB hakkında bilgi vermektedir. BTMOB, bir APK oluşturucu arayüzü ile birlikte satılmaktadır; bu da herkesin yeni yükler oluşturmasına ve belirli bölgeler için oltalama yemlerini hızlı bir şekilde ve herhangi bir kod yazmadan uyarlamasına olanak tanımaktadır. Kötü amaçlı yazılımın yayılmasının ana yöntemi, kullanıcıların akış hizmetleri veya kripto para madenciliği platformları gibi görünen sahte web sitelerine bağlantılar gönderildiği sosyal mühendisliktir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/grandoreiro-malware-and-btmob-rat.html" target="_blank">thehackernews.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-19">
+<div class="news-title"><b>Gitea Güvenlik Açığı Özel Konteyner İmajlarını Kimlik Doğrulaması Olmadan Açığa Çıkarmıştır</b></div>
+<p class="news-content">Siber güvenlik araştırmacıları, Gitea adlı açık kaynaklı, kendi kendine barındırılan sürüm kontrol platformunda bir güvenlik açığı tespit etmiştir. CVE-2026-27771 (CVSS skoru: 8.2) olarak takip edilen bu zafiyet, Gitea'nın 1.26.2 sürümü öncesindeki tüm versiyonlarını etkilemektedir ve kimlik doğrulaması yapılmamış uzaktan saldırganların, bir hesap, parola veya diğer kimlik bilgileri gerektirmeden Gitea dağıtımlarından özel konteyner imajlarını çekmesine olanak tanımaktadır. Noscope'a göre, bu güvenlik kusurunun 30'dan fazla ülkede 30.000'den fazla dağıtımı etkilediği ve neredeyse dört yıl boyunca tespit edilemediği tahmin edilmektedir. Açığın çoğunlukla Çin, ABD, Almanya, Fransa ve İngiltere'de yoğunlaştığı ve sağlık hizmeti sağlayıcıları, havacılık üreticileri, perakende altyapısı ve internet servis sağlayıcıları gibi çeşitli sektörlerdeki kuruluşları etkilediği belirtilmiştir. Noscope, etkilenen sürümlerde, bir konteyner deposundaki özel tanımın operatörlerin makul bir şekilde beklediği korumayı sağlamadığını ifade etmiştir. Gitea'nın konteyner kayıt defterinin, internetteki herhangi bir kişinin, hesabı, parolası veya önceden erişimi olmaksızın, ilk bakışta özel kabul edilecek konteyner imajlarını herkese açıkmış gibi çekmesine izin verdiği açıklanmıştır. İngiltere merkezli güvenlik şirketi, Gitea'nın herhangi bir çatalının, ilgili bakımcılar tarafından bağımsız olarak doğrulanana kadar potansiyel olarak bu güvenlik açığından etkilendiği kabul edilmesi gerektiğini belirtmiştir. Noscope eş kurucusu Keval Jagani, CVE-2026-27771 ile ilgili ek teknik detayların, "daha geniş Gitea ekosistemine yama yapmak için zaman tanımak" amacıyla kasıtlı olarak saklandığını ifade etmiştir. Kullanıcılara, optimal koruma için Gitea'yı 1.6.2 sürümüne güncellemeleri tavsiye edilmektedir. Yama yapmanın hemen mümkün olmaması durumunda, geçici bir çözüm olarak Gitea yapılandırmasında `[service].REQUIRE_SIGNIN_VIEW=true` ayarının yapılması önerilmektedir. Ancak, bu yaklaşımın bazı konteynerlerin kasıtlı olarak herkese açık olması amaçlandığında ideal olmadığı belirtilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/gitea-vulnerability-exposes-private.html" target="_blank">thehackernews.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-20">
+<div class="news-title"><b>Starlette Çerçevesindeki Bir Güvenlik Açığı FastAPI Tabanlı Yapay Zeka Araçlarını Etkilemiştir</b></div>
+<p class="news-content">Araştırmacılar, açık kaynaklı Python çerçevesi Starlette'de, FastAPI'yi de güçlendiren bir güvenlik açığı tespit etmiştir. CVE-2026-48710 olarak takip edilen bu kusur, bir web isteğindeki tek bir hatalı karakterin, kimlik doğrulaması yapılmamış bir saldırganın Starlette üzerine kurulu uygulamaları koruyan erişim kontrollerini atlamasına olanak tanıyabileceğini göstermektedir. Siber güvenlik firması X41 D-Sec'in danışmanlığına göre, saldırganlar, hatalı "Host" başlıklarını kullanarak ana bilgisayar doğrulama korumalarını atlayabilmektedir. Bu saldırı için parola veya kurbanın herhangi bir eylemi gerekmemektedir. Starlette'in bakımcısı, Open Source Technology Improvement Fund (OSTIF) ile koordineli olarak güvenlik açığını açıkladıktan sonra resmi bir GitHub güvenlik danışmanlığı aracılığıyla yama yayımlamıştır. Kusur, Starlette'in gelen bir isteğin adresini yeniden oluşturma şeklinden kaynaklanmaktadır. Çerçeve, istemci tarafından gönderilen Host başlığını, istenen yolla birleştirerek tam bir URL oluşturmakta, ancak tümünü ve parçalarını farklı kurallar kullanarak geçerlilik açısından ayrıştırmaktadır. Host başlığında bir eğik çizgi, soru işareti veya hash karakteri bulunması, yolun başladığı yeri değiştirmekte, bu nedenle Starlette'in raporladığı yol, sunucunun gerçekte aldığı yolla eşleşmemektedir. Bu boşluk, Starlette'in isteği gerçek yola yönlendirmesine rağmen, ara yazılım ve uç noktaların değiştirilmiş yolu okuması nedeniyle riski oluşturmaktadır. Bu durum, hassas rotaları kontrol eden bir uygulamanın, korunan rotayı arkasında çalıştırmaya devam ederken isteği geçirmesine neden olabilmektedir. Güvenlik açığının CVSS skoru bakımcı tarafından 6.5 (Orta) olarak derecelendirilse de, X41 D-Sec tarafından 7.0 (Yüksek) olarak değerlendirilmiş ve Starlette üzerine kurulu yazılımlara yönelik tehlikenin her iki rakamın da üzerinde olduğu belirtilmiştir. Etkilenen yazılımlar arasında model sunma araçları, API ağ geçitleri, OpenAI uyumlu proxy'ler, ajan çerçeveleri ve FastAPI üzerine kurulu Model Bağlam Protokolü sunucuları bulunmaktadır. Ekiplere, Host başlığını doğrulayan ve hatalı değerleri reddeden Starlette 1.0.1 veya sonraki sürümlerine yükseltmeleri tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4177711/fastapi-based-ai-tools-exposed-to-authentication-bypass-by-flaw-in-starlette-framework.html" target="_blank">csoonline.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-21">
+<div class="news-title"><b>GPU Madencilik Kötü Amaçlı Yazılımı SEO Zehirlenmesi ve Yapay Zeka Sohbet Botları Aracılığıyla Yayılmıştır</b></div>
+<p class="news-content">Tehdit aktörleri, eş zamanlı bir SEO zehirlenmesi operasyonu ve yapay zeka sohbet botu tavsiyelerini manipüle ederek yayılan devam eden bir kripto soygunu kampanyasında yüksek performanslı bilgisayarlara sahip sistemleri hedef almaktadır. Saldırı, genellikle güçlü sistem sahipleri tarafından kurulan CrystalDiskInfo, HWMonitor, Display Driver Uninstaller, FurMark, K-Lite Codec Pack ve PDFgear gibi yardımcı yazılımlar için kötü niyetli indirme sayfaları aracılığıyla gerçekleşmektedir. Bir sistem enfekte edildiğinde, saldırgan, gelecekte ek kötü amaçlı yazılım yüklemek için kullanılabilecek meşru uzaktan yönetim aracı ScreenConnect'i dağıtarak makinede kalıcı erişim elde etmektedir. Microsoft araştırmacıları, kampanyayı keşfetmiş ve saldırının, kullanıcıların bahsi geçen yardımcı programlardan birini ararken SEO zehirlenmesi yoluyla arama sıralamalarında yükseltilmiş kötü niyetli bağlantılarla karşılaşmasıyla başladığını belirlemiştir. Ancak, Nisan ayındaki bazı raporlar, kullanıcıların yapay zeka tabanlı asistanlarla etkileşim kurduktan sonra kötü niyetli alanlara yönlendirildiğini göstermiştir. Microsoft, bu durumlarda, kullanıcıların yazılım indirme tavsiyeleri için yapay zeka sohbet botlarını sorguladıklarında, oluşturulan yanıtlarda saldırgan tarafından kontrol edilen alanlara bağlantılar sunulduğunu ifade etmiştir. Kötü amaçlı indirme, gleeze[.]com adresindeki bir alt alanda barındırılan bir ZIP arşividir; bu alan daha önce oltalama web siteleriyle ilişkilendirilmiştir. Arşiv, meşru yardımcı programın yürütülebilir dosyasını ve meşru ikili dosya başlatıldığında otomatik olarak yüklenen kötü amaçlı bir DLL içermektedir. Bu kampanya, hacim yerine "cihaz başına GPU madencilik verimini maksimize etmek için baştan sona tasarlanmış hedefleme ve para kazanma stratejisi" ile öne çıkmaktadır. Microsoft'un araçlarının sağladığı savunmaların yanı sıra, kuruluşların raporda yer alan uzlaşma göstergelerini kullanarak ortamlarını koruyabileceği belirtilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/gpu-mining-malware-spreads-via-seo-poisoning-ai-chatbots/" target="_blank">bleepingcomputer.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-22">
+<div class="news-title"><b>Popüler Konferans Yazılımındaki Bir Güvenlik Açığı Saldırganlara %100 Konuşma Kabul Oranı Sağlamıştır</b></div>
+<p class="news-content">Novee Security araştırmacıları, dünya genelindeki birçok teknik konferansın bildiri çağrısı (CFP) ve zamanlama süreçlerini güçlendiren açık kaynaklı bir platform olan Pretalx'ta yüksek önem dereceli bir güvenlik açığı tespit etmiştir. CVE-2026-41241 olarak takip edilen ve depolanmış bir XSS sorunu olarak tanımlanan bu kusur, herhangi bir kayıtlı konferans konuşmacısının, bir organizatörün saldırganın gönderisini aradığı anda sessizce yürütülecek kötü amaçlı kod yerleştirmesine olanak tanımıştır. Güvenlik açığı, Pretalx'ın 2026.1.0 sürümünde giderilmiştir. Düzinelerce yüksek profilli teknik konferansın aynı temel Pretalx kod tabanını paylaşması nedeniyle, tek bir saldırı tekniği eş zamanlı olarak her dağıtıma uygulanabilmektedir. Kötü niyetli bir aktör, birden fazla konferansa tuzaklı bir konuşma önerisi gönderebilmekte, organizatörlerin gönderilerini aramasını beklemekte ve ardından bu organizatörlerin hesaplarının başka bir etkileşime gerek kalmadan otomatik olarak ele geçirilmesini sağlayabilmektedir. Platformun güvenlik mekanizmaları yetkisiz betiklerin çalışmasını engellemek üzere tasarlanmış olsa da, Novee araştırmacıları, zararsız platform özelliklerini (özellikle konuşmacı materyallerini yükleme yeteneği ve arama sonuçlarının görüntülenme şekli) bir araya getirerek bir organizatörün tarayıcısında tam JavaScript yürütmesine olanak tanıyan bir zincir oluşturarak her iki savunmayı da aşmanın bir yolunu bulmuştur. Bu durum, saldırganın bu güvenlik açığı ve bir yapay zeka ajanı ile, teorik olarak her Pretalx destekli etkinliğe otomatik gönderimler yapabileceği, kötü amaçlı yükü yaygın arama terimleriyle doldurulmuş gönderi başlıklarına yerleştirebileceği ve organizatörlerin sorgularının istismarı tetiklemesini bekleyerek konuşmalarının gerçek bir inceleme olmaksızın kabul edilmesini sağlayabileceği anlamına gelmektedir. Novee araştırmacıları, gerçek dünya kötüye kullanım potansiyelini göstermek için bu senaryoyu bir kavram kanıtı olarak sergilemiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/vulnerability-in-popular-conference-software-granted-attackers-a-100-talk-acceptance-rate/" target="_blank">securityweek.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-23">
+<div class="news-title"><b>Akira Fidye Yazılımı Saldırı Zinciri Günlüklerden Yeniden İnşa Edilmiştir</b></div>
+<p class="news-content">SANS ISC tarafından yayımlanan bir günlük, orta ölçekli bir kuruluşa yönelik son bir Akira fidye yazılımı saldırısının kill chain'ini, yalnızca çevre ve uç nokta günlüklerinden yararlanarak yeniden inşa etmiştir. Bu analiz, saldırının fidye notu veya şifreleme rutininden önceki aşamalarına odaklanmıştır; zira savunucular için önemli sorular, saldırganların nasıl içeri girdiği, ne zaman alan yöneticisi ayrıcalıkları elde ettiği ve ikili dosya tetiklenmeden önce nelere dokunduğu gibi konuları kapsamaktadır. Olayın yeniden yapılandırılması, herhangi bir Uç Nokta Tespit ve Müdahale (EDR) veya bellek yakalama olmaksızın, sadece SSLVPN syslog ve Windows EVTX dışa aktarımları kullanılarak gerçekleştirilmiştir. Ortam, bir çevre NGFW arkasındaki tek bir Active Directory ormanıydı. İlk faydalı sinyal, güvenlik duvarı kimlik doğrulama günlüğünden gelmiştir; burada tek bir yerel SSLVPN hesabını hedef alan belirgin bir kaba kuvvet saldırısı tespit edilmiştir. Başarılı kimlik doğrulama, bilinen bir hedefe karşı kimlik bilgisi doldurma davranışının parmak izini taşımaktaydı. VPN'e erişim sağlandıktan sonra saldırgan, kullanıcı VLAN'ına katman-3 erişimine sahip olmuştur. İç kanıtlara geçiş noktası, güvenlik duvarı NAT günlüğü olmuştur. Bu günlük, VPN tarafından atanan kaynak IP'yi ve ilgili zaman penceresini sağlamıştır. Daha sonra, Windows Güvenlik kanalına karşı bu pencere birleştirilmiştir. İlk ilgi çekici dahili olaylar, VPN tarafından atanan IP'den bir atlama ana bilgisayarına yapılan EID 4624 oturum açmalarıydı. Ardından, EID 4688 işlem oluşturma olaylarında görülebilen ders kitabı keşif faaliyetleri izlemiştir. Yaklaşık 24 saat sonra, üç hizmet hesabına karşı bir EID 4769 olay kümesi ortaya çıkmıştır; bunların hepsi RC4 ile şifrelenmiş ve 90 saniyelik bir pencere içinde atlama ana bilgisayarından gelmiştir. Bu kombinasyon, Kerberoasting'in imza modelidir. Yanal hareket, neredeyse tamamen RDP kullanılarak iki güne yayılmıştır. Bu analiz, çoğu kuruluşun zaten sahip olduğu günlüklerde saldırının tüm aşamalarının görünür olduğunu göstermektedir, ancak bu günlüklerin birleştirilmesi ve yeterince uzun süre saklanması kritik önem taşımaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://isc.sans.edu/diary/rss/33024" target="_blank">isc.sans.edu</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-24">
+<div class="news-title"><b>Çocukları Hedef Alan Seks Şantajcısı 33 Yıl Hapis Cezasına Çarptırılmıştır</b></div>
+<p class="news-content">Kanadalı bir adam, sekiz yıl süren seks şantajı planında Amerika Birleşik Devletleri genelinde 145'ten fazla çocuğu, bazıları 6 yaş kadar küçük olmak üzere hedef aldığı gerekçesiyle 33 yıl hapis cezasına çarptırılmıştır. 40 yaşındaki Ramanan Pathmanathan, 30 Ocak 2026 tarihinde bir küçük çocuğu zorla alıkoyma ve cezbetme ile çocuk pornografisi üretimi suçlarından suçunu kabul etmiştir. Pathmanathan, 33 yıllık hapis cezasının yanı sıra, seks suçlusu olarak kaydolmak ve 10 yıl denetimli serbestlik hizmeti vermek zorunda kalmıştır. Kendisi zaten 2022'de benzer suçlardan Kanada'da 12 yıllık bir hapis cezasını çekmektedir. Seks şantajı, siber suçluların elde ettikleri (zorla) veya çaldıkları (hackleyerek) açık görüntü ve videoları kamuoyuna sızdırmakla tehdit ettiği bir çevrimiçi şantaj biçimidir. Mahkeme belgelerine göre, Pathmanathan, Mart 2014 ile 10 Mart 2021'deki tutuklanması arasında en az 145 genç kurbanla Instagram ve Facebook Messenger hesapları aracılığıyla cinsel eylemlerde bulunmalarını kaydetmek için iletişim kurmuştur. Bu seks şantajı planı boyunca, kurbanlardan video sohbet aracılığıyla cinsel içerikli davranışlarda bulunmalarını talep etmiş ve reddetmeleri veya hesaplarını engellemeleri durumunda kayıtları arkadaşlarına ve ailelerine göndermekle tehdit etmiştir. Adalet Bakanlığı, Pathmanathan'ın küçük yaştaki kurbanlarına cinsel içerikli yetişkin görüntüleri göndererek ne yapmalarını istediğini gösterdiğini belirtmiştir. FBI, Eylül 2021'de seks şantajı şikayetlerinde büyük bir artış olduğu konusunda uyarmış ve seks şantajı tehditleri alan kişilere suçlularla tüm etkileşimi derhal durdurmaları, kolluk kuvvetleriyle iletişime geçmeleri ve mümkün olan en kısa sürede şikayette bulunmaları tavsiyesinde bulunmuştur.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/sextortionist-sentenced-to-33-years-for-targeting-145-children/" target="_blank">bleepingcomputer.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-25">
+<div class="news-title"><b>Oregon Eyalet Ağına Saldıran Rumen Hacker ABD'de Hapis Cezası Almıştır</b></div>
+<p class="news-content">Rumen uyruklu Catalin Dragomir (45), Oregon eyalet ağına erişim sattığını kabul etmesinin ardından ABD'de 4 yıl 8 ay hapis cezasına çarptırılmıştır. Adalet Bakanlığı tarafından yayımlanan basın bültenine göre, Dragomir, 2021 yılında bir Oregon eyalet hükümet ofisinin ağına yetkisiz erişim sağlamış ve bu erişimi satmıştır. Şubat 2026'da, korunan bir bilgisayardan bilgi elde etme ve ağır kimlik hırsızlığı suçlarından suçunu kabul etmiştir. Bu hafta, Oregonian gazetesine göre 4 yıl 8 ay hapis cezasına çarptırılmıştır. Yargıç, Dragomir'in iadesinden önce Romanya'da geçirdiği iki ayı da cezasında dikkate almıştır. ABD Adalet Bakanlığı'na göre, Dragomir 2021 Haziran ayında bir Oregon eyalet hükümet ofisinin ağına sızmıştır. Bu ve diğer ABD'deki ele geçirilmiş ağlara erişimi satmış ve 250.000 doları aşan zararlara neden olmuştur. Oregonian, hacker'ın Oregon ağına erişimi 3.000 dolara Bitcoin karşılığında sattığını bildirmiştir. Dragomir, en az 10 başka kuruluştan elde ettiği bilgileri sattığını kabul etmiş ve savcılar onu "üretken" olarak tanımlamıştır. Ancak Dragomir, planın beyni olmak yerine başka bir hacker için çalıştığını iddia etmiştir. Catalin Dragomir, Kasım 2024'te Romanya'da tutuklanmış ve Ocak 2025'te ABD'ye iade edilmiştir. Bu dava, devlet ağlarına yönelik siber saldırıların ciddi hukuki sonuçlarını ve uluslararası işbirliğinin siber suçluların yakalanmasındaki önemini vurgulamaktadır. Ayrıca, siber suçluların ele geçirdikleri erişimleri finansal kazanç için nasıl kullandıklarını da gözler önüne sermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/romanian-hacker-sentenced-to-prison-in-us-for-selling-access-to-state-network/" target="_blank">securityweek.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-26">
+<div class="news-title"><b>Hollanda Polisi Ajax Futbol Kulübü Veri İhlali Şüphelisini Tutuklamıştır</b></div>
+<p class="news-content">Hollanda Ulusal Polisi, Amsterdam'ın önde gelen futbol kulüplerinden AFC Ajax'ın bilgisayar sistemlerine sızdığından şüphelenilen bir kişiyi tutuklamıştır. Salı sabahı, Buren belediyesinden 35 yaşındaki bir adam, Ajax'taki bilgisayar sistemlerine birden fazla kez kasıtlı ve yasa dışı olarak girdiği şüphesiyle dedektifler tarafından gözaltına alınmıştır. Soruşturma, AFC Ajax'ın bu yılın başlarında bilgisayar sistemlerine yetkisiz erişim tespit etmesinin ardından başlamıştır. Hollanda polisi, sızmayı Buren belediyesinden bir şüpheliye kadar takip etmiş ve soruşturmanın ardından onu tutuklamıştır. Arama sırasında polis, daha fazla inceleme için çeşitli veri taşıyıcılarına el koymuştur. Ajax, 25 Mart 2026'da sızmayı açıklamış ve saldırının kulübün uygulaması ve web sitesindeki güvenlik açıklarından, özellikle de açık API'lerden ve paylaşılan erişim anahtarlarından yararlandığını belirtmiştir. Şüpheli hacker, ilk olarak bir RTL gazetecisine başvurmuş ve güvenlik açıkları hakkında detayları paylaşmıştır. Gazeteci daha sonra biletlerin diğer kullanıcılara transfer edilebileceğini ve stadyum yasaklarının değiştirilebileceğini göstermiştir. RTL'ye göre, bu güvenlik açıkları 300.000'den fazla kayıtlı Ajax taraftarına ait özel verileri açığa çıkarmış ve saldırganların 42.000'den fazla kombine bileti çalmasına veya devre dışı bırakmasına olanak tanıyabilmiştir. RTL ayrıca, kusurların aktif stadyum yasağı olan 538 taraftar hakkında bilgi de ifşa ettiğini bildirmiştir. AFC Ajax, saldırıda istismar edilen güvenlik açıklarını yamalamış ve olayı Hollanda polisine ve ülkenin veri koruma otoritesine bildirmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.helpnetsecurity.com/2026/05/28/dutch-police-arrest-suspect-afc-ajax-hacking/" target="_blank">helpnetsecurity.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-27">
+<div class="news-title"><b>Lastwall, Kuantum Dirençli Kimlik Platformu İçin 11.5 Milyon Dolar Yatırım Toplamıştır</b></div>
+<p class="news-content">Kimlik güvenliği ve kuantum direnci şirketi Lastwall, Kuzey Amerika'daki genişlemesini hızlandırmak amacıyla A Serisi ek yatırım turunda 11.5 milyon dolar (16 milyon Kanada Doları) topladığını duyurmuştur. Kanada merkezli ve ABD'de ofisleri bulunan Lastwall, savunma ve hükümet kuruluşları için güvenli kimlik yönetimi çözümleri sunmaktadır. Şirket, kimlik bilgisi tabanlı saldırılar, oltalama ve kuantum sonrası tehditlerle mücadeleye odaklanmaktadır. Ana ürünü olan IDCommand Suite, sıfır güven mimarisini PKI ile birleştiren ve parolasız kimlik doğrulamayı destekleyen birleşik bir kimlik platformudur. IDCommand Suite, Enterprise, Tactical ve BOLT olmak üzere üç konfigürasyonda sunulmaktadır. Enterprise, standart ve hibrit ortamlar için bulut tabanlı bir kimlik sağlayıcısıdır; Tactical, kısıtlı, bozuk, kesintili ve düşük bant genişliğine sahip (DDIL) ortamlar için sahada konuşlandırılabilir bir şirket içi varyanttır; BOLT ise AAL-3 güvencesi sağlayan biyometrik bir eklentidir. Çözüm, tuş vuruşu ritmi, fare hareketi ve donanım profillemesi dahil olmak üzere 200 bağlamsal sinyali değerlendirerek her giriş girişimine bir risk puanı atamakta ve gerektiğinde ek kimlik doğrulamayı tetiklemektedir. Lastwall'ın ikinci ürünü olan Quantum Shield, NIST onaylı kuantum sonrası kriptografi (PQC) algoritmalarını uygulayarak aktarım halindeki verileri güvence altına alan ve geleneksel şifrelemeyle geriye dönük uyumluluğu sürdüren kuantum güvenli bir TLS sonlandırıcısı ve yük dengeleyicisidir. Şirket CEO'su Karl Holmqvist, modelini dünyanın en zorlu federal pazarında kanıtladıklarını ve ABD hükümet sistemlerini güvence altına aldıklarını belirtmiştir. Bu yatırım, Kanada'nın ulusal güvenlik için kritik bir dönemde siber direncini güçlendirmeye yardımcı olmayı amaçlamaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/lastwall-raises-11-5-million-for-quantum-resilient-identity-platform/" target="_blank">securityweek.com</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-28">
+<div class="news-title"><b>Microsoft'un Yeni Bulut Bilgisayarları Yapay Zeka Ajanlarını Kurumsal Kontroller Altına Almıştır</b></div>
+<p class="news-content">Microsoft, Windows 365 for Agents adlı yeni bulut bilgisayar platformunu duyurmuştur. Bu platform, ajan tabanlı iş yüklerini güvenli ortamlarda çalıştırmak üzere tasarlanmıştır. Kuruluşlar, yapay zeka ajanlarını doğal dil kullanarak uygulamalarla, tarayıcılarla, dosyalarla ve kurumsal sistemlerle etkileşime girmesi için yönlendirebilmektedir. Platform şu anda genel önizlemede bulunmaktadır. Bu yenilik, çalışanların üretkenliği artırmak için kullandığı yapay zeka araçlarının, IT departmanları tarafından genellikle gözden geçirilmemesi ve kurumsal verilere yetkisiz erişim sağlayabilmesi gibi "gölge yapay zeka" sorununa bir çözüm sunmaktadır. Microsoft'a göre, kullanıcılar API'leri olmayan eski ve UI tabanlı ortamlar da dahil olmak üzere uygulamalara ve sistemlere dayanan iş akışlarını otomatikleştirebilmekte, kurumsal güvenlikten veya kontrolden ödün vermemektedirler. Windows 365 for Agents, kuruluşların ajanları bağımsız, sürekli veya talep üzerine mevcut kimlik, ilke ve yönetim kontrolleri (örneğin Microsoft Entra ID ve Intune) kullanarak tanımlamasına ve yönetmesine olanak tanımaktadır. Ajanlar, çok adımlı iş akışları için tanımlanmış sınırlar içinde çalışmaktadır. Microsoft Baş Danışmanı Julie Hersum, ajanları bu kontrollü ortamda çalıştırmanın riski izole etmeye ve güvenlik sınırlarını uygulamaya yardımcı olduğunu, böylece ajanların politikalar tarafından yönetilirken otonom olarak çalışabileceğini ve üretim sistemlerini olumsuz etkilemeyeceğini açıklamıştır. Cloud Security Alliance'ın yakın tarihli bir raporu, yapay zeka ajanlarının insan kullanıcılarla aynı titizliği ve izlenebilirliği gerektirdiğini, çünkü ajanların veri erişimi ve işi etkileyen kararlar alarak insanlar adına hareket ettiğini belirtmiştir. Sınırlar olmadan, ajanlar istenmeyen sistemlere erişebilmekte, amaçlanan kapsamlarının ötesinde çalışabilmekte ve küçük hataları iş akışları boyunca büyütebilmektedir. Kuruluşların, ajanları varsayılan olarak insan denetimi altında tutan otonom faaliyetler için özel bir yürütme ortamına ihtiyacı olduğu vurgulanmıştır. Bu platform, yapay zeka ajanlarının kurumsal ortamlara entegrasyonunda güvenlik ve kontrolün sağlanması için önemli bir adım olarak görülmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.helpnetsecurity.com/2026/05/28/microsoft-windows-365-for-agents-ai-automation/" target="_blank">helpnetsecurity.com</a>, 28.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-29">
+<div class="news-title"><b>Rudd, Siber Komutanlık İncelemelerini Emretmiştir</b></div>
+<p class="news-content">ABD Siber Komutanlığı'nın yeni başkanı Orgeneral Joshua Rudd, askeri dijital savaş kolunun nasıl daha iyi modernize edilebileceğini incelemek üzere, büyük bir dış araştırma kuruluşu tarafından yapılacak bir çalışma da dahil olmak üzere iki inceleme başlatmıştır. Mart ayında Siber Komutanlığı ve NSA'nın ikiz liderlik görevlerini üstlenen Orgeneral Rudd, kuruluşun satın alma modelini inceleyecek ve Kongre tarafından verilen "hizmet benzeri yetkiler" olarak adlandırılan, bağımsız bir askeri dal olmaksızın personelini yönetme ve donatma yetkilerini inceleyebilecek geniş kapsamlı bir gözden geçirme yapması için MITRE'ı görevlendirmiştir. MITRE'dan elde edilecek sonuçların, yeni atanan üst düzey askeri liderler için yaygın bir uygulama olan Rudd'ın kendi 90 günlük komutanlık incelemesine dahil edilmesi beklenmektedir. Bu incelemenin önümüzdeki ay tamamlanması öngörülmektedir. Askeri kariyerinin çoğunu özel kuvvetlerde geçiren Rudd, ayrıca Siber Komutanlığı içinde özel harekat deneyimi olan üst düzey liderlerden oluşan bir "konfederasyon" kurarak, uygulanabilecek "hızlı kazanımlar" bulmak amacıyla dahili bir çalışma yürütmelerini istemiştir. Mevcut ve eski savunma yetkilileri, bu analizlerin Rudd'ın komutanlıkta kapsamlı değişiklikler yapmak ve Başkan Donald Trump'ın ABD'nin siber uzayda daha çatışmacı olması gerektiği inancına daha uygun hale getirmek için sınırlı bir zamanı olduğunu anladığının bir işareti olduğunu belirtmişlerdir. Ayrıca, Pentagon'un "CYBERCOM 2.0" olarak adlandırılan yeni bir kuvvet oluşturma stratejisi aracılığıyla elit siber savaşçıları sahaya sürme ve elde tutma konusundaki kronik zorlukların üstesinden gelmeyi umduğu bir dönemde gerçekleşmektedir. Bu stratejinin temel direklerinden biri, diğer hızlı satın alma ofislerine benzeyecek bir Siber İnovasyon Savaş Merkezi oluşturulmasıdır. Bu gelişmeler, ABD'nin siber güvenlik ve ulusal savunma stratejilerinde önemli bir dönüşümü ve yapay zeka çağının getirdiği yeni zorluklara adaptasyonu yansıtmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/rudd-orders-cyber-command-reviews-as-pentagon-presses-reform-agenda" target="_blank">therecord.media</a>, 27.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-30">
+<div class="news-title"><b>Tehdit Faaliyetlerini Destekleyen Aktörler Siber Tehdit Ortamının Omurgasını Oluşturmaktadır</b></div>
+<p class="news-content">Recorded Future tarafından yayımlanan "Threat Activity Enablers: The Backbone of Today’s Threat Landscape" başlıklı rapor, her fidye yazılımı talebinin, botnetin veya tehdit faaliyet grubunun arkasında bir veri merkezinde bulunan bir sunucu olduğunu belirtmektedir. Çoğu meşru barındırma sağlayıcısı, tehdit aktörlerini tespit ettikten sonra dışarı atarken, belirli bir sağlayıcı sınıfı tam tersini yapmaktadır. Recorded Future, bu sağlayıcılara tehdit faaliyetlerini destekleyen aktörler (TAE'ler) adını vermektedir. TAE, tehdit aktörleri tarafından kullanılan altyapı veya hizmetleri sağlayarak kötü niyetli siber faaliyetleri destekleyen bir kişi, kuruluş veya hizmet sağlayıcısıdır. Bu sağlayıcılar genellikle resmi bir fiziksel veya sanal mağazaya sahip değildir, işlerini yalnızca e-posta veya mesajlaşma platformları aracılığıyla yürütür ve "müşterini tanı" (KYC) politikalarını uygulamazlar. Ayrıca, kötüye kullanım raporlarına veya kolluk kuvvetleri soruşturmalarına seçici olarak yanıt veren veya açıkça denetimi göz ardı eden "kurşun geçirmez" sağlayıcıları da içermektedirler. TAE ağları, fidye yazılımı grupları, bilgi hırsızlığı kampanyaları, botnetler ve hatta devlet destekli tehdit aktörü operasyonları için omurga görevi görmektedir. TAE ağlarını ayıran şey, ağlarındaki kötü niyetli altyapının sürekli yoğunlaşmasıdır. TAE'ler, hesap verebilirlikten kaçınmak için katmanlı paravan şirketlerin arkasına gizlenerek gizleme ustalarıdır ve oldukça dirençlidirler. Recorded Future, bu ağları, bir ağın duyurduğu toplam IP adresi önek sayısına göre doğrulanmış kötü niyetli faaliyet yoğunluğundan hesaplanan Tehdit Yoğunluğu Skoru ile sıralayarak yüksek riskli TAE ağlarını aktif olarak belirlemektedir. Bu yaklaşım, ağ savunucularının, tehdit faaliyetleriyle orantısız bir şekilde ilişkilendirilen altyapıyı hızlıca ortaya çıkarmasına olanak tanımaktadır. TAE zekasının operasyonelleştirilmesi, güvenlik ekiplerinin bireysel tehditlere tepki vermekten, altyapı riskini proaktif olarak yönetmeye geçiş yapmasını sağlamaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.recordedfuture.com/blog/threat-activity-enablers" target="_blank">recordedfuture.com</a>, 06.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-31">
+<div class="news-title"><b>Yapay Zeka Yönetişimi Zorunluluğu Kurumlar İçin Göz Ardı Edilemez Bir Durumdur</b></div>
+<p class="news-content">CSO Online'da yer alan bir makale, yapay zeka ajanlarını gözlemlenebilirlik süreçleri ve araçları olmadan dağıtan kuruluşların, felaketlere davetiye çıkardığını belirtmektedir. Yapay zeka uzmanlarına göre, ajanları gözlemlenebilirlik süreçleri ve araçları olmadan dağıtmak, büyük olumsuz sonuçlar doğurabilecek bir saatli bomba yaratmaktadır. Guardrail Technologies CEO'su T.J. Marlin, birçok şirketin yapay zeka ajanlarını dağıtıp az insan müdahalesiyle üretkenliği artırmayı beklediğini, ancak bunun yanlış bir yaklaşım olduğunu ifade etmektedir. Bunun yerine, IT ekiplerinin ajanları yakından takip etmeleri ve ajan tabanlı süreç boyunca politikaları ve uygulamaları ayarlamaları gerekmektedir. TrueFoundry'nin yakın tarihli bir raporu, düzenlenmemiş ajanlarla ilgili korkuları sayılarla desteklemektedir; 200'den fazla kurumsal yapay zeka lideriyle yapılan bir anket, kuruluşların %54'ünün ajanlarının ne yaptığını tam olarak izleyemediğini ve %56'sının merkezi bir ajan kontrol veya yönetişim katmanına sahip olmadığını ortaya koymuştur. Google'dan Mahesh Kumar Goyal, yönetişim ve gözlemlenebilirlik zorluklarının üretken ajanların dağıtımını engelleyen başlıca faktörler olduğunu ve birçok kuruluşun ajanları merkezi bir liste oluşturmadan dağıttığını belirtmektedir. Geleneksel SIEM ve EDR güvenlik araçlarının insan anormalliklerini tespit etmek için tasarlandığını, ancak ele geçirilmiş bir ajanın art arda 10.000 kez kodu mükemmel bir şekilde çalıştırmasının normal görünebileceğini vurgulamıştır. Tamamen otonom ajanların iyi bir fikir olmadığını ve kuruluşların en az ayrıcalıklı kapsamlı araç izinleri, her istemi ve araç çağrısını denetleyen politika uygulama katmanları ve uçtan uca izleme gibi konuları düşünmesi gerektiğini eklemiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4176485/the-ai-governance-imperative-you-cant-afford-to-ignore-2.html" target="_blank">csoonline.com</a>, 28.05.2026)</b></p>
+</div>
+</div>
+</div>
+<a class="back-to-top" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;" title="Başa Dön">↑</a>
+</div>
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-05-27.html" class="archive-link">27.05.2026</a>
+            <a href="./2026-05-26.html" class="archive-link">26.05.2026</a>
+            <a href="./2026-05-25.html" class="archive-link">25.05.2026</a>
+            <a href="./2026-05-24.html" class="archive-link">24.05.2026</a>
+            <a href="./2026-05-23.html" class="archive-link">23.05.2026</a>
+            <a href="./2026-05-22.html" class="archive-link">22.05.2026</a>
+            <a href="./2026-05-21.html" class="archive-link">21.05.2026</a>
+            <a href="./2026-05-20.html" class="archive-link">20.05.2026</a>
+            <a href="./2026-05-19.html" class="archive-link">19.05.2026</a>
+            <a href="./2026-05-18.html" class="archive-link">18.05.2026</a>
+            <a href="./2026-05-17.html" class="archive-link">17.05.2026</a>
+            <a href="./2026-05-16.html" class="archive-link">16.05.2026</a>
+            <a href="./2026-05-15.html" class="archive-link">15.05.2026</a>
+            <a href="./2026-05-14.html" class="archive-link">14.05.2026</a>
+            <a href="./2026-05-13.html" class="archive-link">13.05.2026</a>
+            <a href="./2026-05-12.html" class="archive-link">12.05.2026</a>
+            <a href="./2026-05-11.html" class="archive-link">11.05.2026</a>
+            <a href="./2026-05-10.html" class="archive-link">10.05.2026</a>
+            <a href="./2026-05-09.html" class="archive-link">09.05.2026</a>
+            <a href="./2026-05-08.html" class="archive-link">08.05.2026</a>
+            <a href="./2026-05-07.html" class="archive-link">07.05.2026</a>
+            <a href="./2026-05-06.html" class="archive-link">06.05.2026</a>
+            <a href="./2026-05-05.html" class="archive-link">05.05.2026</a>
+            <a href="./2026-05-04.html" class="archive-link">04.05.2026</a>
+            <a href="./2026-05-03.html" class="archive-link">03.05.2026</a>
+            <a href="./2026-05-02.html" class="archive-link">02.05.2026</a>
+            <a href="./2026-05-01.html" class="archive-link">01.05.2026</a>
+            <a href="./2026-04-30.html" class="archive-link">30.04.2026</a>
+            <a href="./2026-04-29.html" class="archive-link">29.04.2026</a>
+        </div>
+    </div>
+
+</body>
+</html>
