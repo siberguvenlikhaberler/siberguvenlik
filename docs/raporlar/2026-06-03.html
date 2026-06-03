@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 03.06.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        
+        /* ŞIK BAŞLIK */
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 {
+            color: #1565c0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .important-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .important-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .important-item a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+        
+        /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* HABERLER BÖLÜMÜ */
+        .news-section {
+            padding: 30px;
+        }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .nato-star {
+            display: inline-block;
+            font-size: 13px;
+            color: #ffffff;
+            background: #003087;
+            border-radius: 3px;
+            padding: 1px 6px;
+            margin-right: 7px;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+        .news-content {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .source {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+        .source a {
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+        
+        /* BAŞA DÖN BUTONU */
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
+        .social-signals {
+            background: #f8faff;
+            border: 1px solid #c7d7fd;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .social-signals .signal-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .social-signals .signal-platform-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px;
+            color: #475569;
+            background: #f1f5f9;
+            border-radius: 3px;
+            padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.45;
+            display: block;
+        }
+        .social-signals .signal-item a:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            .social-signals {
+                padding: 16px;
+            }
+            .social-signals .signal-list {
+                grid-template-columns: 1fr;
+            }
+            .social-signals .signal-meta {
+                gap: 6px;
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="report-header">
+<h1><span class="header-date">03.06.2026</span> Siber Güvenlik Haber Özetleri</h1>
+</div>
+<!-- YÖNETİCİ ÖZETİ -->
+<div class="executive-summary">
+<h2>Yönetici Özeti</h2>
+<!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
+<div class="important-news">
+<h2>Önemli Gelişmeler</h2>
+<div class="important-summary">
+<div class="important-item">
+<a href="#haber-1">1. Anthropic, Claude Mythos Erişimiyle NATO ve Kritik Altyapıları Güçlendirmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-2">2. İran İstihbaratı Handala Markasıyla ABD ve İsrail'e Yönelik Fiziksel Tehditlerini Artırmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-3">3. Çin Devlet Destekli Aktörler Çek ve Tayvan Kuruluşlarına Siber Saldırı Düzenlemiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-4">4. Gamaredon, WinRAR Zafiyetini İstismar Ederek Ukrayna'ya Zararlı Yazılım Dağıtmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-5">5. Oracle WebLogic CVE-2024-21182 Açığı Aktif Olarak İstismar Edilmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-6">6. Google Haziran 2026 Android Güncellemesinde Aktif İstismar Edilen Bir Sıfır Gün Açığını Kapatmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-7">7. Acer Wave 7 Yönlendiricilerinde Maksimum Ciddiyetli Sıfır Gün Açıkları Tespit Edilmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-8">8. VS Code Sıfır Gün Açığı Hackerların GitHub Tokenlarını Çalmasını Sağlamıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-9">9. Red Hat npm Paketleri Tedarik Zinciri Saldırısıyla Geliştirici Kimlik Bilgilerini Açığa Çıkarmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-10">10. Kritik Kirki Zafiyeti WordPress Yönetici Hesaplarını Ele Geçirmek İçin İstismar Edilmiştir.</a>
+</div>
+</div>
+</div>
+<!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
+<table class="executive-table">
+<tr>
+<td><a href="#haber-11">11. Canvas Siber Saldırısı 275 Milyon Kullanıcının Verilerini İhlal Etmiştir.</a></td>
+<td><a href="#haber-12">12. Küresel Borsa Üst Düzey Yöneticisinin E-posta Hesabı Aylarca Casusluk Faaliyetine Uğramıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-13">13. Palo Alto GlobalProtect Zafiyeti Açıklanmasından Kısa Süre Sonra İstismar Edilmiştir.</a></td>
+<td><a href="#haber-14">14. FBI Uyarısı ile Kali365 Kimlik Avı Kiti Kapsamını Genişletmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-15">15. Microsoft Android Uygulamalarındaki Tek Satır Kod Milyarlarca İndirmeyi Riske Atmıştır.</a></td>
+<td><a href="#haber-16">16. Windows Arama URI Zafiyeti NTLMv2 Hashlerinin Çalınmasına Neden Olmuştur.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-17">17. Yeni HTTP/2 Bombası Zafiyeti Web Sunucularında Uzaktan Hizmet Reddine Yol Açmıştır.</a></td>
+<td><a href="#haber-18">18. Yapay Zeka Destekli Fidye Yazılımı Kiti EDR Aşmayı Otomatikleştirmektedir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-19">19. Weedhack Zararlı Yazılımı 116.000 Minecraft Sistemini Enfekte Etmiştir.</a></td>
+<td><a href="#haber-20">20. HP Poly VoIP Telefonlarındaki Kritik Zafiyet Kurumsal Ağlara Geçit Oluşturmuştur.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-21">21. Dashlane Müşterilerinin Şifre Kasaları Siber Saldırıyla Çalınmıştır.</a></td>
+<td><a href="#haber-22">22. Microsoft Sıfır Gün Açığı Açıklama Politikası Nedeniyle Hukuki Tehdit Endişelerini Yatıştırmaya Çalışmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-23">23. Rusya Yabancı Casus Ajanslarının Yetkililerin Telefonlarını Hacklediğini İddia Etmiştir.</a></td>
+<td><a href="#haber-24">24. İspanya, Polis ve Siber Yetkililerin Kişisel Verilerini Yayımlayan Hackerı Tutuklamıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-25">25. Fidye Yazılımı Grubu Yanlışlıkla BDT Ülkesindeki Bir Şirketi Hedef Almıştır.</a></td>
+<td><a href="#haber-26">26. Trump Yönetimi Yapay Zeka Siber Güvenliği Üzerine Yeni Bir Yürütme Emri Yayımlamıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-27">27. ABD'de Yeni Bir Siber Güç Oluşturulması İçin 11 Milyar Dolarlık Bütçe Öngörülmüştür.</a></td>
+<td><a href="#haber-28">28. Google, Yapay Zeka Destekli Deepfake Dolandırıcılık Aramalarına Karşı Android Koruması Eklemiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-29">29. CISA, Linux Çekirdeğindeki CVE-2022-0492 Zafiyetini KEV Kataloğuna Eklemiştir.</a></td>
+<td></td>
+</tr>
+</table><div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item"> <div class="signal-meta"> <span class="signal-platform-label">GitHub Advisory</span> <span class="signal-engagement">ÖNEM: KRİTİK  |  CVSS: 9.8</span> </div> <a href="https://github.com/advisories/GHSA-5xrq-8626-4rwp" rel="noopener noreferrer" target="_blank">Vitest UI server dinlemedey</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲25</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tuz2xh/microsoft_insists_defender_is_enough_for_most_pcs/" rel="noopener noreferrer" target="_blank">Microsoft insists Defender is enough for most PCs, but admits third‑party antivirus tools still offer extras it can’t match</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲24</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tvif35/anthropic_expands_project_glasswing_bringing_ai/" rel="noopener noreferrer" target="_blank">Anthropic Expands Project Glasswing, Bringing AI Cyber Defense Tools to 150 More Organizations</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲23</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tvl5fq/shinyhunters_leaks_charter_communications_data/" rel="noopener noreferrer" target="_blank">ShinyHunters leaks Charter Communications data: 4.9M customer records exposed via a social-engineering attack on an employee's Microsoft account</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲22</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tv41p3/is_anyone_else_still_coding_manually_to_learn_the/" rel="noopener noreferrer" target="_blank">Is anyone else still coding manually to learn? The market will continue to hire people that know what's going on even if you can now use AI to code many things</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲21</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tvc304/can_ai_do_intelligence_analysis_apparently_not/" rel="noopener noreferrer" target="_blank">Can AI Do Intelligence Analysis? Apparently Not.</a></div>
+</div></div>
+</div>
+<!-- HABERLER -->
+<div class="news-section">
+<div class="news-item" id="haber-1">
+<div class="news-title"><span class="nato-star">★ NATO</span><b>Anthropic, Claude Mythos Erişimiyle NATO ve Kritik Altyapıları Güçlendirmiştir.</b></div>
+<p class="news-content">Yapay zeka firması Anthropic, Project Glasswing programını genişleterek yaklaşık 150 yeni kuruluşa Claude Mythos Preview modeline erişim sağlamıştır. Bu kuruluşlar arasında NATO, Okta, Samsung, EU siber güvenlik ajansı ENISA gibi önemli yapılar yer almaktadır. Programın amacı, güç, su, sağlık, iletişim ve donanım gibi kritik altyapı sektörlerindeki yazılım güvenlik açıklarını yapay zeka destekli yöntemlerle tespit etme süreçlerini hızlandırmaktır. Anthropic, bu modelin ilk aşamada 50 ortakla birlikte binlerce güvenlik açığı tespit ettiğini belirtmiştir. NATO'nun bu tür ileri düzey bir siber güvenlik aracına erişim sağlaması, ittifakın siber savunma kapasitesini güçlendirme ve üye ülkelerin kritik altyapılarını koruma çabalarının bir parçası olarak değerlendirilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://techcrunch.com/2026/06/02/anthropic-scales-claude-mythos-to-critical-infrastructure-in-15-countries/" target="_blank">techcrunch.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-2">
+<div class="news-title"><b>İran İstihbaratı Handala Markasıyla ABD ve İsrail'e Yönelik Fiziksel Tehditlerini Artırmıştır.</b></div>
+<p class="news-content">İran İstihbarat Bakanlığı (MOIS), "Handala" markasını ABD ve İsrail hedeflerine yönelik fiziksel ve etki operasyonlarını kapsayacak şekilde genişletmiştir. Bu genişleme, siber faaliyetlerin yanı sıra fiziksel saldırılar, casusluk ve sabotaj eylemleri için de eleman toplamayı hedeflemektedir. Recorded Future'ın analizine göre, "Handala Hack Team" ve "Handala Popular Resistance Front" (HPRF) gibi markalar altında faaliyet gösteren gruplar, ABD ve İsrail güvenlik servisleri, askeri ve istihbarat personeli ile enerji, ulaşım ve araştırma kuruluşlarını hedef almaktadır. Özellikle HPRF, İsrail'deki hükümet yetkililerine yönelik kundaklama gibi fiziksel saldırılarla sorumluluk üstlenmiştir. Bu durum, İran-İsrail çatışmasının siber alandan fiziksel alana doğru genişlediğini göstermekte ve jeopolitik gerilimleri artırmaktadır. MOIS'in bu markaları, küresel tanınırlıklarını kullanarak eleman toplama çabalarını hızlandırmak ve operasyonlarının psikolojik etkisini artırmak amacıyla kullandığı belirtilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.recordedfuture.com/research/iran-handala-physical-threats" target="_blank">recordedfuture.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-3">
+<div class="news-title"><b>Çin Devlet Destekli Aktörler Çek ve Tayvan Kuruluşlarına Siber Saldırı Düzenlemiştir.</b></div>
+<p class="news-content">Çin destekli siber tehdit aktörleri, "Operation Dragon Weave" adı verilen iki aşamalı bir oltalama kampanyasıyla Çek Cumhuriyeti ve Tayvan'daki hükümet, araştırma, teknoloji ve finans kuruluşlarını hedef almıştır. Seqrite güvenlik firmasının araştırmasına göre, saldırı, hedeflere sahte iş toplantıları veya Çek Sosyal Güvenlik İdaresi (ČSSZ) randevuları gibi görünen e-postalar göndererek başlamıştır. Bu e-postaların ekinde, kurbanları kötü amaçlı bir LNK kısayol dosyasına tıklamaya veya zararlı bir yürütülebilir dosyayı açmaya ikna eden zip dosyaları bulunmaktadır. Enfeksiyon zinciri, "Rustcloak" adlı bir yükleyici aracılığıyla "Azureveil" adlı özel bir Adaptix komuta ve kontrol (C2) ajanını dağıtmaktadır. Azureveil, Microsoft Azure Blob Storage'ı kullanarak geleneksel C2 modelinden farklı bir "dead-drop" yaklaşımıyla veri sızdırmaktadır. Rustcloak ise sistemin bilgisayar adını bilinen sanal alan ve analist makine adları listesiyle karşılaştırarak anti-tespit ve anti-analiz işlevselliği içermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/threat-intelligence/china-uses-dual-method-attack-czech-taiwan-orgs" target="_blank">darkreading.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-4">
+<div class="news-title"><b>Gamaredon, WinRAR Zafiyetini İstismar Ederek Ukrayna'ya Zararlı Yazılım Dağıtmıştır.</b></div>
+<p class="news-content">Rusya ile bağlantılı Gamaredon (diğer adıyla APT28) hack grubu, WinRAR yazılımındaki CVE-2025-8088 kodlu yol geçişi zafiyetini kullanarak Ukrayna'daki hedeflere yönelik sürekli bir siber casusluk kampanyası yürütmüştür. Sekoia'nın raporuna göre, saldırı, Gamaredon'un WinRAR zafiyetini kullanarak "GammaPhish" adlı HTML Uygulama yükünü başlatmasıyla başlamaktadır. Bu yük, daha sonra "GammaLoad" olarak adlandırılan Visual Basic Script (VBScript) indiricilerini almaktadır. Enfeksiyon zinciri, sistem bilgilerini toplamak, Microsoft Defender dışlamalarını yapılandırmak ve ek JAR yükleri bırakmak için tasarlanmıştır. Bu yükler arasında, zamanlanmış görevler aracılığıyla kalıcılık sağlayan ve ağ paylaşımlarındaki meşru dizinleri kötü amaçlı Windows Kısayol (LNK) dosyalarıyla değiştiren "GammaWorm" adlı bir VBScript solucanı bulunmaktadır. Ayrıca, belirlenen uzantılara uyan dosyaları yakalayan ve bunları Amazon Web Services (AWS) S3 depolama alanına sızdıran "GammaSteel" adlı modüler bir bilgi hırsızı da dağıtılmıştır. Gamaredon'un Ukrayna hükümet, askeri ve kritik altyapı kurumlarını hedef alma geçmişi bulunmaktadır ve</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/gamaredon-exploits-winrar-to-deliver.html" target="_blank">thehackernews.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-5">
+<div class="news-title"><b>Oracle WebLogic CVE-2024-21182 Açığı Aktif Olarak İstismar Edilmiştir.</b></div>
+<p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenlik Ajansı (CISA), Oracle WebLogic Server'daki yüksek ciddiyetli CVE-2024-21182 güvenlik açığını Bilinen İstismar Edilen Zafiyetler (KEV) kataloğuna eklemiştir. Bu zafiyet, iki yıl önce Oracle tarafından Temmuz 2024'te yamalanmış olmasına rağmen aktif olarak istismar edilmektedir. CVSS puanı 7.5 olan bu güvenlik açığı, T3 ve IIOP protokolleri üzerinden ağ erişimi olan kimlik doğrulaması olmayan bir saldırganın savunmasız sunucular üzerinde kontrol ele geçirmesine olanak tanımaktadır. CISA, başarılı saldırıların kritik verilere yetkisiz erişim veya Oracle WebLogic Server tarafından erişilebilen tüm verilere tam erişimle sonuçlanabileceğini belirtmiştir. Federal Sivil Yürütme Organı (FCEB) ajanslarının, ağlarını güvence altına almak için bu açığı 4 Haziran 2026 tarihine kadar yamalamaları zorunlu hale getirilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/oracle-weblogic-cve-2024-21182-added-to-kev-catalog-after-active-exploitation.html" target="_blank">thehackernews.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-6">
+<div class="news-title"><b>Google Haziran 2026 Android Güncellemesinde Aktif İstismar Edilen Bir Sıfır Gün Açığını Kapatmıştır.</b></div>
+<p class="news-content">Google, Haziran 2026 Android güvenlik güncellemesinde, aktif olarak istismar edilen CVE-2025-48595 kodlu yüksek ciddiyetli bir ayrıcalık yükseltme açığı da dahil olmak üzere toplam 124 güvenlik zafiyetini gidermiştir. Bu sıfır gün açığı, Android Framework bileşeninde bir tamsayı taşması nedeniyle ortaya çıkmakta ve kullanıcı etkileşimi gerektirmeden yerel ayrıcalık yükseltmesine yol açabilmektedir. Google, CVE-2025-48595'in "sınırlı, hedefe yönelik istismar" altında olabileceğine dair göstergeler bulunduğunu doğrulamıştır. Genellikle bu tür zafiyetler, yüksek profilli kişileri hedef alan ticari casus yazılım satıcıları tarafından kullanılmaktadır. ABD Siber Güvenlik ve Altyapı Güvenlik Ajansı (CISA), 2 Haziran 2026 tarihinde CVE-2025-48595'i bilinen istismar edilen zafiyetler (KEV) kataloğuna eklemiş ve federal kurumların bu açığı 5 Haziran 2026'ya kadar gidermesini zorunlu kılmıştır. Güncelleme, Android'in 14, 15, 16 ve 16 QPR2 sürümlerini etkilemektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/google-june-2026-android-update-patches-124-flaws-one-actively-exploited.html" target="_blank">thehackernews.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-7">
+<div class="news-title"><b>Acer Wave 7 Yönlendiricilerinde Maksimum Ciddiyetli Sıfır Gün Açıkları Tespit Edilmiştir.</b></div>
+<p class="news-content">Acer, Wave 7 mesh yönlendiricilerini etkileyen iki maksimum ciddiyetli sıfır gün zafiyetini (CVE-2026-49200 ve CVE-2026-49201) gidermek için çalıştığını doğrulamıştır. Güvenlik araştırmacısı Gergo Pap tarafından bildirilen bu zafiyetler, T7c_GBL_1.01.000055 veya daha eski ürün yazılımı sürümlerini çalıştıran Wave 7 yönlendiricilerini etkilemektedir. İlk zafiyet olan CVE-2026-49200, bozuk bir erişim kontrolü zafiyetidir ve kimlik doğrulaması olmayan saldırganların günlük arşivlerinde depolanan düz metin kimlik bilgilerine uzaktan erişmesine olanak tanımaktadır. İkinci zafiyet olan CVE-2026-49201 ise sabit kodlanmış bir şifreleme anahtarından kaynaklanmakta olup, ayrıcalığı olmayan uzaktan saldırganların yönlendiriciye kalıcı arka kapı erişimi sağlamasına izin vermektedir. Acer, bu zafiyetler için henüz bir güvenlik yaması sunmamış olsa da, düzeltmelerin Haziran 2026 sonuna kadar yayımlanmasını planlamaktadır. Yama gelene kadar, Acer müşterilerine uzaktan yönetimi devre dışı bırakmaları veya güvenilir IP adresleriyle sınırlandırmaları önerilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/acer-warns-of-max-severity-zero-days-affecting-wave-7-routers/" target="_blank">bleepingcomputer.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-8">
+<div class="news-title"><b>VS Code Sıfır Gün Açığı Hackerların GitHub Tokenlarını Çalmasını Sağlamıştır.</b></div>
+<p class="news-content">Bir güvenlik araştırmacısı olan Ammar Askar, Visual Studio Code'daki (VS Code) bir sıfır gün zafiyeti için istismar kodunu yayımlamıştır. Bu kritik zafiyet, saldırganların kullanıcıları özel olarak hazırlanmış bir bağlantıya tıklamaya ikna ederek GitHub kimlik doğrulama tokenlarını çalmasına olanak tanımaktadır. Zafiyet, VS Code'un sandboxed webview mesajlaşma sistemini istismar ederek kötü amaçlı uzantıların yüklenmesine ve github.dev'e (GitHub depoları üzerinde çalışmak için kullanılan tarayıcı tabanlı VS Code sürümü) iletilen GitHub OAuth tokenlarının çalınmasına yol açmaktadır. Araştırmacı, bu hatayı GitHub'a bildirmesine rağmen, Microsoft'un güvenlik yanıt süreciyle ilgili olumsuz deneyimleri nedeniyle kamuya açıklama yoluna gitmiştir. Çalınan tokenlar, saldırganlara kurbanın erişebildiği tüm özel depolara tam erişim sağlayabilmektedir. Microsoft, bu tür koordinasyonsuz açıklamaların müşterileri gereksiz risklere maruz bıraktığını belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/vs-code-zero-day-lets-hackers-steal-github-tokens-in-one-click/" target="_blank">bleepingcomputer.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-9">
+<div class="news-title"><b>Red Hat npm Paketleri Tedarik Zinciri Saldırısıyla Geliştirici Kimlik Bilgilerini Açığa Çıkarmıştır.</b></div>
+<p class="news-content">Red Hat'in npm paketleri, "Miasma" olarak adlandırılan yeni bir Shai-Hulud zararlı yazılımı varyantını içeren tedarik zinciri saldırısına uğramıştır. Bu saldırı, ele geçirilmiş bir GitHub hesabı aracılığıyla Red Hat Cloud Services npm namespace altında yayınlanan en az 32 paketi etkilemiş ve geliştiricilerin kimlik bilgilerini çalmıştır. Wiz araştırmacıları tarafından takip edilen Miasma kampanyası, daha önce TeamPCP tarafından açık kaynak olarak yayımlanan Mini Shai-Hulud zararlı yazılımının bir evrimi olarak değerlendirilmektedir. Zararlı yazılım, npm kimlik doğrulama tokenları, ortam değişkenleri, bulut kimlik bilgileri (AWS, GCP, Azure) ve CI/CD sistemlerinden hassas bilgileri toplamayı hedeflemiştir. Saldırganlar, GitHub Actions iş akışlarını tetikleyerek geçerli SLSA kaynak kanıtlamalarına sahip Truva atı bulaşmış paketleri yayınlamayı başarmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/" target="_blank">unit42.paloaltonetworks.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-10">
+<div class="news-title"><b>Kritik Kirki Zafiyeti WordPress Yönetici Hesaplarını Ele Geçirmek İçin İstismar Edilmiştir.</b></div>
+<p class="news-content">WordPress için Kirki - Freeform Page Builder, Website Builder &amp; Customizer eklentisindeki kritik bir ayrıcalık yükseltme zafiyeti (CVE-2026-8206), saldırganlar tarafından aktif olarak istismar edilmektedir. Defiant güvenlik firması tarafından tespit edilen bu saldırılar, WordPress yönetici hesapları dahil olmak üzere herhangi bir kullanıcı hesabını ele geçirmeyi hedeflemektedir. Wordfence güvenlik duvarı, son 24 saat içinde müşterilerine yönelik 222'den fazla saldırı girişimini engellemiştir. Zafiyet, eklentinin 6.0.0 sürümünde tanıtılmış ve 6.0.6'ya kadar olan sürümleri etkilemektedir; bu sürümler, eklentinin kullanıcı tabanının yaklaşık %40'ını oluşturmaktadır. CVE-2026-8206, 'handle_forgot_password()' işlevi aracılığıyla parola sıfırlama için özel bir REST API uç noktasının açığa çıkmasından kaynaklanmaktadır. Bu durum, kimlik doğrulaması olmayan saldırganların herhangi bir kullanıcı için parola sıfırlama bağlantıları oluşturmasına ve bunları kendi kontrol ettikleri e-posta adreslerine göndermesine olanak tanıyarak hesapları kolayca ele geçirmesini sağlamaktadır. Web sitesi sahiplerinin ve yöneticilerinin, bu kritik zafiyeti gidermek için derhal 6.0.7 sürümüne yükseltmeleri veya eklentiyi devre dışı bırakmaları şiddetle tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/critical-kirki-flaw-exploited-to-hijack-wordpress-admin-accounts/" target="_blank">bleepingcomputer.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-11">
+<div class="news-title"><b>Canvas Siber Saldırısı 275 Milyon Kullanıcının Verilerini İhlal Etmiştir.</b></div>
+<p class="news-content">ShinyHunters suçlu hacker ve şantaj grubu, Canvas öğrenme yönetim sistemi (LMS) üzerinde gerçekleştirdiği siber saldırıyla dünya genelinde 9.000'e yakın eğitim kurumunu etkilemiş ve 275 milyon öğrenci, öğretim görevlisi ve personelin hassas verilerini çalmıştır. 6-7 Mayıs 2026 tarihlerinde meydana gelen bu olayda, Canvas kullanıcılarına beklenen giriş sayfası yerine ShinyHunters'ın tehdit mesajını içeren bir web sayfası gösterilmiştir. Çalınan veriler arasında isimler, e-posta adresleri, öğrenci kimlikleri ve özel iletişimler dahil olmak üzere 3.65 terabaytlık şaşırtıcı bir miktar hassas bilgi bulunmaktadır. Saldırının zamanlaması, final sınavları dönemine denk gelmesi nedeniyle yaygın operasyonel aksaklıklara neden olmuş ve dünya genelindeki kolej ve üniversitelerde ders materyallerine, ödevlere ve işbirliği sistemlerine erişimi geçici olarak engellemiştir. Instructure, saldırıda 'Free for Teacher' ortamındaki destek biletleriyle ilgili bir zafiyetin istismar edildiğini belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4180194/lessons-from-the-canvas-cyberattack.html" target="_blank">csoonline.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-12">
+<div class="news-title"><b>Küresel Borsa Üst Düzey Yöneticisinin E-posta Hesabı Aylarca Casusluk Faaliyetine Uğramıştır.</b></div>
+<p class="news-content">Bilinmeyen siber tehdit aktörleri, isimsiz küresel bir borsanın üst düzey yöneticisinin Microsoft Outlook e-posta kutusunu en az beş ay boyunca izlemiş ve aylarca süren e-postaları sızdırmıştır. Symantec ve Carbon Black tarafından rapor edilen bu casusluk kampanyasında, saldırganlar başlangıç erişimini nasıl elde ettikleri tam olarak bilinmemekle birlikte, hedef sistemde sistem ayrıcalıklarıyla iki zararlı yazılım çalıştırmayı başarmışlardır. Bu zararlı yazılımlardan biri Adobe yazılımı gibi görünürken, diğeri OneDrive'ı taklit etmiştir. Saldırganlar, kalıcılık için beş dakikada bir çalışacak şekilde zamanlanmış görevler oluşturmuştur. Komuta ve kontrol (C2) kanalı olarak Dropbox kullanılmış, böylece kötü amaçlı veri sızdırmaları meşru ağ trafiği gibi görünmüştür. Casusluk yazılımı, hedef yöneticinin e-postalarını yerel dosyalara dönüştürmek için meşru bir .NET kütüphanesi olan Aspose'u kullanmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/cyberattacks-data-breaches/global-stock-exchange-hit-monthslong-email-campaign" target="_blank">darkreading.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-13">
+<div class="news-title"><b>Palo Alto GlobalProtect Zafiyeti Açıklanmasından Kısa Süre Sonra İstismar Edilmiştir.</b></div>
+<p class="news-content">Palo Alto Networks'ün GlobalProtect uzaktan erişim VPN platformundaki CVE-2026-0257 kodlu kimlik doğrulama bypass zafiyeti, açıklanmasından sadece günler sonra aktif olarak istismar edilmeye başlanmıştır. Palo Alto Networks, başlangıçta bu zafiyeti orta ciddiyetli olarak derecelendirmiş ve herhangi bir kötü amaçlı istismarın farkında olmadığını belirtmiştir. Ancak Rapid7, 17 Mayıs'tan itibaren saldırganların bu açığı aktif olarak kullandığını tespit etmiştir. Bu zafiyet, saldırganların zararlı yazılım, oltalama veya çalınan kimlik bilgileri olmadan kurumsal ağlara yetkisiz VPN erişimi sağlamasına olanak tanımaktadır. Rapid7, bu durumun güvenlik duvarı üzerinde uzaktan kod yürütme sağlamasa da, zafiyetin atanan ciddiyet puanından daha ciddi ele alınması gerektiğini vurgulamıştır. Kurumsal risk, doğrudan zafiyetin kendisinden ziyade, sonrasında lateral hareket, kimlik bilgisi toplama ve meşru bir oturum kılıfı altında kalıcılık gibi yetkisiz erişimlerin sağlayabileceği imkanlardan kaynaklanmaktadır. CISA da CVE-2026-0257'yi Bilinen İstismar Edilen Zafiyetler kataloğuna ekleyerek federal sivil kurumların bu sorunu 1 Haziran'a kadar gidermesini zorunlu kılmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4179847/attackers-exploit-palo-alto-globalprotect-flaw-days-after-disclosure.html" target="_blank">csoonline.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-14">
+<div class="news-title"><b>FBI Uyarısı ile Kali365 Kimlik Avı Kiti Kapsamını Genişletmiştir.</b></div>
+<p class="news-content">FBI tarafından işaretlenen bir hizmet olarak kimlik avı (PaaS) platformu olan Kali365, Microsoft 365 hesaplarında çok faktörlü kimlik doğrulamayı (MFA) atlatmaya yardımcı olan yeteneklerini ve hedef listesini önemli ölçüde genişletmiştir. Arctic Wolf'un raporuna göre, Kali365, yalnızca Microsoft odaklı bir kimlik avı kitinden, AWS, Okta, Xerox DocuShare ve MAX Messenger gibi Rus çevrimiçi hizmetleri de dahil olmak üzere dijital kimlikleri hedefleyen daha geniş bir hesap ele geçirme platformuna dönüşmüştür. Bu genişleme, Rusya'nın ulusal mesajlaşma hizmeti olarak tanıtılan ve 80 milyondan fazla kullanıcısı olan MAX Messenger'a özel bir odaklanmayı içermektedir. Kali365, akıllı TV'ler ve yazıcılar gibi cihazların kimlik doğrulama iş akışlarını kötüye kullanan cihaz kodu kimlik avı tekniğini kullanmaktadır. Bu saldırıda, tehdit aktörü meşru bir OAuth 2.0 cihaz yetkilendirme isteği oluşturur ve kurbanı sahte bir giriş sayfasında ilgili kodu girmeye ikna etmektedir. Kurban kimlik doğrulamasını tamamladığında, saldırgan kurbanın kimlik bilgilerine ihtiyaç duymadan erişim tokenlarına sahip olmaktadır. FBI, geçen ay Kali365 hakkında bir kamu hizmeti duyurusu yayımlayarak kullanıcıları bu tehlikeli tehdit konusunda uyarmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/cyber-risk/fbi-flagged-phishing-kit-kali365-expands-its-reach" target="_blank">darkreading.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-15">
+<div class="news-title"><b>Microsoft Android Uygulamalarındaki Tek Satır Kod Milyarlarca İndirmeyi Riske Atmıştır.</b></div>
+<p class="news-content">Microsoft 365'in altı Android uygulamasında (Word, PowerPoint, Excel, Microsoft 365 Copilot, Microsoft Loop ve OneNote) bulunan bir hata, üretim kodunda bir hata ayıklama bayrağının (IsDebugMode(true)) yanlışlıkla bırakılması nedeniyle milyarlarca uygulamanın tehlikeye atılmasına neden olabilmektedir. Enclave güvenlik firması tarafından tespit edilen bu zafiyet, yetkisiz Android uygulamalarının Microsoft hesap tokenlarına erişmesini engelleyen korumaları atlatmıştır. Normalde Microsoft uygulamaları, diğer Microsoft uygulamalarına kolay geçiş sağlamak için erişim tokenlarını paylaşırken, diğer Android uygulamalarına bu erişimi kısıtlamaktadır. Ancak etkin bırakılan hata ayıklama modu bu kısıtlamayı kaldırmıştır. Bu durum, saldırganların yalnızca 15 satır kod içeren bir uygulama ile Microsoft hesap tokenlarını ele geçirmesine olanak tanımaktadır. Ele geçirilen tokenlar, saldırganlara e-postalara, dosyalara, belgelere, iletişimlere ve takvim bilgilerine tam erişim sağlayabilmektedir. Microsoft, bu zafiyetleri hızlı bir şekilde düzeltmiş ve CVE-2026-41100, -41101 ve -41102 CVE numaralarını atamıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/exclusive-how-one-line-of-code-put-billions-of-microsoft-android-app-downloads-at-risk/" target="_blank">securityweek.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-16">
+<div class="news-title"><b>Windows Arama URI Zafiyeti NTLMv2 Hashlerinin Çalınmasına Neden Olmuştur.</b></div>
+<p class="news-content">Siber güvenlik araştırmacıları, Windows'un arama URI işleyicisinde bulunan ve henüz yamalanmamış bir güvenlik açığını açıklamıştır. Huntress tarafından tespit edilen bu zafiyet, özel olarak hazırlanmış bir bağlantıya tıklanması durumunda kullanıcının NTLMv2 hash'inin saldırgana ifşa edilmesine olanak tanımaktadır. Bu yeni sorun, daha önce Windows Snipping Tool'un ms-screensketch: URI işleyicisini etkileyen CVE-2026-33829 zafiyetine benzer bir mekanizmaya sahiptir. Saldırgan, bir web sayfasında veya e-posta mesajında özel olarak hazırlanmış bir bağlantıyı kullanarak kullanıcıyı kandırabilmektedir. Kullanıcı bağlantıyı onayladığında, bilgisayar saldırganın seçtiği bir SMB sunucusuna bağlanmakta ve kullanıcının NTLMv2 hash'ini ifşa etmektedir. Bu hash, saldırgan tarafından röle saldırıları gerçekleştirmek ve ağa daha derin erişim sağlamak için kullanılabilmektedir. Microsoft, 15 Nisan 2026'daki sorumlu açıklamaya rağmen, "yalnızca Önemli ve Kritik ciddiyet vakalarının servis eşiğimizi karşıladığını" belirterek sorunu gidermeyi reddetmiştir. Bir düzeltmenin yokluğunda, kullanılmayan ana bilgisayarlarda giden SMB trafiğini engellemek ve NTLM'yi devre dışı bırakmak önerilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/unpatched-windows-search-uri.html" target="_blank">thehackernews.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-17">
+<div class="news-title"><b>Yeni HTTP/2 Bombası Zafiyeti Web Sunucularında Uzaktan Hizmet Reddine Yol Açmıştır.</b></div>
+<p class="news-content">Siber güvenlik araştırmacıları, NGINX, Apache HTTPD, Microsoft IIS, Envoy ve Cloudflare Pingora dahil olmak üzere büyük web sunucularını etkileyen "HTTP/2 Bombası" adı verilen uzaktan hizmet reddi (DoS) istismarını keşfetmiştir. Calif güvenlik firması tarafından "HTTP/2 Bombası" olarak adlandırılan bu zafiyet, HPACK (HTTP/2'nin başlık sıkıştırma şeması) hedefleyen bir sıkıştırma bombası ile Slowloris tarzı bir bekletme tekniğini birleştirmektedir. Bu teknik, bir baytın sunucuda binlerce başlık tahsisine dönüşmesine neden olmakta ve sunucunun belleği serbest bırakmasını engellemektedir. Varsayımsal bir saldırı senaryosunda, 100 Mbps bağlantıya sahip bir ev bilgisayarı, savunmasız bir sunucuyu saniyeler içinde erişilemez hale getirebilmektedir. Tek bir istemci, Apache HTTPD ve Envoy'da yaklaşık 20 saniyede 32 GB sunucu belleğini tüketip tutabilmektedir. NGINX ve Apache HTTPD için düzeltmeler yayımlanmış olsa da, Microsoft IIS, Envoy ve Cloudflare Pingora için henüz bir yama bulunmamaktadır. Bu istismarın OpenAI Codex tarafından keşfedilmesi, yapay zekanın eski, bilinen teknikleri birleştirerek yeni ve etkili saldırılar oluşturma potansiyelini göstermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/new-http2-bomb-vulnerability-allows.html" target="_blank">thehackernews.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-18">
+<div class="news-title"><b>Yapay Zeka Destekli Fidye Yazılımı Kiti EDR Aşmayı Otomatikleştirmektedir.</b></div>
+<p class="news-content">Bir siber tehdit aktörü, uç nokta tespit ve müdahale (EDR) çözümlerini atlatmaya ve Active Directory keşfini otomatikleştirmeye yardımcı olan yapay zeka tarafından geliştirilmiş bir fidye yazılımı saldırı aracı kullanmaktadır. Sophos güvenlik firması araştırmacıları, bir müşteri ortamında bu araç kitinden kaynaklanan faaliyetleri tespit etmiştir. Araç ve yük geliştirme süreçleri, çeşitli aşamalarda Cursor ve Claude Opus ajanları tarafından desteklenmiştir. Bu aşamalar arasında ilk kodlama, analiz ve revizyonlar bulunmaktadır. Ayrıca, çeşitli bypass teknikleri için güvenlik araştırma gönderilerini kontrol etmek üzere bazı ajanlar görevlendirilmiştir. Bu şekilde oluşturulan bazı zararlı yazılımlar, Sophos, CrowdStrike ve Microsoft'un EDR araçlarına karşı sanal ortamlarda test edilmiştir. Araştırmacılar, iş akışının tamamen insan odaklı olmasına rağmen, bu araç kitinin fidye yazılımı ile ilgili siber suç faaliyetlerinde kullanıldığını belirtmiştir. Tespit edilen kötü amaçlı dosyalar, Cobalt Strike profilleri, Telegram bot API tabanlı harici komuta ve kontrol (C2) mekanizması ve shellcode'u meşru Windows yürütülebilir dosyalarına enjekte etmek için Python tabanlı zararlı yazılım geliştirme betikleri gibi bileşenler içermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discovery/" target="_blank">bleepingcomputer.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-19">
+<div class="news-title"><b>Weedhack Zararlı Yazılımı 116.000 Minecraft Sistemini Enfekte Etmiştir.</b></div>
+<p class="news-content">Siber güvenlik araştırmacıları, YouTube üzerinden Minecraft oyuncularını hedef alan ve kurbanların sistemlerinin kontrolünü ele geçirebilen "Weedhack" adlı yeni bir zararlı yazılım kampanyası tespit etmiştir. Bu hizmet olarak zararlı yazılım (MaaS) kampanyası, Ocak 2026'dan bu yana aktif olarak 116.000'den fazla sistemi etkilemiştir. McAfee Labs tarafından "Weedhack" olarak adlandırılan bu kampanya, Minecraft istemcilerini ve modlarını taklit ederek kullanıcıları enfekte etmektedir. Toplamda 3820 benzersiz kötü amaçlı JAR dosyası ve zararlı yazılımı dağıtan 240'tan fazla URL tespit edilmiştir. Kampanyanın merkezinde, müşterilerin çalınan kimlik bilgilerini ve sistem bilgilerini görüntülemesine olanak tanıyan, kurumsal düzeyde bir kontrol paneli bulunmaktadır. Ayrıca, suçlulara Minecraft'ın 1.21.0'dan 1.21.11'e kadar olan sürümlerini hedefleyebilen özel yükler oluşturma ve zararlı yazılımı meşru Minecraft modlarına enjekte etme imkanı sunulmaktadır. Çoğu Weedhack enfeksiyonu ABD, Almanya, Hindistan ve Birleşik Krallık'ta tespit edilmiştir. Zararlı yazılımın uzaktan erişim yetenekleri, siber zorbalık için de kullanıldığı gözlemlenmiştir, genç kullanıcıların kurbanları izlemek ve taciz etmek için web kameralarını kaydettiği durumlar bildirilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/weedhack-attacks-minecraft-users.html" target="_blank">thehackernews.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-20">
+<div class="news-title"><b>HP Poly VoIP Telefonlarındaki Kritik Zafiyet Kurumsal Ağlara Geçit Oluşturmuştur.</b></div>
+<p class="news-content">Rapid7, HP Poly VoIP telefonlarındaki kritik, kimlik doğrulaması olmayan yığın tabanlı arabellek taşması zafiyetinin (CVE-2026-0826) uzaktan kod yürütmeye (RCE) yol açabileceğini belirtmiştir. CVSS puanı 9.2 olan bu zafiyet, Interactive Connectivity Establishment (ICE) özelliği etkinleştirilmiş cihazlardaki Session Description Protocol (SDP) niteliklerinin ayrıştırılmasında bulunmaktadır. Saldırganlar, özel olarak hazırlanmış bir SIP INVITE isteği göndererek arabellek taşmasını tetikleyebilmekte ve böylece program sayacı üzerinde kontrol sağlayabilmektedir. ASLR ve NX gibi güvenlik önlemlerini atlatmak için Return Oriented Programming (ROP) zincirleri kullanılabilmektedir. Bu zafiyet, HP VVX serisi (VVX 150, 250, 350, 450) ve Trio IP Konferans serisi (Trio 8800, 8500, 8300) VoIP telefonlarında doğrulanmıştır. HP, bu zafiyeti gidermek için Poly Unified Communications Software (UCS) sürümlerini yayımlamıştır. Rapid7, bu cihazların konferans odaları veya ofisler gibi güvenilir yerlerde bulunması nedeniyle, ele geçirilmelerinin yalnızca cihaz erişimiyle sınırlı kalmayıp, kurumsal ağlara kalıcı bir dayanak noktası oluşturabileceğini ve konuşmaları dinlemek veya ses verilerini yapay zeka destekli derin sahte (deepfake) saldırılar için toplamak amacıyla kullanılabileceğini vurgulamıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/193045/security/why-an-hp-poly-voip-phones-bug-could-become-an-enterprise-foothold.html" target="_blank">securityaffairs.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-21">
+<div class="news-title"><b>Dashlane Müşterilerinin Şifre Kasaları Siber Saldırıyla Çalınmıştır.</b></div>
+<p class="news-content">Şifre yöneticisi Dashlane, hafta sonu gerçekleşen bir siber saldırı sırasında hackerların en az bir düzine müşterisinin şifre kasalarını ele geçirdiğini açıklamıştır. Şirket, saldırganların şirketin iki faktörlü kimlik doğrulama (2FA) sistemini kaba kuvvet saldırısıyla aşarak yaklaşık 20 müşteri hesabına erişim sağladığını belirtmiştir. 2FA mekanizmasının aşılmasıyla hackerlar, müşterilerin şifrelerini ve diğer hassas kimlik bilgilerini depolayan şifrelenmiş kasalarının bir kopyasını indirmeyi başarmıştır. Dashlane, kendi sistemlerinde bir ihlal kanıtı olmadığını ifade etmiş, ancak saldırganların 2FA korumalarını nasıl aştığını henüz açıklamamıştır. Şirket, gelecekteki olay riskini azaltmak için adımlar attığını belirtmiş, ancak bu adımların ne olduğunu detaylandırmamıştır. Çalınan kasaların şifreli olduğu ve müşterinin ana parolası olmadan okunmasının mümkün olmadığı, ana parolasının sadece müşteri tarafından bilindiği ve Dashlane'a düz metin olarak yüklenmediği bilgisi verilmiştir. Ancak kolay tahmin edilebilir ana parolalara sahip müşterilerin, parolalarının tahmin edilme ve şifre kasalarının deşifre edilme riski altında olabileceği belirtilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://techcrunch.com/2026/06/02/password-manager-dashlane-says-hackers-stole-some-customers-password-vaults/" target="_blank">techcrunch.com</a>, 02.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-22">
+<div class="news-title"><b>Microsoft Sıfır Gün Açığı Açıklama Politikası Nedeniyle Hukuki Tehdit Endişelerini Yatıştırmaya Çalışmıştır.</b></div>
+<p class="news-content">Microsoft, güvenlik araştırmacılarının sıfır gün zafiyetlerini koordineli bildirim olmadan kamuya açıklamasından kaynaklanan hukuki tehdit endişelerine yanıt vermiştir. Tartışma, son haftalarda Microsoft ürünlerini etkileyen yamanmamış birkaç zafiyetin (RedSun, UnDefend, BlueHammer, YellowKey, GreenPlasma ve MiniPlasma) detaylarını ve kavram kanıtlama (PoC) istismar kodlarını kamuya açıklayan "Chaotic Eclipse" ve "Nightmare Eclipse" adlı araştırmacıları ilgilendirmektedir. Microsoft, araştırmacının eylemlerine karşı çıktığını ve bu tür koordinasyonsuz açıklamaların müşterileri gereksiz risklere maruz bıraktığını belirtmiştir. Şirket, araştırmacının güvenlik açığı bildirim portalındaki ve GitHub'daki hesabını devre dışı bırakmıştır. Microsoft, X üzerinden yaptığı açıklamalarda, güvenlik araştırmacılığı yapan veya yayımlayan kişilere karşı yasal işlem başlatma niyetinde olmadığını, ancak "bir kişi yasayı çiğner ve müşterilerimize gerçek zarar veren kötü niyetli faaliyetlerde bulunursa" kolluk kuvvetleriyle işbirliği yapacağını belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/microsoft-tries-to-calm-legal-threat-fears-after-zero-day-disclosure-backlash/" target="_blank">securityweek.com</a>, 03.06.2026)</b></p>
+</div>
+<div class="news-item" id="haber-23">
+<div class="news-title"><b>Rusya Yabancı Casus Ajanslarının Yetkililerin Telefonlarını Hacklediğini İddia Etmiştir.</b></div>
+<p class="news-content">Rusya Federal Güvenlik Servisi (FSB), yabancı istihbarat servislerinin üst düzey Rus yetkililerin mobil cihazlarına yönelik geniş çaplı bir casusluk operasyonu yürüttüğünü iddia etmiştir. FSB, 2 Haziran 2026 tarihinde yaptığı açıklamada, kötü amaçlı yazılımların Rus yetkililerin mobil cihazlarına yüklendiğini ve bu yazılımların veri çıkarmak, iletişimi engellemek ve gizli sesli/görüntülü gözetim yapmak için kullanıldığını belirtmiştir. Ajans, operasyonun "büyük uluslararası BT şirketlerinin teknik yetenekleri ve mobil iletişim teknolojileri" kullanılarak gerçekleştirildiğini öne sürmüştür. Rus yetkililer, failleri belirlemek, operasyonda kullanılan altyapıyı haritalamak ve ele geçirilen bilgilerin kapsamını tespit etmek için bir ceza soruşturması başlatmıştır. FSB'ye göre, bu kampanya ajansın şimdiye kadar ortaya çıkardığı en büyük yabancı istihbarat operasyonlarından biridir ve yetkililerin kişisel temasları, planları ve değerlendirmeleri hakkında doğrudan bilgi toplamayı hedeflemiştir. Ajans, iddialarını destekleyecek teknik kanıt veya zararlı yazılım adı açıklamamıştır, ancak</p>
+<p class="source"><b>(XXXXXXX, AÇIK - </b></p></div></div></div>
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-06-02.html" class="archive-link">02.06.2026</a>
+            <a href="./2026-06-01.html" class="archive-link">01.06.2026</a>
+            <a href="./2026-05-31.html" class="archive-link">31.05.2026</a>
+            <a href="./2026-05-30.html" class="archive-link">30.05.2026</a>
+            <a href="./2026-05-29.html" class="archive-link">29.05.2026</a>
+            <a href="./2026-05-28.html" class="archive-link">28.05.2026</a>
+            <a href="./2026-05-27.html" class="archive-link">27.05.2026</a>
+            <a href="./2026-05-26.html" class="archive-link">26.05.2026</a>
+            <a href="./2026-05-25.html" class="archive-link">25.05.2026</a>
+            <a href="./2026-05-24.html" class="archive-link">24.05.2026</a>
+            <a href="./2026-05-23.html" class="archive-link">23.05.2026</a>
+            <a href="./2026-05-22.html" class="archive-link">22.05.2026</a>
+            <a href="./2026-05-21.html" class="archive-link">21.05.2026</a>
+            <a href="./2026-05-20.html" class="archive-link">20.05.2026</a>
+            <a href="./2026-05-19.html" class="archive-link">19.05.2026</a>
+            <a href="./2026-05-18.html" class="archive-link">18.05.2026</a>
+            <a href="./2026-05-17.html" class="archive-link">17.05.2026</a>
+            <a href="./2026-05-16.html" class="archive-link">16.05.2026</a>
+            <a href="./2026-05-15.html" class="archive-link">15.05.2026</a>
+            <a href="./2026-05-14.html" class="archive-link">14.05.2026</a>
+            <a href="./2026-05-13.html" class="archive-link">13.05.2026</a>
+            <a href="./2026-05-12.html" class="archive-link">12.05.2026</a>
+            <a href="./2026-05-11.html" class="archive-link">11.05.2026</a>
+            <a href="./2026-05-10.html" class="archive-link">10.05.2026</a>
+            <a href="./2026-05-09.html" class="archive-link">09.05.2026</a>
+            <a href="./2026-05-08.html" class="archive-link">08.05.2026</a>
+            <a href="./2026-05-07.html" class="archive-link">07.05.2026</a>
+            <a href="./2026-05-06.html" class="archive-link">06.05.2026</a>
+            <a href="./2026-05-05.html" class="archive-link">05.05.2026</a>
+        </div>
+    </div>
+
+</body></html>
