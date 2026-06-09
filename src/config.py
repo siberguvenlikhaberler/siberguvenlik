@@ -70,16 +70,26 @@ def get_top3_selection_prompt(articles_brief):
 
 NOT: Haber içerikleri İngilizce olabilir; dil fark etmez, anlam ve stratejik öneme göre değerlendir.
 
-SEÇİM KRİTERLERİ — aşağıdaki kategorilerden EN ÖNEMLİ olanları önceliklendir:
-• Devlet destekli saldırı, casusluk operasyonu, APT grubu aktivitesi
-• Kritik altyapıya (enerji, sağlık, finans, hükümet) yönelik olay
-• Büyük çaplı veri ihlali veya kişisel veri istismarı
-• Fidye yazılımı saldırısı veya büyük takedown operasyonu
-• Önemli kimlik avı (phishing) kampanyası veya sosyal mühendislik operasyonu
-• Hükümet/istihbarat teşkilatı kararı, atama, jeopolitik siber gelişme
-• Kanun, yönetmelik, mahkeme kararı (siber güvenlik etkisi olan)
-• Hacktivizm, aktivist eylem, kritik altyapı tehdidi
-• NATO veya ulusal güvenlikle ilişkili siber gelişme
+SEÇİM ÖNCELİĞİ:
+
+1. ÖNCELİK (en üst) — STRATEJİK & POLİTİK haberler:
+   Bu kategoride uygun haber varsa, diğer kategorilere TERCİH EDİLİR.
+   • Hükümet/istihbarat teşkilatı kararı, üst düzey atama, jeopolitik siber gelişme
+   • Kanun, yönetmelik, mahkeme kararı, dava (siber güvenlik etkisi olan)
+   • Stratejik yatırım, devlet kurumu siber politikası
+   • NATO veya ulusal güvenlikle ilişkili siber/diplomatik gelişme
+
+2. DİĞER KATEGORİLER (aralarında ESNEK seçim — günün önemine göre):
+   • Devlet destekli saldırı, casusluk operasyonu, APT grubu aktivitesi
+   • Kritik altyapıya (enerji, sağlık, finans, hükümet) yönelik olay
+   • Büyük çaplı veri ihlali veya kişisel veri istismarı
+   • Fidye yazılımı saldırısı veya büyük takedown operasyonu
+   • Önemli kimlik avı (phishing) kampanyası veya sosyal mühendislik operasyonu
+   • Hacktivizm, aktivist eylem, konum/veri istismarı
+
+KURAL: Stratejik/politik (1. öncelik) kategorisinde nitelikli haber YOKSA,
+3 haberi de 2. gruptan günün en önemli/en kritik olaylarına göre seç.
+Zorlama yapma — 1. öncelikte uygun haber yoksa o kategoriden seçme.
 
 KURAL — seçilmez:
 • Saf CVE/yama/güvenlik açığı tespiti haberleri (aktif istismar kampanyası yoksa)
