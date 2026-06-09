@@ -1870,16 +1870,21 @@ class HaberSistemi:
 
         top3_ids = []
         if non_vuln_ids_p4:
+            # Seçim HAM kaynak metin üzerinden yapılır (Pass 2/3 özetinden DEĞİL),
+            # böylece özetlemede kaybolan nüanslar seçim aşamasında korunur.
             brief_lines_p4 = []
             for aid in non_vuln_ids_p4:
                 c = content_by_id.get(aid, {})
                 a = articles_by_id.get(aid, {})
-                tr_title  = c.get('tr_title') or a.get('title', '')
-                paragraph = c.get('paragraph') or a.get('full_text', '')
+                orig_title = a.get('title', '')
+                tr_title   = c.get('tr_title', '')
+                full_text  = a.get('full_text', '') or c.get('paragraph', '')
+                snippet    = ' '.join(full_text.split()[:160])
                 brief_lines_p4.append(
                     f"=== HABER ID: {aid} ===\n"
-                    f"Başlık: {tr_title}\n"
-                    f"Özet: {' '.join(paragraph.split()[:80])}\n"
+                    f"Başlık: {orig_title}\n"
+                    + (f"TR Başlık: {tr_title}\n" if tr_title else "")
+                    + f"İçerik: {snippet}\n"
                 )
             top3_data = self._gemini_call_json(
                 get_top3_selection_prompt('\n'.join(brief_lines_p4)),

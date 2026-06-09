@@ -68,6 +68,8 @@ def get_top3_selection_prompt(articles_brief):
     """
     return f"""Sen siber tehdit istihbarat analistisin. Aşağıdaki haberler arasından stratejik açıdan EN KRİTİK 3 haberi seç.
 
+NOT: Haber içerikleri İngilizce olabilir; dil fark etmez, anlam ve stratejik öneme göre değerlendir.
+
 SEÇİM KRİTERLERİ — aşağıdaki kategorilerden EN ÖNEMLİ olanları önceliklendir:
 • Devlet destekli saldırı, casusluk operasyonu, APT grubu aktivitesi
 • Kritik altyapıya (enerji, sağlık, finans, hükümet) yönelik olay
