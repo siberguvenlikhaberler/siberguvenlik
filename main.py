@@ -674,6 +674,29 @@ class HaberSistemi:
         return None
 
     @staticmethod
+    def _sanitize_html(html):
+        """
+        <style> blokları DIŞINA sızan CSS yorumlarını (/* ... */) ve serbest HTML
+        yorumlarını (<!-- ... -->) temizler. Legacy/Gemini çıktısında body'ye kaçan
+        '/* YÖNETİCİ ÖZETİ */' gibi görünür artefaktları önler. <style> içindeki
+        gerçek CSS yorumlarına DOKUNULMAZ.
+        """
+        if not html:
+            return html
+        # <style>...</style> bloklarını ayır; yalnızca dışındaki kısımları temizle
+        parts = re.split(r'(<style[^>]*>.*?</style>)', html,
+                         flags=re.DOTALL | re.IGNORECASE)
+        cleaned = []
+        for part in parts:
+            if part[:6].lower() == '<style':
+                cleaned.append(part)           # CSS bloğu — olduğu gibi koru
+            else:
+                part = re.sub(r'/\*.*?\*/', '', part, flags=re.DOTALL)   # sızan CSS yorumu
+                part = re.sub(r'<!--.*?-->', '', part, flags=re.DOTALL)  # sızan HTML yorumu
+                cleaned.append(part)
+        return ''.join(cleaned)
+
+    @staticmethod
     def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str, top3_ids=None):
         """
         Yapılandırılmış içerikten tam HTML raporu üretir (kod tarafı assembly).
@@ -906,7 +929,6 @@ class HaberSistemi:
         top3_cards_html = ''
         if top3_ids:
             top3_cards_html += '            <div class="top3-section">\n'
-            top3_cards_html += '                <div class="top3-section-label">Günün En Kritik 3 Haberi</div>\n'
             for art_id in top3_ids:
                 art = articles_by_id.get(art_id, {})
                 tr_title, paragraph = _safe_content(art_id)
@@ -1010,8 +1032,6 @@ class HaberSistemi:
         </div>
 
         <div class="executive-summary">
-            <h2>Yönetici Özeti</h2>
-
             <div class="important-news">
                 <h2>Önemli Gelişmeler</h2>
 {top3_cards_html}                <div class="important-summary">
@@ -1919,6 +1939,7 @@ class HaberSistemi:
         self._translate_social_signals()
         html = self._inject_social_box(html)
         html = self._remove_commentary_sentences(html)
+        html = self._sanitize_html(html)
 
         html_index   = self._add_archive_links(html, is_archive=False)
         html_archive = self._add_archive_links(html, is_archive=True)
@@ -2106,6 +2127,7 @@ class HaberSistemi:
         html = self._fix_source_links(html)
         html = self._remove_commentary_sentences(html)
         html = self._fix_html_structure(html)
+        html = self._sanitize_html(html)
 
         html_index   = self._add_archive_links(html, is_archive=False)
         html_archive = self._add_archive_links(html, is_archive=True)
