@@ -23,6 +23,7 @@ from src.config import (
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
+    get_top3_selection_prompt,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
 
@@ -673,7 +674,7 @@ class HaberSistemi:
         return None
 
     @staticmethod
-    def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str):
+    def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str, top3_ids=None):
         """
         Yapılandırılmış içerikten tam HTML raporu üretir (kod tarafı assembly).
         content_by_id: {art_id: {'tr_title': str, 'paragraph': str}}
@@ -817,6 +818,39 @@ class HaberSistemi:
             .social-signals .signal-list { grid-template-columns: 1fr; }
             .social-signals .signal-meta { gap: 6px; }
         }
+        .top3-section { margin-bottom: 24px; }
+        .top3-section-label {
+            font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; color: #7c3aed; margin-bottom: 12px;
+        }
+        .top3-card {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-left: 5px solid #7c3aed; border-radius: 8px;
+            padding: 18px 20px; margin-bottom: 14px;
+        }
+        .top3-card:last-child { margin-bottom: 0; }
+        .top3-card-title {
+            color: #1e293b; font-size: 15px; font-weight: 700;
+            margin-bottom: 10px; line-height: 1.4;
+        }
+        .top3-card-paragraph {
+            color: #374151; font-size: 14px; line-height: 1.65; margin-bottom: 10px;
+        }
+        .top3-card .source { color: #64748b; font-size: 12px; margin: 0; }
+        .top3-card .source a { color: #7c3aed; text-decoration: none; }
+        .top3-card .source a:hover { text-decoration: underline; }
+        .vuln-section-heading {
+            background: linear-gradient(135deg, #fff3e0 0%, #fff8f0 100%);
+            border: 1px solid #ffcc80;
+            border-left: 5px solid #e65100;
+            border-radius: 8px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+        }
+        .vuln-section-heading h2 {
+            color: #bf360c; font-size: 18px; font-weight: 700; margin: 0;
+        }
+        .news-item.vuln-item { border-left-color: #e65100; }
         .back-to-top {
             position: fixed; top: 50%; left: calc(50% - 450px - 48px);
             transform: translateY(-50%); width: 36px; height: 36px;
@@ -828,6 +862,17 @@ class HaberSistemi:
         .back-to-top:hover { opacity: 1; }
         """
 
+        import re as _re
+        _CVE_PAT = _re.compile(r'CVE-\d{4}-\d{4,7}', _re.IGNORECASE)
+        _VULN_KW = (
+            'güvenlik açığı', 'açık bulundu', 'açık kapatıldı', 'zafiyet',
+            'yama yayınlandı', 'güvenlik yaması', 'sıfır gün', 'zero-day',
+            'zero day', 'exploit', 'uzaktan kod çalıştırma',
+            'sql injection', 'xss', 'path traversal', 'buffer overflow',
+            'vulnerability', 'vulnerabilities', 'patched', 'critical flaw',
+            'security flaw', 'arbitrary code',
+        )
+
         def _safe_content(art_id):
             c = content_by_id.get(art_id, {})
             art = articles_by_id.get(art_id, {})
@@ -835,47 +880,120 @@ class HaberSistemi:
             paragraph = c.get('paragraph') or art.get('full_text', '')[:500]
             return tr_title, paragraph
 
-        # ── Önemli Gelişmeler kutusu ──────────────────────────────────────
+        def _is_vuln(art_id):
+            tr_title, _ = _safe_content(art_id)
+            orig_title = articles_by_id.get(art_id, {}).get('title', '')
+            combined = (tr_title + ' ' + orig_title).lower()
+            if _CVE_PAT.search(combined):
+                return True
+            return any(kw in combined for kw in _VULN_KW)
+
+        top3_set = set(top3_ids or [])
+
+        # ── Haberleri vuln / normal olarak ayır ───────────────────────────
+        all_ids = list(top10_ids) + list(remaining_ids)
+        vuln_ids    = [aid for aid in all_ids if _is_vuln(aid)]
+        regular_ids = [aid for aid in all_ids if not _is_vuln(aid)]
+
+        # Her haber için global numara: önce vuln (1..N), sonra regular (N+1..M)
+        id_to_num = {}
+        for i, aid in enumerate(vuln_ids, 1):
+            id_to_num[aid] = i
+        for i, aid in enumerate(regular_ids, len(vuln_ids) + 1):
+            id_to_num[aid] = i
+
+        # ── Top 3 kartları (Önemli Gelişmeler altında) ────────────────────
+        top3_cards_html = ''
+        if top3_ids:
+            top3_cards_html += '            <div class="top3-section">\n'
+            top3_cards_html += '                <div class="top3-section-label">Günün En Kritik 3 Haberi</div>\n'
+            for art_id in top3_ids:
+                art = articles_by_id.get(art_id, {})
+                tr_title, paragraph = _safe_content(art_id)
+                num      = id_to_num.get(art_id, 0)
+                link     = art.get('link', '#')
+                domain   = art.get('domain', '')
+                art_date = art.get('art_date', '')
+                top3_cards_html += (
+                    f'                <div class="top3-card">\n'
+                    f'                    <div class="top3-card-title">'
+                    f'<a href="#haber-{num}" style="color:inherit;text-decoration:none;">'
+                    f'{tr_title}</a></div>\n'
+                    f'                    <p class="top3-card-paragraph">{paragraph}</p>\n'
+                    f'                    <p class="source"><b>(XXXXXXX, AÇIK - '
+                    f'<a href="{link}" target="_blank">{domain}</a>, {art_date})</b></p>\n'
+                    f'                </div>\n'
+                )
+            top3_cards_html += '            </div>\n'
+
+        # ── Önemli Gelişmeler kutusu (sadece normal haberler) ─────────────
+        top10_regular = [aid for aid in top10_ids if not _is_vuln(aid)]
         important_items_html = ''
-        for i, art_id in enumerate(top10_ids, 1):
+        for art_id in top10_regular:
+            num = id_to_num[art_id]
             tr_title, _ = _safe_content(art_id)
             important_items_html += (
                 f'            <div class="important-item">\n'
-                f'                <a href="#haber-{i}">{i}. {tr_title}</a>\n'
+                f'                <a href="#haber-{num}">{num}. {tr_title}</a>\n'
                 f'            </div>\n'
             )
 
-        # ── Yönetici Özeti tablosu (kalan haberler) ───────────────────────
+        # ── Yönetici Özeti tablosu (sadece normal haberler) ───────────────
         table_rows_html = ''
-        offset = len(top10_ids) + 1
-        rem_pairs = [remaining_ids[i:i + 2] for i in range(0, len(remaining_ids), 2)]
-        for row_idx, pair in enumerate(rem_pairs):
+        remaining_regular = [aid for aid in regular_ids if aid not in top10_regular]
+        rem_pairs = [remaining_regular[i:i + 2] for i in range(0, len(remaining_regular), 2)]
+        for pair in rem_pairs:
             cells = ''
-            for col_idx, art_id in enumerate(pair):
-                num = offset + row_idx * 2 + col_idx
+            for art_id in pair:
+                num = id_to_num[art_id]
                 tr_title, _ = _safe_content(art_id)
                 cells += f'                    <td><a href="#haber-{num}">{num}. {tr_title}</a></td>\n'
             if len(pair) == 1:
                 cells += '                    <td></td>\n'
             table_rows_html += f'                <tr>\n{cells}                </tr>\n'
 
-        # ── Haber paragrafları ────────────────────────────────────────────
-        news_items_html = ''
-        ordered_ids = list(top10_ids) + list(remaining_ids)
-        for global_num, art_id in enumerate(ordered_ids, 1):
+        def _render_item(art_id, css_extra=''):
             art = articles_by_id.get(art_id, {})
             tr_title, paragraph = _safe_content(art_id)
+            num      = id_to_num[art_id]
             link     = art.get('link', '#')
             domain   = art.get('domain', '')
             art_date = art.get('art_date', '')
-            news_items_html += (
-                f'            <div class="news-item" id="haber-{global_num}">\n'
+            # Top 3 haberleri: paragraf üstte zaten var, burada sadece başlık+kaynak
+            if art_id in top3_set:
+                return (
+                    f'            <div class="news-item{css_extra}" id="haber-{num}" '
+                    f'style="padding:12px 20px;">\n'
+                    f'                <div class="news-title"><b>{tr_title}</b></div>\n'
+                    f'                <p class="source"><b>(XXXXXXX, AÇIK - '
+                    f'<a href="{link}" target="_blank">{domain}</a>, {art_date})</b></p>\n'
+                    f'            </div>\n'
+                )
+            return (
+                f'            <div class="news-item{css_extra}" id="haber-{num}">\n'
                 f'                <div class="news-title"><b>{tr_title}</b></div>\n'
                 f'                <p class="news-content">{paragraph}</p>\n'
                 f'                <p class="source"><b>(XXXXXXX, AÇIK - '
                 f'<a href="{link}" target="_blank">{domain}</a>, {art_date})</b></p>\n'
                 f'            </div>\n'
             )
+
+        # ── Haber paragrafları ────────────────────────────────────────────
+        news_items_html = ''
+
+        # Güvenlik Açıkları bölümü (haber paragraflarından önce)
+        if vuln_ids:
+            news_items_html += (
+                '            <div class="vuln-section-heading">\n'
+                '                <h2>&#128272; Güvenlik Açıkları</h2>\n'
+                '            </div>\n'
+            )
+            for art_id in vuln_ids:
+                news_items_html += _render_item(art_id, ' vuln-item')
+
+        # Normal haberler
+        for art_id in regular_ids:
+            news_items_html += _render_item(art_id)
 
         html = f"""<!DOCTYPE html>
 <html lang="tr">
@@ -896,7 +1014,7 @@ class HaberSistemi:
 
             <div class="important-news">
                 <h2>Önemli Gelişmeler</h2>
-                <div class="important-summary">
+{top3_cards_html}                <div class="important-summary">
 {important_items_html}                </div>
             </div>
 
@@ -1723,6 +1841,66 @@ class HaberSistemi:
             )
 
         # ════════════════════════════════════════════════════════════════
+        # PASS 4 — GÜNÜN EN KRİTİK 3 HABERİ (istihbari/stratejik seçim)
+        # ════════════════════════════════════════════════════════════════
+        import re as _re4
+        _CVE_PAT4 = _re4.compile(r'CVE-\d{4}-\d{4,7}', _re4.IGNORECASE)
+        _VULN_KW4 = (
+            'güvenlik açığı', 'açık bulundu', 'açık kapatıldı', 'zafiyet',
+            'yama yayınlandı', 'güvenlik yaması', 'sıfır gün', 'zero-day',
+            'zero day', 'exploit', 'uzaktan kod çalıştırma',
+            'sql injection', 'xss', 'path traversal', 'buffer overflow',
+            'vulnerability', 'vulnerabilities', 'patched', 'critical flaw',
+            'security flaw', 'arbitrary code',
+        )
+
+        def _is_vuln_p4(art_id):
+            c = content_by_id.get(art_id, {})
+            a = articles_by_id.get(art_id, {})
+            tr_title  = c.get('tr_title') or a.get('title', '')
+            orig_title = a.get('title', '')
+            combined = (tr_title + ' ' + orig_title).lower()
+            if _CVE_PAT4.search(combined):
+                return True
+            return any(kw in combined for kw in _VULN_KW4)
+
+        print("\n🎯 Pass 4 — Günün en kritik 3 haberi seçiliyor...")
+        all_ids_p4 = list(top10_ids) + list(remaining_ids)
+        non_vuln_ids_p4 = [aid for aid in all_ids_p4 if not _is_vuln_p4(aid)]
+
+        top3_ids = []
+        if non_vuln_ids_p4:
+            # Seçim HAM kaynak metin üzerinden yapılır (Pass 2/3 özetinden DEĞİL),
+            # böylece özetlemede kaybolan nüanslar seçim aşamasında korunur.
+            brief_lines_p4 = []
+            for aid in non_vuln_ids_p4:
+                c = content_by_id.get(aid, {})
+                a = articles_by_id.get(aid, {})
+                orig_title = a.get('title', '')
+                tr_title   = c.get('tr_title', '')
+                full_text  = a.get('full_text', '') or c.get('paragraph', '')
+                snippet    = ' '.join(full_text.split()[:160])
+                brief_lines_p4.append(
+                    f"=== HABER ID: {aid} ===\n"
+                    f"Başlık: {orig_title}\n"
+                    + (f"TR Başlık: {tr_title}\n" if tr_title else "")
+                    + f"İçerik: {snippet}\n"
+                )
+            top3_data = self._gemini_call_json(
+                get_top3_selection_prompt('\n'.join(brief_lines_p4)),
+                max_output_tokens=256,
+                label='Pass4-Top3Secim',
+            )
+            if top3_data and 'top3' in top3_data:
+                raw_top3 = [int(x) for x in top3_data['top3']
+                            if str(x).strip().lstrip('-').isdigit()]
+                non_vuln_set = set(non_vuln_ids_p4)
+                top3_ids = [aid for aid in raw_top3 if aid in non_vuln_set][:3]
+        if not top3_ids and non_vuln_ids_p4:
+            top3_ids = non_vuln_ids_p4[:3]
+        print(f"   Seçilen Top 3 ID: {top3_ids}")
+
+        # ════════════════════════════════════════════════════════════════
         # ASSEMBLY — Kod tarafı HTML oluşturma
         # ════════════════════════════════════════════════════════════════
         print("\n🔨 HTML assembly başlıyor...")
@@ -1732,6 +1910,7 @@ class HaberSistemi:
             remaining_ids = remaining_ids,
             content_by_id = content_by_id,
             today_str   = today_str,
+            top3_ids    = top3_ids,
         )
         print(f"✅ HTML oluşturuldu ({len(html)} karakter, "
               f"{len(top10_ids) + len(remaining_ids)} haber)")

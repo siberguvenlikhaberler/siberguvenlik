@@ -35,13 +35,13 @@ ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
    Kapsam GENİŞ tutulur: gerçekleşen saldırı/kampanya ZORUNLU DEĞİL; şüpheli faaliyet, uyarı,
    dolaylı/ilişkili gelişme, istihbarat paylaşımı, güvenlik önlemi, kritik altyapı hazırlığı,
    diplomatik/siber gerilim veya zirveyle bağlantılı olabilecek her türlü teknik gelişme dahildir.
-2. İran-İsrail siber çatışması kapsamındaki haberler
-3. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
+2. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
+3. Devlet destekli saldırı / APT grubu aktivitesi / casusluk operasyonları
 4. 5 milyon+ kullanıcı veri ihlalleri
-5. Zero-day açıkları + APT grubu aktivitesi
-6. Ulusal güvenlik / Türkiye ile ilgili haberler
-7. Kritik CVE (CVSS >= 9.0) + aktif istismar
-8. Büyük fidye yazılımı (ransomware) saldırıları
+5. Ulusal güvenlik / Türkiye ile ilgili haberler
+6. Büyük fidye yazılımı (ransomware) saldırıları
+7. Takedown operasyonları, hukuki süreçler, siber suç kovuşturmaları
+8. Zero-day açıkları + aktif istismar kampanyası
 9. Tedarik zinciri (supply chain) saldırıları
 10. Diğer önemli gelişmeler
 
@@ -56,6 +56,50 @@ SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
   "remaining": [2, 5, 9, 11, 14],
   "filtered": [4, 6, 13, 20]
 }}
+
+HABERLER:
+{articles_brief}"""
+
+
+def get_top3_selection_prompt(articles_brief):
+    """
+    Pass 4: Tüm non-CVE haberler arasından istihbari/stratejik açıdan EN KRİTİK 3'ü seç.
+    articles_brief: "=== HABER ID: N ===\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
+    """
+    return f"""Sen siber tehdit istihbarat analistisin. Aşağıdaki haberler arasından stratejik açıdan EN KRİTİK 3 haberi seç.
+
+NOT: Haber içerikleri İngilizce olabilir; dil fark etmez, anlam ve stratejik öneme göre değerlendir.
+
+SEÇİM ÖNCELİĞİ:
+
+1. ÖNCELİK (en üst) — STRATEJİK & POLİTİK haberler:
+   Bu kategoride uygun haber varsa, diğer kategorilere TERCİH EDİLİR.
+   • Hükümet/istihbarat teşkilatı kararı, üst düzey atama, jeopolitik siber gelişme
+   • Kanun, yönetmelik, mahkeme kararı, dava (siber güvenlik etkisi olan)
+   • Stratejik yatırım, devlet kurumu siber politikası
+   • NATO veya ulusal güvenlikle ilişkili siber/diplomatik gelişme
+
+2. DİĞER KATEGORİLER (aralarında ESNEK seçim — günün önemine göre):
+   • Devlet destekli saldırı, casusluk operasyonu, APT grubu aktivitesi
+   • Kritik altyapıya (enerji, sağlık, finans, hükümet) yönelik olay
+   • Büyük çaplı veri ihlali veya kişisel veri istismarı
+   • Fidye yazılımı saldırısı veya büyük takedown operasyonu
+   • Önemli kimlik avı (phishing) kampanyası veya sosyal mühendislik operasyonu
+   • Hacktivizm, aktivist eylem, konum/veri istismarı
+
+KURAL: Stratejik/politik (1. öncelik) kategorisinde nitelikli haber YOKSA,
+3 haberi de 2. gruptan günün en önemli/en kritik olaylarına göre seç.
+Zorlama yapma — 1. öncelikte uygun haber yoksa o kategoriden seçme.
+
+KURAL — seçilmez:
+• Saf CVE/yama/güvenlik açığı tespiti haberleri (aktif istismar kampanyası yoksa)
+• Ürün lansmanı, beta sürüm, pazar araştırması
+• Genel tavsiye, röportaj, konferans duyurusu
+
+NOT: Bir CVE haberi devlet aktörü veya APT grubunun aktif kampanyasıyla doğrudan ilişkiliyse seçilebilir.
+
+SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
+{{"top3": [42, 7, 15]}}
 
 HABERLER:
 {articles_brief}"""
@@ -78,7 +122,7 @@ Her haber için iki şey üret:
    - Somut detay: şirket/CVE/ülke adı dahil et
 
 2. PARAGRAF: Resmi Türkçe özet
-   - MİNİMUM 120 kelime (kesinlikle daha kısa yazma)
+   - 100-120 kelime arası (bu aralığın dışına çıkma)
    - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
    - Teknik detaylar ekle (CVE numarası, etkilenen sürümler, saldırı vektörü vb.)
    - YASAK SON CÜMLELER: "Bu olay...", "Bu saldırı...", "...önem taşımaktadır", "...göstermektedir"
@@ -118,7 +162,7 @@ Her haber için:
    - Somut detay: şirket/CVE/ülke adı dahil et
 
 2. PARAGRAF: Resmi Türkçe özet
-   - MİNİMUM 100 kelime (kesinlikle daha kısa yazma)
+   - 100-120 kelime arası (bu aralığın dışına çıkma)
    - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
    - Mevcut teknik detayları aktar (CVE, etkilenen sürümler, saldırı türü vb.)
    - YASAK SON CÜMLELER: "Bu olay...", "Bu gelişme...", "...önem taşımaktadır", "...göstermektedir"
