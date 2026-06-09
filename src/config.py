@@ -357,14 +357,6 @@ Aşağıdaki kriterlere göre önem sırasına göre en önemli 10 haberi seç:
    - Anahtar kelimeler: "NATO summit", "NATO Turkey", "NATO Türkiye", "NATO Antalya", "NATO 2026", "NATO zirvesi", "alliance cyber", "summit security", "NATO cyber", "NATO defence", "NATO member"
    - Bu kategoride haber varsa, diğer tüm kategorilerden haber çıkarılsa bile bu haber listede kalır ve 1. sıradadır.
 
-🟠 **[2. ÖNCELİK — AKTİF ÇATIŞMA DÖNEMİ]** İran-İsrail çatışması kapsamındaki SİBER haberler NATO zirvesi haberleri hariç diğer tüm kategorilere göre ÜST ÖNCELİK alır ve ÖNEMLİ GELİŞMELER kutusunda NATO haberlerinin hemen ardına yerleştirilir:
-   - İran veya İsrail kaynaklı siber saldırı / siber operasyon haberleri
-   - İki ülke arasındaki siber casusluk, sabotaj, hack & leak haberleri
-   - Çatışmayla bağlantılı kritik altyapı saldırıları (enerji, iletişim, finans)
-   - İlgili tehdit aktörleri: Charming Kitten, APT33, APT34, OilRig, Tortoiseshell, Unit 8200
-   - Anahtar kelimeler: "Iran cyber", "Israel cyber", "IDF cyber", "IRGC", "Gaza", "Hamas cyber", "Hezbollah cyber"
-   - Bu kategoride haber varsa, diğer kategorilerden haber çıkarılsa bile bu haber listede kalır.
-
 1️⃣ **KRİTİK ALTYAPI SALDIRISI**
    - Enerji, sağlık, finans, hükümet sektörü
    - "Critical infrastructure", "power grid", "hospital systems"
