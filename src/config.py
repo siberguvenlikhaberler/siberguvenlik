@@ -110,7 +110,7 @@ Her haber için iki şey üret:
    - Somut detay: şirket/CVE/ülke adı dahil et
 
 2. PARAGRAF: Resmi Türkçe özet
-   - MİNİMUM 120 kelime (kesinlikle daha kısa yazma)
+   - 100-120 kelime arası (bu aralığın dışına çıkma)
    - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
    - Teknik detaylar ekle (CVE numarası, etkilenen sürümler, saldırı vektörü vb.)
    - YASAK SON CÜMLELER: "Bu olay...", "Bu saldırı...", "...önem taşımaktadır", "...göstermektedir"
@@ -150,7 +150,7 @@ Her haber için:
    - Somut detay: şirket/CVE/ülke adı dahil et
 
 2. PARAGRAF: Resmi Türkçe özet
-   - MİNİMUM 100 kelime (kesinlikle daha kısa yazma)
+   - 100-120 kelime arası (bu aralığın dışına çıkma)
    - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
    - Mevcut teknik detayları aktar (CVE, etkilenen sürümler, saldırı türü vb.)
    - YASAK SON CÜMLELER: "Bu olay...", "Bu gelişme...", "...önem taşımaktadır", "...göstermektedir"
