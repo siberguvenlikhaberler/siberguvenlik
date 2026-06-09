@@ -817,6 +817,18 @@ class HaberSistemi:
             .social-signals .signal-list { grid-template-columns: 1fr; }
             .social-signals .signal-meta { gap: 6px; }
         }
+        .vuln-section-heading {
+            background: linear-gradient(135deg, #fff3e0 0%, #fff8f0 100%);
+            border: 1px solid #ffcc80;
+            border-left: 5px solid #e65100;
+            border-radius: 8px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+        }
+        .vuln-section-heading h2 {
+            color: #bf360c; font-size: 18px; font-weight: 700; margin: 0;
+        }
+        .news-item.vuln-item { border-left-color: #e65100; }
         .back-to-top {
             position: fixed; top: 50%; left: calc(50% - 450px - 48px);
             transform: translateY(-50%); width: 36px; height: 36px;
@@ -828,6 +840,17 @@ class HaberSistemi:
         .back-to-top:hover { opacity: 1; }
         """
 
+        import re as _re
+        _CVE_PAT = _re.compile(r'CVE-\d{4}-\d{4,7}', _re.IGNORECASE)
+        _VULN_KW = (
+            'güvenlik açığı', 'açık bulundu', 'açık kapatıldı', 'zafiyet',
+            'yama yayınlandı', 'güvenlik yaması', 'sıfır gün', 'zero-day',
+            'zero day', 'exploit', 'uzaktan kod çalıştırma',
+            'sql injection', 'xss', 'path traversal', 'buffer overflow',
+            'vulnerability', 'vulnerabilities', 'patched', 'critical flaw',
+            'security flaw', 'arbitrary code',
+        )
+
         def _safe_content(art_id):
             c = content_by_id.get(art_id, {})
             art = articles_by_id.get(art_id, {})
@@ -835,47 +858,84 @@ class HaberSistemi:
             paragraph = c.get('paragraph') or art.get('full_text', '')[:500]
             return tr_title, paragraph
 
-        # ── Önemli Gelişmeler kutusu ──────────────────────────────────────
+        def _is_vuln(art_id):
+            tr_title, _ = _safe_content(art_id)
+            orig_title = articles_by_id.get(art_id, {}).get('title', '')
+            combined = (tr_title + ' ' + orig_title).lower()
+            if _CVE_PAT.search(combined):
+                return True
+            return any(kw in combined for kw in _VULN_KW)
+
+        # ── Haberleri vuln / normal olarak ayır ───────────────────────────
+        all_ids = list(top10_ids) + list(remaining_ids)
+        vuln_ids    = [aid for aid in all_ids if _is_vuln(aid)]
+        regular_ids = [aid for aid in all_ids if not _is_vuln(aid)]
+
+        # Her haber için global numara: önce vuln (1..N), sonra regular (N+1..M)
+        id_to_num = {}
+        for i, aid in enumerate(vuln_ids, 1):
+            id_to_num[aid] = i
+        for i, aid in enumerate(regular_ids, len(vuln_ids) + 1):
+            id_to_num[aid] = i
+
+        # ── Önemli Gelişmeler kutusu (sadece normal haberler) ─────────────
+        top10_regular = [aid for aid in top10_ids if not _is_vuln(aid)]
         important_items_html = ''
-        for i, art_id in enumerate(top10_ids, 1):
+        for art_id in top10_regular:
+            num = id_to_num[art_id]
             tr_title, _ = _safe_content(art_id)
             important_items_html += (
                 f'            <div class="important-item">\n'
-                f'                <a href="#haber-{i}">{i}. {tr_title}</a>\n'
+                f'                <a href="#haber-{num}">{num}. {tr_title}</a>\n'
                 f'            </div>\n'
             )
 
-        # ── Yönetici Özeti tablosu (kalan haberler) ───────────────────────
+        # ── Yönetici Özeti tablosu (sadece normal haberler) ───────────────
         table_rows_html = ''
-        offset = len(top10_ids) + 1
-        rem_pairs = [remaining_ids[i:i + 2] for i in range(0, len(remaining_ids), 2)]
-        for row_idx, pair in enumerate(rem_pairs):
+        remaining_regular = [aid for aid in regular_ids if aid not in top10_regular]
+        rem_pairs = [remaining_regular[i:i + 2] for i in range(0, len(remaining_regular), 2)]
+        for pair in rem_pairs:
             cells = ''
-            for col_idx, art_id in enumerate(pair):
-                num = offset + row_idx * 2 + col_idx
+            for art_id in pair:
+                num = id_to_num[art_id]
                 tr_title, _ = _safe_content(art_id)
                 cells += f'                    <td><a href="#haber-{num}">{num}. {tr_title}</a></td>\n'
             if len(pair) == 1:
                 cells += '                    <td></td>\n'
             table_rows_html += f'                <tr>\n{cells}                </tr>\n'
 
-        # ── Haber paragrafları ────────────────────────────────────────────
-        news_items_html = ''
-        ordered_ids = list(top10_ids) + list(remaining_ids)
-        for global_num, art_id in enumerate(ordered_ids, 1):
+        def _render_item(art_id, css_extra=''):
             art = articles_by_id.get(art_id, {})
             tr_title, paragraph = _safe_content(art_id)
+            num      = id_to_num[art_id]
             link     = art.get('link', '#')
             domain   = art.get('domain', '')
             art_date = art.get('art_date', '')
-            news_items_html += (
-                f'            <div class="news-item" id="haber-{global_num}">\n'
+            return (
+                f'            <div class="news-item{css_extra}" id="haber-{num}">\n'
                 f'                <div class="news-title"><b>{tr_title}</b></div>\n'
                 f'                <p class="news-content">{paragraph}</p>\n'
                 f'                <p class="source"><b>(XXXXXXX, AÇIK - '
                 f'<a href="{link}" target="_blank">{domain}</a>, {art_date})</b></p>\n'
                 f'            </div>\n'
             )
+
+        # ── Haber paragrafları ────────────────────────────────────────────
+        news_items_html = ''
+
+        # Güvenlik Açıkları bölümü (haber paragraflarından önce)
+        if vuln_ids:
+            news_items_html += (
+                '            <div class="vuln-section-heading">\n'
+                '                <h2>&#128272; Güvenlik Açıkları</h2>\n'
+                '            </div>\n'
+            )
+            for art_id in vuln_ids:
+                news_items_html += _render_item(art_id, ' vuln-item')
+
+        # Normal haberler
+        for art_id in regular_ids:
+            news_items_html += _render_item(art_id)
 
         html = f"""<!DOCTYPE html>
 <html lang="tr">
