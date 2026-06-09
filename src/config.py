@@ -35,13 +35,13 @@ ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
    Kapsam GENİŞ tutulur: gerçekleşen saldırı/kampanya ZORUNLU DEĞİL; şüpheli faaliyet, uyarı,
    dolaylı/ilişkili gelişme, istihbarat paylaşımı, güvenlik önlemi, kritik altyapı hazırlığı,
    diplomatik/siber gerilim veya zirveyle bağlantılı olabilecek her türlü teknik gelişme dahildir.
-2. İran-İsrail siber çatışması kapsamındaki haberler
-3. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
+2. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
+3. Devlet destekli saldırı / APT grubu aktivitesi / casusluk operasyonları
 4. 5 milyon+ kullanıcı veri ihlalleri
-5. Zero-day açıkları + APT grubu aktivitesi
-6. Ulusal güvenlik / Türkiye ile ilgili haberler
-7. Kritik CVE (CVSS >= 9.0) + aktif istismar
-8. Büyük fidye yazılımı (ransomware) saldırıları
+5. Ulusal güvenlik / Türkiye ile ilgili haberler
+6. Büyük fidye yazılımı (ransomware) saldırıları
+7. Takedown operasyonları, hukuki süreçler, siber suç kovuşturmaları
+8. Zero-day açıkları + aktif istismar kampanyası
 9. Tedarik zinciri (supply chain) saldırıları
 10. Diğer önemli gelişmeler
 
@@ -56,6 +56,38 @@ SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
   "remaining": [2, 5, 9, 11, 14],
   "filtered": [4, 6, 13, 20]
 }}
+
+HABERLER:
+{articles_brief}"""
+
+
+def get_top3_selection_prompt(articles_brief):
+    """
+    Pass 4: Tüm non-CVE haberler arasından istihbari/stratejik açıdan EN KRİTİK 3'ü seç.
+    articles_brief: "=== HABER ID: N ===\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
+    """
+    return f"""Sen siber tehdit istihbarat analistisin. Aşağıdaki haberler arasından stratejik açıdan EN KRİTİK 3 haberi seç.
+
+SEÇİM KRİTERLERİ — aşağıdaki kategorilerden EN ÖNEMLİ olanları önceliklendir:
+• Devlet destekli saldırı, casusluk operasyonu, APT grubu aktivitesi
+• Kritik altyapıya (enerji, sağlık, finans, hükümet) yönelik olay
+• Büyük çaplı veri ihlali veya kişisel veri istismarı
+• Fidye yazılımı saldırısı veya büyük takedown operasyonu
+• Önemli kimlik avı (phishing) kampanyası veya sosyal mühendislik operasyonu
+• Hükümet/istihbarat teşkilatı kararı, atama, jeopolitik siber gelişme
+• Kanun, yönetmelik, mahkeme kararı (siber güvenlik etkisi olan)
+• Hacktivizm, aktivist eylem, kritik altyapı tehdidi
+• NATO veya ulusal güvenlikle ilişkili siber gelişme
+
+KURAL — seçilmez:
+• Saf CVE/yama/güvenlik açığı tespiti haberleri (aktif istismar kampanyası yoksa)
+• Ürün lansmanı, beta sürüm, pazar araştırması
+• Genel tavsiye, röportaj, konferans duyurusu
+
+NOT: Bir CVE haberi devlet aktörü veya APT grubunun aktif kampanyasıyla doğrudan ilişkiliyse seçilebilir.
+
+SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
+{{"top3": [42, 7, 15]}}
 
 HABERLER:
 {articles_brief}"""
