@@ -2936,57 +2936,55 @@ KURALLAR:
         return html
 
     def _create_fallback_html(self, txt_content, error_type=None, error_message=None):
-        """Gemini API başarısız olursa — hata detaylarını içeren fallback HTML"""
-        now = datetime.now()
+        """Gemini API başarısız olursa — yeni format layout'u, ham İngilizce içerikle"""
+        now       = datetime.now()
+        today_str = now.strftime('%d.%m.%Y')
 
-        if error_type or error_message:
-            import html as _html_escape
-            safe_type = _html_escape.escape(str(error_type or 'Bilinmiyor'))
-            safe_msg  = _html_escape.escape(str(error_message or 'Bilinmiyor'))
-            error_section = f"""
-    <div class="error-box">
-        <h2>⚠️ Gemini API Hata Detayları</h2>
-        <table class="error-table">
-            <tr><th>Hata Türü</th><td><code>{safe_type}</code></td></tr>
-            <tr><th>Hata Mesajı</th><td><code>{safe_msg}</code></td></tr>
-            <tr><th>Oluşma Zamanı</th><td>{now.strftime('%d.%m.%Y %H:%M:%S')}</td></tr>
-            <tr><th>Deneme Sayısı</th><td>5 deneme / 3 model (bu çalışmada) — tümü başarısız; 1 saat sonra yeniden denenecek</td></tr>
-        </table>
-    </div>"""
+        articles = self._parse_articles_from_txt(txt_content) if txt_content else []
+
+        if articles:
+            # Ham içerikle content_by_id oluştur — AI özeti yok, orijinal metin
+            content_by_id = {}
+            for a in articles:
+                snippet = ' '.join(a.get('full_text', '').split()[:110])
+                content_by_id[a['id']] = {
+                    'tr_title':  a.get('title', ''),
+                    'paragraph': snippet,
+                }
+            # Sıralama yok — olduğu gibi kullan
+            top10_ids     = [a['id'] for a in articles[:10]]
+            remaining_ids = [a['id'] for a in articles[10:]]
+            top3_ids      = []
+
+            html = self._build_html(
+                articles      = articles,
+                top10_ids     = top10_ids,
+                remaining_ids = remaining_ids,
+                content_by_id = content_by_id,
+                today_str     = today_str,
+                top3_ids      = top3_ids,
+            )
+            # Hata uyarı bandı ekle
+            if error_type or error_message:
+                import html as _html_escape
+                safe_msg = _html_escape.escape(str(error_message or error_type or ''))[:200]
+                warning_bar = (
+                    f'<div style="background:#fff3cd;border-bottom:2px solid #ffc107;'
+                    f'padding:10px 20px;font-size:13px;color:#856404;">'
+                    f'⚠️ Gemini API yanıt vermedi — içerik çevrilmedi/özetlenmedi. '
+                    f'<code style="font-size:12px">{safe_msg}</code></div>'
+                )
+                html = html.replace('<body>', '<body>' + warning_bar, 1)
+            html = html.replace('[FALLBACK]', '')
         else:
-            error_section = ""
-
-        html = f"""<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siber Güvenlik Raporu - {now.strftime('%d %B %Y')} [FALLBACK]</title>
-    <style>
-        body {{ font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }}
-        .header {{ background: #1e3c72; color: white; padding: 40px; border-radius: 10px; margin-bottom: 20px; }}
-        .header h1 {{ margin: 0 0 10px 0; }}
-        .header p {{ margin: 4px 0; opacity: 0.9; }}
-        .error-box {{ background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 24px 30px; margin-bottom: 20px; }}
-        .error-box h2 {{ color: #856404; margin: 0 0 16px 0; font-size: 18px; }}
-        .error-table {{ width: 100%; border-collapse: collapse; }}
-        .error-table th {{ text-align: left; padding: 8px 12px; background: #ffeeba; color: #533f03; width: 180px; font-size: 14px; }}
-        .error-table td {{ padding: 8px 12px; font-size: 14px; }}
-        .error-table tr {{ border-bottom: 1px solid #ffd875; }}
-        .error-table code {{ background: #fff; border: 1px solid #ddd; border-radius: 3px; padding: 2px 6px; font-size: 13px; word-break: break-all; }}
-        .content {{ background: white; padding: 40px; border-radius: 10px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }}
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>🔒 Siber Güvenlik Günlük Raporu</h1>
-        <p>{now.strftime('%d %B %Y')}</p>
-        <p>⚠️ Gemini API yanıt vermedi — 1 saat sonra otomatik yeniden denenecek</p>
-    </div>
-    {error_section}
-    <div class="content">{txt_content}</div>
-</body>
-</html>"""
+            # Makale ayrıştırılamadıysa minimal sayfa
+            html = (
+                '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8">'
+                f'<title>Siber Güvenlik Raporu [FALLBACK]</title></head><body>'
+                f'<h2>⚠️ Gemini API yanıt vermedi</h2>'
+                f'<pre style="font-size:13px">{txt_content[:3000] if txt_content else ""}</pre>'
+                '</body></html>'
+            )
 
         os.makedirs("docs/raporlar", exist_ok=True)
         with open("docs/index.html", 'w', encoding='utf-8') as f:
@@ -2994,7 +2992,7 @@ KURALLAR:
         with open(f"docs/raporlar/{now.strftime('%Y-%m-%d')}.html", 'w', encoding='utf-8') as f:
             f.write(html)
 
-        print("✅ Fallback HTML oluşturuldu (hata detayları dahil)")
+        print("✅ Fallback HTML oluşturuldu (yeni format, ham içerik)")
         return html
 
     def _cleanup_old_reports(self):
