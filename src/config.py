@@ -320,6 +320,64 @@ DETECTION_PATTERNS = {
     'countries': r'\b(Ukraine|Russia|China|Iran|Korea|Israel|US|USA|UK|United States)\b',
 }
 
+def get_legacy_json_prompt(articles_brief):
+    """
+    Legacy tek-çağrı fallback için: sıralama + Türkçe özet birleşik JSON prompt.
+    Döndürülen JSON:
+    {
+      "top10": [id, ...],          // en önemli max 10 haber ID
+      "remaining": [id, ...],      // diğer haberler önem sırasıyla
+      "filtered": [id, ...],       // çıkarılan haberler
+      "summaries": [
+        {"id": N, "tr_title": "...", "paragraph": "..."},
+        ...
+      ]
+    }
+    """
+    return f"""Sen profesyonel bir siber tehdit istihbarat analistisin.
+Sana {len(articles_brief.split('=== HABER ID:')) - 1} haber verilecek. Tek seferde şunları yapacaksın:
+
+ADIM 1 — FİLTRELE (filtered listesi):
+Aşağıdakileri ÇIKAR:
+- Podcast, webinar, konferans, etkinlik duyurusu
+- Ürün lansmanı, beta sürüm, pazar araştırması raporu
+- Genel tavsiye makalesi, röportaj, inceleme yazısı
+- Basit patch haberleri (kritik olmayan)
+
+ADIM 2 — SIRALA:
+Kalan haberleri önem sırasına göre sırala. En önemli max 10 tanesi "top10", geri kalanlar "remaining".
+Öncelik sırası:
+1. NATO/ulusal güvenlik, jeopolitik siber gelişme, hükümet kararı
+2. Kritik altyapı saldırısı (enerji, sağlık, finans, hükümet)
+3. Devlet destekli saldırı / APT / casusluk
+4. Büyük veri ihlali (5M+ kullanıcı)
+5. Zero-day + aktif istismar
+6. Fidye yazılımı, takedown, kovuşturma
+7. Tedarik zinciri saldırısı
+8. Diğer
+
+ADIM 3 — TÜRKÇE ÖZET YAZ (filtered hariç HER haber için):
+Her haber için:
+- "tr_title": Türkçe başlık. ZORUNLU: eylem cümlesi kullan ("...saldırı gerçekleştirilmiştir", "...açığa çıkmıştır"). YASAK: "...Bulunması", "...Açıklanması" gibi isim-fiil.
+- "paragraph": 100-120 kelime arasında Türkçe analiz paragrafı. Bu aralığın DIŞINA ÇIKMA.
+  - Ne oldu, kim etkilendi, teknik boyut, stratejik önemi anlat
+  - Yorumsuz, olgusal, resmi dil
+
+ÇIKTI FORMATI — SADECE JSON, başka hiçbir şey yazma:
+{{
+  "top10": [42, 7, 15, ...],
+  "remaining": [3, 8, 21, ...],
+  "filtered": [5, 12, ...],
+  "summaries": [
+    {{"id": 42, "tr_title": "Başlık...", "paragraph": "Paragraf..."}},
+    ...
+  ]
+}}
+
+HABERLER:
+{articles_brief}"""
+
+
 # Gemini prompt (RESMİ TÜRKÇE) - YENİ GELİŞTİRİLMİŞ VERSİYON
 def get_claude_prompt(news_content, recent_events=''):
     now = datetime.now()

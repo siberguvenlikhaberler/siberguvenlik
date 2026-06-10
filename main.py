@@ -23,7 +23,7 @@ from src.config import (
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
-    get_top3_selection_prompt,
+    get_top3_selection_prompt, get_legacy_json_prompt,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
 
@@ -2037,102 +2037,159 @@ class HaberSistemi:
 
     def _create_html_legacy(self, txt_content):
         """
-        Eski tek-çağrı yöntemi — Pass 1 başarısız olduğunda fallback olarak kullanılır.
-        Gemini'ye tam txt gönderir, HTML döndürür; doğrulama + tamamlama mekanizmalı.
+        Legacy fallback — Pass 1 başarısız olduğunda çalışır.
+        Tek Gemini çağrısıyla sıralama + Türkçe özetleri JSON olarak alır,
+        ardından _build_html() ile yeni formatta rapor üretir.
         """
-        print("🔄 Eski tek-çağrı yöntemi (legacy) çalışıyor...")
-        html = None
+        print("🔄 Legacy tek-çağrı yöntemi çalışıyor...")
         if not GEMINI_API_KEY:
             return self._create_fallback_html(
                 txt_content, error_type="NoAPIKey",
                 error_message="GEMINI_API_KEY mevcut değil"
             )
 
-        client = genai.Client(api_key=GEMINI_API_KEY)
-        _MODEL_CFG = {
-            'gemini-2.5-pro':   {'max_output_tokens': 65000},
-            'gemini-2.5-flash': {'max_output_tokens': 65536},
-        }
-        _GEMINI_MODELS = list(_MODEL_CFG.keys())
-        last_error_type = last_error_message = None
+        now       = datetime.now()
+        today_str = now.strftime('%d.%m.%Y')
 
-        for attempt in range(4):
-            model = _GEMINI_MODELS[min(attempt // 2, len(_GEMINI_MODELS) - 1)]
-            cfg   = _MODEL_CFG[model]
-            try:
-                print(f"   [Legacy] Deneme {attempt + 1}/4 [{model}]...")
-                prompt = get_claude_prompt(txt_content)
-                chunks = []
-                last_chunk = None
-                for chunk in client.models.generate_content_stream(
-                    model=model,
-                    contents=prompt,
-                    config=genai_types.GenerateContentConfig(
-                        max_output_tokens=cfg['max_output_tokens'],
-                        temperature=0.7,
-                        safety_settings=[
-                            genai_types.SafetySetting(
-                                category='HARM_CATEGORY_DANGEROUS_CONTENT',
-                                threshold='BLOCK_ONLY_HIGH',
-                            ),
-                        ],
-                    ),
-                ):
-                    if chunk.text:
-                        chunks.append(chunk.text)
-                    last_chunk = chunk
-
-                if last_chunk and last_chunk.candidates:
-                    finish_reason = last_chunk.candidates[0].finish_reason
-                    ok_reasons = {'STOP', 'FinishReason.STOP', '1'}
-                    if str(finish_reason) not in ok_reasons:
-                        raise Exception(f"Stream tamamlanmadi (finish_reason={finish_reason})")
-                elif not chunks:
-                    raise Exception("Stream bos dondu")
-
-                html = ''.join(chunks)
-                break
-            except Exception as e:
-                last_error_type = type(e).__name__
-                last_error_message = str(e)
-                print(f"   [Legacy] ⚠️  [{last_error_type}]: {last_error_message}")
-                if attempt < 3:
-                    wait_time = min(30 * (2 ** attempt), 240)
-                    time.sleep(wait_time)
-
-        if not html:
+        articles = self._parse_articles_from_txt(txt_content)
+        if not articles:
             return self._create_fallback_html(
-                txt_content, error_type=last_error_type,
-                error_message=last_error_message,
+                txt_content, error_type="ParseError",
+                error_message="txt_content'ten makale çıkarılamadı"
+            )
+        print(f"   {len(articles)} makale ayrıştırıldı.")
+
+        # Brief hazırla
+        brief_lines = []
+        for a in articles:
+            snippet = ' '.join(a['full_text'].split()[:200]).replace('\n', ' ')
+            brief_lines.append(
+                f"=== HABER ID: {a['id']} ===\n"
+                f"Kaynak: {a['source']}\n"
+                f"Başlık: {a['title']}\n"
+                f"İçerik: {snippet}\n"
+            )
+        articles_brief = '\n'.join(brief_lines)
+
+        # Tek Gemini çağrısı — JSON
+        data = self._gemini_call_json(
+            get_legacy_json_prompt(articles_brief),
+            max_output_tokens=65536,
+            label='Legacy-JSON',
+        )
+
+        if data is None:
+            return self._create_fallback_html(
+                txt_content, error_type="LegacyJSONFailed",
+                error_message="Legacy JSON çağrısı başarısız"
             )
 
-        # HTML temizle
-        doctype_pos = html.lower().find('<!doctype html')
-        html_tag_pos = html.lower().find('<html')
-        candidates = [p for p in [doctype_pos, html_tag_pos] if p != -1]
-        if candidates:
-            html = html[min(candidates):]
-        html = re.sub(r'\s*```\s*$', '', html).strip()
+        # Veriyi çözümle
+        all_ids       = {a['id'] for a in articles}
+        top10_ids     = [int(i) for i in data.get('top10', [])    if int(i) in all_ids]
+        filtered_ids  = {int(i) for i in data.get('filtered', []) if int(i) in all_ids}
+        remaining_ids = [int(i) for i in data.get('remaining', [])
+                         if int(i) in all_ids
+                         and int(i) not in set(top10_ids)
+                         and int(i) not in filtered_ids]
+        # Sıralamada yer almayan ama filtrelenmemiş makaleleri sona ekle
+        ranked_set = set(top10_ids) | set(remaining_ids) | filtered_ids
+        for a in articles:
+            if a['id'] not in ranked_set:
+                remaining_ids.append(a['id'])
 
-        validation = self._validate_html_completeness(html)
-        for _ in range(2):
-            if validation['is_valid']:
-                break
-            html = self._complete_missing_paragraphs(html, txt_content, validation)
-            validation = self._validate_html_completeness(html)
+        content_by_id = {}
+        for s in data.get('summaries', []):
+            try:
+                aid = int(s['id'])
+                content_by_id[aid] = {
+                    'tr_title':  s.get('tr_title', ''),
+                    'paragraph': s.get('paragraph', ''),
+                }
+            except (KeyError, ValueError, TypeError):
+                pass
+
+        # Özeti olmayan haberlere ham metin ekle
+        id_to_article = {a['id']: a for a in articles}
+        for aid in top10_ids + remaining_ids:
+            if aid not in content_by_id:
+                a = id_to_article.get(aid, {})
+                snippet = ' '.join(a.get('full_text', '').split()[:120])
+                content_by_id[aid] = {
+                    'tr_title':  a.get('title', ''),
+                    'paragraph': snippet,
+                }
+
+        print(f"   📊 Doğrulama: Özet={len(content_by_id)}, "
+              f"Top10={len(top10_ids)}, Kalan={len(remaining_ids)}")
+
+        # Pass 4 — Top 3 seçimi (CVE dışı)
+        CVE_RE = re.compile(r'CVE-\d{4}-\d{4,7}', re.IGNORECASE)
+        VULN_KEYWORDS = [
+            'güvenlik açığı', 'vulnerability', 'patch', 'yama', 'zero-day',
+            'exploit', 'zafiyet', 'güncelleme', 'update', 'advisory',
+        ]
+        top3_ids = []
+        non_vuln_ids = []
+        for a in articles:
+            aid = a['id']
+            if aid in filtered_ids or aid not in set(top10_ids + remaining_ids):
+                continue
+            title = a.get('title', '').lower()
+            text  = a.get('full_text', '').lower()
+            is_vuln = bool(CVE_RE.search(a.get('title', '') + a.get('full_text', '')))
+            if not is_vuln:
+                is_vuln = any(kw in title or kw in text for kw in VULN_KEYWORDS)
+            if not is_vuln:
+                non_vuln_ids.append(aid)
+
+        if non_vuln_ids:
+            brief_lines_p4 = []
+            for aid in non_vuln_ids:
+                a  = id_to_article.get(aid, {})
+                c  = content_by_id.get(aid, {})
+                orig_title = a.get('title', '')
+                tr_title   = c.get('tr_title', '')
+                full_text  = a.get('full_text', '') or c.get('paragraph', '')
+                snippet    = ' '.join(full_text.split()[:160])
+                brief_lines_p4.append(
+                    f"=== HABER ID: {aid} ===\n"
+                    f"Başlık: {orig_title}\n"
+                    + (f"TR Başlık: {tr_title}\n" if tr_title else "")
+                    + f"İçerik: {snippet}\n"
+                )
+            top3_data = self._gemini_call_json(
+                get_top3_selection_prompt('\n'.join(brief_lines_p4)),
+                max_output_tokens=256,
+                label='Legacy-Top3',
+            )
+            if top3_data and 'top3' in top3_data:
+                raw_top3 = [int(x) for x in top3_data['top3']
+                            if str(x).strip().lstrip('-').isdigit()]
+                non_vuln_set = set(non_vuln_ids)
+                top3_ids = [aid for aid in raw_top3 if aid in non_vuln_set][:3]
+        if not top3_ids and non_vuln_ids:
+            top3_ids = non_vuln_ids[:3]
+        print(f"   Seçilen Top 3 ID: {top3_ids}")
+
+        # HTML oluştur
+        html = self._build_html(
+            articles      = articles,
+            top10_ids     = top10_ids,
+            remaining_ids = remaining_ids,
+            content_by_id = content_by_id,
+            today_str     = today_str,
+            top3_ids      = top3_ids,
+        )
 
         self._translate_social_signals()
         html = self._inject_social_box(html)
-        html = self._fix_source_dates(html, txt_content)
-        html = self._fix_source_links(html)
         html = self._remove_commentary_sentences(html)
-        html = self._fix_html_structure(html)
         html = self._sanitize_html(html)
 
         html_index   = self._add_archive_links(html, is_archive=False)
         html_archive = self._add_archive_links(html, is_archive=True)
 
-        now = datetime.now()
         os.makedirs("docs/raporlar", exist_ok=True)
         with open("docs/index.html", 'w', encoding='utf-8') as f:
             f.write(html_index)
