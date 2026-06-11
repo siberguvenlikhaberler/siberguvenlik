@@ -77,29 +77,34 @@ def _glm_call_json(prompt, max_output_tokens=4096, label=''):
     token = _jwt.encode(payload, secret, algorithm='HS256',
                         headers={'alg': 'HS256', 'sign_type': 'SIGN'})
     url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
-    body = {
-        'model': 'glm-4-flash',
-        'messages': [{'role': 'user', 'content': prompt}],
-        'temperature': 0.3,
-    }
-    data = _json.dumps(body).encode()
-    request = _req.Request(url, data=data, headers={
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {token}',
-    })
-    try:
-        with _req.urlopen(request, timeout=120) as r:
-            raw = _json.loads(r.read())['choices'][0]['message']['content']
-            result = _extract_json_from_text(raw)
-            print(f"   [{label}] ✅ GLM-4-Flash başarılı.")
-            return result
-    except _uerr.HTTPError as e:
-        body_err = e.read().decode(errors='replace')
-        print(f"   [{label}] ⚠️  GLM HTTP {e.code}: {body_err}")
-        return None
-    except Exception as e:
-        print(f"   [{label}] ⚠️  GLM hatası [{type(e).__name__}]: {e}")
-        return None
+    # Olası model adlarını sırayla dene
+    _GLM_MODELS = ['glm-4-flash', 'glm-4.7-flash', 'glm-4-flash-250414', 'GLM-4-Flash']
+    for model_name in _GLM_MODELS:
+        body = {
+            'model': model_name,
+            'messages': [{'role': 'user', 'content': prompt}],
+            'temperature': 0.3,
+        }
+        data = _json.dumps(body).encode()
+        request = _req.Request(url, data=data, headers={
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {token}',
+        })
+        try:
+            with _req.urlopen(request, timeout=120) as r:
+                raw = _json.loads(r.read())['choices'][0]['message']['content']
+                result = _extract_json_from_text(raw)
+                print(f"   [{label}] ✅ GLM başarılı (model: {model_name}).")
+                return result
+        except _uerr.HTTPError as e:
+            body_err = e.read().decode(errors='replace')
+            print(f"   [{label}] ⚠️  GLM [{model_name}] HTTP {e.code}: {body_err}")
+            if e.code != 400:  # 400=model yok, diğer hatalarda dur
+                return None
+        except Exception as e:
+            print(f"   [{label}] ⚠️  GLM [{model_name}] hatası [{type(e).__name__}]: {e}")
+            return None
+    return None
 
 
 def _calculate_content_hash(title, description):
