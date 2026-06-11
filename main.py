@@ -77,8 +77,8 @@ def _glm_call_json(prompt, max_output_tokens=4096, label=''):
     token = _jwt.encode(payload, secret, algorithm='HS256',
                         headers={'alg': 'HS256', 'sign_type': 'SIGN'})
     url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
-    # Z.ai'da doğru model adı: GLM-4.7-Flash (concurrency limit: 1)
-    for model_name in ['GLM-4.7-Flash', 'glm-4.7-flash']:
+    # Z.ai free modeller: 429/1305 alınca sıradakini dene
+    for model_name in ['GLM-4.7-Flash', 'GLM-4.7-FlashX', 'GLM-4.5-Flash', 'GLM-4.6']:
         for attempt in range(4):
             body = {
                 'model': model_name,
@@ -99,12 +99,10 @@ def _glm_call_json(prompt, max_output_tokens=4096, label=''):
             except _uerr.HTTPError as e:
                 body_err = e.read().decode(errors='replace')
                 print(f"   [{label}] ⚠️  GLM [{model_name}] HTTP {e.code}: {body_err}")
-                if e.code == 429:
-                    wait = 60 * (attempt + 1)
-                    print(f"   [{label}] ⏳ Rate limit — {wait}s bekleniyor...")
-                    _time.sleep(wait)
+                if e.code in (429, 503) or '"1305"' in body_err or '1305' in body_err:
+                    break  # Sunucu aşırı yüklü — sonraki modele geç
                 elif e.code == 400:
-                    break  # Bu model adı yanlış, diğerini dene
+                    break  # Model adı yanlış — sonraki modele geç
                 else:
                     return None
             except Exception as e:
