@@ -19,7 +19,7 @@ from google.genai import types as genai_types
 from openai import OpenAI as OpenAIClient
 
 from src.config import (
-    GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
+    GEMINI_API_KEY, ZHIPUAI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
@@ -63,6 +63,40 @@ def _extract_json_from_text(text):
                 except json.JSONDecodeError:
                     break
     raise ValueError("Geçerli JSON çıkarılamadı")
+
+
+def _glm_call_json(prompt, max_output_tokens=4096, label=''):
+    """GLM-4.7-Flash API çağrısı — Gemini başarısız olunca fallback olarak kullanılır."""
+    import time as _time, jwt as _jwt
+    key_id, secret = ZHIPUAI_API_KEY.split('.')
+    payload = {
+        'api_key': key_id,
+        'exp': int(round(_time.time() * 1000)) + 3600 * 1000,
+        'timestamp': int(round(_time.time() * 1000)),
+    }
+    token = _jwt.encode(payload, secret, algorithm='HS256',
+                        headers={'alg': 'HS256', 'sign_type': 'SIGN'})
+    import urllib.request as _req, json as _json
+    url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
+    data = _json.dumps({
+        'model': 'glm-4-flash',
+        'messages': [{'role': 'user', 'content': prompt}],
+        'max_tokens': max_output_tokens,
+        'temperature': 0.3,
+    }).encode()
+    request = _req.Request(url, data=data, headers={
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}',
+    })
+    try:
+        with _req.urlopen(request, timeout=120) as r:
+            raw = _json.loads(r.read())['choices'][0]['message']['content']
+            result = _extract_json_from_text(raw)
+            print(f"   [{label}] ✅ GLM-4.7-Flash başarılı.")
+            return result
+    except Exception as e:
+        print(f"   [{label}] ⚠️  GLM hatası [{type(e).__name__}]: {e}")
+        return None
 
 
 def _calculate_content_hash(title, description):
@@ -670,7 +704,18 @@ class HaberSistemi:
                     print(f"   [{label}] ⏳ {wait}s bekleniyor...")
                     time.sleep(wait)
 
-        print(f"   [{label}] ❌ 4 deneme başarısız.")
+        print(f"   [{label}] ❌ Gemini 4 deneme başarısız.")
+
+        # ── GLM-4.7-Flash fallback ─────────────────────────────────────────
+        if ZHIPUAI_API_KEY:
+            print(f"   [{label}] 🔄 GLM-4.7-Flash deneniyor...")
+            glm_result = _glm_call_json(prompt, max_output_tokens, label)
+            if glm_result is not None:
+                return glm_result
+            print(f"   [{label}] ❌ GLM-4.7-Flash de başarısız.")
+        else:
+            print(f"   [{label}] ⚠️  ZHIPUAI_API_KEY yok, GLM atlanıyor.")
+
         return None
 
     @staticmethod
