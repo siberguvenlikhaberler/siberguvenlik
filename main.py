@@ -77,36 +77,39 @@ def _glm_call_json(prompt, max_output_tokens=4096, label=''):
     token = _jwt.encode(payload, secret, algorithm='HS256',
                         headers={'alg': 'HS256', 'sign_type': 'SIGN'})
     url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
-    model_name = 'glm-4.7-flash'
-    for attempt in range(4):
-        body = {
-            'model': model_name,
-            'messages': [{'role': 'user', 'content': prompt}],
-            'temperature': 0.3,
-        }
-        data = _json.dumps(body).encode()
-        request = _req.Request(url, data=data, headers={
-            'Content-Type': 'application/json',
-            'Authorization': f'Bearer {token}',
-        })
-        try:
-            with _req.urlopen(request, timeout=120) as r:
-                raw = _json.loads(r.read())['choices'][0]['message']['content']
-                result = _extract_json_from_text(raw)
-                print(f"   [{label}] ✅ GLM başarılı.")
-                return result
-        except _uerr.HTTPError as e:
-            body_err = e.read().decode(errors='replace')
-            print(f"   [{label}] ⚠️  GLM HTTP {e.code}: {body_err}")
-            if e.code == 429:
-                wait = 30 * (attempt + 1)
-                print(f"   [{label}] ⏳ Rate limit — {wait}s bekleniyor...")
-                _time.sleep(wait)
-            else:
+    # Z.ai'da doğru model adı: GLM-4.7-Flash (concurrency limit: 1)
+    for model_name in ['GLM-4.7-Flash', 'glm-4.7-flash']:
+        for attempt in range(4):
+            body = {
+                'model': model_name,
+                'messages': [{'role': 'user', 'content': prompt}],
+                'temperature': 0.3,
+            }
+            data = _json.dumps(body).encode()
+            request = _req.Request(url, data=data, headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'Bearer {token}',
+            })
+            try:
+                with _req.urlopen(request, timeout=120) as r:
+                    raw = _json.loads(r.read())['choices'][0]['message']['content']
+                    result = _extract_json_from_text(raw)
+                    print(f"   [{label}] ✅ GLM başarılı (model: {model_name}).")
+                    return result
+            except _uerr.HTTPError as e:
+                body_err = e.read().decode(errors='replace')
+                print(f"   [{label}] ⚠️  GLM [{model_name}] HTTP {e.code}: {body_err}")
+                if e.code == 429:
+                    wait = 60 * (attempt + 1)
+                    print(f"   [{label}] ⏳ Rate limit — {wait}s bekleniyor...")
+                    _time.sleep(wait)
+                elif e.code == 400:
+                    break  # Bu model adı yanlış, diğerini dene
+                else:
+                    return None
+            except Exception as e:
+                print(f"   [{label}] ⚠️  GLM [{model_name}] hatası [{type(e).__name__}]: {e}")
                 return None
-        except Exception as e:
-            print(f"   [{label}] ⚠️  GLM hatası [{type(e).__name__}]: {e}")
-            return None
     return None
 
 
