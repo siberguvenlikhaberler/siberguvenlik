@@ -659,7 +659,7 @@ class HaberSistemi:
         articles.sort(key=lambda a: a['id'])
         return articles
 
-    def _gemini_call_json(self, prompt, max_output_tokens=4096, label=''):
+    def _gemini_call_json(self, prompt, max_output_tokens=4096, label='', try_glm=False):
         """
         Gemini API çağrısı yapar ve JSON yanıt döndürür.
         Retry: 4 deneme, üstel geri çekilme; model sırası pro→pro→flash→flash.
@@ -721,15 +721,13 @@ class HaberSistemi:
 
         print(f"   [{label}] ❌ Gemini 4 deneme başarısız.")
 
-        # ── GLM-4.7-Flash fallback ─────────────────────────────────────────
-        if ZHIPUAI_API_KEY:
+        # ── GLM-4.7-Flash fallback (sadece izin verildiğinde) ────────────
+        if try_glm and ZHIPUAI_API_KEY:
             print(f"   [{label}] 🔄 GLM-4.7-Flash deneniyor...")
             glm_result = _glm_call_json(prompt, max_output_tokens, label)
             if glm_result is not None:
                 return glm_result
             print(f"   [{label}] ❌ GLM-4.7-Flash de başarısız.")
-        else:
-            print(f"   [{label}] ⚠️  ZHIPUAI_API_KEY yok, GLM atlanıyor.")
 
         return None
 
@@ -2131,11 +2129,12 @@ class HaberSistemi:
             )
         articles_brief = '\n'.join(brief_lines)
 
-        # Tek Gemini çağrısı — JSON
+        # Tek Gemini çağrısı — JSON (GLM fallback burada)
         data = self._gemini_call_json(
             get_legacy_json_prompt(articles_brief),
             max_output_tokens=65536,
             label='Legacy-JSON',
+            try_glm=True,
         )
 
         if data is None:
