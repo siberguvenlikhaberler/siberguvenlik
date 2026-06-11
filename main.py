@@ -66,48 +66,42 @@ def _extract_json_from_text(text):
 
 
 def _glm_call_json(prompt, max_output_tokens=4096, label=''):
-    """GLM-4-Flash API çağrısı — Gemini başarısız olunca fallback olarak kullanılır."""
-    import time as _time, jwt as _jwt, urllib.request as _req, json as _json, urllib.error as _uerr
-    key_id, secret = ZHIPUAI_API_KEY.split('.')
-    payload = {
-        'api_key': key_id,
-        'exp': int(round(_time.time() * 1000)) + 3600 * 1000,
-        'timestamp': int(round(_time.time() * 1000)),
-    }
-    token = _jwt.encode(payload, secret, algorithm='HS256',
-                        headers={'alg': 'HS256', 'sign_type': 'SIGN'})
-    url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
-    # Z.ai free modeller: 429/1305 alınca sıradakini dene
-    for model_name in ['GLM-4.7-Flash', 'GLM-4.7-FlashX', 'GLM-4.5-Flash', 'GLM-4.6']:
-        for attempt in range(4):
-            body = {
-                'model': model_name,
-                'messages': [{'role': 'user', 'content': prompt}],
-                'temperature': 0.3,
-            }
-            data = _json.dumps(body).encode()
-            request = _req.Request(url, data=data, headers={
-                'Content-Type': 'application/json',
-                'Authorization': f'Bearer {token}',
-            })
-            try:
-                with _req.urlopen(request, timeout=120) as r:
-                    raw = _json.loads(r.read())['choices'][0]['message']['content']
-                    result = _extract_json_from_text(raw)
-                    print(f"   [{label}] ✅ GLM başarılı (model: {model_name}).")
-                    return result
-            except _uerr.HTTPError as e:
-                body_err = e.read().decode(errors='replace')
-                print(f"   [{label}] ⚠️  GLM [{model_name}] HTTP {e.code}: {body_err}")
-                if e.code in (429, 503) or '"1305"' in body_err or '1305' in body_err:
-                    break  # Sunucu aşırı yüklü — sonraki modele geç
-                elif e.code == 400:
-                    break  # Model adı yanlış — sonraki modele geç
-                else:
-                    return None
-            except Exception as e:
-                print(f"   [{label}] ⚠️  GLM [{model_name}] hatası [{type(e).__name__}]: {e}")
-                return None
+    """GLM API çağrısı — zhipuai SDK ile, Gemini başarısız olunca fallback."""
+    try:
+        from zhipuai import ZhipuAI as _ZhipuAI
+    except ImportError:
+        print(f"   [{label}] ⚠️  zhipuai paketi yok.")
+        return None
+    import warnings as _w
+    _w.filterwarnings("ignore", category=UserWarning, module="jwt")
+    _w.filterwarnings("ignore", message=".*HMAC key.*")
+    client = _ZhipuAI(api_key=ZHIPUAI_API_KEY)
+    # Ücretsiz modeller (Z.ai rate limit tablosundan)
+    _MODELS = ['GLM-4.7-Flash', 'GLM-4.6', 'GLM-4.5-Air', 'GLM-4.5-Flash']
+    for model_name in _MODELS:
+        try:
+            print(f"   [{label}] GLM [{model_name}] deneniyor...")
+            resp = client.chat.completions.create(
+                model=model_name,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                timeout=180,
+            )
+            raw = resp.choices[0].message.content
+            result = _extract_json_from_text(raw)
+            print(f"   [{label}] ✅ GLM başarılı (model: {model_name}).")
+            return result
+        except Exception as e:
+            err = str(e)
+            print(f"   [{label}] ⚠️  GLM [{model_name}]: {err[:120]}")
+            # Ücretli model veya yetki hatası — sonrakine geç
+            if any(c in err for c in ["1113", "1211", "1214"]):
+                continue
+            # Sunucu aşırı yükü — sonrakine geç
+            if any(c in err for c in ["1305", "429", "503"]):
+                continue
+            # Diğer hatalar — dur
+            return None
     return None
 
 
