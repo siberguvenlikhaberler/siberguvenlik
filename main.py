@@ -66,8 +66,8 @@ def _extract_json_from_text(text):
 
 
 def _glm_call_json(prompt, max_output_tokens=4096, label=''):
-    """GLM-4.7-Flash API çağrısı — Gemini başarısız olunca fallback olarak kullanılır."""
-    import time as _time, jwt as _jwt
+    """GLM-4-Flash API çağrısı — Gemini başarısız olunca fallback olarak kullanılır."""
+    import time as _time, jwt as _jwt, urllib.request as _req, json as _json, urllib.error as _uerr
     key_id, secret = ZHIPUAI_API_KEY.split('.')
     payload = {
         'api_key': key_id,
@@ -76,14 +76,13 @@ def _glm_call_json(prompt, max_output_tokens=4096, label=''):
     }
     token = _jwt.encode(payload, secret, algorithm='HS256',
                         headers={'alg': 'HS256', 'sign_type': 'SIGN'})
-    import urllib.request as _req, json as _json
     url = 'https://open.bigmodel.cn/api/paas/v4/chat/completions'
-    data = _json.dumps({
+    body = {
         'model': 'glm-4-flash',
         'messages': [{'role': 'user', 'content': prompt}],
-        'max_tokens': max_output_tokens,
         'temperature': 0.3,
-    }).encode()
+    }
+    data = _json.dumps(body).encode()
     request = _req.Request(url, data=data, headers={
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}',
@@ -92,8 +91,12 @@ def _glm_call_json(prompt, max_output_tokens=4096, label=''):
         with _req.urlopen(request, timeout=120) as r:
             raw = _json.loads(r.read())['choices'][0]['message']['content']
             result = _extract_json_from_text(raw)
-            print(f"   [{label}] ✅ GLM-4.7-Flash başarılı.")
+            print(f"   [{label}] ✅ GLM-4-Flash başarılı.")
             return result
+    except _uerr.HTTPError as e:
+        body_err = e.read().decode(errors='replace')
+        print(f"   [{label}] ⚠️  GLM HTTP {e.code}: {body_err}")
+        return None
     except Exception as e:
         print(f"   [{label}] ⚠️  GLM hatası [{type(e).__name__}]: {e}")
         return None
