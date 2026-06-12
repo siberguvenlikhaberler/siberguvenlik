@@ -1003,15 +1003,17 @@ class HaberSistemi:
             )
 
         # ── Haber paragrafları ────────────────────────────────────────────
-        # Render sırası: regular (1..N) önce, vuln (N+1..M) sonra
-        # Böylece anchor #haber-1 sayfanın başında, numaralar sıralı
+        # Render sırası: regular (1..N) → sosyal sinyaller marker → vuln (N+1..M)
         news_items_html = ''
 
         # Normal haberler (1..N)
         for art_id in regular_ids:
             news_items_html += _render_item(art_id)
 
-        # Güvenlik Açıkları bölümü (N+1..M) — regular haberlerden sonra
+        # Sosyal sinyaller kutusu buraya enjekte edilecek
+        news_items_html += '<!-- SOCIAL_SIGNALS_HERE -->\n'
+
+        # Güvenlik Açıkları bölümü (N+1..M) — en sonda
         if vuln_ids:
             news_items_html += (
                 '            <div class="vuln-section-heading">\n'
@@ -2452,10 +2454,9 @@ KURALLAR:
     def _inject_social_box(self, html):
         """
         Sosyal medya sinyalleri kutusunu HTML'e enjekte eder.
-        Konum: .executive-table'dan sonra, .news-section'dan önce (B konumu).
+        Konum: normal haberlerden sonra, güvenlik açıklarından önce.
         self.social_data listesini kullanır — Gemini'den bağımsız, programatik.
         """
-        from bs4 import BeautifulSoup as _BS
 
         if not getattr(self, 'social_data', None):
             return html
@@ -2529,22 +2530,23 @@ KURALLAR:
             f'</div>'
         )
 
-        soup = _BS(html, 'html.parser')
+        # Konum: normal haberlerden sonra, güvenlik açıklarından önce
+        if '<!-- SOCIAL_SIGNALS_HERE -->' in html:
+            return html.replace('<!-- SOCIAL_SIGNALS_HERE -->', box_html, 1)
 
-        # Konum B: executive-table'dan sonra, news-section'dan önce
+        # Fallback: BeautifulSoup ile executive-table'dan sonra ekle
+        from bs4 import BeautifulSoup as _BS
+        soup = _BS(html, 'html.parser')
         exec_table   = soup.find('table', class_='executive-table')
         news_section = soup.find('div', class_='news-section')
-
         if exec_table:
             exec_table.insert_after(_BS(box_html, 'html.parser'))
         elif news_section:
             news_section.insert_before(_BS(box_html, 'html.parser'))
         else:
-            # Fallback: body'nin sonuna ekle
             body = soup.find('body')
             if body:
                 body.append(_BS(box_html, 'html.parser'))
-
         return str(soup)
 
     # Kritik CSS sınıfları — bunlar eksikse sayfa düzgün görünmez
