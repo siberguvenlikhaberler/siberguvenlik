@@ -19,7 +19,7 @@ from google.genai import types as genai_types
 from openai import OpenAI as OpenAIClient
 
 from src.config import (
-    GEMINI_API_KEY, ZHIPUAI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
+    GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, get_claude_prompt,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
@@ -64,45 +64,6 @@ def _extract_json_from_text(text):
                     break
     raise ValueError("Geçerli JSON çıkarılamadı")
 
-
-def _glm_call_json(prompt, max_output_tokens=4096, label=''):
-    """GLM API çağrısı — zhipuai SDK ile, Gemini başarısız olunca fallback."""
-    try:
-        from zhipuai import ZhipuAI as _ZhipuAI
-    except ImportError:
-        print(f"   [{label}] ⚠️  zhipuai paketi yok.")
-        return None
-    import warnings as _w
-    _w.filterwarnings("ignore", category=UserWarning, module="jwt")
-    _w.filterwarnings("ignore", message=".*HMAC key.*")
-    client = _ZhipuAI(api_key=ZHIPUAI_API_KEY)
-    # Ücretsiz modeller (Z.ai rate limit tablosundan)
-    _MODELS = ['GLM-4.7-Flash', 'GLM-4.6', 'GLM-4.5-Air', 'GLM-4.5-Flash']
-    for model_name in _MODELS:
-        try:
-            print(f"   [{label}] GLM [{model_name}] deneniyor...")
-            resp = client.chat.completions.create(
-                model=model_name,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.3,
-                timeout=180,
-            )
-            raw = resp.choices[0].message.content
-            result = _extract_json_from_text(raw)
-            print(f"   [{label}] ✅ GLM başarılı (model: {model_name}).")
-            return result
-        except Exception as e:
-            err = str(e)
-            print(f"   [{label}] ⚠️  GLM [{model_name}]: {err[:120]}")
-            # Ücretli model veya yetki hatası — sonrakine geç
-            if any(c in err for c in ["1113", "1211", "1214"]):
-                continue
-            # Sunucu aşırı yükü — sonrakine geç
-            if any(c in err for c in ["1305", "429", "503"]):
-                continue
-            # Diğer hatalar — dur
-            return None
-    return None
 
 
 def _calculate_content_hash(title, description):
@@ -651,7 +612,7 @@ class HaberSistemi:
         articles.sort(key=lambda a: a['id'])
         return articles
 
-    def _gemini_call_json(self, prompt, max_output_tokens=4096, label='', try_glm=False):
+    def _gemini_call_json(self, prompt, max_output_tokens=4096, label=''):
         """
         Gemini API çağrısı yapar ve JSON yanıt döndürür.
         Retry: 4 deneme, üstel geri çekilme; model sırası pro→pro→flash→flash.
@@ -711,15 +672,6 @@ class HaberSistemi:
                     time.sleep(wait)
 
         print(f"   [{label}] ❌ Gemini 4 deneme başarısız.")
-
-        # ── GLM-4.7-Flash fallback (sadece izin verildiğinde) ────────────
-        if try_glm and ZHIPUAI_API_KEY:
-            print(f"   [{label}] 🔄 GLM-4.7-Flash deneniyor...")
-            glm_result = _glm_call_json(prompt, max_output_tokens, label)
-            if glm_result is not None:
-                return glm_result
-            print(f"   [{label}] ❌ GLM-4.7-Flash de başarısız.")
-
         return None
 
     @staticmethod
@@ -2120,12 +2072,10 @@ class HaberSistemi:
             )
         articles_brief = '\n'.join(brief_lines)
 
-        # Tek Gemini çağrısı — JSON (GLM fallback burada)
         data = self._gemini_call_json(
             get_legacy_json_prompt(articles_brief),
             max_output_tokens=65536,
             label='Legacy-JSON',
-            try_glm=True,
         )
 
         if data is None:
