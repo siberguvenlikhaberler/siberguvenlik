@@ -919,11 +919,12 @@ class HaberSistemi:
         vuln_ids    = [aid for aid in all_ids if _is_vuln(aid)]
         regular_ids = [aid for aid in all_ids if not _is_vuln(aid)]
 
-        # Her haber için global numara: önce vuln (1..N), sonra regular (N+1..M)
+        # Her haber için global numara: önce regular (1..N), sonra vuln (N+1..M)
+        # Böylece "Önemli Gelişmeler" (sadece regular) 1'den başlar
         id_to_num = {}
-        for i, aid in enumerate(vuln_ids, 1):
+        for i, aid in enumerate(regular_ids, 1):
             id_to_num[aid] = i
-        for i, aid in enumerate(regular_ids, len(vuln_ids) + 1):
+        for i, aid in enumerate(vuln_ids, len(regular_ids) + 1):
             id_to_num[aid] = i
 
         # ── Top 3 kartları (Önemli Gelişmeler altında) ────────────────────
@@ -1002,9 +1003,15 @@ class HaberSistemi:
             )
 
         # ── Haber paragrafları ────────────────────────────────────────────
+        # Render sırası: regular (1..N) önce, vuln (N+1..M) sonra
+        # Böylece anchor #haber-1 sayfanın başında, numaralar sıralı
         news_items_html = ''
 
-        # Güvenlik Açıkları bölümü (haber paragraflarından önce)
+        # Normal haberler (1..N)
+        for art_id in regular_ids:
+            news_items_html += _render_item(art_id)
+
+        # Güvenlik Açıkları bölümü (N+1..M) — regular haberlerden sonra
         if vuln_ids:
             news_items_html += (
                 '            <div class="vuln-section-heading">\n'
@@ -1013,10 +1020,6 @@ class HaberSistemi:
             )
             for art_id in vuln_ids:
                 news_items_html += _render_item(art_id, ' vuln-item')
-
-        # Normal haberler
-        for art_id in regular_ids:
-            news_items_html += _render_item(art_id)
 
         html = f"""<!DOCTYPE html>
 <html lang="tr">
@@ -2859,25 +2862,34 @@ KURALLAR:
         """
         import re
 
-        # Yorum cümlesini tanıyan regex
-        COMMENTARY_RE = re.compile(
-            r'\s+Bu\s+(?:olay|saldırı|gelişme|vaka|durum|yaklaşım|metodoloji|uygulama|süreç|tür\s+\w+|çift\s+\w+|'
-            r'siber|tehdit|grup|operasyon|kampanya|teknik|yöntem|strateji|rapor|bulgu|durum|ihlal)[^<.]{0,400}?'
-            r'(?:göstermektedir|ortaya koymaktadır|vurgulamaktadır|kanıtlamaktadır|taşımaktadır|'
-            r'gözler önüne sermektedir|açıkça ortaya çıkmaktadır)\s*\.'
-            r'|'
-            r'\s+[^<.]{0,200}?bir kez daha[^<.]{0,150}?'
+        # Yorum/analiz cümlelerini tanıyan regex
+        # "Bu X ... fiil." kalıbı
+        BU_RE = re.compile(
+            r'[^.!?]*\bBu\s+\w+(?:\s+\w+){0,5}\s*[^<.!?]{0,350}?'
+            r'(?:göstermektedir|ortaya koymaktadır|vurgulamaktadır|kanıtlamaktadır|'
+            r'taşımaktadır|darbe vurmuştur|önem arz etmektedir|'
+            r'gözler önüne sermektedir|açıkça ortaya çıkmaktadır|'
+            r'farkındalık yaratmaktadır|ne denli önemli olduğunu göstermektedir)\s*\.',
+            re.IGNORECASE | re.DOTALL
+        )
+        # "... bir kez daha ..." kalıbı
+        BIRKEZDAHA_RE = re.compile(
+            r'[^.!?]{0,200}bir kez daha[^<.!?]{0,150}?'
             r'(?:göstermektedir|vurgulamaktadır|ortaya koymaktadır|kanıtlamaktadır)\s*\.',
             re.IGNORECASE | re.DOTALL
         )
+
+        def _strip_commentary(text):
+            text = BU_RE.sub('', text)
+            text = BIRKEZDAHA_RE.sub('', text)
+            return text.strip()
 
         cleaned_count = 0
 
         def process_paragraph(m):
             nonlocal cleaned_count
             content = m.group(1)
-            cleaned = COMMENTARY_RE.sub('', content).strip()
-            # Çift boşlukları temizle
+            cleaned = _strip_commentary(content)
             cleaned = re.sub(r'  +', ' ', cleaned)
             if cleaned != content:
                 cleaned_count += 1

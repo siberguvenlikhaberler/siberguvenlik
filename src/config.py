@@ -122,10 +122,12 @@ Her haber için iki şey üret:
    - Somut detay: şirket/CVE/ülke adı dahil et
 
 2. PARAGRAF: Resmi Türkçe özet
-   - 100-120 kelime arası (bu aralığın dışına çıkma)
+   - MİNİMUM 120 kelime (daha az yazarsan YANLIŞ sayılır — say ve kontrol et)
    - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
    - Teknik detaylar ekle (CVE numarası, etkilenen sürümler, saldırı vektörü vb.)
-   - YASAK SON CÜMLELER: "Bu olay...", "Bu saldırı...", "...önem taşımaktadır", "...göstermektedir"
+   - SADECE kaynak metinde olan bilgileri yaz — tahmin, yorum, çıkarım YASAK
+   - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BITIRME
+   - MUTLAK YASAK SON KELIMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
    - Son cümle somut teknik bulgu veya haber detayı olacak
    - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
@@ -162,10 +164,12 @@ Her haber için:
    - Somut detay: şirket/CVE/ülke adı dahil et
 
 2. PARAGRAF: Resmi Türkçe özet
-   - 100-120 kelime arası (bu aralığın dışına çıkma)
+   - MİNİMUM 120 kelime (daha az yazarsan YANLIŞ sayılır — say ve kontrol et)
    - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
    - Mevcut teknik detayları aktar (CVE, etkilenen sürümler, saldırı türü vb.)
-   - YASAK SON CÜMLELER: "Bu olay...", "Bu gelişme...", "...önem taşımaktadır", "...göstermektedir"
+   - SADECE kaynak metinde olan bilgileri yaz — tahmin, yorum, çıkarım YASAK
+   - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BİTİRME
+   - MUTLAK YASAK SON KELİMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
    - Son cümle somut bir teknik bulgu veya haber detayı olacak
    - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
@@ -359,9 +363,11 @@ Kalan haberleri önem sırasına göre sırala. En önemli max 10 tanesi "top10"
 ADIM 3 — TÜRKÇE ÖZET YAZ (filtered hariç HER haber için):
 Her haber için:
 - "tr_title": Türkçe başlık. ZORUNLU: eylem cümlesi kullan ("...saldırı gerçekleştirilmiştir", "...açığa çıkmıştır"). YASAK: "...Bulunması", "...Açıklanması" gibi isim-fiil.
-- "paragraph": 100-120 kelime arasında Türkçe analiz paragrafı. Bu aralığın DIŞINA ÇIKMA.
-  - Ne oldu, kim etkilendi, teknik boyut, stratejik önemi anlat
-  - Yorumsuz, olgusal, resmi dil
+- "paragraph": MİNİMUM 120 kelime Türkçe özet (daha az yazarsan YANLIŞ).
+  - SADECE kaynak metindeki bilgiler — tahmin, yorum, çıkarım YASAK
+  - Ne oldu, kim etkilendi, teknik boyutları aktar
+  - MUTLAK YASAK: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "darbe vurmuştur", "önem arz etmektedir" ile biten cümleler
+  - Son cümle somut haber detayı veya teknik bulgu olacak
 
 ÇIKTI FORMATI — SADECE JSON, başka hiçbir şey yazma:
 {{
@@ -897,39 +903,26 @@ BAŞLIK KURALLARI:
 ✓ 7-9 kelime, her kelimenin ilk harfi büyük
 
 ÖZET PARAGRAF KURALLARI:
-✓ MİNİMUM 100 kelime — ZORUNLU (100'den az kelime kesinlikle kabul edilmez!)
-✓ İdeal uzunluk: 110-150 kelime aralığında yaz
+✓ MİNİMUM 120 kelime — ZORUNLU (yazmadan önce say, 120'den az kesinlikle kabul edilmez!)
 ✓ 5N1K tüm sorular cevaplansın
 ✓ Resmi Türkçe (-mıştır, -edilmiştir)
 ✓ Normal cümle yapısı (başlık değil)
 
-⛔ YORUM/ANALİZ CÜMLESI YASAĞI — MUTLAK KURAL:
+⛔ TERCÜMAN KURALI — MUTLAK:
 Sen bir TERCÜMAN gibi çalışıyorsun: orijinal haberdeki bilgileri Türkçeye aktarırsın.
-ASLA orijinal haber metninde OLMAYAN yorum, değerlendirme, ders çıkarma veya sonuç cümlesi EKLEME.
+ASLA orijinal haber metninde OLMAYAN yorum, değerlendirme, ders veya sonuç cümlesi EKLEME.
 
-Yasak kalıplar — BU KELİMELERLE BİTEN CÜMLELER KESİNLİKLE YAZILMAZ:
-  ⛔ "...göstermektedir." (yorum sonucu olarak)
-  ⛔ "...ortaya koymaktadır."
-  ⛔ "...vurgulamaktadır."
-  ⛔ "...kanıtlamaktadır."
-  ⛔ "...taşımaktadır." (önem/kritiklik bağlamında)
-  ⛔ "...bir kez daha [herhangi bir fiil]maktadır."
-  ⛔ "...farkındalık [herhangi bir şey]."
-  ⛔ "...ne denli önemli olduğunu [herhangi bir şey]."
+⛔ YASAK SON KELİMELER — bu kelimelerle biten HİÇBİR cümle yazılmaz:
+  • göstermektedir • ortaya koymaktadır • vurgulamaktadır • kanıtlamaktadır
+  • taşımaktadır • darbe vurmuştur • önem arz etmektedir • açıkça ortaya çıkmaktadır
+  • bir kez daha göstermektedir • farkındalık yaratmaktadır
 
-Bu kalıpları tetikleyen TİPİK BAŞLANGIÇLAR — BU BAŞLANGIÇLARLA CÜMLE YAZMA:
-  ⛔ "Bu olay ..."
-  ⛔ "Bu saldırı ..."
-  ⛔ "Bu gelişme ..."
-  ⛔ "Bu vaka ..."
-  ⛔ "Bu durum ..."
-  ⛔ "Bu yaklaşım ..."
-  ⛔ "Bu tür [herhangi bir şey] ..."
-  ⛔ "Bu çift/yeni/kritik [herhangi bir şey] ..."
-  ⛔ "Bu metodoloji ..."
+⛔ YASAK BAŞLANGIÇLAR — bu başlangıçlarla başlayan cümle PARAGRAFTA OLAMAZ:
+  • "Bu olay ..." • "Bu saldırı ..." • "Bu gelişme ..." • "Bu operasyon ..."
+  • "Bu vaka ..." • "Bu durum ..." • "Bu yaklaşım ..." • "Bu metodoloji ..."
+  • "Bu tür ..." • "Bu başarılı ..." • "Bu kritik ..."
 
-Paragrafın SON CÜMLESİ de dahil olmak üzere HİÇBİR cümle yukarıdaki kalıplarda OLAMAZ.
-Son cümle mutlaka somut bir haber detayı, teknik bulgu veya doğrudan orijinal haberden alınan bilgi olacak.
+Paragrafın SON CÜMLESİ mutlaka somut bir haber detayı, teknik bulgu veya doğrudan orijinal haberden alınan bilgi olacak.
 
 KRİTİK:
 - EN ÖNEMLİ 10 HABER → Hem "Önemli Gelişmeler" kutusunda HEM de haber paragraflarının en üstünde
