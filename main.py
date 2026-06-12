@@ -1006,12 +1006,12 @@ class HaberSistemi:
         # Render sırası: regular (1..N) → sosyal sinyaller marker → vuln (N+1..M)
         news_items_html = ''
 
-        # Sosyal sinyaller kutusu buraya enjekte edilecek (normal haberlerden önce)
-        news_items_html += '<!-- SOCIAL_SIGNALS_HERE -->\n'
-
         # Normal haberler (1..N)
         for art_id in regular_ids:
             news_items_html += _render_item(art_id)
+
+        # Sosyal sinyaller kutusu buraya enjekte edilecek (güvenlik açıklarından önce)
+        news_items_html += '<!-- SOCIAL_SIGNALS_HERE -->\n'
 
         # Güvenlik Açıkları bölümü (N+1..M) — en sonda
         if vuln_ids:
