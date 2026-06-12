@@ -661,8 +661,7 @@ class HaberSistemi:
             print(f"   ⚠️  [{label}] GEMINI_API_KEY yok, atlanıyor.")
             return None
 
-        _MODELS = []  # Gemini geçici devre dışı — GLM test
-        _MODELS_DISABLED = ['gemini-2.5-pro', 'gemini-2.5-pro',
+        _MODELS = ['gemini-2.5-pro', 'gemini-2.5-pro',
                    'gemini-2.5-flash', 'gemini-2.5-flash']
         client = genai.Client(api_key=GEMINI_API_KEY)
 
