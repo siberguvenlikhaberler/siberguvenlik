@@ -3041,7 +3041,7 @@ def main():
         try:
             with open(today_report, encoding='utf-8') as f:
                 report_content = f.read()
-            if '[FALLBACK]' not in report_content and 'error-box' not in report_content:
+            if '[FALLBACK]' not in report_content and 'error-box' not in report_content and 'Gemini API yanıt vermedi' not in report_content:
                 print(f"✅ Bugünün başarılı raporu zaten mevcut: {today_report}")
                 print("   Yeniden oluşturma atlanıyor.")
                 return 0
