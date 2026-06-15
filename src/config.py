@@ -33,10 +33,12 @@ ADIM 1 — FILTRELE (bunları "filtered" listesine koy):
 ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
 ÖNCELİK İLKESİ: Stratejik / jeopolitik / istihbari değeri olan haberler her zaman üsttedir.
 "Büyük rakam" (milyonlarca kullanıcı, milyarlarca dolar) tek başına üst sıra GETİRMEZ.
-1. NATO Türkiye Zirvesi (Temmuz 2026) kapsamındaki haberler → EN ÜSTTE
-   Kapsam GENİŞ tutulur: gerçekleşen saldırı/kampanya ZORUNLU DEĞİL; şüpheli faaliyet, uyarı,
-   dolaylı/ilişkili gelişme, istihbarat paylaşımı, güvenlik önlemi, kritik altyapı hazırlığı,
-   diplomatik/siber gerilim veya zirveyle bağlantılı olabilecek her türlü teknik gelişme dahildir.
+1. DOĞRUDAN NATO Türkiye Zirvesi (Temmuz 2026) ile ilgili haberler → EN ÜSTTE
+   ⚠️ SADECE zirveden açıkça söz eden veya zirveyi hedef/konu alan haberler buraya girer:
+   zirveye yönelik saldırı, şüpheli faaliyet, uyarı, güvenlik önlemi, zirveyle bağlantılı
+   diplomatik/siber gerilim. Gerçekleşen saldırı ZORUNLU DEĞİL ama zirve bağı ZORUNLUDUR.
+   ⛔ Zirveden bahsetmeyen genel NATO haberleri (NATO siber politikası, NATO üyesi ülkeye
+      yönelik ama zirveyle ilgisiz saldırılar) buraya GİRMEZ — alttaki kategorilerde değerlendir.
 2. Ticari/devlet casus yazılımı: NSO Group, Pegasus, Candiru, Intellexa/Predator, Paragon,
    L3Harris, FinFisher vb. "mercenary spyware" — bunların kullanımı, keşfi, bu firmalara
    yönelik dava/yaptırım/sızıntı (örn. Meta vs. NSO Group)
@@ -94,17 +96,24 @@ Bu durumda top 3'ü boş bırakmak yerine Kategori 3'ten en iyi 3'ü seç.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 KATEGORİ 0 — NATO TÜRKİYE ZİRVESİ (MUTLAK ÖNCELİK — HER ŞEYİN ÜSTÜNDE)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-NATO Türkiye Zirvesi (Temmuz 2026) ile DOĞRUDAN veya DOLAYLI ilgili her haber,
-diğer tüm kategorilerin ÜZERİNDEDİR ve KOŞULSUZ top 3'e alınır (1. sıraya yerleştirilir).
-Kapsam GENİŞ tutulur:
-   • Zirveye yönelik APT faaliyeti, siber casusluk, saldırı, keşif, hazırlık
+⚠️ DAR KAPSAM: Bu kategori SADECE doğrudan NATO TÜRKİYE ZİRVESİ (Temmuz 2026) ile
+ilgili haberleri içerir. Haberin NATO Türkiye Zirvesi'nden açıkça söz etmesi veya
+açıkça zirveyi hedef/konu alması ŞARTTIR.
+Yalnızca zirveye bağlıysa KOŞULSUZ top 3'e alınır (1. sıraya yerleştirilir):
+   • Zirveyi hedef alan APT faaliyeti, siber casusluk, saldırı, keşif, hazırlık
    • Zirve güvenliğine dair uyarı, tehdit değerlendirmesi, güvenlik önlemi
-   • NATO üyesi ülke veya Türk kurumlarının zirveyle bağlantılı gelişmeleri
-   • Zirveyle bağlantılı dezenformasyon / hack & leak / etki operasyonu
-   • İlgili aktörler: Rusya (APT28, APT29, Sandworm), Çin (APT10, APT40), İran, Kuzey Kore
-   • Anahtar kelimeler: "NATO summit", "NATO Turkey/Türkiye", "NATO Antalya", "NATO 2026",
-     "NATO zirvesi", "alliance cyber", "summit security", "NATO cyber/defence/member"
-→ Bu türde haber varsa: önce onu/onları seç, kalan yerleri Kategori 1'den tamamla.
+   • Türk kurumlarının veya katılımcı ülkelerin doğrudan zirveye yönelik gelişmeleri
+   • Zirveyi konu alan dezenformasyon / hack & leak / etki operasyonu
+   • Zirve bağlamında ilgili aktörler: Rusya (APT28/APT29/Sandworm), Çin (APT10/APT40), İran, Kuzey Kore
+   • Anahtar kelimeler: "NATO summit", "NATO Turkey/Türkiye summit", "NATO Antalya",
+     "NATO 2026 zirvesi", "summit security"
+
+⛔ BU KATEGORİYE GİRMEZ (genel NATO haberi ≠ zirve haberi):
+   • Zirveden bahsetmeyen genel NATO siber politikası, NATO savunma/üyelik haberleri
+   • NATO üyesi bir ülkeye yönelik, zirveyle bağı OLMAYAN herhangi bir saldırı
+   • "NATO" kelimesi geçen ama Türkiye Zirvesi'yle ilgisi olmayan her haber
+   → Bunlar Kategori 0 DEĞİLDİR; uygunsa Kategori 1/2'de normal değerlendirilir.
+→ Zirveyle doğrudan ilgili haber varsa: önce onu/onları seç, kalanı Kategori 1'den tamamla.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 KATEGORİ 1 — EN YÜKSEK ÖNCELİK (NATO zirvesi haberi yoksa)
@@ -424,8 +433,8 @@ CONTENT_SELECTORS = {
 IMPORTANCE_WEIGHTS = {
     'nato_turkey_summit': {
         'weight': 130,
-        'description': 'NATO Türkiye Zirvesi (Temmuz 2026) — gerçekleşen saldırı, şüpheli faaliyet, dolaylı/ilişkili her türlü gelişme',
-        'keywords': ['nato summit', 'nato turkey', 'nato türkiye', 'nato antalya', 'nato 2026', 'nato zirvesi', 'alliance cyber', 'summit security', 'nato cyber', 'nato defence', 'nato member']
+        'description': 'SADECE doğrudan NATO Türkiye Zirvesi (Temmuz 2026) haberleri — zirveyi konu/hedef alanlar. Genel NATO haberleri dahil DEĞİL.',
+        'keywords': ['nato summit', 'nato turkey summit', 'nato türkiye zirvesi', 'nato antalya', 'nato 2026 summit', 'nato zirvesi', 'türkiye zirvesi', 'summit security']
     },
     'infrastructure_attack': {
         'weight': 100,
