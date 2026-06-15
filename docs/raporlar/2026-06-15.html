@@ -456,20 +456,13 @@ function _getBlockText() {
         var title  = (card.querySelector('.top3-card-title')    || {}).textContent || '';
         var para   = (card.querySelector('.top3-card-paragraph') || {}).textContent || '';
         var source = (card.querySelector('.source')              || {}).textContent || '';
-        lines.push((i + 1) + '. ' + title.trim());
+        lines.push(title.trim());
         lines.push('');
         lines.push(para.trim());
         lines.push('');
         lines.push(source.trim());
-        lines.push('-'.repeat(60));
-        lines.push('');
+        if (i < cards.length - 1) { lines.push('-'.repeat(60)); lines.push(''); }
     });
-    var items = document.querySelectorAll('#onemli-gelismeler-block .important-item a');
-    if (items.length) {
-        lines.push('Diğer Önemli Haberler:');
-        items.forEach(function(a) { lines.push('  • ' + a.textContent.trim()); });
-        lines.push('');
-    }
     return lines.join('\n');
 }
 function _flashBtn(btn, label) {
