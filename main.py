@@ -1150,7 +1150,7 @@ function saveBlock(btn) {{
     var blob = new Blob([text], {{type: 'text/plain;charset=utf-8'}});
     var url  = URL.createObjectURL(blob);
     var a    = document.createElement('a');
-    a.href = url; a.download = 'onemli-gelismeler-{today_str}.txt';
+    a.href = url; a.download = '{today_str}.txt';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a); URL.revokeObjectURL(url);
     _flashBtn(btn, 'Kaydedildi!');
