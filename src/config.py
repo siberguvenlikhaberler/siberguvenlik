@@ -121,10 +121,31 @@ D) HUKUK & DÜZENLEYICI GELİŞME (siber güvenlik boyutu olan)
 KATEGORİ 2 — İKİNCİL ÖNCELİK (Kategori 1 dolmadığında)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Kategori 1'den 3 haber bulunamazsa buradan tamamla:
+
+E) TEDARİK ZİNCİRİ SALDIRISI (Supply Chain)
+   Yazılım veya donanım tedarik zinciri aracılığıyla çok sayıda kurumu/ülkeyi
+   etkileyen saldırılar ulusal güvenlik tehdidi sayılır:
+   • Yaygın açık kaynak paketi, geliştirici aracı veya güvenlik yazılımına
+     arka kapı/zararlı kod enjeksiyonu (SolarWinds, XZ Utils türü olaylar)
+   • Büyük yazılım sağlayıcısının güncelleme mekanizmasının ele geçirilmesi
+   • Donanım veya firmware düzeyinde tedarik zinciri manipülasyonu
+   • Geliştiricileri, CI/CD sistemlerini veya kod depolarını (npm, PyPI, GitHub)
+     hedef alan ve geniş ölçekte yayılan kampanyalar
+
+F) MİLLİ GÜVENLİĞİ DOĞRUDAN ETKİLEYEN BÜYÜK VERİ İHLALİ
+   Ölçek veya içerik açısından devlet/toplum düzeyinde sonuç doğuran ihlaller:
+   • Devlet kurumu, ordu, istihbarat servisi veya savunma müteahhidine ait veri sızıntısı
+   • Pasaport, kimlik, biyometrik, sağlık kaydı, seçmen kütüğü gibi hassas ulusal
+     veri tabanlarının ele geçirilmesi
+   • 50 milyon+ vatandaşı etkileyen platform veya telekom ihlali
+     (finansal veri, konum, iletişim içeriği gibi kritik veri türleri)
+   • İstihbarat operasyonunu, ürtaj/casusluk faaliyetini kolaylaştırabilecek
+     büyük ölçekli kişisel veri sızıntısı (gazeteciler, aktivistler, kamu görevlileri)
+
+G) DİĞER STRATEJİK HABERLER
    • APT grubu veya devlet destekli tehdit aktörünün yeni kampanyası/tekniği
    • Kritik altyapı (enerji şebekesi, hastane ağı, finans sistemi) saldırısı
    • Stratejik önemi olan büyük fidye yazılımı saldırısı (hükümet veya kritik hizmet)
-   • Büyük çaplı tedarik zinciri (supply chain) saldırısı
    • Geniş çaplı devlet destekli dezenformasyon / etki operasyonu
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
