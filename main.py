@@ -758,20 +758,24 @@ class HaberSistemi:
             position: relative;
         }
         .important-news h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .onemli-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .onemli-header h2 { margin-bottom: 0; }
         .block-actions {
             display: flex;
             gap: 6px;
-        }
-        .block-actions-top {
-            position: absolute;
-            top: 16px;
-            right: 16px;
+            flex-shrink: 0;
         }
         .block-actions-bottom {
             display: flex;
             justify-content: flex-end;
             gap: 6px;
             margin-top: 14px;
+            margin-bottom: 20px;
         }
         .block-action-btn {
             background: rgba(255,255,255,0.92);
@@ -1068,29 +1072,31 @@ class HaberSistemi:
 
         <div class="executive-summary">
             <div class="important-news" id="onemli-gelismeler-block">
-                <h2>Önemli Gelişmeler</h2>
-                <div class="block-actions block-actions-top">
-                    <button class="block-action-btn" id="btn-copy-top" onclick="copyBlock(this)" title="Panoya kopyala">
+                <div class="onemli-header">
+                    <h2>Önemli Gelişmeler</h2>
+                    <div class="block-actions">
+                        <button class="block-action-btn" onclick="copyBlock(this)" title="Panoya kopyala">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            Kopyala
+                        </button>
+                        <button class="block-action-btn" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Kaydet
+                        </button>
+                    </div>
+                </div>
+{top3_cards_html}                <div class="block-actions-bottom">
+                    <button class="block-action-btn" onclick="copyBlock(this)" title="Panoya kopyala">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                         Kopyala
                     </button>
-                    <button class="block-action-btn" id="btn-save-top" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
+                    <button class="block-action-btn" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         Kaydet
                     </button>
                 </div>
-{top3_cards_html}                <div class="important-summary">
+                <div class="important-summary">
 {important_items_html}                </div>
-                <div class="block-actions-bottom">
-                    <button class="block-action-btn" id="btn-copy-bot" onclick="copyBlock(this)" title="Panoya kopyala">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        Kopyala
-                    </button>
-                    <button class="block-action-btn" id="btn-save-bot" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Kaydet
-                    </button>
-                </div>
             </div>
 
             <table class="executive-table">
