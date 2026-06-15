@@ -66,44 +66,96 @@ def get_top3_selection_prompt(articles_brief):
     Pass 4: Tüm non-CVE haberler arasından istihbari/stratejik açıdan EN KRİTİK 3'ü seç.
     articles_brief: "=== HABER ID: N ===\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
     """
-    return f"""Sen siber tehdit istihbarat analistisin. Aşağıdaki haberler arasından stratejik açıdan EN KRİTİK 3 haberi seç.
+    return f"""Sen bir siber tehdit istihbarat analistisin. Görevin: aşağıdaki haberler arasından yalnızca STRATEJİK, JEOPOLİTİK veya İSTİHBARİ değeri olan EN KRİTİK 3 haberi seçmek.
 
 NOT: Haber içerikleri İngilizce olabilir; dil fark etmez, anlam ve stratejik öneme göre değerlendir.
 
-SEÇİM ÖNCELİĞİ:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TEMEL İLKE — STRATEJİK DEĞER TESTİ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Her haberi seçmeden önce şu soruyu sor:
+"Bu olay; hükümetleri, uluslararası ilişkileri, ulusal güvenliği veya
+ devletlerin siber kapasitesini doğrudan ya da dolaylı olarak etkiliyor mu?"
+→ EVET: aday haber.
+→ HAYIR: seçme.
 
-1. ÖNCELİK (en üst) — STRATEJİK & POLİTİK haberler:
-   Bu kategoride uygun haber varsa, diğer kategorilere TERCİH EDİLİR.
-   • Hükümet/istihbarat teşkilatı kararı, üst düzey atama, jeopolitik siber gelişme
-   • Kanun, yönetmelik, mahkeme kararı, dava (siber güvenlik etkisi olan)
-     — Örnek: Büyük tech firmasının casus yazılım üreticisine açtığı/kazandığı dava (Meta vs NSO Group gibi)
-   • Stratejik yatırım, devlet kurumu siber politikası
-   • NATO veya ulusal güvenlikle ilişkili siber/diplomatik gelişme
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KATEGORİ 1 — EN YÜKSEK ÖNCELİK (her zaman tercih edilir)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aşağıdaki türde haber varsa, diğer tüm kategorilere ÖNCE bu seçilir:
 
-2. DİĞER KATEGORİLER (aralarında ESNEK seçim — günün önemine göre):
-   • Devlet destekli saldırı, casusluk operasyonu, APT grubu aktivitesi
-     — Casus yazılım (stalkerware, spyware, Pegasus vb.) devlet/APT bağlantılıysa bu kategoriye girer
-   • Uluslararası kurum, parlamento, büyükelçilik veya hükümet sistemine yönelik saldırı/ihlal
-     — Örnek: Avrupa Konseyi, BM ajansı, NATO üyesi bakanlık, AB kurumu hacklenmesi
-   • Kritik altyapıya (enerji, sağlık, finans) yönelik olay
-   • 5 milyon veya daha fazla kullanıcıyı etkileyen veri ihlali
-     — 5 milyonun altındaki ihlaller ancak çok hassas veri (pasaport, biyometrik, sağlık) içeriyorsa seçilebilir
-   • Fidye yazılımı saldırısı veya büyük takedown/tutuklama operasyonu
-   • Önemli kimlik avı (phishing) kampanyası veya sosyal mühendislik operasyonu
-   • Hacktivizm, aktivist eylem, konum/veri istismarı
+A) DEVLET CİHAZLI CİHAZLARI & TİCARİ CASUSLUK YAZILIMI
+   Devletlere veya istihbarat servislerine satılan/kullanılan casus araçlar.
+   • NSO Group / Pegasus, Candiru, Intellexa / Predator, FinFisher, L3Harris,
+     Paragon, Hacking Team, Circles, QuaDream ve benzeri "mercenary spyware" firmaları
+   • Bu firmalara yönelik dava, yaptırım, yasak, lisans iptali, sızıntı
+   • Söz konusu araçların yeni hedef ülke/kişi/örgüte karşı kullanıldığına dair bulgu
+   • Benzer ticari gözetleme araçlarının keşfi veya teknik analizi
 
-KURAL: Stratejik/politik (1. öncelik) kategorisinde nitelikli haber YOKSA,
-3 haberi de 2. gruptan günün en önemli/en kritik olaylarına göre seç.
-Zorlama yapma — 1. öncelikte uygun haber yoksa o kategoriden seçme.
+B) JEOPOLİTİK & DİPLOMATİK SİBER GELİŞMELER
+   • Ülkeler arası siber saldırı/casusluk/sabotaj atfı (attribution)
+   • Siber savaş, hibrit savaş, siber operasyon (Rusya, Çin, İran, Kuzey Kore vb.)
+   • Uluslararası anlaşma, diplomatik kriz, yaptırım, sınır dışı etme kararı
+   • NATO, AB, BM, OSCE gibi uluslararası örgütlerin siber güvenlik kararı veya politikası
 
-KURAL — seçilmez:
-• Saf CVE/yama/güvenlik açığı tespiti haberleri (aktif istismar kampanyası yoksa)
-• Ürün lansmanı, beta sürüm, pazar araştırması
-• Genel tavsiye, röportaj, konferans duyurusu
-• Reklam yazılımı (adware), tarayıcı korsanı gibi düşük etkili rutin zararlı yazılım tespitleri
-• 5 milyonun altında kullanıcıyı etkileyen ve sıradan kategorideki (e-posta, şifre) veri ihlalleri
+C) STRATEJİK KURUM/DEVLET SALDIRISI
+   Saldırının HEDEF kurumu stratejik değer taşımalıdır:
+   • Devlet başkanlığı, bakanlık, meclis, büyükelçilik, istihbarat servisi
+   • Uluslararası kurum: Avrupa Konseyi, Avrupa Parlamentosu, BM ajansları,
+     Uluslararası Adalet Divanı, IMF, NATO karargahı, AB kurumları
+   • Askeri sistem, savunma müteahhidi, kritik altyapı operatörü
+   → Örnekler: Avrupa Konseyi hacklenmesi, ABD Savunma Bakanlığı ihlali,
+     NATO üyesi ülkenin seçim sistemine saldırı
 
-NOT: Bir CVE haberi devlet aktörü veya APT grubunun aktif kampanyasıyla doğrudan ilişkiliyse seçilebilir.
+D) HUKUK & DÜZENLEYICI GELİŞME (siber güvenlik boyutu olan)
+   • Mahkeme kararı, kovuşturma, iade, tutuklama (siber casusluk / casus yazılım)
+   • Büyük tech firması vs. mercenary spyware davası (Meta vs. NSO Group gibi)
+   • Yeni siber güvenlik yasası, ulusal güvenlik direktifi, istihbarat paylaşım anlaşması
+   • Devlet destekli hacker grubuna uluslararası yaptırım
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KATEGORİ 2 — İKİNCİL ÖNCELİK (Kategori 1 dolmadığında)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Kategori 1'den 3 haber bulunamazsa buradan tamamla:
+   • APT grubu veya devlet destekli tehdit aktörünün yeni kampanyası/tekniği
+   • Kritik altyapı (enerji şebekesi, hastane ağı, finans sistemi) saldırısı
+   • Stratejik önemi olan büyük fidye yazılımı saldırısı (hükümet veya kritik hizmet)
+   • Büyük çaplı tedarik zinciri (supply chain) saldırısı
+   • Geniş çaplı devlet destekli dezenformasyon / etki operasyonu
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KESİNLİKLE SEÇİLMEZ — TOP 3'E GİRMEZ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aşağıdaki haber türleri ne kadar büyük görünürse görünsün top 3'e ALINMAZ:
+
+✗ Sıradan bireyleri veya tüketicileri hedef alan veri ihlalleri
+   — Tanınmamış e-ticaret, uygulama, forum gibi platformlardaki sızdırılan kullanıcı adı/şifre/e-posta
+   — Stratejik kurumla bağı olmayan ihlaller, etkilenen kişi sayısı ne olursa olsun
+   — Örnek: "X alışveriş sitesi 2.6 milyon kullanıcı verisi sızdırdı" → SEÇİLMEZ
+
+✗ Ticari amaçlı rutin zararlı yazılım haberleri (devlet bağlantısı yoksa)
+   — Adware, browser hijacker, crimeware, finansal dolandırıcılık kötü yazılımı
+   — Bilgi çalan (infostealer) zararlı yazılımların rutin keşfi (kampanya yoksa)
+
+✗ Saf teknik/ürün haberleri
+   — CVE/yama/güvenlik açığı tespiti (aktif devlet/APT istismarı yoksa)
+   — Ürün lansmanı, beta sürüm, güvenlik aracı duyurusu
+
+✗ İçerik haberleri
+   — Genel tavsiye makalesi, röportaj, konferans duyurusu, pazar araştırması
+
+KURAL: Bir haber "büyük rakam" içerse de (milyonlarca kullanıcı, milyarlarca dolar zarar)
+stratejik/jeopolitik/istihbari boyutu yoksa top 3'e GİREMEZ.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KARAR AKIŞI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Önce Kategori 1'den (A→B→C→D sırasıyla) adayları listele.
+2. Kategori 1'den 3 haber çıkıyorsa bunları seç — Kategori 2'ye bakma.
+3. Kategori 1'den 1-2 haber çıkıyorsa, kalan yerleri Kategori 2'nin
+   en güçlü adaylarıyla tamamla.
+4. Kategori 1'den hiç haber yoksa, 3'ü de Kategori 2'den seç.
+5. Hangi kategoriden seçilirse seçilsin: "Seçilmez" listesindeki haber KESİNLİKLE alınmaz.
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{"top3": [42, 7, 15]}}
