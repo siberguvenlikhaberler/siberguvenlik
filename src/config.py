@@ -76,14 +76,19 @@ SEÇİM ÖNCELİĞİ:
    Bu kategoride uygun haber varsa, diğer kategorilere TERCİH EDİLİR.
    • Hükümet/istihbarat teşkilatı kararı, üst düzey atama, jeopolitik siber gelişme
    • Kanun, yönetmelik, mahkeme kararı, dava (siber güvenlik etkisi olan)
+     — Örnek: Büyük tech firmasının casus yazılım üreticisine açtığı/kazandığı dava (Meta vs NSO Group gibi)
    • Stratejik yatırım, devlet kurumu siber politikası
    • NATO veya ulusal güvenlikle ilişkili siber/diplomatik gelişme
 
 2. DİĞER KATEGORİLER (aralarında ESNEK seçim — günün önemine göre):
    • Devlet destekli saldırı, casusluk operasyonu, APT grubu aktivitesi
-   • Kritik altyapıya (enerji, sağlık, finans, hükümet) yönelik olay
-   • Büyük çaplı veri ihlali veya kişisel veri istismarı
-   • Fidye yazılımı saldırısı veya büyük takedown operasyonu
+     — Casus yazılım (stalkerware, spyware, Pegasus vb.) devlet/APT bağlantılıysa bu kategoriye girer
+   • Uluslararası kurum, parlamento, büyükelçilik veya hükümet sistemine yönelik saldırı/ihlal
+     — Örnek: Avrupa Konseyi, BM ajansı, NATO üyesi bakanlık, AB kurumu hacklenmesi
+   • Kritik altyapıya (enerji, sağlık, finans) yönelik olay
+   • 5 milyon veya daha fazla kullanıcıyı etkileyen veri ihlali
+     — 5 milyonun altındaki ihlaller ancak çok hassas veri (pasaport, biyometrik, sağlık) içeriyorsa seçilebilir
+   • Fidye yazılımı saldırısı veya büyük takedown/tutuklama operasyonu
    • Önemli kimlik avı (phishing) kampanyası veya sosyal mühendislik operasyonu
    • Hacktivizm, aktivist eylem, konum/veri istismarı
 
@@ -95,6 +100,8 @@ KURAL — seçilmez:
 • Saf CVE/yama/güvenlik açığı tespiti haberleri (aktif istismar kampanyası yoksa)
 • Ürün lansmanı, beta sürüm, pazar araştırması
 • Genel tavsiye, röportaj, konferans duyurusu
+• Reklam yazılımı (adware), tarayıcı korsanı gibi düşük etkili rutin zararlı yazılım tespitleri
+• 5 milyonun altında kullanıcıyı etkileyen ve sıradan kategorideki (e-posta, şifre) veri ihlalleri
 
 NOT: Bir CVE haberi devlet aktörü veya APT grubunun aktif kampanyasıyla doğrudan ilişkiliyse seçilebilir.
 
