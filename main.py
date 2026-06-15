@@ -914,13 +914,16 @@ class HaberSistemi:
 
         top3_set = set(top3_ids or [])
 
-        # ── Haberleri vuln / normal olarak ayır ───────────────────────────
+        # ── Haberleri vuln / normal olarak ayır (top3 hariç) ──────────────
+        # Top3 haberleri yalnızca üstteki kartlarda gösterilir;
+        # Önemli Gelişmeler listesi, Yönetici Özeti tablosu ve
+        # haber paragrafları bölümüne kesinlikle dahil edilmez.
         all_ids = list(top10_ids) + list(remaining_ids)
-        vuln_ids    = [aid for aid in all_ids if _is_vuln(aid)]
-        regular_ids = [aid for aid in all_ids if not _is_vuln(aid)]
+        non_top3_ids = [aid for aid in all_ids if aid not in top3_set]
+        vuln_ids     = [aid for aid in non_top3_ids if _is_vuln(aid)]
+        regular_ids  = [aid for aid in non_top3_ids if not _is_vuln(aid)]
 
-        # Her haber için global numara: önce regular (1..N), sonra vuln (N+1..M)
-        # Böylece "Önemli Gelişmeler" (sadece regular) 1'den başlar
+        # Numaralandırma: regular (1..N), vuln (N+1..M) — top3 numara almaz
         id_to_num = {}
         for i, aid in enumerate(regular_ids, 1):
             id_to_num[aid] = i
@@ -928,20 +931,20 @@ class HaberSistemi:
             id_to_num[aid] = i
 
         # ── Top 3 kartları (Önemli Gelişmeler altında) ────────────────────
+        # Başlık linki doğrudan kaynak makaleye gider (iç anchor yok)
         top3_cards_html = ''
         if top3_ids:
             top3_cards_html += '            <div class="top3-section">\n'
             for art_id in top3_ids:
                 art = articles_by_id.get(art_id, {})
                 tr_title, paragraph = _safe_content(art_id)
-                num      = id_to_num.get(art_id, 0)
                 link     = art.get('link', '#')
                 domain   = art.get('domain', '')
                 art_date = art.get('art_date', '')
                 top3_cards_html += (
                     f'                <div class="top3-card">\n'
                     f'                    <div class="top3-card-title">'
-                    f'<a href="#haber-{num}" style="color:inherit;text-decoration:none;">'
+                    f'<a href="{link}" target="_blank" style="color:inherit;text-decoration:none;">'
                     f'{tr_title}</a></div>\n'
                     f'                    <p class="top3-card-paragraph">{paragraph}</p>\n'
                     f'                    <p class="source"><b>(XXXXXXX, AÇIK - '
@@ -950,8 +953,8 @@ class HaberSistemi:
                 )
             top3_cards_html += '            </div>\n'
 
-        # ── Önemli Gelişmeler kutusu (sadece normal haberler) ─────────────
-        top10_regular = [aid for aid in top10_ids if not _is_vuln(aid)]
+        # ── Önemli Gelişmeler kutusu (top3 hariç normal haberler) ─────────
+        top10_regular = [aid for aid in top10_ids if not _is_vuln(aid) and aid not in top3_set]
         important_items_html = ''
         for art_id in top10_regular:
             num = id_to_num[art_id]
@@ -962,7 +965,7 @@ class HaberSistemi:
                 f'            </div>\n'
             )
 
-        # ── Yönetici Özeti tablosu (sadece normal haberler) ───────────────
+        # ── Yönetici Özeti tablosu (top3 hariç normal haberler) ───────────
         table_rows_html = ''
         remaining_regular = [aid for aid in regular_ids if aid not in top10_regular]
         rem_pairs = [remaining_regular[i:i + 2] for i in range(0, len(remaining_regular), 2)]
@@ -983,16 +986,6 @@ class HaberSistemi:
             link     = art.get('link', '#')
             domain   = art.get('domain', '')
             art_date = art.get('art_date', '')
-            # Top 3 haberleri: paragraf üstte zaten var, burada sadece başlık+kaynak
-            if art_id in top3_set:
-                return (
-                    f'            <div class="news-item{css_extra}" id="haber-{num}" '
-                    f'style="padding:12px 20px;">\n'
-                    f'                <div class="news-title"><b>{tr_title}</b></div>\n'
-                    f'                <p class="source"><b>(XXXXXXX, AÇIK - '
-                    f'<a href="{link}" target="_blank">{domain}</a>, {art_date})</b></p>\n'
-                    f'            </div>\n'
-                )
             return (
                 f'            <div class="news-item{css_extra}" id="haber-{num}">\n'
                 f'                <div class="news-title"><b>{tr_title}</b></div>\n'
@@ -1004,6 +997,7 @@ class HaberSistemi:
 
         # ── Haber paragrafları ────────────────────────────────────────────
         # Render sırası: regular (1..N) → sosyal sinyaller marker → vuln (N+1..M)
+        # Top3 haberleri bu bölümde hiç render edilmez.
         news_items_html = ''
 
         # Normal haberler (1..N)
