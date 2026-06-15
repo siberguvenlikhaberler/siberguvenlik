@@ -31,19 +31,27 @@ ADIM 1 — FILTRELE (bunları "filtered" listesine koy):
 - Kritik olmayan rutin patch/güncelleme haberleri
 
 ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
+ÖNCELİK İLKESİ: Stratejik / jeopolitik / istihbari değeri olan haberler her zaman üsttedir.
+"Büyük rakam" (milyonlarca kullanıcı, milyarlarca dolar) tek başına üst sıra GETİRMEZ.
 1. NATO Türkiye Zirvesi (Temmuz 2026) kapsamındaki haberler → EN ÜSTTE
    Kapsam GENİŞ tutulur: gerçekleşen saldırı/kampanya ZORUNLU DEĞİL; şüpheli faaliyet, uyarı,
    dolaylı/ilişkili gelişme, istihbarat paylaşımı, güvenlik önlemi, kritik altyapı hazırlığı,
    diplomatik/siber gerilim veya zirveyle bağlantılı olabilecek her türlü teknik gelişme dahildir.
-2. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
-3. Devlet destekli saldırı / APT grubu aktivitesi / casusluk operasyonları
-4. 5 milyon+ kullanıcı veri ihlalleri
-5. Ulusal güvenlik / Türkiye ile ilgili haberler
-6. Büyük fidye yazılımı (ransomware) saldırıları
-7. Takedown operasyonları, hukuki süreçler, siber suç kovuşturmaları
+2. Ticari/devlet casus yazılımı: NSO Group, Pegasus, Candiru, Intellexa/Predator, Paragon,
+   L3Harris, FinFisher vb. "mercenary spyware" — bunların kullanımı, keşfi, bu firmalara
+   yönelik dava/yaptırım/sızıntı (örn. Meta vs. NSO Group)
+3. Stratejik kurum/devlet saldırısı: devlet başkanlığı, bakanlık, meclis, büyükelçilik,
+   istihbarat servisi, savunma müteahhidi veya uluslararası kurum (Avrupa Konseyi, AB
+   kurumları, BM ajansları, NATO karargahı) hedefli saldırı/ihlal
+4. Jeopolitik/diplomatik siber gelişme + devlet destekli APT/casusluk operasyonu
+   (ülkeler arası atıf, siber savaş; Rusya, Çin, İran, Kuzey Kore vb.)
+5. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
+6. Tedarik zinciri (supply chain) saldırıları — yaygın paket/araç/güncelleme mekanizması
+7. Milli güvenliği etkileyen büyük veri ihlali (devlet/ordu/savunma verisi, pasaport/
+   biyometrik/seçmen kütüğü, 50 milyon+ kritik veri)
 8. Zero-day açıkları + aktif istismar kampanyası
-9. Tedarik zinciri (supply chain) saldırıları
-10. Diğer önemli gelişmeler
+9. Büyük fidye yazılımı (ransomware) + takedown operasyonları, hukuki süreçler, kovuşturmalar
+10. Diğer önemli gelişmeler (sıradan/bireysel veri ihlalleri ve rutin zararlı yazılım dahil)
 
 ADIM 3 — TOP 10: Sıraladığın ilk 10'u "top10" listesine koy.
 
@@ -84,7 +92,22 @@ Bu durumda top 3'ü boş bırakmak yerine Kategori 3'ten en iyi 3'ü seç.
 "Seçilmez" listesi her zaman geçerlidir — başka seçenek olmasa bile o listeden seçme.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-KATEGORİ 1 — EN YÜKSEK ÖNCELİK (her zaman tercih edilir)
+KATEGORİ 0 — NATO TÜRKİYE ZİRVESİ (MUTLAK ÖNCELİK — HER ŞEYİN ÜSTÜNDE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NATO Türkiye Zirvesi (Temmuz 2026) ile DOĞRUDAN veya DOLAYLI ilgili her haber,
+diğer tüm kategorilerin ÜZERİNDEDİR ve KOŞULSUZ top 3'e alınır (1. sıraya yerleştirilir).
+Kapsam GENİŞ tutulur:
+   • Zirveye yönelik APT faaliyeti, siber casusluk, saldırı, keşif, hazırlık
+   • Zirve güvenliğine dair uyarı, tehdit değerlendirmesi, güvenlik önlemi
+   • NATO üyesi ülke veya Türk kurumlarının zirveyle bağlantılı gelişmeleri
+   • Zirveyle bağlantılı dezenformasyon / hack & leak / etki operasyonu
+   • İlgili aktörler: Rusya (APT28, APT29, Sandworm), Çin (APT10, APT40), İran, Kuzey Kore
+   • Anahtar kelimeler: "NATO summit", "NATO Turkey/Türkiye", "NATO Antalya", "NATO 2026",
+     "NATO zirvesi", "alliance cyber", "summit security", "NATO cyber/defence/member"
+→ Bu türde haber varsa: önce onu/onları seç, kalan yerleri Kategori 1'den tamamla.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KATEGORİ 1 — EN YÜKSEK ÖNCELİK (NATO zirvesi haberi yoksa)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Aşağıdaki türde haber varsa, diğer tüm kategorilere ÖNCE bu seçilir:
 
@@ -191,6 +214,10 @@ stratejik/jeopolitik/istihbari boyutu yoksa top 3'e GİREMEZ.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 KARAR AKIŞI
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+0. Kategori 0 (NATO Türkiye Zirvesi) adaylarını say.
+   → Varsa: önce bunları 1. sıradan başlayarak seç, kalan yerleri adım 1'den tamamla.
+   → Yoksa: adım 1'e geç.
+
 1. Kategori 1'den (A→B→C→D) adayları say.
    → 3 veya daha fazla aday: ilk 3'ü seç, bitti.
    → 1-2 aday: bunları al, kalan yerleri adım 2'den tamamla.
@@ -500,578 +527,3 @@ Her haber için:
 HABERLER:
 {articles_brief}"""
 
-
-# Gemini prompt (RESMİ TÜRKÇE) - YENİ GELİŞTİRİLMİŞ VERSİYON
-def get_claude_prompt(news_content, recent_events=''):
-    now = datetime.now()
-    return f"""Sen profesyonel siber güvenlik analistisin.
-
-GÖREV: 130 haberi analiz et → En önemli 10'unu seç (10 yoksa olduğu kadar) → Kalanları önem sırasına koy → HTML raporu oluştur.
-
-🚨 BAŞLIK KURALI — TÜM HABER BAŞLIKLARI İÇİN ZORUNLU:
-✅ ZORUNLU: "[Özne]'nin/[Özne]'ın [Nesne]'yi [eylem-ması/mesi]" → isim-fiil (mastar) yapısı
-   Örnekler: "FBI'ın Outsider Enterprise Ağını Çökertmesi" / "Meta'nın NSO Group'u Suçlaması"
-⛔ YASAK: "...Etkilemiştir", "...Açıklanmıştır", "...Tespit Edilmiştir" → eylem cümlesi KULLANMA
-
-🚨 KRİTİK AŞAMA 1 - HABERLERİ FİLTRELE:
-Aşağıdaki türleri ÇIKAR (raporda gösterme):
-❌ "Podcast yayınlandı", "Webinar duyurusu", "Ürün lansmanı", "Beta sürüm" 
-❌ "İndirilebilir rapor", "Etkinlik katılımı", "Konferans programı"
-❌ Basit patch/güncelleme haberleri (kritik olmayan)
-❌ İnceleme yazıları, röportajlar, genel tavsiye makaleleri
-✅ SADECE aktif tehdit, açık, saldırı, veri ihlali, kritik güncelleme haberlerini AL
-
-🚨 KRİTİK AŞAMA 2 - EN ÖNEMLİ 10 HABERİ SEÇ (yoksa olduğu kadar, max 10):
-Aşağıdaki kriterlere göre önem sırasına göre en önemli 10 haberi seç:
-
-🔴 **[1. ÖNCELİK — NATO TÜRKİYE ZİRVESİ — TEMMUZ 2026]** NATO Türkiye Zirvesi kapsamındaki haberler TÜM kategorilerin üzerinde ÜST ÖNCELİK alır ve ÖNEMLİ GELİŞMELER kutusunda KESİNLİKLE EN ÜSTE yerleştirilir.
-
-   ⚠️ KAPSAM GENİŞTİR — sadece gerçekleşmiş saldırı değil, aşağıdakilerin TAMAMI bu kategoriye girer:
-   - Zirveye yönelik APT faaliyetleri, siber casusluk, siber saldırı ve siber operasyonlar
-   - Şüpheli faaliyet, keşif (reconnaissance), hazırlık veya ön istihbarat haberleri
-   - Zirve güvenliğine yönelik uyarılar, açıklamalar, tehdit değerlendirmeleri
-   - NATO üyesi ülkelerin veya Türk kurumlarının zirveyle bağlantılı güvenlik önlemleri
-   - Zirve altyapısını, iletişim sistemlerini, lojistiğini veya katılımcıları hedef alabilecek her türlü tehdit
-   - Zirveyle dolaylı ilişkili jeopolitik siber gerilimler ve diplomatik krizler
-   - Zirveyle bağlantılı dezenformasyon kampanyaları, hack & leak, etki operasyonları
-   - İstihbarat paylaşımı, siber savunma işbirliği, NATO siber kapasitesine ilişkin gelişmeler
-   - İlgili tehdit aktörleri: Rusya (APT28, APT29, Sandworm), Çin (APT10, APT40), İran, Kuzey Kore bağlantılı gruplar
-   - Anahtar kelimeler: "NATO summit", "NATO Turkey", "NATO Türkiye", "NATO Antalya", "NATO 2026", "NATO zirvesi", "alliance cyber", "summit security", "NATO cyber", "NATO defence", "NATO member"
-   - Bu kategoride haber varsa, diğer tüm kategorilerden haber çıkarılsa bile bu haber listede kalır ve 1. sıradadır.
-
-1️⃣ **KRİTİK ALTYAPI SALDIRISI**
-   - Enerji, sağlık, finans, hükümet sektörü
-   - "Critical infrastructure", "power grid", "hospital systems"
-   - APT grupları + devlet destekli saldırılar
-
-2️⃣ **5 MİLYON+ KULLANICI VERİ İHLALİ**
-   - "5 million", "10 million", "data breach"
-   - Büyük şirketler (Microsoft, Google, Amazon, Apple)
-   - "Personal information", "credit card", "SSN"
-
-3️⃣ **ZERO-DAY + APT GRUBU AKTİVİTESİ**
-   - APT28, APT29, Lazarus, etc.
-   - Nation-state actors
-   - "Previously unknown vulnerability"
-
-4️⃣ **ULUSAL GÜVENLİK / TÜRKİYE**
-   - "National security", "government agencies"
-   - Türkiye ile ilgili siber güvenlik haberleri
-   - NATO, AB, Türk kurumları
-
-5️⃣ **JEOPOLİTİK KRİTİK DURUMLAR**
-   - Ülkeler arası siber savaş, siber diplomasi krizi
-   - "Cyber warfare", "nation-state conflict", "diplomatic crisis"
-   - Kritik ülke sistemlerine saldırı (Rusya-Ukrayna, ABD-Çin, İran, Kuzey Kore)
-   - Seçim sistemleri, kritik altyapı hedefleme
-   - Uluslararası hukuk/anlaşma ihlalleri
-
-6️⃣ **YASAL DÜZENLEMELER**
-   - Siber güvenlikle ilgili yeni çıkan yasalar, yasal düzenlemeler
-
-7️⃣ **KRİTİK CVE / YÜKSEK CVSS SKORU**
-   - CVSS >= 9.0 olan kritik güvenlik açıkları
-   - Aktif olarak istismar edilen zafiyetler
-   - Yaygın yazılım/donanımı (Windows, Linux, Cisco, Fortinet vb.) etkileyen açıklar
-
-8️⃣ **BÜYÜK RANSOMWARE / FİDYE SALDIRISI**
-   - Kritik hizmetleri durduran fidye saldırıları
-   - Büyük kuruluşları etkileyen ransomware grupları (LockBit, BlackCat, Cl0p vb.)
-
-9️⃣ **TEDARİK ZİNCİRİ / SUPPLY CHAIN SALDIRISI**
-   - Yazılım tedarik zinciri saldırıları
-   - Açık kaynak paketlerine enjeksiyon, geliştiricileri hedef alma
-
-🔟 **DİĞER ÖNEMLİ GELİŞMELER** (yukarıdakilerde yer almayan en etkili haber)
-   - Geniş çaplı phishing / sosyal mühendislik kampanyaları
-   - Yeni zararlı yazılım ailesi / botnet keşfi
-   - Önemli güvenlik araştırması veya ifşaatı
-
-🚨 AŞAMA 3 - YAPILANDIRILMIŞ RAPOR OLUŞTUR:
-
-RAPOR YAPISI (SIRAYLA):
-
-1️⃣ **BAŞLIK**: "{now.strftime('%d.%m.%Y')} Siber Güvenlik Haber Özetleri"
-
-2️⃣ **YÖNETİCİ ÖZETİ BAŞLIĞI**
-
-3️⃣ **"ÖNEMLİ GELİŞMELER" KUTUSU**:
-   - En kritik 10 haberin TAM CÜMLELİK özeti (10 yoksa olduğu kadar, minimum 1)
-   - Her biri sayfa içi link: <a href="#haber-N">N. CVE-2024-1234 açığı Microsoft sunucularında kritik güvenlik riski oluşturmaktadır.</a>
-   - ZORUNLU: Tam cümle (özne + yüklem + nesne) + nokta ile bitiş
-
-⚠️ Ham veride [S1]-[S5] ile başlayan satırlar SOSYAL SİNYAL referansıdır.
-   Bunları ASLA haber olarak sayma, numaralandırma veya paragraf yazma. Tamamen yoksay.
-
-4️⃣ **GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU** (önemli 10 haber kutusuna girmeyenler):
-   - Önemli 10 haber seçildiyse: 11. haber → id="haber-11", 12. haber → id="haber-12" vs.
-   - Her biri TAM CÜMLELİK özet + sayfa içi link
-   - ZORUNLU: Tam cümle yapısı (özne + yüklem + nesne) + nokta ile bitiş
-
-5️⃣ **HABER PARAGRAFLARI (SIRALAMA ÖNEMLİ!)**:
-   - ÖNCE: En önemli 10 haberin paragraf özetleri (id="haber-1" dan haber-10'a)
-   - SONRA: Geri kalan TÜM haberlerin paragraf özetleri (id="haber-11"den son habere kadar)
-   - ⚠️ YARIDA BIRAKMAK YASAK — tabloda kaç haber varsa HEPSININ paragraf özeti olacak
-   - Her news-item için news-content paragrafı ZORUNLUDUR, atlanamaz
-   - ⚠️ HER PARAGRAF MİNİMUM 100 KELİME OLMALIDIR (daha kısa yazarsan HATA sayılır!)
-   - ⛔ Son cümle dahil HİÇBİR cümle "Bu olay önemini göstermektedir", "kritik önem taşımaktadır" vb. jenerik kalıp içeremez
-
-KRİTİK KURALLALAR:
-✅ ÖNEMLİ GELİŞMELER KUTUSUNA MÜMKÜNSE 10 HABER SEÇ (haber yoksa olduğu kadar, max 10)
-✅ Tablodaki haber sayısı = paragraf sayısı (bire bir eşit olmalı)
-✅ Önemli gelişmelerdeki haberler tekrar etmesin tabloda
-✅ ID numaraları: 1'den son habere kadar sürekli
-✅ Sayfa içi linkler doğru çalışsın
-✅ ASLA eksik paragraf bırakma — her news-item'ın news-content'i dolu olacak
-
-KRİTİK DİL KURALI - RESMİ TÜRKÇE:
-- yapılmıştır, edilmiştir, belirtilmektedir, ifade edilmektedir, tespit edilmiştir
-- ASLA: yaptı, etti, söyledi, bulundu (günlük dil yasak)
-- CVE, FBI, NSA, APT gibi kısaltmaların tamamı büyük harf
-
-ANTİ-HALÜSİNASYON:
-- SADECE verilen metni kullan
-- TAHMİN YAPMA, VARSAYIMDA BULUNMA, KISALTMA YAPMA  
-- VERİLEN TÜM UYGUN HABERLERİ YAZ! (Filtrelenenler hariç)
-- ASLA YARIDA KESME! SON HABERE KADAR DEVAM ET!
-
-⚠️ KAYNAK SATIRI KURALI - KRİTİK:
-Her haberin altında şu format var: (XXXXXXX, AÇIK - https://link, domain.com, GG.AA.YYYY)
-ZORUNLU ÇIKTI FORMATI — AYNEN BU ŞABLONU KULLAN:
-  <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://TAM-URL" target="_blank">domain.com</a>, GG.AA.YYYY)</b></p>
-  → <a href="..."> içine: tam https://... linkini yaz
-  → görünen metin (anchor text): sadece domain.com
-  → tarih: ham verideki GG.AA.YYYY değerini AYNEN kopyala
-⛔ URL'yi düz metin olarak YAZMA — mutlaka <a href="..."> etiketi içinde olacak
-⛔ ASLA bugünün tarihini yazma — her haberin tarihi farklıdır, ham veriden oku
-
-ZORUNLU HTML ŞABLONU - AYNEN KULLAN:
-```html
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siber Güvenlik Raporu - {now.strftime('%d.%m.%Y')}</title>
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        html {{ scroll-behavior: smooth; }}
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #2c3e50;
-            background: #f5f7fa;
-            padding: 20px;
-        }}
-        .container {{
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
-        }}
-        
-        /* ŞIK BAŞLIK */
-        .report-header {{
-            background: #ffffff;
-            padding: 36px 40px 30px;
-            text-align: center;
-            position: relative;
-            border-bottom: 1px solid #e2e8f0;
-        }}
-        .report-header::before {{
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
-        }}
-        .report-header h1 {{
-            font-size: 26px;
-            font-weight: 600;
-            margin: 0;
-            letter-spacing: 0.3px;
-            color: #1e293b;
-        }}
-        .header-date {{
-            color: #2563eb;
-            font-weight: 700;
-        }}
-        
-        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
-        .important-news {{
-            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
-            color: #2c3e50;
-            padding: 25px 30px;
-            margin: 0;
-            border: 1px solid #bbdefb;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }}
-        .important-news h2 {{
-            color: #1565c0;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }}
-        .important-summary {{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }}
-        @media (max-width: 640px) {{
-            .important-summary {{
-                grid-template-columns: 1fr;
-            }}
-        }}
-        .important-item {{
-            background: rgba(255,255,255,0.7);
-            padding: 12px 16px;
-            border-radius: 6px;
-            border-left: 4px solid #42a5f5;
-        }}
-        .important-item a {{
-            color: #2c3e50;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-        }}
-        .important-item a:hover {{
-            text-decoration: underline;
-            color: #1565c0;
-        }}
-        
-        /* YÖNETİCİ ÖZETİ */
-        .executive-summary {{
-            background: #f8f9fa;
-            padding: 25px 30px;
-            margin: 0;
-            border-bottom: 1px solid #e1e8ed;
-        }}
-        .executive-summary h2 {{
-            color: #1a237e;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #1a237e;
-        }}
-        .executive-table {{
-            width: 100%;
-            border-spacing: 8px;
-        }}
-        .executive-table td {{
-            background: white;
-            padding: 12px 16px;
-            border-radius: 6px;
-            border-left: 3px solid #1a237e;
-            vertical-align: top;
-            width: 50%;
-        }}
-        .executive-table a {{
-            color: #1a237e;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 1.4;
-        }}
-        .executive-table a:hover {{
-            text-decoration: underline;
-        }}
-        
-        /* HABERLER BÖLÜMÜ */
-        .news-section {{
-            padding: 30px;
-        }}
-        .news-item {{
-            background: #f8f9fa;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            padding: 20px;
-            border-left: 4px solid #1a237e;
-        }}
-        .news-title {{
-            color: #1a237e;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }}
-        .nato-star {{
-            display: inline-block;
-            font-size: 13px;
-            color: #ffffff;
-            background: #003087;
-            border-radius: 3px;
-            padding: 1px 6px;
-            margin-right: 7px;
-            vertical-align: middle;
-            letter-spacing: 0.5px;
-            font-weight: 700;
-            line-height: 1.6;
-        }}
-        .news-content {{
-            color: #2c3e50;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }}
-        .source {{
-            color: #666;
-            font-size: 13px;
-            margin: 0;
-        }}
-        .source a {{
-            color: #1a237e;
-            text-decoration: none;
-        }}
-        .source a:hover {{
-            text-decoration: underline;
-        }}
-        
-        /* BAŞA DÖN BUTONU */
-        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
-        .social-signals {{
-            background: #f8faff;
-            border: 1px solid #c7d7fd;
-            border-radius: 8px;
-            padding: 24px 28px;
-            margin-bottom: 20px;
-        }}
-        .social-signals h2 {{
-            color: #1e3a8a;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #dbeafe;
-        }}
-        .social-signals .signal-list {{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }}
-        .social-signals .signal-item {{
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-left: 4px solid #3b82f6;
-            border-radius: 6px;
-            padding: 12px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }}
-        .social-signals .signal-item.reddit-item   {{ border-left-color: #ff4500; }}
-        .social-signals .signal-item.hn-item       {{ border-left-color: #ff6600; }}
-        .social-signals .signal-item.github-item   {{ border-left-color: #238636; }}
-        .social-signals .signal-item.mastodon-item {{ border-left-color: #6364ff; }}
-        .social-signals .signal-meta {{
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }}
-        .social-signals .signal-platform-label {{
-            font-size: 10px;
-            font-weight: 700;
-            color: #ffffff;
-            background: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-radius: 3px;
-            padding: 2px 7px;
-        }}
-        .social-signals .reddit-item .signal-platform-label   {{ background: #ff4500; }}
-        .social-signals .hn-item .signal-platform-label       {{ background: #ff6600; }}
-        .social-signals .github-item .signal-platform-label   {{ background: #238636; }}
-        .social-signals .mastodon-item .signal-platform-label {{ background: #6364ff; }}
-        .social-signals .signal-engagement {{
-            font-size: 11px;
-            color: #475569;
-            background: #f1f5f9;
-            border-radius: 3px;
-            padding: 2px 8px;
-        }}
-        .social-signals .signal-item a {{
-            color: #1e293b;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            line-height: 1.45;
-            display: block;
-        }}
-        .social-signals .signal-item a:hover {{
-            color: #1e3a8a;
-            text-decoration: underline;
-        }}
-        @media (max-width: 640px) {{
-            .social-signals {{
-                padding: 16px;
-            }}
-            .social-signals .signal-list {{
-                grid-template-columns: 1fr;
-            }}
-            .social-signals .signal-meta {{
-                gap: 6px;
-            }}
-        }}
-
-        .back-to-top {{
-            position: fixed;
-            top: 50%;
-            left: calc(50% - 450px - 48px);
-            transform: translateY(-50%);
-            width: 36px;
-            height: 36px;
-            background: #1a237e;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            opacity: 0.85;
-            transition: opacity 0.2s;
-            z-index: 999;
-        }}
-        .back-to-top:hover {{
-            opacity: 1;
-        }}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="report-header">
-            <h1><span class="header-date">{now.strftime('%d.%m.%Y')}</span> Siber Güvenlik Haber Özetleri</h1>
-        </div>
-        
-        <!-- YÖNETİCİ ÖZETİ -->
-        <div class="executive-summary">
-            <h2>Yönetici Özeti</h2>
-            
-            <!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
-            <div class="important-news">
-                <h2>Önemli Gelişmeler</h2>
-                <div class="important-summary">
-                    [EN ÖNEMLİ 10 HABER BURADA (mümkünse 10) - HER BİRİ TAM CÜMLE:]
-                    <div class="important-item">
-                        <a href="#haber-1">1. Microsoft Exchange sunucularında CVE-2024-1234 açığı kritik güvenlik riski oluşturmaktadır.</a>
-                    </div>
-                    <div class="important-item">
-                        <a href="#haber-2">2. LockBit 4.0 fidye yazılımı dünya genelinde sağlık kurumlarını hedef almaktadır.</a>
-                    </div>
-                    <div class="important-item">
-                        <a href="#haber-3">3. ...</a>
-                    </div>
-                    [... haber-10'a kadar devam et ...]
-                </div>
-            </div>
-
-            <!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
-            <table class="executive-table">
-                [GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU - TAM CÜMLE ÖRNEKLER:]
-                <tr>
-                    <td><a href="#haber-11">11. Google Chrome'da sıfır gün açığı aktif olarak istismar edilmektedir.</a></td>
-                    <td><a href="#haber-12">12. Cisco ağ cihazları için kritik güvenlik güncellemesi yayınlanmıştır.</a></td>
-                </tr>
-            </table>
-        </div>
-        
-        <!-- HABERLER -->
-        <div class="news-section">
-            [ÖNEMLİ 10 HABERİN PARAGRAF ÖZETLERİ - ÖNCE BUNLAR (haber-1'den haber-10'a)]
-            <div class="news-item" id="haber-1">
-                <div class="news-title"><span class="nato-star">★ NATO</span><b>NATO Zirvesiyle İlgili Haberin Başlığı [SADECE NATO haberleri için ikonu ekle]</b></div>
-                <p class="news-content">MİNİMUM 100 kelime paragraf özet (zorunlu), resmi Türkçe. 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa. Yeterli bağlam ve teknik detay ekle.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="[KAYNAK_LINK değeri]" target="_blank">[KAYNAK_DOMAIN değeri]</a>, [HABER_TARİHİ değeri])</b></p>
-            </div>
-            [... haber-2'den haber-10'a kadar devam et — NATO dışı haberlerde nato-star KULLANMA ...]
-
-            [SONRA GERİ KALAN HABERLERİN PARAGRAF ÖZETLERİ (haber-11'den son habere)]
-            <div class="news-item" id="haber-11">
-                <div class="news-title"><b>On Birinci Haberin Başlığı</b></div>
-                <p class="news-content">MİNİMUM 100 kelime paragraf özet (zorunlu), resmi Türkçe. 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa. Yeterli bağlam ve teknik detay ekle.</p>
-                <p class="source"><b>(KAYNAK, AÇIK - <a href="[KAYNAK_LINK değeri]" target="_blank">[KAYNAK_DOMAIN değeri]</a>, [HABER_TARİHİ değeri])</b></p>
-            </div>
-        </div>
-    </div>
-    <a href="#" class="back-to-top" title="Başa Dön" onclick="window.scrollTo({{top:0,behavior:'smooth'}});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
-</body>
-</html>
-```
-
-NATO YILDIZI İKONU KURALI — KRİTİK:
-✓ SADECE NATO Türkiye Zirvesi (Temmuz 2026) ile doğrudan ilgili haberlerde, başlıktan ÖNCE şu HTML ekle:
-   <span class="nato-star">★ NATO</span>
-✓ Örnek: <div class="news-title"><span class="nato-star">★ NATO</span><b>NATO Zirvesine Yönelik APT28 Siber Operasyonu Tespit Edilmiştir</b></div>
-⛔ NATO ile ilgisi olmayan haberlere KESİNLİKLE ekleme — tek bir hatalı kullanım bile kabul edilmez
-⛔ İran-İsrail, ransomware, CVE vb. haberler dahil diğer tüm kategorilerde kullanma
-⛔ "Önemli Gelişmeler" kutusundaki linklere ekleme — sadece news-title div'ine ekle
-
-BAŞLIK KURALLARI:
-✓ İsim-fiil: "CVE-2024-1234 Açığının Microsoft Exchange Sunucularını Etkilemesi"
-✓ FORMAT: [Özne]'nin/[Özne]'ın [Nesne]'yi [eylem-ması/mesi]
-✗ YASAK: -mıştır, -edilmiştir, -tespit edilmiştir gibi eylem cümlesi yapıları
-✓ SOMUT detaylar: Şirket/CVE/ülke adları dahil
-✓ 5-9 kelime, her kelimenin ilk harfi büyük
-
-ÖZET PARAGRAF KURALLARI:
-✓ MİNİMUM 120 kelime — ZORUNLU (yazmadan önce say, 120'den az kesinlikle kabul edilmez!)
-✓ 5N1K tüm sorular cevaplansın
-✓ Resmi Türkçe (-mıştır, -edilmiştir)
-✓ Normal cümle yapısı (başlık değil)
-
-⛔ TERCÜMAN KURALI — MUTLAK:
-Sen bir TERCÜMAN gibi çalışıyorsun: orijinal haberdeki bilgileri Türkçeye aktarırsın.
-ASLA orijinal haber metninde OLMAYAN yorum, değerlendirme, ders veya sonuç cümlesi EKLEME.
-
-⛔ YASAK SON KELİMELER — bu kelimelerle biten HİÇBİR cümle yazılmaz:
-  • göstermektedir • ortaya koymaktadır • vurgulamaktadır • kanıtlamaktadır
-  • taşımaktadır • darbe vurmuştur • önem arz etmektedir • açıkça ortaya çıkmaktadır
-  • bir kez daha göstermektedir • farkındalık yaratmaktadır
-
-⛔ YASAK BAŞLANGIÇLAR — bu başlangıçlarla başlayan cümle PARAGRAFTA OLAMAZ:
-  • "Bu olay ..." • "Bu saldırı ..." • "Bu gelişme ..." • "Bu operasyon ..."
-  • "Bu vaka ..." • "Bu durum ..." • "Bu yaklaşım ..." • "Bu metodoloji ..."
-  • "Bu tür ..." • "Bu başarılı ..." • "Bu kritik ..."
-
-Paragrafın SON CÜMLESİ mutlaka somut bir haber detayı, teknik bulgu veya doğrudan orijinal haberden alınan bilgi olacak.
-
-KRİTİK:
-- EN ÖNEMLİ 10 HABER → Hem "Önemli Gelişmeler" kutusunda HEM de haber paragraflarının en üstünde
-- Kalan haberler → Önem sırasına göre sıralanmış
-- Her habere id="haber-N" ve sayfa içi linkler
-- Filtrelenenler (podcast/webinar/vb) raporda YOK
-
-═══════════════════════════════════════════════════════════
-
-SON 3 GÜNDE RAPORLANAN OLAYLAR (TEKRAR ALMA):
-{recent_events if recent_events else "(Henüz arşiv yok)"}
-
-⛔ Yukarıdaki olaylarla AYNI OLAYI anlatan haberler, farklı kaynak/başlıkla gelse bile ÇIKAR.
-Aynı olay: aynı CVE numarası, aynı şirket/kurum adı + aynı saldırı türü, aynı tehdit aktörü + aynı hedef.
-
-═══════════════════════════════════════════════════════════
-
-HAM HABERLER:
-{news_content}
-
-═══════════════════════════════════════════════════════════
-
-ŞİMDİ SIRAYLA YAP:
-1. Filtreleme → Uygun haberleri seç (130'den ~43)
-2. ÖNEMLİ GELİŞMELER için EN FAZLA 10 HABERİ SEÇ (mümkünse 10, yoksa olduğu kadar)
-   - Yukarıdaki 10 kritere göre önceliklendir
-   - Eğer 10 tane kritik haber bulamazsan, en az kritik haber kategorisinden tamamla
-3. Kalanları önem sırasına koy (tablo için)
-4. HTML şablonunu doldur
-
-ZORUNLU:
-- Yukarıdaki şablonu AYNEN kullan
-- TÜM uygun haberleri dahil et
-- ÖNEMLİ GELİŞMELER KUTUSUNA MÜMKÜNSE 10 HABER SEÇ (eksik bırakma!)"""

@@ -20,7 +20,7 @@ from openai import OpenAI as OpenAIClient
 
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
-    ARCHIVE_FILE, get_claude_prompt,
+    ARCHIVE_FILE,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_legacy_json_prompt,
@@ -1110,7 +1110,7 @@ class HaberSistemi:
        onclick="window.scrollTo({{top:0,behavior:'smooth'}});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
 <script>
 function _getBlockText() {{
-    var lines = ['{today_str} - Siber Güvenlik Raporu: Önemli Gelişmeler', '='.repeat(60), ''];
+    var lines = [];
     var cards = document.querySelectorAll('#onemli-gelismeler-block .top3-card');
     cards.forEach(function(card, i) {{
         var title   = (card.querySelector('.top3-card-title')    || {{}}).textContent || '';
