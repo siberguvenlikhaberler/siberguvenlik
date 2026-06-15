@@ -88,7 +88,7 @@ KATEGORİ 1 — EN YÜKSEK ÖNCELİK (her zaman tercih edilir)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Aşağıdaki türde haber varsa, diğer tüm kategorilere ÖNCE bu seçilir:
 
-A) DEVLET CİHAZLI CİHAZLARI & TİCARİ CASUSLUK YAZILIMI
+A) DEVLET DESTEKLİ CASUS ARAÇLARI & TİCARİ CASUS YAZILIMI
    Devletlere veya istihbarat servislerine satılan/kullanılan casus araçlar.
    • NSO Group / Pegasus, Candiru, Intellexa / Predator, FinFisher, L3Harris,
      Paragon, Hacking Team, Circles, QuaDream ve benzeri "mercenary spyware" firmaları
@@ -139,7 +139,7 @@ F) MİLLİ GÜVENLİĞİ DOĞRUDAN ETKİLEYEN BÜYÜK VERİ İHLALİ
      veri tabanlarının ele geçirilmesi
    • 50 milyon+ vatandaşı etkileyen platform veya telekom ihlali
      (finansal veri, konum, iletişim içeriği gibi kritik veri türleri)
-   • İstihbarat operasyonunu, ürtaj/casusluk faaliyetini kolaylaştırabilecek
+   • İstihbarat operasyonunu, izleme/casusluk faaliyetini kolaylaştırabilecek
      büyük ölçekli kişisel veri sızıntısı (gazeteciler, aktivistler, kamu görevlileri)
 
 G) DİĞER STRATEJİK HABERLER
