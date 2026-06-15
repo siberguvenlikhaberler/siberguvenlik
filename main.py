@@ -755,8 +755,43 @@ class HaberSistemi:
             border: 1px solid #bbdefb;
             border-radius: 8px;
             margin-bottom: 20px;
+            position: relative;
         }
         .important-news h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .block-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .block-actions-top {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+        .block-actions-bottom {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 14px;
+        }
+        .block-action-btn {
+            background: rgba(255,255,255,0.92);
+            border: 1px solid #90caf9;
+            border-radius: 6px;
+            padding: 5px 11px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1565c0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.15s, border-color 0.15s;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .block-action-btn:hover { background: #dbeeff; border-color: #42a5f5; }
+        .block-action-btn.success { background: #e8f5e9; border-color: #66bb6a; color: #2e7d32; }
+        .block-action-btn svg { flex-shrink: 0; }
         .important-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         @media (max-width: 640px) { .important-summary { grid-template-columns: 1fr; } }
         .important-item {
@@ -1032,10 +1067,30 @@ class HaberSistemi:
         </div>
 
         <div class="executive-summary">
-            <div class="important-news">
+            <div class="important-news" id="onemli-gelismeler-block">
                 <h2>Önemli Gelişmeler</h2>
+                <div class="block-actions block-actions-top">
+                    <button class="block-action-btn" id="btn-copy-top" onclick="copyBlock(this)" title="Panoya kopyala">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Kopyala
+                    </button>
+                    <button class="block-action-btn" id="btn-save-top" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Kaydet
+                    </button>
+                </div>
 {top3_cards_html}                <div class="important-summary">
 {important_items_html}                </div>
+                <div class="block-actions-bottom">
+                    <button class="block-action-btn" id="btn-copy-bot" onclick="copyBlock(this)" title="Panoya kopyala">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Kopyala
+                    </button>
+                    <button class="block-action-btn" id="btn-save-bot" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Kaydet
+                    </button>
+                </div>
             </div>
 
             <table class="executive-table">
@@ -1047,6 +1102,60 @@ class HaberSistemi:
     </div>
     <a href="#" class="back-to-top" title="Başa Dön"
        onclick="window.scrollTo({{top:0,behavior:'smooth'}});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
+<script>
+function _getBlockText() {{
+    var lines = ['{today_str} - Siber Güvenlik Raporu: Önemli Gelişmeler', '='.repeat(60), ''];
+    var cards = document.querySelectorAll('#onemli-gelismeler-block .top3-card');
+    cards.forEach(function(card, i) {{
+        var title   = (card.querySelector('.top3-card-title')   || {{}}).textContent || '';
+        var para    = (card.querySelector('.top3-card-paragraph') || {{}}).textContent || '';
+        var source  = (card.querySelector('.source')             || {{}}).textContent || '';
+        lines.push((i + 1) + '. ' + title.trim());
+        lines.push('');
+        lines.push(para.trim());
+        lines.push('');
+        lines.push(source.trim());
+        lines.push('-'.repeat(60));
+        lines.push('');
+    }});
+    var items = document.querySelectorAll('#onemli-gelismeler-block .important-item a');
+    if (items.length) {{
+        lines.push('Diğer Önemli Haberler:');
+        items.forEach(function(a) {{ lines.push('  • ' + a.textContent.trim()); }});
+        lines.push('');
+    }}
+    return lines.join('\n');
+}}
+function _flashBtn(btn, label) {{
+    var orig = btn.innerHTML;
+    btn.classList.add('success');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ' + label;
+    setTimeout(function() {{ btn.classList.remove('success'); btn.innerHTML = orig; }}, 1800);
+}}
+function copyBlock(btn) {{
+    var text = _getBlockText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {{
+        navigator.clipboard.writeText(text).then(function() {{ _flashBtn(btn, 'Kopyalandı!'); }}).catch(function() {{ _fallbackCopy(text, btn); }});
+    }} else {{ _fallbackCopy(text, btn); }}
+}}
+function _fallbackCopy(text, btn) {{
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try {{ document.execCommand('copy'); _flashBtn(btn, 'Kopyalandı!'); }} catch(e) {{ alert('Kopyalama desteklenmiyor.'); }}
+    document.body.removeChild(ta);
+}}
+function saveBlock(btn) {{
+    var text = _getBlockText();
+    var blob = new Blob([text], {{type: 'text/plain;charset=utf-8'}});
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href = url; a.download = 'onemli-gelismeler-{today_str}.txt';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    _flashBtn(btn, 'Kaydedildi!');
+}}
+</script>
 </body>
 </html>"""
         return html
