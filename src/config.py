@@ -222,10 +222,15 @@ def get_deep_analysis_prompt(articles_full):
 ⚠️ DİL KURALI: Tüm çıktılar YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile yanıt kesinlikle Türkçe yazılacak.
 
 Her haber için iki şey üret:
-1. TR_BASLIK: Türkçe eylem cümlesi başlığı
-   - 6-9 kelime, her kelimenin ilk harfi büyük
-   - Fiil zorunlu: -mıştır, -edilmiştir, -tespit edilmiştir, -açıklanmıştır
-   - YASAK: -ması, -edilmesi gibi isim-fiil (mastar) yapıları
+1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
+   - 5-9 kelime, her kelimenin ilk harfi büyük
+   - ZORUNLU FORMAT: "[Özne]'nin/[Özne]'ın [Nesne]'yi [eylem-ması/mesi]"
+   - Bitiş: -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
+   - Örnekler: "FBI'ın Outsider Enterprise Kimlik Avı Ağını Çökertmesi"
+               "Meta'nın NSO Group'u WhatsApp Kullanıcılarını Hedeflemekle Suçlaması"
+               "ShinyHunters'ın Avrupa Konseyi Verilerini Sızdırması"
+               "Microsoft Exchange'de CVE-2024-1234 Açığının Keşfedilmesi"
+   - YASAK: -mıştır, -edilmiştir, -tespit edilmiştir gibi eylem cümlesi yapıları
    - Somut detay: şirket/CVE/ülke adı dahil et
 
 2. PARAGRAF: Resmi Türkçe özet
@@ -241,7 +246,7 @@ Her haber için iki şey üret:
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
   "3": {{
-    "tr_title": "Microsoft Exchange'de CVE-2024-1234 Kritik Uzaktan Kod Çalıştırma Açığı Tespit Edilmiştir",
+    "tr_title": "Microsoft Exchange'de CVE-2024-1234 Kritik Açığının Tespit Edilmesi",
     "paragraph": "Microsoft, Exchange Server ürününde..."
   }},
   "7": {{
@@ -264,10 +269,15 @@ def get_summary_batch_prompt(articles_full):
 ⚠️ DİL KURALI: Tüm çıktılar YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile yanıt kesinlikle Türkçe yazılacak.
 
 Her haber için:
-1. TR_BASLIK: Türkçe eylem cümlesi başlığı
-   - 6-9 kelime, her kelimenin ilk harfi büyük
-   - Fiil zorunlu: -mıştır, -edilmiştir, -tespit edilmiştir, -açıklanmıştır
-   - YASAK: -ması, -edilmesi gibi isim-fiil (mastar) yapıları
+1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
+   - 5-9 kelime, her kelimenin ilk harfi büyük
+   - ZORUNLU FORMAT: "[Özne]'nin/[Özne]'ın [Nesne]'yi [eylem-ması/mesi]"
+   - Bitiş: -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
+   - Örnekler: "FBI'ın Outsider Enterprise Kimlik Avı Ağını Çökertmesi"
+               "Meta'nın NSO Group'u WhatsApp Kullanıcılarını Hedeflemekle Suçlaması"
+               "ShinyHunters'ın Avrupa Konseyi Verilerini Sızdırması"
+               "Google Chrome'da Sıfır Gün Açığının Aktif Olarak İstismar Edilmesi"
+   - YASAK: -mıştır, -edilmiştir, -tespit edilmiştir gibi eylem cümlesi yapıları
    - Somut detay: şirket/CVE/ülke adı dahil et
 
 2. PARAGRAF: Resmi Türkçe özet
@@ -283,7 +293,7 @@ Her haber için:
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
   "42": {{
-    "tr_title": "Google Chrome Sıfır Gün Açığı Aktif Olarak İstismar Edilmektedir",
+    "tr_title": "Google Chrome'da Sıfır Gün Açığının Aktif Olarak İstismar Edilmesi",
     "paragraph": "Google, Chrome tarayıcısında..."
   }},
   "1": {{
@@ -469,7 +479,7 @@ Kalan haberleri önem sırasına göre sırala. En önemli max 10 tanesi "top10"
 
 ADIM 3 — TÜRKÇE ÖZET YAZ (filtered hariç HER haber için):
 Her haber için:
-- "tr_title": Türkçe başlık. ZORUNLU: eylem cümlesi kullan ("...saldırı gerçekleştirilmiştir", "...açığa çıkmıştır"). YASAK: "...Bulunması", "...Açıklanması" gibi isim-fiil.
+- "tr_title": Türkçe isim-fiil başlığı. ZORUNLU FORMAT: "[Özne]'nin [Nesne]'yi [eylem-ması/mesi]" — örnek: "FBI'ın Kimlik Avı Ağını Çökertmesi", "Meta'nın NSO Group'u Suçlaması". YASAK: "...gerçekleştirilmiştir", "...açığa çıkmıştır" gibi eylem cümlesi yapıları.
 - "paragraph": MİNİMUM 120 kelime Türkçe özet (daha az yazarsan YANLIŞ).
   - SADECE kaynak metindeki bilgiler — tahmin, yorum, çıkarım YASAK
   - Ne oldu, kim etkilendi, teknik boyutları aktar
@@ -499,8 +509,9 @@ def get_claude_prompt(news_content, recent_events=''):
 GÖREV: 130 haberi analiz et → En önemli 10'unu seç (10 yoksa olduğu kadar) → Kalanları önem sırasına koy → HTML raporu oluştur.
 
 🚨 BAŞLIK KURALI — TÜM HABER BAŞLIKLARI İÇİN ZORUNLU:
-⛔ YASAK: "...Etkilenmesi", "...Açıklanması", "...Bulunması" → mastar/isim-fiil KULLANMA
-✅ ZORUNLU: "...Etkilemiştir", "...Açıklanmıştır", "...Tespit Edilmiştir" → eylem cümlesi
+✅ ZORUNLU: "[Özne]'nin/[Özne]'ın [Nesne]'yi [eylem-ması/mesi]" → isim-fiil (mastar) yapısı
+   Örnekler: "FBI'ın Outsider Enterprise Ağını Çökertmesi" / "Meta'nın NSO Group'u Suçlaması"
+⛔ YASAK: "...Etkilemiştir", "...Açıklanmıştır", "...Tespit Edilmiştir" → eylem cümlesi KULLANMA
 
 🚨 KRİTİK AŞAMA 1 - HABERLERİ FİLTRELE:
 Aşağıdaki türleri ÇIKAR (raporda gösterme):
@@ -1003,11 +1014,11 @@ NATO YILDIZI İKONU KURALI — KRİTİK:
 ⛔ "Önemli Gelişmeler" kutusundaki linklere ekleme — sadece news-title div'ine ekle
 
 BAŞLIK KURALLARI:
-✓ Eylem cümlesi: "CVE-2024-1234 Microsoft Exchange Sunucularını Etkilemiştir"
-✓ Fiil zorunlu: -mıştır, -edilmiştir, -tespit edilmiştir, -açıklanmıştır
-✗ YASAK: -ması, -edilmesi, -bulunması gibi isim-fiil (mastar) yapıları
+✓ İsim-fiil: "CVE-2024-1234 Açığının Microsoft Exchange Sunucularını Etkilemesi"
+✓ FORMAT: [Özne]'nin/[Özne]'ın [Nesne]'yi [eylem-ması/mesi]
+✗ YASAK: -mıştır, -edilmiştir, -tespit edilmiştir gibi eylem cümlesi yapıları
 ✓ SOMUT detaylar: Şirket/CVE/ülke adları dahil
-✓ 7-9 kelime, her kelimenin ilk harfi büyük
+✓ 5-9 kelime, her kelimenin ilk harfi büyük
 
 ÖZET PARAGRAF KURALLARI:
 ✓ MİNİMUM 120 kelime — ZORUNLU (yazmadan önce say, 120'den az kesinlikle kabul edilmez!)
