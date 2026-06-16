@@ -615,7 +615,7 @@ class HaberSistemi:
     def _gemini_call_json(self, prompt, max_output_tokens=4096, label=''):
         """
         Gemini API çağrısı yapar ve JSON yanıt döndürür.
-        Retry: 4 deneme, üstel geri çekilme; model sırası pro→pro→flash→flash.
+        Retry: 4 deneme, sabit 15s bekleme; model sırası pro→pro→flash→flash.
         Başarısızlıkta None döndürür.
         """
         if not GEMINI_API_KEY:
@@ -624,6 +624,8 @@ class HaberSistemi:
 
         _MODELS = ['gemini-2.5-pro', 'gemini-2.5-pro',
                    'gemini-2.5-flash', 'gemini-2.5-flash']
+        # Büyük çıktılar (>8K token) için daha uzun HTTP timeout (ms)
+        http_timeout_ms = 300_000 if max_output_tokens > 8000 else 180_000
         client = genai.Client(api_key=GEMINI_API_KEY)
 
         for attempt, model in enumerate(_MODELS):
@@ -635,6 +637,7 @@ class HaberSistemi:
                     config=genai_types.GenerateContentConfig(
                         max_output_tokens=max_output_tokens,
                         temperature=0.3,
+                        http_options=genai_types.HttpOptions(timeout=http_timeout_ms),
                         safety_settings=[
                             genai_types.SafetySetting(
                                 category='HARM_CATEGORY_DANGEROUS_CONTENT',
@@ -667,9 +670,8 @@ class HaberSistemi:
             except Exception as e:
                 print(f"   [{label}] ⚠️  Hata [{type(e).__name__}]: {e}")
                 if attempt < 3:
-                    wait = min(20 * (2 ** attempt), 120)
-                    print(f"   [{label}] ⏳ {wait}s bekleniyor...")
-                    time.sleep(wait)
+                    print(f"   [{label}] ⏳ 15s bekleniyor...")
+                    time.sleep(15)
 
         print(f"   [{label}] ❌ Gemini 4 deneme başarısız.")
         return None
