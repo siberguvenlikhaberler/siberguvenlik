@@ -11,7 +11,7 @@ GitHub repo ayarlarında:
 
 1. **Secret** ekle: `OPENROUTER_API_KEY = sk-or-...`
 2. **Variable** ekle: `LLM_PROVIDER = openrouter`
-3. (Opsiyonel) **Variable**: `OPENROUTER_MODEL = google/gemini-3-flash-preview`
+3. (Opsiyonel) **Variable**: `OPENROUTER_MODEL = google/gemini-3.5-flash`
 
 Workflow (`.github/workflows/daily.yml`) bu değerleri zaten ortama aktarıyor.
 Anahtar/değişken boş kaldıkça sistem otomatik olarak Gemini ile çalışmaya
@@ -43,7 +43,7 @@ python -u main.py
 
 | Özellik | Değer |
 |---|---|
-| Model slug | `google/gemini-3-flash-preview` |
+| Model slug | `google/gemini-3.5-flash` (GA, 19 May 2026) |
 | Bağlam penceresi | ~1M token |
 | Giriş | metin, görsel, PDF, ses, video (çoklu-mod) |
 | Çıkış | metin |
@@ -78,8 +78,8 @@ client.chat.completions.create(
 | `LLM_PROVIDER` | `gemini` | `openrouter` yapılınca geçiş açılır |
 | `OPENROUTER_API_KEY` | _(boş)_ | OpenRouter anahtarı (`sk-or-...`) |
 | `OPENROUTER_BASE_URL` | `https://openrouter.ai/api/v1` | API kök adresi |
-| `OPENROUTER_MODEL` | `google/gemini-3-flash-preview` | Birincil model |
-| `OPENROUTER_FALLBACK_MODELS` | `gemini-3-flash-preview,gemini-2.5-flash` | Yedek modeller (virgüllü) |
+| `OPENROUTER_MODEL` | `google/gemini-3.5-flash` | Birincil model (GA) |
+| `OPENROUTER_FALLBACK_MODELS` | `gemini-3.5-flash,gemini-3-flash-preview,gemini-2.5-flash` | Yedek modeller (virgüllü) |
 | `OPENROUTER_REASONING_EFFORT` | `low` | `minimal/low/medium/high/xhigh`; `none`→kapalı |
 | `OPENROUTER_REASONING_EXCLUDE` | `1` | Reasoning çıktısını gizle |
 | `OPENROUTER_TEMPERATURE` | `0.3` | Örnekleme sıcaklığı |
@@ -87,6 +87,7 @@ client.chat.completions.create(
 | `OPENROUTER_HTTP_REFERER` | repo URL | OpenRouter sıralama başlığı (ops.) |
 | `OPENROUTER_APP_TITLE` | `Siber Guvenlik Haberleri` | OpenRouter sıralama başlığı (ops.) |
 
-> Not: `google/gemini-3-flash-preview` şu an **preview** sürümdür. Genel sürüm
-> (ör. `google/gemini-3-flash`) yayınlandığında `OPENROUTER_MODEL` değişkenini
-> güncellemek yeterlidir; kod değişikliği gerekmez.
+> Not: Varsayılan model artık **GA (kararlı)** olan `google/gemini-3.5-flash`tır
+> (19 May 2026). `google/gemini-3-flash-preview` hâlâ preview olduğundan yalnızca
+> yedek listesinde tutulur. Başka bir modele geçmek için `OPENROUTER_MODEL`
+> değişkenini değiştirmek yeterlidir; kod değişikliği gerekmez.

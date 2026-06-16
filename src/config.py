@@ -16,9 +16,11 @@ TAVILY_API_KEY = os.getenv('TAVILY_API_KEY', '')
 # OpenRouter, OpenAI uyumlu bir API sunar; bu yüzden mevcut `openai` paketiyle
 # (requirements.txt'te zaten var) yalnızca base_url değiştirilerek kullanılır.
 #   Endpoint : https://openrouter.ai/api/v1/chat/completions
-#   Model    : google/gemini-3-flash-preview  (Gemini 3 Flash, 1M bağlam)
+#   Model    : google/gemini-3.5-flash  (GA — 19 May 2026; Flash sınıfı, 1M bağlam)
+#   Not      : google/gemini-3-flash-preview hâlâ "preview" olduğundan üretimde
+#              kararlı GA modeli (3.5 Flash) varsayılan alındı; preview yedekte tutulur.
 #
-# Gemini 3 Flash bir "thinking" modelidir; reasoning gücü `reasoning.effort` ile
+# Gemini 3.x Flash bir "thinking" modelidir; reasoning gücü `reasoning.effort` ile
 # ayarlanır: minimal | low | medium | high | xhigh. JSON üretim görevlerinde
 # (sıralama/özet) düşük effort yeterli ve hızlı/ucuzdur — varsayılan: low.
 # Not: GitHub Actions tanımsız `vars.X` değerlerini boş string olarak geçirir;
@@ -28,11 +30,11 @@ LLM_PROVIDER = (os.getenv('LLM_PROVIDER') or 'gemini').strip().lower()
 OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '')
 OPENROUTER_BASE_URL = os.getenv('OPENROUTER_BASE_URL') or 'https://openrouter.ai/api/v1'
 # Birincil model + başarısızlıkta denenecek yedekler (sıra önemlidir)
-OPENROUTER_MODEL = os.getenv('OPENROUTER_MODEL') or 'google/gemini-3-flash-preview'
+OPENROUTER_MODEL = os.getenv('OPENROUTER_MODEL') or 'google/gemini-3.5-flash'
 OPENROUTER_FALLBACK_MODELS = [
     m.strip() for m in os.getenv(
         'OPENROUTER_FALLBACK_MODELS',
-        'google/gemini-3-flash-preview,google/gemini-2.5-flash'
+        'google/gemini-3.5-flash,google/gemini-3-flash-preview,google/gemini-2.5-flash'
     ).split(',') if m.strip()
 ]
 # Reasoning effort: minimal|low|medium|high|xhigh ; 'none'/'' → reasoning gönderilmez
