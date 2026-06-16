@@ -24,8 +24,12 @@ from src.config import (
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_legacy_json_prompt,
+    is_openrouter_active,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
+# OpenRouter (Gemini 3 Flash) — PASİF altyapı. Yalnızca is_openrouter_active()
+# True iken devreye girer; aksi halde tüm LLM çağrıları Gemini üzerinden gider.
+from src import llm_client as _llm
 
 
 # ===== YARDIMCI FONKSİYONLAR =====
@@ -617,7 +621,16 @@ class HaberSistemi:
         Gemini API çağrısı yapar ve JSON yanıt döndürür.
         Retry: 4 deneme, sabit 15s bekleme; model sırası pro→pro→flash→flash.
         Başarısızlıkta None döndürür.
+
+        OpenRouter aktifse (LLM_PROVIDER=openrouter + OPENROUTER_API_KEY) çağrı
+        Gemini yerine OpenRouter (Gemini 3 Flash) üzerinden yapılır. Pasifken
+        bu satırın hiçbir etkisi yoktur.
         """
+        if is_openrouter_active():
+            return _llm.generate_json(
+                prompt, max_output_tokens=max_output_tokens, label=label,
+            )
+
         if not GEMINI_API_KEY:
             print(f"   ⚠️  [{label}] GEMINI_API_KEY yok, atlanıyor.")
             return None
@@ -1955,8 +1968,8 @@ function saveBlock(btn) {{
             full_text'in ilk 150 kelimesi ham olarak yerleştirilir
         Fallback: Pass 1 tamamen başarısız → _create_html_legacy().
         """
-        if not GEMINI_API_KEY:
-            print("⚠️  GEMINI_API_KEY yok — Fallback HTML oluşturuluyor...")
+        if not GEMINI_API_KEY and not is_openrouter_active():
+            print("⚠️  LLM anahtarı yok (GEMINI_API_KEY / OPENROUTER_API_KEY) — Fallback HTML oluşturuluyor...")
             return self._create_fallback_html(
                 txt_content, error_type="NoAPIKey",
                 error_message="GEMINI_API_KEY mevcut değil"
@@ -2245,10 +2258,10 @@ function saveBlock(btn) {{
         ardından _build_html() ile yeni formatta rapor üretir.
         """
         print("🔄 Legacy tek-çağrı yöntemi çalışıyor...")
-        if not GEMINI_API_KEY:
+        if not GEMINI_API_KEY and not is_openrouter_active():
             return self._create_fallback_html(
                 txt_content, error_type="NoAPIKey",
-                error_message="GEMINI_API_KEY mevcut değil"
+                error_message="LLM API anahtarı mevcut değil"
             )
 
         now       = datetime.now()
@@ -2527,17 +2540,23 @@ KURALLAR:
 """
 
         try:
-            client = genai.Client(api_key=GEMINI_API_KEY)
-            response = client.models.generate_content(
-                model='gemini-2.5-pro',
-                contents=completion_prompt,
-                config=genai_types.GenerateContentConfig(
-                    max_output_tokens=65000,
-                    temperature=0.7,
+            if is_openrouter_active():
+                new_paragraphs = _llm.generate_text(
+                    completion_prompt, max_output_tokens=65000,
+                    temperature=0.7, label='paragraf-tamamlama',
+                ) or ''
+            else:
+                client = genai.Client(api_key=GEMINI_API_KEY)
+                response = client.models.generate_content(
+                    model='gemini-2.5-pro',
+                    contents=completion_prompt,
+                    config=genai_types.GenerateContentConfig(
+                        max_output_tokens=65000,
+                        temperature=0.7,
+                    )
                 )
-            )
 
-            new_paragraphs = response.text
+                new_paragraphs = response.text
 
             # Temizle
             if new_paragraphs.startswith('```html'):
@@ -2619,6 +2638,21 @@ KURALLAR:
             "Format:\n[S1]: <çeviri veya orijinal metin>\n[S2]: <çeviri veya orijinal metin>\n\n"
             + '\n'.join(lines)
         )
+        if is_openrouter_active():
+            text = _llm.generate_text(
+                prompt, max_output_tokens=2048, temperature=0.2,
+                label='sosyal-ceviri',
+            ) or ''
+            matched = 0
+            for match in _re.finditer(r'\[S(\d+)\]:\s*(.+)', text):
+                idx = int(match.group(1)) - 1
+                if 0 <= idx < len(self.social_data):
+                    self.social_data[idx]['title_tr'] = match.group(2).strip()
+                    matched += 1
+            print(f"   Sosyal sinyal Türkçe özetler (OpenRouter): "
+                  f"{matched}/{len(self.social_data)}")
+            return
+
         for model_name in ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash']:
             try:
                 client = genai.Client(api_key=GEMINI_API_KEY)

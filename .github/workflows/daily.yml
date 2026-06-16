@@ -44,6 +44,12 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
+          # OpenRouter (Gemini 3 Flash) — PASİF. LLM_PROVIDER repo değişkeni
+          # 'openrouter' yapılıp OPENROUTER_API_KEY secret'ı eklenince aktifleşir.
+          # Boş kaldıkça sistem Gemini ile çalışmaya devam eder.
+          LLM_PROVIDER: ${{ vars.LLM_PROVIDER }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
         run: python -u main.py
       
       - run: |

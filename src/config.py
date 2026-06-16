@@ -6,6 +6,54 @@ from datetime import datetime
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY', '')
 
+# ─────────────────────────────────────────────────────────────────────────────
+# LLM SAĞLAYICI SEÇİMİ — OpenRouter geçişi için PASİF altyapı
+# ─────────────────────────────────────────────────────────────────────────────
+# Sistem varsayılan olarak Gemini (google-genai SDK) ile çalışmaya devam eder.
+# OpenRouter'a geçiş için TEK YAPILACAK: ortam değişkeni LLM_PROVIDER=openrouter
+# ve OPENROUTER_API_KEY tanımlamak. Anahtar gelene kadar bu blok uyur (pasif).
+#
+# OpenRouter, OpenAI uyumlu bir API sunar; bu yüzden mevcut `openai` paketiyle
+# (requirements.txt'te zaten var) yalnızca base_url değiştirilerek kullanılır.
+#   Endpoint : https://openrouter.ai/api/v1/chat/completions
+#   Model    : google/gemini-3-flash-preview  (Gemini 3 Flash, 1M bağlam)
+#
+# Gemini 3 Flash bir "thinking" modelidir; reasoning gücü `reasoning.effort` ile
+# ayarlanır: minimal | low | medium | high | xhigh. JSON üretim görevlerinde
+# (sıralama/özet) düşük effort yeterli ve hızlı/ucuzdur — varsayılan: low.
+# Not: GitHub Actions tanımsız `vars.X` değerlerini boş string olarak geçirir;
+# bu yüzden `or default` ile boş değerleri de varsayılana düşürürüz.
+LLM_PROVIDER = (os.getenv('LLM_PROVIDER') or 'gemini').strip().lower()
+
+OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '')
+OPENROUTER_BASE_URL = os.getenv('OPENROUTER_BASE_URL') or 'https://openrouter.ai/api/v1'
+# Birincil model + başarısızlıkta denenecek yedekler (sıra önemlidir)
+OPENROUTER_MODEL = os.getenv('OPENROUTER_MODEL') or 'google/gemini-3-flash-preview'
+OPENROUTER_FALLBACK_MODELS = [
+    m.strip() for m in os.getenv(
+        'OPENROUTER_FALLBACK_MODELS',
+        'google/gemini-3-flash-preview,google/gemini-2.5-flash'
+    ).split(',') if m.strip()
+]
+# Reasoning effort: minimal|low|medium|high|xhigh ; 'none'/'' → reasoning gönderilmez
+OPENROUTER_REASONING_EFFORT = (os.getenv('OPENROUTER_REASONING_EFFORT') or 'low').strip().lower()
+# Reasoning çıktısını yanıttan gizle (sadece nihai cevabı al) — token tasarrufu
+OPENROUTER_REASONING_EXCLUDE = (os.getenv('OPENROUTER_REASONING_EXCLUDE') or '1') not in ('0', 'false', 'False')
+OPENROUTER_TEMPERATURE = float(os.getenv('OPENROUTER_TEMPERATURE') or '0.3')
+OPENROUTER_TIMEOUT = int(os.getenv('OPENROUTER_TIMEOUT') or '300')   # saniye
+# OpenRouter sıralama/analitik başlıkları (opsiyonel, isteğe gömülür)
+OPENROUTER_HTTP_REFERER = os.getenv('OPENROUTER_HTTP_REFERER') or 'https://github.com/siberguvenlikhaberler/siberguvenlik'
+OPENROUTER_APP_TITLE = os.getenv('OPENROUTER_APP_TITLE') or 'Siber Guvenlik Haberleri'
+
+
+def is_openrouter_active():
+    """OpenRouter sağlayıcısı seçili VE API anahtarı mevcut mu?
+
+    Anahtar gelene kadar False döner; bu sayede altyapı tamamen pasif kalır ve
+    mevcut Gemini akışı hiç etkilenmez.
+    """
+    return LLM_PROVIDER == 'openrouter' and bool(OPENROUTER_API_KEY)
+
 # Dosya yolları
 ARCHIVE_FILE = "data/haberler_arsiv.txt"
 
