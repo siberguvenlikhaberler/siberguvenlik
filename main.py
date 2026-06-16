@@ -923,6 +923,63 @@ class HaberSistemi:
             text-decoration: none; opacity: 0.85; transition: opacity 0.2s; z-index: 999;
         }
         .back-to-top:hover { opacity: 1; }
+        /* ── DARK MODE ─────────────────────────────────────────── */
+        .theme-toggle {
+            position: absolute; top: 50%; right: 40px; transform: translateY(-50%);
+            background: none; border: 1px solid #e2e8f0; border-radius: 20px;
+            padding: 6px 14px; cursor: pointer; font-size: 12px; font-weight: 600;
+            color: #64748b; display: flex; align-items: center; gap: 6px;
+            transition: all 0.2s; user-select: none; z-index: 10;
+        }
+        .theme-toggle:hover { background: #f1f5f9; border-color: #94a3b8; }
+        @media (max-width: 640px) { .theme-toggle { right: 12px; padding: 5px 10px; } }
+        [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
+        [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        [data-theme="dark"] .report-header { background: #161b22; border-bottom-color: #30363d; }
+        [data-theme="dark"] .report-header h1 { color: #e6edf3; }
+        [data-theme="dark"] .header-date { color: #79c0ff; }
+        [data-theme="dark"] .important-news {
+            background: linear-gradient(135deg, #1c2d4a 0%, #162038 100%);
+            border-color: #2d4a7a; color: #e6edf3;
+        }
+        [data-theme="dark"] .important-news h2 { color: #79c0ff; }
+        [data-theme="dark"] .block-action-btn { background: rgba(22,27,34,0.9); border-color: #388bfd; color: #79c0ff; }
+        [data-theme="dark"] .block-action-btn:hover { background: #1c2d4a; border-color: #58a6ff; }
+        [data-theme="dark"] .block-action-btn.success { background: #162312; border-color: #3fb950; color: #3fb950; }
+        [data-theme="dark"] .important-item { background: rgba(30,50,90,0.5); border-left-color: #388bfd; }
+        [data-theme="dark"] .important-item a { color: #c9d1d9; }
+        [data-theme="dark"] .important-item a:hover { color: #79c0ff; }
+        [data-theme="dark"] .executive-summary { background: #1c2128; border-bottom-color: #30363d; }
+        [data-theme="dark"] .executive-summary h2 { color: #79c0ff; border-bottom-color: #388bfd; }
+        [data-theme="dark"] .executive-table td { background: #21262d; border-left-color: #388bfd; }
+        [data-theme="dark"] .executive-table a { color: #79c0ff; }
+        [data-theme="dark"] .news-section { background: #161b22; }
+        [data-theme="dark"] .news-item { background: #21262d; border-left-color: #388bfd; }
+        [data-theme="dark"] .news-title { color: #79c0ff; }
+        [data-theme="dark"] .news-content { color: #c9d1d9; }
+        [data-theme="dark"] .source { color: #8b949e; }
+        [data-theme="dark"] .source a { color: #58a6ff; }
+        [data-theme="dark"] .social-signals { background: #1a2233; border-color: #263557; }
+        [data-theme="dark"] .social-signals h2 { color: #79c0ff; border-bottom-color: #263557; }
+        [data-theme="dark"] .social-signals .signal-item { background: #21262d; border-color: #30363d; }
+        [data-theme="dark"] .social-signals .signal-item a { color: #c9d1d9; }
+        [data-theme="dark"] .social-signals .signal-item a:hover { color: #79c0ff; }
+        [data-theme="dark"] .social-signals .signal-engagement { background: #30363d; color: #8b949e; }
+        [data-theme="dark"] .top3-section-label { color: #79c0ff; }
+        [data-theme="dark"] .top3-card { background: #21262d; border-color: #30363d; border-left-color: #388bfd; }
+        [data-theme="dark"] .top3-card-title { color: #e6edf3; }
+        [data-theme="dark"] .top3-card-paragraph { color: #c9d1d9; }
+        [data-theme="dark"] .top3-card .source { color: #8b949e; }
+        [data-theme="dark"] .top3-card .source a { color: #58a6ff; }
+        [data-theme="dark"] .vuln-section-heading {
+            background: linear-gradient(135deg, #2d1a0a 0%, #231305 100%);
+            border-color: #5c3317; border-left-color: #f97316;
+        }
+        [data-theme="dark"] .vuln-section-heading h2 { color: #fb923c; }
+        [data-theme="dark"] .news-item.vuln-item { border-left-color: #f97316; }
+        [data-theme="dark"] .back-to-top { background: #388bfd; }
+        [data-theme="dark"] .theme-toggle { border-color: #30363d; color: #8b949e; }
+        [data-theme="dark"] .theme-toggle:hover { background: #21262d; border-color: #58a6ff; color: #e6edf3; }
         """
 
         import re as _re
@@ -1063,11 +1120,17 @@ class HaberSistemi:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Siber Güvenlik Raporu - {today_str}</title>
     <style>{css}    </style>
+    <script>(function(){{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}})()</script>
 </head>
 <body>
     <div class="container">
         <div class="report-header">
             <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece/Gündüz modu">
+                <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <span id="theme-label">Gece</span>
+            </button>
         </div>
 
         <div class="executive-summary">
@@ -1109,6 +1172,22 @@ class HaberSistemi:
     <a href="#" class="back-to-top" title="Başa Dön"
        onclick="window.scrollTo({{top:0,behavior:'smooth'}});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
 <script>
+function toggleTheme() {{
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var theme = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    document.getElementById('theme-icon-moon').style.display = isDark ? 'inline' : 'none';
+    document.getElementById('theme-icon-sun').style.display = isDark ? 'none' : 'inline';
+    document.getElementById('theme-label').textContent = isDark ? 'Gece' : 'Gündüz';
+}}
+(function() {{
+    if (document.documentElement.getAttribute('data-theme') === 'dark') {{
+        document.getElementById('theme-icon-moon').style.display = 'none';
+        document.getElementById('theme-icon-sun').style.display = 'inline';
+        document.getElementById('theme-label').textContent = 'Gündüz';
+    }}
+}})();
 function _getBlockText() {{
     var lines = [];
     var cards = document.querySelectorAll('#onemli-gelismeler-block .top3-card');
