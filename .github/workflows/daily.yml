@@ -1,13 +1,22 @@
 name: Günlük Rapor
 
 on:
+  # NOT: GitHub scheduled workflow'ları "best-effort" kuyruğa alır. Dakika :00
+  # (tepe saat) en sıkışık slottur; yoğun saatlerde tetiklenmeler saatlerce
+  # gecikir, hatta tamamen DÜŞÜRÜLÜR. Bu yüzden:
+  #   1) dakika :00 yerine düzensiz bir dakika (:23) kullanılır,
+  #   2) denemeler 06:23–20:53 UTC arasına geniş yayılır (8 deneme),
+  # böylece slotlardan biri düşse bile bir sonraki yakalar. main.py zaten
+  # idempotenttir: başarılı rapor varsa sonraki denemeler hemen çıkar (Kontrol 1).
   schedule:
-    - cron: '0 07 * * *'   # 1. deneme  — 07:00 UTC
-    - cron: '0 08 * * *'   # 2. deneme  — 08:00 UTC (Gemini başarısız olduysa)
-    - cron: '0 09 * * *'   # 3. deneme  — 09:00 UTC
-    - cron: '0 10 * * *'   # 4. deneme  — 10:00 UTC
-    - cron: '0 11 * * *'   # 5. deneme  — 11:00 UTC
-    - cron: '0 12 * * *'   # 6. deneme  — 12:00 UTC
+    - cron: '23 6 * * *'    # 1. deneme — 06:23 UTC
+    - cron: '23 8 * * *'    # 2. deneme — 08:23 UTC
+    - cron: '23 10 * * *'   # 3. deneme — 10:23 UTC
+    - cron: '23 12 * * *'   # 4. deneme — 12:23 UTC
+    - cron: '23 14 * * *'   # 5. deneme — 14:23 UTC
+    - cron: '23 16 * * *'   # 6. deneme — 16:23 UTC
+    - cron: '23 18 * * *'   # 7. deneme — 18:23 UTC
+    - cron: '53 20 * * *'   # 8. deneme — 20:53 UTC (son güvenlik ağı)
   workflow_dispatch:
 
 jobs:
