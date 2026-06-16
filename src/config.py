@@ -361,10 +361,11 @@ NEWS_SOURCES = {
     'SecurityWeek': 'https://feeds.feedburner.com/securityweek',
     'Help Net Security': 'https://www.helpnetsecurity.com/feed',
     'The Record': 'https://therecord.media/feed/',
-    'Talos Intelligence': 'https://blog.talosintelligence.com/feeds/all.atom.xml',
+    'Talos Intelligence': 'https://blog.talosintelligence.com/rss/',  # Ghost CMS — eski feeds/all.atom.xml 2026-06 itibarıyla 404
     'Unit 42': 'https://unit42.paloaltonetworks.com/feed/',
-    'Sophos News': 'https://news.sophos.com/en-us/feed/',
+    # 'Sophos News': 'https://news.sophos.com/en-us/feed/',  # Sophos CDN GitHub Actions IP'lerini engelliyor (2026-06'dan beri Timeout)
 }
+
 
 # ===== SOSYAL MEDYA SİNYALLERİ AYARLARI =====
 # Ana havuz: HN + Mastodon + GitHub (max 2) → top 5
