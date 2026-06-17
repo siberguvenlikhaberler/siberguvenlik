@@ -2073,6 +2073,20 @@ function saveBlock(btn) {{
                     except (ValueError, TypeError):
                         pass
 
+        # Pass 2 tek çağrıyla yapılır; kısmi/başarısız yanıtta (ör. çıktı token
+        # kesilmesi) üst sıradaki top-10 haberler içeriksiz kalır ve raporda HAM
+        # İNGİLİZCE görünür. İçeriği gelmeyen top-10 haberleri Pass 3'ün
+        # split-retry mantığıyla küçük gruplar hâlinde tamamla.
+        missing_top10 = [aid for aid in top10_ids if aid not in content_by_id]
+        if missing_top10:
+            print(f"   ⚠️  Pass 2 — {len(missing_top10)} top-10 haber içeriksiz, "
+                  f"split-retry ile tamamlanıyor: {missing_top10}")
+            for i in range(0, len(missing_top10), 5):
+                self._process_batch_with_split(
+                    missing_top10[i:i + 5], articles_by_id, content_by_id,
+                    label_prefix='P2-Tamamla',
+                )
+
         # ════════════════════════════════════════════════════════════════
         # PASS 3 — KALAN HABERLER (20'LİK BATCH'LER, TAM METİN)
         # ════════════════════════════════════════════════════════════════
@@ -2235,32 +2249,52 @@ function saveBlock(btn) {{
             label=f'{label_prefix}(n={len(batch)})',
         )
 
+        # Yalnızca BU batch'e ait dönen ID'leri yerleştir (model yanlış/uydurma
+        # ID döndürürse o, batch dışı sayılır ve görmezden gelinir).
         norm = _normalize_id_content(data) if data else {}
-        if norm:
-            for k, v in norm.items():
-                try:
-                    content_by_id[int(k)] = v
-                except (ValueError, TypeError):
-                    pass
+        batch_set = set(batch)
+        applied = 0
+        for k, v in norm.items():
+            try:
+                aid = int(k)
+            except (ValueError, TypeError):
+                continue
+            if aid in batch_set and aid not in content_by_id:
+                content_by_id[aid] = v
+                applied += 1
+
+        # Bu batch içinde hâlâ içeriği gelmeyen ID'ler.
+        # KRİTİK: model batch'in yalnızca bir kısmını döndürürse (ör. çıktı token
+        # kesilmesi → kısmi JSON), eksik kalanlar eskiden sessizce atlanıp HAM
+        # İNGİLİZCE kalıyordu. Artık eksikleri yeniden işliyoruz.
+        missing = [aid for aid in batch if aid not in content_by_id]
+        if not missing:
             return
 
-        # Başarısız — bölme kararı
-        if len(batch) == 1:
-            art_id = batch[0]
+        # Tek haber kaldı ve onu da getiremedik → ham fallback (son çare).
+        if len(missing) == 1:
+            art_id = missing[0]
             a = articles_by_id.get(art_id)
             if a:
                 content_by_id[art_id] = self._make_fallback_content(a)
                 print(f"   ⚠️  [{label_prefix}] Tek haber fallback: ID={art_id}")
             return
 
-        mid = len(batch) // 2
-        print(f"   🔀 [{label_prefix}] Batch bölünüyor: {len(batch)} → {mid} + {len(batch) - mid}")
+        # Eksikleri ikiye bölerek yeniden dene. Kısmi yanıt (applied > 0) da
+        # buraya düşer; böylece kuyrukta kalan haberler tekrar denenir.
+        if applied:
+            print(f"   ⚠️  [{label_prefix}] Kısmi yanıt: {applied} geldi, "
+                  f"{len(missing)} eksik → eksikler yeniden bölünüyor.")
+        else:
+            print(f"   🔀 [{label_prefix}] Batch bölünüyor: "
+                  f"{len(missing)} → {len(missing) // 2} + {len(missing) - len(missing) // 2}")
+        mid = len(missing) // 2
         self._process_batch_with_split(
-            batch[:mid], articles_by_id, content_by_id,
+            missing[:mid], articles_by_id, content_by_id,
             label_prefix=f'{label_prefix}L', _depth=_depth + 1,
         )
         self._process_batch_with_split(
-            batch[mid:], articles_by_id, content_by_id,
+            missing[mid:], articles_by_id, content_by_id,
             label_prefix=f'{label_prefix}R', _depth=_depth + 1,
         )
 
