@@ -478,6 +478,10 @@ NEWS_SOURCES = {
     'Talos Intelligence': 'https://blog.talosintelligence.com/rss/',  # Ghost CMS — eski feeds/all.atom.xml 2026-06 itibarıyla 404
     'Unit 42': 'https://unit42.paloaltonetworks.com/feed/',
     # 'Sophos News': 'https://news.sophos.com/en-us/feed/',  # Sophos CDN GitHub Actions IP'lerini engelliyor (2026-06'dan beri Timeout)
+    # Devlet siber güvenlik kurumları — joint advisory ve APT atıfları için yüksek stratejik değer
+    'CISA': 'https://www.cisa.gov/news-events/alerts-advisories/feed',
+    'NCSC UK': 'https://www.ncsc.gov.uk/api/1/services/rss.xml',
+    'CERT-EU': 'https://cert.europa.eu/publications/security-advisories/feed/',
 }
 
 
