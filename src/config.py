@@ -324,31 +324,42 @@ Her haber için iki şey üret:
    - SADECE kaynak metinde olan bilgileri yaz — tahmin, yorum, çıkarım YASAK
    - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
-   ── YAZI SIRASI (bu sırayı her haber için uygula) ──────────────────────────
-   Yazmadan önce kaynak metinde şu dört soruyu sor:
-     (A) SALDIRGAN: Devlet bağlantısı var mı? Hangi ülkenin istihbarat/askeri
-         yapısıyla ilişkili? Özel müteahhit mi, APT grubu mu?
-     (B) HEDEF: Hangi ülkelerin hükümetleri veya kritik kurumları etkilendi?
-         (dış işleri, savunma, telekom, enerji vb.)
-     (C) AMAÇ: Casusluk mu, sabotaj mı, veri hırsızlığı mı, altyapı
-         konumlandırması mı?
-     (D) JEOPOLİTİK BAĞLAM: Hangi ülkeler arası gerilimle örtüşüyor?
+   ── ODAK KURALI (her haber için zorunlu) ───────────────────────────────────
+   Bu paragrafın amacı bir TEHDİT İSTİHBARATI değerlendirmesidir, teknik bir
+   rapor DEĞİLDİR. Okuyucu "bu neden stratejik/jeopolitik açıdan önemli?"
+   sorusunun cevabını almalı.
 
-   → A/B/C/D sorularından EN AZ BİRİNE kaynak metinde net cevap VARSA:
-       Paragrafın İLK YARISI bu stratejik/operasyonel bağlama ayrılır.
-       (kim saldırıyor, kimi hedef alıyor, ne amaçla, hangi jeopolitik çerçevede)
-       Teknik detaylar (exploit adı, driver dosya adları, DLL zinciri, C2 protokol
-       tipi gibi uygulama ayrıntıları) YALNIZCA ikinci yarıda ve stratejik bağlamı
-       somutlaştırmak için kullanılır — teknik liste değil, bağlamsal kanıt olarak.
+   Yazmadan önce kaynak metinde şu soruları sor ve cevaplarını paragrafın
+   OMURGASI yap:
+     (A) SALDIRGAN KİM? Devlet bağlantısı, hangi ülke, istihbarat/askeri yapı,
+         özel müteahhit mi APT grubu mu, bilinen diğer isimleri/geçmişi.
+     (B) HEDEF KİM? Hangi ülkelerin hükümetleri/kritik kurumları (dış işleri,
+         savunma, telekom, enerji), kaç ülke, hangi sektör.
+     (C) AMAÇ NE? Casusluk, veri hırsızlığı, sabotaj, altyapıya önceden
+         konumlanma, etki operasyonu.
+     (D) JEOPOLİTİK ANLAM NE? Hangi ülkeler arası gerilim/rekabetle örtüşüyor,
+         neden şimdi, kime karşı avantaj sağlıyor.
 
-   → Dört soruya da kaynak metinde net cevap YOKSA (saf teknik makale):
-       Normal 5N1K formatında yaz; teknik detaylara ağırlık ver.
+   TEKNİK DETAY POLİTİKASI:
+     • Paragraf neredeyse tamamen A/B/C/D eksenine yazılır.
+     • Teknik ayrıntılar (CVE numarası, exploit/malware/driver dosya adları,
+       DLL side-loading zinciri, C2 protokol tipi, kayıt defteri anahtarları,
+       sürüm numaraları) KURAL OLARAK YAZILMAZ.
+     • İstisna: bir teknik unsur stratejik anlamı DOĞRUDAN değiştiriyorsa
+       (ör. "aktif istismar altında bir sıfır-gün" veya "tedarik zinciri
+       güncelleme mekanizmasının ele geçirilmesi"), o unsuru TEK CÜMLEYLE,
+       sade dille, stratejik sonucuna bağlayarak ver — teknik liste yapma.
+     • Hiçbir koşulda paragrafın yarısından fazlası teknik anlatı olamaz.
+
+   NOT: Kaynak metin A/B/C/D'nin hiçbirine cevap vermiyorsa (saf teknik/ürün
+   haberi), olayın kimi, neyi, ne ölçekte etkilediğini sade dille anlat; yine
+   teknik prosedür ayrıntılarına boğma.
    ───────────────────────────────────────────────────────────────────────────
 
-   - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
+   - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
    - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BITIRME
    - MUTLAK YASAK SON KELIMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
-   - Son cümle somut bir bulgu veya operasyonel detay olacak
+   - Son cümle somut bir bulgu veya operasyonel/stratejik tespit olacak
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
@@ -392,31 +403,42 @@ Her haber için:
    - SADECE kaynak metinde olan bilgileri yaz — tahmin, yorum, çıkarım YASAK
    - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
-   ── YAZI SIRASI (bu sırayı her haber için uygula) ──────────────────────────
-   Yazmadan önce kaynak metinde şu dört soruyu sor:
-     (A) SALDIRGAN: Devlet bağlantısı var mı? Hangi ülkenin istihbarat/askeri
-         yapısıyla ilişkili? Özel müteahhit mi, APT grubu mu?
-     (B) HEDEF: Hangi ülkelerin hükümetleri veya kritik kurumları etkilendi?
-         (dış işleri, savunma, telekom, enerji vb.)
-     (C) AMAÇ: Casusluk mu, sabotaj mı, veri hırsızlığı mı, altyapı
-         konumlandırması mı?
-     (D) JEOPOLİTİK BAĞLAM: Hangi ülkeler arası gerilimle örtüşüyor?
+   ── ODAK KURALI (her haber için zorunlu) ───────────────────────────────────
+   Bu paragrafın amacı bir TEHDİT İSTİHBARATI değerlendirmesidir, teknik bir
+   rapor DEĞİLDİR. Okuyucu "bu neden stratejik/jeopolitik açıdan önemli?"
+   sorusunun cevabını almalı.
 
-   → A/B/C/D sorularından EN AZ BİRİNE kaynak metinde net cevap VARSA:
-       Paragrafın İLK YARISI bu stratejik/operasyonel bağlama ayrılır.
-       (kim saldırıyor, kimi hedef alıyor, ne amaçla, hangi jeopolitik çerçevede)
-       Teknik detaylar (exploit adı, driver dosya adları, DLL zinciri, C2 protokol
-       tipi gibi uygulama ayrıntıları) YALNIZCA ikinci yarıda ve stratejik bağlamı
-       somutlaştırmak için kullanılır — teknik liste değil, bağlamsal kanıt olarak.
+   Yazmadan önce kaynak metinde şu soruları sor ve cevaplarını paragrafın
+   OMURGASI yap:
+     (A) SALDIRGAN KİM? Devlet bağlantısı, hangi ülke, istihbarat/askeri yapı,
+         özel müteahhit mi APT grubu mu, bilinen diğer isimleri/geçmişi.
+     (B) HEDEF KİM? Hangi ülkelerin hükümetleri/kritik kurumları (dış işleri,
+         savunma, telekom, enerji), kaç ülke, hangi sektör.
+     (C) AMAÇ NE? Casusluk, veri hırsızlığı, sabotaj, altyapıya önceden
+         konumlanma, etki operasyonu.
+     (D) JEOPOLİTİK ANLAM NE? Hangi ülkeler arası gerilim/rekabetle örtüşüyor,
+         neden şimdi, kime karşı avantaj sağlıyor.
 
-   → Dört soruya da kaynak metinde net cevap YOKSA (saf teknik makale):
-       Normal 5N1K formatında yaz; teknik detaylara ağırlık ver.
+   TEKNİK DETAY POLİTİKASI:
+     • Paragraf neredeyse tamamen A/B/C/D eksenine yazılır.
+     • Teknik ayrıntılar (CVE numarası, exploit/malware/driver dosya adları,
+       DLL side-loading zinciri, C2 protokol tipi, kayıt defteri anahtarları,
+       sürüm numaraları) KURAL OLARAK YAZILMAZ.
+     • İstisna: bir teknik unsur stratejik anlamı DOĞRUDAN değiştiriyorsa
+       (ör. "aktif istismar altında bir sıfır-gün" veya "tedarik zinciri
+       güncelleme mekanizmasının ele geçirilmesi"), o unsuru TEK CÜMLEYLE,
+       sade dille, stratejik sonucuna bağlayarak ver — teknik liste yapma.
+     • Hiçbir koşulda paragrafın yarısından fazlası teknik anlatı olamaz.
+
+   NOT: Kaynak metin A/B/C/D'nin hiçbirine cevap vermiyorsa (saf teknik/ürün
+   haberi), olayın kimi, neyi, ne ölçekte etkilediğini sade dille anlat; yine
+   teknik prosedür ayrıntılarına boğma.
    ───────────────────────────────────────────────────────────────────────────
 
-   - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
+   - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
    - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BİTİRME
    - MUTLAK YASAK SON KELİMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
-   - Son cümle somut bir bulgu veya operasyonel detay olacak
+   - Son cümle somut bir bulgu veya operasyonel/stratejik tespit olacak
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{

@@ -1162,7 +1162,7 @@ class HaberSistemi:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Siber Güvenlik Raporu - {today_str}</title>
     <style>{css}    </style>
-    <script>(function(){{var m=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',m);}})()</script>
+    <script>(function(){{var m=(localStorage.getItem('theme')==='light')?'light':'dark';document.documentElement.setAttribute('data-theme',m);}})()</script>
 </head>
 <body>
     <div class="container">
@@ -1214,24 +1214,21 @@ class HaberSistemi:
     <a href="#" class="back-to-top" title="Başa Dön"
        onclick="window.scrollTo({{top:0,behavior:'smooth'}});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
 <script>
-// Mod döngüsü: Gece ↔ Gündüz
+// Mod döngüsü: Gece ↔ Gündüz (varsayılan: Gece)
+// 'light' dışındaki her değer (eski 'auto' dahil) gece olarak normalize edilir.
 function _applyTheme() {{
-    var mode = localStorage.getItem('theme') || 'dark';
+    var mode = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', mode);
     document.getElementById('theme-icon-moon').style.display = mode === 'dark' ? 'inline' : 'none';
     document.getElementById('theme-icon-sun').style.display  = mode === 'light' ? 'inline' : 'none';
     document.getElementById('theme-label').textContent = mode === 'dark' ? 'Gece' : 'Gündüz';
 }}
 function toggleTheme() {{
-    var cur = localStorage.getItem('theme') || 'dark';
+    var cur = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
     localStorage.setItem('theme', cur === 'dark' ? 'light' : 'dark');
     _applyTheme();
 }}
 _applyTheme();
-// Otomatik moddayken saat geçişini yakalamak için dakikada bir kontrol et
-setInterval(function() {{
-    if ((localStorage.getItem('theme') || 'auto') === 'auto') {{ _applyTheme(); }}
-}}, 60000);
 function _getBlockText() {{
     var lines = [];
     var cards = document.querySelectorAll('#onemli-gelismeler-block .top3-card');
