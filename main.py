@@ -3332,19 +3332,47 @@ def main():
     today_str = now.strftime('%Y-%m-%d')
     today_report = f"docs/raporlar/{today_str}.html"
     ham_txt_path = "data/haberler_ham.txt"
+    cron_marker_path = "data/cron_basarili.txt"
 
-    # ── Kontrol 1: Başarılı rapor zaten var mı? ────────────────────────────
-    # Fallback içermeyen bir rapor mevcutsa hiçbir şey yapma.
-    if os.path.exists(today_report):
+    # Bu çalıştırma CRON (schedule) tarafından mı tetiklendi?
+    # GitHub Actions her adıma GITHUB_EVENT_NAME ortam değişkenini otomatik koyar.
+    # Manuel (workflow_dispatch) ve yerel çalıştırmalarda değeri 'schedule' DEĞİLDİR.
+    is_schedule = os.environ.get('GITHUB_EVENT_NAME') == 'schedule'
+
+    def _rapor_basarili(content: str) -> bool:
+        """Rapor fallback/hata içermiyorsa (gerçekten başarılıysa) True döner."""
+        return ('[FALLBACK]' not in content
+                and 'error-box' not in content
+                and 'Gemini API yanıt vermedi' not in content)
+
+    # ── Kontrol 1: Bugün CRON başarıyla çalışıp BAŞARILI rapor üretti mi? ───
+    # Görevin "tamamlandı" sayılması için İKİ şart BİRLİKTE aranır:
+    #   (1) Bugüne ait CRON başarı işareti var mı?  (data/cron_basarili.txt == bugün)
+    #   (2) O işarete karşılık gelen rapor gerçekten başarılı (fallback değil) mi?
+    # İkisi de sağlanırsa atlanır. Aksi halde rapor üretimi sürer.
+    #
+    # ÖNEMLİ: Manuel (workflow_dispatch) tetiklemeyle üretilmiş rapor bu işareti
+    # KOYMAZ. Bu yüzden elle rapor üretilmiş olsa bile cron saati gelince cron
+    # YİNE çalışır. Rapor fallback ise işaret konmaz → sıradaki cron slotu dener.
+    cron_basarili_bugun = False
+    if os.path.exists(cron_marker_path):
+        try:
+            with open(cron_marker_path, encoding='utf-8') as f:
+                if f.read().strip() == today_str:
+                    cron_basarili_bugun = True
+        except Exception:
+            pass
+
+    if cron_basarili_bugun and os.path.exists(today_report):
         try:
             with open(today_report, encoding='utf-8') as f:
                 report_content = f.read()
-            if '[FALLBACK]' not in report_content and 'error-box' not in report_content and 'Gemini API yanıt vermedi' not in report_content:
-                print(f"✅ Bugünün başarılı raporu zaten mevcut: {today_report}")
-                print("   Yeniden oluşturma atlanıyor.")
+            if _rapor_basarili(report_content):
+                print(f"✅ Bugün CRON zaten başarılı rapor üretti: {today_report}")
+                print("   Görev tamamlanmış — yeniden oluşturma atlanıyor.")
                 return 0
             else:
-                print("⚠️  Bugünün raporu fallback — Gemini yeniden denenecek.")
+                print("⚠️  CRON işareti bugünü gösteriyor ama rapor fallback — yeniden denenecek.")
         except Exception:
             pass  # Okuma hatası varsa devam et
 
@@ -3394,6 +3422,27 @@ def main():
 
     # 3. HTML (Gemini)
     sistem.create_html(txt)
+
+    # ── CRON başarı işareti ────────────────────────────────────────────────
+    # Günü "tamamlandı" sayan TEK koşul: bu çalıştırma CRON (schedule) ile
+    # tetiklendi VE üretilen rapor başarılı (fallback değil). Bu durumda bugünün
+    # tarihi data/cron_basarili.txt'ye yazılır; aynı gün sonraki cron slotları atlar.
+    #   • Manuel tetiklemeler bu işareti YAZMAZ → cron saati gelince cron yine çalışır.
+    #   • Rapor fallback ise işaret yazılmaz → sıradaki cron slotu yeniden dener.
+    if is_schedule:
+        try:
+            basarili = False
+            if os.path.exists(today_report):
+                with open(today_report, encoding='utf-8') as f:
+                    basarili = _rapor_basarili(f.read())
+            if basarili:
+                with open(cron_marker_path, 'w', encoding='utf-8') as f:
+                    f.write(today_str)
+                print(f"🔖 CRON başarı işareti güncellendi: {today_str}")
+            else:
+                print("⚠️  Rapor başarılı değil — CRON işareti yazılmadı, sıradaki cron denenecek.")
+        except Exception as e:
+            print(f"⚠️  CRON işareti yazılamadı: {str(e)[:100]}")
 
     print("\n" + "=" * 70)
     print("✨ TAMAMLANDI!")

@@ -6,8 +6,11 @@ on:
   # gecikir, hatta tamamen DÜŞÜRÜLÜR. Bu yüzden:
   #   1) dakika :00 yerine düzensiz bir dakika (:23) kullanılır,
   #   2) denemeler 06:23–20:53 UTC arasına geniş yayılır (8 deneme),
-  # böylece slotlardan biri düşse bile bir sonraki yakalar. main.py zaten
-  # idempotenttir: başarılı rapor varsa sonraki denemeler hemen çıkar (Kontrol 1).
+  # böylece slotlardan biri düşse bile bir sonraki yakalar. main.py idempotenttir:
+  # AYNI GÜN içinde CRON başarılı bir rapor ürettiyse (data/cron_basarili.txt işareti)
+  # sonraki cron slotları hemen çıkar. Manuel (workflow_dispatch) tetikleme bu işareti
+  # KOYMAZ; dolayısıyla elle çalıştırma yapılsa bile cron saati gelince cron yine çalışır.
+  # Rapor fallback'se işaret yazılmaz → bir sonraki cron slotu yeniden dener (Kontrol 1).
   schedule:
     - cron: '23 6 * * *'    # 1. deneme — 06:23 UTC
     - cron: '23 8 * * *'    # 2. deneme — 08:23 UTC
