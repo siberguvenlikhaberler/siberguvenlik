@@ -321,13 +321,34 @@ Her haber için iki şey üret:
 
 2. PARAGRAF: Resmi Türkçe özet
    - MİNİMUM 120 kelime (daha az yazarsan YANLIŞ sayılır — say ve kontrol et)
-   - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
-   - Teknik detaylar ekle (CVE numarası, etkilenen sürümler, saldırı vektörü vb.)
    - SADECE kaynak metinde olan bilgileri yaz — tahmin, yorum, çıkarım YASAK
+   - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
+
+   ── YAZI SIRASI (bu sırayı her haber için uygula) ──────────────────────────
+   Yazmadan önce kaynak metinde şu dört soruyu sor:
+     (A) SALDIRGAN: Devlet bağlantısı var mı? Hangi ülkenin istihbarat/askeri
+         yapısıyla ilişkili? Özel müteahhit mi, APT grubu mu?
+     (B) HEDEF: Hangi ülkelerin hükümetleri veya kritik kurumları etkilendi?
+         (dış işleri, savunma, telekom, enerji vb.)
+     (C) AMAÇ: Casusluk mu, sabotaj mı, veri hırsızlığı mı, altyapı
+         konumlandırması mı?
+     (D) JEOPOLİTİK BAĞLAM: Hangi ülkeler arası gerilimle örtüşüyor?
+
+   → A/B/C/D sorularından EN AZ BİRİNE kaynak metinde net cevap VARSA:
+       Paragrafın İLK YARISI bu stratejik/operasyonel bağlama ayrılır.
+       (kim saldırıyor, kimi hedef alıyor, ne amaçla, hangi jeopolitik çerçevede)
+       Teknik detaylar (exploit adı, driver dosya adları, DLL zinciri, C2 protokol
+       tipi gibi uygulama ayrıntıları) YALNIZCA ikinci yarıda ve stratejik bağlamı
+       somutlaştırmak için kullanılır — teknik liste değil, bağlamsal kanıt olarak.
+
+   → Dört soruya da kaynak metinde net cevap YOKSA (saf teknik makale):
+       Normal 5N1K formatında yaz; teknik detaylara ağırlık ver.
+   ───────────────────────────────────────────────────────────────────────────
+
+   - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
    - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BITIRME
    - MUTLAK YASAK SON KELIMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
-   - Son cümle somut teknik bulgu veya haber detayı olacak
-   - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
+   - Son cümle somut bir bulgu veya operasyonel detay olacak
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
@@ -368,13 +389,34 @@ Her haber için:
 
 2. PARAGRAF: Resmi Türkçe özet
    - MİNİMUM 120 kelime (daha az yazarsan YANLIŞ sayılır — say ve kontrol et)
-   - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
-   - Mevcut teknik detayları aktar (CVE, etkilenen sürümler, saldırı türü vb.)
    - SADECE kaynak metinde olan bilgileri yaz — tahmin, yorum, çıkarım YASAK
+   - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
+
+   ── YAZI SIRASI (bu sırayı her haber için uygula) ──────────────────────────
+   Yazmadan önce kaynak metinde şu dört soruyu sor:
+     (A) SALDIRGAN: Devlet bağlantısı var mı? Hangi ülkenin istihbarat/askeri
+         yapısıyla ilişkili? Özel müteahhit mi, APT grubu mu?
+     (B) HEDEF: Hangi ülkelerin hükümetleri veya kritik kurumları etkilendi?
+         (dış işleri, savunma, telekom, enerji vb.)
+     (C) AMAÇ: Casusluk mu, sabotaj mı, veri hırsızlığı mı, altyapı
+         konumlandırması mı?
+     (D) JEOPOLİTİK BAĞLAM: Hangi ülkeler arası gerilimle örtüşüyor?
+
+   → A/B/C/D sorularından EN AZ BİRİNE kaynak metinde net cevap VARSA:
+       Paragrafın İLK YARISI bu stratejik/operasyonel bağlama ayrılır.
+       (kim saldırıyor, kimi hedef alıyor, ne amaçla, hangi jeopolitik çerçevede)
+       Teknik detaylar (exploit adı, driver dosya adları, DLL zinciri, C2 protokol
+       tipi gibi uygulama ayrıntıları) YALNIZCA ikinci yarıda ve stratejik bağlamı
+       somutlaştırmak için kullanılır — teknik liste değil, bağlamsal kanıt olarak.
+
+   → Dört soruya da kaynak metinde net cevap YOKSA (saf teknik makale):
+       Normal 5N1K formatında yaz; teknik detaylara ağırlık ver.
+   ───────────────────────────────────────────────────────────────────────────
+
+   - 5N1K: kim, ne, nerede, ne zaman, nasıl, neden sorularını kapsa
    - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BİTİRME
    - MUTLAK YASAK SON KELİMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
-   - Son cümle somut bir teknik bulgu veya haber detayı olacak
-   - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
+   - Son cümle somut bir bulgu veya operasyonel detay olacak
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
