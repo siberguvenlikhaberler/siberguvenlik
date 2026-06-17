@@ -479,9 +479,9 @@ NEWS_SOURCES = {
     'Unit 42': 'https://unit42.paloaltonetworks.com/feed/',
     # 'Sophos News': 'https://news.sophos.com/en-us/feed/',  # Sophos CDN GitHub Actions IP'lerini engelliyor (2026-06'dan beri Timeout)
     # Devlet siber güvenlik kurumları — joint advisory ve APT atıfları için yüksek stratejik değer
-    'CISA': 'https://www.cisa.gov/news-events/alerts-advisories/feed',
-    'NCSC UK': 'https://www.ncsc.gov.uk/api/1/services/rss.xml',
-    'CERT-EU': 'https://cert.europa.eu/publications/security-advisories/feed/',
+    'CISA': 'https://www.cisa.gov/cybersecurity-advisories/all.xml',
+    'NCSC UK': 'https://www.ncsc.gov.uk/api/1/services/v1/all-rss-feed.xml',
+    'CERT-EU': 'https://cert.europa.eu/publications/security-advisories-rss',
 }
 
 
