@@ -1748,6 +1748,16 @@ function saveBlock(btn) {{
                         except Exception:
                             pass
 
+                # RFC 2822 isimli timezone'lar (GMT, EST, ...) — strptime %z bunları
+                # kabul etmez; parsedate_to_datetime kabul eder. Bu fallback olmadan
+                # "... GMT" tarihli eski haberler parse edilemeyip filtreyi atlardı.
+                if art_dt is None and isinstance(raw_date, str) and raw_date.strip():
+                    try:
+                        import email.utils as _eu
+                        art_dt = _eu.parsedate_to_datetime(raw_date)
+                    except Exception:
+                        art_dt = None
+
                 if art_dt is None:
                     # Tarih parse edilemezse dahil et (güvenli taraf)
                     filtered_articles.append(art)
