@@ -1162,17 +1162,16 @@ class HaberSistemi:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Siber Güvenlik Raporu - {today_str}</title>
     <style>{css}    </style>
-    <script>(function(){{function a(){{var n=new Date();var u=new Date(n.getTime()+n.getTimezoneOffset()*60000+10800000);var h=u.getHours();return(h<7||h>=19)?'dark':'light';}}var m=localStorage.getItem('theme')||'auto';document.documentElement.setAttribute('data-theme',m==='auto'?a():m);}})()</script>
+    <script>(function(){{var m=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',m);}})()</script>
 </head>
 <body>
     <div class="container">
         <div class="report-header">
             <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
-            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Tema: Otomatik (UTC+3) / Gündüz / Gece">
-                <svg id="theme-icon-auto" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
-                <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
+                <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                <span id="theme-label">Oto</span>
+                <span id="theme-label">Gece</span>
             </button>
         </div>
 
@@ -1215,28 +1214,17 @@ class HaberSistemi:
     <a href="#" class="back-to-top" title="Başa Dön"
        onclick="window.scrollTo({{top:0,behavior:'smooth'}});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
 <script>
-// UTC+3 saatine göre otomatik tema: 19:00–07:00 arası gece, gündüz aydınlık.
-function _autoTheme() {{
-    var n = new Date();
-    var u = new Date(n.getTime() + n.getTimezoneOffset() * 60000 + 10800000);
-    var h = u.getHours();
-    return (h < 7 || h >= 19) ? 'dark' : 'light';
-}}
-// Mod döngüsü: Otomatik → Gündüz → Gece → Otomatik
+// Mod döngüsü: Gece ↔ Gündüz
 function _applyTheme() {{
-    var mode = localStorage.getItem('theme') || 'auto';
-    var eff  = (mode === 'auto') ? _autoTheme() : mode;
-    document.documentElement.setAttribute('data-theme', eff);
-    var icons = {{auto: 'theme-icon-auto', light: 'theme-icon-sun', dark: 'theme-icon-moon'}};
-    for (var k in icons) {{ document.getElementById(icons[k]).style.display = 'none'; }}
-    var labels = {{auto: 'Oto', light: 'Gündüz', dark: 'Gece'}};
-    document.getElementById(icons[mode]).style.display = 'inline';
-    document.getElementById('theme-label').textContent = labels[mode];
+    var mode = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', mode);
+    document.getElementById('theme-icon-moon').style.display = mode === 'dark' ? 'inline' : 'none';
+    document.getElementById('theme-icon-sun').style.display  = mode === 'light' ? 'inline' : 'none';
+    document.getElementById('theme-label').textContent = mode === 'dark' ? 'Gece' : 'Gündüz';
 }}
 function toggleTheme() {{
-    var order = ['auto', 'light', 'dark'];
-    var cur   = localStorage.getItem('theme') || 'auto';
-    localStorage.setItem('theme', order[(order.indexOf(cur) + 1) % 3]);
+    var cur = localStorage.getItem('theme') || 'dark';
+    localStorage.setItem('theme', cur === 'dark' ? 'light' : 'dark');
     _applyTheme();
 }}
 _applyTheme();
