@@ -1243,7 +1243,7 @@ function _getBlockText() {{
         lines.push(source.trim());
         if (i < cards.length - 1) {{ lines.push('-'.repeat(60)); lines.push(''); }}
     }});
-    return lines.join('\n');
+    return lines.join('\\n');
 }}
 function _flashBtn(btn, label) {{
     var orig = btn.innerHTML;
@@ -1673,10 +1673,12 @@ function saveBlock(btn) {{
                     continue
 
                 # Seviye 3: Başlık benzerliği
+                # 0.72: aynı olay farklı tehdit aktörü adıyla raporlandığında
+                # (örn. FishMonger vs Earth Lusca) yakalamak için 0.85'ten düşürüldü.
                 is_similar = False
                 for used_title in used_titles.values():
                     similarity = SequenceMatcher(None, title.lower(), used_title.lower()).ratio()
-                    if similarity >= 0.85:
+                    if similarity >= 0.72:
                         is_similar = True
                         removed_count += 1
                         detail_removed['similarity'] += 1
@@ -1685,6 +1687,10 @@ function saveBlock(btn) {{
                 if is_similar:
                     continue
 
+                # Geçen haberi mevcut run içindeki karşılaştırma havuzuna ekle
+                used_titles[link_norm] = title
+                used_links.add(link_norm)
+                used_hashes.add(content_hash)
                 filtered_articles.append(art)
 
             if filtered_articles:

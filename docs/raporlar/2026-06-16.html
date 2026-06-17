@@ -1006,8 +1006,7 @@ function _getBlockText() {
         lines.push(source.trim());
         if (i < cards.length - 1) { lines.push('-'.repeat(60)); lines.push(''); }
     });
-    return lines.join('
-');
+    return lines.join('\n');
 }
 function _flashBtn(btn, label) {
     var orig = btn.innerHTML;
