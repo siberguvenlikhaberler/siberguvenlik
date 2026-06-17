@@ -70,6 +70,33 @@ def _extract_json_from_text(text):
 
 
 
+def _normalize_id_content(data):
+    """Pass 2/3 çıktısını {id: {...}} sözlüğüne indirger.
+
+    Prompt id-anahtarlı sözlük ister: {"3": {...}, "7": {...}}. Ancak bazı
+    modeller (ör. gemini-3-flash-preview) bunun yerine liste döndürebilir:
+    [{"id": 3, "tr_title": ..., "paragraph": ...}, ...] veya tek anahtarlı
+    bir sarmal {"articles": [...]}. Bu fonksiyon her şekli tek biçime çevirir;
+    beklenmeyen tipte boş sözlük döner."""
+    if isinstance(data, dict):
+        # {"items": [...]} / {"results": [...]} gibi tek-listeli sarmalı aç
+        if len(data) == 1:
+            only_val = next(iter(data.values()))
+            if isinstance(only_val, list):
+                return _normalize_id_content(only_val)
+        return data
+    if isinstance(data, list):
+        out = {}
+        for item in data:
+            if not isinstance(item, dict):
+                continue
+            key = item.get('id', item.get('ID', item.get('Id')))
+            if key is not None:
+                out[key] = item
+        return out
+    return {}
+
+
 def _calculate_content_hash(title, description):
     """Title + description'dan MD5 hash hesapla (16 karakter hex)"""
     content = f"{title or ''}{description or ''}".lower().strip()
@@ -2055,7 +2082,7 @@ function saveBlock(btn) {{
                 label='Pass2-DerinAnaliz',
             )
             if deep_data:
-                for k, v in deep_data.items():
+                for k, v in _normalize_id_content(deep_data).items():
                     try:
                         content_by_id[int(k)] = v
                     except (ValueError, TypeError):
@@ -2223,8 +2250,9 @@ function saveBlock(btn) {{
             label=f'{label_prefix}(n={len(batch)})',
         )
 
-        if data:
-            for k, v in data.items():
+        norm = _normalize_id_content(data) if data else {}
+        if norm:
+            for k, v in norm.items():
                 try:
                     content_by_id[int(k)] = v
                 except (ValueError, TypeError):
