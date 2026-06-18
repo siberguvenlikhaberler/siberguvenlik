@@ -23,6 +23,7 @@ from src.config import (
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_legacy_json_prompt, get_quality_review_prompt,
+    get_executive_summary_prompt,
     is_openrouter_active,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
@@ -769,12 +770,14 @@ class HaberSistemi:
         return ''.join(cleaned)
 
     @staticmethod
-    def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str, top3_ids=None):
+    def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str,
+                    top3_ids=None, exec_summary=''):
         """
         Yapılandırılmış içerikten tam HTML raporu üretir (kod tarafı assembly).
         content_by_id: {art_id: {'tr_title': str, 'paragraph': str}}
         top10_ids: sıralı ID listesi (önemli gelişmeler kutusu)
         remaining_ids: sıralı ID listesi (tablo + kalan paragraflar)
+        exec_summary: en önemli 9 haberi özetleyen Yönetici Özeti paragrafı (opsiyonel)
         """
         articles_by_id = {a['id']: a for a in articles}
 
@@ -836,6 +839,17 @@ class HaberSistemi:
             margin-bottom: 20px;
         }
         .onemli-header h2 { margin-bottom: 0; }
+        .exec-brief {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0 0 20px 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            position: relative;
+        }
+        .exec-brief h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+        .exec-brief-paragraph { font-size: 15.5px; line-height: 1.85; text-align: justify; margin: 0; }
         .block-actions {
             display: flex;
             gap: 6px;
@@ -1039,6 +1053,11 @@ class HaberSistemi:
             border-color: #2d4a7a; color: #e6edf3;
         }
         [data-theme="dark"] .important-news h2 { color: #79c0ff; }
+        [data-theme="dark"] .exec-brief {
+            background: linear-gradient(135deg, #1c2d4a 0%, #162038 100%);
+            border-color: #2d4a7a; color: #e6edf3;
+        }
+        [data-theme="dark"] .exec-brief h2 { color: #79c0ff; }
         [data-theme="dark"] .block-action-btn { background: rgba(22,27,34,0.9); border-color: #388bfd; color: #79c0ff; }
         [data-theme="dark"] .block-action-btn:hover { background: #1c2d4a; border-color: #58a6ff; }
         [data-theme="dark"] .block-action-btn.success { background: #162312; border-color: #3fb950; color: #3fb950; }
@@ -1216,6 +1235,16 @@ class HaberSistemi:
             for art_id in vuln_ids:
                 news_items_html += _render_item(art_id, ' vuln-item')
 
+        # ── Yönetici Özeti kutusu (en önemli 9 haberin tek paragraf özeti) ─
+        exec_brief_html = ''
+        if exec_summary and exec_summary.strip():
+            exec_brief_html = (
+                '        <div class="exec-brief" id="yonetici-ozeti-block">\n'
+                '            <h2>Yönetici Özeti</h2>\n'
+                f'            <p class="exec-brief-paragraph">{exec_summary.strip()}</p>\n'
+                '        </div>\n\n'
+            )
+
         html = f"""<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -1236,7 +1265,7 @@ class HaberSistemi:
             </button>
         </div>
 
-        <div class="executive-summary">
+{exec_brief_html}        <div class="executive-summary">
             <div class="important-news" id="onemli-gelismeler-block">
                 <div class="onemli-header">
                     <h2>Önemli Gelişmeler</h2>
@@ -2380,6 +2409,42 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print("   ✅ Tüm içerikler kalite kontrolünden geçti")
 
         # ════════════════════════════════════════════════════════════════
+        # PASS 6 — YÖNETİCİ ÖZETİ (en önemli 9 haberin tek paragraf özeti)
+        # ════════════════════════════════════════════════════════════════
+        # En önemli 9 haber = top3 + Önemli Gelişmeler kutusundaki 6 haber
+        # (top10 içinden, vuln olmayan ve top3 dışındaki ilk 6).
+        print("\n📝 Pass 6 — Yönetici Özeti oluşturuluyor...")
+        top3_set_p6 = set(top3_ids)
+        top10_regular_p6 = [aid for aid in top10_ids
+                            if not _is_vuln_p4(aid) and aid not in top3_set_p6]
+        exec_ids = list(top3_ids) + top10_regular_p6[:6]
+
+        exec_summary = ''
+        es_lines = []
+        for art_id in exec_ids:
+            c = content_by_id.get(art_id, {})
+            a = articles_by_id.get(art_id, {})
+            tr_title  = c.get('tr_title') or a.get('title', '')
+            paragraph = c.get('paragraph', '')
+            snippet   = ' '.join(paragraph.split()[:90])
+            es_lines.append(
+                f"=== HABER {art_id} ===\n"
+                f"Başlık: {tr_title}\n"
+                f"Özet: {snippet}\n"
+            )
+        if es_lines:
+            es_data = self._gemini_call_json(
+                get_executive_summary_prompt('\n'.join(es_lines)),
+                max_output_tokens=1024,
+                label='Pass6-YoneticiOzeti',
+            )
+            if es_data and isinstance(es_data.get('ozet'), str):
+                exec_summary = es_data['ozet'].strip()
+                print(f"   ✅ Yönetici Özeti üretildi ({len(exec_summary.split())} kelime)")
+            else:
+                print("   ⚠️  Yönetici Özeti üretilemedi — kutu atlanıyor.")
+
+        # ════════════════════════════════════════════════════════════════
         # ASSEMBLY — Kod tarafı HTML oluşturma
         # ════════════════════════════════════════════════════════════════
         print("\n🔨 HTML assembly başlıyor...")
@@ -2390,6 +2455,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             content_by_id = content_by_id,
             today_str   = today_str,
             top3_ids    = top3_ids,
+            exec_summary = exec_summary,
         )
         print(f"✅ HTML oluşturuldu ({len(html)} karakter, "
               f"{len(top10_ids) + len(remaining_ids)} haber)")
