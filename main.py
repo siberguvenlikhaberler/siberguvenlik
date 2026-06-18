@@ -1150,9 +1150,12 @@ class HaberSistemi:
             top3_cards_html += '            </div>\n'
 
         # ── Önemli Gelişmeler kutusu (top3 hariç normal haberler) ─────────
+        # Top3'ten sonra, önem sırasına göre dizilmiş en önemli 6 haber
+        # burada listelenir (iki sütun, 3'er 3'er).
         top10_regular = [aid for aid in top10_ids if not _is_vuln(aid) and aid not in top3_set]
+        important_summary_ids = top10_regular[:6]
         important_items_html = ''
-        for art_id in top10_regular:
+        for art_id in important_summary_ids:
             num = id_to_num[art_id]
             tr_title, _ = _safe_content(art_id)
             important_items_html += (
@@ -1163,7 +1166,7 @@ class HaberSistemi:
 
         # ── Yönetici Özeti tablosu (top3 hariç normal haberler) ───────────
         table_rows_html = ''
-        remaining_regular = [aid for aid in regular_ids if aid not in top10_regular]
+        remaining_regular = [aid for aid in regular_ids if aid not in important_summary_ids]
         rem_pairs = [remaining_regular[i:i + 2] for i in range(0, len(remaining_regular), 2)]
         for pair in rem_pairs:
             cells = ''
