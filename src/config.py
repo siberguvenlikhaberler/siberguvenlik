@@ -31,10 +31,11 @@ OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '')
 OPENROUTER_BASE_URL = os.getenv('OPENROUTER_BASE_URL') or 'https://openrouter.ai/api/v1'
 # Birincil model + başarısızlıkta denenecek yedekler (sıra önemlidir)
 OPENROUTER_MODEL = os.getenv('OPENROUTER_MODEL') or 'google/gemini-3-flash-preview'
+# Birincil: Gemini 3 Flash preview. Başarısızlıkta TEK yedek: Gemini 3.5 Flash (GA).
 OPENROUTER_FALLBACK_MODELS = [
     m.strip() for m in os.getenv(
         'OPENROUTER_FALLBACK_MODELS',
-        'google/gemini-3-flash-preview,google/gemini-3.5-flash,google/gemini-2.5-flash'
+        'google/gemini-3.5-flash'
     ).split(',') if m.strip()
 ]
 # Reasoning effort: minimal|low|medium|high|xhigh ; 'none'/'' → reasoning gönderilmez

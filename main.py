@@ -16,7 +16,6 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 from google import genai
 from google.genai import types as genai_types
-from openai import OpenAI as OpenAIClient
 
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
@@ -103,6 +102,30 @@ def _calculate_content_hash(title, description):
     return hashlib.md5(content.encode('utf-8')).hexdigest()  # tam 32 karakter
 
 
+# FeedBurner/feedproxy HEAD redirect çözümlemeleri için süreç-düzeyi önbellek.
+# _normalize_url_advanced dedup döngülerinde aynı link için defalarca çağrılır;
+# önbelleksiz her çağrı 5 sn'lik senkron bir HEAD isteği başlatıyordu (25 dk'lık
+# Actions limitine baskı). Ayrıca HEAD aralıklı başarısız olunca aynı URL farklı
+# normalize olup dedup'ı kaçırıyordu. Önbellek hem süreyi düşürür hem de bir run
+# içindeki çözümlemeyi belirli (deterministik) kılar.
+_HEAD_REDIRECT_CACHE = {}
+
+
+def _resolve_feed_redirect(link):
+    """FeedBurner/feedproxy linkinin nihai hedefini (HEAD ile) bir kez çözer, önbelleğe alır."""
+    if link in _HEAD_REDIRECT_CACHE:
+        return _HEAD_REDIRECT_CACHE[link]
+    resolved = link
+    try:
+        r = requests.head(link, allow_redirects=True, timeout=5)
+        if r.url and r.url != link:
+            resolved = r.url
+    except Exception:
+        pass
+    _HEAD_REDIRECT_CACHE[link] = resolved
+    return resolved
+
+
 def _normalize_url_advanced(link):
     """
     Gelişmiş URL normalizasyonu:
@@ -110,7 +133,7 @@ def _normalize_url_advanced(link):
     - Protocol standardizasyonu (http→https)
     - Query parametreleri sorting
     - The Register proxy URL'lerini çözme
-    - Google FeedBurner redirect'lerini çözme
+    - Google FeedBurner redirect'lerini çözme (önbellekli, bkz. _resolve_feed_redirect)
     - Trailing slash normalizasyonu
     """
     if not link:
@@ -124,14 +147,9 @@ def _normalize_url_advanced(link):
             if 'td' in qs:
                 link = qs['td'][0]
 
-        # FeedBurner redirect fix
+        # FeedBurner redirect fix (önbellekli — tekrar çağrılarda ağ isteği yapmaz)
         if 'feedproxy.google.com' in link or 'feeds.feedburner.com' in link:
-            try:
-                r = requests.head(link, allow_redirects=True, timeout=5)
-                if r.url and r.url != link:
-                    link = r.url
-            except Exception:
-                pass
+            link = _resolve_feed_redirect(link)
 
         parsed = urlparse(link)
 
@@ -159,6 +177,22 @@ def _normalize_url_advanced(link):
     except Exception:
         return link.rstrip('/')
 
+
+
+# Özetleme promptlarına gönderilen tam metin için uç-durum (outlier) tavanı.
+# Haber metinleri "ters piramit" yapısındadır: olgular başta yoğunlaşır. Tipik siber
+# güvenlik haberi ~400-900 kelimedir; bu tavan normal haberleri ETKİLEMEZ, yalnızca
+# nadiren karşılaşılan çok uzun analiz/sayfa kazımalarını sınırlayarak Pass 2/3
+# girdi token'ının kontrolsüz şişmesini önler. Kalite kaybı olmadan worst-case sınırı.
+_FULLTEXT_PROMPT_WORD_CAP = 1500
+
+
+def _cap_fulltext(text):
+    """Tam metni özetleme promptu için _FULLTEXT_PROMPT_WORD_CAP kelimeye sınırlar."""
+    words = (text or '').split()
+    if len(words) <= _FULLTEXT_PROMPT_WORD_CAP:
+        return text or ''
+    return ' '.join(words[:_FULLTEXT_PROMPT_WORD_CAP])
 
 
 def _parse_article_date(date_str, fallback):
@@ -474,14 +508,9 @@ def fetch_social_signals(config):
     # Kendi havuzunda tutulur (main_results sıralamasını etkilemez).
     reddit_cfg      = config.get('reddit', {})
     reddit_subs     = reddit_cfg.get('subreddits', ['cybersecurity', 'netsec'])
-    reddit_query    = reddit_cfg.get('query',
-                        'cybersecurity vulnerability exploit malware breach')
     reddit_size     = reddit_cfg.get('size', 25)
-    reddit_min_ups  = reddit_cfg.get('min_upvotes', 3)
     reddit_top_n    = reddit_cfg.get('top_n', 3)
     reddit_hours    = reddit_cfg.get('hours_back', 48)
-    fetch_comments  = reddit_cfg.get('fetch_comments', True)
-    max_comments    = reddit_cfg.get('max_comments', 5)
     # ── Reddit (Resmi RSS — Hot Feed) ──────────────────────────────────────────
     # PullPush arşivi ~10 ay geride kaldığı için kullanılamaz hale geldi.
     # Reddit'in /r/{sub}/hot.rss endpoint'i API key gerektirmez ve güncel veri döndürür.
@@ -1616,10 +1645,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         return used_links, used_titles, used_hashes
 
-    def _similarity(self, a, b):
-        """Başlık benzerliği"""
-        return SequenceMatcher(None, a.lower(), b.lower()).ratio()
-
     def _keyword_jaccard_similarity(self, title_a, title_b):
         """
         Anahtar kelime Jaccard benzerliği — farklı kaynaktan aynı olay tespiti.
@@ -2173,7 +2198,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 f"Başlık: {a['title']}\n"
                 f"Tarih: {a['art_date']}\n"
                 f"Link: {a['link']}\n\n"
-                f"TAM METİN:\n{a['full_text']}\n"
+                f"TAM METİN:\n{_cap_fulltext(a['full_text'])}\n"
             )
         if full_lines:
             deep_data = self._gemini_call_json(
@@ -2287,7 +2312,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             a = articles_by_id.get(art_id, {})
             tr_title   = c.get('tr_title') or a.get('title', '')
             paragraph  = c.get('paragraph', '')
-            snippet    = ' '.join(paragraph.split()[:120])
+            # Pass 5 kararları (kısa/İngilizce/kriter-dışı/kopya) başlık + ilk ~70 kelimeyle
+            # güvenle verilir; 120→70 kısaltma kalite kaybı olmadan girdi token'ını azaltır.
+            snippet    = ' '.join(paragraph.split()[:70])
             has_source = 'evet' if len(a.get('full_text', '').split()) > 80 else 'hayır'
             qr_lines.append(
                 f"=== HABER ID: {art_id} ===\n"
@@ -2411,7 +2438,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 f"Başlık: {a['title']}\n"
                 f"Tarih: {a['art_date']}\n"
                 f"Link: {a['link']}\n\n"
-                f"TAM METİN:\n{a['full_text']}\n"
+                f"TAM METİN:\n{_cap_fulltext(a['full_text'])}\n"
             )
         return '\n'.join(lines)
 
@@ -2651,195 +2678,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         self._cleanup_old_reports()
         return html
 
-    def _validate_html_completeness(self, html):
-        """HTML'deki yönetici özeti sayısı ile haber paragrafı sayısını karşılaştır"""
-        import re
-
-        soup = BeautifulSoup(html, 'html.parser')
-
-        # Önemli gelişmeler (5 adet) + tablodaki haberler
-        important_items = soup.find_all('div', class_='important-item')
-        table_links = []
-        exec_table = soup.find('table', class_='executive-table')
-        if exec_table:
-            table_links = exec_table.find_all('a')
-
-        summary_count = len(important_items) + len(table_links)
-
-        # Haber paragraflarını say
-        news_items = soup.find_all('div', class_='news-item')
-        paragraph_count = len(news_items)
-
-        # Mevcut paragrafların ID'lerini çıkar
-        existing_ids = set()
-        for item in news_items:
-            item_id = item.get('id', '')
-            match = re.search(r'haber-(\d+)', item_id)
-            if match:
-                existing_ids.add(int(match.group(1)))
-
-        # Eksik ID'leri bul
-        if summary_count > 0:
-            expected_ids = set(range(1, summary_count + 1))
-            missing_ids = sorted(expected_ids - existing_ids)
-        else:
-            missing_ids = []
-
-        last_paragraph_id = max(existing_ids) if existing_ids else 0
-        is_valid = paragraph_count >= summary_count and len(missing_ids) == 0
-
-        result = {
-            'is_valid': is_valid,
-            'summary_count': summary_count,
-            'paragraph_count': paragraph_count,
-            'missing_ids': missing_ids,
-            'last_paragraph_id': last_paragraph_id
-        }
-
-        status = "✅ TAMAM" if is_valid else "❌ EKSİK"
-        print(f"   📊 Doğrulama: Özet={summary_count}, Paragraf={paragraph_count} {status}")
-        if missing_ids:
-            print(f"   ⚠️  Eksik haber ID'leri: {missing_ids}")
-
-        return result
-
-    def _complete_missing_paragraphs(self, html, txt_content, validation):
-        """Eksik haber paragraflarını Gemini'ye tamamlattır ve HTML'e ekle"""
-        import re
-
-        missing_ids = validation['missing_ids']
-        last_id = validation['last_paragraph_id']
-
-        if not missing_ids:
-            return html
-
-        print(f"   🔄 {len(missing_ids)} eksik paragraf tamamlanıyor (ID: {missing_ids[0]}-{missing_ids[-1]})...")
-
-        # Mevcut HTML'den eksik haberlerin başlıklarını çıkar
-        soup = BeautifulSoup(html, 'html.parser')
-        all_titles = {}
-
-        # Önemli gelişmelerden
-        for item in soup.find_all('div', class_='important-item'):
-            link = item.find('a')
-            if link:
-                match = re.search(r'#haber-(\d+)', link.get('href', ''))
-                if match:
-                    haber_id = int(match.group(1))
-                    title_text = re.sub(r'^\d+\.\s*', '', link.get_text(strip=True))
-                    all_titles[haber_id] = title_text
-
-        # Tablodan
-        exec_table = soup.find('table', class_='executive-table')
-        if exec_table:
-            for link in exec_table.find_all('a'):
-                match = re.search(r'#haber-(\d+)', link.get('href', ''))
-                if match:
-                    haber_id = int(match.group(1))
-                    title_text = re.sub(r'^\d+\.\s*', '', link.get_text(strip=True))
-                    all_titles[haber_id] = title_text
-
-        # Eksik başlıkları listele
-        missing_titles = []
-        for mid in missing_ids:
-            title = all_titles.get(mid, f"Haber #{mid}")
-            missing_titles.append(f"  - haber-{mid}: {title}")
-
-        titles_text = "\n".join(missing_titles)
-
-        # Tamamlama prompt'u
-        completion_prompt = f"""Aşağıdaki siber güvenlik haberlerinin SADECE eksik paragraf özetlerini yaz.
-
-HAM HABER METNİ:
-{txt_content}
-
-EKSİK HABER PARAGRAFLARI (SADECE bu ID'lerin paragraflarını yaz):
-{titles_text}
-
-HER PARAGRAF İÇİN ÇIKTI FORMATI (SADECE BU FORMATTA, BAŞKA HİÇBİR ŞEY YAZMA):
-
-<div class="news-item" id="haber-N">
-    <div class="news-title"><b>Haberin Başlığı</b></div>
-    <p class="news-content">MİNİMUM 100 kelime paragraf özet, resmi Türkçe. 5N1K sorularını kapsa, teknik detaylar ekle.</p>
-    <p class="source"><b>(KAYNAK, AÇIK - <a href="LINK" target="_blank">domain.com</a>, TARİH)</b></p>
-</div>
-
-KURALLAR:
-- SADECE eksik paragrafları yaz, CSS/başlık/açıklama YAZMA
-- Her paragraf MİNİMUM 100 kelime (kesinlikle daha kısa yazma, 100'den az kelime HATALIDIIR)
-- İdeal uzunluk: 110-150 kelime; 5N1K sorularını (kim/ne/nerede/ne zaman/nasıl/neden) kapsa
-- Resmi Türkçe (-mıştır, -edilmiştir)
-- Sıra: haber-{missing_ids[0]}'den haber-{missing_ids[-1]}'e
-- Kod bloğu (```) KULLANMA, direkt HTML yaz
-"""
-
-        try:
-            if is_openrouter_active():
-                new_paragraphs = _llm.generate_text(
-                    completion_prompt, max_output_tokens=65000,
-                    temperature=0.7, label='paragraf-tamamlama',
-                ) or ''
-            else:
-                client = genai.Client(api_key=GEMINI_API_KEY)
-                response = client.models.generate_content(
-                    model='gemini-2.5-pro',
-                    contents=completion_prompt,
-                    config=genai_types.GenerateContentConfig(
-                        max_output_tokens=65000,
-                        temperature=0.7,
-                    )
-                )
-
-                new_paragraphs = response.text
-
-            # Temizle
-            if new_paragraphs.startswith('```html'):
-                new_paragraphs = new_paragraphs[7:]
-            if new_paragraphs.startswith('```'):
-                new_paragraphs = new_paragraphs[3:]
-            if new_paragraphs.endswith('```'):
-                new_paragraphs = new_paragraphs[:-3]
-            new_paragraphs = new_paragraphs.strip()
-
-            if not new_paragraphs:
-                print("   ⚠️  Tamamlama yanıtı boş geldi")
-                return html
-
-            # Yeni paragraf sayısını kontrol et
-            new_soup = BeautifulSoup(new_paragraphs, 'html.parser')
-            new_items = new_soup.find_all('div', class_='news-item')
-            print(f"   ✅ {len(new_items)} yeni paragraf alındı")
-
-            if len(new_items) == 0:
-                print("   ⚠️  Tamamlama yanıtında news-item bulunamadı")
-                return html
-
-            # HTML'e ekle: son news-item'ın source paragrafından sonra
-            all_source_ends = list(re.finditer(
-                r'</p>\s*</div>\s*(?=\s*(?:</div>|<div\s+class="news-item"|<a\s+href))',
-                html
-            ))
-
-            if all_source_ends:
-                insert_pos = all_source_ends[-1].end()
-                html = html[:insert_pos] + "\n\n            " + new_paragraphs + "\n" + html[insert_pos:]
-                print(f"   ✅ Eksik paragraflar HTML'e eklendi")
-            else:
-                # Fallback: </body> etiketinden önce
-                body_close = html.rfind('</body>')
-                if body_close > 0:
-                    html = html[:body_close] + "\n" + new_paragraphs + "\n" + html[body_close:]
-                    print(f"   ⚠️  Fallback: </body> önüne eklendi")
-                else:
-                    html += "\n" + new_paragraphs
-                    print(f"   ⚠️  Fallback: HTML sonuna eklendi")
-
-            return html
-
-        except Exception as e:
-            print(f"   ❌ Tamamlama hatası: {e}")
-            return html
-
     def _translate_social_signals(self):
         """
         Sosyal sinyal başlıklarını Gemini ile resmi Türkçe tek cümleye çevirir.
@@ -3015,308 +2853,6 @@ KURALLAR:
         return str(soup)
 
     # Kritik CSS sınıfları — bunlar eksikse sayfa düzgün görünmez
-    REQUIRED_CSS_CLASSES = [
-        '.executive-table',
-        '.news-item',
-        '.social-signals',
-        '.back-to-top',
-    ]
-
-    # Eksik CSS sınıfları için yedek blok (config.py şablonundan)
-    FALLBACK_CSS = """
-        /* YÖNETİCİ ÖZETİ */
-        .executive-summary {
-            background: #f8f9fa;
-            padding: 25px 30px;
-            margin: 0;
-            border-bottom: 1px solid #e1e8ed;
-        }
-        .executive-summary h2 {
-            color: #1a237e;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #1a237e;
-        }
-        .executive-table {
-            width: 100%;
-            border-spacing: 8px;
-        }
-        .executive-table td {
-            background: white;
-            padding: 12px 16px;
-            border-radius: 6px;
-            border-left: 3px solid #1a237e;
-            vertical-align: top;
-            width: 50%;
-        }
-        .executive-table a {
-            color: #1a237e;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        .executive-table a:hover {
-            text-decoration: underline;
-        }
-        /* HABERLER BÖLÜMÜ */
-        .news-section { padding: 30px; }
-        .news-item {
-            background: #f8f9fa;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            padding: 20px;
-            border-left: 4px solid #1a237e;
-        }
-        .news-title {
-            color: #1a237e;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }
-        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
-        .source { color: #666; font-size: 13px; margin: 0; }
-        .source a { color: #1a237e; text-decoration: none; }
-        .source a:hover { text-decoration: underline; }
-        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
-        .social-signals {
-            background: #f8faff;
-            border: 1px solid #c7d7fd;
-            border-radius: 8px;
-            padding: 24px 28px;
-            margin-bottom: 20px;
-        }
-        .social-signals h2 {
-            color: #1e3a8a;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #dbeafe;
-        }
-        .social-signals .signal-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .social-signals .signal-item {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-left: 4px solid #3b82f6;
-            border-radius: 6px;
-            padding: 12px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
-        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
-        .social-signals .signal-item.github-item   { border-left-color: #238636; }
-        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
-        .social-signals .signal-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .social-signals .signal-platform-label {
-            font-size: 10px;
-            font-weight: 700;
-            color: #ffffff;
-            background: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-radius: 3px;
-            padding: 2px 7px;
-        }
-        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
-        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
-        .social-signals .github-item .signal-platform-label   { background: #238636; }
-        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
-        .social-signals .signal-engagement {
-            font-size: 11px; color: #475569; background: #f1f5f9; border-radius: 3px; padding: 2px 8px;
-        }
-        .social-signals .signal-item a {
-            color: #1e293b;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            line-height: 1.45;
-            display: block;
-        }
-        .social-signals .signal-item a:hover { color: #1e3a8a; text-decoration: underline; }
-        @media (max-width: 640px) {
-            .social-signals { padding: 16px; }
-            .social-signals .signal-list { grid-template-columns: 1fr; }
-            .social-signals .signal-meta { gap: 6px; }
-        }
-        .back-to-top {
-            position: fixed;
-            top: 50%;
-            left: calc(50% - 450px - 48px);
-            transform: translateY(-50%);
-            width: 36px;
-            height: 36px;
-            background: #1a237e;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            opacity: 0.85;
-            transition: opacity 0.2s;
-            z-index: 999;
-        }
-        .back-to-top:hover { opacity: 1; }"""
-
-    def _fix_html_structure(self, html):
-        """Gemini çıktısındaki yapısal HTML hatalarını otomatik düzelt.
-
-        Bilinen sorun 1 — </style> eksik:
-            Gemini bazen CSS bloğunu kapatmadan doğrudan HTML içeriğine geçer.
-            Tarayıcı tüm içeriği CSS olarak yorumlar → boş sayfa.
-
-        Bilinen sorun 2 — report-header div eksik:
-            Gemini bazen mavi başlık bölümünü atlar.
-
-        Bilinen sorun 3 — CSS kısmi kesilmiş:
-            Gemini bazen </style>'ı erken kapatarak executive-table,
-            news-item, social-signals gibi kritik stilleri atlar.
-        """
-        now = datetime.now()
-        tarih = now.strftime('%d.%m.%Y')
-
-        # ── Sorun 1: </style> etiketi eksik ────────────────────────────────
-        # Kontrol: <body> etiketi hiç yok veya <style> bloğu kapatılmamış
-        style_close_pos = html.find('</style>')
-        body_pos        = html.find('<body>')
-        first_div_pos   = html.find('<div')
-
-        style_missing = (
-            style_close_pos == -1 or           # </style> hiç yok
-            (body_pos != -1 and body_pos < style_close_pos) or  # <body> </style>'dan önce geliyor (anlamsız)
-            (body_pos == -1 and first_div_pos != -1 and
-             first_div_pos < style_close_pos)  # div'ler </style>'dan önce
-        )
-
-        if style_missing:
-            print("   ⚠️  HTML yapı hatası: </style> eksik veya yanlış konumda — otomatik düzeltiliyor")
-            # CSS yorumunu veya ilk HTML etiketini bul, öncesine kapanış ekle
-            insert_marker = None
-            for marker in [
-                '        /* YÖNETİCİ ÖZETİ */',
-                '        <div class="executive-summary">',
-                '        <div class="container">',
-                '<div class="executive-summary">',
-                '<div class="container">',
-            ]:
-                pos = html.find(marker)
-                if pos != -1:
-                    insert_marker = (pos, marker)
-                    break
-
-            if insert_marker:
-                pos, marker = insert_marker
-                # CSS bloğu yorumundan önceki gereksiz boşluğu temizle, kapanış ekle
-                before = html[:pos].rstrip()
-                after  = html[pos:]
-                # Marker CSS yorumuysa sil, HTML etiketiyse koru
-                if marker.startswith('/*'):
-                    after = after[len(marker):]
-                html = before + '\n    </style>\n</head>\n<body>\n<div class="container">\n' + after.lstrip()
-            else:
-                print("   ⚠️  Ekleme noktası bulunamadı, yapı düzeltilemiyor")
-
-        # Bozuk kapanış etiketlerini temizle
-        for bad, good in [
-            ('</html></style></head></html>', '</div>\n</body>\n</html>'),
-            ('</body>\n</div>\n</body>\n</html>', '</div>\n</body>\n</html>'),
-        ]:
-            html = html.replace(bad, good)
-
-        # ── Sorun 2: report-header eksik ───────────────────────────────────
-        if '<div class="report-header">' not in html:
-            print("   ⚠️  HTML yapı hatası: report-header eksik — otomatik ekleniyor")
-            header_html = f'<div class="report-header"><h1><span class="header-date">{tarih}</span> Siber Güvenlik Haber Özetleri</h1></div>\n'
-            # <div class="container"> sonrasına ekle
-            for anchor in ['<div class="container">\n', '<div class="container">']:
-                if anchor in html:
-                    html = html.replace(anchor, anchor + header_html, 1)
-                    break
-
-        # ── Sorun 3: CSS kısmi kesilmiş (kritik sınıflar eksik) ────────────
-        # Gemini </style>'ı erken kapattıysa executive-table, news-item vb. eksik kalır
-        style_end = html.find('</style>')
-        if style_end != -1:
-            css_block = html[:style_end]
-            missing_classes = [cls for cls in self.REQUIRED_CSS_CLASSES if cls not in css_block]
-            if missing_classes:
-                print(f"   ⚠️  HTML yapı hatası: CSS eksik ({', '.join(missing_classes)}) — yedek CSS ekleniyor")
-                html = html[:style_end] + self.FALLBACK_CSS + '\n    ' + html[style_end:]
-
-        return html
-
-    def _fix_source_dates(self, html, txt_content):
-        """Gemini'nin yazdığı hatalı tarihleri ham TXT'deki gerçek tarihlerle düzelt"""
-        import re
-
-        link_to_date = {}
-        pattern = re.compile(
-            r'[(]XXXXXXX, AÇIK - (https?://[^\s,]+),\s*[^,]+,\s*(\d{2}[.]\d{2}[.]\d{4})[)]'
-        )
-        for m in pattern.finditer(txt_content):
-            link_to_date[m.group(1).strip()] = m.group(2).strip()
-
-        if not link_to_date:
-            return html
-
-        source_pattern = re.compile(r'<p class="source">.*?</p>', re.DOTALL)
-        href_pattern = re.compile(r'href="(https?://[^"]+)"')
-        date_pattern = re.compile(r'\d{2}[.]\d{2}[.]\d{4}(?=[)])')
-
-        def fix_source(m):
-            src = m.group(0)
-            href_m = href_pattern.search(src)
-            if not href_m:
-                return src
-            href = href_m.group(1).strip()
-            if href not in link_to_date:
-                return src
-            return date_pattern.sub(link_to_date[href], src)
-
-        fixed_html = source_pattern.sub(fix_source, html)
-        print("   ✅ Kaynak tarihleri düzeltildi")
-        return fixed_html
-
-    def _fix_source_links(self, html):
-        """Gemini'nin düz metin yazdığı kaynak URL'lerini tıklanabilir <a href> etiketine çevir.
-
-        Girdi  (Gemini çıktısı):
-            <p class="source"><b>(XXXXXXX, AÇIK - https://example.com/article, example.com, 10.03.2026)</b></p>
-        Çıktı:
-            <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://example.com/article" target="_blank">example.com</a>, 10.03.2026)</b></p>
-        """
-        import re
-
-        # Zaten <a href> olan satırları atlamak için negatif lookahead kullan
-        pattern = re.compile(
-            r'AÇIK - (?!<a[\s>])(https?://[^,\s<"]+),\s*([^,<)\s][^,<)]*?),\s*(\d{2}\.\d{2}\.\d{4})\)'
-        )
-
-        def replacer(m):
-            url    = m.group(1).strip()
-            domain = m.group(2).strip()
-            date   = m.group(3).strip()
-            return f'AÇIK - <a href="{url}" target="_blank">{domain}</a>, {date})'
-
-        fixed, n = pattern.subn(replacer, html)
-        if n > 0:
-            print(f"   ✅ {n} kaynak linki tıklanabilir yapıldı")
-        return fixed
-
     def _remove_commentary_sentences(self, html):
         """Gemini'nin haber paragraflarının sonuna eklediği yapay yorum cümlelerini sil.
 
