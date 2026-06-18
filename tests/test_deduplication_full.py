@@ -338,5 +338,76 @@ class TestFilterDuplicates:
         assert filtered['Test Source'][0]['title'] == 'Brand New Story'
 
 
+class TestKeywordJaccardSimilarity:
+    """_keyword_jaccard_similarity() testleri — Level 4 dedup"""
+
+    def setup_method(self):
+        self.sistem = HaberSistemi()
+
+    def test_same_event_different_wording_caught(self):
+        """Aynı olay, farklı kaynak anlatımı → yakalanmalı"""
+        t1 = "Rusya Bağlantılı Grupların Fortinet Güvenlik Duvarı Yönetici Şifrelerini Ele Geçirmesi"
+        t2 = "Rusya Bağlantılı Saldırganların Fortinet Güvenlik Duvarlarını Kitlesel Olarak Ele Geçirmesi"
+        score = self.sistem._keyword_jaccard_similarity(t1, t2)
+        assert score >= 0.45, f"Beklenen >= 0.45, alınan {score:.3f}"
+
+    def test_different_cve_not_caught(self):
+        """Farklı CVE numaraları → farklı haber, yakalanmamalı"""
+        t1 = "Windows Kernelde Kritik Güvenlik Açığı CVE-2024-1234"
+        t2 = "Windows SMB Protokolünde Yeni Güvenlik Açığı CVE-2024-5678"
+        score = self.sistem._keyword_jaccard_similarity(t1, t2)
+        assert score == 0.0, f"Farklı CVE'ler 0.0 döndürmeli, alınan {score:.3f}"
+
+    def test_same_cve_allowed_through(self):
+        """Aynı CVE numarası, farklı anlatım → normal Jaccard hesabı yapılmalı (0.0 dönemez)"""
+        t1 = "Kritik Açık CVE-2024-9999 Kamuoyuyla Paylaşıldı"
+        t2 = "CVE-2024-9999 Yamalaması Acilen Yayınlandı"
+        score = self.sistem._keyword_jaccard_similarity(t1, t2)
+        assert score > 0.0, "Aynı CVE'de sıfırdan büyük olmalı"
+
+    def test_different_version_not_caught(self):
+        """Farklı sürüm numaraları → farklı haber"""
+        t1 = "Apache HTTP Server 2.4.51 Güvenlik Güncellemesi"
+        t2 = "Apache HTTP Server 2.4.58 Kritik Yama Yayınlandı"
+        score = self.sistem._keyword_jaccard_similarity(t1, t2)
+        assert score == 0.0, f"Farklı sürümler 0.0 döndürmeli, alınan {score:.3f}"
+
+    def test_unrelated_stories_low_score(self):
+        """Tamamen farklı haberler → düşük skor"""
+        t1 = "Apple iPhone iOS Güncellemesi Yayınlandı"
+        t2 = "Rusya Altyapı Saldırısı Enerji Sektörünü Hedef Aldı"
+        score = self.sistem._keyword_jaccard_similarity(t1, t2)
+        assert score < 0.30, f"Bağımsız haberler < 0.30 olmalı, alınan {score:.3f}"
+
+    def test_filter_duplicates_level4_catches_same_event(self, tmp_path):
+        """_filter_duplicates Level 4: aynı olay iki farklı kaynaktan gelince birini atar"""
+        links_file = tmp_path / "haberler_linkler.txt"
+        links_file.write_text("", encoding='utf-8')
+
+        sistem = HaberSistemi()
+        sistem.used_links_file = str(links_file)
+
+        all_news = {
+            'securityaffairs': [
+                {
+                    'link': 'https://securityaffairs.com/fortinet-russia',
+                    'title': 'Rusya Bağlantılı Grupların Fortinet Güvenlik Duvarı Yönetici Şifrelerini Ele Geçirmesi',
+                    'description': 'Rusça konuşan tehdit grubu 75 bin cihazı ele geçirdi'
+                }
+            ],
+            'theregister': [
+                {
+                    'link': 'https://theregister.com/fortinet-russia-attack',
+                    'title': 'Rusya Bağlantılı Saldırganların Fortinet Güvenlik Duvarlarını Kitlesel Olarak Ele Geçirmesi',
+                    'description': 'Rus siber suç grubu 194 ülkede Fortinet cihazlarına sızdı'
+                }
+            ]
+        }
+
+        filtered = sistem._filter_duplicates(all_news)
+        total = sum(len(v) for v in filtered.values())
+        assert total == 1, f"Aynı olaydan yalnızca 1 haber geçmeli, {total} geçti"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

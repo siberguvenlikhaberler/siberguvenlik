@@ -1620,6 +1620,36 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         """Başlık benzerliği"""
         return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
+    def _keyword_jaccard_similarity(self, title_a, title_b):
+        """
+        Anahtar kelime Jaccard benzerliği — farklı kaynaktan aynı olay tespiti.
+
+        Türkçe çekim eklerini gidermek için 5 harflik kök alınır.
+        CVE veya sürüm numaraları (1.2.3) farklıysa 0.0 döner (farklı olay).
+        """
+        a = title_a.lower()
+        b = title_b.lower()
+
+        # Farklı CVE numarası → kesinlikle farklı haber
+        cve_a = set(re.findall(r'cve-\d{4}-\d+', a))
+        cve_b = set(re.findall(r'cve-\d{4}-\d+', b))
+        if cve_a and cve_b and cve_a != cve_b:
+            return 0.0
+
+        # Farklı sürüm numarası (örn. 7.2.1 vs 8.0.0) → büyük olasılıkla farklı haber
+        ver_a = set(re.findall(r'\d+\.\d+[\.\d]*', a))
+        ver_b = set(re.findall(r'\d+\.\d+[\.\d]*', b))
+        if ver_a and ver_b and not ver_a & ver_b:
+            return 0.0
+
+        def stems(text):
+            return {w[:5] for w in text.split() if len(w) >= 5}
+
+        sa, sb = stems(a), stems(b)
+        if not sa or not sb:
+            return 0.0
+        return len(sa & sb) / len(sa | sb)
+
     def _save_used_links(self, articles):
         """Kullanılan linkleri kaydet (7 günden eski olanları sil)"""
         if not articles:
@@ -1703,7 +1733,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         filtered = {}
         removed_count = 0
-        detail_removed = {'link': 0, 'hash': 0, 'similarity': 0}
+        detail_removed = {'link': 0, 'hash': 0, 'similarity': 0, 'keyword': 0}
 
         for src, articles in all_news.items():
             filtered_articles = []
@@ -1742,6 +1772,19 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 if is_similar:
                     continue
 
+                # Seviye 4: Anahtar kelime Jaccard örtüşmesi
+                # Aynı olay farklı kaynaklardan farklı anlatımla geldiğinde
+                # Seviye 3'ün kaçırdığı durumları yakalar (örn. "Grupların" vs "Saldırganların").
+                for used_title in used_titles.values():
+                    if self._keyword_jaccard_similarity(title, used_title) >= 0.45:
+                        is_similar = True
+                        removed_count += 1
+                        detail_removed['keyword'] += 1
+                        break
+
+                if is_similar:
+                    continue
+
                 # Geçen haberi mevcut run içindeki karşılaştırma havuzuna ekle
                 used_titles[link_norm] = title
                 used_links.add(link_norm)
@@ -1755,7 +1798,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"🔄 {removed_count} tekrar eden haber filtrelendi")
             print(f"   ├─ URL: {detail_removed['link']}")
             print(f"   ├─ Hash: {detail_removed['hash']}")
-            print(f"   └─ Benzerlik: {detail_removed['similarity']}")
+            print(f"   ├─ Benzerlik: {detail_removed['similarity']}")
+            print(f"   └─ Anahtar kelime: {detail_removed['keyword']}")
 
         return filtered
 
