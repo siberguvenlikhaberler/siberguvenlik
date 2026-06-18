@@ -838,14 +838,6 @@ class HaberSistemi:
         .block-action-btn:hover { background: #dbeeff; border-color: #42a5f5; }
         .block-action-btn.success { background: #e8f5e9; border-color: #66bb6a; color: #2e7d32; }
         .block-action-btn svg { flex-shrink: 0; }
-        @keyframes drag-hint {
-            0%   { transform: translateX(0) rotate(0deg); }
-            20%  { transform: translateX(-4px) rotate(-2deg); }
-            40%  { transform: translateX(4px) rotate(1.5deg); }
-            60%  { transform: translateX(-3px) rotate(-1deg); }
-            80%  { transform: translateX(2px) rotate(0.5deg); }
-            100% { transform: translateX(0) rotate(0deg); }
-        }
         .drag-file-chip {
             display: inline-flex; align-items: center; gap: 6px;
             background: rgba(255,255,255,0.92);
@@ -854,7 +846,6 @@ class HaberSistemi:
             font-size: 12px; font-weight: 600; color: #1565c0;
             cursor: grab; user-select: none; white-space: nowrap;
             transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
-            animation: drag-hint 0.7s ease-in-out 1.2s 1;
             flex-direction: column; gap: 1px;
         }
         .drag-file-chip-inner {
