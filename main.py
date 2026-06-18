@@ -1338,11 +1338,10 @@ function initDragFile() {{
         chip.addEventListener('dragstart', function(e) {{
             var text = _getBlockText();
             var filename = chip.dataset.filename;
-            var file = new File([text], filename, {{type: 'text/plain'}});
-            e.dataTransfer.items.add(file);
             var b64 = btoa(unescape(encodeURIComponent(text)));
             e.dataTransfer.setData('DownloadURL', 'text/plain:' + filename + ':data:text/plain;base64,' + b64);
             e.dataTransfer.setData('text/plain', text);
+            e.dataTransfer.items.add(new File([text], filename, {{type: 'text/plain'}}));
             chip.classList.add('dragging');
         }});
         chip.addEventListener('dragend', function() {{ chip.classList.remove('dragging'); }});
