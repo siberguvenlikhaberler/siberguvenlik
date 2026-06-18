@@ -74,6 +74,12 @@ def get_ranking_prompt(articles_brief, recent_events=''):
     """
     return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri önem derecesine göre değerlendir.
 
+ADIM 0 — TEKİL OLAY KONTROLÜ (önce yap):
+Aynı siber olayı/saldırıyı/gelişmeyi farklı kaynaklardan anlatan haberleri tespit et.
+Kriter: başlık + içerik birlikte değerlendirildiğinde AYNI OLAY (aynı mağdur + aynı saldırgan/grup + aynı tarihli olay).
+Her gruptan yalnızca en kapsamlı/güncel haberi bırak; diğerlerini "filtered" listesine ekle.
+⚠️ Dikkat: farklı CVE numaraları veya farklı mağdurlar → farklı haber (filtreleme).
+
 ADIM 1 — FILTRELE (bunları "filtered" listesine koy):
 - Podcast, webinar, konferans, etkinlik duyurusu
 - Ürün lansmanı, beta sürüm, pazar araştırması raporu
@@ -595,6 +601,50 @@ DETECTION_PATTERNS = {
     'sectors': r'\b(healthcare|health|hospital|energy|power|financ(?:e|ial)|bank|government|military|defense)\b',
     'countries': r'\b(Ukraine|Russia|China|Iran|Korea|Israel|US|USA|UK|United States)\b',
 }
+
+def get_quality_review_prompt(articles_content):
+    """
+    Pass 5: Üretilmiş Türkçe içerikleri kalite kontrol eder.
+    articles_content: "=== HABER ID: N ===\\nTR Başlık: ...\\nParagraf: ...\n" formatında string.
+    Döndürülen JSON:
+    {
+      "remove":      [id, ...],   // kaldırılacak (boş/İngilizce/kriter dışı/kopya)
+      "regenerate":  [id, ...]    // Türkçeye çevrilecek (İngilizce içerik üretilmiş)
+    }
+    """
+    return f"""Sen siber güvenlik raporu kalite kontrolcüsüsün. Aşağıdaki haberlerin üretilmiş Türkçe içeriklerini incele.
+
+Her haber için dört kontrol yap:
+
+KONTROL 1 — BOŞLUK/DEAD LINK:
+Paragraf 40 kelimeden kısa, "içerik bulunamadı", "erişilemiyor", "haber metni yok" veya benzeri
+bir placeholder ise → "remove" listesine ekle.
+
+KONTROL 2 — İNGİLİZCE İÇERİK:
+TR Başlık veya Paragraf büyük ölçüde İngilizce yazılmışsa (Türkçe olması gerekirdi) → "regenerate" listesine ekle.
+Not: İngilizce şirket/ürün/CVE adları normal — paragrafın çoğunluğu İngilizce cümle ise sorun var.
+
+KONTROL 3 — KRİTER DIŞI KALAN:
+Paragraf okunduğunda açıkça şunlardan biri olduğu anlaşılıyorsa → "remove" listesine ekle:
+- Ürün lansmanı / pazar araştırması raporu / beta duyurusu
+- Podcast, webinar, konferans veya etkinlik tanıtımı
+- Genel tavsiye / eğitim / röportaj yazısı (somut bir olay/saldırı/ihlal yok)
+
+KONTROL 4 — KOPYALAR (Pass 1'den kaçan):
+Farklı ID'li iki haber aynı olayı anlatıyorsa (aynı mağdur + saldırgan + tarihli olay),
+daha kısa/yüzeysel olanı → "remove" listesine ekle.
+
+Sorun tespit etmediğin haberleri listeye EKLEME — yalnızca sorunluları bildir.
+
+SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
+{{
+  "remove":     [17, 23],
+  "regenerate": [8]
+}}
+
+HABERLER:
+{articles_content}"""
+
 
 def get_legacy_json_prompt(articles_brief):
     """

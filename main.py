@@ -23,7 +23,7 @@ from src.config import (
     ARCHIVE_FILE,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
-    get_top3_selection_prompt, get_legacy_json_prompt,
+    get_top3_selection_prompt, get_legacy_json_prompt, get_quality_review_prompt,
     is_openrouter_active,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
@@ -2276,6 +2276,59 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if not top3_ids and non_vuln_ids_p4:
             top3_ids = non_vuln_ids_p4[:3]
         print(f"   Seçilen Top 3 ID: {top3_ids}")
+
+        # ════════════════════════════════════════════════════════════════
+        # PASS 5 — KALİTE KONTROL (boş/İngilizce/kriter dışı/kopya)
+        # ════════════════════════════════════════════════════════════════
+        print("\n🔎 Pass 5 — Kalite kontrol başlıyor...")
+        qr_lines = []
+        for art_id in list(top10_ids) + list(remaining_ids):
+            c = content_by_id.get(art_id, {})
+            a = articles_by_id.get(art_id, {})
+            tr_title  = c.get('tr_title') or a.get('title', '')
+            paragraph = c.get('paragraph', '')
+            snippet   = ' '.join(paragraph.split()[:120])
+            qr_lines.append(
+                f"=== HABER ID: {art_id} ===\n"
+                f"TR Başlık: {tr_title}\n"
+                f"Paragraf: {snippet}\n"
+            )
+
+        qr_data = None
+        if qr_lines:
+            qr_data = self._gemini_call_json(
+                get_quality_review_prompt('\n'.join(qr_lines)),
+                max_output_tokens=512,
+                label='Pass5-KaliteKontrol',
+            )
+
+        p5_remove     = set()
+        p5_regenerate = []
+        if qr_data:
+            p5_remove     = {int(i) for i in qr_data.get('remove', [])
+                             if str(i).strip().lstrip('-').isdigit()}
+            p5_regenerate = [int(i) for i in qr_data.get('regenerate', [])
+                             if str(i).strip().lstrip('-').isdigit()]
+
+        if p5_remove:
+            print(f"   🗑️  Kaldırılan: {sorted(p5_remove)}")
+            top10_ids     = [i for i in top10_ids     if i not in p5_remove]
+            remaining_ids = [i for i in remaining_ids if i not in p5_remove]
+            top3_ids      = [i for i in top3_ids      if i not in p5_remove]
+
+        if p5_regenerate:
+            print(f"   🔄 Yeniden üretilen (İngilizce içerik): {p5_regenerate}")
+            for rid in p5_regenerate:
+                if rid in content_by_id:
+                    del content_by_id[rid]
+            for i in range(0, len(p5_regenerate), 5):
+                self._process_batch_with_split(
+                    p5_regenerate[i:i + 5], articles_by_id, content_by_id,
+                    label_prefix='P5-Yeniden',
+                )
+
+        if not p5_remove and not p5_regenerate:
+            print("   ✅ Tüm içerikler kalite kontrolünden geçti")
 
         # ════════════════════════════════════════════════════════════════
         # ASSEMBLY — Kod tarafı HTML oluşturma
