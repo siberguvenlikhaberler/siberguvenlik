@@ -3,14 +3,20 @@ name: Günlük Rapor
 on:
   # NOT: GitHub scheduled workflow'ları "best-effort" kuyruğa alır. Dakika :00
   # (tepe saat) en sıkışık slottur; yoğun saatlerde tetiklenmeler saatlerce
-  # gecikir, hatta tamamen DÜŞÜRÜLÜR. Bu yüzden:
+  # gecikir, hatta tamamen DÜŞÜRÜLÜR (özellikle sabah 06–10 UTC slotları pratikte
+  # neredeyse hiç ateşlenmez). Bu yüzden:
   #   1) dakika :00 yerine düzensiz bir dakika (:23) kullanılır,
   #   2) denemeler 06:23–20:53 UTC arasına geniş yayılır (8 deneme),
-  # böylece slotlardan biri düşse bile bir sonraki yakalar. main.py idempotenttir:
-  # AYNI GÜN içinde CRON başarılı bir rapor ürettiyse (data/cron_basarili.txt işareti)
-  # sonraki cron slotları hemen çıkar. Manuel (workflow_dispatch) tetikleme bu işareti
-  # KOYMAZ; dolayısıyla elle çalıştırma yapılsa bile cron saati gelince cron yine çalışır.
-  # Rapor fallback'se işaret yazılmaz → bir sonraki cron slotu yeniden dener (Kontrol 1).
+  #   3) ASIL GÜVENİLİR tetikleme harici zamanlayıcıdan (cron-job.org) gelir:
+  #      'repository_dispatch' (event_type: scheduled-report) ile AYNI 8 saat/sıralama
+  #      dakikası dakikasına tetiklenir. GitHub'ın kendi 'schedule' bloğu yedek olarak
+  #      KALIR (idempotency sayesinde zararsızdır; harici tetikleme başarılı raporu
+  #      ürettiyse geç gelen GitHub cron'u atlar). Kurulum: docs/CRON_SETUP.md
+  # main.py idempotenttir: AYNI GÜN içinde CRON (schedule VEYA repository_dispatch)
+  # başarılı bir rapor ürettiyse (data/cron_basarili.txt işareti) sonraki slotlar hemen
+  # çıkar. Manuel (workflow_dispatch) tetikleme bu işareti KOYMAZ; dolayısıyla elle
+  # çalıştırma yapılsa bile cron saati gelince cron yine çalışır. Rapor fallback'se
+  # işaret yazılmaz → bir sonraki slot yeniden dener (Kontrol 1).
   schedule:
     - cron: '23 6 * * *'    # 1. deneme — 06:23 UTC
     - cron: '23 8 * * *'    # 2. deneme — 08:23 UTC
@@ -20,6 +26,9 @@ on:
     - cron: '23 16 * * *'   # 6. deneme — 16:23 UTC
     - cron: '23 18 * * *'   # 7. deneme — 18:23 UTC
     - cron: '53 20 * * *'   # 8. deneme — 20:53 UTC (son güvenlik ağı)
+  # Harici zamanlayıcı (cron-job.org) bu olayı tetikler — bkz. docs/CRON_SETUP.md
+  repository_dispatch:
+    types: [scheduled-report]
   workflow_dispatch:
 
 jobs:

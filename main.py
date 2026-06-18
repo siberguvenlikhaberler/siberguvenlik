@@ -3344,10 +3344,16 @@ def main():
     ham_txt_path = "data/haberler_ham.txt"
     cron_marker_path = "data/cron_basarili.txt"
 
-    # Bu çalıştırma CRON (schedule) tarafından mı tetiklendi?
+    # Bu çalıştırma CRON tarafından mı tetiklendi?
     # GitHub Actions her adıma GITHUB_EVENT_NAME ortam değişkenini otomatik koyar.
-    # Manuel (workflow_dispatch) ve yerel çalıştırmalarda değeri 'schedule' DEĞİLDİR.
-    is_schedule = os.environ.get('GITHUB_EVENT_NAME') == 'schedule'
+    #   • 'schedule'            → GitHub'ın kendi cron'u (güvenilmez: sabah slotlarını düşürür)
+    #   • 'repository_dispatch' → harici zamanlayıcı (cron-job.org) tetiklemesi.
+    #     GitHub cron'unun düşürdüğü sabah saatlerini güvenilir şekilde tetiklemek için
+    #     kullanılır; cron'la AYNI idempotency davranışı istenir (marker yazar, aynı gün
+    #     başarılı raporu olan sonraki slotları atlar). Bu yüzden 'schedule' gibi sayılır.
+    # Manuel (workflow_dispatch) ve yerel çalıştırmalarda is_schedule FALSE kalır → marker
+    # yazılmaz, elle çalıştırma her zaman raporu zorla yeniden üretir.
+    is_schedule = os.environ.get('GITHUB_EVENT_NAME') in ('schedule', 'repository_dispatch')
 
     def _rapor_basarili(content: str) -> bool:
         """Rapor fallback/hata içermiyorsa (gerçekten başarılıysa) True döner."""
