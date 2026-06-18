@@ -2285,13 +2285,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         for art_id in list(top10_ids) + list(remaining_ids):
             c = content_by_id.get(art_id, {})
             a = articles_by_id.get(art_id, {})
-            tr_title  = c.get('tr_title') or a.get('title', '')
-            paragraph = c.get('paragraph', '')
-            snippet   = ' '.join(paragraph.split()[:120])
+            tr_title   = c.get('tr_title') or a.get('title', '')
+            paragraph  = c.get('paragraph', '')
+            snippet    = ' '.join(paragraph.split()[:120])
+            has_source = 'evet' if len(a.get('full_text', '').split()) > 80 else 'hayır'
             qr_lines.append(
                 f"=== HABER ID: {art_id} ===\n"
                 f"TR Başlık: {tr_title}\n"
                 f"Paragraf: {snippet}\n"
+                f"Kaynak Var: {has_source}\n"
             )
 
         qr_data = None
@@ -2305,10 +2307,27 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         p5_remove     = set()
         p5_regenerate = []
         if qr_data:
-            p5_remove     = {int(i) for i in qr_data.get('remove', [])
-                             if str(i).strip().lstrip('-').isdigit()}
+            raw_remove = {int(i) for i in qr_data.get('remove', [])
+                          if str(i).strip().lstrip('-').isdigit()}
             p5_regenerate = [int(i) for i in qr_data.get('regenerate', [])
                              if str(i).strip().lstrip('-').isdigit()]
+            # LLM "remove" demiş ama kaynak metni yeterince zenginse yeniden üret
+            regen_set = set(p5_regenerate)
+            for rid in raw_remove:
+                a = articles_by_id.get(rid, {})
+                if len(a.get('full_text', '').split()) > 80 and rid not in regen_set:
+                    # Kaynak var → sadece içerik üretimi bozuk, kaldırma
+                    c = content_by_id.get(rid, {})
+                    paragraph = c.get('paragraph', '')
+                    # Kısa/boş/İngilizce paragrafsa yeniden üret; kriter dışıysa kaldır
+                    words = paragraph.split()
+                    mostly_english = sum(1 for w in words[:30]
+                                        if w.isascii() and w.isalpha()) > 15
+                    if len(words) < 50 or mostly_english:
+                        p5_regenerate.append(rid)
+                        regen_set.add(rid)
+                        continue
+                p5_remove.add(rid)
 
         if p5_remove:
             print(f"   🗑️  Kaldırılan: {sorted(p5_remove)}")

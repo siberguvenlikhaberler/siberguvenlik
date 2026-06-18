@@ -605,30 +605,36 @@ DETECTION_PATTERNS = {
 def get_quality_review_prompt(articles_content):
     """
     Pass 5: Üretilmiş Türkçe içerikleri kalite kontrol eder.
-    articles_content: "=== HABER ID: N ===\\nTR Başlık: ...\\nParagraf: ...\n" formatında string.
+    articles_content: "=== HABER ID: N ===\\nTR Başlık: ...\\nParagraf: ...\\nKaynak Var: evet/hayır\n" formatında string.
     Döndürülen JSON:
     {
-      "remove":      [id, ...],   // kaldırılacak (boş/İngilizce/kriter dışı/kopya)
-      "regenerate":  [id, ...]    // Türkçeye çevrilecek (İngilizce içerik üretilmiş)
+      "remove":      [id, ...],   // kaldırılacak (dead-link/kriter dışı/kopya — düzeltilemez)
+      "regenerate":  [id, ...]    // yeniden üretilecek (İngilizce çıkmış veya çok kısa ama kaynak var)
     }
     """
-    return f"""Sen siber güvenlik raporu kalite kontrolcüsüsün. Aşağıdaki haberlerin üretilmiş Türkçe içeriklerini incele.
+    return f"""Sen siber güvenlik raporu kalite kontrolcüsüsün. Aşağıdaki haberlerin üretilmiş Türkçe içeriklerini incele ve sorunları düzelt.
 
-Her haber için dört kontrol yap:
+Her haber için dört kontrol yap. Karar verirken "Kaynak Var" alanına dikkat et:
+- "Kaynak Var: evet" → orijinal makale metni mevcut, yeniden üretim mümkün
+- "Kaynak Var: hayır" → kaynak metin yok, yeniden üretim mümkün değil
 
-KONTROL 1 — BOŞLUK/DEAD LINK:
-Paragraf 40 kelimeden kısa, "içerik bulunamadı", "erişilemiyor", "haber metni yok" veya benzeri
-bir placeholder ise → "remove" listesine ekle.
+KONTROL 1 — KISA/BOZUK ÖZET:
+Paragraf 40 kelimeden kısa, anlamsız veya "içerik bulunamadı" gibi placeholder ise:
+  • Kaynak Var: evet → "regenerate" listesine ekle (yeniden üretilecek)
+  • Kaynak Var: hayır → "remove" listesine ekle (dead link, çıkarılacak)
 
 KONTROL 2 — İNGİLİZCE İÇERİK:
-TR Başlık veya Paragraf büyük ölçüde İngilizce yazılmışsa (Türkçe olması gerekirdi) → "regenerate" listesine ekle.
-Not: İngilizce şirket/ürün/CVE adları normal — paragrafın çoğunluğu İngilizce cümle ise sorun var.
+TR Başlık veya Paragraf büyük ölçüde İngilizce yazılmışsa (Türkçe olması gerekirdi):
+  • Kaynak Var: evet → "regenerate" listesine ekle
+  • Kaynak Var: hayır → "remove" listesine ekle
+Not: İngilizce şirket/ürün/CVE adları normaldir — paragrafın çoğunluğu İngilizce cümle ise sorun var.
 
-KONTROL 3 — KRİTER DIŞI KALAN:
-Paragraf okunduğunda açıkça şunlardan biri olduğu anlaşılıyorsa → "remove" listesine ekle:
-- Ürün lansmanı / pazar araştırması raporu / beta duyurusu
+KONTROL 3 — KRİTER DIŞI:
+Paragraf okunduğunda açıkça şunlardan biri olduğu anlaşılıyorsa → "remove" listesine ekle
+(kaynak olsa bile içerik değişmeyeceğinden regenerate anlamsız):
+- Ürün lansmanı / pazar araştırması / beta duyurusu
 - Podcast, webinar, konferans veya etkinlik tanıtımı
-- Genel tavsiye / eğitim / röportaj yazısı (somut bir olay/saldırı/ihlal yok)
+- Genel tavsiye / eğitim / röportaj (somut olay/saldırı/ihlal yok)
 
 KONTROL 4 — KOPYALAR (Pass 1'den kaçan):
 Farklı ID'li iki haber aynı olayı anlatıyorsa (aynı mağdur + saldırgan + tarihli olay),
