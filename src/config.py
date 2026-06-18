@@ -305,29 +305,31 @@ HABERLER:
 {articles_brief}"""
 
 
-def get_executive_summary_prompt(articles_brief):
+def get_executive_summary_prompt(articles_brief, source_count, news_count):
     """
     Yönetici Özeti: O günün en önemli 9 haberini (top3 + sonraki 6) tek bir
     akıcı paragrafta özetler.
     articles_brief: "=== HABER N ===\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
+    source_count: son 24 saatte taranan kaynak sayısı (giriş cümlesi için).
+    news_count: son 24 saatte analiz edilen toplam haber sayısı.
     """
     return f"""Sen bir siber güvenlik istihbarat bülteni editörüsün. Görevin: aşağıda verilen, o günün EN ÖNEMLİ haberlerini tek bir AKICI YÖNETİCİ ÖZETİ paragrafında toparlamak.
 
 ⚠️ DİL KURALI: Çıktı YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile özet kesinlikle Türkçe yazılacak. (Şirket adları, CVE kodları ve ürün adları orijinal kalabilir.)
 
 GÖREV:
-- Verilen haberleri TEK BİR paragrafta özetle (madde işareti, başlık, alt başlık YOK).
+- Paragrafa ŞU çerçeveyle başla: "Son 24 saatte {source_count} kaynakta yayımlanan {news_count} haberin analizinden öne çıkan başlıklar..." benzeri bir GİRİŞ CÜMLESİYLE aç. Bu iki sayıyı ({source_count} ve {news_count}) aynen kullan, değiştirme veya uydurma. Giriş cümlesini kelimesi kelimesine kopyalama; aynı sayıları koruyarak akıcı ve doğal biçimde yeniden ifade et.
+- Giriş cümlesinin ardından, verilen haberleri TEK BİR paragraf içinde özetlemeye devam et (madde işareti, başlık, alt başlık YOK).
 - Bir yönetici tek okuyuşta, son 24 saatte siber güvenlik dünyasında yaşanan en önemli gelişmeler hakkında doğrudan fikir sahibi olabilmeli.
-- En önemli/stratejik gelişmelerle başla, ardından diğer önemli haberlere geç.
-- Akıcı, bağlaçlarla birbirine bağlanmış, haber bülteni üslubunda anlat.
+- Girişten sonra en önemli/stratejik gelişmelerle devam et, ardından diğer önemli haberlere geç.
+- Akıcı, bağlaçlarla birbirine bağlanmış, haber bülteni üslubunda anlat. Giriş ve devamı kusursuz, düzgün bir anlatım bütünlüğü oluştursun.
 - Resmî, formal ve dikkatli bir Türkçe kullan; özensiz ifadelerden kaçın.
-- Olayları "son 24 saatte", "bugün", "bu hafta öne çıkan gelişmeler arasında" gibi güncel bir çerçeveyle aktar.
-- UZUNLUK: 130-200 kelime. Tek paragraf.
+- UZUNLUK: 140-210 kelime. Tek paragraf.
 - Yalnızca verilen haberlerdeki bilgileri kullan; uydurma ekleme yapma.
 - Kaynak adı, URL, "HABER N" gibi referanslar YAZMA — sadece akıcı metin.
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
-{{"ozet": "Son 24 saatte ... şeklinde tek paragraf özet."}}
+{{"ozet": "Son 24 saatte {source_count} kaynakta yayımlanan {news_count} haberin analizinden ... şeklinde tek paragraf özet."}}
 
 HABERLER:
 {articles_brief}"""

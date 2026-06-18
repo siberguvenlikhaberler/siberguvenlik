@@ -850,6 +850,11 @@ class HaberSistemi:
         }
         .exec-brief h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 16px; }
         .exec-brief-paragraph { font-size: 15.5px; line-height: 1.85; text-align: justify; margin: 0; }
+        .exec-brief-vuln-link { margin: 16px 0 0 0; text-align: right; }
+        .exec-brief-vuln-link a {
+            color: #e65100; font-weight: 700; font-size: 14.5px; text-decoration: none;
+        }
+        .exec-brief-vuln-link a:hover { text-decoration: underline; color: #bf360c; }
         .block-actions {
             display: flex;
             gap: 6px;
@@ -1058,6 +1063,8 @@ class HaberSistemi:
             border-color: #2d4a7a; color: #e6edf3;
         }
         [data-theme="dark"] .exec-brief h2 { color: #79c0ff; }
+        [data-theme="dark"] .exec-brief-vuln-link a { color: #fb923c; }
+        [data-theme="dark"] .exec-brief-vuln-link a:hover { color: #fdba74; }
         [data-theme="dark"] .block-action-btn { background: rgba(22,27,34,0.9); border-color: #388bfd; color: #79c0ff; }
         [data-theme="dark"] .block-action-btn:hover { background: #1c2d4a; border-color: #58a6ff; }
         [data-theme="dark"] .block-action-btn.success { background: #162312; border-color: #3fb950; color: #3fb950; }
@@ -1228,7 +1235,7 @@ class HaberSistemi:
         # Güvenlik Açıkları bölümü (N+1..M) — en sonda
         if vuln_ids:
             news_items_html += (
-                '            <div class="vuln-section-heading">\n'
+                '            <div class="vuln-section-heading" id="guvenlik-aciklari">\n'
                 '                <h2>&#128272; Güvenlik Açıkları</h2>\n'
                 '            </div>\n'
             )
@@ -1238,10 +1245,18 @@ class HaberSistemi:
         # ── Yönetici Özeti kutusu (en önemli 9 haberin tek paragraf özeti) ─
         exec_brief_html = ''
         if exec_summary and exec_summary.strip():
+            vuln_link_html = ''
+            if vuln_ids:
+                vuln_link_html = (
+                    '            <p class="exec-brief-vuln-link">'
+                    '<a href="#guvenlik-aciklari">&#128272; Güvenlik Açıkları &#8595;</a>'
+                    '</p>\n'
+                )
             exec_brief_html = (
                 '        <div class="exec-brief" id="yonetici-ozeti-block">\n'
                 '            <h2>Yönetici Özeti</h2>\n'
                 f'            <p class="exec-brief-paragraph">{exec_summary.strip()}</p>\n'
+                f'{vuln_link_html}'
                 '        </div>\n\n'
             )
 
@@ -1261,7 +1276,6 @@ class HaberSistemi:
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
                 <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                <span id="theme-label">Gece</span>
             </button>
         </div>
 
@@ -1322,7 +1336,6 @@ function _applyTheme() {{
     document.documentElement.setAttribute('data-theme', mode);
     document.getElementById('theme-icon-moon').style.display = mode === 'dark' ? 'inline' : 'none';
     document.getElementById('theme-icon-sun').style.display  = mode === 'light' ? 'inline' : 'none';
-    document.getElementById('theme-label').textContent = mode === 'dark' ? 'Gece' : 'Gündüz';
 }}
 function toggleTheme() {{
     var cur = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
@@ -2419,6 +2432,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                             if not _is_vuln_p4(aid) and aid not in top3_set_p6]
         exec_ids = list(top3_ids) + top10_regular_p6[:6]
 
+        # Giriş cümlesi için: son 24 saatte analiz edilen toplam haber ve kaynak sayısı
+        es_news_count   = len(articles)
+        es_source_count = len({a.get('source', '') for a in articles if a.get('source')})
+
         exec_summary = ''
         es_lines = []
         for art_id in exec_ids:
@@ -2434,7 +2451,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             )
         if es_lines:
             es_data = self._gemini_call_json(
-                get_executive_summary_prompt('\n'.join(es_lines)),
+                get_executive_summary_prompt(
+                    '\n'.join(es_lines), es_source_count, es_news_count),
                 max_output_tokens=1024,
                 label='Pass6-YoneticiOzeti',
             )
