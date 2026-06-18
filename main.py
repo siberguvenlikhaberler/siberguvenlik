@@ -864,21 +864,12 @@ class HaberSistemi:
             font-size: 9px; font-weight: 400; color: #64b5f6;
             letter-spacing: 0.3px; line-height: 1;
         }
-        .drag-file-chip .grip {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 2px; flex-shrink: 0; opacity: 0.5;
-        }
-        .drag-file-chip .grip span {
-            width: 3px; height: 3px; border-radius: 50%;
-            background: currentColor; display: block;
-        }
-        .drag-file-chip:hover {
+.drag-file-chip:hover {
             background: #dbeeff; border-color: #42a5f5;
             transform: translateY(-2px) rotate(-1deg);
             box-shadow: 0 4px 10px rgba(21,101,192,0.18);
         }
-        .drag-file-chip:hover .grip { opacity: 0.9; }
-        .drag-file-chip:hover .drag-file-chip-hint { color: #1565c0; }
+.drag-file-chip:hover .drag-file-chip-hint { color: #1565c0; }
         .drag-file-chip:active { cursor: grabbing; transform: scale(0.97); }
         .drag-file-chip.dragging { opacity: 0.45; transform: rotate(3deg); }
         .important-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -1236,7 +1227,6 @@ class HaberSistemi:
                             Kaydet
                         </button>
                         <span class="drag-file-chip" draggable="true" data-filename="{today_str}.txt" title="Masaüstüne veya klasöre sürükleyin → .txt olarak kaydeder (Chrome/Edge)">
-                            <div class="grip"><span></span><span></span><span></span><span></span><span></span><span></span></div>
                             <span class="drag-file-chip-inner">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                                 {today_str}.txt
