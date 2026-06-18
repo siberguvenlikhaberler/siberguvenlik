@@ -93,18 +93,49 @@
         .block-action-btn:hover { background: #dbeeff; border-color: #42a5f5; }
         .block-action-btn.success { background: #e8f5e9; border-color: #66bb6a; color: #2e7d32; }
         .block-action-btn svg { flex-shrink: 0; }
+        @keyframes drag-hint {
+            0%   { transform: translateX(0) rotate(0deg); }
+            20%  { transform: translateX(-4px) rotate(-2deg); }
+            40%  { transform: translateX(4px) rotate(1.5deg); }
+            60%  { transform: translateX(-3px) rotate(-1deg); }
+            80%  { transform: translateX(2px) rotate(0.5deg); }
+            100% { transform: translateX(0) rotate(0deg); }
+        }
         .drag-file-chip {
-            display: inline-flex; align-items: center; gap: 5px;
+            display: inline-flex; align-items: center; gap: 6px;
             background: rgba(255,255,255,0.92);
             border: 1.5px dashed #90caf9;
-            border-radius: 6px; padding: 5px 11px;
+            border-radius: 8px; padding: 5px 12px 5px 8px;
             font-size: 12px; font-weight: 600; color: #1565c0;
             cursor: grab; user-select: none; white-space: nowrap;
-            transition: background 0.15s, border-color 0.15s;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+            animation: drag-hint 0.7s ease-in-out 1.2s 1;
+            flex-direction: column; gap: 1px;
         }
-        .drag-file-chip:active { cursor: grabbing; }
-        .drag-file-chip:hover { background: #dbeeff; border-color: #42a5f5; }
-        .drag-file-chip.dragging { opacity: 0.45; }
+        .drag-file-chip-inner {
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .drag-file-chip-hint {
+            font-size: 9px; font-weight: 400; color: #64b5f6;
+            letter-spacing: 0.3px; line-height: 1;
+        }
+        .drag-file-chip .grip {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 2px; flex-shrink: 0; opacity: 0.5;
+        }
+        .drag-file-chip .grip span {
+            width: 3px; height: 3px; border-radius: 50%;
+            background: currentColor; display: block;
+        }
+        .drag-file-chip:hover {
+            background: #dbeeff; border-color: #42a5f5;
+            transform: translateY(-2px) rotate(-1deg);
+            box-shadow: 0 4px 10px rgba(21,101,192,0.18);
+        }
+        .drag-file-chip:hover .grip { opacity: 0.9; }
+        .drag-file-chip:hover .drag-file-chip-hint { color: #1565c0; }
+        .drag-file-chip:active { cursor: grabbing; transform: scale(0.97); }
+        .drag-file-chip.dragging { opacity: 0.45; transform: rotate(3deg); }
         .important-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         @media (max-width: 640px) { .important-summary { grid-template-columns: 1fr; } }
         .important-item {
@@ -256,7 +287,9 @@
         [data-theme="dark"] .block-action-btn:hover { background: #1c2d4a; border-color: #58a6ff; }
         [data-theme="dark"] .block-action-btn.success { background: #162312; border-color: #3fb950; color: #3fb950; }
         [data-theme="dark"] .drag-file-chip { background: rgba(22,27,34,0.9); border-color: #388bfd; color: #79c0ff; }
-        [data-theme="dark"] .drag-file-chip:hover { background: #1c2d4a; border-color: #58a6ff; }
+        [data-theme="dark"] .drag-file-chip:hover { background: #1c2d4a; border-color: #58a6ff; box-shadow: 0 4px 10px rgba(56,139,253,0.25); }
+        [data-theme="dark"] .drag-file-chip-hint { color: #388bfd; }
+        [data-theme="dark"] .drag-file-chip:hover .drag-file-chip-hint { color: #79c0ff; }
         [data-theme="dark"] .important-item { background: rgba(30,50,90,0.5); border-left-color: #388bfd; }
         [data-theme="dark"] .important-item a { color: #c9d1d9; }
         [data-theme="dark"] .important-item a:hover { color: #79c0ff; }
@@ -318,9 +351,13 @@
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             Kaydet
                         </button>
-                        <span class="drag-file-chip" draggable="true" data-filename="18.06.2026.txt" title="Chrome/Edge: masaüstüne sürükleyin → .txt olarak kaydeder">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                            18.06.2026.txt
+                        <span class="drag-file-chip" draggable="true" data-filename="18.06.2026.txt" title="Masaüstüne veya klasöre sürükleyin → .txt olarak kaydeder (Chrome/Edge)">
+                            <div class="grip"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                            <span class="drag-file-chip-inner">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                18.06.2026.txt
+                            </span>
+                            <span class="drag-file-chip-hint">↔ sürükle</span>
                         </span>
                     </div>
                 </div>
