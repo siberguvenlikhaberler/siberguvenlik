@@ -43,6 +43,7 @@ soruşturmalara ağırlık veren kaynaklar — raporun stratejik çekirdeği.
 | The DFIR Report | thedfirreport.com/feed | Gerçek saldırı TTP'leri, operasyonel istihbarat |
 | ANSSI (CERT-FR) | cert.ssi.gouv.fr/feed | Fransız CERT, APT raporları |
 | BSI | bsi.bund.de/.../RSSNewsfeed_Presse_Veranstaltungen.xml | Alman Federal Bilgi Güvenliği Dairesi |
+| NIST Cybersecurity | nist.gov/news-events/cybersecurity/rss.xml | ABD Ulusal Standartlar ve Teknoloji Enstitüsü |
 
 ---
 
