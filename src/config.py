@@ -313,18 +313,20 @@ def get_executive_summary_prompt(articles_brief, source_count, news_count):
     source_count: son 24 saatte taranan kaynak sayısı (giriş cümlesi için).
     news_count: son 24 saatte analiz edilen toplam haber sayısı.
     """
-    return f"""Sen bir siber güvenlik istihbarat bülteni editörüsün. Görevin: aşağıda verilen, o günün EN ÖNEMLİ haberlerini tek bir AKICI YÖNETİCİ ÖZETİ paragrafında toparlamak.
+    return f"""Sen bir siber güvenlik istihbarat bülteni editörüsün. Görevin: aşağıda verilen, o günün EN ÖNEMLİ haberlerini net ve kolay okunur bir YÖNETİCİ ÖZETİ olarak toparlamak.
 
 ⚠️ DİL KURALI: Çıktı YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile özet kesinlikle Türkçe yazılacak. (Şirket adları, CVE kodları ve ürün adları orijinal kalabilir.)
 
 GÖREV:
 - Paragrafa ŞU çerçeveyle başla: "Son 24 saatte {source_count} kaynakta yayımlanan {news_count} haberin analizinden öne çıkan başlıklar..." benzeri bir GİRİŞ CÜMLESİYLE aç. Bu iki sayıyı ({source_count} ve {news_count}) aynen kullan, değiştirme veya uydurma. Giriş cümlesini kelimesi kelimesine kopyalama; aynı sayıları koruyarak akıcı ve doğal biçimde yeniden ifade et.
-- Giriş cümlesinin ardından, verilen haberleri TEK BİR paragraf içinde özetlemeye devam et (madde işareti, başlık, alt başlık YOK).
-- Bir yönetici tek okuyuşta, son 24 saatte siber güvenlik dünyasında yaşanan en önemli gelişmeler hakkında doğrudan fikir sahibi olabilmeli.
+- Giriş cümlesinin ardından verilen haberleri TEK BİR paragraf içinde özetle (madde işareti, başlık, alt başlık YOK).
 - Girişten sonra en önemli/stratejik gelişmelerle devam et, ardından diğer önemli haberlere geç.
-- Akıcı, bağlaçlarla birbirine bağlanmış, haber bülteni üslubunda anlat. Giriş ve devamı kusursuz, düzgün bir anlatım bütünlüğü oluştursun.
-- Resmî, formal ve dikkatli bir Türkçe kullan; özensiz ifadelerden kaçın.
-- UZUNLUK: 140-210 kelime. Tek paragraf.
+- CÜMLE YAPISI — EN KRİTİK KURAL:
+  • Her cümle TEK bir gelişmeyi anlatır. Birden fazla olayı "ve", "ayrıca", "öte yandan" gibi bağlaçlarla tek cümlede ZİNCİRLEME.
+  • Cümleler kısa ve doğrudan olacak: özne → eylem → sonuç. Yan cümle sayısı bir cümlede en fazla bir tane.
+  • Okuyucu her cümlenin sonunda ne öğrendiğini net olarak bilmeli.
+- Resmî ve dikkatli bir Türkçe kullan; özensiz ifadelerden kaçın.
+- UZUNLUK: 130-190 kelime. Tek paragraf.
 - Yalnızca verilen haberlerdeki bilgileri kullan; uydurma ekleme yapma.
 - Kaynak adı, URL, "HABER N" gibi referanslar YAZMA — sadece akıcı metin.
 
