@@ -17,6 +17,31 @@
 | TechCrunch Security | techcrunch.com/category/security/feed |
 | CSO Online | csoonline.com/feed |
 | Infoblox Blog | blogs.infoblox.com/feed |
+| Dark Reading | darkreading.com/rss.xml |
+| SecurityWeek | feeds.feedburner.com/securityweek |
+| Help Net Security | helpnetsecurity.com/feed |
+| The Record | therecord.media/feed |
+| Talos Intelligence | blog.talosintelligence.com/rss |
+| Unit 42 | unit42.paloaltonetworks.com/feed |
+| CISA | cisa.gov/cybersecurity-advisories/all.xml |
+| NCSC UK | ncsc.gov.uk/api/1/services/v1/all-rss-feed.xml |
+| CERT-EU | cert.europa.eu/publications/security-advisories-rss |
+
+### Stratejik / Jeopolitik / İstihbari Odaklı Kaynaklar
+
+APT atıfı, ulus-devlet operasyonları, ticari casus yazılım ve gözetim/jeopolitik
+soruşturmalara ağırlık veren kaynaklar — raporun stratejik çekirdeği.
+
+| Kaynak | Feed | Odak |
+|---|---|---|
+| Microsoft Security | microsoft.com/en-us/security/blog/feed | APT atıfı, tedarik zinciri, nation-state |
+| Bellingcat | bellingcat.com/feed | OSINT, jeopolitik soruşturma |
+| Citizen Lab | citizenlab.ca/feed | Ticari casus yazılım (Pegasus vb.), gözetim |
+| Mandiant (Google Cloud) | feeds.feedburner.com/threatintelligence/pvexyqv7v0v | APT attribution, nation-state |
+| CrowdStrike | crowdstrike.com/blog/feed | Adversary tracking, APT grupları |
+| Securelist (Kaspersky) | securelist.com/feed | APT araştırmaları (Rusya/Çin odaklı) |
+| The DFIR Report | thedfirreport.com/feed | Gerçek saldırı TTP'leri, operasyonel istihbarat |
+| ANSSI (CERT-FR) | cert.ssi.gouv.fr/feed | Fransız CERT, APT raporları |
 
 ---
 

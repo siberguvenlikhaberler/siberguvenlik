@@ -519,6 +519,17 @@ NEWS_SOURCES = {
     'CISA': 'https://www.cisa.gov/cybersecurity-advisories/all.xml',
     'NCSC UK': 'https://www.ncsc.gov.uk/api/1/services/v1/all-rss-feed.xml',
     'CERT-EU': 'https://cert.europa.eu/publications/security-advisories-rss',
+    # Stratejik / jeopolitik / istihbari odaklı kaynaklar (kullanıcı tarafından doğrulandı 2026-06)
+    # Bu grup; APT atıfı, ulus-devlet operasyonları, ticari casus yazılım ve
+    # gözetim/jeopolitik soruşturmalara ağırlık verir — raporun stratejik çekirdeği.
+    'Microsoft Security': 'https://www.microsoft.com/en-us/security/blog/feed/',
+    'Bellingcat': 'https://www.bellingcat.com/feed/',
+    'Citizen Lab': 'https://citizenlab.ca/feed/',
+    'Mandiant (Google Cloud)': 'https://feeds.feedburner.com/threatintelligence/pvexyqv7v0v',
+    'CrowdStrike': 'https://www.crowdstrike.com/blog/feed/',
+    'Securelist (Kaspersky)': 'https://securelist.com/feed/',
+    'The DFIR Report': 'https://thedfirreport.com/feed/',
+    'ANSSI (CERT-FR)': 'https://www.cert.ssi.gouv.fr/feed/',
 }
 
 
@@ -582,6 +593,14 @@ CONTENT_SELECTORS = {
     'Infoblox Blog': [{'class': 'entry-content'}],
     'Cyberscoop': [{'class': 'article-body'}, {'class': 'post-content'}, {'class': 'entry-content'}],
     'Recorded Future': [{'class': 'article-body'}, {'class': 'blog-content'}, {'class': 'entry-content'}],
+    # Stratejik kaynaklar — WordPress tabanlılar entry-content kullanır; eşleşmezse
+    # fetch_full_article generic <article>/<main> fallback'ine düşer (hata üretmez).
+    'Bellingcat': [{'class': 'entry-content'}, {'class': 'post-content'}],
+    'Citizen Lab': [{'class': 'entry-content'}, {'class': 'post-content'}],
+    'Securelist (Kaspersky)': [{'class': 'entry-content'}, {'class': 'js-reading-content'}],
+    'The DFIR Report': [{'class': 'entry-content'}, {'class': 'post-content'}],
+    'CrowdStrike': [{'class': 'entry-content'}, {'class': 'article-body'}, {'class': 'post-content'}],
+    'ANSSI (CERT-FR)': [{'class': 'article-content'}, {'class': 'content'}],
 }
 
 # ===== YENİ: ÖNEM SCORING SİSTEMİ (v2.0) =====
