@@ -322,10 +322,7 @@ GÖREV:
 - Giriş cümlesinin ardından, verilen haberleri TEK BİR paragraf içinde özetlemeye devam et (madde işareti, başlık, alt başlık YOK).
 - Bir yönetici tek okuyuşta, son 24 saatte siber güvenlik dünyasında yaşanan en önemli gelişmeler hakkında doğrudan fikir sahibi olabilmeli.
 - Girişten sonra en önemli/stratejik gelişmelerle devam et, ardından diğer önemli haberlere geç.
-- CÜMLE YAPISI — EN KRİTİK KURAL:
-  • Her cümle TEK bir gelişmeyi anlatır. Birden fazla olayı "ve", "ayrıca", "öte yandan" gibi bağlaçlarla tek cümlede ZİNCİRLEME.
-  • Cümleler kısa ve doğrudan olacak: özne → eylem → sonuç. Yan cümle sayısı bir cümlede en fazla bir tane.
-  • Okuyucu her cümlenin sonunda ne öğrendiğini net olarak bilmeli.
+- CÜMLE YAPISI: Bir cümlede en fazla iki gelişme bağlanabilir ("ve", "ayrıca", "öte yandan" ile). Üç veya daha fazla olayı tek cümlede ZİNCİRLEME. Yan cümle sayısı bir cümlede en fazla bir tane.
 - Resmî ve dikkatli bir Türkçe kullan; özensiz ifadelerden kaçın.
 - UZUNLUK: 130-190 kelime. Tek paragraf.
 - Yalnızca verilen haberlerdeki bilgileri kullan; uydurma ekleme yapma.
