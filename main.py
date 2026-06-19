@@ -1040,12 +1040,11 @@ class HaberSistemi:
         .back-to-top:hover { opacity: 1; }
         /* ── DARK MODE ─────────────────────────────────────────── */
         .theme-toggle {
-            position: fixed; top: 16px; right: 24px;
-            background: #fff; border: 1px solid #e2e8f0; border-radius: 20px;
+            position: absolute; top: 50%; right: 40px; transform: translateY(-50%);
+            background: none; border: 1px solid #e2e8f0; border-radius: 20px;
             padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
             color: #64748b; display: flex; align-items: center; gap: 4px;
-            transition: all 0.2s; user-select: none; z-index: 9999;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            transition: all 0.2s; user-select: none; z-index: 10;
         }
         .theme-toggle:hover { background: #f1f5f9; border-color: #94a3b8; }
         .theme-toggle .sep { color: #cbd5e1; font-size: 11px; margin: 0 1px; }
@@ -1275,14 +1274,14 @@ class HaberSistemi:
     <script>(function(){{var m=(localStorage.getItem('theme')==='light')?'light':'dark';document.documentElement.setAttribute('data-theme',m);}})()</script>
 </head>
 <body>
-    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
-        <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <span class="sep">/</span>
-        <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
     <div class="container">
         <div class="report-header">
             <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
+                <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <span class="sep">/</span>
+                <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
         </div>
 
 {exec_brief_html}        <div class="executive-summary">
