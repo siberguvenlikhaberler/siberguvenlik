@@ -531,7 +531,7 @@ NEWS_SOURCES = {
     'The DFIR Report': 'https://thedfirreport.com/feed/',
     'ANSSI (CERT-FR)': 'https://www.cert.ssi.gouv.fr/feed/',
     'BSI': 'https://www.bsi.bund.de/SiteGlobals/Functions/RSSFeed/RSSNewsfeed/RSSNewsfeed_Presse_Veranstaltungen.xml',
-    'NIST Cybersecurity': 'https://www.nist.gov/news-events/cybersecurity/rss.xml',
+    'NIST': 'https://www.nist.gov/news-events/news/rss.xml',
 }
 
 
