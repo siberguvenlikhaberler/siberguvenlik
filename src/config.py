@@ -532,6 +532,9 @@ NEWS_SOURCES = {
     'ANSSI (CERT-FR)': 'https://www.cert.ssi.gouv.fr/feed/',
     'BSI': 'https://www.bsi.bund.de/SiteGlobals/Functions/RSSFeed/RSSNewsfeed/RSSNewsfeed_Presse_Veranstaltungen.xml',
     'NIST': 'https://www.nist.gov/news-events/news/rss.xml',
+    'SentinelOne Labs': 'https://www.sentinelone.com/labs/feed/',
+    'Proofpoint Threat Insight': 'https://www.proofpoint.com/us/rss.xml',
+    'Schneier on Security': 'https://www.schneier.com/blog/atom.xml',
 }
 
 

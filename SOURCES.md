@@ -44,6 +44,9 @@ soruşturmalara ağırlık veren kaynaklar — raporun stratejik çekirdeği.
 | ANSSI (CERT-FR) | cert.ssi.gouv.fr/feed | Fransız CERT, APT raporları |
 | BSI | bsi.bund.de/.../RSSNewsfeed_Presse_Veranstaltungen.xml | Alman Federal Bilgi Güvenliği Dairesi |
 | NIST | nist.gov/news-events/news/rss.xml | ABD Ulusal Standartlar ve Teknoloji Enstitüsü |
+| SentinelOne Labs | sentinelone.com/labs/feed | APT araştırmaları, malware analizi |
+| Proofpoint Threat Insight | proofpoint.com/us/rss.xml | Phishing kampanyaları, e-posta tabanlı APT |
+| Schneier on Security | schneier.com/blog/atom.xml | Güvenlik politikası, kriptografi, stratejik analiz |
 
 ---
 
