@@ -530,6 +530,7 @@ NEWS_SOURCES = {
     'Securelist (Kaspersky)': 'https://securelist.com/feed/',
     'The DFIR Report': 'https://thedfirreport.com/feed/',
     'ANSSI (CERT-FR)': 'https://www.cert.ssi.gouv.fr/feed/',
+    'BSI': 'https://www.bsi.bund.de/SiteGlobals/Functions/RSSFeed/RSSNewsfeed/RSSNewsfeed_Presse_Veranstaltungen.xml',
 }
 
 

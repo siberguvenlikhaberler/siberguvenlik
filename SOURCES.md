@@ -42,6 +42,7 @@ soruşturmalara ağırlık veren kaynaklar — raporun stratejik çekirdeği.
 | Securelist (Kaspersky) | securelist.com/feed | APT araştırmaları (Rusya/Çin odaklı) |
 | The DFIR Report | thedfirreport.com/feed | Gerçek saldırı TTP'leri, operasyonel istihbarat |
 | ANSSI (CERT-FR) | cert.ssi.gouv.fr/feed | Fransız CERT, APT raporları |
+| BSI | bsi.bund.de/.../RSSNewsfeed_Presse_Veranstaltungen.xml | Alman Federal Bilgi Güvenliği Dairesi |
 
 ---
 
