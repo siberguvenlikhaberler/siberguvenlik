@@ -263,13 +263,17 @@
         .back-to-top:hover { opacity: 1; }
         /* ── DARK MODE ─────────────────────────────────────────── */
         .theme-toggle {
-            position: absolute; top: 50%; right: 40px; transform: translateY(-50%);
-            background: none; border: 1px solid #e2e8f0; border-radius: 20px;
-            padding: 6px 14px; cursor: pointer; font-size: 12px; font-weight: 600;
-            color: #64748b; display: flex; align-items: center; gap: 6px;
-            transition: all 0.2s; user-select: none; z-index: 10;
+            position: fixed; top: 16px; right: 24px;
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 20px;
+            padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
+            color: #64748b; display: flex; align-items: center; gap: 4px;
+            transition: all 0.2s; user-select: none; z-index: 9999;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
         }
         .theme-toggle:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .theme-toggle .sep { color: #cbd5e1; font-size: 11px; margin: 0 1px; }
+        .theme-toggle svg { transition: opacity 0.2s; }
+        .theme-toggle svg.dim { opacity: 0.25; }
         @media (max-width: 640px) { .theme-toggle { right: 12px; padding: 5px 10px; } }
         [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
         [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
@@ -327,8 +331,9 @@
         [data-theme="dark"] .vuln-section-heading h2 { color: #fb923c; }
         [data-theme="dark"] .news-item.vuln-item { border-left-color: #f97316; }
         [data-theme="dark"] .back-to-top { background: #388bfd; }
-        [data-theme="dark"] .theme-toggle { border-color: #30363d; color: #8b949e; }
+        [data-theme="dark"] .theme-toggle { background: #161b22; border-color: #30363d; color: #8b949e; }
         [data-theme="dark"] .theme-toggle:hover { background: #21262d; border-color: #58a6ff; color: #e6edf3; }
+        [data-theme="dark"] .theme-toggle .sep { color: #30363d; }
             </style>
     <script>(function(){var m=(localStorage.getItem('theme')==='light')?'light':'dark';document.documentElement.setAttribute('data-theme',m);})()</script>
 </head>
@@ -338,7 +343,8 @@
             <h1><span class="header-date">19.06.2026</span> Siber Güvenlik Haber Özetleri</h1>
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
                 <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <span class="sep">/</span>
+                <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             </button>
         </div>
 
@@ -610,8 +616,8 @@
 function _applyTheme() {
     var mode = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', mode);
-    document.getElementById('theme-icon-moon').style.display = mode === 'dark' ? 'inline' : 'none';
-    document.getElementById('theme-icon-sun').style.display  = mode === 'light' ? 'inline' : 'none';
+    document.getElementById('theme-icon-moon').classList.toggle('dim', mode !== 'dark');
+    document.getElementById('theme-icon-sun').classList.toggle('dim',  mode !== 'light');
 }
 function toggleTheme() {
     var cur = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
