@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber Güvenlik Raporu - 21.06.2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date { color: #2563eb; font-weight: 700; }
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .important-news h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .onemli-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .onemli-header h2 { margin-bottom: 0; }
+        .exec-brief {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0 0 20px 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            position: relative;
+        }
+        .exec-brief h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+        .exec-brief-paragraph { font-size: 15.5px; line-height: 1.85; text-align: justify; margin: 0; }
+        .exec-brief-vuln-link { margin: 16px 0 0 0; text-align: right; }
+        .exec-brief-vuln-link a {
+            color: #e65100; font-weight: 700; font-size: 14.5px; text-decoration: none;
+        }
+        .exec-brief-vuln-link a:hover { text-decoration: underline; color: #bf360c; }
+        .block-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .block-actions-bottom {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 14px;
+            margin-bottom: 20px;
+        }
+        .block-action-btn {
+            background: rgba(255,255,255,0.92);
+            border: 1px solid #90caf9;
+            border-radius: 6px;
+            padding: 5px 11px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1565c0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.15s, border-color 0.15s;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .block-action-btn:hover { background: #dbeeff; border-color: #42a5f5; }
+        .block-action-btn.success { background: #e8f5e9; border-color: #66bb6a; color: #2e7d32; }
+        .block-action-btn svg { flex-shrink: 0; }
+        .drag-file-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.92);
+            border: 1.5px dashed #90caf9;
+            border-radius: 8px; padding: 5px 12px 5px 8px;
+            font-size: 12px; font-weight: 600; color: #1565c0;
+            cursor: grab; user-select: none; white-space: nowrap;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+            flex-direction: column; gap: 1px;
+        }
+        .drag-file-chip-inner {
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .drag-file-chip-hint {
+            font-size: 9px; font-weight: 400; color: #64b5f6;
+            letter-spacing: 0.3px; line-height: 1;
+        }
+.drag-file-chip:hover {
+            background: #dbeeff; border-color: #42a5f5;
+            transform: translateY(-2px) rotate(-1deg);
+            box-shadow: 0 4px 10px rgba(21,101,192,0.18);
+        }
+.drag-file-chip:hover .drag-file-chip-hint { color: #1565c0; }
+        .drag-file-chip:active { cursor: grabbing; transform: scale(0.97); }
+        .drag-file-chip.dragging { opacity: 0.45; transform: rotate(3deg); }
+        .important-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 640px) { .important-summary { grid-template-columns: 1fr; } }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a { color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 15px; }
+        .important-item a:hover { text-decoration: underline; color: #1565c0; }
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e; font-size: 18px; font-weight: 600;
+            margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #1a237e;
+        }
+        .executive-table { width: 100%; border-spacing: 8px; }
+        .executive-table td {
+            background: white; padding: 12px 16px; border-radius: 6px;
+            border-left: 3px solid #1a237e; vertical-align: top; width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e; text-decoration: none; font-weight: 500;
+            font-size: 14px; line-height: 1.4;
+        }
+        .executive-table a:hover { text-decoration: underline; }
+        .news-section { padding: 30px; }
+        .news-item {
+            background: #f8f9fa; margin-bottom: 25px; border-radius: 8px;
+            padding: 20px; border-left: 4px solid #1a237e;
+        }
+        .news-title { color: #1a237e; font-size: 18px; font-weight: 600; margin-bottom: 12px; line-height: 1.3; }
+        .nato-star {
+            display: inline-block; font-size: 13px; color: #ffffff; background: #003087;
+            border-radius: 3px; padding: 1px 6px; margin-right: 7px; vertical-align: middle;
+            letter-spacing: 0.5px; font-weight: 700; line-height: 1.6;
+        }
+        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+        .source { color: #666; font-size: 13px; margin: 0; }
+        .source a { color: #1a237e; text-decoration: none; }
+        .source a:hover { text-decoration: underline; }
+        .social-signals {
+            background: #f8faff; border: 1px solid #c7d7fd;
+            border-radius: 8px; padding: 24px 28px; margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a; font-size: 18px; font-weight: 700;
+            margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .social-signals .signal-item {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6; border-radius: 6px;
+            padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .social-signals .signal-platform-label {
+            font-size: 10px; font-weight: 700; color: #ffffff; background: #64748b;
+            text-transform: uppercase; letter-spacing: 0.05em; border-radius: 3px; padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px; color: #475569; background: #f1f5f9; border-radius: 3px; padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b; text-decoration: none; font-size: 13px;
+            font-weight: 500; line-height: 1.45; display: block;
+        }
+        .social-signals .signal-item a:hover { color: #1e3a8a; text-decoration: underline; }
+        @media (max-width: 640px) {
+            .social-signals { padding: 16px; }
+            .social-signals .signal-list { grid-template-columns: 1fr; }
+            .social-signals .signal-meta { gap: 6px; }
+        }
+        .top3-section { margin-bottom: 24px; }
+        .top3-section-label {
+            font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; color: #1a237e; margin-bottom: 12px;
+        }
+        .top3-card {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-left: 5px solid #1a237e; border-radius: 8px;
+            padding: 18px 20px; margin-bottom: 14px;
+        }
+        .top3-card:last-child { margin-bottom: 0; }
+        .top3-card-title {
+            color: #1e293b; font-size: 15px; font-weight: 700;
+            margin-bottom: 10px; line-height: 1.4;
+        }
+        .top3-card-paragraph {
+            color: #374151; font-size: 14px; line-height: 1.65; margin-bottom: 10px;
+        }
+        .top3-card .source { color: #64748b; font-size: 12px; margin: 0; }
+        .top3-card .source a { color: #1a237e; text-decoration: none; }
+        .top3-card .source a:hover { text-decoration: underline; }
+        .vuln-section-heading {
+            background: linear-gradient(135deg, #fff3e0 0%, #fff8f0 100%);
+            border: 1px solid #ffcc80;
+            border-left: 5px solid #e65100;
+            border-radius: 8px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+        }
+        .vuln-section-heading h2 {
+            color: #bf360c; font-size: 18px; font-weight: 700; margin: 0;
+        }
+        .news-item.vuln-item { border-left-color: #e65100; }
+        .back-to-top {
+            position: fixed; top: 50%; left: calc(50% - 450px - 48px);
+            transform: translateY(-50%); width: 36px; height: 36px;
+            background: #1a237e; color: white; border: none; border-radius: 50%;
+            font-size: 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; opacity: 0.85; transition: opacity 0.2s; z-index: 999;
+        }
+        .back-to-top:hover { opacity: 1; }
+        /* ── DARK MODE ─────────────────────────────────────────── */
+        .theme-toggle {
+            position: absolute; top: 50%; right: 40px; transform: translateY(-50%);
+            background: none; border: 1px solid #e2e8f0; border-radius: 20px;
+            padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
+            color: #64748b; display: flex; align-items: center; gap: 4px;
+            transition: all 0.2s; user-select: none; z-index: 10;
+        }
+        .theme-toggle:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .theme-toggle .sep { color: #cbd5e1; font-size: 11px; margin: 0 1px; }
+        .theme-toggle svg { transition: opacity 0.2s; }
+        .theme-toggle svg.dim { opacity: 0.25; }
+        @media (max-width: 640px) { .theme-toggle { right: 12px; padding: 5px 10px; } }
+        [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
+        [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        [data-theme="dark"] .report-header { background: #161b22; border-bottom-color: #30363d; }
+        [data-theme="dark"] .report-header h1 { color: #e6edf3; }
+        [data-theme="dark"] .header-date { color: #79c0ff; }
+        [data-theme="dark"] .important-news {
+            background: linear-gradient(135deg, #1c2d4a 0%, #162038 100%);
+            border-color: #2d4a7a; color: #e6edf3;
+        }
+        [data-theme="dark"] .important-news h2 { color: #79c0ff; }
+        [data-theme="dark"] .exec-brief {
+            background: linear-gradient(135deg, #1c2d4a 0%, #162038 100%);
+            border-color: #2d4a7a; color: #e6edf3;
+        }
+        [data-theme="dark"] .exec-brief h2 { color: #79c0ff; }
+        [data-theme="dark"] .exec-brief-vuln-link a { color: #fb923c; }
+        [data-theme="dark"] .exec-brief-vuln-link a:hover { color: #fdba74; }
+        [data-theme="dark"] .block-action-btn { background: rgba(22,27,34,0.9); border-color: #388bfd; color: #79c0ff; }
+        [data-theme="dark"] .block-action-btn:hover { background: #1c2d4a; border-color: #58a6ff; }
+        [data-theme="dark"] .block-action-btn.success { background: #162312; border-color: #3fb950; color: #3fb950; }
+        [data-theme="dark"] .drag-file-chip { background: rgba(22,27,34,0.9); border-color: #388bfd; color: #79c0ff; }
+        [data-theme="dark"] .drag-file-chip:hover { background: #1c2d4a; border-color: #58a6ff; box-shadow: 0 4px 10px rgba(56,139,253,0.25); }
+        [data-theme="dark"] .drag-file-chip-hint { color: #388bfd; }
+        [data-theme="dark"] .drag-file-chip:hover .drag-file-chip-hint { color: #79c0ff; }
+        [data-theme="dark"] .important-item { background: rgba(30,50,90,0.5); border-left-color: #388bfd; }
+        [data-theme="dark"] .important-item a { color: #c9d1d9; }
+        [data-theme="dark"] .important-item a:hover { color: #79c0ff; }
+        [data-theme="dark"] .executive-summary { background: #1c2128; border-bottom-color: #30363d; }
+        [data-theme="dark"] .executive-summary h2 { color: #79c0ff; border-bottom-color: #388bfd; }
+        [data-theme="dark"] .executive-table td { background: #21262d; border-left-color: #388bfd; }
+        [data-theme="dark"] .executive-table a { color: #79c0ff; }
+        [data-theme="dark"] .news-section { background: #161b22; }
+        [data-theme="dark"] .news-item { background: #21262d; border-left-color: #388bfd; }
+        [data-theme="dark"] .news-title { color: #79c0ff; }
+        [data-theme="dark"] .news-content { color: #c9d1d9; }
+        [data-theme="dark"] .source { color: #8b949e; }
+        [data-theme="dark"] .source a { color: #58a6ff; }
+        [data-theme="dark"] .social-signals { background: #1a2233; border-color: #263557; }
+        [data-theme="dark"] .social-signals h2 { color: #79c0ff; border-bottom-color: #263557; }
+        [data-theme="dark"] .social-signals .signal-item { background: #21262d; border-color: #30363d; }
+        [data-theme="dark"] .social-signals .signal-item a { color: #c9d1d9; }
+        [data-theme="dark"] .social-signals .signal-item a:hover { color: #79c0ff; }
+        [data-theme="dark"] .social-signals .signal-engagement { background: #30363d; color: #8b949e; }
+        [data-theme="dark"] .top3-section-label { color: #79c0ff; }
+        [data-theme="dark"] .top3-card { background: #21262d; border-color: #30363d; border-left-color: #388bfd; }
+        [data-theme="dark"] .top3-card-title { color: #e6edf3; }
+        [data-theme="dark"] .top3-card-paragraph { color: #c9d1d9; }
+        [data-theme="dark"] .top3-card .source { color: #8b949e; }
+        [data-theme="dark"] .top3-card .source a { color: #58a6ff; }
+        [data-theme="dark"] .vuln-section-heading {
+            background: linear-gradient(135deg, #2d1a0a 0%, #231305 100%);
+            border-color: #5c3317; border-left-color: #f97316;
+        }
+        [data-theme="dark"] .vuln-section-heading h2 { color: #fb923c; }
+        [data-theme="dark"] .news-item.vuln-item { border-left-color: #f97316; }
+        [data-theme="dark"] .back-to-top { background: #388bfd; }
+        [data-theme="dark"] .theme-toggle { background: #161b22; border-color: #30363d; color: #8b949e; }
+        [data-theme="dark"] .theme-toggle:hover { background: #21262d; border-color: #58a6ff; color: #e6edf3; }
+        [data-theme="dark"] .theme-toggle .sep { color: #30363d; }
+            </style>
+    <script>(function(){var m=(localStorage.getItem('theme')==='light')?'light':'dark';document.documentElement.setAttribute('data-theme',m);})()</script>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1><span class="header-date">21.06.2026</span> Siber Güvenlik Haber Özetleri</h1>
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
+                <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <span class="sep">/</span>
+                <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+        </div>
+
+        <div class="executive-summary">
+            <div class="important-news" id="onemli-gelismeler-block">
+                <div class="onemli-header">
+                    <h2>Önemli Gelişmeler</h2>
+                    <div class="block-actions">
+                        <button class="block-action-btn" onclick="copyBlock(this)" title="Panoya kopyala">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            Kopyala
+                        </button>
+                        <button class="block-action-btn" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Kaydet
+                        </button>
+                        <span class="drag-file-chip" draggable="true" data-filename="21.06.2026.txt" title="Masaüstüne veya klasöre sürükleyin → .txt olarak kaydeder (Chrome/Edge)">
+                            <span class="drag-file-chip-inner">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                21.06.2026.txt
+                            </span>
+                            <span class="drag-file-chip-hint">↔ sürükle</span>
+                        </span>
+                    </div>
+                </div>
+            <div class="top3-section">
+                <div class="top3-card">
+                    <div class="top3-card-title"><a href="https://www.bleepingcomputer.com/news/security/microsoft-links-mastra-ai-supply-chain-attack-to-north-korean-hackers/" target="_blank" style="color:inherit;text-decoration:none;">Kuzey Kore'nin Mastra AI Tedarik Zinciri Üzerinden Yazılımcıları Hedeflemesi</a></div>
+                    <p class="top3-card-paragraph">Microsoft tarafından yapılan incelemeler sonucunda, Mastra AI platformuna ait 140'tan fazla npm paketinin Kuzey Kore devletine bağlı Sapphire Sleet grubu tarafından ele geçirildiği tespit edilmiştir. BlueNoroff adıyla da bilinen bu saldırgan yapının, özellikle finansal sektörü hedef alan stratejik siber casusluk ve hırsızlık faaliyetleriyle tanındığı belirtilmektedir. Saldırganların bir paket yöneticisi hesabını ele geçirerek kötü amaçlı yazılım enjekte ettikleri ve bu yolla dünya genelindeki yazılım geliştiricilerin cihazlarına sızmayı amaçladıkları görülmektedir. Operasyonun temel hedefinin, kritik altyapılarda kullanılan API anahtarları, kimlik doğrulama belirteçleri ve kripto para cüzdanları gibi stratejik verilerin çalınması olduğu anlaşılmaktadır. Kuzey Kore'nin bu tür sofistike tedarik zinciri saldırılarını, uluslararası yaptırımları delmek ve devlet hazinesine döviz sağlamak amacıyla sistematik bir yöntem olarak kullandığı değerlendirilmektedir. Saldırının Windows, Linux ve macOS gibi farklı işletim sistemlerini kapsayacak şekilde geniş bir yelpazede yürütülmesi, grubun teknik kapasitesinin ve küresel ölçekteki operasyonel hazırlığının bir göstergesi olarak kabul edilmektedir. Microsoft, saldırganların kullandığı altyapının geçmişteki devlet destekli kampanyalarla doğrudan örtüştüğünü ve bu durumun Pyongyang yönetiminin siber alandaki agresif tutumunu desteklediğini raporlamıştır.</p>
+                    <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/microsoft-links-mastra-ai-supply-chain-attack-to-north-korean-hackers/" target="_blank">bleepingcomputer.com</a>, 20.06.2026)</b></p>
+                </div>
+                <div class="top3-card">
+                    <div class="top3-card-title"><a href="https://www.bleepingcomputer.com/news/security/new-prinz-eugen-ransomware-prioritizes-recent-files-for-encryption/" target="_blank" style="color:inherit;text-decoration:none;">Prinz Eugen'in Güncel Dosyaları Şifreleyerek Şirket Verilerini Rehin Alması</a></div>
+                    <p class="top3-card-paragraph">Prinz Eugen adı verilen yeni bir fidye yazılımı operasyonunun, sistemlerdeki en son değiştirilen dosyaları önceliklendirerek kritik iş verilerini hedef aldığı ve herhangi bir fidye notu bırakmadan faaliyet gösterdiği tespit edilmiştir. Yapılan araştırmalar, saldırganların bir hizmet modeli kullanmak yerine operasyonları doğrudan yönettiklerini ve meşru uzaktan izleme araçlarını kullanarak sistemlerde kalıcılık sağladıklarını ortaya koymaktadır. Saldırganların başlangıç erişimi için çalınmış uzak masaüstü protokolü kimlik bilgilerini kullandığı ve manuel yöntemlerle ağ içerisinde ilerlediği belirtilmektedir. Özellikle finansal kurumlar ve büyük ölçekli şirketlerin hedef alındığı bu saldırılarda, fidye iletişiminin tespit edilmesini zorlaştırmak amacıyla tüm sürecin sistem dışı kanallar üzerinden yürütüldüğü görülmektedir. Dosyaların şifrelenmeden önce kurtarılabilirliğinin kontrol edilmesi ve ardından orijinal verilerin güvenli şekilde silinmesi, saldırganların kurban üzerindeki baskıyı maksimize etme stratejisini yansıtmaktadır. Bu operasyonel yaklaşım, siber suç gruplarının geleneksel yöntemlerden uzaklaşarak daha gizli ve hedef odaklı bir şantaj modeli benimsediğini kanıtlayan somut bir örnek teşkil etmektedir.</p>
+                    <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/new-prinz-eugen-ransomware-prioritizes-recent-files-for-encryption/" target="_blank">bleepingcomputer.com</a>, 20.06.2026)</b></p>
+                </div>
+                <div class="top3-card">
+                    <div class="top3-card-title"><a href="https://securityaffairs.com/193941/uncategorized/inside-gentlekiller-the-edr-killer-powering-the-gentlemen.html" target="_blank" style="color:inherit;text-decoration:none;">The Gentlemen'ın GentleKiller Yazılımıyla Güvenlik Sistemlerini Devre Dışı Bırakması</a></div>
+                    <p class="top3-card-paragraph">Rusya merkezli olduğu değerlendirilen ve Alexander Andreevich Yapaev tarafından yönetildiği iddia edilen The Gentlemen fidye yazılımı grubunun, güvenlik yazılımlarını etkisiz hale getirmek için GentleKiller adlı özel bir araç seti geliştirdiği bildirilmektedir. Grubun, geleneksel fidye yazılımı modellerinden farklı olarak, iştiraklerine merkezi bir savunma kırma mekanizması sunarak saldırıların başarı oranını artırmayı hedeflediği görülmektedir. Güneydoğu Asya, Güney Amerika ve Batı Avrupa'daki kritik kurumları hedef alan bu yapı, özellikle FortiGate cihazlarındaki yapılandırma hatalarını kullanarak stratejik sızma operasyonları yürütmektedir. GentleKiller yazılımının, meşru sürücülerin açıklarını istismar ederek CrowdStrike ve Microsoft Defender gibi küresel ölçekte kullanılan 48 farklı güvenlik ürününü doğrudan hedef aldığı tespit edilmiştir. Bu operasyonel yaklaşım, siber suç ekosisteminde teknik bariyerlerin düşürülmesine ve devlet dışı aktörlerin karmaşık savunma sistemlerini daha hızlı aşmasına olanak tanımaktadır. Grubun lider kadrosunun geçmişte birçok büyük fidye yazılımı operasyonunda yer almış olması, bu faaliyetin sadece maddi kazanç değil, aynı zamanda küresel dijital altyapılara yönelik ciddi bir sabotaj kapasitesi barındırdığını ortaya koymaktadır. ESET tarafından paylaşılan veriler, grubun yeni keşfedilen açıkları birkaç gün içinde silah haline getirerek operasyonlarına dahil ettiğini göstermektedir.</p>
+                    <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/193941/uncategorized/inside-gentlekiller-the-edr-killer-powering-the-gentlemen.html" target="_blank">securityaffairs.com</a>, 20.06.2026)</b></p>
+                </div>
+            </div>
+                <div class="block-actions-bottom">
+                    <button class="block-action-btn" onclick="copyBlock(this)" title="Panoya kopyala">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Kopyala
+                    </button>
+                    <button class="block-action-btn" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Kaydet
+                    </button>
+                    <span class="drag-file-chip" draggable="true" data-filename="21.06.2026.txt" title="Chrome/Edge: masaüstüne sürükleyin → .txt olarak kaydeder">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        21.06.2026.txt
+                    </span>
+                </div>
+                <div class="important-summary">
+                </div>
+            </div>
+
+            <table class="executive-table">
+            </table>
+        </div>
+
+        <div class="news-section">
+<div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item">  <div class="signal-meta">    <span class="signal-platform-label">GitHub Advisory</span>    <span class="signal-engagement">ÖNEM: YÜKSEK  |  CVSS: 7.7</span>  </div>  <a href="https://github.com/advisories/GHSA-cc8f-fcx3-gpjr" target="_blank" rel="noopener noreferrer">SurrealDB üzerinde DEFINE ANALYZER mapper() filtresi aracılığıyla rastgele dosya okuma zafiyeti tespit edilmiştir.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲25</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1ub1t1p/anyone_else_tired_of_cyber_influencers_on_linkedin/" target="_blank" rel="noopener noreferrer">LinkedIn platformundaki "Cyber Influencers" paylaşımlarından başka kullanıcıların da rahatsız olup olmadığı sorgulanmıştır.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲24</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1ub7y15/the_boring_controls_still_stop_most_incidents/" target="_blank" rel="noopener noreferrer">"Sıkıcı" kontrollerin hâlâ çoğu olayı durdurduğu belirtilerek, hangisinden asla vazgeçilmeyeceği sorulmuştur.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲23</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1ubgt60/what_security_awareness_training_actually_works/" target="_blank" rel="noopener noreferrer">Hangi güvenlik farkındalığı eğitimlerinin gerçekten işe yaradığı ve hangilerinin sadece bir kutucuğu işaretlemekten ibaret olduğu tartışılmıştır.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲22</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1ubcgkj/whats_the_biggest_frustration_you_have_with_how/" target="_blank" rel="noopener noreferrer">Siber güvenlik öğrenme kaynaklarının dağınık olmasından kaynaklanan en büyük hayal kırıklığının ne olduğu sorulmuştur.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲21</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1ub1xbn/user_scanner_v140_one_the_most_advanced_and/" target="_blank" rel="noopener noreferrer">User Scanner v1.4.0 sürümünün, 2026 yılında en gelişmiş ve aktif olarak sürdürülen 2'si 1 arada e-posta ve kullanıcı adı açık kaynak OSINT aracı olduğu belirtilmiştir.</a></div>
+</div></div>
+        </div>
+    </div>
+    <a href="#" class="back-to-top" title="Başa Dön"
+       onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
+<script>
+// Mod döngüsü: Gece ↔ Gündüz (varsayılan: Gece)
+// 'light' dışındaki her değer (eski 'auto' dahil) gece olarak normalize edilir.
+function _applyTheme() {
+    var mode = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', mode);
+    document.getElementById('theme-icon-moon').classList.toggle('dim', mode !== 'dark');
+    document.getElementById('theme-icon-sun').classList.toggle('dim',  mode !== 'light');
+}
+function toggleTheme() {
+    var cur = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
+    localStorage.setItem('theme', cur === 'dark' ? 'light' : 'dark');
+    _applyTheme();
+}
+_applyTheme();
+function _getBlockText() {
+    var lines = [];
+    var cards = document.querySelectorAll('#onemli-gelismeler-block .top3-card');
+    cards.forEach(function(card, i) {
+        var title   = (card.querySelector('.top3-card-title')    || {}).textContent || '';
+        var para    = (card.querySelector('.top3-card-paragraph') || {}).textContent || '';
+        var source  = (card.querySelector('.source')              || {}).textContent || '';
+        lines.push(title.trim());
+        lines.push('');
+        lines.push(para.trim());
+        lines.push('');
+        lines.push(source.trim());
+        if (i < cards.length - 1) { lines.push('-'.repeat(60)); lines.push(''); }
+    });
+    return lines.join('\n');
+}
+function _flashBtn(btn, label) {
+    var orig = btn.innerHTML;
+    btn.classList.add('success');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ' + label;
+    setTimeout(function() { btn.classList.remove('success'); btn.innerHTML = orig; }, 1800);
+}
+function copyBlock(btn) {
+    var text = _getBlockText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() { _flashBtn(btn, 'Kopyalandı!'); }).catch(function() { _fallbackCopy(text, btn); });
+    } else { _fallbackCopy(text, btn); }
+}
+function _fallbackCopy(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); _flashBtn(btn, 'Kopyalandı!'); } catch(e) { alert('Kopyalama desteklenmiyor.'); }
+    document.body.removeChild(ta);
+}
+function saveBlock(btn) {
+    var text = _getBlockText();
+    var blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href = url; a.download = '21.06.2026.txt';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    _flashBtn(btn, 'Kaydedildi!');
+}
+function initDragFile() {
+    document.querySelectorAll('.drag-file-chip').forEach(function(chip) {
+        chip.addEventListener('dragstart', function(e) {
+            var text = _getBlockText();
+            var filename = chip.dataset.filename;
+            var b64 = btoa(unescape(encodeURIComponent(text)));
+            e.dataTransfer.setData('DownloadURL', 'text/plain:' + filename + ':data:text/plain;base64,' + b64);
+            e.dataTransfer.setData('text/plain', text);
+            e.dataTransfer.items.add(new File([text], filename, {type: 'text/plain'}));
+            chip.classList.add('dragging');
+        });
+        chip.addEventListener('dragend', function() { chip.classList.remove('dragging'); });
+    });
+}
+document.addEventListener('DOMContentLoaded', initDragFile);
+</script>
+
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-06-20.html" class="archive-link">20.06.2026</a>
+            <a href="./2026-06-19.html" class="archive-link">19.06.2026</a>
+            <a href="./2026-06-18.html" class="archive-link">18.06.2026</a>
+            <a href="./2026-06-17.html" class="archive-link">17.06.2026</a>
+            <a href="./2026-06-16.html" class="archive-link">16.06.2026</a>
+            <a href="./2026-06-15.html" class="archive-link">15.06.2026</a>
+            <a href="./2026-06-14.html" class="archive-link">14.06.2026</a>
+            <a href="./2026-06-13.html" class="archive-link">13.06.2026</a>
+            <a href="./2026-06-12.html" class="archive-link">12.06.2026</a>
+            <a href="./2026-06-10.html" class="archive-link">10.06.2026</a>
+            <a href="./2026-06-09.html" class="archive-link">09.06.2026</a>
+            <a href="./2026-06-08.html" class="archive-link">08.06.2026</a>
+            <a href="./2026-06-07.html" class="archive-link">07.06.2026</a>
+            <a href="./2026-06-06.html" class="archive-link">06.06.2026</a>
+            <a href="./2026-06-05.html" class="archive-link">05.06.2026</a>
+            <a href="./2026-06-04.html" class="archive-link">04.06.2026</a>
+            <a href="./2026-06-03.html" class="archive-link">03.06.2026</a>
+            <a href="./2026-06-02.html" class="archive-link">02.06.2026</a>
+            <a href="./2026-06-01.html" class="archive-link">01.06.2026</a>
+            <a href="./2026-05-31.html" class="archive-link">31.05.2026</a>
+            <a href="./2026-05-30.html" class="archive-link">30.05.2026</a>
+            <a href="./2026-05-29.html" class="archive-link">29.05.2026</a>
+            <a href="./2026-05-28.html" class="archive-link">28.05.2026</a>
+            <a href="./2026-05-27.html" class="archive-link">27.05.2026</a>
+            <a href="./2026-05-26.html" class="archive-link">26.05.2026</a>
+            <a href="./2026-05-25.html" class="archive-link">25.05.2026</a>
+            <a href="./2026-05-24.html" class="archive-link">24.05.2026</a>
+            <a href="./2026-05-23.html" class="archive-link">23.05.2026</a>
+        </div>
+    </div>
+
+</body>
+</html>
