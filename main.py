@@ -1197,25 +1197,14 @@ class HaberSistemi:
                 )
             top3_cards_html += '            </div>\n'
 
-        # ── Önemli Gelişmeler kutusu (top3 hariç normal haberler) ─────────
-        # Top3'ten sonra, önem sırasına göre dizilmiş en önemli 6 haber
-        # burada listelenir (iki sütun, 3'er 3'er).
-        top10_regular = [aid for aid in top10_ids if not _is_vuln(aid) and aid not in top3_set]
-        important_summary_ids = top10_regular[:6]
-        important_items_html = ''
-        for art_id in important_summary_ids:
-            num = id_to_num[art_id]
-            tr_title, _ = _safe_content(art_id)
-            important_items_html += (
-                f'            <div class="important-item">\n'
-                f'                <a href="#haber-{num}">{num}. {tr_title}</a>\n'
-                f'            </div>\n'
-            )
-
-        # ── Yönetici Özeti tablosu (top3 hariç normal haberler) ───────────
+        # ── Yönetici Özeti tablosu (top3 hariç TÜM normal haberler) ───────
+        # Önceden kritik-3 kartlarının hemen altında, aynı kutu içinde ilk 6
+        # "diğer önemli haber" ayrı bir liste (important-summary) olarak
+        # gösteriliyordu. Artık kritik-3 dışındaki bütün normal haberler,
+        # kendi sıralama kriterimize göre (top10 önce, kalan sonra) bu tek
+        # tabloda toplanıyor; üstteki kutuda yalnızca 3 kritik kart kalıyor.
         table_rows_html = ''
-        remaining_regular = [aid for aid in regular_ids if aid not in important_summary_ids]
-        rem_pairs = [remaining_regular[i:i + 2] for i in range(0, len(remaining_regular), 2)]
+        rem_pairs = [regular_ids[i:i + 2] for i in range(0, len(regular_ids), 2)]
         for pair in rem_pairs:
             cells = ''
             for art_id in pair:
@@ -1338,8 +1327,6 @@ class HaberSistemi:
                         {today_str}.txt
                     </span>
                 </div>
-                <div class="important-summary">
-{important_items_html}                </div>
             </div>
 
             <table class="executive-table">
