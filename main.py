@@ -196,6 +196,28 @@ def _cap_fulltext(text):
     return ' '.join(words[:_FULLTEXT_PROMPT_WORD_CAP])
 
 
+def _is_nato_summit(*texts):
+    """NATO Türkiye Zirvesi (Temmuz 2026) haberini deterministik tespit eder.
+
+    DAR KAPSAM (false-positive koruması): tek başına 'nato' YETMEZ — genel
+    NATO haberi ≠ zirve haberi. Bir 'nato/türkiye' bağlamı ile bir 'summit/
+    zirve' sinyali BİRLİKTE geçmelidir. Bu sayede genel NATO siber-politika
+    haberleri eşleşmez; yalnızca zirveyi konu/hedef alan haberler yakalanır.
+
+    LLM (Pass 1 eleme / Pass 4 top3 / Pass 5 kalite) zirveyi gözden kaçırsa
+    bile kod düzeyinde güvenlik ağı olarak kullanılır.
+    """
+    blob = ' '.join(t for t in texts if t).lower()
+    if not blob:
+        return False
+    has_summit = ('summit' in blob) or ('zirve' in blob)
+    if not has_summit:
+        return False
+    has_context = ('nato' in blob) or ('türkiye' in blob) or ('turkiye' in blob) \
+        or ('turkey' in blob) or ('antalya' in blob)
+    return has_context
+
+
 def _parse_article_date(date_str, fallback):
     """RSS tarihini DD.MM.YYYY formatına çevirir (TR UTC+3), parse edilemezse bugünün tarihini kullanır"""
     from datetime import timezone, timedelta as td
@@ -2236,6 +2258,24 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if a['id'] not in ranked_set:
                 remaining_ids.append(a['id'])
 
+        # ── NATO TÜRKİYE ZİRVESİ GÜVENLİK AĞI (Pass 1) ───────────────────
+        # Zirve haberi LLM tarafından yanlışlıkla elenmiş (filtered) veya
+        # alt sıraya atılmış olabilir. Deterministik olarak yakala, elemeden
+        # kurtar ve top10'un EN BAŞINA al ki Pass 4 top3 seçiminde mutlaka
+        # değerlendirilsin.
+        summit_ids = [a['id'] for a in articles
+                      if _is_nato_summit(a.get('title', ''), a.get('full_text', ''))]
+        if summit_ids:
+            sset = set(summit_ids)
+            rescued = [sid for sid in summit_ids if sid in filtered_ids]
+            if rescued:
+                print(f"   🛡️  NATO zirve güvenlik ağı: {rescued} elemeden kurtarıldı → top10")
+            filtered_ids -= sset
+            remaining_ids = [i for i in remaining_ids if i not in sset]
+            top10_rest = [i for i in top10_ids if i not in sset]
+            top10_ids = summit_ids + top10_rest  # zirve haberleri en başta
+            print(f"   🛡️  NATO zirve haberi top10 başına alındı: {summit_ids}")
+
         print(f"   Top-10: {top10_ids}")
         print(f"   Kalan : {len(remaining_ids)} haber  |  Filtrelenen: {len(filtered_ids)} haber")
 
@@ -2359,6 +2399,18 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 top3_ids = [aid for aid in raw_top3 if aid in non_vuln_set][:3]
         if not top3_ids and non_vuln_ids_p4:
             top3_ids = non_vuln_ids_p4[:3]
+
+        # ── NATO TÜRKİYE ZİRVESİ GÜVENLİK AĞI (Pass 4) ───────────────────
+        # LLM zirve haberini top3'e koymadıysa kod düzeyinde 1. sıraya sabitle.
+        # Yalnızca havuzda (top10+remaining) gerçekten bulunan zirve haberi
+        # zorlanır; uydurma ID eklenmez.
+        pool_p4 = set(all_ids_p4)
+        summit_top3 = [sid for sid in summit_ids if sid in pool_p4]
+        if summit_top3 and not all(sid in top3_ids for sid in summit_top3):
+            top3_ids = summit_top3 + [i for i in top3_ids if i not in set(summit_top3)]
+            top3_ids = top3_ids[:3]
+            print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi: {summit_top3}")
+
         print(f"   Seçilen Top 3 ID: {top3_ids}")
 
         # ════════════════════════════════════════════════════════════════
@@ -2414,6 +2466,20 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         regen_set.add(rid)
                         continue
                 p5_remove.add(rid)
+
+        # ── NATO TÜRKİYE ZİRVESİ GÜVENLİK AĞI (Pass 5) ───────────────────
+        # Zirve haberi kalite kontrolde "kaldır" işaretlense bile ASLA çıkarma;
+        # gerekiyorsa içeriği yeniden üretilsin ama haber havuzda kalsın.
+        protected = set(summit_ids) & p5_remove
+        if protected:
+            print(f"   🛡️  NATO zirve haberi kalite kontrolde korundu (kaldırılmadı): {sorted(protected)}")
+            p5_remove -= set(summit_ids)
+            for sid in protected:
+                if sid not in p5_regenerate and sid in content_by_id:
+                    # İçeriği şüpheliyse yeniden üret, ama haberi at-ma
+                    c = content_by_id.get(sid, {})
+                    if len(c.get('paragraph', '').split()) < 50:
+                        p5_regenerate.append(sid)
 
         if p5_remove:
             print(f"   🗑️  Kaldırılan: {sorted(p5_remove)}")
@@ -2693,6 +2759,17 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if a['id'] not in ranked_set:
                 remaining_ids.append(a['id'])
 
+        # NATO Türkiye Zirvesi güvenlik ağı (legacy yolu): elemeden kurtar,
+        # top10 başına al — ana pipeline ile aynı garanti.
+        summit_ids = [a['id'] for a in articles
+                      if _is_nato_summit(a.get('title', ''), a.get('full_text', ''))]
+        if summit_ids:
+            sset = set(summit_ids)
+            filtered_ids -= sset
+            remaining_ids = [i for i in remaining_ids if i not in sset]
+            top10_ids = summit_ids + [i for i in top10_ids if i not in sset]
+            print(f"   🛡️  NATO zirve güvenlik ağı (legacy): {summit_ids} top10 başına alındı")
+
         content_by_id = {}
         for s in data.get('summaries', []):
             try:
@@ -2765,6 +2842,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 top3_ids = [aid for aid in raw_top3 if aid in non_vuln_set][:3]
         if not top3_ids and non_vuln_ids:
             top3_ids = non_vuln_ids[:3]
+
+        # NATO zirve haberini top3'ün 1. sırasına sabitle (legacy yolu).
+        pool_legacy = set(top10_ids) | set(remaining_ids)
+        summit_top3 = [sid for sid in summit_ids if sid in pool_legacy]
+        if summit_top3 and not all(sid in top3_ids for sid in summit_top3):
+            top3_ids = (summit_top3 + [i for i in top3_ids if i not in set(summit_top3)])[:3]
+            print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi (legacy): {summit_top3}")
+
         print(f"   Seçilen Top 3 ID: {top3_ids}")
 
         # HTML oluştur
