@@ -320,9 +320,15 @@ def fetch_social_signals(config):
                                 })
                                 rss_added += 1
                             print(f"   Mastodon #{tag} ({instance}): RSS ile {rss_added} post eklendi")
-                            tag_fetched = True
+                            # RSS 200 ama 0 post → bu instance işe yaramadı; break ETME,
+                            # sıradaki fallback instance'ın (mastodon.social/fosstodon.org)
+                            # API'sini dene. Aksi halde fallback zinciri hiç çalışmıyordu.
+                            if rss_added > 0:
+                                tag_fetched = True
+                                time.sleep(0.5)
+                                break
                             time.sleep(0.5)
-                            break
+                            continue
                         else:
                             print(f"   Mastodon #{tag} ({instance}): RSS HTTP {rr.status_code}")
                     except Exception as rss_e:
@@ -403,8 +409,11 @@ def fetch_social_signals(config):
 
     # ── Hacker News (Algolia API) ────────────────────────────────────────────
     # Skor modeli: combined_score = points + (num_comments × comment_weight)
-    # search endpoint: relevance + popularity ağırlıklı (search_by_date'den
-    # daha güvenilir çünkü points filtresi bazı saatlerde 0 sonuç dönderebilir)
+    # ⚠️ search_by_date (tarih-sıralı) son 24 saatin EN YENİ hikayelerini döndürür;
+    # bunların çoğu henüz oy almamış (<min_points) olduğundan filtre sonrası 0
+    # nitelikli hikaye kalabiliyordu (21-22 Haz'da iki gün üst üste 0 oldu).
+    # search endpoint relevance + popularity ağırlıklıdır: taze ama oy almış
+    # hikayeleri üste taşır, böylece min_points filtresi sonrası sonuç kalır.
     hn_cfg         = config.get('hackernews', {})
     min_points     = hn_cfg.get('min_points', 15)
     hn_limit       = hn_cfg.get('limit', 25)
@@ -418,7 +427,7 @@ def fetch_social_signals(config):
             'numericFilters': f'created_at_i>{cutoff_ts}',
             'hitsPerPage':    hn_limit,
         }
-        r = _requests_get_with_retry("https://hn.algolia.com/api/v1/search_by_date",
+        r = _requests_get_with_retry("https://hn.algolia.com/api/v1/search",
                                      headers=HEADERS, timeout=(3, 5),
                                      params=hn_params)
         if r.status_code == 200:
@@ -524,18 +533,24 @@ def fetch_social_signals(config):
                     'who wants to be hired', 'megathread', 'ama:')
     rss_cutoff_dt = datetime.now() - timedelta(hours=reddit_hours)
 
+    # Tek BİRLEŞİK feed: r/cybersecurity+netsec/hot.rss → tek HTTP isteği.
+    # Önceki sürüm her subreddit için ayrı istek atıyordu; ikinci istek
+    # reddit.com'un IP-bazlı rate limitine takılıp HTTP 429 alıyordu (GH Actions
+    # paylaşımlı IP). Birleşik feed ikinci-istek 429'unu tamamen ortadan kaldırır.
+    # Subreddit atıfı her entry'nin <category term="..."> alanından korunur.
     try:
         rss_pool = []
         seen_rss_links = set()
-        for sub in reddit_subs:
-            rss_url = f'https://www.reddit.com/r/{sub}/hot.rss?limit={reddit_size}'
-            r = _requests_get_with_retry(rss_url, headers=HEADERS, timeout=(3, 5))
-            if r.status_code != 200:
-                print(f"   Reddit RSS r/{sub}: HTTP {r.status_code}")
-                time.sleep(0.5)
-                continue
+        combined_subs = '+'.join(reddit_subs)
+        rss_url = (f'https://www.reddit.com/r/{combined_subs}/hot.rss'
+                   f'?limit={reddit_size * max(1, len(reddit_subs))}')
+        r = _requests_get_with_retry(rss_url, headers=HEADERS, timeout=(3, 5))
+        if r.status_code != 200:
+            print(f"   Reddit RSS r/{combined_subs}: HTTP {r.status_code}")
+            top_reddit = []
+        else:
             root = ET.fromstring(r.content)
-            sub_found = 0
+            found = 0
             for entry in root.findall(f'{{{_ATOM}}}entry'):
                 # Başlık
                 title_el = entry.find(f'{{{_ATOM}}}title')
@@ -561,6 +576,10 @@ def fetch_social_signals(config):
                     except Exception:
                         pass   # Tarih parse edilemezse geç
                 seen_rss_links.add(url)
+                # Subreddit atıfı: entry'nin category term alanından (birleşik feed)
+                cat_el = entry.find(f'{{{_ATOM}}}category')
+                sub = cat_el.get('term', '') if cat_el is not None else ''
+                sub = sub or (reddit_subs[0] if reddit_subs else 'reddit')
                 # RSS'te upvote bilgisi yok; sıra indeksini ters puan olarak kullan
                 # (hot feed zaten engagement'a göre sıralı)
                 rss_pool.append({
@@ -568,19 +587,18 @@ def fetch_social_signals(config):
                     'source':       f'Reddit: r/{sub}',
                     'title':        title,
                     'link':         url,
-                    'score':        reddit_size - sub_found,   # pozisyon puanı
+                    'score':        (reddit_size * max(1, len(reddit_subs))) - found,
                     'comments':     0,
                     'full_text':    '',
                     'top_comments': [],
                     'subreddit':    sub,
                 })
-                sub_found += 1
-            print(f"   Reddit RSS r/{sub}: {sub_found} nitelikli post")
-            time.sleep(0.5)
-        reddit_results.extend(rss_pool)
-        top_reddit = rss_pool[:reddit_top_n]
-        print(f"   Reddit (RSS): toplam {len(rss_pool)} post → "
-              f"en iyi {len(top_reddit)} eklendi")
+                found += 1
+            print(f"   Reddit RSS r/{combined_subs}: {found} nitelikli post")
+            reddit_results.extend(rss_pool)
+            top_reddit = rss_pool[:reddit_top_n]
+            print(f"   Reddit (RSS): toplam {len(rss_pool)} post → "
+                  f"en iyi {len(top_reddit)} eklendi")
     except Exception as e:
         top_reddit = []
         print(f"   Reddit RSS hatası: {e}")
@@ -2426,6 +2444,20 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if not p5_remove and not p5_regenerate:
             print("   ✅ Tüm içerikler kalite kontrolünden geçti")
 
+        # ── AZ-HABER GUARD ───────────────────────────────────────────────
+        # Çok az haber olan günlerde (ör. hafta sonu kıtlığı + dedup) tüm
+        # haberler top3'e girip gövde tamamen boş kalabiliyor (21 Haz 2026:
+        # 3 haber → top3=[hepsi] → gövde paragrafı/tablo yok). top3 dışında
+        # render edilecek haber kalmıyorsa top3 kutusunu boşalt; haberler
+        # gövdede normal paragraf olarak gösterilsin.
+        rendered_ids_guard = list(top10_ids) + list(remaining_ids)
+        top3_set_guard = set(top3_ids)
+        if top3_ids and not [aid for aid in rendered_ids_guard
+                             if aid not in top3_set_guard]:
+            print(f"   ⚠️  Az-haber guard: top3 dışında haber kalmıyor → "
+                  f"top3 kutusu atlanıyor, {len(top3_ids)} haber gövdede gösterilecek")
+            top3_ids = []
+
         # ════════════════════════════════════════════════════════════════
         # PASS 6 — YÖNETİCİ ÖZETİ (en önemli 9 haberin tek paragraf özeti)
         # ════════════════════════════════════════════════════════════════
@@ -2439,7 +2471,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         # Giriş cümlesi için: son 24 saatte analiz edilen toplam haber ve kaynak sayısı
         es_news_count   = len(articles)
-        es_source_count = len({a.get('source', '') for a in articles if a.get('source')})
+        # Taranan toplam kaynak (feed) sayısı — rapor kapsamını doğru yansıtır.
+        # Önceki değer "sağ kalan haberlerin ait olduğu farklı kaynak sayısı" idi;
+        # az-haber günlerinde (ör. 6) okuyucuya yalnızca 6 kaynak izlenmiş gibi
+        # yanıltıcı görünüyordu. Gerçekte ~34 kaynak taranıyor.
+        es_source_count = len(self.sources)
 
         exec_summary = ''
         es_lines = []

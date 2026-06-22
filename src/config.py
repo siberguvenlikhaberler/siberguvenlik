@@ -318,7 +318,7 @@ def get_executive_summary_prompt(articles_brief, source_count, news_count):
 ⚠️ DİL KURALI: Çıktı YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile özet kesinlikle Türkçe yazılacak. (Şirket adları, CVE kodları ve ürün adları orijinal kalabilir.)
 
 GÖREV:
-- Paragrafa ŞU çerçeveyle başla: "Son 24 saatte {source_count} kaynakta yayımlanan {news_count} haberin analizinden öne çıkan başlıklar..." benzeri bir GİRİŞ CÜMLESİYLE aç. Bu iki sayıyı ({source_count} ve {news_count}) aynen kullan, değiştirme veya uydurma. Giriş cümlesini kelimesi kelimesine kopyalama; aynı sayıları koruyarak akıcı ve doğal biçimde yeniden ifade et.
+- Paragrafa ŞU çerçeveyle başla: "Son 24 saatte taranan {source_count} kaynaktan derlenen {news_count} haberin analizinden öne çıkan başlıklar..." benzeri bir GİRİŞ CÜMLESİYLE aç. Bu iki sayıyı ({source_count} ve {news_count}) aynen kullan, değiştirme veya uydurma. Giriş cümlesini kelimesi kelimesine kopyalama; aynı sayıları koruyarak akıcı ve doğal biçimde yeniden ifade et.
 - Giriş cümlesinin ardından, verilen haberleri TEK BİR paragraf içinde özetlemeye devam et (madde işareti, başlık, alt başlık YOK).
 - Bir yönetici tek okuyuşta, son 24 saatte siber güvenlik dünyasında yaşanan en önemli gelişmeler hakkında doğrudan fikir sahibi olabilmeli.
 - Girişten sonra en önemli/stratejik gelişmelerle devam et, ardından diğer önemli haberlere geç.
@@ -329,7 +329,7 @@ GÖREV:
 - Kaynak adı, URL, "HABER N" gibi referanslar YAZMA — sadece akıcı metin.
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
-{{"ozet": "Son 24 saatte {source_count} kaynakta yayımlanan {news_count} haberin analizinden ... şeklinde tek paragraf özet."}}
+{{"ozet": "Son 24 saatte taranan {source_count} kaynaktan derlenen {news_count} haberin analizinden ... şeklinde tek paragraf özet."}}
 
 HABERLER:
 {articles_brief}"""
@@ -574,7 +574,7 @@ SOCIAL_SIGNAL_CONFIG = {
         'hours_back': 48,      # Mastodon için zaman penceresi (son 48 saat)
     },
     'hackernews': {
-        'min_points':    5,    # Daha geniş filtre — genişletildi (önceki: 10)
+        'min_points':    3,    # search endpoint (relevance) ile birlikte düşürüldü (önceki: 5)
         'limit':         30,   # Daha fazla çek, combined score ile sırala (önceki: 25)
         'comment_weight': 3,   # combined_score = points + comments * 3
     },
