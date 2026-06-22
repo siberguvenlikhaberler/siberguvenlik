@@ -520,7 +520,7 @@ NEWS_SOURCES = {
     # 'Threatpost': 'https://threatpost.com/feed/',  # Yıllardır ölü — 2022'den beri yayın yok, site erişilemez durumda
     'Security Affairs': 'https://securityaffairs.com/feed',
     'Graham Cluley': 'https://grahamcluley.com/feed/',
-    'SANS ISC': 'https://isc.sans.edu/rssfeed.xml',
+    # 'SANS ISC': 'https://isc.sans.edu/rssfeed.xml',  # isc.sans.edu tüm domain GitHub Actions IP'lerini engelliyor (2026-06'dan beri HTTP 200 + HTML/boş içerik → XML parse hatası)
     'Recorded Future': 'https://www.recordedfuture.com/feed',
     'Cyberscoop': 'https://cyberscoop.com/feed/',
     'The Register': 'https://www.theregister.com/security/cyber_crime/headlines.atom',
@@ -536,7 +536,7 @@ NEWS_SOURCES = {
     'Unit 42': 'https://unit42.paloaltonetworks.com/feed/',
     # 'Sophos News': 'https://news.sophos.com/en-us/feed/',  # Sophos CDN GitHub Actions IP'lerini engelliyor (2026-06'dan beri Timeout)
     # Devlet siber güvenlik kurumları — joint advisory ve APT atıfları için yüksek stratejik değer
-    'CISA': 'https://www.cisa.gov/cybersecurity-advisories/all.xml',
+    # 'CISA': 'https://www.cisa.gov/cybersecurity-advisories/all.xml',  # cisa.gov tüm domain GitHub Actions IP'lerini engelliyor (2026-06-18'den beri kalıcı HTTP 403)
     'NCSC UK': 'https://www.ncsc.gov.uk/api/1/services/v1/all-rss-feed.xml',
     'CERT-EU': 'https://cert.europa.eu/publications/security-advisories-rss',
     # Stratejik / jeopolitik / istihbari odaklı kaynaklar (kullanıcı tarafından doğrulandı 2026-06)
