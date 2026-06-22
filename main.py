@@ -206,15 +206,30 @@ def _is_nato_summit(*texts):
 
     LLM (Pass 1 eleme / Pass 4 top3 / Pass 5 kalite) zirveyi gözden kaçırsa
     bile kod düzeyinde güvenlik ağı olarak kullanılır.
+
+    NOT (substring değil, KELİME-SINIRI): Eşleşmeler \b kelime sınırıyla
+    aranır. Aksi hâlde 'nato' substring'i seNATOr / expaNATOry / doNATO gibi
+    alakasız kelimelerin İÇİNDE eşleşip (özellikle ABD siber-politika
+    haberlerinde 'senator' + 'summit' birlikteliği) alakasız bir haberi
+    yanlışlıkla top3'e sabitler. Türkçe sözcükler için sınır esnetilir
+    (ör. 'türkiye'nin', 'zirvede') — sonek almaları normaldir.
     """
     blob = ' '.join(t for t in texts if t).lower()
     if not blob:
         return False
-    has_summit = ('summit' in blob) or ('zirve' in blob)
+    # 'summit' kelime sınırıyla; 'zirve' Türkçe çekim eklerine izin verecek
+    # şekilde sözcük başında aranır (zirvede, zirveye, zirvenin...).
+    has_summit = bool(re.search(r'\bsummit\b', blob) or re.search(r'\bzirve', blob))
     if not has_summit:
         return False
-    has_context = ('nato' in blob) or ('türkiye' in blob) or ('turkiye' in blob) \
-        or ('turkey' in blob) or ('antalya' in blob)
+    # Bağlam kelimeleri kelime sınırıyla; Türkçe olanlarda sondaki çekim
+    # eklerine izin ver (türkiye'nin, türkiyede...).
+    has_context = bool(
+        re.search(r'\bnato\b', blob)
+        or re.search(r'\bt[üu]rkiye', blob)
+        or re.search(r'\bturkey\b', blob)
+        or re.search(r'\bantalya', blob)
+    )
     return has_context
 
 
