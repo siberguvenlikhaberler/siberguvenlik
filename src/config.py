@@ -310,17 +310,17 @@ def get_executive_summary_prompt(articles_brief, source_count, news_count):
     Yönetici Özeti: O günün en önemli 9 haberini (top3 + sonraki 6) tek bir
     akıcı paragrafta özetler.
     articles_brief: "=== HABER N ===\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
-    source_count: son 24 saatte taranan kaynak sayısı (giriş cümlesi için).
-    news_count: son 24 saatte analiz edilen toplam haber sayısı.
+    source_count: son 48 saatte taranan kaynak sayısı (giriş cümlesi için).
+    news_count: son 48 saatte analiz edilen toplam haber sayısı.
     """
     return f"""Sen bir siber güvenlik istihbarat bülteni editörüsün. Görevin: aşağıda verilen, o günün EN ÖNEMLİ haberlerini tek bir AKICI YÖNETİCİ ÖZETİ paragrafında toparlamak.
 
 ⚠️ DİL KURALI: Çıktı YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile özet kesinlikle Türkçe yazılacak. (Şirket adları, CVE kodları ve ürün adları orijinal kalabilir.)
 
 GÖREV:
-- Paragrafa ŞU çerçeveyle başla: "Son 24 saatte taranan {source_count} kaynaktan derlenen {news_count} haberin analizinden öne çıkan başlıklar..." benzeri bir GİRİŞ CÜMLESİYLE aç. Bu iki sayıyı ({source_count} ve {news_count}) aynen kullan, değiştirme veya uydurma. Giriş cümlesini kelimesi kelimesine kopyalama; aynı sayıları koruyarak akıcı ve doğal biçimde yeniden ifade et.
+- Paragrafa ŞU çerçeveyle başla: "Son 48 saatte taranan {source_count} kaynaktan derlenen {news_count} haberin analizinden öne çıkan başlıklar..." benzeri bir GİRİŞ CÜMLESİYLE aç. Bu iki sayıyı ({source_count} ve {news_count}) aynen kullan, değiştirme veya uydurma. Giriş cümlesini kelimesi kelimesine kopyalama; aynı sayıları koruyarak akıcı ve doğal biçimde yeniden ifade et.
 - Giriş cümlesinin ardından, verilen haberleri TEK BİR paragraf içinde özetlemeye devam et (madde işareti, başlık, alt başlık YOK).
-- Bir yönetici tek okuyuşta, son 24 saatte siber güvenlik dünyasında yaşanan en önemli gelişmeler hakkında doğrudan fikir sahibi olabilmeli.
+- Bir yönetici tek okuyuşta, son 48 saatte siber güvenlik dünyasında yaşanan en önemli gelişmeler hakkında doğrudan fikir sahibi olabilmeli.
 - Girişten sonra en önemli/stratejik gelişmelerle devam et, ardından diğer önemli haberlere geç.
 - CÜMLE YAPISI: Bir cümlede en fazla iki gelişme bağlanabilir ("ve", "ayrıca", "öte yandan" ile). Üç veya daha fazla olayı tek cümlede ZİNCİRLEME. Yan cümle sayısı bir cümlede en fazla bir tane.
 - Resmî ve dikkatli bir Türkçe kullan; özensiz ifadelerden kaçın.
@@ -329,7 +329,7 @@ GÖREV:
 - Kaynak adı, URL, "HABER N" gibi referanslar YAZMA — sadece akıcı metin.
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
-{{"ozet": "Son 24 saatte taranan {source_count} kaynaktan derlenen {news_count} haberin analizinden ... şeklinde tek paragraf özet."}}
+{{"ozet": "Son 48 saatte taranan {source_count} kaynaktan derlenen {news_count} haberin analizinden ... şeklinde tek paragraf özet."}}
 
 HABERLER:
 {articles_brief}"""
