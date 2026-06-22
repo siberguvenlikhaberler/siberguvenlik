@@ -393,6 +393,26 @@ Her haber için iki şey üret:
    teknik prosedür ayrıntılarına boğma.
    ───────────────────────────────────────────────────────────────────────────
 
+   ── TEKRAR ÖNLEME — AYNI AKTÖR ÇOKLU HABER (zorunlu) ───────────────────────
+   Bu sette BİRDEN FAZLA haber AYNI tehdit aktörünü/grubunu konu alıyorsa
+   (aynı isim veya kaynak metinde AÇIKÇA belirtilen aynı takma ad — örn.
+   "The Gentlemen" = "Storm-2697") ve bunlardan biri grubun GENEL PROFİLİ
+   (yükselişi, yöntemleri, kurban sayısı/kapsamı) diğeri o grubun SOMUT BİR
+   SALDIRISI (belirli bir mağdur) ise:
+     • Grubun genel tanıtımını (ne zaman kuruldu, kaç kurban, AI/infostealer
+       kullanımı, ortaklık/komisyon modeli, sektörel hedef kalıbı vb.) YALNIZCA
+       profil haberinde anlat.
+     • Somut saldırı haberinde bu genel tanıtımı TEKRARLAMA; grubu adıyla anıp
+       kimliğini bilinen bağlam gibi geç ve TÜM kelimeleri O SALDIRIYA özgü
+       detaya ayır: hangi mağdur, hangi sektör, operasyonel/ekonomik etki,
+       kritik altyapı boyutu.
+     • Kelime minimumu yine geçerlidir — boşalan yeri dolgu cümleyle değil,
+       mağdura/etkiye özgü somut bilgiyle doldur.
+   ⚠️ Bu kuralı YALNIZCA aktör adı/takma adı kaynak metinlerde açıkça aynıysa
+   uygula. Emin değilsen, aktör farklıysa veya yalnızca tek haber aktörden söz
+   ediyorsa hiçbir şey değiştirme; her haberi bağımsız yaz.
+   ───────────────────────────────────────────────────────────────────────────
+
    - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
    - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BITIRME
    - MUTLAK YASAK SON KELIMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
