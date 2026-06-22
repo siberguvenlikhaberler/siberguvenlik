@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 14.05.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        
+        /* ŞIK BAŞLIK */
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 {
+            color: #1565c0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .important-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .important-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .important-item a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+        
+        /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* HABERLER BÖLÜMÜ */
+        .news-section {
+            padding: 30px;
+        }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .news-content {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .source {
+            color: #666;
+            font-size: 13px;
+            margin: 0;
+        }
+        .source a {
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+        
+        /* BAŞA DÖN BUTONU */
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
+        .social-signals {
+            background: #f8faff;
+            border: 1px solid #c7d7fd;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .social-signals .signal-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .social-signals .signal-platform-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px;
+            color: #475569;
+            background: #f1f5f9;
+            border-radius: 3px;
+            padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.45;
+            display: block;
+        }
+        .social-signals .signal-item a:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            .social-signals {
+                padding: 16px;
+            }
+            .social-signals .signal-list {
+                grid-template-columns: 1fr;
+            }
+            .social-signals .signal-meta {
+                gap: 6px;
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="report-header">
+<h1><span class="header-date">14.05.2026</span> Siber Güvenlik Haber Özetleri</h1>
+</div>
+<!-- YÖNETİCİ ÖZETİ -->
+<div class="executive-summary">
+<h2>Yönetici Özeti</h2>
+<!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
+<div class="important-news">
+<h2>Önemli Gelişmeler</h2>
+<div class="important-summary">
+<div class="important-item">
+<a href="#haber-1">1. Instructure (Canvas) Veri İhlali ve Milletvekillerinin Talepleri Başlamıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-2">2. Microsoft, 138 Güvenlik Açığını Gidermiş ve Kritik RCE Zafiyetleri İçermiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-3">3. Çin Destekli FamousSparrow APT Grubu Azerbaycan Enerji Firmasını Hedeflemiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-4">4. Windows BitLocker'da Sıfır Gün Zafiyetleri (YellowKey ve GreenPlasma) Ortaya Çıkarılmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-5">5. Quest KACE SMA'daki Kritik Kimlik Doğrulama Atlatma Zafiyeti 60+ Kuruluşu Etkilemiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-6">6. Foxconn, Nitrogen Fidye Yazılımı Saldırısını Doğrulamış ve Veri Çalınmıştır.</a>
+</div>
+<div class="important-item">
+<a href="#haber-7">7. NGINX Yeniden Yazma Modülündeki 18 Yıllık Zafiyet Uzaktan Kod Yürütmeye İzin Vermiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-8">8. İran Destekli MuddyWater APT Grubu Güney Koreli Elektronik Üreticisini Hedeflemiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-9">9. Microsoft MDASH Yapay Zeka Sistemi, 16 Windows Zafiyetini Tespit Etmiştir.</a>
+</div>
+<div class="important-item">
+<a href="#haber-10">10. Yapay Zeka, Otonom Siber Yetenek Benchmarklarını Aşmıştır.</a>
+</div>
+</div>
+</div>
+<!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
+<table class="executive-table">
+<tr>
+<td><a href="#haber-11">11. Kritik Exim Mailer Zafiyeti Uzaktan Kod Yürütmeye Olanak Tanımıştır.</a></td>
+<td><a href="#haber-12">12. Fragnesia Linux Çekirdeği Yerel Ayrıcalık Yükseltme Zafiyeti Tespit Edilmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-13">13. Fortinet, İki Kritik Uzaktan Kod Yürütme Zafiyetini Gidermiş ve Yama Yayınlamıştır.</a></td>
+<td><a href="#haber-14">14. VMware Fusion'da Yüksek Şiddetli Bir Güvenlik Açığı Giderilmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-15">15. İşten Çıkarılan Çalışan, Yapay Zeka Yardımıyla Veri Silmeyi Gizlemeye Çalışmıştır.</a></td>
+<td><a href="#haber-16">16. ABD, Şüpheli Dream Market Yöneticisini Almanya'da Tutuklamıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-17">17. "The Gentlemen" RaaS Grubunun İç Veritabanı İhlal Edilmiştir.</a></td>
+<td><a href="#haber-18">18. OpenLoop Health Veri İhlali 716.000 Kişiyi Etkilemiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-19">19. Çin'in Yapay Zekası Mythos'a Yetiştiğinde Siber Savaş Etkileri Tartışılmıştır.</a></td>
+<td><a href="#haber-20">20. CISA'nın Yapay Zeka SBOM Rehberliği Yazılım Tedarik Zinciri Denetimini Genişletmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-21">21. Birleşik Krallık, Siber Suç Yasasında Güvenlik Araştırmacılarını Korumak İçin Değişiklik Yapmıştır.</a></td>
+<td><a href="#haber-22">22. Avrupa Komisyonu, Gençlerin Sosyal Medya Erişimini Geciktirecek Yeni Yasa Taslağını Desteklemiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-23">23. Latin Amerika'daki Hackerlar, Yapay Zeka ile Özel Hacking Araçları Üretmiştir.</a></td>
+<td><a href="#haber-24">24. Outlook Önemsiz E-posta Klasöründeki Bağlantı Önizleme Fonksiyonu Atlatılmıştır.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-25">25. OpenAI Daybreak Siber Güvenlik Girişimi Başlatılmıştır.</a></td>
+<td><a href="#haber-26">26. Temsilciler Meclisi'nde Anthropic'in Mythos ve Siber Riskleri Hakkında Kapalı Brifing Gerçekleştirilmiştir.</a></td>
+</tr>
+<tr>
+<td><a href="#haber-27">27. West Pharmaceutical Services, Siber Saldırı Sonucu Veri Sızıntısı Yaşamıştır.</a></td>
+<td><a href="#haber-28">28. Saldırganlar, RubyGems'i Veri Sızdırmak İçin Silah Olarak Kullanmıştır.</a></td>
+</tr>
+</table><div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item"> <div class="signal-meta"> <span class="signal-platform-label">GitHub Advisory</span> <span class="signal-engagement">ÖNEM: KRİTİK  |  CVSS: 9.8</span> </div> <a href="https://github.com/advisories/GHSA-2rgp-f66f-4499" rel="noopener noreferrer" target="_blank">Goobi viewer - Core: Unauthenticated Solr Streaming Expression Proxy</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲25</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tc3zam/microsoft_bitlockerprotected_drives_can_now_be/" rel="noopener noreferrer" target="_blank">Microsoft BitLocker korumalı sürücüler artık yalnızca bir USB bellekteki bazı dosyalarla açılabilmektedir — YellowKey sıfır gün istismarı, açık bir arka kapı olduğunu ortaya koymuştur.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲24</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tcs9x2/new_fragnesia_linux_flaw_lets_attackers_gain_root/" rel="noopener noreferrer" target="_blank">Yeni Fragnesia Linux güvenlik açığı, saldırganların root ayrıcalıkları elde etmesine olanak tanımaktadır.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲23</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tcvgfm/two_brothers_deleted_96_federal_databases_after/" rel="noopener noreferrer" target="_blank">İki kardeş, işten çıkarıldıktan sonra 96 federal veri tabanını silmiştir – biri daha sonra kanıtları nasıl gizleyeceğini Google'da aramıştır.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲22</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tc57la/nist_is_surrendering_to_the_amount_of_cves_coming/" rel="noopener noreferrer" target="_blank">NIST, gelen CVE sayısına teslim olmaktadır.</a></div>
+<div class="signal-item reddit-item"> <div class="signal-meta"> <span class="signal-platform-label">Reddit</span> <span class="signal-engagement">▲21</span> </div> <a href="https://www.reddit.com/r/cybersecurity/comments/1tct2ya/microsofts_multiagent_ai_system_tops_anthropics/" rel="noopener noreferrer" target="_blank">Microsoft'un çok ajanlı yapay zeka sistemi, siber güvenlik kıyaslamasında Anthropic'in Mythos'unu geride bırakmıştır.</a></div>
+</div></div>
+</div>
+<!-- HABERLER -->
+<div class="news-section">
+<div class="news-item" id="haber-1">
+<div class="news-title"><b>Instructure (Canvas) Veri İhlali ve Milletvekillerinin Talepleri Başlamıştır</b></div>
+<p class="news-content">Eğitim teknolojisi şirketi Instructure'ın Canvas platformu, ShinyHunters siber suç grubu tarafından gerçekleştirilen iki ayrı saldırıda büyük bir veri ihlaline maruz kalmıştır. Bu ihlaller sonucunda 3.65 terabayt veri çalınmış ve yaklaşık 9.000 eğitim kurumundan 275 milyondan fazla öğrenci, öğretmen ve diğer bireylerin kişisel bilgileri açığa çıkmıştır. İlk saldırı 29 Nisan'da API anahtarlarına dayanan araçlarda kesintilere yol açarken, 7 Mayıs'ta ikinci bir saldırı ile hackerlar okul giriş sayfalarını tahrip etmiştir. ABD Temsilciler Meclisi İç Güvenlik Komitesi, olayın ciddiyeti nedeniyle Instructure'dan brifing talep etmiş ve şirketin olaylara müdahale adımlarını, etkilenen veri türlerini ve federal kolluk kuvvetleri ile CISA koordinasyonunun yeterliliğini sorgulamıştır. Instructure, çalınan verilerin iade edilmesi ve yok edilmesi konusunda hacker grubuyla bir anlaşmaya vardığını açıklamış, ancak fidye miktarı belirtilmemiştir. Bu olay, eğitim sektöründeki kritik altyapının ne denli hedef alındığını ve büyük ölçekli veri ihlallerinin ulusal güvenlik düzeyine ulaşabildiğini göstermiştir. Şirket, "Free-for-Teacher" hesaplarındaki bir zafiyetin her iki saldırıda da kullanıldığını belirtmiş ve bu hesapları geçici olarak kapatma kararı almıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityweek.com/government-to-scrutinize-instructure-on-canvas-disruption-data-breach/" target="_blank">securityweek.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-2">
+<div class="news-title"><b>Microsoft, 138 Güvenlik Açığını Gidermiş ve Kritik RCE Zafiyetleri İçermiştir</b></div>
+<p class="news-content">Microsoft, Mayıs 2026 Patch Tuesday güncellemeleri kapsamında ürün portföyündeki 138 güvenlik açığını gidermiştir. Bu zafiyetlerin 30'u kritik, 104'ü ise önemli olarak derecelendirilmiştir. Yama paketinde, Windows DNS İstemcisi'ndeki bir yığın tabanlı arabellek taşması (CVE-2026-41096, CVSS 9.8) ve Windows Netlogon'daki bir yığın tabanlı arabellek taşması (CVE-2026-41089, CVSS 9.8) dahil olmak üzere birden fazla uzaktan kod yürütme (RCE) açığı yer almıştır. Ayrıca, Microsoft Dynamics 365 (şirket içi) ürünündeki bir kod enjeksiyonu zafiyeti (CVE-2026-42898, CVSS 9.9) ve Azure DevOps'ta yetkisiz bilgi ifşası (CVE-2026-42826, CVSS 10.0) gibi yüksek CVSS puanına sahip kritik zafiyetler de giderilmiştir. Bu zafiyetlerin hiçbiri kamuya açık olarak bilinmemekte veya aktif saldırılarda kullanılmamaktadır. Microsoft, bu ayki düzeltmelerin büyük bir kısmının yeni çok modelli yapay zeka destekli güvenlik açığı keşif sistemi MDASH tarafından tespit edildiğini belirtmiştir. Kuruluşların, bu kritik güncellemeleri mümkün olan en kısa sürede uygulayarak sistemlerini korumaları tavsiye edilmektedir, zira bu tür zafiyetler geniş çaplı istismarlara yol açabilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/microsoft-patches-138-vulnerabilities.html" target="_blank">thehackernews.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-3">
+<div class="news-title"><b>Çin Destekli FamousSparrow APT Grubu Azerbaycan Enerji Firmasını Hedeflemiştir</b></div>
+<p class="news-content">Çin ile bağlantılı FamousSparrow (UAT-9244 olarak da bilinmektedir) tehdit aktörü, Azerbaycan'daki isimsiz bir petrol ve gaz şirketini Aralık 2025 ile Şubat 2026 arasında hedef alan çok dalgalı bir sızma operasyonu gerçekleştirmiştir. Bitdefender tarafından orta ila yüksek güvenle FamousSparrow grubuna atfedilen bu aktivite, grubun hedefleme coğrafyasının genişlediğini göstermektedir. Saldırganlar, aynı savunmasız Microsoft Exchange Sunucusu giriş noktasını, çeşitli iyileştirme girişimlerine rağmen tekrar tekrar kullanarak Deed RAT ve TernDoor gibi arka kapı yazılımlarını dağıtmıştır. ProxyNotShell zincirinin ilk erişim için kullanıldığı değerlendirilmektedir. Bu durum, Rusya'nın Ukrayna gaz transit anlaşmasının 2024'te sona ermesi ve 2026 Hürmüz Boğazı'ndaki aksaklıkların ardından Azerbaycan'ın Avrupa enerji güvenliğindeki rolünün artmasıyla jeopolitik bir önem kazanmıştır. Saldırılar sırasında web kabukları konuşlandırılmış, yanal hareketler gerçekleştirilmiş ve DLL yan yükleme teknikleri kullanılmıştır. Bitdefender, bu sızmanın izole bir olaydan ziyade, kurban ortamında erişimi yeniden kazanmak ve genişletmek için sürekli ve adaptif bir operasyon olduğunu belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/azerbaijani-energy-firm-hit-by-repeated.html" target="_blank">thehackernews.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-4">
+<div class="news-title"><b>Windows BitLocker'da Sıfır Gün Zafiyetleri (YellowKey ve GreenPlasma) Ortaya Çıkarılmıştır</b></div>
+<p class="news-content">Bir siber güvenlik araştırmacısı, Microsoft Windows'da YellowKey ve GreenPlasma adını verdiği iki yamalanmamış sıfır gün zafiyeti için PoC (Proof-of-Concept) kodlarını kamuoyuna açıklamıştır. YellowKey, BitLocker şifrelemesini atlayarak korumalı sürücülere fiziksel erişim sağlamış, Windows 11 ve Windows Server 2022/2025 sistemlerini etkilemiştir. Bu atlatma, özel olarak hazırlanmış 'FsTx' dosyalarını bir USB sürücüsüne veya EFI bölümüne yerleştirerek ve Windows Kurtarma Ortamı'na (WinRE) önyükleme yaparak bir komut istemi kabuğu tetiklenmesiyle gerçekleştirilmiştir. Araştırmacı, YellowKey'in BitLocker'da kasıtlı olarak yerleştirilmiş bir arka kapı olabileceğini iddia etmiştir. GreenPlasma ise, SYSTEM ayrıcalıklarına yükseltmeye olanak tanıyan bir ayrıcalık yükseltme zafiyetidir ve yetkisiz bir kullanıcının SYSTEM tarafından yazılabilir dizin nesneleri içinde rastgele bellek bölümü nesneleri oluşturmasına izin vermiştir. Araştırmacı, Microsoft'un güvenlik açığı raporlarını ele alış biçiminden duyduğu memnuniyetsizlik nedeniyle bu zafiyetleri kamuoyuna açıklama kararı almıştır. Bu sıfır gün zafiyetlerinin PoC kodlarının yayımlanması, saldırganların bu açıkları hızla silahlandırması riskini artırmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/windows-bitlocker-zero-day-gives-access-to-protected-drives-poc-released/" target="_blank">bleepingcomputer.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-5">
+<div class="news-title"><b>Quest KACE SMA'daki Kritik Kimlik Doğrulama Atlatma Zafiyeti 60+ Kuruluşu Etkilemiştir</b></div>
+<p class="news-content">Quest KACE Systems Management Appliance (SMA) ürünündeki CVE-2025-32975 kimlik doğrulama atlatma zafiyeti, CVSS puanı 10.0 olarak belirlenmiş kritik bir güvenlik açığı olarak tespit edilmiştir. Bu zafiyet, yetkisiz ve ağdan erişilebilir saldırganların, yöneticiler dahil olmak üzere meşru kullanıcılar gibi davranmasına olanak tanımıştır. Zafiyetin, bir yönetilen hizmet sağlayıcısı (MSP) olan HIQ'nun sistemlerinin tehlikeye atılmasıyla 60'tan fazla müşteriyi etkilediği ortaya çıkmıştır. Bu müşteriler arasında hukuk, devlet, sağlık ve eğitim sektörlerinden kuruluşlar bulunmaktadır. Saldırgan, HIQ'nun IT işlerinin tüm operasyonel resmini içeren 512 MB'lık bir veritabanı yedeğini ele geçirmiştir. Quest, zafiyet için Mayıs 2025'te bir yama yayınlamış olmasına rağmen, olay, birçok kuruluşun yamaları uygulamakta geciktiğini ve bunun tedarik zinciri risklerini nasıl artırdığını gözler önüne sermiştir. Saldırganın araç setinin karmaşıklığına rağmen, ilk erişimin yama yapılmamış bir kimlik doğrulama ekranı üzerinden gerçekleştiği belirlenmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192067/security/quest-kace-sma-flaw-cve-2025-32975-when-one-unpatched-tool-opens-the-door-to-60-organizations.html" target="_blank">securityaffairs.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-6">
+<div class="news-title"><b>Foxconn, Nitrogen Fidye Yazılımı Saldırısını Doğrulamış ve Veri Çalınmıştır</b></div>
+<p class="news-content">Dünyanın en büyük elektronik üreticisi Foxconn, Kuzey Amerika'daki bazı fabrikalarının siber saldırıya uğradığını doğrulamıştır. Bu saldırı, Nitrogen fidye yazılımı grubu tarafından üstlenilmiş ve grubun dark web sızıntı sitesinde Foxconn'un adının listelenmesiyle ortaya çıkmıştır. Nitrogen fidye yazılımı grubu, Apple, Intel, Google, Dell ve Nvidia gibi Foxconn müşterilerine ait gizli talimatlar, projeler ve çizimler de dahil olmak üzere yaklaşık 8 TB veri ve 11 milyondan fazla belge çaldığını iddia etmiştir. Foxconn sözcüsü, siber güvenlik ekibinin acil müdahale mekanizmasını etkinleştirdiğini ve üretimin sürekliliğini sağlamak için operasyonel önlemler aldığını belirtmiştir. Etkilenen fabrikaların normal üretime geri dönmeye başladığı açıklanmıştır. Bu olay, büyük küresel üreticiler için fidye yazılımı gruplarının endüstriyel sistemleri ve tedarik zincirlerini hedef almaya devam etmesiyle ortaya çıkan mevcut riskleri öne çıkarmıştır. Nitrogen, çifte gasp stratejisi kullanarak, hem dosyaları şifrelemekte hem de çalınan verileri sızdırma tehdidiyle kurbanlardan fidye talep etmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/electronics-giant-foxconn-confirms-cyberattack-on-north-american-factories/" target="_blank">bleepingcomputer.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-7">
+<div class="news-title"><b>NGINX Yeniden Yazma Modülündeki 18 Yıllık Zafiyet Uzaktan Kod Yürütmeye İzin Vermiştir</b></div>
+<p class="news-content">Siber güvenlik araştırmacıları, NGINX Plus ve NGINX Open Source'u etkileyen, 18 yıldır tespit edilemeyen kritik bir güvenlik açığını açıklamıştır. NGINX Rift olarak adlandırılan bu zafiyet, `ngx_http_rewrite_module` modülündeki bir yığın arabellek taşması sorunudur (CVE-2026-42945, CVSS v4 puanı: 9.2). Bu açık, saldırganların özel olarak hazırlanmış istekler göndererek uzaktan kod yürütmesine (RCE) veya hizmet reddine (DoS) neden olmasına olanak tanımaktadır. F5 tarafından yayınlanan bir danışmanlıkta, zafiyetin `rewrite` yönergesinin ardından başka bir `rewrite`, `if` veya `set` yönergesi ile isimsiz bir Perl Uyumlu Normal İfade (PCRE) yakalamasının (örneğin, `$1`, `$2`) soru işareti (?) içeren bir değiştirme dizesiyle kullanılması durumunda ortaya çıktığı belirtilmiştir. Kimlik doğrulaması olmayan bir saldırgan, belirli koşullarla bu zafiyeti kullanarak NGINX çalışan sürecinde bir yığın arabellek taşmasına yol açabilmektedir. ASLR (Address Space Layout Randomization) devre dışı bırakılmış sistemlerde kod yürütme de mümkün olmuştur. Zafiyet, 21 Nisan 2026'da sorumlu bir şekilde açıklanmış ve NGINX Plus R32 P6, R36 P4 ile NGINX Open Source 1.30.1 ve 1.31.0 gibi sürümlerde giderilmiştir. Kullanıcılara en kısa sürede güncellemeleri uygulamaları tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/18-year-old-nginx-rewrite-module-flaw.html" target="_blank">thehackernews.com</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-8">
+<div class="news-title"><b>İran Destekli MuddyWater APT Grubu Güney Koreli Elektronik Üreticisini Hedeflemiştir</b></div>
+<p class="news-content">İran ile bağlantılı MuddyWater (Seedworm, Static Kitten olarak da bilinmektedir) hacking grubu, en az dokuz yüksek profilli kuruluşu hedef alan geniş çaplı bir siber casusluk kampanyası başlatmıştır. Kurbanlar arasında Güney Koreli büyük bir elektronik üreticisi, devlet kurumları, Orta Doğu'da uluslararası bir havalimanı ve Asya'daki endüstriyel üreticiler bulunmaktadır. Symantec araştırmacıları, tehdit aktörünün Şubat 2026'da Güney Koreli elektronik üreticisinin ağında bir hafta geçirdiğini tespit etmiştir. Saldırganın endüstriyel ve fikri mülkiyet hırsızlığı, devlet casusluğu ve alt müşterilere veya kurumsal ağlara erişim elde etmeye odaklandığı değerlendirilmektedir. Kampanya, yasal yazılımların kötü amaçlı DLL'leri yüklemesini sağlayan DLL yan yükleme tekniğini yoğun bir şekilde kullanmıştır. Saldırıda ChromElevator gibi ticari post-exploasyon araçları kullanılmış ve PowerShell, ekran görüntüleri yakalama, keşif, ek yükleri getirme ve kimlik bilgileri çalma gibi amaçlarla aktif olarak kullanılmıştır. Symantec, bu son MuddyWater kampanyasının tehdit aktörlerinin coğrafi genişlemesi, operasyonel olgunluğu ve yasal araçların kötüye kullanılması nedeniyle dikkat çekici olduğunu belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/iranian-hackers-targeted-major-south-korean-electronics-maker/" target="_blank">bleepingcomputer.com</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-9">
+<div class="news-title"><b>Microsoft MDASH Yapay Zeka Sistemi, 16 Windows Zafiyetini Tespit Etmiştir</b></div>
+<p class="news-content">Microsoft, yapay zeka destekli yeni çok modelli güvenlik açığı keşif sistemi MDASH'i tanıtmıştır. Bu sistem, bu ayki Patch Tuesday güncellemelerinde giderilen 16 Windows güvenlik açığını, iki kritik uzaktan kod yürütme (RCE) zafiyeti dahil olmak üzere, insan araştırmacılar tarafından daha önce tespit edilmeden önce bulmuştur. MDASH, Microsoft'un Otonom Kod Güvenliği ekibi tarafından geliştirilmiş ve Windows Ağ ve Kimlik Doğrulama yığınındaki zafiyetleri ortaya çıkarmıştır. Sistem, 100'den fazla uzmanlaşmış yapay zeka ajanını bir araya getirerek, kod analizi, zafiyet doğrulama ve istismar edilebilir kusurların kanıtlanması süreçlerini otonom olarak yürütmektedir. Microsoft, MDASH'in mimarisinin büyük ölçüde modelden bağımsız olacak şekilde tasarlandığını ve temel yapay zeka modellerini değiştirebilme esnekliği sağladığını belirtmiştir. Bu gelişme, yapay zeka destekli güvenlik açığı araştırmalarında önemli bir dönüm noktası olarak görülmekte ve yazılım zafiyetlerinin nasıl keşfedilip giderildiği konusunda büyük bir değişime işaret etmektedir. Microsoft, MDASH'in şu anda sınırlı özel önizlemede olduğunu ve güvenlik ekiplerini erken erişim için başvurmaya davet ettiğini açıklamıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/microsofts-mdash-ai-system-finds-16.html" target="_blank">thehackernews.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-10">
+<div class="news-title"><b>Yapay Zeka, Otonom Siber Yetenek Benchmarklarını Aşmıştır</b></div>
+<p class="news-content">Birleşik Krallık Yapay Zeka Güvenlik Enstitüsü (AISI) ve Palo Alto Networks tarafından yayımlanan ayrı bulgulara göre, Anthropic'in Claude Mythos Preview ve OpenAI'ın GPT-5.5 gibi en gelişmiş yapay zeka modelleri, otonom siber güvenlik görevlerini tamamlama hızında mevcut benchmarkları önemli ölçüde aşmıştır. AISI, bu modellerin siber görevleri tamamlama süresinin aylara değil, ayların katlarına düştüğünü belirtmiştir. Claude Mythos Preview, enstitünün iki siber menzilini de tamamlayan ilk model olmuş, 32 adımlı simüle edilmiş bir kurumsal ağ saldırısı olan "The Last Ones"ı 10 denemeden 6'sında çözmüş ve daha önce hiçbir modelin çözemediği "Cooling Tower"ı 10 denemeden 3'ünde tamamlamıştır. Palo Alto Networks de kendi testlerinde benzer sonuçlara ulaşarak, en yeni modellerin güvenlik açıklarını bulma ve bunları neredeyse gerçek zamanlı olarak kritik istismar yollarına dönüştürme konusunda olağanüstü yetenekli olduğunu belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/ai-autonomous-cyber-capability-benchmarks-broken-gpt5-claude-mythos/" target="_blank">cyberscoop.com</a>, 14.05.2026)</b></p>
+<div class="news-item" id="haber-11">
+<div class="news-title"><b>Kritik Exim Mailer Zafiyeti Uzaktan Kod Yürütmeye Olanak Tanımıştır</b></div>
+<p class="news-content">Exim açık kaynaklı posta aktarım aracının belirli yapılandırmalarını etkileyen kritik bir güvenlik açığı (CVE-2026-45185) tespit edilmiştir. Bu zafiyet, kimlik doğrulaması olmayan uzaktan bir saldırgan tarafından rastgele kod yürütmek için istismar edilebilmektedir. Güvenlik sorunu, Exim'in 4.99.3 öncesi sürümlerinde, güvenli iletişim için varsayılan GNU Transport Layer Security (GnuTLS) kütüphanesini kullanan yapılarında ortaya çıkmıştır. Zafiyet, TLS kapatma sırasında BDAT chunked SMTP trafiğinin işlenmesi sırasında tetiklenen bir kullanım sonrası serbest bırakma (UAF) kusurudur. Exim, bir TLS aktarım arabelleğini serbest bırakmış, ancak daha sonra serbest bırakılan bellek bölgesine veri yazabilen eski geri çağırma referanslarını kullanmaya devam etmiştir. Bu durum, kimlik doğrulaması olmayan uzaktan kod yürütmeye yol açabilmektedir. Exim, Linux ve Unix sunucularında e-posta göndermek, almak ve yönlendirmek için yaygın olarak kullanılan bir MTA'dır. Zafiyeti istismar eden saldırganlar, sunucuda komutlar yürütebilmekte, Exim verilerine ve e-postalarına erişebilmekte ve sunucu izinleri ve yapılandırmasına bağlı olarak ortamda daha fazla pivot yapabilmektedir. XBOW araştırmacısı Federico Kirschbaum tarafından keşfedilen bu zafiyet için Exim sürüm 4.99.3'te bir düzeltme yayınlanmıştır. Kullanıcıların, paket yöneticileri aracılığıyla mevcut Exim güncellemelerini uygulamaları tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/new-critical-exim-mailer-flaw-allows-remote-code-execution/" target="_blank">bleepingcomputer.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-12">
+<div class="news-title"><b>Fragnesia Linux Çekirdeği Yerel Ayrıcalık Yükseltme Zafiyeti Tespit Edilmiştir</b></div>
+<p class="news-content">Linux dağıtımları, saldırganların root ayrıcalıklarıyla kötü amaçlı kod çalıştırmasına olanak tanıyan yeni ve yüksek önem dereceli bir çekirdek ayrıcalık yükseltme zafiyeti için yamalar yayınlamıştır. Fragnesia olarak bilinen ve CVE-2026-46300 olarak takip edilen bu güvenlik açığı, Linux çekirdeğinin XFRM ESP-in-TCP alt sistemindeki bir mantık hatasından kaynaklanmaktadır. Bu hata, ayrıcalıksız yerel saldırganların, salt okunur dosyaların çekirdek sayfa önbelleğine rastgele baytlar yazarak root ayrıcalıkları elde etmesine olanak tanımıştır. Zellic'in güvence başkanı William Bowling tarafından keşfedilen bu zafiyet için bir PoC (Proof-of-Concept) istismarı yayınlanmıştır. Bowling, bu açığın geçen hafta açıklanan Dirty Frag zafiyet sınıfına ait olduğunu ve 13 Mayıs 2026'dan önce yayınlanan tüm Linux çekirdeklerini etkilediğini belirtmiştir. Fragnesia, kernelde bir bellek yazma ilkelini elde ederek ve /usr/bin/su ikili dosyasının sayfa önbellek belleğini bozarak tüm büyük dağıtımlarda anında root elde etmesi açısından Copy Fail ve Dirty Frag'e (Copy Fail 2 olarak da bilinir) benzemektedir. Sistemleri saldırılara karşı korumak için Linux kullanıcılarına çekirdek güncellemelerini mümkün olan en kısa sürede uygulamaları tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/new-fragnesia-linux-kernel-lpe-grants.html" target="_blank">thehackernews.com</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-13">
+<div class="news-title"><b>Fortinet, İki Kritik Uzaktan Kod Yürütme Zafiyetini Gidermiş ve Yama Yayınlamıştır</b></div>
+<p class="news-content">Fortinet, Patch Tuesday güncellemeleri kapsamında ürünlerinde iki kritik uzaktan kod yürütme (RCE) zafiyetini gideren yamalar yayınlamıştır. FortiAuthenticator'daki CVE-2026-44277 (CVSS 9.1) olarak izlenen zafiyet, yanlış erişim kontrolü sorunudur. Başarılı bir istismar, kimlik doğrulaması olmayan saldırganların özel olarak hazırlanmış istekler göndererek yetkisiz kod ve komutlar yürütmesine olanak tanımıştır. FortiSandbox'taki CVE-2026-26083 (CVSS 9.1) olarak izlenen ikinci zafiyet ise, eksik yetkilendirme sorunudur ve yine kimlik doğrulaması olmayan saldırganların HTTP istekleri aracılığıyla rastgele kod ve komutlar yürütmesine imkan tanımıştır. Her iki zafiyet de Fortinet tarafından dahili olarak keşfedilmiş olup, şu ana kadar aktif istismar kanıtı bulunmamaktadır. Ancak, Fortinet ürünlerindeki zafiyetlerin geçmişte tehdit aktörleri tarafından sıkça istismar edildiği göz önüne alındığında, şirketlerin bu yamaları mümkün olan en kısa sürede dağıtması büyük önem taşımaktadır. Yamalar, FortiAuthenticator için 6.5.7, 6.6.9 veya 8.0.3 sürümlerine, FortiSandbox için ise 4.4.9 veya 5.0.2 sürümlerine yükseltilerek uygulanabilmektedir. Ayrıca, Fortinet FortiOS ve FortiAP'deki yüksek ve orta şiddetli diğer zafiyetler için de yamalar yayınlamıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4170993/fortinet-fixes-two-critical-rce-flaws-in-fortiauthenticator-and-fortisandbox.html" target="_blank">csoonline.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-14">
+<div class="news-title"><b>VMware Fusion'da Yüksek Şiddetli Bir Güvenlik Açığı Giderilmiştir</b></div>
+<p class="news-content">Broadcom, VMware Fusion ürününde yüksek şiddetli bir güvenlik açığını gideren bir güncelleme yayınladığını duyurmuştur. Mathieu Farrell tarafından rapor edilen ve CVE-2026-41702 olarak izlenen bu zafiyet, bir zaman-kontrolü zaman-kullanımı (TOCTOU) kusurudur ve bir SETUID ikili dosyasının gerçekleştirdiği bir işlem sırasında ortaya çıkmaktadır. Yerel, yönetici olmayan kullanıcı ayrıcalıklarına sahip kötü niyetli bir aktör, bu zafiyeti istismar ederek Fusion'ın yüklü olduğu sistemde root ayrıcalıklarına yükselebilmektedir. Broadcom'un danışmanlığı, CVE-2026-41702'nin aktif saldırılarda kullanıldığına dair bir bilgi içermemektedir. Ancak, VMware ürünlerindeki zafiyetler geçmişte sıkça istismar edilmiştir ve CISA'nın KEV kataloğunda şu anda 26 VMware zafiyeti bulunmaktadır. Bu yama, Broadcom'un Berlin'deki Pwn2Own hacking yarışmasına katıldığı bir zamanda açıklanmıştır ve bu tür kritik zafiyetlerin hızla giderilmesi gerektiğinin altını çizmektedir. Kullanıcıların, sistemlerini korumak için yayınlanan güncellemeyi mümkün olan en kısa sürede uygulamaları tavsiye edilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/high-severity-vulnerability-patched-in-vmware-fusion/" target="_blank">securityweek.com</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-15">
+<div class="news-title"><b>İşten Çıkarılan Çalışan, Yapay Zeka Yardımıyla Veri Silmeyi Gizlemeye Çalışmıştır</b></div>
+<p class="news-content">Bir çevrimiçi hosting şirketinden ikiz kardeşlerin işten çıkarılmasının ardından, kardeşlerden biri olan Sohaib Akhter'in ABD federal veritabanlarını silme ve bu eylemi yapay zeka araçları kullanarak gizleme girişiminde bulunduğu tespit edilmiştir. Virginia'da bir jüri tarafından mahkum edilen Sohaib Akhter, bilgisayar dolandırıcılığı komplosu, şifre ticareti ve yasaklı bir kişi tarafından ateşli silah bulundurma suçlarından yargılanmıştır. Kardeşi Muneeb ise 96 veritabanını sildiğini kabul etmiştir. Bu olay, IT ve insan kaynakları liderlerine, içeriden gelen saldırıları önlemek için sıkı işten çıkarma prosedürleri uygulanması gerektiğini hatırlatmıştır. Özellikle, yapay zeka araçlarının kötü niyetli kişiler tarafından nasıl silahlandırılabileceği ve mevcut koruma önlemlerinin yetersiz kalabileceği konusunda endişeler dile getirilmiştir. Muneeb'in, veritabanlarını sildikten sonra SQL sunucularından sistem günlüklerini nasıl temizleyeceği veya Microsoft Windows Server 2012'den tüm olay ve uygulama günlüklerini nasıl sileceği konusunda bir yapay zeka aracından yardım aldığı belirlenmiştir. Uzmanlar, yapay zekanın kötü niyetli içeriden gelen tehditleri hızlandırma ve gizleme yeteneğini önemli ölçüde artırdığını belirtmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4170987/fired-employee-sought-ai-help-to-hide-deletion-of-hosting-firms-customer-data.html" target="_blank">csoonline.com</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-16">
+<div class="news-title"><b>ABD, Şüpheli Dream Market Yöneticisini Almanya'da Tutuklamıştır</b></div>
+<p class="news-content">Dream Market Incognito Market'ın, kapanmadan önce en büyük dark web pazarlarından biri olan, iddia edilen ana yöneticisi Owe Martin Andresen, ABD'de kara para aklama suçlamalarıyla itham edilmiş ve Almanya'da tutuklanmıştır. 49 yaşındaki Andresen, Çarşamba günü federal büyük jüri tarafından altı uluslararası kara para aklama ve altı kara para aklama suçlamasıyla itham edilmiş, her suçlama için 20 yıla kadar hapis cezasıyla karşı karşıya kalmıştır. Andresen, Kasım 2013'te yasa dışı ürün ve hizmetlere anonim erişim sağlamak amacıyla başlatılan Dream Market'ın "Speedstepper" takma adıyla ana yöneticisi olduğu iddia edilmiştir. Adalet Bakanlığı, Dream Market'ın 2019'daki kapanışına kadar 450 kilogramdan fazla kokain, 90 kilogram eroin ve diğer uyuşturucuların satışını kolaylaştırdığını belirtmiştir. Savcılar, Andresen'in Kasım ve Aralık 2022'de milyonlarca dolarlık komisyon ödemeleri içeren Dream Market kripto para cüzdanlarına eriştiğini ve fonları yeni cüzdanlara taşıdığını iddia etmiştir. Ağustos 2023'te ise Andresen'in, Atlanta, Georgia merkezli bir kripto para hizmet sağlayıcısını kullanarak uluslararası şirketlerden altın külçeleri satın aldığı ve bunları Almanya'daki ev adresine gönderdiği belirtilmiştir. Alman yetkililer, Andresen'in ikametgahında yapılan aramalarda yaklaşık 1.7 milyon dolarlık altın külçesi ve 23.000 dolardan fazla nakit para ele geçirmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/us-charges-suspected-dream-market-admin-arrested-in-germany/" target="_blank">bleepingcomputer.com</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-17">
+<div class="news-title"><b>"The Gentlemen" RaaS Grubunun İç Veritabanı İhlal Edilmiştir</b></div>
+<p class="news-content">Dünyanın en üretken fidye yazılımı operasyonlarından biri olan Rus siber suç çetesi "The Gentlemen", kendi iç sistemlerinin ihlaline maruz kalmıştır. Mayıs 2026'nın ilk beş ayında, "The Gentlemen" yaklaşık 332 farklı kuruluşa ait hassas verileri yayınlamıştır. 4 Mayıs veya öncesinde, anonim bir grup "The Gentlemen"ın dahili arka uç veritabanını tehlikeye atmış ve bu grubun iç iletişim, araç ve diğer verilerinden oluşan 16 GB'tan fazla veriyi 10.000 dolara Bitcoin karşılığında satmaya başlamıştır. Check Point Research, sızdırılan 44 MB'lık örnek veriyi analiz ederek grubun operasyonel yapısı, taktikleri, teknikleri ve prosedürleri (TTP'ler) hakkında yeni bilgiler edinmiştir. Grubun lideri "zeta88" olarak bilinmekte ve fidye yazılımı oluşturma, araçları yönetme, altyapıyı işletme ve hedef seçimi gibi görevlerden sorumludur. Grup, zafiyetleri istismar etmek için kritik, bilinen açıklardan ve yaklaşık 30 farklı araçtan faydalanmaktadır. Bu olay, fidye yazılımı operasyonlarının kendi siber güvenlik zafiyetlerinin de olabileceğini ve iç işleyişlerine dair nadir bir bakış açısı sunduğunu göstermiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/threat-intelligence/gentlemen-raas-gang-data-leak" target="_blank">darkreading.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-18">
+<div class="news-title"><b>OpenLoop Health Veri İhlali 716.000 Kişiyi Etkilemiştir</b></div>
+<p class="news-content">Teletıp altyapı firması OpenLoop Health, Ocak 2026'da gerçekleşen bir siber saldırı sonucunda 716.000 kişinin kişisel bilgilerinin açığa çıktığını doğrulamıştır. Saldırı, Ocak 7 ile 8, 2026 tarihleri arasında gerçekleşmiş ve yetkisiz bir üçüncü tarafın OpenLoop sistemlerine erişim sağlayarak belirli bilgileri ele geçirdiği tespit edilmiştir. İhlal, Mart ayında ilgili yetkililere bildirilmiş, ancak etkilenen birey sayısı bu hafta ABD Sağlık ve İnsan Hizmetleri Departmanı'nın ihlal portalına eklenmiştir. Çalınan kişisel bilgiler arasında isimler, adresler, e-posta adresleri, doğum tarihleri ve tıbbi veriler bulunmaktadır. Ancak, elektronik sağlık kayıtları, Sosyal Güvenlik numaraları veya finansal hesap bilgilerinin bu olaydan etkilenmediği belirtilmiştir. OpenLoop, yetkisiz erişimi derhal sonlandırdığını, harici siber güvenlik uzmanlarının yardımıyla bir soruşturma başlattığını ve güvenlik kontrollerini güçlendirdiğini açıklamıştır. Şirket, çalınan kişisel bilgilerin kötüye kullanıldığına dair herhangi bir kanıt bulunmadığını, ancak etkilenen kişilere bir yıllık ücretsiz kimlik ve kredi izleme hizmeti sunduğunu ifade etmiştir. Bu olay, sağlık sektöründeki veri güvenliğinin önemini bir kez daha vurgulamıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192066/uncategorized/openloop-health-confirms-january-2026-data-breach-affecting-716000.html" target="_blank">securityaffairs.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-19">
+<div class="news-title"><b>Çin'in Yapay Zekası Mythos'a Yetiştiğinde Siber Savaş Etkileri Tartışılmıştır</b></div>
+<p class="news-content">Washington ve Pekin arasındaki zirve, yapay zekanın (AI) siber savaş ve küresel dijital altyapı üzerindeki potansiyel etkileri üzerine odaklanmıştır. Anthropic'in Mythos Preview modeli, tüm büyük işletim sistemleri ve tarayıcılardaki sıfır gün zafiyetlerini otonom olarak keşfetme yeteneğini sergileyerek, yapay zeka destekli siber güvenlikte bir dönüm noktası olarak kabul edilmiştir. Ancak, Çin'in yapay zeka yeteneklerinin ABD ile arasındaki farkı hızla kapattığı belirtilmiştir. Stanford'ın 2026 Yapay Zeka Endeksi, ABD ve Çin modellerinin 2025 başından bu yana küresel performans liderliğini birden fazla kez değiştirdiğini göstermiştir. Çin, yapay zeka patent başvuruları, araştırma alıntıları ve endüstriyel robot kurulumlarında dünya lideri konumundadır. Uzmanlar, yapay zeka yeteneklerinin siber suç ekosistemlerine yayılması ve fidye yazılımı grupları gibi devlet dışı aktörler tarafından kullanılmasının daha büyük bir endişe kaynağı olduğunu vurgulamıştır. Bu durum, saldırıların maliyetini ve karmaşıklığını azaltarak, savunmacıların daha az sofistike olabilme lüksünü ortadan kaldırmıştır. ABD'li yetkililer, yapay zekada "çatışmayı önleme kanalları" oluşturmayı düşündüklerini belirtmiş, ancak teknolojinin hem ekonomik faydaları hem de potansiyel istikrarsızlaştırıcı yetenekleri nedeniyle anlaşmaların zorlu olacağı ifade edilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4170818/what-happens-when-chinas-ai-catches-up-to-mythos.html" target="_blank">csoonline.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-20">
+<div class="news-title"><b>CISA'nın Yapay Zeka SBOM Rehberliği Yazılım Tedarik Zinciri Denetimini Genişletmiştir</b></div>
+<p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA) ve G7 siber ajansı ortakları, yapay zeka yazılım faturası (AI SBOM) için minimum unsurların bir listesini yayınlamıştır. Bu rehberlik, CISOlara kurumsal ortamlara giren yapay zeka sistemlerinin güvenliğini ve kökenini değerlendirmeleri için bir yol sunmaktadır. Geleneksel SBOM kavramlarını yapay zekaya genişleten bu kılavuz, modellerin, veri setlerinin, yazılım bileşenlerinin, sağlayıcıların, lisansların ve diğer bağımlılıkların belgelenmesini talep etmektedir. CISA, bu ek minimum unsurların kapsamlı veya zorunlu olmadığını, ancak G7 uzmanları arasında bir fikir birliğini yansıttığını ve yapay zeka teknolojisi geliştikçe genişlemesinin beklendiğini belirtmiştir. Güvenlik liderleri için bu belge, yapay zeka riskini kurumsal tedarik zinciri denetiminin daha sağlam bir parçası haline getirmektedir. Bu durum, yapay zeka SBOM'larının yazılım bileşimi, bulut hizmetleri ve üçüncü taraf teknoloji platformlarını çevreleyen mevcut tedarikçi risk görüşmelerinin bir parçası haline gelebileceği anlamına gelmektedir. Ancak, yapay zeka SBOM'ları, yapay zeka riskinin modeller, veriler, altyapı ve sistem davranışı tarafından şekillendirildiği için yazılım bileşiminin ötesinde görünürlük gerektirmektedir. Bu rehberlik, satın alma ve tedarikçi risk yönetimi süreçlerinde hemen kullanılabilecektir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4170694/cisas-ai-sbom-guidance-pushes-software-supply-chain-oversight-into-new-territory.html" target="_blank">csoonline.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-21">
+<div class="news-title"><b>Birleşik Krallık, Siber Suç Yasasında Güvenlik Araştırmacılarını Korumak İçin Değişiklik Yapmıştır</b></div>
+<p class="news-content">Birleşik Krallık hükümeti, güncel olmayan siber suç yasalarının güvenlik araştırmacılarını engellediği ve ülkenin siber savunmasını zayıflattığı yönündeki yıllarca süren uyarılardan sonra, siber suç yasalarında önemli değişiklikler yapacağını duyurmuştur. Yeni parlamento oturumunu açan Kral'ın Konuşması ile birlikte yayınlanan brifing belgelerinde özetlenen bu reformlar, 1990 tarihli Bilgisayar Kötüye Kullanımı Yasası'nı (Computer Misuse Act 1990) siber suç ve dijital tehditlere odaklanan daha geniş bir ulusal güvenlik paketinin parçası olarak güncellemeyi amaçlamaktadır. Yasanın yeniden yazılmasının tam niteliği henüz belirlenmemiş olsa da, muhalefetteki İşçi Partisi daha önce hackerlar için kamu yararı savunması getiren bir yasa değişikliği önermişti. Bu değişiklik o dönemde kabul edilmemiştir. Bu adım, hükümetin İngiltere siber endüstrisinin en uzun süreli şikayetlerinden birini yeniden ele almaya hazır olduğunun en net işaretidir: ülkenin ana siber suç yasasının modern savunma güvenliği çalışmalarının gerçeklerini artık yansıtmadığı yönündeki şikayetler dikkate alınmıştır. Kampanyacılar, yasanın geniş yetkisiz erişim hükümlerinin, güvenlik açığı araştırması, penetrasyon testi ve tehdit istihbaratı operasyonları gibi meşru faaliyetler etrafında yasal belirsizlik yaratabileceğini belirtmişlerdir. Önerilen Siber Suç Risk Emirleri ve siber suç şüphelileri adına delil gizlediğinden şüphelenilen kişilerle ilgili yetkiler de hükümetin fidye yazılımı ve organize siber suç ağlarını bozmayı hedefleyen daha geniş bir strateji izlediğini göstermektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/uk-moves-to-shield-security-researchers-cybercrime" target="_blank">therecord.media</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-22">
+<div class="news-title"><b>Avrupa Komisyonu, Gençlerin Sosyal Medya Erişimini Geciktirecek Yeni Yasa Taslağını Desteklemiştir</b></div>
+<p class="news-content">Avrupa Komisyonu Başkanı, gençlerin sosyal medya erişimini geciktirecek yeni bir yasa tasarısını desteklediğini açıklamıştır. Bu açıklama, Avrupa Birliği'nin gençlerin platformları kullanımını sınırlayan bir planı yakında uygulamaya koyabileceğine dair önemli bir sinyal olarak değerlendirilmiştir. Komisyon tarafından atanan bir uzman paneli, AB'nin çocukları çevrimiçi ortamda daha iyi nasıl koruyabileceğine dair tavsiyelerini önümüzdeki haftalarda yayınlayacaktır. Komisyon Başkanı Ursula von der Leyen, bu çalışmaların en erken bu yaz sosyal medyaya erişim yaşını geciktiren yasal bir teklife yol açabileceğini belirtmiştir. Von der Leyen, "Teknolojinin ne kadar hızlı ilerlediğine ve çocukluğun ve ergenliğin her köşesine nasıl nüfuz ettiğine tanık oluyoruz" diyerek, sosyal medya için asgari yaş tartışmalarının artık göz ardı edilemeyeceğini vurgulamıştır. Yaklaşan Dijital Adalet Yasası'nın (DFA), "bağımlılık yaratan ve zararlı tasarım uygulamalarını" hedeflemesi beklenmektedir. Bu yasa, mevcut Dijital Hizmetler Yasası'nı (DSA) genişletmeyi amaçlamaktadır. Komisyon, Meta'yı küçükleri yeterince korumadığı ve bağımlılık yaratan tasarım özelliklerini kullandığı gerekçesiyle olası DSA ihlalleri nedeniyle soruşturmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/european-commission-head-pushes-restriction-teen-social-media" target="_blank">therecord.media</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-23">
+<div class="news-title"><b>Latin Amerika'daki Hackerlar, Yapay Zeka ile Özel Hacking Araçları Üretmiştir</b></div>
+<p class="news-content">Latin Amerika'daki tehdit aktörleri, ilk erişimden penetrasyon araçlarının anında üretilmesine kadar tüm saldırı zincirlerini kolaylaştırmak için yapay zeka (AI) ajanlarını kullanmaya başlamıştır. Trend Micro'nun TrendAI Araştırma ekibi, Meksika ve Brezilya'daki kuruluşlara yönelik saldırıları desteklemek için yapay zeka ajanlarını ve "vibe-hacking" olarak adlandırılan tekniği kullanan iki tehdit kampanyası hakkında araştırma yayınlamıştır. "Shadow-Aether-040" adlı ilk kampanya, 2025'in sonlarında Meksika'daki altı devlet kurumunu hedeflemiş ve yapay zeka ajanları desteğiyle veri hırsızlığına yol açmıştır. "Shadow-Aether-064" adlı ikinci kampanya ise Nisan ayında başlamış ve Brezilya'daki finans kuruluşlarını hedefleyerek finansal veri çalmayı amaçlamıştır. Her iki kampanya da Shodan ve VulDB gibi araçları kullanarak zafiyetleri tespit etmek ve Web kabukları dağıtmak için yapay zeka ajanlarını kullanmıştır. En dikkat çekici nokta, her iki kampanyanın da yapay zeka kullanarak özel, dinamik olarak üretilen hacking araçları ve betikler oluşturmasıdır. Bu, geleneksel güvenlik çözümlerinin bilinen imzalarına dayandığı için tespit edilmesini zorlaştırmaktadır. Araştırmacılar, yapay zeka destekli kampanyaların güçlü güvenlik temellerine sahip ortamlarda başarısız olduğunu, bu nedenle zamanında yama uygulama, sıfır güven erişim kontrolleri ve çevresel aktivitenin kapsamlı bir şekilde izlenmesinin önemini vurgulamıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/cloud-security/ai-agents-generate-custom-hacking-tools" target="_blank">darkreading.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-24">
+<div class="news-title"><b>Outlook Önemsiz E-posta Klasöründeki Bağlantı Önizleme Fonksiyonu Atlatılmıştır</b></div>
+<p class="news-content">Microsoft Outlook'un Önemsiz E-posta klasöründeki bağlantı önizleme işlevinin, kimlik avı mesajlarındaki kötü niyetli bağlantıları gizleyebildiği tespit edilmiştir. Normalde, Önemsiz E-posta klasörüne yerleştirilen e-postaların tüm biçimlendirmesi kaldırılmakta ve mesajdaki tüm bağlantıların hedefleri kullanıcıya görünür hale getirilmektedir. Bu özellik, şüpheli mesajlardaki bağlantıları güvenli bir şekilde incelemek için önemli bir güvenlik farkındalığı aracı olarak kabul edilmektedir. Ancak, Nisan ayında bir kimlik avı mesajıyla yapılan bir deneyde, Outlook önizleme bölmesinin, metin açıkça bir bağlantıyı temsil etmesine rağmen herhangi bir bağlantı göstermediği gözlemlenmiştir. Mesaj başka bir klasöre taşındığında, bağlantının aslında mevcut olduğu ortaya çıkmıştır. Bu durumun nedeni, HREF hedefinin geçerli bir URI içermemesi, yani şema (protokol) kısmının eksik olmasıdır. Bu eksiklik nedeniyle bağlantı önizleme mekanizması onu geçerli bir bağlantı olarak ayrıştırmamış ve göstermemiştir. Bu bulgu, kullanıcıların ve güvenlik uzmanlarının Outlook'un bağlantı önizleme mekanizmasının her zaman güvenilir olmayabileceği konusunda dikkatli olmaları gerektiğini göstermektedir, zira bu durum kimlik avı saldırılarının tespitini zorlaştırabilmektedir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://isc.sans.edu/diary/rss/32990" target="_blank">isc.sans.edu</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-25">
+<div class="news-title"><b>OpenAI Daybreak Siber Güvenlik Girişimi Başlatılmıştır</b></div>
+<p class="news-content">OpenAI, şirketinin büyük dil modellerini (LLM'ler) Codex ajans çerçevesiyle birleştirerek kuruluşların yazılım zafiyetlerini geliştirme yaşam döngüsü boyunca tanımlamasına, yamalamasına ve doğrulamasına yardımcı olmak amacıyla Daybreak adlı bir siber güvenlik girişimini tanıtmıştır. Platform, genel kullanım için GPT-5.5, doğrulanmış savunma güvenlik iş akışları için Trusted Access for Cyber ile GPT-5.5 ve yetkili kırmızı takım ve penetrasyon testi gibi özel kullanım durumları için daha geniş yetkilere sahip GPT-5.5-Cyber olmak üzere üç model katmanı etrafında inşa edilmiştir. Her katman farklı koruma seviyeleri ve erişim kontrolleri içermekte, en yetenekli katman daha güçlü kimlik doğrulama ve hesap düzeyinde denetimle eşleştirilmiştir. OpenAI, bu erişim kontrollerini, temel teknolojinin çift kullanımlı doğasına bir yanıt olarak çerçevelemiştir. Şirket, savunmacıların kod tabanlarındaki ilişkileri anlamalarına, ince güvenlik açıklarını belirlemelerine ve iyileştirmeyi hızlandırmalarına olanak tanıyan aynı yapay zeka yeteneklerinin kötüye kullanılabileceğini kabul etmiştir. Cisco, Oracle, CrowdStrike, Palo Alto Networks, Cloudflare, Fortinet, Akamai ve Zscaler gibi birçok büyük teknoloji ve siber güvenlik şirketi, Trusted Access for Cyber çerçevesinde halihazırda çalışmaktadır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/openai-daybreak-gpt-5-5-anthropic-mythos-cybersecurity/" target="_blank">cyberscoop.com</a>, 13.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-26">
+<div class="news-title"><b>Temsilciler Meclisi'nde Anthropic'in Mythos ve Siber Riskleri Hakkında Kapalı Brifing Gerçekleştirilmiştir</b></div>
+<p class="news-content">ABD Temsilciler Meclisi İç Güvenlik Komitesi, Anthropic'in yapay zeka modeli Mythos'u ve siber güvenlik risklerini derinlemesine incelemek üzere bir dizi brifing ve oturum düzenlemiştir. Komitenin siber güvenlik alt komitesi başkanı, bu konuda bir duruşma yapmayı planladığını belirtmiştir. Çarşamba günü yapılan kapalı kapılar ardındaki brifingde, Mythos'un canlı bir demosu gerçekleştirilerek üyelerin gelişmiş yapay zekanın yazılım zafiyetlerini nasıl tespit ettiğini ve analiz ettiğini ilk elden görmeleri sağlanmıştır. Katılımcılar, bu gelişmenin federal kurumların, sivil siber savunucular da dahil olmak üzere, yabancı düşmanlar veya suç aktörleri istismar etmeden önce zafiyetleri bulup yamalamak için en gelişmiş ABD modellerine sorumlu bir şekilde erişmesini ve dağıtmasını sağlamanın aciliyetini pekiştirdiğini ifade etmişlerdir. Brifingde, federal hükümetin Mythos'u kullanıp kullanmadığı ve tedarik zinciri riski tanımının etkisi gibi konular da gündeme gelmiştir. Özellikle Çin Halk Cumhuriyeti'nin yapay zeka inovasyon boşluğunu kapatmak için agresif bir şekilde çalıştığı bir dönemde bu tür gelişmelerin önemi vurgulanmıştır.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/house-homeland-security-briefing-anthropic-mythos-cyber-risks/" target="_blank">cyberscoop.com</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-27">
+<div class="news-title"><b>West Pharmaceutical Services, Siber Saldırı Sonucu Veri Sızıntısı Yaşamıştır</b></div>
+<p class="news-content">West Pharmaceutical Services, 4 Mayıs'ta bir siber saldırının hedefi olduğunu ve bu saldırı sonucunda veri sızıntısı ile sistem şifrelemesi yaşandığını açıklamıştır. Şirket, olayın ilk tespitinin ardından hemen olay müdahale protokollerini etkinleştirmiş, sistemlerini küresel olarak çevrimdışı duruma getirmiş, kolluk kuvvetlerini bilgilendirmiş ve harici siber adli uzmanlarla işbirliği yapmıştır. ABD Menkul Kıymetler ve Borsa Komisyonu'na (SEC) yapılan bildirimde, yetkisiz bir tarafın ağdan veri çaldığı ve belirli sistemleri şifrelediği belirtilmiştir. Soruşturma, olayın tam doğasını, kapsamını ve çalınan veri türünü belirlemek üzere devam etmektedir. Yıllık geliri 3 milyar doları aşan ve dünya genelinde 10.800'den fazla çalışanı bulunan S&amp;P 500 listesindeki bir Amerikan ilaç üretim şirketi olan West Pharmaceutical Services, enjeksiyonluk ilaç ambalajları, şırınga ve flakon bileşenleri, muhafaza sistemleri ve ilaç dağıtım cihazları konusunda uzmanlaşmıştır. Siber saldırı, şirketin küresel iş operasyonlarını kaçınılmaz olarak aksatmıştır. Şirket, nakliye ve üretim operasyonlarını destekleyen temel kurumsal sistemlerini geri yüklemiş ve üretim kısmen yeniden başlatılmıştır. Tüm sistemlerin tamamen geri yüklenmesi henüz tamamlanmamış olup, bu restorasyonun ne zaman biteceğine dair bir zaman çizelgesi sunulmamıştır. Şirket, sızdırılan verilerin yayılma riskini azaltmak için adımlar attığını belirtmiş, ancak bu adımların ne olduğu konusunda detay vermemiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/west-pharmaceutical-says-hackers-stole-data-encrypted-systems/" target="_blank">bleepingcomputer.com</a>, 14.05.2026)</b></p>
+</div>
+<div class="news-item" id="haber-28">
+<div class="news-title"><b>Saldırganlar, RubyGems'i Veri Sızdırmak İçin Silah Olarak Kullanmıştır</b></div>
+<p class="news-content">Yeni bir tehdit kampanyasında, saldırganların RubyGems paket yöneticisini geleneksel bir kötü amaçlı yazılım dağıtım kanalı yerine, sızdırılan verileri depolamak için bir "ölü nokta" (dead drop) olarak kullandığı tespit edilmiştir. Socket güvenlik firması tarafından "GemStuffer" olarak adlandırılan bu kampanya, Ruby programlama dili için bir paket yöneticisi olan RubyGems'in kötüye kullanıldığını ortaya koymuştur. Saldırgan, Birleşik Krallık yerel yönetim portallarından (Lambeth, Wandsworth ve Southwark bölgeleri) kamuya açık verileri kazıyan (scrape eden) ve bu verileri RubyGems'e .gem arşivleri olarak yükleyen 100'den fazla paket yayınlamıştır. Bu veriler arasında belediye takvimi sayfaları, gündem listeleri ve komite bağlantıları gibi bilgiler bulunmaktadır. Saldırgan, daha sonra bu paketleri RubyGems'ten indirerek verileri elde etmiştir, bu da geleneksel bir komuta ve kontrol (C2) sunucusuna ihtiyaç duymadan veri sızdırmayı sağlamıştır. Bu alışılmadık yöntem, tedarik zinciri saldırılarında yeni bir istismar senaryosunu göstermekte ve yazılım paketi kayıt defterlerinin zımnen güvenilmemesi gerektiğini vurgulamıştır. Geliştiricilere, /tmp klasörünü incelemeleri, paketlerin teslim vektörünü belirlemeleri ve CI/CD süreçlerinde onaylanmamış gem yüklemelerini engellemeleri tavsiye edilmiştir.</p>
+<p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/application-security/attackers-weaponize-rubygems-data-dead-drops" target="_blank">darkreading.com</a>, 13.05.2026)</b></p>
+</div>
+</div>
+<a class="back-to-top" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;" title="Başa Dön">↑</a>
+</div></div>
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-05-14.html" class="archive-link">14.05.2026</a>
+            <a href="./2026-05-13.html" class="archive-link">13.05.2026</a>
+            <a href="./2026-05-12.html" class="archive-link">12.05.2026</a>
+            <a href="./2026-05-11.html" class="archive-link">11.05.2026</a>
+            <a href="./2026-05-10.html" class="archive-link">10.05.2026</a>
+            <a href="./2026-05-09.html" class="archive-link">09.05.2026</a>
+            <a href="./2026-05-08.html" class="archive-link">08.05.2026</a>
+            <a href="./2026-05-07.html" class="archive-link">07.05.2026</a>
+            <a href="./2026-05-06.html" class="archive-link">06.05.2026</a>
+            <a href="./2026-05-05.html" class="archive-link">05.05.2026</a>
+            <a href="./2026-05-04.html" class="archive-link">04.05.2026</a>
+            <a href="./2026-05-03.html" class="archive-link">03.05.2026</a>
+            <a href="./2026-05-02.html" class="archive-link">02.05.2026</a>
+            <a href="./2026-05-01.html" class="archive-link">01.05.2026</a>
+            <a href="./2026-04-30.html" class="archive-link">30.04.2026</a>
+            <a href="./2026-04-29.html" class="archive-link">29.04.2026</a>
+            <a href="./2026-04-28.html" class="archive-link">28.04.2026</a>
+            <a href="./2026-04-27.html" class="archive-link">27.04.2026</a>
+            <a href="./2026-04-26.html" class="archive-link">26.04.2026</a>
+            <a href="./2026-04-25.html" class="archive-link">25.04.2026</a>
+            <a href="./2026-04-24.html" class="archive-link">24.04.2026</a>
+            <a href="./2026-04-23.html" class="archive-link">23.04.2026</a>
+            <a href="./2026-04-22.html" class="archive-link">22.04.2026</a>
+            <a href="./2026-04-21.html" class="archive-link">21.04.2026</a>
+            <a href="./2026-04-20.html" class="archive-link">20.04.2026</a>
+            <a href="./2026-04-19.html" class="archive-link">19.04.2026</a>
+            <a href="./2026-04-18.html" class="archive-link">18.04.2026</a>
+            <a href="./2026-04-17.html" class="archive-link">17.04.2026</a>
+            <a href="./2026-04-16.html" class="archive-link">16.04.2026</a>
+            <a href="./2026-04-15.html" class="archive-link">15.04.2026</a>
+        </div>
+    </div>
+
+</body>
+</html>

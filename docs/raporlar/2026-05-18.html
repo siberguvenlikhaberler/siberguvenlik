@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 18.05.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        
+        /* ŞIK BAŞLIK */
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 {
+            color: #1565c0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .important-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .important-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .important-item a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+    
+        /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        /* HABERLER BÖLÜMÜ */
+        .news-section { padding: 30px; }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+        .source { color: #666; font-size: 13px; margin: 0; }
+        .source a { color: #1a237e; text-decoration: none; }
+        .source a:hover { text-decoration: underline; }
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
+        .social-signals {
+            background: #f8faff;
+            border: 1px solid #c7d7fd;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .social-signals .signal-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .social-signals .signal-platform-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px; color: #475569; background: #f1f5f9; border-radius: 3px; padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.45;
+            display: block;
+        }
+        .social-signals .signal-item a:hover { color: #1e3a8a; text-decoration: underline; }
+        @media (max-width: 640px) {
+            .social-signals { padding: 16px; }
+            .social-signals .signal-list { grid-template-columns: 1fr; }
+            .social-signals .signal-meta { gap: 6px; }
+        }
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="report-header"><h1><span class="header-date">18.05.2026</span> Siber Güvenlik Haber Özetleri</h1></div>
+/* YÖNETİCİ ÖZETİ */
+        <div class="executive-summary">
+            <h2>Yönetici Özeti</h2>
+            
+            <!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
+            <div class="important-news">
+                <h2>Önemli Gelişmeler</h2>
+                <div class="important-summary">
+                    <div class="important-item">
+                        <a href="#haber-1">1. Cisco Catalyst SD-WAN Kritik Kimlik Doğrulama Açığı İstismar Edilmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-2">2. MiniPlasma Windows Sıfır Gün Açığı Sistem Ayrıcalığı Elde Etmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-3">3. NGINX CVE-2026-42945 Açığı Aktif Olarak İstismar Edilmektedir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-4">4. Microsoft Exchange Sunucusu Sıfır Gün Açığı CISA Tarafından Listelenmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-5">5. Fast16 Zararlı Yazılımı Nükleer Silah Simülasyonlarını Manipüle Etmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-6">6. BerriAI LiteLLM Kritik SQL Enjeksiyon Açığı Aktif Olarak İstismar Edilmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-7">7. Dört Kötü Amaçlı npm Paketi Tedarik Zincirini Hedeflemiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-8">8. JDownloader Sitesi Kötü Amaçlı Yazılım Dağıtarak Tehlike Oluşturmuştur.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-9">9. Pwn2Own Berlin 2026 Yarışmasında 47 Sıfır Gün Açığı Keşfedilmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-10">10. DirtyDecrypt Linux Çekirdeği Kök Ayrıcalığı Açığı Tespit Edilmiştir.</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
+            <table class="executive-table">
+                <tr>
+                    <td><a href="#haber-11">11. Grafana Labs GitHub Hesabı İhlal Edilerek Kaynak Kodu Çalınmıştır.</a></td>
+                    <td><a href="#haber-12">12. Tycoon2FA Kimlik Avı Kiti Microsoft 365 Hesaplarını Ele Geçirmiştir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-13">13. WordPress Funnel Builder Eklentisi E-Skimmer Enjeksiyonlarına Neden Olmuştur.</a></td>
+                    <td><a href="#haber-14">14. cPanel Güvenlik Açıkları Dosya Erişimi ve Uzaktan Kod Yürütme Sağlamıştır.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-15">15. Güney Kore Deepfake Yasaları Seçim Güvenliğini Güçlendirmiştir.</a></td>
+                    <td><a href="#haber-16">16. Instagram Doğrudan Mesajlarda Uçtan Uca Şifrelemeyi Kaldırmıştır.</a></td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- HABERLER -->
+        <div class="news-section">
+            <div class="news-item" id="haber-1">
+                <div class="news-title"><b>Cisco Catalyst SD-WAN Kritik Kimlik Doğrulama Açığı İstismar Edilmiştir</b></div>
+                <p class="news-content">Cisco Catalyst SD-WAN Controller (vSmart) ve Manager (vManage) ürünlerindeki kimlik doğrulama mekanizmasında CVE-2026-20182 olarak takip edilen kritik bir güvenlik açığı tespit edilmiş ve aktif olarak istismar edilmiştir. CVSS skoru 10.0 olan bu zafiyet, ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA) tarafından Bilinen İstismar Edilen Zafiyetler (KEV) kataloğuna eklenmiştir. Kimliği doğrulanmamış uzaktan bir saldırgan, özel olarak hazırlanmış istekler göndererek kimlik doğrulamayı atlayabilmekte ve etkilenen sistemde yönetici ayrıcalıkları elde edebilmektedir. Başarılı bir istismar, saldırganın yüksek ayrıcalıklı bir dahili hesaba erişmesini, NETCONF'u kullanmasını ve SD-WAN ağ yapılandırmalarını manipüle etmesini sağlamıştır. Cisco PSIRT, Mayıs 2026'da bu zafiyetin sınırlı gerçek dünya istismarını tespit etmiş ve müşterileri düzeltilmiş yazılım sürümüne yükseltmeye çağırmıştır. Rapid7 araştırmacıları, açığın daha önce istismar edilen CVE-2026-20127'ye benzediğini ancak yeni bir sorun olduğunu belirtmiştir. CISA, federal kurumların bu zafiyeti 17 Mayıs 2026'ya kadar düzeltmesini zorunlu kılmıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192157/hacking/u-s-cisa-adds-a-flaw-in-cisco-catalyst-sd-wan-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-2">
+                <div class="news-title"><b>MiniPlasma Windows Sıfır Gün Açığı Sistem Ayrıcalığı Elde Etmiştir</b></div>
+                <p class="news-content">MiniPlasma adı verilen yeni bir Windows ayrıcalık yükseltme sıfır gün açığı, güvenlik araştırmacısı Chaotic Eclipse tarafından PoC koduyla birlikte kamuoyuna açıklanmıştır. Bu açık, tam yamalı Windows sistemlerinde saldırganlara SYSTEM ayrıcalıkları sağlamaktadır. Zafiyet, "cldflt.sys" olarak bilinen Windows Cloud Files Mini Filter Driver'ı ve özellikle "HsmOsBlockPlaceholderAccess" rutinini etkilemektedir. Bu kritik güvenlik açığı, ilk olarak Google Project Zero araştırmacısı James Forshaw tarafından Eylül 2020'de Microsoft'a bildirilmiş ve CVE-2020-17103 olarak tanımlanmıştır. Microsoft'un Aralık 2020'de bu sorunu düzelttiği varsayılmasına rağmen, Chaotic Eclipse, aynı sorunun hala mevcut ve yamalanmamış olduğunu belirtmiştir. Araştırmacı, orijinal PoC'yi bir SYSTEM kabuğu başlatmak için "silahlandırdığını" ve güvenilir bir şekilde çalıştığını ifade etmiştir. Güvenlik araştırmacısı Will Dormann da MiniPlasma'nın en son Mayıs 2026 güncellemelerini çalıştıran Windows 11 sistemlerinde SYSTEM ayrıcalıklarıyla bir komut istemi açtığını doğrulamıştır. Bu durum, Microsoft'un yama yönetimi süreçlerinin güvenilirliği hakkında ciddi endişeler uyandırmıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192325/hacking/chaotic-eclipse-discloses-miniplasma-zero-day-suggesting-a-missing-or-undone-2020-windows-security-fix.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-3">
+                <div class="news-title"><b>NGINX CVE-2026-42945 Açığı Aktif Olarak İstismar Edilmektedir</b></div>
+                <p class="news-content">NGINX Plus ve NGINX Open Source'u etkileyen CVE-2026-42945 (CVSS 9.2) olarak takip edilen kritik bir güvenlik açığı, kamuoyuna duyurulmasından günler sonra aktif olarak istismar edilmeye başlanmıştır. Bu zafiyet, ngx_http_rewrite_module bileşenindeki bir yığın arabellek taşmasıdır ve NGINX'in 0.6.27'den 1.30.0'a kadar olan sürümlerini etkilemektedir. Açık, 2008 yılında tanıtılmış ve 16 yıl boyunca NGINX kodunda gizli kalmıştır. Başarılı bir istismar, kimliği doğrulanmamış bir saldırganın özel olarak hazırlanmış HTTP istekleriyle çalışan süreçleri çökertmesine veya uzaktan kod yürütmesine olanak tanıyabilmektedir. Ancak uzaktan kod yürütme (RCE), Yığın Alanı Düzeni Rastgeleleştirme (ASLR) korumasının devre dışı bırakıldığı sistemlerde mümkün olmaktadır. VulnCheck tarafından yapılan son bulgular, tehdit aktörlerinin bu açığı silahlandırmaya başladığını ve honeypot ağlarına karşı istismar girişimlerinin tespit edildiğini göstermektedir. Kullanıcılara, aktif tehditlere karşı ağlarını güvence altına almak için F5 tarafından yayınlanan en son düzeltmeleri uygulamaları tavsiye edilmektedir. Uzmanlar, DoS saldırılarının kolayca gerçekleştirilebildiğini, ancak RCE'nin ASLR etkin sistemlerde daha zor olduğunu belirtmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192289/uncategorized/experts-warn-of-active-exploitation-of-critical-nginx-flaw-cve-2026-42945.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-4">
+                <div class="news-title"><b>Microsoft Exchange Sunucusu Sıfır Gün Açığı CISA Tarafından Listelenmiştir</b></div>
+                <p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Microsoft Exchange Server'daki CVE-2026-42897 (CVSS 8.1) olarak takip edilen bir güvenlik açığını bilinen istismar edilen zafiyetler (KEV) kataloğuna eklemiştir. Microsoft, tehdit aktörlerinin bu yeni Exchange Server sıfır gün açığını aktif olarak istismar ettiğini bildirmiştir. Zafiyet, Microsoft Exchange Server'da web sayfası oluşturma sırasındaki uygunsuz giriş nötralizasyonu (cross-site scripting) ile ilgili olup, yetkisiz bir saldırganın ağ üzerinden kimlik sahtekarlığı yapmasına olanak tanımaktadır. Açık, özellikle Outlook Web Access (OWA) uygulamasını etkilemektedir ve saldırganlar, belirli koşullar altında Outlook Web Access'te açıldığında kötü amaçlı JavaScript kodu çalıştıran özel hazırlanmış bir e-posta göndererek bu zafiyeti istismar edebilmektedir. Microsoft, CVE-2026-42897'nin aktif istismarını tespit ettiğini doğrulamış, ancak saldırıların detaylarını açıklamamıştır. Geçici hafifletme önlemleri yayınlanmış ve yöneticilerin bunları derhal uygulamaları tavsiye edilmektedir. CISA, federal kurumların bu zafiyeti 29 Mayıs 2026 tarihine kadar düzeltmesini emretmiştir. Exchange Server sıfır gün açıkları, kurumsal e-posta sistemlerinin merkezinde yer aldığından yüksek risk taşımaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192240/hacking/u-s-cisa-adds-a-flaw-in-microsoft-exchange-server-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-5">
+                <div class="news-title"><b>Fast16 Zararlı Yazılımı Nükleer Silah Simülasyonlarını Manipüle Etmiştir</b></div>
+                <p class="news-content">Lua tabanlı fast16 zararlı yazılımının yeni bir analizi, bu aracın nükleer silah testi simülasyonlarını manipüle etmek için tasarlanmış bir siber sabotaj aracı olduğunu doğrulamıştır. Broadcom'a ait Symantec ve Carbon Black ekiplerine göre, Stuxnet öncesi bu araç, nükleer silah tasarımında merkezi bir rol oynayan uranyum sıkıştırma simülasyonlarını bozmak için geliştirilmiştir. Zararlı yazılımın, LS-DYNA ve AUTODYN gibi mühendislik ve simülasyon programları tarafından yürütülen matematiksel hesaplamaları tahrif etmek için 101 kural içeren bir dizi özelliğe sahip olduğu tespit edilmiştir. SentinelOne tarafından ortaya çıkarılan kanıtlar, fast16'nın 2005 gibi erken bir tarihte geliştirilmiş olabileceğini ve Stuxnet'in bilinen en eski sürümünden iki yıl öncesine dayandığını göstermiştir. Fast16'nın belirli güvenlik ürünleri yüklü bilgisayarları enfekte etmeyecek şekilde tasarlandığı ve aynı ağdaki diğer uç noktalara otomatik olarak yayıldığı belirtilmiştir. Bu bulgular, ulus devlet aktörleri tarafından stratejik endüstriyel sabotajın, Stuxnet'ten çok daha önce, yaklaşık 20 yıl önce gerçekleştirildiğini işaret etmektedir. Bu durum, siber savaşın tarihsel derinliğini ve kritik altyapılara yönelik tehditlerin evrimini gözler önüne sermiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/pre-stuxnet-fast16-malware-tampered.html" target="_blank">thehackernews.com</a>, 18.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-6">
+                <div class="news-title"><b>BerriAI LiteLLM Kritik SQL Enjeksiyon Açığı Aktif Olarak İstismar Edilmiştir</b></div>
+                <p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), BerriAI LiteLLM Python paketindeki CVE-2026-42208 (CVSS 9.3) olarak takip edilen kritik bir SQL enjeksiyon açığını bilinen istismar edilen zafiyetler (KEV) kataloğuna eklemiştir. Bu zafiyet, proxy API anahtar doğrulama sürecindeki bir SQL enjeksiyonu olup, saldırganların veritabanı verilerine erişmesine ve potansiyel olarak değiştirmesine olanak tanımaktadır. Açık, API anahtarını güvenli bir parametre olarak geçirmek yerine, kullanıcı tarafından sağlanan değeri doğrudan bir veritabanı sorgusuna eklemesi nedeniyle ortaya çıkmıştır. Saldırganlar, geçerli kimlik bilgilerine ihtiyaç duymadan, özel olarak hazırlanmış bir Authorization başlığı göndererek veritabanı sorgusunu manipüle edebilmektedir. LiteLLM'in 1.81.16'dan 1.83.6'ya kadar olan sürümlerini etkileyen bu açık, 19 Nisan 2026'da 1.83.7 sürümünde düzeltilmiştir. Sysdig Tehdit Araştırma Ekibi, açığın duyurulmasından yaklaşık 36 saat sonra gerçek dünya istismar girişimlerini gözlemlemiştir. Saldırganların LiteLLM'in veritabanı yapısı hakkında güçlü bilgiye sahip olduğu ve yüksek değerli sırları içeren tabloları hedef aldığı belirtilmiştir. CISA, federal kurumların bu zafiyeti 11 Mayıs 2026'ya kadar düzeltmesini zorunlu kılmıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191964/security/u-s-cisa-adds-a-flaw-in-berriai-litellm-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-7">
+                <div class="news-title"><b>Dört Kötü Amaçlı npm Paketi Tedarik Zincirini Hedeflemiştir</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, bilgi çalan kötü amaçlı yazılımlar içeren dört yeni npm paketi keşfetmiştir. Bu paketlerden biri, TeamPCP tarafından açık kaynak olarak yayınlanan Shai-Hulud solucanının bir kopyasıdır. Tanımlanan paketler "chalk-tempalte", "@deadcode09284814/axios-util", "axois-utils" ve "color-style-utils" olarak listelenmiştir. "axois-utils" paketi, HTTP, TCP ve UDP protokollerini kullanarak hedef web sitelerini sular altında bırakma yeteneğine sahip Golang tabanlı Phantom Bot adında bir dağıtılmış hizmet reddi (DDoS) botnet'i dağıtmak için tasarlanmıştır. Bu botnet, Windows ve Linux makinelerinde kalıcılık sağlamaktadır. Diğer üç paket ise ele geçirilmiş sistemlere bilgi çalan bir zararlı yük bırakmaktadır. Özellikle "chalk-tempalte" paketi, çalınan kimlik bilgilerini uzaktan bir C2 sunucusuna ve yeni bir GitHub deposuna gönderen Shai-Hulud solucanının bir klonunu içermektedir. Diğer iki npm paketi, SSH anahtarlarını, ortam değişkenlerini, bulut kimlik bilgilerini, sistem bilgilerini, IP adresini ve kripto para cüzdan verilerini ele geçirmektedir. Araştırmacılar, Shai-Hulud kodunun açık kaynak hale gelmesiyle tehdit aktörlerinin tedarik zinciri ve yazım hatası saldırılarına daha fazla motive olduğunu belirtmiştir. Kullanıcılara, bu paketleri derhal kaldırmaları, kötü amaçlı yapılandırmaları silmeleri ve şifrelerini değiştirmeleri tavsiye edilmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/05/four-malicious-npm-packages-deliver.html" target="_blank">thehackernews.com</a>, 18.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-8">
+                <div class="news-title"><b>JDownloader Sitesi Kötü Amaçlı Yazılım Dağıtarak Tehlike Oluşturmuştur</b></div>
+                <p class="news-content">JDownloader'ın resmi web sitesi, 6-7 Mayıs 2026 tarihleri arasında bir tedarik zinciri saldırısı sonucunda ele geçirilmiş ve meşru Windows ve Linux yükleyicileri kötü amaçlı dosyalarla değiştirilmiştir. JDownloader, milyonlarca kullanıcı tarafından kullanılan ücretsiz, açık kaynaklı bir indirme yönetimi uygulamasıdır. Saldırganlar, sitedeki indirme bağlantılarını değiştirerek kullanıcılara gerçek yazılım yerine Python tabanlı uzaktan erişim truva atı (RAT) içeren kötü amaçlı yazılım sunmuştur. Saldırı, Windows "Alternatif Yükleyici" ve Linux kabuk yükleyicisini indiren kullanıcıları hedef almıştır. Durum, bir Reddit kullanıcısının Microsoft Defender'ın indirilen yükleyicileri kötü amaçlı olarak işaretlemesini fark etmesi ve şüpheli geliştirici adları görmesi üzerine ortaya çıkmıştır. JDownloader geliştiricileri ihlali hızla doğrulamış ve soruşturma için web sitesini geçici olarak kapatmıştır. Saldırganların, sitenin içerik yönetim sistemindeki yamalanmamış bir zafiyeti istismar ettiği, ancak sunucuya veya işletim sistemine tam erişim sağlayamadığı belirtilmiştir. Yalnızca belirli indirme bağlantıları etkilenmiş, uygulama içi güncellemeler, macOS indirmeleri ve diğer paketler güvende kalmıştır. Kullanıcılara, yükleyicilerin "Dijital İmzalar" sekmesinden "AppWork GmbH" imzasını doğrulayarak güvenli olup olmadığını kontrol etmeleri tavsiye edilmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191920/malware/official-jdownloader-site-served-malware-to-windows-and-linux-users.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-9">
+                <div class="news-title"><b>Pwn2Own Berlin 2026 Yarışmasında 47 Sıfır Gün Açığı Keşfedilmiştir</b></div>
+                <p class="news-content">Pwn2Own Berlin 2026 hacking yarışması sona ermiş ve güvenlik araştırmacıları 47 sıfır gün açığını istismar ederek toplam 1.298.250 dolar ödül kazanmıştır. Yarışma, 14-16 Mayıs tarihleri arasında OffensiveCon konferansında gerçekleştirilmiş ve kurumsal teknolojiler ile yapay zeka odaklı olmuştur. Katılımcılar web tarayıcıları, kurumsal uygulamalar, yerel ayrıcalık yükseltme, sunucular, yerel çıkarım, bulut yerel/kapsayıcı ortamlar, sanallaştırma ve LLM (Büyük Dil Modelleri) kategorilerindeki tam yamalı ürünleri hedef almıştır. DEVCORE, Microsoft SharePoint, Microsoft Exchange, Microsoft Edge ve Windows 11'i hackleyerek 50.5 Master of Pwn puanı ve 505.000 dolar ödül ile bu yılki Pwn2Own Berlin yarışmasını kazanmıştır. En yüksek ödül olan 200.000 dolar, DEVCORE Araştırma Ekibi'nden Cheng-Da Tsai'ye (Orange Tsai) Microsoft Exchange'de SYSTEM ayrıcalıklarıyla uzaktan kod yürütme elde etmek için üç açığı zincirlemesiyle verilmiştir. Yarışma sonunda, TrendMicro'nun Zero Day Initiative (ZDI) bu zafiyetleri kamuoyuna açıklamadan önce satıcılara güvenlik yamalarını yayınlamaları için 90 gün süre tanımıştır. Bu yarışma, birçok sıfır gün açığının keşfedilmesiyle siber güvenlik topluluğu için önemli bilgiler sağlamıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/hackers-earn-1-298-250-for-47-zero-days-at-pwn2own-berlin-2026/" target="_blank">bleepingcomputer.com</a>, 18.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-10">
+                <div class="news-title"><b>DirtyDecrypt Linux Çekirdeği Kök Ayrıcalığı Açığı Tespit Edilmiştir</b></div>
+                <p class="news-content">Linux çekirdeğinin rxgk modülündeki yakın zamanda yamalanan bir yerel ayrıcalık yükseltme zafiyeti için bir PoC (Proof-of-Concept) istismarı yayınlanmıştır. DirtyDecrypt veya DirtyCBC olarak adlandırılan bu güvenlik açığı, saldırganların bazı Linux sistemlerinde kök erişimi elde etmesine olanak tanımaktadır. Bu zafiyet, V12 güvenlik ekibi tarafından 9 Mayıs 2026'da bulunmuş ve bildirilmiş, ancak ana hat çekirdeğinde zaten yamalanmış bir kopya olduğu belirtilmiştir. Resmi bir CVE kimliği olmamasına rağmen, Tharros'tan Will Dormann'a göre, araştırmacıların sağladığı bilgiler 25 Nisan'da yamalanan CVE-2026-31635 ile uyumlu görünmektedir. Başarılı bir istismar için, Andrew Dosya Sistemi (AFS) istemcisi ve ağ aktarımı için RxGK güvenlik desteğini etkinleştiren CONFIG_RXGK yapılandırma seçeneğine sahip bir Linux çekirdeği çalıştırılması gerekmektedir. Bu durum, saldırı yüzeyini Fedora, Arch Linux ve openSUSE Tumbleweed gibi en son çekirdek sürümlerini yakından takip eden Linux dağıtımlarıyla sınırlamaktadır. Linux kullanıcılarına, potansiyel olarak DirtyDecrypt'ten etkilenen dağıtımlarda en kısa sürede en son çekirdek güncellemelerini yüklemeleri tavsiye edilmektedir. CISA, benzer zafiyetleri KEV listesine ekleyerek federal kurumları hızlıca önlem almaya çağırmıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/exploit-available-for-new-dirtydecrypt-linux-root-escalation-flaw/" target="_blank">bleepingcomputer.com</a>, 18.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-11">
+                <div class="news-title"><b>Grafana Labs GitHub Hesabı İhlal Edilerek Kaynak Kodu Çalınmıştır</b></div>
+                <p class="news-content">Gözlemlenebilirlik şirketi Grafana Labs, bir saldırganın GitHub deposuna eriştiğini ve kaynak kodunu çaldığını açıklamıştır. Şirket, durumu GitHub ortamına erişim sağlayan bir tokenin yetkisiz bir tarafça ele geçirilmesine bağlamıştır. Grafana Labs, kimlik bilgisi sızıntısının kaynağını tespit ettiğini, ele geçirilen kimlik bilgilerini geçersiz kıldığını ve yetkisiz erişime karşı ortamlarını daha da güvence altına almak için ek güvenlik önlemleri uyguladığını belirtmiştir. Ancak saldırgan, fidye ödenmemesi halinde şirketin kodunu yayınlamakla tehdit etmiştir. Grafana, fidye ödemeyi reddetme kararı almıştır, çünkü Federal Soruşturma Bürosu'nun (FBI) fidye ödemenin verilerin geri alınmasını garanti etmediği ve yasa dışı faaliyetleri teşvik ettiği yönündeki duruşunu desteklemektedir. Şirket, bu olay sırasında müşteri verilerine veya kişisel bilgilere erişilmediğini ve müşteri sistemleri veya operasyonları üzerinde herhangi bir etki bulamadığını ifade etmiştir. Şirket ürünlerinin çoğunun zaten açık kaynaklı olması, çalınan kodun işleri üzerinde önemli bir maddi fark yaratmayacağı veya müşterilere zarar vermeyeceği konusunda kendilerine güven vermektedir. Bu olay, tedarik zinciri güvenliğinin ve geliştirme ortamlarının korunmasının önemini bir kez daha ortaya koymuştur.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.theregister.com/cyber-crime/2026/05/18/grafana-labs-admits-attackers-downloaded-its-codebase-from-github/5241686" target="_blank">theregister.com</a>, 18.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-12">
+                <div class="news-title"><b>Tycoon2FA Kimlik Avı Kiti Microsoft 365 Hesaplarını Ele Geçirmiştir</b></div>
+                <p class="news-content">Tycoon2FA kimlik avı kiti, artık cihaz kodu kimlik avı saldırılarını desteklemekte ve Microsoft 365 hesaplarını ele geçirmek için Trustifi tıklama izleme URL'lerini kötüye kullanmaktadır. Tycoon2FA platformu, Mart ayındaki uluslararası bir kolluk operasyonuyla bozulmasına rağmen, yeni bir altyapı üzerinde yeniden inşa edilmiş ve hızla normal faaliyet seviyelerine geri dönmüştür. Cihaz kodu kimlik avı, tehdit aktörlerinin hedef hizmet sağlayıcısına bir cihaz yetkilendirme isteği göndermesi ve oluşturulan kodu kurbana ileterek, kurbanı hizmetin meşru giriş sayfasına bu kodu girmesi için kandırmasıyla gerçekleşen bir saldırı türüdür. Bu, saldırgana kurbanın Microsoft 365 hesabıyla sahte bir cihaz kaydetme yetkisi vererek, e-posta, takvim ve bulut dosya depolama dahil olmak üzere kurbanın verilerine ve hizmetlerine sınırsız erişim sağlamaktadır. eSentire tarafından yapılan yeni araştırmalar, Tycoon2FA'nın cihaz kodu kimlik avını siber suçlular arasında oldukça popüler hale getirdiğini doğrulamıştır. Saldırının, kurbanın bir Trustifi tıklama izleme URL'sine tıkladığı ve ardından sahte bir Microsoft CAPTCHA sayfasına yönlendirildiği bir fatura temalı kimlik avı e-postasıyla başladığı belirtilmiştir. Araştırmacılar, kullanılmadığında OAuth cihaz kodu akışının devre dışı bırakılmasını, OAuth onay izinlerinin kısıtlanmasını ve Entra günlüklerinin izlenmesini tavsiye etmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/tycoon2fa-hijacks-microsoft-365-accounts-via-device-code-phishing/" target="_blank">bleepingcomputer.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-13">
+                <div class="news-title"><b>WordPress Funnel Builder Eklentisi E-Skimmer Enjeksiyonlarına Neden Olmuştur</b></div>
+                <p class="news-content">WordPress Funnel Builder eklentisindeki kritik bir güvenlik açığı, WooCommerce ödeme sayfalarına kötü amaçlı JavaScript kodu enjekte etmek için aktif olarak istismar edilmektedir. Sansec araştırmacılarına göre, FunnelKit tarafından geliştirilen Funnel Builder, 40.000'den fazla WooCommerce mağazasında yüklü bir ödeme ve upsell eklentisidir. Saldırganlar, müşterilerin satın alma işlemleri sırasında kart ve ödeme bilgilerini çalmak için tasarlanmış bir e-skimmer kodu enjekte etmiştir. Eklentinin "Harici Komut Dosyaları" ayarına sahte Google Etiket Yöneticisi komut dosyaları yerleştirilerek, bu kodun normal analitik etiketlerinin yanında gizlenmesi sağlanmıştır. Bu kritik zafiyet, kimliği doğrulanmamış saldırganların WooCommerce ödeme sayfalarına kötü amaçlı komut dosyaları enjekte etmesine olanak tanımaktadır, çünkü güvenlik açığı, izinleri doğrulamakta başarısız olmakta ve küresel eklenti ayarlarının değiştirilmesine izin vermektedir. Yamalanan sürüm 3.15.0.3, uygun izin kontrolleri ekleyerek ve erişimi onaylanmış yöntemlerle sınırlayarak bu sorunu gidermiştir. Sansec, saldırganların sahte Google Tag Manager veya Analytics komut dosyaları kılığına girmiş kötü amaçlı yazılım enjekte etmek için Funnel Builder açığını kötüye kullandığını gözlemlemiştir. Mağaza sahiplerine, güvenlik güncellemelerini derhal uygulamaları ve ödeme sayfalarını güvenlik ihlali belirtileri açısından gözden geçirmeleri çağrısı yapılmıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/192260/cyber-crime/attackers-exploit-funnel-builder-bug-to-inject-e-skimmers-into-e-stores.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-14">
+                <div class="news-title"><b>cPanel Güvenlik Açıkları Dosya Erişimi ve Uzaktan Kod Yürütme Sağlamıştır</b></div>
+                <p class="news-content">cPanel, cPanel & WHM'yi etkileyen ve saldırganların hassas dosyalara erişmesine, uzaktan kod yürütmesine veya ayrıcalıkları yükseltmesine olanak tanıyabilecek üç güvenlik açığını düzeltmek için güvenlik güncellemeleri yayınlamıştır. Bu zafiyetler arasında CVE-2026-29201 (CVSS 4.3) olarak takip edilen, `feature::LOADFEATUREFILE` adminbin çağrısındaki bir giriş doğrulama sorunu bulunmaktadır. Bu sorun, saldırganların sunucudaki rastgele dosyaları okumasına izin vermektedir. CVE-2026-29202 (CVSS 8.8) ise `create_user` API'sindeki `plugin` parametresinin uygunsuz doğrulanmasından kaynaklanan kritik bir açık olup, kimliği doğrulanmış bir saldırganın etkilenen hesabın ayrıcalıklarıyla rastgele Perl kodu yürütmesine olanak tanımaktadır. CVE-2026-29203 (CVSS 8.8) ise güvenli olmayan bir sembolik bağlantı işleme zafiyeti olarak tanımlanmıştır. Bu zafiyet, bir kullanıcının `chmod` kullanarak rastgele dosyaların izinlerini değiştirmesine yol açabilmekte ve potansiyel olarak hizmet reddi koşullarına veya ayrıcalık yükseltmeye neden olabilmektedir. Bu sorunlar, 11.136.0.9, 11.134.0.25, 11.132.0.31 ve daha yeni sürümler dahil olmak üzere birden çok desteklenen cPanel & WHM sürümünde yamalanmıştır. Şu anda aktif bir istismar kanıtı bulunmamasına rağmen, bu duyuru, tehdit aktörlerinin Mirai botnet varyantlarını dağıtmak için başka bir kritik cPanel açığını sıfır gün olarak silahlandırmasından kısa bir süre sonra gelmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191931/security/new-cpanel-vulnerabilities-could-allow-file-access-and-remote-code-execution.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-15">
+                <div class="news-title"><b>Güney Kore Deepfake Yasaları Seçim Güvenliğini Güçlendirmiştir</b></div>
+                <p class="news-content">Güney Kore, Haziran ayında yapılacak yerel seçimlerde yapay zeka deepfake'lerinin siyasi kampanyalarda kullanılmasını engellemeyi amaçlayan iki yeni yasayı uygulamaya koyarak, bu düzenlemelerin etkinliğini test etmiştir. Kamu Görevlileri Seçim Yasası'nın 82-8. Maddesi, seçim gününden 90 gün önce gerçeklikten ayırt edilmesi zor sanal ses, görüntü veya video kullanımını yasaklamaktadır. Bu yasa, seçim sonuçlarını etkilemek amacıyla deepfake oluşturmayı hedefleyen bireylere veya kampanyalara karşı caydırıcı bir rol oynamaktadır. Bu maddeyi ihlal edenler, yedi yıla kadar hapis veya 10 milyon ila 50 milyon won arasında para cezasına çarptırılabilmektedir. Ayrıca, bu Ocak ayında yürürlüğe giren Yapay Zeka Temel Yasası'nın 31. maddesi, yapay zeka sistemlerinin gerçek içerikten ayırt edilmesi zor sanal ses, görüntü veya video üretmesi durumunda, yapay zeka işletmecilerinin bu içeriğin bir yapay zeka sistemi tarafından oluşturulduğunu açıkça belirtmesini zorunlu kılmaktadır. Güney Kore Ulusal Polis Teşkilatı (KNPA), soruşturmalarını kolaylaştırmak için 2024 yılında bir deepfake tespit aracı geliştirmiş ve kullanıma sokmuştur. Bu yasal çerçeve, deepfake'lerle mücadelede kapsamlı bir ulusal düzeyde yapay zeka yasasının erken bir örneğini teşkil etmektedir. Bu tür düzenlemeler, diğer ülkeler için de emsal teşkil edebilecek önemli bir adım olarak değerlendirilmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.darkreading.com/vulnerabilities-threats/can-laws-stop-deepfakes-south-korea" target="_blank">darkreading.com</a>, 18.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-16">
+                <div class="news-title"><b>Instagram Doğrudan Mesajlarda Uçtan Uca Şifrelemeyi Kaldırmıştır</b></div>
+                <p class="news-content">Instagram, 8 Mayıs 2026 tarihinden itibaren doğrudan mesajlardaki (DM) uçtan uca şifrelemeyi kaldırmıştır. Bu karar, platformdaki özel sohbetlerin ele alınış biçiminde önemli bir değişikliği işaret etmektedir. Bu değişiklik, Meta'ya daha önce yalnızca göndericiler ve alıcılar tarafından okunabilen mesaj içeriğine teknik erişim yeteneği sağlamıştır. Şifreli sohbetleri daha önce kullanmış olan kullanıcılardan, özellik ortadan kalkmadan önce mesaj geçmişlerini indirmeleri istenmektedir. Ancak, indirilen bu yedeklemeler, Google Drive veya iCloud gibi bulut hizmetlerine yüklendiğinde şifreleme korumasını kaybetmektedir. Meta, bu kararı düşük kullanım oranı ve ayrı mesajlaşma sistemlerini sürdürmenin karmaşıklığı ile gerekçelendirmiştir. Bu değişikliğin zamanlaması, ABD'nin "Take It Down Act" yasasının son uyumluluk aşamasından günler önce gelmesi nedeniyle dikkat çekmiştir. Bu yasa, platformların rıza dışı samimi görüntüleri, yapay zeka tarafından oluşturulan deepfake'ler dahil, bildirimden sonra 48 saat içinde kaldırmasını zorunlu kılmaktadır. Analistler, şifrelemenin kaldırılmasının platformların zararlı içeriği geniş ölçekte tespit etmesini ve denetlemesini kolaylaştırdığını belirtmektedir. Etkilenen kullanıcılara, 8 Mayıs'tan önce tüm şifreli sohbet geçmişlerini indirmeleri ve gizliliği korumak amacıyla bulut yedeklemelerinden kaçınmaları tavsiye edilmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/191941/security/instagram-removed-end-to-end-encryption-for-dms-what-should-users-do.html" target="_blank">securityaffairs.com</a>, 17.05.2026)</b></p>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="back-to-top" title="Başa Dön" onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
+</div>
+
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-05-17.html" class="archive-link">17.05.2026</a>
+            <a href="./2026-05-16.html" class="archive-link">16.05.2026</a>
+            <a href="./2026-05-15.html" class="archive-link">15.05.2026</a>
+            <a href="./2026-05-14.html" class="archive-link">14.05.2026</a>
+            <a href="./2026-05-13.html" class="archive-link">13.05.2026</a>
+            <a href="./2026-05-12.html" class="archive-link">12.05.2026</a>
+            <a href="./2026-05-11.html" class="archive-link">11.05.2026</a>
+            <a href="./2026-05-10.html" class="archive-link">10.05.2026</a>
+            <a href="./2026-05-09.html" class="archive-link">09.05.2026</a>
+            <a href="./2026-05-08.html" class="archive-link">08.05.2026</a>
+            <a href="./2026-05-07.html" class="archive-link">07.05.2026</a>
+            <a href="./2026-05-06.html" class="archive-link">06.05.2026</a>
+            <a href="./2026-05-05.html" class="archive-link">05.05.2026</a>
+            <a href="./2026-05-04.html" class="archive-link">04.05.2026</a>
+            <a href="./2026-05-03.html" class="archive-link">03.05.2026</a>
+            <a href="./2026-05-02.html" class="archive-link">02.05.2026</a>
+            <a href="./2026-05-01.html" class="archive-link">01.05.2026</a>
+            <a href="./2026-04-30.html" class="archive-link">30.04.2026</a>
+            <a href="./2026-04-29.html" class="archive-link">29.04.2026</a>
+            <a href="./2026-04-28.html" class="archive-link">28.04.2026</a>
+            <a href="./2026-04-27.html" class="archive-link">27.04.2026</a>
+            <a href="./2026-04-26.html" class="archive-link">26.04.2026</a>
+            <a href="./2026-04-25.html" class="archive-link">25.04.2026</a>
+            <a href="./2026-04-24.html" class="archive-link">24.04.2026</a>
+            <a href="./2026-04-23.html" class="archive-link">23.04.2026</a>
+            <a href="./2026-04-22.html" class="archive-link">22.04.2026</a>
+            <a href="./2026-04-21.html" class="archive-link">21.04.2026</a>
+            <a href="./2026-04-20.html" class="archive-link">20.04.2026</a>
+            <a href="./2026-04-19.html" class="archive-link">19.04.2026</a>
+        </div>
+    </div>
+
+</body>
+</html>

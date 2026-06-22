@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Siber Güvenlik Raporu - 11.05.2026</title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        
+        /* ŞIK BAŞLIK */
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date {
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        /* ÖNEMLİ GELİŞMELER KUTUSU - AÇIK PASTEL MAVİ */
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .important-news h2 {
+            color: #1565c0;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .important-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .important-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .important-item a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+    
+        /* YÖNETİCİ ÖZETİ */
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1a237e;
+        }
+        .executive-table {
+            width: 100%;
+            border-spacing: 8px;
+        }
+        .executive-table td {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #1a237e;
+            vertical-align: top;
+            width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .executive-table a:hover {
+            text-decoration: underline;
+        }
+        /* HABERLER BÖLÜMÜ */
+        .news-section { padding: 30px; }
+        .news-item {
+            background: #f8f9fa;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #1a237e;
+        }
+        .news-title {
+            color: #1a237e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+        .source { color: #666; font-size: 13px; margin: 0; }
+        .source a { color: #1a237e; text-decoration: none; }
+        .source a:hover { text-decoration: underline; }
+        /* ── SOSYAL MEDYA SİNYALLERİ KUTUSU ── */
+        .social-signals {
+            background: #f8faff;
+            border: 1px solid #c7d7fd;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .social-signals .signal-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .social-signals .signal-platform-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            background: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px; color: #475569; background: #f1f5f9; border-radius: 3px; padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.45;
+            display: block;
+        }
+        .social-signals .signal-item a:hover { color: #1e3a8a; text-decoration: underline; }
+        @media (max-width: 640px) {
+            .social-signals { padding: 16px; }
+            .social-signals .signal-list { grid-template-columns: 1fr; }
+            .social-signals .signal-meta { gap: 6px; }
+        }
+        .back-to-top {
+            position: fixed;
+            top: 50%;
+            left: calc(50% - 450px - 48px);
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            z-index: 999;
+        }
+        .back-to-top:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="report-header"><h1><span class="header-date">11.05.2026</span> Siber Güvenlik Haber Özetleri</h1></div>
+/* YÖNETİCİ ÖZETİ */
+        <div class="executive-summary">
+            <h2>Yönetici Özeti</h2>
+            
+            <!-- ÖNEMLİ GELİŞMELER KUTUSU - EN FAZLA 10 HABER, 2 SÜTUN GRID -->
+            <div class="important-news">
+                <h2>Önemli Gelişmeler</h2>
+                <div class="important-summary">
+                    <div class="important-item">
+                        <a href="#haber-1">1. Palo Alto Networks PAN-OS açığı CISA tarafından KEV kataloğuna eklenmiş ve aktif olarak istismar edilmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-2">2. WebPros cPanel'deki CVE-2026-41940 açığı CISA KEV kataloğuna eklenmiş ve 44 binden fazla IP'yi etkilemiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-3">3. BerriAI LiteLLM'deki CVE-2026-42208 açığı CISA tarafından KEV kataloğuna eklenmiş ve hızla istismar edilmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-4">4. Linux Kernel'deki CVE-2026-31431 "Copy Fail" açığı CISA KEV kataloğuna eklenmiş ve aktif olarak istismar edilmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-5">5. Ollama'daki CVE-2026-7482 sınır dışı okuma zafiyeti uzaktan işlem belleği sızıntısına yol açmıştır.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-6">6. Canvas öğrenim yönetim sistemine yapılan siber saldırı dünya genelinde binlerce okulu aksatmıştır.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-7">7. Checkmarx Jenkins AST eklentisi bir tedarik zinciri saldırısında ele geçirilmiştir.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-8">8. Hugging Face'teki sahte OpenAI Gizlilik Filtresi deposu Rust tabanlı bilgi hırsızı dağıtmıştır.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-9">9. Resmi JDownloader sitesi 6-7 Mayıs tarihleri arasında Windows ve Linux kullanıcılarına zararlı yazılım dağıtmıştır.</a>
+                    </div>
+                    <div class="important-item">
+                        <a href="#haber-10">10. Çin bağlantılı APT Salt Typhoon, IBM İtalya yan kuruluşu Sistemi Informativi'ye sızmıştır.</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GERİ KALAN HABERLERİN 2 SÜTUNLU TABLOSU (önemli 10'dan sonrakiler) -->
+            <table class="executive-table">
+                <tr>
+                    <td><a href="#haber-11">11. Beş yüzü aşkın kuruluş, yıllardır süren bir kimlik avı kampanyasının hedefi olmuştur.</a></td>
+                    <td><a href="#haber-12">12. Yeniden canlandırılan Crimenetwork siber suç pazar yeri kapatılmış ve yöneticisi tutuklanmıştır.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-13">13. Yeni cPanel güvenlik açıkları dosya erişimi ve uzaktan kod yürütmeye izin vermiştir.</a></td>
+                    <td><a href="#haber-14">14. Yeni "Dirty Frag" Linux güvenlik açığının saldırılarda istismar edildiği tahmin edilmektedir.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-15">15. TrickMo Android bankacılık zararlı yazılımı gizli iletişim için TON blok zincirini kullanmıştır.</a></td>
+                    <td><a href="#haber-16">16. Hackerlar, Google reklamlarını ve Claude.ai sohbetlerini Mac zararlı yazılımı yaymak için kötüye kullanmıştır.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-17">17. Bluekit kimlik avı kiti, 40'tan fazla şablon ve yapay zeka araçlarıyla otomatik kimlik avını sağlamaktadır.</a></td>
+                    <td><a href="#haber-18">18. Instagram, doğrudan mesajlar için uçtan uca şifrelemeyi kaldırmıştır.</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-19">19. Bin sekiz yüzden fazla MCP sunucusu kimlik doğrulaması olmadan ifşa edilmiştir.</a></td>
+                    <td><a href="#haber-20">20. Google, hata ödül programlarını yapay zeka çağında yeniden düzenlemiştir.</a></td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- HABERLER -->
+        <div class="news-section">
+            <!-- ÖNEMLİ 10 HABERİN PARAGRAF ÖZETLERİ - ÖNCE BUNLAR (haber-1'den haber-10'a) -->
+            <div class="news-item" id="haber-1">
+                <div class="news-title"><b>Palo Alto Networks PAN-OS Açığı CISA Tarafından KEV Kataloğuna Eklenmiş ve Aktif Olarak İstismar Edilmiştir</b></div>
+                <p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Palo Alto Networks'ün PAN-OS yazılımındaki CVE-2026-0300 kodlu güvenlik açığını Bilinen İstismar Edilen Güvenlik Açıkları (KEV) kataloğuna eklemiştir. CVSS skoru 9.3 olan bu zafiyet, User-ID Kimlik Doğrulama Portalı'nın internete açık olması durumunda kimlik doğrulaması yapılmamış bir saldırganın kök ayrıcalıklarıyla rastgele kod yürütmesine olanak tanımaktadır. Palo Alto Networks, bu kritik açığın aktif olarak istismar edildiğini bildirmiştir. Etkilenen ürünler arasında PA Serisi ve VM Serisi güvenlik duvarları bulunmaktadır; ancak Prisma Access, Cloud NGFW ve Panorama cihazları bu durumdan etkilenmemiştir. Şirket, riskin, User-ID Kimlik Doğrulama Portalı'na yalnızca güvenilir dahili IP adreslerinden erişimi kısıtlamak gibi en iyi uygulamaları takip eden kuruluşlar için büyük ölçüde azaldığını belirtmiştir. CISA, federal kurumlara bu güvenlik açığını 9 Mayıs 2026 tarihine kadar düzeltmeleri talimatını vermiştir. Güvenlik düzeltmelerinin 13 Mayıs 2026 tarihinden itibaren yayınlanması beklenmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191780/security/u-s-cisa-adds-a-flaw-in-palo-alto-networks-pan-os-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-2">
+                <div class="news-title"><b>WebPros cPanel'deki CVE-2026-41940 Açığı CISA KEV Kataloğuna Eklenmiş ve 44 Binden Fazla IP'yi Etkilemiştir</b></div>
+                <p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), WebPros cPanel'de bulunan CVE-2026-41940 kodlu kimlik doğrulama bypass güvenlik açığını Bilinen İstismar Edilen Güvenlik Açıkları (KEV) kataloğuna dahil etmiştir. Bu kritik zafiyetin CVSS skoru 9.3 olarak belirlenmiştir. watchTowr siber güvenlik uzmanları tarafından bu hafta başında açıklanan açık, giriş akışındaki bir zayıflık nedeniyle uzaktan saldırganların kimlik doğrulama kontrollerini atlamasına veya manipüle etmesine olanak tanımaktadır. Bu durum, saldırganlara geçerli kimlik bilgileri olmadan kontrol paneline erişim sağlamakta, böylece barındırma ayarlarını yönetme, hassas verilere erişme veya sunucunun kontrolünü ele geçirme imkanı sunmaktadır. Shadowserver Foundation'a göre, bu açıktan binlerce cPanel ve WHM örneği etkilenmiş olup, 30 Nisan 2026 tarihinde en az 44.000 benzersiz IP'nin honeypot sensörlerine karşı tarama yaptığı tespit edilmiştir. CISA, federal kurumların bu güvenlik açığını 3 Mayıs 2026 tarihine kadar düzeltmelerini zorunlu kılmıştır. cPanel ve watchTowr, saldırıları ve savunmasız sistemleri tespit etmek için araçlar yayınlamıştır.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191613/hacking/u-s-cisa-adds-a-flaw-in-webpros-cpanel-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-3">
+                <div class="news-title"><b>BerriAI LiteLLM'deki CVE-2026-42208 Açığı CISA Tarafından KEV Kataloğuna Eklenmiş ve Hızla İstismar Edilmiştir</b></div>
+                <p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), BerriAI LiteLLM'deki CVE-2026-42208 kodlu kritik güvenlik açığını Bilinen İstismar Edilen Güvenlik Açıkları (KEV) kataloğuna eklemiştir. CVSS skoru 9.3 olan bu SQL enjeksiyon zafiyeti, proxy API anahtarı doğrulama sürecinde ortaya çıkmaktadır ve saldırganların veritabanı verilerine erişmesine ve potansiyel olarak değiştirmesine olanak tanımıştır. Sysdig Tehdit Araştırma Ekibi (TRT), açığın kamuya açıklanmasından sadece 36 saat sonra ilk istismar girişimini gözlemlemiştir. Saldırganlar, üretim LiteLLM şemasının sanal API anahtarları, depolanan sağlayıcı kimlik bilgileri ve proxy'nin ortam değişkeni yapılandırması gibi en değerli sırları barındıran üç tablosunu hedef almıştır. LiteLLM'in 1.81.16'dan 1.83.6'ya kadar olan sürümlerini etkileyen bu açık, 19 Nisan 2026 tarihinde 1.83.7 sürümünde düzeltilmiştir. CISA, federal kurumların bu güvenlik açığını 11 Mayıs 2026 tarihine kadar düzeltmesini emretmiştir. Güncelleme yapamayan kullanıcılar için geçici bir çözüm olarak genel ayarlarda `disable_error_logs: true` seçeneğinin etkinleştirilmesi önerilmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191964/security/u-s-cisa-adds-a-flaw-in-berriai-litellm-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-4">
+                <div class="news-title"><b>Linux Kernel'deki CVE-2026-31431 "Copy Fail" Açığı CISA KEV Kataloğuna Eklenmiş ve Aktif Olarak İstismar Edilmiştir</b></div>
+                <p class="news-content">ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Linux Çekirdeği'ndeki CVE-2026-31431 kodlu "Copy Fail" zafiyetini Bilinen İstismar Edilen Güvenlik Açıkları (KEV) kataloğuna dahil etmiştir. CVSS skoru 7.8 olan bu mantıksal hata, yerel, ayrıcalıksız bir kullanıcının herhangi bir okunabilir dosyanın sayfa önbelleğine dört kontrollü bayt yazmasına olanak tanımaktadır. Xint Code araştırmacıları tarafından keşfedilen bu açık, ana dağıtımlarda kök ayrıcalıklarına yükseltmeye imkan vermektedir. Hata, diskteki dosyayı değiştirmeden setuid ikili dosyasını bellekte değiştirebilmekte, bu da tespiti zorlaştırmaktadır. Ubuntu, RHEL, SUSE ve Amazon Linux gibi büyük dağıtımları etkileyen bu zafiyet, paylaşılan sayfa önbelleği nedeniyle konteyner sınırlarını bile aşabilmektedir. CISA, federal kurumların bu güvenlik açığını 15 Mayıs 2026 tarihine kadar düzeltmesini zorunlu kılmıştır. Araştırmacılar, 2017'den bu yana çıkan neredeyse her ana akım Linux dağıtımının bu açıktan etkilendiğini belirtmişlerdir. Exploit, Python ile yazılmış 732 baytlık bir betik aracılığıyla `/usr/bin/su` gibi setuid-root ikili dosyalarını hedef almaktadır.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191629/hacking/u-s-cisa-adds-a-flaw-in-linux-kernel-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-5">
+                <div class="news-title"><b>Ollama'daki CVE-2026-7482 Sınır Dışı Okuma Zafiyeti Uzaktan İşlem Belleği Sızıntısına Yol Açmıştır</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, Ollama'da tespit edilen kritik bir güvenlik açığını (CVE-2026-7482, CVSS skoru 9.1) açıklamıştır. "Bleeding Llama" olarak adlandırılan bu sınır dışı okuma zafiyeti, uzaktan, kimlik doğrulaması yapılmamış bir saldırganın Ollama'nın tüm işlem belleğini sızdırmasına olanak tanımaktadır. Dünya genelinde 300.000'den fazla sunucuyu etkileme potansiyeli bulunan bu açık, özellikle GGUF model yükleyicisindeki bir heap sınır dışı okuma hatasından kaynaklanmaktadır. Saldırganlar, özel olarak hazırlanmış bir GGUF dosyasını `/api/create` uç noktasını kullanarak açıkta olan bir Ollama sunucusuna yükleyerek bu zafiyeti tetikleyebilmektedir. Başarılı bir istismar sonucunda ortam değişkenleri, API anahtarları, sistem istemleri ve eşzamanlı kullanıcıların konuşma verileri gibi hassas veriler sızdırılabilmektedir. Ayrıca, Ollama'nın Windows güncelleme mekanizmasında, 27 Ocak 2026'da açıklanan ancak hala düzeltilmemiş iki ayrı zafiyet (CVE-2026-42248 ve CVE-2026-42249) kalıcı kod yürütmeye yol açabilmektedir. Kullanıcıların güncel yamaları uygulaması, ağ erişimini sınırlaması ve güvenlik duvarı arkasına alması şiddetle tavsiye edilmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://thehackernews.com/2026/05/ollama-out-of-bounds-read-vulnerability.html" target="_blank">thehackernews.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-6">
+                <div class="news-title"><b>Canvas Öğrenim Yönetim Sistemine Yapılan Siber Saldırı Dünya Genelinde Binlerce Okulu Aksatmıştır</b></div>
+                <p class="news-content">Instructure tarafından sunulan ve dünya genelinde binlerce okul tarafından kullanılan Canvas öğrenim yönetim sistemi, ShinyHunters adlı bir siber saldırı grubu tarafından hedef alınmıştır. Bu saldırı sonucunda sistem çevrimdışı kalmış, final sınavlarına hazırlanan on binlerce öğrenci ve öğretim görevlisi platforma erişim sağlayamamıştır. ShinyHunters, dünya genelinde yaklaşık 9.000 okulun etkilendiğini ve milyarlarca özel mesaj ile diğer kayıtların erişildiğini iddia etmiştir. Saldırganlar, bireysel okullara doğrudan kendileriyle iletişime geçerek bir anlaşma yapmalarını veya verileri sızdırmakla tehdit eden bir mesaj görüntülemiştir. Instructure, yetkisiz aktörün "Free-For-Teacher" hesaplarıyla ilgili bir sorunu istismar ettiğini doğrulamış ve bu hesapları geçici olarak kapatmıştır. Şirket, güvenlik açığını kontrol altına almak ve daha fazla araştırma yapmak amacıyla Canvas'ı çevrimdışı duruma getirmiştir. Saldırının, final dönemine denk gelmesi, eğitim kurumları için büyük bir kriz yaratmış ve birçok okulun sınav tarihlerini ertelemesine neden olmuştur. Instructure, fidye ödeyip ödemediği veya ele geçirilen verilerin durumu hakkında henüz bir açıklama yapmamıştır.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://www.securityweek.com/canvas-system-is-online-after-a-cyberattack-disrupted-thousands-of-schools/" target="_blank">securityweek.com</a>, 11.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-7">
+                <div class="news-title"><b>Checkmarx Jenkins AST Eklentisi Bir Tedarik Zinciri Saldırısında Ele Geçirilmiştir</b></div>
+                <p class="news-content">Checkmarx, Jenkins AST eklentisinin kötü amaçlı bir sürümünün Jenkins Marketplace'te yayınlandığını duyurarak bir tedarik zinciri saldırısının kurbanı olduğunu bildirmiştir. Bu eklenti, Checkmarx One platformunun işlevselliğini Jenkins işlem hatlarına entegre ederek kaynak kodunun Checkmarx AST platformu kullanılarak taranmasını sağlamaktadır. Şirket, kullanıcıları 2.0.13-829.vc72453fa_1c16 sürümünü veya daha yeni 2.0.13-848.v76e89de8a_053 sürümünü kullandıklarından emin olmaları konusunda uyarmıştır. Bu olay, Checkmarx'ın Mart ayından bu yana uğraştığı daha geniş bir tedarik zinciri saldırısının bir parçası olarak değerlendirilmektedir. Trivy tedarik zinciri saldırısı sonucunda TeamPCP hacker grubunun Mart ayının sonlarında Checkmarx'ın depolama alanlarına eriştiği ve kötü amaçlı eserler yayınladığı tespit edilmiştir. Bir ay sonra, muhtemelen sürekli veya yenilenen saldırgan erişimi nedeniyle, Checkmarx adına yeni bir kötü amaçlı eser dalgası yayınlanmıştır. Daha sonra, Lapsus$ fidye yazılımı grubu, şirketin depolama alanlarından çalındığı iddia edilen verileri kamuya açıklamıştır. Checkmarx, verilerin Mart ayının sonlarında Trivy tedarik zinciri saldırısı aracılığıyla ele geçirilen kimlik bilgileri kullanılarak GitHub depolama alanlarından çalındığını doğrulamıştır.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://www.securityweek.com/checkmarx-jenkins-ast-plugin-compromised-in-supply-chain-attack/" target="_blank">securityweek.com</a>, 11.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-8">
+                <div class="news-title"><b>Hugging Face'teki Sahte OpenAI Gizlilik Filtresi Deposu Rust Tabanlı Bilgi Hırsızı Dağıtmıştır</b></div>
+                <p class="news-content">Hugging Face platformunda, OpenAI'nin Privacy Filter adlı meşru açık kaynaklı modelini taklit eden kötü amaçlı bir depo, Windows kullanıcılarına Rust tabanlı bir bilgi hırsızı dağıtmıştır. "Open-OSS/privacy-filter" adını taşıyan bu proje, yasal karşılığının tüm açıklamasını kopyalayarak kullanıcıları yanıltmış ve platformun trend listesinde bir numaraya yükselerek yaklaşık 244.000 indirme ve 667 beğeni almıştır. HiddenLayer Araştırma Ekibi, kötü amaçlı projenin kullanıcıları depoyu klonlamaya ve Windows için "start.bat" veya Linux/macOS için "loader.py" betiğini çalıştırmaya yönlendirdiğini belirtmiştir. Python betiği, SSL doğrulamasını devre dışı bırakan, JSON Keeper'da barındırılan Base64 kodlu bir URL'yi çözen ve PowerShell'e iletilen bir komut çıkaran kötü amaçlı kodu tetiklemiştir. Bu saldırı, açık kaynak ekosistemlerini hedef alan daha geniş bir tedarik zinciri operasyonunun parçası olarak değerlendirilmektedir ve ValleyRAT (Winos 4.0 olarak da bilinir) zararlı yazılımının yeni bir ilk erişim vektörünü temsil etmektedir. ValleyRAT'ın dağıtımının münhasıran Çinli Silver Fox hacker grubuna atfedildiği bilinmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://thehackernews.com/2026/05/fake-openai-privacy-filter-repo-hits-1.html" target="_blank">thehackernews.com</a>, 11.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-9">
+                <div class="news-title"><b>Resmi JDownloader Sitesi 6-7 Mayıs Tarihleri Arasında Windows ve Linux Kullanıcılarına Zararlı Yazılım Dağıtmıştır</b></div>
+                <p class="news-content">JDownloader'ın resmi web sitesi, 6-7 Mayıs 2026 tarihleri arasında bir tedarik zinciri saldırısına uğramıştır. Saldırganlar, meşru Windows ve Linux yükleyicilerini kötü amaçlı dosyalarla değiştirerek kullanıcıların Python tabanlı bir uzaktan erişim trojanı (RAT) indirmesine neden olmuştur. JDownloader, milyonlarca kullanıcı tarafından Windows, Linux ve macOS üzerinde kullanılan popüler, ücretsiz ve açık kaynaklı bir indirme yöneticisidir. Saldırı, özellikle Windows "Alternatif Yükleyici" ve Linux kabuk yükleyicisi indiren kullanıcıları hedef almıştır. Microsoft Defender'ın indirilen yükleyicileri kötü amaçlı olarak işaretlemesi ve meşru yayıncı AppWork GmbH yerine "Zipline LLC" veya "The Water Team" gibi şüpheli geliştirici adlarının görülmesi üzerine bir Reddit kullanıcısı tarafından fark edilmiştir. JDownloader geliştiricileri ihlali hızla doğrulamış ve soruşturma için web sitesini geçici olarak kapatmıştır. Saldırganlar, sitenin içerik yönetim sistemindeki yamalanmamış bir güvenlik açığını istismar ederek indirme sayfalarını ve meşru yükleyici bağlantılarını değiştirebilmiştir. Geliştiriciler, sitenin artık güvenli olduğunu ve restore edildiğini belirtmiştir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191920/malware/official-jdownloader-site-served-malware-to-windows-and-linux-users.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-10">
+                <div class="news-title"><b>Çin Bağlantılı APT Salt Typhoon, IBM İtalya Yan Kuruluşu Sistemi Informativi'ye Sızmıştır</b></div>
+                <p class="news-content">Nisan 2026'nın sonlarında, Çin bağlantılı siber casusluk grubu Salt Typhoon'un, IBM İtalya'ya ait olan ve kamu ve özel sektördeki önemli kurumlar için BT altyapı yönetimi hizmetleri sunan Sistemi Informativi şirketine sızdığı bildirilmiştir. La Repubblica tarafından ilk olarak duyurulan bu olay, Çin bağlantılı siber operasyonların Avrupa'daki artan erişimi hakkında yeni endişeler yaratmıştır. Sistemi Informativi, İtalya'nın dijital altyapısı için merkezi bir konumda bulunmaktadır ve bu kesinti siber güvenlik otoriteleri arasında alarm zillerini çaldırmıştır. IBM, güvenlik ihlalini doğrulamış ve olayı kontrol altına aldığını, sistemlerin stabil hale geldiğini ve hizmetlerin restore edildiğini açıklamıştır. Salt Typhoon, 2019'dan beri aktif olan ve telekomünikasyon, savunma lojistiği ve kritik altyapıya odaklanan yetenekli bir APT grubu olarak bilinmektedir. Grup, tedarik zinciri zafiyetleri ve sıfır gün açıklarını kullanarak ağlara sızma taktiklerini kullanmaktadır. Saldırının, İtalya'nın kamu altyapısının omurgasına yönelik en iddialı siber saldırılardan biri olabileceği ifade edilmiştir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191638/apt/salt-typhoon-breach-ibm-subsidiary-in-italy-a-warning-for-europes-digital-defenses.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+
+            <!-- SONRA GERİ KALAN HABERLERİN PARAGRAF ÖZETLERİ (haber-11'den son habere) -->
+            <div class="news-item" id="haber-11">
+                <div class="news-title"><b>Beş Yüzü Aşkın Kuruluş, Yıllardır Süren Bir Kimlik Avı Kampanyasının Hedefi Olmuştur</b></div>
+                <p class="news-content">SOCRadar tarafından "Operation HookedWing" olarak adlandırılan ve dört yılı aşkın süredir devam eden bir kimlik avı kampanyası, havacılık, kritik altyapı, enerji, finans, hükümet, lojistik, kamu yönetimi ve teknoloji sektörlerinde 500'den fazla kuruluşu ve 2.000'den fazla kullanıcı kimlik bilgisini etkilemiştir. Kampanya, 2022'de belgelenmesine rağmen faaliyetlerini sürdürmüş ve altyapısını uyarlarken temel kalıplarını büyük ölçüde korumuştur. Saldırgan, 2022-2024 yılları arasında İngilizce içerikli GitHub alan adlarını ve ele geçirilmiş sunucuları kullanmıştır; saldırılar genellikle Microsoft ve Outlook temalı olmuştur. 2024 ve 2025'te tehdit aktörü, Fransızca içerik ekleyerek hedeflemesini genişletmiş, GitHub ve ele geçirilmiş sunucuları kullanmaya devam etmiştir. 2025'ten itibaren ise aktif altyapıyı ve yemleri genişleterek GitHub alan adı adlandırmasını gizlemiş, daha fazla tema eklemiş ve ek açılış sayfaları dağıtmıştır. Kampanya, insan kaynakları veya iş arkadaşı gibi görünen kimlik avı e-postaları veya bildirimler şeklinde ilerlemiştir. Bu mesajlar, şüphe uyandırmadan yetki ve aciliyet hissi vermek üzere tasarlanmıştır. SOCRadar, Operation HookedWing ile ilişkili yirmi dört komuta ve kontrol (C&C) sunucusu ile 100'den fazla GitHub alan adı tespit etmiştir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://www.securityweek.com/over-500-organizations-hit-in-years-long-phishing-campaign/" target="_blank">securityweek.com</a>, 11.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-12">
+                <div class="news-title"><b>Yeniden Canlandırılan Crimenetwork Siber Suç Pazar Yeri Kapatılmış ve Yöneticisi Tutuklanmıştır</b></div>
+                <p class="news-content">Alman yetkililer, 3.6 milyon Euro'dan fazla gelir elde eden "Crimenetwork" adlı siber suç pazar yerinin yeniden başlatılan sürümünü kapatmış ve işletmecisini tutuklamıştır. Crimenetwork, 2012'den beri faaliyet gösteren ve 100.000 kayıtlı kullanıcısı bulunan Almanya'nın en büyük siber suç pazar yeriydi. Bu platform, yasa dışı hizmetlerin, maddelerin ve çalınan verilerin satışına olanak tanımaktaydı. İlk sürümü Aralık 2024'te kapatıldıktan günler sonra, yeni bir operatör tarafından yeni bir altyapı üzerinde yeniden canlandırılmıştır. Yeniden başlatılan bu versiyon kısa sürede 22.000 kullanıcıya ve 100'den fazla satıcıya ulaşmıştır. Bu hafta başında, Crimenetwork'ün yeni sürümünü yönettiğinden şüphelenilen 35 yaşındaki Alman bir adam, İspanya Ulusal Polisi'nin özel bir birimi tarafından Mayorka'daki ikametgahında Avrupa tutuklama emriyle tutuklanmıştır. Polis, ayrıca yaklaşık 194.000 Euro değerinde yasa dışı olduğu iddia edilen varlıklara el koymuş ve daha fazla soruşturmayı kolaylaştırmak için kapsamlı kullanıcı ve işlem verileri elde etmiştir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://www.securityweek.com/resurrected-crimenetwork-marketplace-taken-down-administrator-arrested/" target="_blank">securityweek.com</a>, 11.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-13">
+                <div class="news-title"><b>Yeni cPanel Güvenlik Açıkları Dosya Erişimi ve Uzaktan Kod Yürütmeye İzin Vermiştir</b></div>
+                <p class="news-content">cPanel, cPanel & WHM'i etkileyen ve saldırganların savunmasız sistemlerde dosya okumasına, kod yürütmesine veya ayrıcalıklarını yükseltmesine olanak tanıyabilecek üç güvenlik açığını düzeltmek için güvenlik güncellemeleri yayınlamıştır. Bu açıklar arasında CVE-2026-29201 (CVSS skoru 4.3) olarak izlenen bir giriş doğrulama sorunu, CVE-2026-29202 (CVSS skoru 8.8) olarak izlenen 'create_user' API'sinde kritik bir doğrulama hatası ve CVE-2026-29203 (CVSS skoru 8.8) olarak izlenen güvenli olmayan bir sembolik bağlantı işleme zafiyeti bulunmaktadır. CVE-2026-29202, kimliği doğrulanmış bir saldırganın etkilenen hesabın ayrıcalıklarıyla rastgele Perl kodu yürütmesine izin verebilmektedir. CVE-2026-29203 ise bir kullanıcının chmod kullanarak rastgele dosyaların izinlerini değiştirmesine olanak tanıyarak hizmet reddi koşullarına veya ayrıcalık yükseltmeye yol açabilmektedir. Bu sorunlar, 11.136.0.9, 11.134.0.25, 11.132.0.31 ve daha yeni sürümler dahil olmak üzere birden çok desteklenen cPanel & WHM sürümünde yamalanmıştır. Şu anda aktif bir istismar kanıtı bulunmamakla birlikte, bu açıklama tehdit aktörlerinin kısa süre önce başka bir kritik cPanel açığını (CVE-2026-41940) sıfır gün olarak Mirai botnet varyantlarını dağıtmak için kullanmasından sonra yapılmıştır. Kullanıcıların mümkün olan en kısa sürede en son sürümleri yüklemeleri önerilmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191931/security/new-cpanel-vulnerabilities-could-allow-file-access-and-remote-code-execution.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-14">
+                <div class="news-title"><b>Yeni "Dirty Frag" Linux Güvenlik Açığının Saldırılarda İstismar Edildiği Tahmin Edilmiştir</b></div>
+                <p class="news-content">Önemli Linux dağıtımlarını etkileyen ve yeni açıklanan bir yerel ayrıcalık yükseltme zafiyetinin aktif olarak istismar edildiği tahmin edilmektedir. "Dirty Frag" ve "Copy Fail 2" olarak da adlandırılan bu exploit, CVE-2026-43284 ve CVE-2026-43500 olarak izlenen iki açığı bir araya getirerek ayrıcalıksız bir kullanıcının root ayrıcalıklarına yükselmesine olanak tanımaktadır. Araştırmacı Hyunwoo Kim, bu zafiyeti sorumlu bir şekilde açıklamış, ancak yamalar yayınlanmadan önce kamuya duyurulmuştur; bu durum Kim'i teknik detayları ve PoC kodunu erişilebilir kılmaya itmiştir. Kim, bunun zamanlama penceresine bağlı olmayan deterministik bir mantık hatası olduğunu, bu nedenle yarış koşuluna gerek kalmadığını ve başarı oranının çok yüksek olduğunu belirtmiştir. Zafiyetler, Linux çekirdeğinin xfrm-ESP (IPsec) ve RxRPC bileşenlerini etkilemektedir. Microsoft, Defender ürününün Dirty Frag veya Copy Fail'in istismarına işaret edebilecek sınırlı saha içi aktivite gözlemlediğini rapor etmiştir. Linux dağıtımları, Red Hat, Amazon Linux, Ubuntu, Fedora ve Alma Linux dahil olmak üzere Dirty Frag için yamalar ve hafifletmeler yayınlamaya başlamıştır.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://www.securityweek.com/new-dirty-frag-linux-vulnerability-possibly-exploited-in-attacks/" target="_blank">securityweek.com</a>, 11.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-15">
+                <div class="news-title"><b>TrickMo Android Bankacılık Zararlı Yazılımı Gizli İletişim İçin TON Blok Zincirini Kullanmıştır</b></div>
+                <p class="news-content">Avrupa'daki kullanıcıları hedef alan kampanyalarda dağıtılan TrickMo Android bankacılık zararlı yazılımının yeni bir varyantı, yeni komutlar sunmuş ve gizli komuta-kontrol (C2) iletişimleri için The Open Network (TON) blok zincirini kullanmıştır. İlk olarak Eylül 2019'da tespit edilen TrickMo, o zamandan beri sürekli güncellemeler alarak aktif gelişimini sürdürmüştür. ThreatFabric tarafından "Trickmo.C" olarak izlenen bu en son varyant, TikTok veya yayın uygulamaları gibi görünerek Fransa, İtalya ve Avusturya'daki kullanıcıların bankacılık ve kripto para cüzdanlarını hedef almaktadır. Mevcut varyantın anahtar yeni özelliği, enfekte cihazda çalışan yerleşik bir yerel TON proxy'si aracılığıyla yönlendirilen .ADNL adreslerini kullanarak operatörle TON tabanlı iletişim kurmasıdır. TON, Telegram ekosistemi etrafında geliştirilmiş merkezi olmayan bir eşler arası ağdır ve cihazların herkese açık internet sunucuları yerine şifreli bir katman ağı üzerinden web ile iletişim kurmasını sağlamaktadır. Bu yöntem, gerçek sunucu altyapısını tanımlamayı, engellemeyi veya devre dışı bırakmayı zorlaştırmaktadır. TrickMo, kimlik avı katmanları aracılığıyla bankacılık kimlik bilgilerini hedeflemekte, tuş vuruşu kaydı, ekran kaydı, SMS engelleme, OTP bildirimini bastırma ve pano değişikliği gibi işlevleri gerçekleştirmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://www.bleepingcomputer.com/news/security/trickmo-android-banker-adopts-ton-blockchain-for-covert-comms/" target="_blank">bleepingcomputer.com</a>, 11.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-16">
+                <div class="news-title"><b>Hackerlar, Google Reklamlarını ve Claude.ai Sohbetlerini Mac Zararlı Yazılımı Yaymak İçin Kötüye Kullanmıştır</b></div>
+                <p class="news-content">Saldırganlar, aktif bir kötü amaçlı reklam kampanyasında Google Ads'i ve meşru Claude.ai paylaşılan sohbetlerini kötüye kullanmıştır. "Claude mac download" araması yapan kullanıcılar, claude.ai'yi hedef web sitesi olarak gösteren sponsorlu arama sonuçlarına rastlayabilmekte, ancak bu sonuçlar Mac cihazlarına zararlı yazılım yükleyen talimatlara yönlendirmektedir. Trendyol Group'tan güvenlik mühendisi Berk Albayrak tarafından tespit edilen bu kampanya, "Apple Destek"e atfedilen resmi bir "Claude Code on Mac" kurulum rehberi gibi görünen Claude.ai paylaşılan bir sohbetini kullanmaktadır. Sohbet, kullanıcılara Terminal'i açmalarını ve Mac'lerine zararlı yazılımı sessizce indiren ve çalıştıran bir komut yapıştırmalarını söylemektedir. Kötü amaçlı komutlar, saldırganların sunucularından kodlanmış bir kabuk betiği indirmektedir. Bu betik, makinenin Rus veya BDT bölgesi klavye giriş kaynaklarına sahip olup olmadığını kontrol etmekte ve varsa çıkış yapmaktadır. Geçerli sistemler, ikinci aşama bir yükü indirip macOS'un yerleşik betik motoru olan osascript aracılığıyla çalıştırmaktadır. Bu durum, saldırganlara geleneksel bir uygulama veya ikili dosya bırakmadan uzaktan kod yürütme yeteneği sağlamaktadır. Kullanıcıların, sponsorlu arama sonuçlarına tıklamak yerine, yerel Claude uygulamasını indirmek için doğrudan claude.ai adresine gitmeleri tavsiye edilmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://www.bleepingcomputer.com/news/security/hackers-abuse-google-ads-claudeai-chats-to-push-mac-malware/" target="_blank">bleepingcomputer.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-17">
+                <div class="news-title"><b>Bluekit Kimlik Avı Kiti, 40'tan Fazla Şablon ve Yapay Zeka Araçlarıyla Otomatik Kimlik Avını Sağlamaktadır</b></div>
+                <p class="news-content">Bluekit, geliştirilme aşamasında olan ve yapay zeka asistanı ve otomatik alan adı kaydı gibi gelişmiş özellikler içeren yeni bir kimlik avı kitidir. Varonis'e göre, bu kit 40'tan fazla web sitesi şablonu ile birlikte sahtekarlık, ses klonlama, antibot koruması, coğrafi konum hileleri ve iki faktörlü kimlik doğrulama atlama desteği gibi araçlar sunmaktadır. Bluekit, iCloud, Apple ID, Gmail, Outlook, Yahoo, ProtonMail, GitHub, Twitter, Zoho, Zara ve Ledger gibi büyük hizmetleri hedefleyen birden fazla kimlik avı şablonunu desteklemektedir. Araştırmacılar, Bluekit'in dahili kontrol paneline erişerek kimlik avı operasyonlarını tek bir arayüzde merkezileştirdiğini gözlemlemiştir. Operatörler, kampanyalar oluşturabilmekte, alan adları kaydedebilmekte veya bağlayabilmekte, ele geçirilen kimlik bilgilerini yönetebilmekte ve çalınan verileri Telegram aracılığıyla gönderebilmektedir. Kit ayrıca, Llama, GPT-4.1, Claude Sonnet 4, Gemini ve DeepSeek varyantları gibi birden fazla model seçeneği sunan bir Yapay Zeka Asistanı paneli içermektedir. Testlerde sadece varsayılan Llama modelinin kullanılabilir olduğu tespit edilmiştir. Yapay Zeka Asistanı, tam işlevsel kimlik avı kitleri sunmaktan ziyade kampanya taslakları oluşturma aracı olarak işlev görmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191646/cyber-crime/bluekit-phishing-kit-enables-automated-phishing-with-40-templates-and-ai-tools.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-18">
+                <div class="news-title"><b>Instagram, Doğrudan Mesajlar İçin Uçtan Uca Şifrelemeyi Kaldırmıştır</b></div>
+                <p class="news-content">Instagram, 8 Mayıs 2026 tarihinden itibaren doğrudan mesajlar (DM) için uçtan uca şifrelemeyi kaldırmıştır. Bu değişiklik, Meta'nın daha önce yalnızca gönderenler ve alıcılar tarafından okunabilen mesaj içeriğine teknik olarak erişebilmesini sağlamaktadır. Instagram, isteğe bağlı şifreli mesajlaşmayı 2023 yılında kullanıma sunmuştu. Meta, bu kararı düşük kullanım oranı ve ayrı mesajlaşma sistemlerini sürdürmenin karmaşıklığı ile gerekçelendirmiştir. Daha önce şifreli sohbetleri kullanan kullanıcılardan, özellik kaybolmadan önce mesaj geçmişlerini indirmeleri istenmektedir. Ancak, indirilen yedekler Google Drive veya iCloud gibi bulut hizmetlerine yüklenirse korumalarını kaybetmektedir, çünkü bu durumda şifresiz biçimde var olmaktadırlar. Bu değişikliğin zamanlaması, ABD'nin 2025'te imzalanan ve platformların rızasız samimi görüntüleri, yapay zeka tarafından üretilen deepfake'ler de dahil olmak üzere, bildirimden sonra 48 saat içinde kaldırmasını gerektiren "Take It Down Act" yasasının son uyum aşamasından günler önce gelmesi nedeniyle dikkat çekmiştir. Yasa, şirketlerin 19 Mayıs 2026 tarihine kadar uygulama sistemleri kurmasını gerektirmektedir. Meta, iki gelişmeyi açıkça birbirine bağlamasa da, analistler şifrelemeyi kaldırmanın platformların zararlı içeriği büyük ölçekte tespit etmesini ve denetlemesini kolaylaştırdığını belirtmişlerdir. Güvenlik uzmanları, gizlilik hedefliyorsa dışa aktarılan mesajlar için bulut yedeklemelerinden kaçınılmasını önermektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191941/security/instagram-removed-end-to-end-encryption-for-dms-what-should-users-do.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-19">
+                <div class="news-title"><b>Bin Sekiz Yüzden Fazla MCP Sunucusu Kimlik Doğrulaması Olmadan İfşa Edilmiştir</b></div>
+                <p class="news-content">Knostic güvenlik araştırmacıları, Model Bağlam Protokolü (MCP) kullanan 1.862 sunucunun kimlik doğrulaması olmadan halka açık bir şekilde ifşa edildiğini tespit etmiştir. Anthropic tarafından Kasım 2024'te büyük dil modellerini harici araçlara bağlamak için geliştirilen MCP, hızla yaygınlaşmıştır; ancak güvenlik disiplini bu hıza ayak uyduramamıştır. Araştırmacıların manuel olarak doğruladığı 119 örnekten her biri, dahili araç listelerine kimlik doğrulaması yapılmadan erişime izin vermiştir. Bu durum, kuruluşların yapay zeka yeteneklerinin kapsamlı envanterlerini basit bir şifre sorgusu bile olmadan herkese yayınladığı anlamına gelmektedir. Knostic'in adli analizi, bu sunucuların finansal veritabanlarına, sosyal medya hesaplarına ve müşteri ilişkileri yönetimi platformlarına yazma erişimi olan üretim sistemleri olduğunu ortaya koymuştur. EchoLeak (CVE-2025-32711) ve mcp-remote (CVE-2025-6514) gibi zafiyetler, Bu zafiyetler, yapay zeka aracılarının insan gözetimi olmadan kötü amaçlı talimatları işleyebilmesine yol açmaktadır. Güvenlik ekiplerinin her MCP sunucusunda kimlik doğrulamayı zorunlu kılması, ağları bölümlere ayırması ve araç tanımları için kriptografik imzalamalı değişmez versiyonlama uygulaması gerekmektedir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://www.csoonline.com/article/4168979/1800-mcp-servers-exposed-without-authentication-how-zero-trust-can-secure-the-ai-agent-revolution.html" target="_blank">csoonline.com</a>, 11.05.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-20">
+                <div class="news-title"><b>Google, Hata Ödül Programlarını Yapay Zeka Çağında Yeniden Düzenlemiştir</b></div>
+                <p class="news-content">Google, Android ve Chrome için Güvenlik Açığı Ödül Programlarında (VRP) önemli bir revizyon yapmıştır. Bu değişiklikler, yapay zeka araçlarının güvenlik açığı keşfini yeniden şekillendirmesiyle birlikte, şirketin siber güvenliğe yaklaşımında stratejik bir değişimi işaret etmektedir. Son yıllarda, üretken yapay zeka sistemleri, kod analizinin ve exploit geliştirmenin büyük bir kısmını otomatikleştirebilmekte, bu da güvenlik açığı gönderimlerinde artışa yol açmıştır. Google, bu değişikliklerin ödül programlarını nicelikten ziyade kaliteye ve kullanıcı etkisine odaklanacak şekilde geliştirmeyi gerekli kıldığını belirtmiştir. Android ve Google Cihazları VRP'si en dramatik güncellemeleri görmüştür; Pixel'in Titan M güvenlik çipini hedefleyen kalıcılığa sahip sıfır tıklama exploitleri için en yüksek ödül 1 milyon dolardan 1.5 milyon dolara yükseltilmiştir. Chrome için ise Google, çoğu kategoride standart ödemeleri düşürmüştür. Şirket, yapay zeka tarafından üretilen raporların ezici akışını gerekçe göstererek, 2025'te rastgele okuma/yazma ve uzaktan kod yürütme zafiyetleri için verilen bonusları aşamalı olarak kaldırmıştır. Google, 2026'da toplam ödül miktarını artırmayı beklemektedir. Bu strateji, yapay zeka odaklı bir ortamda diğer teknoloji şirketlerinin güvenlik programlarını nasıl uyarlayacağını etkileyebilir.</p>
+                <p class="source"><b>(KAYNAK, ÖZET - <a href="https://securityaffairs.com/191600/security/google-revamps-bug-bounty-programs-android-rewards-rise-chrome-payouts-drop-in-the-age-of-ai.html" target="_blank">securityaffairs.com</a>, 10.05.2026)</b></p>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="back-to-top" title="Başa Dön" onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
+</div>
+
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-05-10.html" class="archive-link">10.05.2026</a>
+            <a href="./2026-05-09.html" class="archive-link">09.05.2026</a>
+            <a href="./2026-05-08.html" class="archive-link">08.05.2026</a>
+            <a href="./2026-05-07.html" class="archive-link">07.05.2026</a>
+            <a href="./2026-05-06.html" class="archive-link">06.05.2026</a>
+            <a href="./2026-05-05.html" class="archive-link">05.05.2026</a>
+            <a href="./2026-05-04.html" class="archive-link">04.05.2026</a>
+            <a href="./2026-05-03.html" class="archive-link">03.05.2026</a>
+            <a href="./2026-05-02.html" class="archive-link">02.05.2026</a>
+            <a href="./2026-05-01.html" class="archive-link">01.05.2026</a>
+            <a href="./2026-04-30.html" class="archive-link">30.04.2026</a>
+            <a href="./2026-04-29.html" class="archive-link">29.04.2026</a>
+            <a href="./2026-04-28.html" class="archive-link">28.04.2026</a>
+            <a href="./2026-04-27.html" class="archive-link">27.04.2026</a>
+            <a href="./2026-04-26.html" class="archive-link">26.04.2026</a>
+            <a href="./2026-04-25.html" class="archive-link">25.04.2026</a>
+            <a href="./2026-04-24.html" class="archive-link">24.04.2026</a>
+            <a href="./2026-04-23.html" class="archive-link">23.04.2026</a>
+            <a href="./2026-04-22.html" class="archive-link">22.04.2026</a>
+            <a href="./2026-04-21.html" class="archive-link">21.04.2026</a>
+            <a href="./2026-04-20.html" class="archive-link">20.04.2026</a>
+            <a href="./2026-04-19.html" class="archive-link">19.04.2026</a>
+            <a href="./2026-04-18.html" class="archive-link">18.04.2026</a>
+            <a href="./2026-04-17.html" class="archive-link">17.04.2026</a>
+            <a href="./2026-04-16.html" class="archive-link">16.04.2026</a>
+            <a href="./2026-04-15.html" class="archive-link">15.04.2026</a>
+            <a href="./2026-04-14.html" class="archive-link">14.04.2026</a>
+            <a href="./2026-04-13.html" class="archive-link">13.04.2026</a>
+            <a href="./2026-04-12.html" class="archive-link">12.04.2026</a>
+        </div>
+    </div>
+
+</body>
+</html>
