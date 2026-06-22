@@ -1222,9 +1222,15 @@ class HaberSistemi:
                 link     = art.get('link', '#')
                 domain   = art.get('domain', '')
                 art_date = art.get('art_date', '')
+                # Yalnızca gerçekten zirve haberi olan kartta NATO rozeti göster.
+                # Deterministik güvenlik ağıyla aynı dar ölçüt kullanılır; genel
+                # NATO haberinde rozet ÇIKMAZ.
+                nato_badge = ('<span class="nato-star">NATO ZİRVESİ</span>'
+                              if _is_nato_summit(art.get('title', ''),
+                                                 art.get('full_text', '')) else '')
                 top3_cards_html += (
                     f'                <div class="top3-card">\n'
-                    f'                    <div class="top3-card-title">'
+                    f'                    <div class="top3-card-title">{nato_badge}'
                     f'<a href="{link}" target="_blank" style="color:inherit;text-decoration:none;">'
                     f'{tr_title}</a></div>\n'
                     f'                    <p class="top3-card-paragraph">{paragraph}</p>\n'
