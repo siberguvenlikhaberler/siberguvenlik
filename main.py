@@ -1897,18 +1897,22 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         return filtered
 
     def _filter_old_articles(self, all_news):
-        """Son 30 saatte yayınlanmayan haberleri filtrele.
+        """Son 48 saatte yayınlanmayan haberleri filtrele.
 
         Tarih değil datetime karşılaştırması kullanılır:
         - "yesterday_tr" (tarih bazlı) sabah 07 UTC çalışmasında
           tüm dünü kabul eder → %70 dünkü haber dolardı.
         - "today_tr" (tarih bazlı) sabah 07 UTC'de yalnızca 1-2 haber bırakır
           (ABD iş saatlerindeki haberler henüz yayınlanmamış).
-        - 30 saatlik datetime penceresi her iki sorunu da çözer.
+        - 48 saatlik datetime penceresi her iki sorunu da çözer; hafta
+          sonu / tatil yayın kuraklığında da yeterli havuz bırakır.
+          Tekrar önleme görevini zaten URL deduplikasyonu
+          (haberler_linkler.txt) üstlendiği için pencereyi genişletmek
+          mükerrer haber riski yaratmaz.
         """
         from datetime import timezone, timedelta as td
         UTC = timezone.utc
-        cutoff_dt = datetime.now(UTC) - td(hours=30)
+        cutoff_dt = datetime.now(UTC) - td(hours=48)
 
         filtered = {}
         removed_count = 0
@@ -1967,7 +1971,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 filtered[src] = filtered_articles
 
         if removed_count > 0:
-            print(f"📅 {removed_count} eski haber filtrelendi (>30 saat)")
+            print(f"📅 {removed_count} eski haber filtrelendi (>48 saat)")
 
         return filtered
 
