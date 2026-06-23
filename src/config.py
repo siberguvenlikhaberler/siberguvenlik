@@ -326,12 +326,14 @@ def get_executive_summary_prompt(articles_brief, source_count=None, news_count=N
 ⚠️ DİL KURALI: Çıktı YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile özet kesinlikle Türkçe yazılacak. (Şirket adları, CVE kodları ve ürün adları orijinal kalabilir.)
 
 GÖREV:
-- Paragrafa güncel siber tehdit ortamına bağlamsal bir GİRİŞ CÜMLESİYLE başla. Örnek çerçeveler (kelimesi kelimesine kopyalama; aynı tonu koruyarak doğal biçimde yeniden ifade et):
-  • "Küresel siber tehdit ortamında öne çıkan gelişmeler incelendiğinde..."
+- Paragrafa güncel siber tehdit ortamına bağlamsal bir GİRİŞ CÜMLESİYLE başla.
+  ⚠️ ZORUNLU: Giriş cümlesinde mutlaka "son 48 saat", "son iki gün", "geçen 48 saat" veya
+  benzeri bir ZAMAN REFERANSI yer almalıdır. Zaman referansı olmayan giriş kabul edilmez.
+  Örnek çerçeveler (kelimesi kelimesine kopyalama; aynı tonu koruyarak doğal biçimde yeniden ifade et):
   • "Son 48 saatin siber güvenlik gündeminde belirleyici olan gelişmeler değerlendirildiğinde..."
   • "Geçen 48 saat içinde siber tehdit ortamında yaşanan gelişmeler ele alındığında..."
   • "Son iki günde küresel siber güvenlik gündemini şekillendiren başlıca olaylar incelendiğinde..."
-  ⛔ YASAK GİRİŞLER: "Bugünün…", "Bugün siber…", "Bu günün…" ile başlayan ifadeler KULLANILMAZ — rapor son 48 saati kapsar, yalnızca bugünü değil.
+  ⛔ YASAK GİRİŞLER: "Bugünün…", "Bugün siber…", "Bu günün…", "Küresel siber tehdit ortamında öne çıkan…" (zaman referansı olmadan) ile başlayan ifadeler KULLANILMAZ.
   Giriş cümlesi bağlama uygun ve özgün olsun; her gün aynı kalıpla başlama.
 - Giriş cümlesinin ardından, verilen haberleri TEK BİR paragraf içinde özetlemeye devam et (madde işareti, başlık, alt başlık YOK).
 - Bir yönetici tek okuyuşta, son 48 saatte siber güvenlik dünyasında yaşanan en önemli gelişmeler hakkında doğrudan fikir sahibi olabilmeli.
