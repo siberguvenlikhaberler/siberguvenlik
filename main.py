@@ -1238,6 +1238,16 @@ class HaberSistemi:
         vuln_ids     = [aid for aid in non_top3_ids if _is_vuln(aid)]
         regular_ids  = [aid for aid in non_top3_ids if not _is_vuln(aid)]
 
+        # İKİ SÜTUN SİMETRİSİ: "Yönetici Özeti" tablosu (top3 dışı normal
+        # haberler) 2 sütunlu render edilir. Tek sayıda son satırda bir hücre
+        # boş kalıp sütunlar dengesiz görünür. Bu yüzden tek sayıdaysa en düşük
+        # öncelikli (listenin sonundaki) normal haber çıkarılır → daima ÇİFT.
+        # Çıkarılan haber tablo, gövde ve numaralandırmadan tutarlı şekilde düşer.
+        if len(regular_ids) % 2 == 1:
+            dropped_parity = regular_ids.pop()
+            print(f"   ⚖️  Çift-sayı simetrisi: ID {dropped_parity} çıkarıldı "
+                  f"(normal haber sayısı tek → çift)")
+
         # Numaralandırma: regular (1..N), vuln (N+1..M) — top3 numara almaz
         id_to_num = {}
         for i, aid in enumerate(regular_ids, 1):
