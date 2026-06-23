@@ -194,6 +194,9 @@ A) DEVLET DESTEKLİ CASUS ARAÇLARI & TİCARİ CASUS YAZILIMI
 B) JEOPOLİTİK & DİPLOMATİK SİBER GELİŞMELER
    • Ülkeler arası siber saldırı/casusluk/sabotaj atfı (attribution)
    • Siber savaş, hibrit savaş, siber operasyon (Rusya, Çin, İran, Kuzey Kore vb.)
+   • Devlet veya istihbarat servisinin yürüttüğü aktif siber operasyon: botnet çökertme,
+     tehdit aktörü altyapısı tasfiyesi, uluslararası koordineli ağ kapatma operasyonu
+     (FBI, CISA, Five Eyes, Europol, NCSC, CSE, AIVD ve benzeri kurumlar dahil)
    • Uluslararası anlaşma, diplomatik kriz, yaptırım, sınır dışı etme kararı
    • NATO, AB, BM, OSCE gibi uluslararası örgütlerin siber güvenlik kararı veya politikası
 
