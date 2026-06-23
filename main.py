@@ -2421,6 +2421,17 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if not top3_ids and non_vuln_ids_p4:
             top3_ids = non_vuln_ids_p4[:3]
 
+        # LLM 3'ten az geçerli ID döndürmüşse (filtrelenmiş veya <3 gönderilmiş)
+        # non_vuln listesinin başından tamamla — eksik kalan slotları doldur.
+        if len(top3_ids) < 3:
+            existing = set(top3_ids)
+            for aid in non_vuln_ids_p4:
+                if aid not in existing:
+                    top3_ids.append(aid)
+                    existing.add(aid)
+                if len(top3_ids) == 3:
+                    break
+
         # ── NATO TÜRKİYE ZİRVESİ GÜVENLİK AĞI (Pass 4) ───────────────────
         # LLM zirve haberini top3'e koymadıysa kod düzeyinde 1. sıraya sabitle.
         # Yalnızca havuzda (top10+remaining) gerçekten bulunan zirve haberi
@@ -2507,6 +2518,21 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             top10_ids     = [i for i in top10_ids     if i not in p5_remove]
             remaining_ids = [i for i in remaining_ids if i not in p5_remove]
             top3_ids      = [i for i in top3_ids      if i not in p5_remove]
+            # Pass 5 top3'ten haber çıkardıysa 3'e tamamla (non_vuln + kalan tüm
+            # haberler havuzundan, p5_remove ve mevcut top3 dışındakilerden).
+            if len(top3_ids) < 3:
+                remaining_pool = ([i for i in non_vuln_ids_p4 if i not in p5_remove]
+                                  + [i for i in all_ids_p4 if i not in p5_remove])
+                existing_t3 = set(top3_ids)
+                for aid in remaining_pool:
+                    if aid not in existing_t3:
+                        top3_ids.append(aid)
+                        existing_t3.add(aid)
+                    if len(top3_ids) == 3:
+                        break
+                if len(top3_ids) < 3:
+                    print(f"   ⚠️  Pass 5 sonrası top3 {len(top3_ids)}'e düştü, "
+                          f"tamamlanacak haber bulunamadı")
 
         if p5_regenerate:
             print(f"   🔄 Yeniden üretilen (İngilizce içerik): {p5_regenerate}")
@@ -2863,6 +2889,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 top3_ids = [aid for aid in raw_top3 if aid in non_vuln_set][:3]
         if not top3_ids and non_vuln_ids:
             top3_ids = non_vuln_ids[:3]
+
+        # LLM <3 ID döndürmüşse tamamla (legacy yolu).
+        if len(top3_ids) < 3:
+            existing = set(top3_ids)
+            for aid in non_vuln_ids:
+                if aid not in existing:
+                    top3_ids.append(aid)
+                    existing.add(aid)
+                if len(top3_ids) == 3:
+                    break
 
         # NATO zirve haberini top3'ün 1. sırasına sabitle (legacy yolu).
         pool_legacy = set(top10_ids) | set(remaining_ids)
