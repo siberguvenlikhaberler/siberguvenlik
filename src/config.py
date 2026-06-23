@@ -78,8 +78,14 @@ def get_ranking_prompt(articles_brief, recent_events=''):
 ADIM 0 — TEKİL OLAY KONTROLÜ (önce yap):
 Aynı siber olayı/saldırıyı/gelişmeyi farklı kaynaklardan anlatan haberleri tespit et.
 Kriter: başlık + içerik birlikte değerlendirildiğinde AYNI OLAY (aynı mağdur + aynı saldırgan/grup + aynı tarihli olay).
+🔑 GÜÇLÜ SİNYAL: Aynı kampanya / operasyon / zararlı yazılım KOD ADINI paylaşan
+   haberler (ör. "FortiBleed", "Operation Escaneo", "SolarWinds", "LockBit") —
+   başlıkları farklı sözcüklerle yazılmış olsa bile — büyük olasılıkla AYNI
+   OLAYDIR; en kapsamlısı dışındakileri "filtered" listesine al.
 Her gruptan yalnızca en kapsamlı/güncel haberi bırak; diğerlerini "filtered" listesine ekle.
 ⚠️ Dikkat: farklı CVE numaraları veya farklı mağdurlar → farklı haber (filtreleme).
+⚠️ Dikkat: aynı ürün/vendor adı (FortiGate, Windows, Fortinet) paylaşmak TEK BAŞINA
+   aynı olay demek DEĞİLDİR — farklı kampanya/açık olabilir (ör. FortiBleed ≠ FortiSandbox açığı).
 
 ADIM 1 — FILTRELE (bunları "filtered" listesine koy):
 - Podcast, webinar, konferans, etkinlik duyurusu

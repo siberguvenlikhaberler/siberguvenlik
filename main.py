@@ -233,6 +233,40 @@ def _is_nato_summit(*texts):
     return has_context
 
 
+# Kod adı dedup (Seviye 5) için ortak vendor/ürün adları — bunlar tek başına
+# "aynı olay" sinyali DEĞİLDİR (birçok farklı haberde geçer). Kod adı olarak
+# sayılmaz; yalnızca gerçek kampanya/operasyon/zararlı kod adları (FortiBleed,
+# CastleStealer, PixelSmash...) dedup anahtarı olur.
+_CODENAME_DENYLIST = {
+    'fortigate', 'fortinet', 'fortios', 'fortisandbox', 'fortiweb', 'fortimanager',
+    'windows', 'microsoft', 'macos', 'ipados', 'iphone', 'iphones', 'ipad', 'ipads',
+    'github', 'gitlab', 'linkedin', 'whatsapp', 'youtube', 'facebook', 'instagram',
+    'openai', 'chatgpt', 'powershell', 'javascript', 'typescript', 'nodejs',
+    'wordpress', 'bleepingcomputer', 'crowdstrike', 'virustotal', 'cloudflare',
+    'paypal', 'mongodb', 'postgresql', 'mysql', 'kubernetes', 'dropbox', 'onedrive',
+    'sharepoint', 'teamviewer', 'anydesk', 'lastpass', 'bitlocker', 'sentinelone',
+    'sonicwall', 'paloalto', 'checkpoint', 'proofpoint', 'mimecast', 'manageengine',
+    'autogen', 'deepseek', 'blackberry', 'quickbooks', 'salesforce', 'servicenow',
+    'pytorch', 'tensorflow', 'macbook', 'airpods', 'playstation',
+}
+
+
+def _extract_codenames(title):
+    """Başlıktan ayırt edici kampanya/operasyon/zararlı kod adlarını çıkarır.
+
+    Heuristik: içinde küçük→büyük harf geçişi olan (CamelCase) ve uzunluğu ≥5
+    olan token'lar (FortiBleed, CastleStealer, PixelSmash...). Bunlar nadir ve
+    bir olaya özgüdür; aynı kampanyayı farklı kaynaktan/başlıkla anlatan
+    haberleri (genel kelime örtüşmesi düşük olsa bile) bağlamak için güçlü
+    sinyaldir. Yaygın vendor/ürün adları (_CODENAME_DENYLIST) hariç tutulur.
+    """
+    out = set()
+    for w in re.findall(r'[A-Za-z][A-Za-z0-9]+', title):
+        if len(w) >= 5 and re.search(r'[a-z][A-Z]', w) and w.lower() not in _CODENAME_DENYLIST:
+            out.add(w.lower())
+    return out
+
+
 def _parse_article_date(date_str, fallback):
     """RSS tarihini DD.MM.YYYY formatına çevirir (TR UTC+3), parse edilemezse bugünün tarihini kullanır"""
     from datetime import timezone, timedelta as td
@@ -1856,7 +1890,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         filtered = {}
         removed_count = 0
-        detail_removed = {'link': 0, 'hash': 0, 'similarity': 0, 'keyword': 0}
+        detail_removed = {'link': 0, 'hash': 0, 'similarity': 0, 'keyword': 0, 'codename': 0}
+
+        # Seviye 5 (kod adı) yalnızca AYNI RUN içinde karşılaştırılır — 7 günlük
+        # geçmişe karşı DEĞİL. Böylece aynı gün 3 kaynaktan gelen "FortiBleed"
+        # haberleri tekilleşir, ama ertesi günkü FortiBleed GELİŞMESİ engellenmez.
+        run_codenames = {}  # codename -> ilk görülen başlık
 
         for src, articles in all_news.items():
             filtered_articles = []
@@ -1908,10 +1947,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 if is_similar:
                     continue
 
+                # Seviye 5: Ortak ayırt edici kod adı (aynı run içinde)
+                # Başlıklar farklı sözcüklerle yazılsa bile aynı kampanya kod
+                # adını (FortiBleed gibi) paylaşan haberler tek olaydır; Seviye
+                # 3/4'ün eşik altında kalan bu durumu yakalar.
+                art_codenames = _extract_codenames(title)
+                shared_codename = next((c for c in art_codenames if c in run_codenames), None)
+                if shared_codename:
+                    removed_count += 1
+                    detail_removed['codename'] += 1
+                    continue
+
                 # Geçen haberi mevcut run içindeki karşılaştırma havuzuna ekle
                 used_titles[link_norm] = title
                 used_links.add(link_norm)
                 used_hashes.add(content_hash)
+                for c in art_codenames:
+                    run_codenames.setdefault(c, title)
                 filtered_articles.append(art)
 
             if filtered_articles:
@@ -1922,7 +1974,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"   ├─ URL: {detail_removed['link']}")
             print(f"   ├─ Hash: {detail_removed['hash']}")
             print(f"   ├─ Benzerlik: {detail_removed['similarity']}")
-            print(f"   └─ Anahtar kelime: {detail_removed['keyword']}")
+            print(f"   ├─ Anahtar kelime: {detail_removed['keyword']}")
+            print(f"   └─ Kod adı: {detail_removed['codename']}")
 
         return filtered
 
