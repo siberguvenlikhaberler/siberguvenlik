@@ -23,7 +23,7 @@ from src.config import (
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_legacy_json_prompt, get_quality_review_prompt,
-    get_executive_summary_prompt,
+    get_executive_summary_prompt, get_title_rescue_prompt,
     is_openrouter_active,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
@@ -2611,6 +2611,38 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if not p5_remove and not p5_regenerate:
             print("   ✅ Tüm içerikler kalite kontrolünden geçti")
 
+        # ── DETERMİNİSTİK İNGİLİZCE-İÇERİK SÜPÜRMESİ (LLM'den bağımsız ağ) ──
+        # Kalite-kontrol LLM'i bir haberi flag'lemezse, içerik filtresine takılıp
+        # _make_fallback_content'e düşen HAM İNGİLİZCE başlık/paragraf rapora
+        # sızabiliyordu (ör. "jailbreak/spyware" içerikli haberler). Render
+        # edilecek TÜM haberleri LLM'den bağımsız tarayıp İngilizce kalanları
+        # önce yeniden üret, hâlâ İngilizce ise yansız çeviriyle Türkçeye çevir.
+        rendered_now = list(top10_ids) + list(remaining_ids)
+        english_leftovers = [aid for aid in rendered_now
+                             if self._content_is_english(content_by_id.get(aid, {}))]
+        if english_leftovers:
+            print(f"   🔁 Deterministik İngilizce süpürme: {english_leftovers}")
+            for rid in english_leftovers:
+                content_by_id.pop(rid, None)
+            for i in range(0, len(english_leftovers), 3):
+                self._process_batch_with_split(
+                    english_leftovers[i:i + 3], articles_by_id, content_by_id,
+                    label_prefix='EN-Süpür',
+                )
+            # Yeniden üretim de İngilizce/fallback verdiyse (kalıcı içerik
+            # filtresi) yansız çeviri çağrısıyla en azından Türkçe başlık+paragraf al.
+            for rid in english_leftovers:
+                if self._content_is_english(content_by_id.get(rid, {})):
+                    rescued = self._rescue_translate(articles_by_id.get(rid, {}))
+                    if rescued:
+                        merged = dict(content_by_id.get(rid, {}))
+                        merged.pop('_fallback', None)
+                        merged.update(rescued)
+                        content_by_id[rid] = merged
+                        print(f"   🌐 Çeviriyle kurtarıldı: ID={rid}")
+                    else:
+                        print(f"   ⚠️  ID={rid} Türkçeleştirilemedi (içerik filtresi olası).")
+
         # ── AZ-HABER GUARD ───────────────────────────────────────────────
         # Çok az haber olan günlerde (ör. hafta sonu kıtlığı + dedup) tüm
         # haberler top3'e girip gövde tamamen boş kalabiliyor (21 Haz 2026:
@@ -2658,17 +2690,38 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 f"Özet: {snippet}\n"
             )
         if es_lines:
-            es_data = self._gemini_call_json(
-                get_executive_summary_prompt(
-                    '\n'.join(es_lines), es_source_count, es_news_count),
-                max_output_tokens=1024,
-                label='Pass6-YoneticiOzeti',
-            )
-            if es_data and isinstance(es_data.get('ozet'), str):
-                exec_summary = es_data['ozet'].strip()
-                print(f"   ✅ Yönetici Özeti üretildi ({len(exec_summary.split())} kelime)")
-            else:
-                print("   ⚠️  Yönetici Özeti üretilemedi — kutu atlanıyor.")
+            # Yönetici Özeti raporun en görünür bloğu; tek bir geçici LLM
+            # hatasında TAMAMEN kaybolmaması için 3 kez dene.
+            for es_attempt in range(3):
+                es_data = self._gemini_call_json(
+                    get_executive_summary_prompt(
+                        '\n'.join(es_lines), es_source_count, es_news_count),
+                    max_output_tokens=1024,
+                    label=f'Pass6-YoneticiOzeti(d{es_attempt + 1})',
+                )
+                if (es_data and isinstance(es_data.get('ozet'), str)
+                        and es_data['ozet'].strip()):
+                    exec_summary = es_data['ozet'].strip()
+                    print(f"   ✅ Yönetici Özeti üretildi ({len(exec_summary.split())} kelime)")
+                    break
+                print(f"   ⚠️  Yönetici Özeti denemesi {es_attempt + 1}/3 başarısız.")
+
+            # 3 deneme de başarısızsa: blok ASLA kaybolmasın — en önemli
+            # haberlerin Türkçe başlıklarından deterministik bir özet kur.
+            if not exec_summary:
+                titles = []
+                for art_id in exec_ids:
+                    c = content_by_id.get(art_id, {})
+                    t = (c.get('tr_title') or '').strip().rstrip('.')
+                    if t and not self._is_mostly_english(t):
+                        titles.append(t)
+                if titles:
+                    lead = ('Son 48 saatin siber güvenlik gündeminde öne çıkan '
+                            'başlıca gelişmeler şunlardır: ')
+                    exec_summary = lead + '; '.join(titles[:8]) + '.'
+                    print("   ↩️  Yönetici Özeti deterministik yedekle dolduruldu.")
+                else:
+                    print("   ⚠️  Yönetici Özeti üretilemedi — kutu atlanıyor.")
 
         # ════════════════════════════════════════════════════════════════
         # ASSEMBLY — Kod tarafı HTML oluşturma
@@ -2714,11 +2767,73 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         Gemini'nin tamamen başarısız olduğu tek bir haber için fallback içerik üretir.
         İngilizce başlık + full_text'in ilk ~150 kelimesi Türkçeye dönüştürülmeden
         ham olarak yerleştirilir; en azından boş paragraf çıkmaz.
+        '_fallback' bayrağı, deterministik İngilizce-süpürmenin bu haberi
+        yeniden denemesi için işaret bırakır.
         """
         title = article.get('title', f"Haber #{article.get('id', '?')}")
         words = article.get('full_text', '').split()
         paragraph = ' '.join(words[:150]) if words else title
-        return {'tr_title': title, 'paragraph': paragraph}
+        return {'tr_title': title, 'paragraph': paragraph, '_fallback': True}
+
+    @staticmethod
+    def _is_mostly_english(text):
+        """
+        Bir metnin ağırlıklı İngilizce (Türkçeleştirilmemiş ham içerik) olup
+        olmadığını sezgisel saptar: metinde Türkçe'ye özgü karakter YOKSA ve
+        ASCII-Latin sözcükler baskınsa İngilizce sayılır. 110+ kelimelik gerçek
+        bir Türkçe paragrafta çğıöşü karakterleri kaçınılmaz olarak bulunur,
+        bu yüzden yanlış-pozitif riski çok düşüktür.
+        """
+        if not text or not text.strip():
+            return False
+        sample = text.split()[:40]
+        if not sample:
+            return False
+        has_turkish = any(ch in text for ch in 'çğıöşüÇĞİÖŞÜ')
+        if has_turkish:
+            return False
+        ascii_alpha = sum(1 for w in sample if w.isascii() and w.isalpha())
+        return ascii_alpha >= max(8, int(len(sample) * 0.6))
+
+    @classmethod
+    def _content_is_english(cls, content):
+        """Render edilecek bir haberin paragrafı ham İngilizce mi? Çok kısa
+        paragraflar güvenilir sinyal vermediğinden İngilizce sayılmaz."""
+        if not content:
+            return False
+        if content.get('_fallback'):
+            return True
+        para = content.get('paragraph', '')
+        if len(para.split()) < 20:
+            return False
+        return cls._is_mostly_english(para)
+
+    def _rescue_translate(self, article):
+        """
+        İçerik filtresine takılıp ham İngilizce kalan bir haberi, YANSIZ bir
+        çeviri çağrısıyla Türkçeye dönüştürür (son çare). Başarısızlıkta None.
+        """
+        if not article:
+            return None
+        title = article.get('title', '')
+        body = ' '.join(article.get('full_text', '').split()[:220])
+        if not body:
+            return None
+        data = self._gemini_call_json(
+            get_title_rescue_prompt(title, body),
+            max_output_tokens=1500,
+            label='EN-Çeviri',
+        )
+        if not data:
+            return None
+        tr_title = (data.get('tr_title') or '').strip()
+        paragraph = (data.get('paragraph') or '').strip()
+        if not tr_title or self._is_mostly_english(tr_title):
+            return None
+        out = {'tr_title': tr_title}
+        if paragraph and not self._is_mostly_english(paragraph):
+            out['paragraph'] = paragraph
+        return out
 
     def _format_batch_for_prompt(self, batch, articles_by_id):
         """Bir batch makaleyi get_summary_batch_prompt için tam metin formatına dönüştürür."""

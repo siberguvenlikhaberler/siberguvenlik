@@ -346,6 +346,39 @@ HABERLER:
 {articles_brief}"""
 
 
+def get_title_rescue_prompt(title, body):
+    """
+    İçerik filtresine takılıp/analiz başarısız olup HAM İNGİLİZCE kalan tek bir
+    haberi YANSIZ ÇEVİRİ çerçevesiyle Türkçeye dönüştürür. Analitik 'derin analiz'
+    yerine düz çeviri çerçevesi kullanıldığından güvenlik filtresine takılma
+    olasılığı düşüktür.
+    title: orijinal (İngilizce) başlık. body: makalenin ilk ~220 kelimesi.
+    """
+    return f"""Aşağıdaki İngilizce siber güvenlik haberini Türkçeye çevir. Bu yalnızca bir DİL ÇEVİRİSİ görevidir; içerik üzerinde değerlendirme/yorum yapma.
+
+⚠️ DİL KURALI: Çıktı YALNIZCA TÜRKÇE olacak. (Şirket adları, CVE kodları, ürün adları orijinal kalabilir.)
+
+İKİ ŞEY ÜRET:
+1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
+   - 5-9 kelime, her kelimenin ilk harfi büyük
+   - ZORUNLU FORMAT: "[Özne]'nin [Nesne]'yi [eylem-ması/mesi]"
+   - Bitiş: -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
+   - YASAK: -mıştır, -edilmiştir gibi eylem cümlesi yapıları
+
+2. PARAGRAF: Haberin resmi Türkçe özeti
+   - MİNİMUM 110 kelime, tek paragraf
+   - SADECE verilen metindeki bilgileri kullan; tahmin/yorum ekleme
+   - Resmi dil: yapılmıştır, belirtilmektedir, tespit edilmiştir
+
+SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
+{{"tr_title": "...", "paragraph": "..."}}
+
+ORİJİNAL BAŞLIK: {title}
+
+METİN:
+{body}"""
+
+
 def get_deep_analysis_prompt(articles_full):
     """
     Pass 2: Top-10 haberin TAM metni → Türkçe başlık + 120+ kelime paragraf (JSON).
