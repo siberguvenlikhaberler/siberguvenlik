@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siber Güvenlik Raporu - 23.06.2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        .report-header {
+            background: #ffffff;
+            padding: 36px 40px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .report-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
+        }
+        .report-header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+            color: #1e293b;
+        }
+        .header-date { color: #2563eb; font-weight: 700; }
+        .important-news {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .important-news h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .onemli-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .onemli-header h2 { margin-bottom: 0; }
+        .exec-brief {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
+            color: #2c3e50;
+            padding: 25px 30px;
+            margin: 0 0 20px 0;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            position: relative;
+        }
+        .exec-brief h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+        .exec-brief-paragraph { font-size: 15.5px; line-height: 1.85; text-align: justify; margin: 0; }
+        .exec-brief-vuln-link { margin: 16px 0 0 0; text-align: right; }
+        .exec-brief-vuln-link a {
+            color: #e65100; font-weight: 700; font-size: 14.5px; text-decoration: none;
+        }
+        .exec-brief-vuln-link a:hover { text-decoration: underline; color: #bf360c; }
+        .block-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .block-actions-bottom {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 14px;
+            margin-bottom: 20px;
+        }
+        .block-action-btn {
+            background: rgba(255,255,255,0.92);
+            border: 1px solid #90caf9;
+            border-radius: 6px;
+            padding: 5px 11px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1565c0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.15s, border-color 0.15s;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .block-action-btn:hover { background: #dbeeff; border-color: #42a5f5; }
+        .block-action-btn.success { background: #e8f5e9; border-color: #66bb6a; color: #2e7d32; }
+        .block-action-btn svg { flex-shrink: 0; }
+        .drag-file-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.92);
+            border: 1.5px dashed #90caf9;
+            border-radius: 8px; padding: 5px 12px 5px 8px;
+            font-size: 12px; font-weight: 600; color: #1565c0;
+            cursor: grab; user-select: none; white-space: nowrap;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+            flex-direction: column; gap: 1px;
+        }
+        .drag-file-chip-inner {
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .drag-file-chip-hint {
+            font-size: 9px; font-weight: 400; color: #64b5f6;
+            letter-spacing: 0.3px; line-height: 1;
+        }
+.drag-file-chip:hover {
+            background: #dbeeff; border-color: #42a5f5;
+            transform: translateY(-2px) rotate(-1deg);
+            box-shadow: 0 4px 10px rgba(21,101,192,0.18);
+        }
+.drag-file-chip:hover .drag-file-chip-hint { color: #1565c0; }
+        .drag-file-chip:active { cursor: grabbing; transform: scale(0.97); }
+        .drag-file-chip.dragging { opacity: 0.45; transform: rotate(3deg); }
+        .important-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 640px) { .important-summary { grid-template-columns: 1fr; } }
+        .important-item {
+            background: rgba(255,255,255,0.7);
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #42a5f5;
+        }
+        .important-item a { color: #2c3e50; text-decoration: none; font-weight: 500; font-size: 15px; }
+        .important-item a:hover { text-decoration: underline; color: #1565c0; }
+        .executive-summary {
+            background: #f8f9fa;
+            padding: 25px 30px;
+            margin: 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        .executive-summary h2 {
+            color: #1a237e; font-size: 18px; font-weight: 600;
+            margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid #1a237e;
+        }
+        .executive-table { width: 100%; border-spacing: 8px; }
+        .executive-table td {
+            background: white; padding: 12px 16px; border-radius: 6px;
+            border-left: 3px solid #1a237e; vertical-align: top; width: 50%;
+        }
+        .executive-table a {
+            color: #1a237e; text-decoration: none; font-weight: 500;
+            font-size: 14px; line-height: 1.4;
+        }
+        .executive-table a:hover { text-decoration: underline; }
+        .news-section { padding: 30px; }
+        .news-item {
+            background: #f8f9fa; margin-bottom: 25px; border-radius: 8px;
+            padding: 20px; border-left: 4px solid #1a237e;
+        }
+        .news-title { color: #1a237e; font-size: 18px; font-weight: 600; margin-bottom: 12px; line-height: 1.3; }
+        .nato-star {
+            display: inline-block; font-size: 13px; color: #ffffff; background: #003087;
+            border-radius: 3px; padding: 1px 6px; margin-right: 7px; vertical-align: middle;
+            letter-spacing: 0.5px; font-weight: 700; line-height: 1.6;
+        }
+        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+        .source { color: #666; font-size: 13px; margin: 0; }
+        .source a { color: #1a237e; text-decoration: none; }
+        .source a:hover { text-decoration: underline; }
+        .social-signals {
+            background: #f8faff; border: 1px solid #c7d7fd;
+            border-radius: 8px; padding: 24px 28px; margin-bottom: 20px;
+        }
+        .social-signals h2 {
+            color: #1e3a8a; font-size: 18px; font-weight: 700;
+            margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #dbeafe;
+        }
+        .social-signals .signal-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .social-signals .signal-item {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-left: 4px solid #3b82f6; border-radius: 6px;
+            padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;
+        }
+        .social-signals .signal-item.reddit-item   { border-left-color: #ff4500; }
+        .social-signals .signal-item.hn-item       { border-left-color: #ff6600; }
+        .social-signals .signal-item.github-item   { border-left-color: #238636; }
+        .social-signals .signal-item.mastodon-item { border-left-color: #6364ff; }
+        .social-signals .signal-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .social-signals .signal-platform-label {
+            font-size: 10px; font-weight: 700; color: #ffffff; background: #64748b;
+            text-transform: uppercase; letter-spacing: 0.05em; border-radius: 3px; padding: 2px 7px;
+        }
+        .social-signals .reddit-item .signal-platform-label   { background: #ff4500; }
+        .social-signals .hn-item .signal-platform-label       { background: #ff6600; }
+        .social-signals .github-item .signal-platform-label   { background: #238636; }
+        .social-signals .mastodon-item .signal-platform-label { background: #6364ff; }
+        .social-signals .signal-engagement {
+            font-size: 11px; color: #475569; background: #f1f5f9; border-radius: 3px; padding: 2px 8px;
+        }
+        .social-signals .signal-item a {
+            color: #1e293b; text-decoration: none; font-size: 13px;
+            font-weight: 500; line-height: 1.45; display: block;
+        }
+        .social-signals .signal-item a:hover { color: #1e3a8a; text-decoration: underline; }
+        @media (max-width: 640px) {
+            .social-signals { padding: 16px; }
+            .social-signals .signal-list { grid-template-columns: 1fr; }
+            .social-signals .signal-meta { gap: 6px; }
+        }
+        .top3-section { margin-bottom: 24px; }
+        .top3-section-label {
+            font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; color: #1a237e; margin-bottom: 12px;
+        }
+        .top3-card {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-left: 5px solid #1a237e; border-radius: 8px;
+            padding: 18px 20px; margin-bottom: 14px;
+        }
+        .top3-card:last-child { margin-bottom: 0; }
+        .top3-card-title {
+            color: #1e293b; font-size: 15px; font-weight: 700;
+            margin-bottom: 10px; line-height: 1.4;
+        }
+        .top3-card-paragraph {
+            color: #374151; font-size: 14px; line-height: 1.65; margin-bottom: 10px;
+        }
+        .top3-card .source { color: #64748b; font-size: 12px; margin: 0; }
+        .top3-card .source a { color: #1a237e; text-decoration: none; }
+        .top3-card .source a:hover { text-decoration: underline; }
+        .vuln-section-heading {
+            background: linear-gradient(135deg, #fff3e0 0%, #fff8f0 100%);
+            border: 1px solid #ffcc80;
+            border-left: 5px solid #e65100;
+            border-radius: 8px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+        }
+        .vuln-section-heading h2 {
+            color: #bf360c; font-size: 18px; font-weight: 700; margin: 0;
+        }
+        .news-item.vuln-item { border-left-color: #e65100; }
+        .back-to-top {
+            position: fixed; top: 50%; left: calc(50% - 450px - 48px);
+            transform: translateY(-50%); width: 36px; height: 36px;
+            background: #1a237e; color: white; border: none; border-radius: 50%;
+            font-size: 18px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; opacity: 0.85; transition: opacity 0.2s; z-index: 999;
+        }
+        .back-to-top:hover { opacity: 1; }
+        /* ── DARK MODE ─────────────────────────────────────────── */
+        .theme-toggle {
+            position: absolute; top: 50%; right: 40px; transform: translateY(-50%);
+            background: none; border: 1px solid #e2e8f0; border-radius: 20px;
+            padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
+            color: #64748b; display: flex; align-items: center; gap: 4px;
+            transition: all 0.2s; user-select: none; z-index: 10;
+        }
+        .theme-toggle:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .theme-toggle .sep { color: #cbd5e1; font-size: 11px; margin: 0 1px; }
+        .theme-toggle svg { transition: opacity 0.2s; }
+        .theme-toggle svg.dim { opacity: 0.25; }
+        @media (max-width: 640px) { .theme-toggle { right: 12px; padding: 5px 10px; } }
+        [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
+        [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        [data-theme="dark"] .report-header { background: #161b22; border-bottom-color: #30363d; }
+        [data-theme="dark"] .report-header h1 { color: #e6edf3; }
+        [data-theme="dark"] .header-date { color: #79c0ff; }
+        [data-theme="dark"] .important-news {
+            background: linear-gradient(135deg, #1c2d4a 0%, #162038 100%);
+            border-color: #2d4a7a; color: #e6edf3;
+        }
+        [data-theme="dark"] .important-news h2 { color: #79c0ff; }
+        [data-theme="dark"] .exec-brief {
+            background: linear-gradient(135deg, #1c2d4a 0%, #162038 100%);
+            border-color: #2d4a7a; color: #e6edf3;
+        }
+        [data-theme="dark"] .exec-brief h2 { color: #79c0ff; }
+        [data-theme="dark"] .exec-brief-vuln-link a { color: #fb923c; }
+        [data-theme="dark"] .exec-brief-vuln-link a:hover { color: #fdba74; }
+        [data-theme="dark"] .block-action-btn { background: rgba(22,27,34,0.9); border-color: #388bfd; color: #79c0ff; }
+        [data-theme="dark"] .block-action-btn:hover { background: #1c2d4a; border-color: #58a6ff; }
+        [data-theme="dark"] .block-action-btn.success { background: #162312; border-color: #3fb950; color: #3fb950; }
+        [data-theme="dark"] .drag-file-chip { background: rgba(22,27,34,0.9); border-color: #388bfd; color: #79c0ff; }
+        [data-theme="dark"] .drag-file-chip:hover { background: #1c2d4a; border-color: #58a6ff; box-shadow: 0 4px 10px rgba(56,139,253,0.25); }
+        [data-theme="dark"] .drag-file-chip-hint { color: #388bfd; }
+        [data-theme="dark"] .drag-file-chip:hover .drag-file-chip-hint { color: #79c0ff; }
+        [data-theme="dark"] .important-item { background: rgba(30,50,90,0.5); border-left-color: #388bfd; }
+        [data-theme="dark"] .important-item a { color: #c9d1d9; }
+        [data-theme="dark"] .important-item a:hover { color: #79c0ff; }
+        [data-theme="dark"] .executive-summary { background: #1c2128; border-bottom-color: #30363d; }
+        [data-theme="dark"] .executive-summary h2 { color: #79c0ff; border-bottom-color: #388bfd; }
+        [data-theme="dark"] .executive-table td { background: #21262d; border-left-color: #388bfd; }
+        [data-theme="dark"] .executive-table a { color: #79c0ff; }
+        [data-theme="dark"] .news-section { background: #161b22; }
+        [data-theme="dark"] .news-item { background: #21262d; border-left-color: #388bfd; }
+        [data-theme="dark"] .news-title { color: #79c0ff; }
+        [data-theme="dark"] .news-content { color: #c9d1d9; }
+        [data-theme="dark"] .source { color: #8b949e; }
+        [data-theme="dark"] .source a { color: #58a6ff; }
+        [data-theme="dark"] .social-signals { background: #1a2233; border-color: #263557; }
+        [data-theme="dark"] .social-signals h2 { color: #79c0ff; border-bottom-color: #263557; }
+        [data-theme="dark"] .social-signals .signal-item { background: #21262d; border-color: #30363d; }
+        [data-theme="dark"] .social-signals .signal-item a { color: #c9d1d9; }
+        [data-theme="dark"] .social-signals .signal-item a:hover { color: #79c0ff; }
+        [data-theme="dark"] .social-signals .signal-engagement { background: #30363d; color: #8b949e; }
+        [data-theme="dark"] .top3-section-label { color: #79c0ff; }
+        [data-theme="dark"] .top3-card { background: #21262d; border-color: #30363d; border-left-color: #388bfd; }
+        [data-theme="dark"] .top3-card-title { color: #e6edf3; }
+        [data-theme="dark"] .top3-card-paragraph { color: #c9d1d9; }
+        [data-theme="dark"] .top3-card .source { color: #8b949e; }
+        [data-theme="dark"] .top3-card .source a { color: #58a6ff; }
+        [data-theme="dark"] .vuln-section-heading {
+            background: linear-gradient(135deg, #2d1a0a 0%, #231305 100%);
+            border-color: #5c3317; border-left-color: #f97316;
+        }
+        [data-theme="dark"] .vuln-section-heading h2 { color: #fb923c; }
+        [data-theme="dark"] .news-item.vuln-item { border-left-color: #f97316; }
+        [data-theme="dark"] .back-to-top { background: #388bfd; }
+        [data-theme="dark"] .theme-toggle { background: #161b22; border-color: #30363d; color: #8b949e; }
+        [data-theme="dark"] .theme-toggle:hover { background: #21262d; border-color: #58a6ff; color: #e6edf3; }
+        [data-theme="dark"] .theme-toggle .sep { color: #30363d; }
+            </style>
+    <script>(function(){var m=(localStorage.getItem('theme')==='light')?'light':'dark';document.documentElement.setAttribute('data-theme',m);})()</script>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1><span class="header-date">23.06.2026</span> Siber Güvenlik Haber Özetleri</h1>
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
+                <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <span class="sep">/</span>
+                <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+        </div>
+
+        <div class="exec-brief" id="yonetici-ozeti-block">
+            <h2>Yönetici Özeti</h2>
+            <p class="exec-brief-paragraph">Küresel siber güvenlik gündemini şekillendiren başlıca olaylar incelendiğinde, yapay zeka modellerinin stratejik sistemlere sızma kapasitesi ve tedarik zinciri zafiyetlerinin ön plana çıktığı görülmektedir. Anthropic şirketine ait Mythos modelinin NSA sistemlerine sızması üzerine ABD hükümeti gelişmiş yapay zeka modellerine erişimi kısıtlarken, Five Eyes ittifakı bu teknolojilerin siber saldırı yeteneklerini kökten değiştireceği konusunda ortak bir uyarı yayımlamıştır. Öte yandan Paradigm Shift, Apple'ın A12 ve A13 işlemcilerinde yazılımla düzeltilemeyen donanımsal bir açık tespit etmiş, Tata Electronics ise Apple ve Tesla'ya ait kritik üretim belgelerini içeren büyük bir veri sızıntısı yaşamıştır. Kanada istihbaratı kritik altyapıları hedef alan yabancı botnet ağlarını etkisiz hale getirirken, FortiBleed operasyonu kapsamında dünya genelinde 430 binden fazla FortiGate cihazından kimlik bilgileri çalınmıştır. LastPass, üçüncü taraf bir platform üzerinden gerçekleşen tedarik zinciri saldırısı sonucunda müşteri verilerinin sızdırıldığını doğrulamıştır. Son olarak Brezilya'da ulusal uyarı sisteminin ele geçirilmesiyle milyonlarca vatandaşa sahte mesajlar gönderilmiş, Scattered Spider örgütü üyeleri ise Londra ulaşım ağlarına yönelik saldırıları nedeniyle suçlu bulunmuştur.</p>
+            <p class="exec-brief-vuln-link"><a href="#guvenlik-aciklari">&#128272; Güvenlik Açıkları &#8595;</a></p>
+        </div>
+
+        <div class="executive-summary">
+            <div class="important-news" id="onemli-gelismeler-block">
+                <div class="onemli-header">
+                    <h2>Önemli Gelişmeler</h2>
+                    <div class="block-actions">
+                        <button class="block-action-btn" onclick="copyBlock(this)" title="Panoya kopyala">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            Kopyala
+                        </button>
+                        <button class="block-action-btn" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Kaydet
+                        </button>
+                        <span class="drag-file-chip" draggable="true" data-filename="23.06.2026.txt" title="Masaüstüne veya klasöre sürükleyin → .txt olarak kaydeder (Chrome/Edge)">
+                            <span class="drag-file-chip-inner">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                23.06.2026.txt
+                            </span>
+                            <span class="drag-file-chip-hint">↔ sürükle</span>
+                        </span>
+                    </div>
+                </div>
+            <div class="top3-section">
+                <div class="top3-card">
+                    <div class="top3-card-title"><a href="https://securityaffairs.com/194016/ai/anthropics-mythos-ai-broke-into-almost-all-nsa-classified-systems-in-hours.html" target="_blank" style="color:inherit;text-decoration:none;">Anthropic'in Mythos Yapay Zekasının NSA Sistemlerine Sızması</a></div>
+                    <p class="top3-card-paragraph">Amerika Birleşik Devletleri Senatosu'nda verilen ifadeler, Anthropic şirketine ait Mythos adlı yapay zeka modelinin Ulusal Güvenlik Ajansı ve Siber Komutanlık tarafından yönetilen gizli sistemlerin neredeyse tamamına birkaç saat içinde sızdığını ortaya koymuştur. Bu gelişme üzerine Trump yönetimi, Anthropic'e en gelişmiş modelleri olan Fable 5 ve Mythos 5'e erişimi yalnızca Amerika Birleşik Devletleri vatandaşlarıyla sınırlandırma talimatı vermiş, şirket ise teknik imkansızlıklar nedeniyle bu sistemleri tüm kullanıcılara kapatmak zorunda kalmıştır. Beş Göz ittifakı ortakları olan Avustralya, Birleşik Krallık, Kanada ve Yeni Zelanda'nın yanı sıra uluslararası yapay zeka güvenlik kurumlarının da erişimi kesilmiştir. General Joshua Rudd tarafından aktarılan bilgilere göre, bu sızma eylemi haftalar değil saatler içinde gerçekleşmiş ve şifreleme teknolojilerinden çok daha çok yönlü bir tehdit unsuru olarak tanımlanmıştır. Olayın jeopolitik boyutu, Amerika Birleşik Devletleri'nin yapay zeka alanındaki liderliğini koruma çabası ve Çin ile olan teknolojik rekabetiyle doğrudan ilişkilendirilmektedir. Anthropic, Mythos modelinin OpenBSD gibi son derece güvenli işletim sistemlerinde yirmi yedi yıllık açıkları bulabildiğini belirtirken, Amerikan hükümetinin bu ani kısıtlama kararı Avrupa'da teknolojik egemenlik ve dışa bağımlılık tartışmalarını yeniden alevlendirmiştir. Şirket, Project Glasswing girişimi kapsamında bu yetenekleri sınırlı sayıda stratejik ortakla paylaşmaya devam etmektedir.</p>
+                    <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/194016/ai/anthropics-mythos-ai-broke-into-almost-all-nsa-classified-systems-in-hours.html" target="_blank">securityaffairs.com</a>, 22.06.2026)</b></p>
+                </div>
+                <div class="top3-card">
+                    <div class="top3-card-title"><a href="https://cyberscoop.com/five-eyes-alliance-say-advanced-ai-hacking-models-months-away/" target="_blank" style="color:inherit;text-decoration:none;">Five Eyes İttifakı'nın Gelişmiş Yapay Zeka Modellerinin Siber Tehditleri Artırması</a></div>
+                    <p class="top3-card-paragraph">Amerika Birleşik Devletleri, Kanada, Birleşik Krallık, Avustralya ve Yeni Zelanda'dan oluşan Five Eyes istihbarat ittifakı, gelişmiş yapay zeka modellerinin siber alanda yaratacağı tehlikelere dair ortak bir uyarı yayımlamıştır. İstihbarat birimleri, Anthropic'in Fable 5 ve OpenAI'ın Daybreak gibi sınır modellerinin siber saldırı yeteneklerini kökten değiştireceğini ve bu teknolojilerin bir yıl içinde kamuya açık hale geleceğini öngörmektedir. Raporda, yapay zekanın özellikle eski sistemlerdeki zafiyetleri istismar etme, yama döngülerindeki yavaşlıklardan faydalanma ve kimlik erişim kontrollerini aşma konularında saldırganlara stratejik avantaj sağlayacağı belirtilmektedir. İstihbarat direktörleri, savunma ve saldırı kapasitelerinin dönüşüm sürecinin yıllar değil aylar içinde gerçekleşeceğini vurgulamaktadır. Mevcut durumda açık kaynaklı modellerin ve karaborsa kaynaklı sistemlerin halihazırda siber operasyonlarda kullanıldığı, ancak yeni nesil modellerin bu süreci hızlandıracağı ifade edilmektedir. Belgede, kurumların dijital güvenliği bir uyumluluk meselesi yerine temel iş stratejisi olarak ele almaları gerektiği ve yapay zeka destekli tehditlere karşı hazırlıklı olunması gerektiği bildirilmektedir. Anthropic ve OpenAI gibi şirketlerin belirli modelleri kısıtlama çabalarına rağmen, teknolojik gelişimin hızı nedeniyle savunma hatlarının hızla güncellenmesi gerektiği somut bir gereklilik olarak sunulmaktadır.</p>
+                    <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://cyberscoop.com/five-eyes-alliance-say-advanced-ai-hacking-models-months-away/" target="_blank">cyberscoop.com</a>, 22.06.2026)</b></p>
+                </div>
+                <div class="top3-card">
+                    <div class="top3-card-title"><a href="https://techcrunch.com/2026/06/22/a-new-unpatchable-flaw-in-apple-chips-opens-the-door-to-an-iphone-jailbreak/" target="_blank" style="color:inherit;text-decoration:none;">Paradigm Shift'in Apple Çiplerindeki Donanımsal Açığı Yayınlaması</a></div>
+                    <p class="top3-card-paragraph">Barselona merkezli ofansif siber güvenlik şirketi Paradigm Shift, Apple'ın A12 ve A13 işlemcilerinde bulunan ve yazılımsal olarak düzeltilmesi mümkün olmayan "usbliter8" adlı bir donanım zafiyetini kamuoyuna açıklamıştır. iPhone XS ile iPhone 11 arasındaki modelleri etkileyen bu açık, cihazın Boot ROM kodunda yer aldığı için Apple tarafından bir güncelleme ile kapatılamamaktadır. Saldırganların bu açığı istismar edebilmesi için hedef cihaza fiziksel erişim sağlaması ve kablo ile bağlantı kurması gerekmektedir. Bu zafiyetin, devletler ve istihbarat birimleri için casus yazılım geliştiren Cellebrite ve Magnet Forensics gibi kuruluşlar tarafından cihazların kısıtlamalarını kaldırmak (jailbreak) amacıyla kullanılabileceği belirtilmektedir. Şirket, bu donanımsal hatanın kalıcı bir risk teşkil ettiğini ve etkilenen kullanıcılar için en kesin çözümün daha yeni donanımlara geçiş yapmak olduğunu vurgulamıştır. Paradigm Shift, zafiyetin nasıl kullanılacağına dair bir kavram kanıtlama çalışmasını da raporuna dahil etmiştir.</p>
+                    <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://techcrunch.com/2026/06/22/a-new-unpatchable-flaw-in-apple-chips-opens-the-door-to-an-iphone-jailbreak/" target="_blank">techcrunch.com</a>, 22.06.2026)</b></p>
+                </div>
+            </div>
+                <div class="block-actions-bottom">
+                    <button class="block-action-btn" onclick="copyBlock(this)" title="Panoya kopyala">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Kopyala
+                    </button>
+                    <button class="block-action-btn" onclick="saveBlock(this)" title="Metin dosyası olarak kaydet">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Kaydet
+                    </button>
+                    <span class="drag-file-chip" draggable="true" data-filename="23.06.2026.txt" title="Chrome/Edge: masaüstüne sürükleyin → .txt olarak kaydeder">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        23.06.2026.txt
+                    </span>
+                </div>
+            </div>
+
+            <table class="executive-table">
+                <tr>
+                    <td><a href="#haber-1">1. Kanada İstihbarat Servisi'nin Botnet Ağlarını Etkisiz Hale Getirmesi</a></td>
+                    <td><a href="#haber-2">2. FortiBleed Operasyonunda FortiGate Cihazlarından Kimlik Bilgilerinin Çalınması</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-3">3. LastPass'in Klue Tedarik Zinciri Saldırısında Veri Sızdırması</a></td>
+                    <td><a href="#haber-4">4. Hackerın Brezilya Ulusal Uyarı Sistemini Ele Geçirmesi</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-5">5. Tata Electronics'in Apple ve Tesla Verilerini Sızdırması</a></td>
+                    <td><a href="#haber-6">6. Scattered Spider Üyelerinin Londra Ulaşım Kurumu'na Saldırmaktan Suçlu Bulunması</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-7">7. FFmpeg Yazılımındaki PixelSmash Açığının Video Kod Çözücülerini Etkilemesi</a></td>
+                    <td><a href="#haber-8">8. Zararlı Npm Paketlerinin PostCSS Araçlarını Taklit Ederek Windows Sistemlerini Hedeflemesi</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-9">9. WhatsApp Üzerinden Sahte Belgelerle ManageEngine Yazılımının Sistemlere Sızdırılması</a></td>
+                    <td><a href="#haber-10">10. Squid Proxy'nin Squidbleed Açığı Üzerinden Kullanıcı Verilerini Sızdırması</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-11">11. Rusça Konuşan Saldırganların OXLOADER Aracılığıyla CastleStealer Zararlı Yazılımını Yayması</a></td>
+                    <td><a href="#haber-12">12. JaredFromSubway Botunun Sahte Kripto İşlemleriyle 15 Milyon Dolar Çaldırması</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-13">13. Microsoft'ın AutoGen Studio'daki Kod Çalıştırma Açığını Kapatması</a></td>
+                    <td><a href="#haber-14">14. Siber Saldırganların Çalınan Kimlik Bilgileri İçin Hedefli Arama Hizmeti Sunması</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-15">15. Xsolis'in Bir Milyondan Fazla Kişinin Sağlık Verilerini Sızdırması</a></td>
+                    <td><a href="#haber-16">16. ShapedPlugin'in Pro Eklenti Güncellemelerine Arka Kapı Yerleştirilmesi</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-17">17. GitHub'ın Pwn Request Saldırılarına Karşı Güvenlik Önlemlerini Artırması</a></td>
+                    <td><a href="#haber-18">18. Cezayirli Abdellah Belmili'nin Siber Suç Pazaryerlerini İşletmekten İade Edilmesi</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#haber-19">19. Kanadalı London Hydro Şirketinin Müşteri Verilerinin Sızdırılmasını Açıklaması</a></td>
+                    <td><a href="#haber-20">20. Bulut Depolama Alanlarında Küresel İsim Alanı Risklerinin Tespit Edilmesi</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="news-section">
+            <div class="news-item" id="haber-1">
+                <div class="news-title"><b>Kanada İstihbarat Servisi'nin Botnet Ağlarını Etkisiz Hale Getirmesi</b></div>
+                <p class="news-content">Kanada Güvenlik İstihbarat Servisi (CSIS), Kanada topraklarındaki enfekte olmuş sunucular, yönlendiriciler ve nesnelerin interneti cihazlarını temizlemek amacıyla ilk kez özel bir tehdit azaltma yetkisini kullanmıştır. Federal Mahkeme tarafından verilen izin doğrultusunda gerçekleştirilen operasyon, yabancı devletler tarafından yönetilen iki farklı botnet ağını hedef almıştır. Bu ağların, Kanada'nın enerji sektörü, hükümet yapıları ve askeri ağları gibi kritik altyapılarına yönelik casusluk ve olası sabotaj faaliyetleri için bir sıçrama tahtası olarak kullanıldığı tespit edilmiştir. Saldırganların kimliği kamuya açıklanan belgelerde gizli tutulsa da, operasyonun ABD'nin Çin bağlantılı Volt Typhoon ve Rusya bağlantılı APT28 gruplarına karşı yürüttüğü benzer temizlik faaliyetleriyle aynı döneme denk gelmesi dikkat çekmektedir. Mahkeme kararı, CSIS'in sadece istihbarat toplamakla kalmayıp, ulusal güvenliğe yönelik tehditleri aktif olarak bozma ve verileri imha etme yetkisini onaylamıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/canadas-spy-agency-used-first-of-its.html" target="_blank">thehackernews.com</a>, 22.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-2">
+                <div class="news-title"><b>FortiBleed Operasyonunda FortiGate Cihazlarından Kimlik Bilgilerinin Çalınması</b></div>
+                <p class="news-content">SOCRadar tarafından yayımlanan rapor, dünya genelinde 430.000'den fazla Fortinet FortiGate güvenlik duvarını hedef alan geniş kapsamlı FortiBleed saldırı kampanyasının detaylarını ortaya koymuştur. Şubat 2026'dan bu yana aktif olan ve bir ilk erişim aracısı tarafından yürütüldüğü belirtilen bu operasyon, kurumsal ağlara sızmak için kimlik bilgisi doldurma ve kaba kuvvet saldırılarını kullanmaktadır. Saldırganlar, ele geçirdikleri cihazlara FortigateSniffer adlı özel bir araç yükleyerek FortiOS işletim sisteminin yerleşik paket izleme işlevini kötüye kullanmış ve ağ trafiğinden kimlik bilgilerini toplamıştır. Bu araç; RADIUS, NTLM, Kerberos ve LDAP dahil olmak üzere yirmi dört farklı protokolü izleyerek parola özetlerini ve açık metin kimlik bilgilerini ayıklayacak şekilde tasarlanmıştır. Toplanan veriler, bir yapay zeka şirketinden kiralanan otuz altı adet kurumsal sınıf grafik işlem birimi kullanılarak yüksek hızda kırılmıştır. Siber güvenlik uzmanı Kevin Beaumont, saldırganların sadece trafik izleme değil, aynı zamanda cihaz yapılandırma dosyalarını indirerek de kimlik bilgilerine ulaştığını tespit etmiştir. Fortinet, olayın yeni bir güvenlik açığından ziyade önceden sızdırılmış bilgilerin bir derlemesi olduğunu savunsa da, araştırmalar saldırganların aktif olarak yeni cihazları hedef almaya devam ettiğini doğrulamaktadır. Kampanya kapsamında seksen binden fazla VPN bağlantı adresine ait verilerin sızdırıldığı ve saldırganların bu verileri satmak veya ağlara sızmak için kullandığı bildirilmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/fortibleed-campaign-used-custom-fortigate-sniffer-to-steal-credentials/" target="_blank">bleepingcomputer.com</a>, 22.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-3">
+                <div class="news-title"><b>LastPass'in Klue Tedarik Zinciri Saldırısında Veri Sızdırması</b></div>
+                <p class="news-content">Parola yönetim platformu LastPass, Klue adlı üçüncü taraf pazar istihbarat platformuna yönelik gerçekleştirilen bir tedarik zinciri saldırısı sonucunda müşteri verilerinin ele geçirildiğini doğrulamıştır. Haziran 2026 başında gerçekleşen olayda, Icarus adlı fidye yazılımı grubu Klue'nun altyapısına sızarak LastPass'in Salesforce ortamına erişim sağlayan yetkilendirme belirteçlerini çalmıştır. Saldırganlar, bu belirteçleri kullanarak LastPass'in satış ve müşteri ilişkileri yönetimi sistemlerinde bulunan destek vakası bilgilerine ve kurumsal verilere erişim sağlamıştır. Şirket, ana altyapısının ve kullanıcı kasa verilerinin bu olaydan etkilenmediğini, ancak sızdırılan bilgilerin kimlik avı ve sosyal mühendislik saldırılarında kullanılabileceğini belirtmiştir. Icarus grubu, Klue'nun eski bir entegrasyon hizmetine ait kimlik bilgilerini kullanarak sisteme sızmış ve aralarında Recorded Future, Tanium ve Jamf gibi dev siber güvenlik şirketlerinin de bulunduğu çok sayıda kuruluşu etkileyen bir veri hırsızlığı operasyonu yürütmüştür. LastPass, olayın ardından Klue platformuna olan tüm çalışan erişimlerini durdurmuş, etkilenen uygulama programlama arayüzü anahtarlarını yenilemiş ve kolluk kuvvetlerine bildirimde bulunmuştur. Saldırganların ele geçirdikleri müşteri ilişkileri verilerini kullanarak ilgili şirketlere yönelik şantaj faaliyetlerine başladığı ve belirli alan adları üzerinden sahte iletişimler kurmaya çalıştığı tespit edilmiştir. Soruşturma kapsamında, saldırganların müşteri görüşmelerini içeren Gong sistemine erişip erişmediği de incelenmiş ancak bu yönde bir kanıt bulunamamıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/lastpass-confirms-data-breach-in-klue-supply-chain-attack/" target="_blank">bleepingcomputer.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-4">
+                <div class="news-title"><b>Hackerın Brezilya Ulusal Uyarı Sistemini Ele Geçirmesi</b></div>
+                <p class="news-content">Brezilya'nın ulusal sivil savunma uyarı sistemi, 20 Haziran 2026 tarihinde kimliği belirsiz bir saldırgan tarafından ele geçirilerek milyonlarca vatandaşa sahte acil durum bildirimleri gönderilmiştir. Saldırgan, sistemin en yüksek seviyeli uyarı kategorisi olan ve normalde doğal afetler için kullanılan aşırı uyarı özelliğini kullanarak São Paulo ve Rio de Janeiro dahil beş eyaletteki telefonlara insanlık nefreti anlamına gelen misantropi ibaresini içeren mesajlar iletmiştir. İlk yetkisiz bildirim Paraná eyaletinde gece yarısına yakın bir saatte gönderilmiş, ardından iki saat içinde dokuz tanesi sessiz modu devre dışı bırakan hücre yayını ve bir tanesi kısa mesaj olmak üzere toplam on adet sahte uyarı yapılmıştır. Brezilya Ulusal Sivil Savunma birimi, sistemin güvenliğinin ihlal edilmesi üzerine platformu geçici olarak çevrimdışı bırakmış ve altyapıda yapısal bir hasar olmadığını açıklamıştır. Sivil Savunma Sekreteri Wolnei Wolff, saldırganların sistemi engelleme çabalarına rağmen erişimi bir süreliğine geri kazanmayı başardıklarını ve şüphelilerin henüz tespit edilemediğini doğrulamıştır. 2025 yılında tüm ülkeyi kapsayacak şekilde genişletilen bu sistemin istismar edilmesi, kamuoyunda acil durum mekanizmalarına olan güvenin sarsılmasına neden olmuştur. Yetkililer, saldırganın herhangi bir zararlı yönlendirme veya tahliye talimatı vermediğini, eylemin temel amacının sistemin işleyişini bozmak olduğunu ifade etmiştir. Olayın ardından sistemin güvenlik protokollerinin gözden geçirilmesi ve erişim denetimlerinin sıkılaştırılması için çalışmalar başlatılmıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bitdefender.com/en-us/blog/hotforsecurity/hacker-hijacks-brazils-national-alert-system" target="_blank">bitdefender.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-5">
+                <div class="news-title"><b>Tata Electronics'in Apple ve Tesla Verilerini Sızdırması</b></div>
+                <p class="news-content">Apple ve Tesla gibi teknoloji devlerinin ana tedarikçisi olan Hindistan merkezli Tata Electronics, sistemlerine yönelik bir siber saldırı sonucunda veri ihlali yaşandığını doğrulamıştır. Bir hacker forumunda şirkete ait olduğu iddia edilen 630 gigabayttan fazla verinin satışa çıkarılmasının ardından yapılan incelemelerde, 204.300'den fazla dosyanın sızdırıldığı tespit edilmiştir. Sızdırılan veriler arasında Apple tedarikçi spesifikasyonları, Tesla üretim belgeleri, kurumsal e-posta yazışmaları ve müşteri ilişkileri yönetimi bilgileri yer almaktadır. Tata Electronics sözcüsü, siber güvenlik olayının birkaç hafta önce fark edildiğini ve müdahale protokollerinin devreye alındığını, ancak operasyonel faaliyetlerin bu durumdan etkilenmediğini açıklamıştır. Şirket, sızdırılan verilerin niteliği ve etkilenen kişi sayısı hakkındaki detaylı soruları yanıtsız bırakırken, Apple'ın olayla ilgili kendi soruşturmasını başlattığı ve saldırganların bir fidye talebinde bulunduğu bildirilmiştir. Tata Group'un küresel teknoloji tedarik zincirindeki rolünün arttığı ve üretim merkezlerini Çin dışına kaydıran şirketler için Hindistan'ın kritik bir alternatif haline geldiği bir dönemde bu ihlal gerçekleşmiştir. Siber güvenlik araştırmacıları, sızdırılan belgelerin SAP sistemleri ve kurumsal kaynak planlama verileriyle ilişkili olduğunu ve stratejik üretim bilgilerini içerdiğini doğrulamıştır. Şirket, iPhone montaj operasyonlarında çalışan bazı personeline veri ihlali hakkında bilgilendirme yapmış ancak müşterilerine yönelik resmi bir bildirim süreci hakkında detay paylaşmamıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://techcrunch.com/2026/06/22/tata-electronics-a-major-tech-supplier-to-apple-and-tesla-confirms-data-breach/" target="_blank">techcrunch.com</a>, 22.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-6">
+                <div class="news-title"><b>Scattered Spider Üyelerinin Londra Ulaşım Kurumu'na Saldırmaktan Suçlu Bulunması</b></div>
+                <p class="news-content">İngiltere Ulusal Suç Teşkilatı tarafından yürütülen soruşturma sonucunda, Scattered Spider siber suç örgütü üyesi iki kişinin Londra'nın ulaşım otoritesi olan Transport for London ağlarına sızdıkları tespit edilmiştir. İngilizce konuşan siber suçlulardan oluşan bu grubun, havacılık, sigorta ve perakende gibi kritik sektörlerdeki büyük ABD ve Avrupa şirketlerini hedef alan geniş kapsamlı bir ağın parçası olduğu belirtilmektedir. Saldırganların temel amacının veri hırsızlığı ve şantaj yoluyla finansal kazanç elde etmek olduğu, grubun geçmişte kurbanlarından en az 115 milyon dolar haraç topladığı bildirilmektedir. Londra'daki ulaşım hizmetlerini aylarca aksatan bu saldırı, yaklaşık 29 milyon sterlin tutarında zarara yol açmış ve milyonlarca müşterinin ödeme verilerinin açığa çıkmasına neden olmuştur. Soruşturma kapsamında ele geçirilen dijital materyaller, saldırganların ABD merkezli sağlık kuruluşları olan SSM Health Care Corporation ve Sutter Health ağlarına da sızarak zarar verdiğini ortaya koymuştur. Sanıklar, ulusal güvenliği ve kamu refahını tehlikeye atan bilgisayar suçları işlemekten dolayı yargılanmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://therecord.media/guilty-plea-tfl-cyberattack-scattered-spider-members" target="_blank">therecord.media</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-7">
+                <div class="news-title"><b>FFmpeg Yazılımındaki PixelSmash Açığının Video Kod Çözücülerini Etkilemesi</b></div>
+                <p class="news-content">Güvenlik araştırmacıları, dünya genelinde yaygın olarak kullanılan FFmpeg multimedya kütüphanesinde PixelSmash olarak adlandırılan kritik bir zafiyet tespit etmiştir. Bu açık, MagicYUV kod çözücüsünün dilim işleme mekanizmasındaki bir bellek hatasından kaynaklanmakta ve kötü niyetli video dosyaları aracılığıyla istismar edilebilmektedir. Saldırganların bu açığı kullanarak Jellyfin, Kodi, OBS Studio ve Nextcloud gibi popüler medya sunucuları ile uygulamaları üzerinde uzaktan kod çalıştırma veya hizmet dışı bırakma saldırıları gerçekleştirebileceği belirtilmektedir. Özellikle Jellyfin gibi sunucularda, otomatik medya tarama süreçleri sırasında herhangi bir kullanıcı etkileşimi gerekmeden sistemin tam kontrolünün ele geçirilmesi mümkündür. Sorunun, FFmpeg kütüphanesine güvenen yüzlerce farklı projeyi etkilemesi nedeniyle geniş bir tedarik zinciri riski oluşturduğu vurgulanmaktadır. Birçok popüler mesajlaşma platformunun da sunucu tarafındaki video önizleme işlemleri için bu kütüphaneyi kullanması, tehdidin etki alanını küresel ölçekte genişletmektedir. Geliştirici ekip, söz konusu güvenlik açığını gidermek amacıyla yazılımın güncel sürümünü yayınlamış ve kullanıcıların sistemlerini ivedilikle güncellemeleri gerektiğini bildirmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/ffmpeg-fixes-pixelsmash-flaw-in-widely-used-video-decoder/" target="_blank">bleepingcomputer.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-8">
+                <div class="news-title"><b>Zararlı Npm Paketlerinin PostCSS Araçlarını Taklit Ederek Windows Sistemlerini Hedeflemesi</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, yazılım geliştiricilerin kullandığı popüler PostCSS araçlarını taklit eden bir dizi zararlı npm paketinin Windows tabanlı bir uzak erişim truva atı yaydığını ortaya çıkarmıştır. Saldırganların, milyonlarca kez indirilen meşru kütüphanelerin isimlerine benzer adlar kullanarak geliştiricileri yanılttığı ve bu yolla sistemlere sızmayı amaçladığı tespit edilmiştir. Çok aşamalı bir enfeksiyon zinciri kullanan bu paketler, hedef sistemlerde PowerShell ve Python tabanlı betikler çalıştırarak Google Chrome tarayıcısından kimlik bilgilerini çalmakta ve komuta kontrol sunucusuyla veri alışverişi yapmaktadır. Bu faaliyetlerin, Kuzey Kore bağlantılı PolinRider operasyonuyla örtüştüğü ve yaklaşık 2.000 GitHub deposunu etkileyen geniş kapsamlı bir tedarik zinciri saldırısının parçası olduğu belirtilmektedir. Saldırganların, sahte çekme istekleri ve blokzinciri altyapısını kullanarak tespit edilmekten kaçındıkları ve geliştirici makinelerindeki hassas verileri hedefledikleri bildirilmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/malicious-npm-packages-pose-as-postcss.html" target="_blank">thehackernews.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-9">
+                <div class="news-title"><b>WhatsApp Üzerinden Sahte Belgelerle ManageEngine Yazılımının Sistemlere Sızdırılması</b></div>
+                <p class="news-content">Kaspersky araştırmacıları, WhatsApp Desktop ve WhatsApp Web kullanıcılarını hedef alan ve kötü niyetli Visual Basic betikleri içeren yeni bir siber casusluk kampanyası tespit etmiştir. Saldırganların, ele geçirilmiş WhatsApp hesaplarını kullanarak rehberdeki kişilere finansal rapor veya hesap özeti görünümünde sahte belgeler gönderdikleri ve bu yolla kurbanları kandırdıkları belirtilmektedir. Malezya başta olmak üzere Brezilya, Hindistan ve İngiltere gibi birçok ülkede aktif olan bu kampanyanın temel amacı, hedef sistemlere meşru bir uzaktan izleme ve yönetim yazılımı olan ManageEngine RMM aracını gizlice kurmaktır. Bu yöntemle saldırganlar, kurbanların bilgisayarlarına tam yetkili uzaktan erişim sağlayarak casusluk faaliyetleri yürütmektedir. Betik dosyalarının içinde Çince yorum satırlarının bulunması ve kullanılan altyapının geçmişteki Gh0st RAT operasyonlarıyla benzerlik gösteresi, saldırının arkasındaki aktörlerin profiline dair ipuçları sunmaktadır. Enfeksiyon zincirinin, kullanıcının WhatsApp uygulamasını kullanım şekline göre farklılık gösterdiği ve Windows Kullanıcı Hesabı Denetimi ayarlarını manipüle etmeye çalıştığı tespit edilmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/whatsapp-vbscript-campaign-uses-fake.html" target="_blank">thehackernews.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-10">
+                <div class="news-title"><b>Squid Proxy'nin Squidbleed Açığı Üzerinden Kullanıcı Verilerini Sızdırması</b></div>
+                <p class="news-content">Squid web proxy sunucusunda tespit edilen ve Squidbleed olarak adlandırılan kritik bir bellek sızıntısı hatası, aynı proxy sunucusunu kullanan saldırganların diğer kullanıcıların açık metin halindeki HTTP isteklerini ele geçirmesine olanak tanımaktadır. Calif.io araştırmacıları tarafından ortaya çıkarılan bu durum, 1997 yılından bu yana varsayılan yapılandırmalarda aktif olan bir FTP dizin listeleme ayrıştırıcısı hatasından kaynaklanmaktadır. Saldırganın bu sızıntıyı tetikleyebilmesi için proxy erişimine sahip olması ve kontrolündeki bir FTP sunucusuna bağlantı kurması gerekmektedir. Bu tehdit özellikle okullar, ofisler ve kamuya açık kablosuz ağlar gibi çok sayıda kullanıcının aynı proxy altyapısını paylaştığı ortamları doğrudan etkilemektedir. Ele geçirilen veriler arasında kullanıcı kimlik bilgileri ve oturum belirteçleri yer almaktadır. Araştırmacılar, modern ağlarda kullanımı azalan FTP protokolünün tamamen devre dışı bırakılmasını en etkili savunma yöntemi olarak önermektedir. Debian ve SUSE gibi dağıtımlar için yama süreçleri devam ederken, hatanın tespiti yapay zeka destekli analiz araçları kullanılarak gerçekleştirilmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/29-year-old-squid-proxy-bug-squidbleed.html" target="_blank">thehackernews.com</a>, 22.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-11">
+                <div class="news-title"><b>Rusça Konuşan Saldırganların OXLOADER Aracılığıyla CastleStealer Zararlı Yazılımını Yayması</b></div>
+                <p class="news-content">Siber güvenlik araştırmacıları, finansal motivasyonla hareket eden ve Rusça konuştuğu değerlendirilen bir tehdit aktörünün, OXLOADER adı verilen yeni bir yükleyiciyi kullanarak CastleStealer zararlı yazılımını dağıttığını tespit etmiştir. REF8372 kod adıyla izlenen bu kampanya, özellikle Google Reklamları üzerinden kullanıcıları hedef alarak kötü amaçlı yazılımın yayılmasını sağlamaktadır. Saldırganların, Bağımsız Devletler Topluluğu bölgesindeki bilgisayarlara bulaşmayı engelleyen özel istisnalar kullanması, grubun kökenine dair önemli bir veri olarak kaydedilmiştir. Operasyon süreci, kullanıcıların arama motorlarında belirli teknik terimleri aramasıyla başlamakta ve Ukrayna merkezli olduğu iddia edilen doğrulanmış ancak sahte bir hesap üzerinden yayınlanan reklamlarla sahte web sitelerine yönlendirilmesiyle devam etmektedir. Bu süreçte Storj gibi merkeziyetsiz bulut depolama platformlarının kullanılması, saldırganların alan adı tabanlı filtreleme sistemlerini aşma stratejisini yansıtmaktadır. Saldırı zinciri içerisinde PowerShell komutları ve DLL yandan yükleme teknikleri kullanılarak CastleStealer bilgi hırsızı yazılımı sisteme dahil edilmektedir. OXLOADER yükleyicisinin, analizlerden kaçınmak için karmaşıklaştırma katmanları ve sanal makine karşıtı önlemlerle donatıldığı belirtilmektedir. Google, söz konusu reklam hesabını ve bağlantılı kampanyaları 14 Mayıs 2026 tarihinde platformundan kaldırmıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://thehackernews.com/2026/06/new-oxloader-loader-uses-malicious.html" target="_blank">thehackernews.com</a>, 22.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-12">
+                <div class="news-title"><b>JaredFromSubway Botunun Sahte Kripto İşlemleriyle 15 Milyon Dolar Çaldırması</b></div>
+                <p class="news-content">Ethereum ağının en agresif ve görünür MEV bot operasyonlarından biri olan JaredFromSubway, bir saldırganın sistem mantığını manipüle etmesi sonucunda 15 milyon dolarlık kripto varlık kaybına uğramıştır. Saldırganın, botun otomatik işlem algoritmalarını yanıltmak amacıyla sahte kripto para havuzları ve tokenlar oluşturduğu, bu sayede botun kendi kontrolündeki akıllı sözleşmelere harcama yetkisi vermesini sağladığı tespit edilmiştir. Blokzinciri güvenlik firması Blockaid tarafından fark edilen olayda, saldırganın önce küçük test işlemleriyle botun tepkilerini ölçtüğü, ardından açık bırakılan onayları kullanarak WETH, USDC ve USDT varlıklarını kendi cüzdanına aktardığı bildirilmektedir. Bot operatörü, çalınan fonların iadesi için saldırgana önce 3 milyon dolar, ardından çalınan miktarın yarısının iadesi karşılığında 7,5 milyon dolarlık bir ödül teklif etmiştir. Henüz bir anlaşmaya varılamadığı ve çalınan fonların geri alınması için beyaz şapkalı hacker gruplarıyla görüşmelerin devam ettiği belirtilmektedir. Bu olay, otomatik ticaret sistemlerinin karmaşık mantıksal hatalar üzerinden nasıl büyük ölçekli finansal kayıplara uğratılabileceğini somut bir şekilde ortaya koyan bir gelişme olarak kayıtlara geçmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/jaredfromsubway-mev-bot-hacked-in-15-million-crypto-theft/" target="_blank">bleepingcomputer.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-13">
+                <div class="news-title"><b>Microsoft'ın AutoGen Studio'daki Kod Çalıştırma Açığını Kapatması</b></div>
+                <p class="news-content">Microsoft'un yapay zeka ajanları oluşturmak için kullandığı açık kaynaklı AutoGen Studio arayüzünde "AutoJack" olarak adlandırılan bir güvenlik açığı zinciri tespit edilmiştir. Bu açık, saldırganların kötü niyetli bir web sayfası aracılığıyla yapay zeka ajanlarını manipüle ederek ana sistem üzerinde rastgele komutlar yürütmesine olanak tanımaktadır. Microsoft, bu zafiyetin henüz genel bir sürüm yayınlanmadan önce geliştirme aşamasında fark edildiğini ve giderildiğini belirtmektedir. Etkilenen kesimin, AutoGen Studio'yu belirli bir zaman aralığında doğrudan GitHub ana dalından derleyen geliştiricilerle sınırlı olduğu ifade edilmektedir. Stratejik açıdan bu durum, yapay zeka geliştirme araçlarının tedarik zinciri güvenliği için kritik bir hedef haline geldiğini göstermektedir. Saldırganlar, geliştiricilerin yetkili hesaplarını ele geçirerek kurumsal altyapılara sızmayı amaçlamaktadır. Microsoft, bu tür araçların internete kapalı ve izole ortamlarda, düşük yetkili hesaplarla kullanılmasını tavsiye etmektedir. Olay, yapay zeka ekosistemindeki hızlı gelişimin beraberinde getirdiği güvenlik risklerini ve geliştirici araçlarının istismar edilme potansiyelini vurgulamaktadır. Microsoft, kullanıcıların bu tür prototip araçları günlük hesapları yerine izole edilmiş konteyner yapılarında çalıştırması gerektiğini bildirmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/microsoft-fixes-autogen-studio-flaw-that-enabled-code-execution/" target="_blank">bleepingcomputer.com</a>, 22.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-14">
+                <div class="news-title"><b>Siber Saldırganların Çalınan Kimlik Bilgileri İçin Hedefli Arama Hizmeti Sunması</b></div>
+                <p class="news-content">Yeraltı forumlarında siber saldırganların, bilgi hırsızı yazılımlar aracılığıyla elde edilen devasa veri yığınlarını "hedefini ara" şeklinde adlandırılan profesyonel hizmetlere dönüştürdüğü tespit edilmiştir. Flare araştırmacıları tarafından yapılan analizler, saldırganların artık toplu veri sızıntıları yerine belirli şirketler, platformlar veya coğrafi bölgeler için özelleştirilmiş kimlik bilgisi arama imkanı sunduğunu ortaya koymaktadır. Bu hizmet modeli, çalınan verilerin işlenmesi ve hedeflenmiş saldırı materyallerine dönüştürülmesi aşamasında kritik bir aracı katman oluşturmaktadır. Saldırganlar, milyarlarca satırlık veri tabanlarını indeksleyerek alıcılara URL, kullanıcı adı ve şifre gibi formatlarda doğrudan sonuçlar sağlamaktadır. Stratejik olarak bu durum, hesap ele geçirme operasyonlarının daha maliyet etkin ve hızlı hale gelmesine neden olmaktadır. Özellikle kurumsal ağlara erişim sağlamak isteyen aktörler, bu servisleri kullanarak hedef odaklı sızma girişimlerinde bulunmaktadır. Pazarın, ilk erişim aracılığı ekosistemiyle örtüştüğü ancak daha geniş bir kullanıcı kitlesine hitap ettiği belirtilmektedir. Kurumların bu tür yeraltı pazarlarını izleyerek maruz kalan çalışan kimlik bilgilerini tespit etmesi ve proaktif önlemler alması gerekmektedir. Araştırma kapsamında incelenen 470 farklı yeraltı forum paylaşımı, bu pazarın 2025 ve 2026 yılları arasında hızla büyüdüğünü belgelemektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.bleepingcomputer.com/news/security/a-glimpse-into-the-search-your-target-market-for-stolen-credentials/" target="_blank">bleepingcomputer.com</a>, 22.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-15">
+                <div class="news-title"><b>Xsolis'in Bir Milyondan Fazla Kişinin Sağlık Verilerini Sızdırması</b></div>
+                <p class="news-content">Tennessee merkezli sağlık teknolojisi şirketi Xsolis, bir oltalama saldırısı sonucunda yaklaşık 1,4 milyon bireyin kişisel ve korunan sağlık bilgilerinin yetkisiz erişime maruz kaldığını duyurmuştur. Şirket, 20 Ocak 2026 tarihinde gerçekleşen hedefli saldırıyı iki gün sonra fark ettiğini ve durumu kontrol altına aldığını belirtmektedir. Ele geçirilen veriler arasında isimler, adresler, doğum tarihleri, Sosyal Güvenlik numaraları, sağlık sigortası bilgileri ve tıbbi tedavi kayıtları yer almaktadır. ABD Sağlık ve İnsani Hizmetler Bakanlığı verilerine göre olaydan tam olarak 1.396.519 kişi etkilenmiştir. Saldırının herhangi bir fidye yazılımı grubu tarafından üstlenilmediği ifade edilmektedir. Stratejik açıdan bu olay, sağlık sektöründeki kritik veri sağlayıcılarının casusluk veya veri hırsızlığı amaçlı siber operasyonlar için ne kadar cazip hedefler olduğunu göstermektedir. Xsolis, etkilenen bireylere ücretsiz kredi izleme ve kimlik koruma hizmetleri sunmaya başlamıştır. Şirket, kolluk kuvvetleriyle iş birliği içinde soruşturmayı sürdürürken, benzer olayların önlenmesi için ek güvenlik önlemlerini devreye aldığını açıklamıştır. Kullanıcıların kimlik hırsızlığı riskine karşı hesap hareketlerini ve sigorta bildirimlerini düzenli olarak kontrol etmeleri tavsiye edilmektedir. Şirket, olayla ilgili soruları yanıtlamak üzere ücretsiz bir çağrı merkezi kurduğunu açıklamıştır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/194067/cyber-crime/xsolis-data-breach-impacts-1-4-million-people.html" target="_blank">securityaffairs.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-16">
+                <div class="news-title"><b>ShapedPlugin'in Pro Eklenti Güncellemelerine Arka Kapı Yerleştirilmesi</b></div>
+                <p class="news-content">WordPress ve WooCommerce platformları için yazılım geliştiren ShapedPlugin firmasının üretim ve dağıtım hattının ele geçirilmesi sonucunda geniş kapsamlı bir tedarik zinciri saldırısı gerçekleştirilmiştir. Wordfence araştırmacıları tarafından tespit edilen bu saldırıda, saldırganların firmanın resmi güncelleme kanallarını kullanarak ücretli Pro eklenti sürümlerine kötü amaçlı kod enjekte ettikleri belirlenmiştir. Saldırının ana hedefi, dünya genelinde yüz binlerce web sitesi tarafından kullanılan Product Slider Pro, Real Testimonials Pro ve Smart Post Show Pro gibi popüler eklentilerin kullanıcılarıdır. Saldırganların kimliği, komuta kontrol altyapısının Rusya merkezli oluşumlarla bağlantılı olan AEZA GROUP LLC adına kayıtlı olmasıyla ilişkilendirilmektedir. Bu operasyonun temel amacı, etkilenen web sitelerinde tam yetki sahibi olmak, kullanıcı kimlik bilgilerini ele geçirmek ve özellikle iki faktörlü kimlik doğrulama (2FA) sırlarını çalarak güvenlik önlemlerini aşmaktır. Saldırganlar, meşru güncelleme mekanizmalarını birer zararlı yazılım dağıtım aracına dönüştürerek, site sahiplerinin resmi kanallardan aldıkları güvenli yazılımlar üzerinden sistemlerine sızmıştır. Adli bilişim kanıtları, saldırganların doğrudan firmanın özel depolarına ve otomatik derleme süreçlerine erişim sağladığını, çalınan verilerin ise meşru trafik gibi görünen özel alan adlarına aktarıldığını doğrulamaktadır. Olaydan etkilenen tüm kullanıcıların 2FA anahtarlarını ve tüm yönetici şifrelerini acilen yenilemeleri gerekmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://securityaffairs.com/194059/hacking/shapedplugin-supply-chain-attack-backdoors-pro-plugin-updates.html" target="_blank">securityaffairs.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-17">
+                <div class="news-title"><b>GitHub'ın Pwn Request Saldırılarına Karşı Güvenlik Önlemlerini Artırması</b></div>
+                <p class="news-content">GitHub, geliştirici ortamlarını hedef alan ve "pwn request" olarak bilinen saldırı türlerini engellemek amacıyla GitHub Actions platformunda önemli güvenlik güncellemeleri yapmıştır. Bu saldırılar, dış kaynaklı kodların yetkili iş akışları içinde çalıştırılmasına olanak tanıyan yapılandırma hatalarını istismar etmektedir. Yeni sürümle birlikte, incelenmemiş çatallardan gelen kodların yüksek yetkili süreçlerde otomatik olarak çalıştırılması varsayılan olarak engellenmektedir. Bu değişiklik, güvenliğin geliştiricilerin inisiyatifinden ziyade sistem tarafından varsayılan olarak sağlanması stratejisinin bir parçasıdır. Geçmişte TeamPCP gibi saldırgan grupların bu yöntemi kullanarak 170'den fazla paket ekosistemini tehlikeye attığı bilinmektedir. Stratejik düzeyde bu hamle, açık kaynaklı yazılım tedarik zincirinin korunması ve kurumsal depoların güvenliğinin sağlanması açısından büyük önem taşımaktadır. GitHub, bu yeni güvenlik standartlarını geriye dönük olarak tüm desteklenen sürümlere uygulayacağını duyurmuştur. Geliştiricilerin bu kısıtlamaları aşmak için açıkça onay vermesi gerekecektir. Bu durum, yazılım geliştirme süreçlerinde otomasyon ve güvenlik arasındaki dengenin yeniden kurulmasını hedeflemektedir. Platform, gelecekte benzer risk taşıyan diğer olay tetikleyicileri için de ek sertleştirme önlemleri almayı planlamaktadır. Güncelleme kapsamında 16 Temmuz tarihinden itibaren tüm ana sürümler bu yeni güvenlik protokollerini içerecek şekilde güncellenecektir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4188144/github-actions-hardens-checkout-security-to-block-pwn-request-attacks-2.html" target="_blank">csoonline.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-18">
+                <div class="news-title"><b>Cezayirli Abdellah Belmili'nin Siber Suç Pazaryerlerini İşletmekten İade Edilmesi</b></div>
+                <p class="news-content">Amerika Birleşik Devletleri Adalet Bakanlığı, 26 yaşındaki Cezayir vatandaşı Abdellah Belmili'nin İspanya'da yakalanarak Amerika Birleşik Devletleri'ne iade edildiğini duyurmuştur. Belmili, Eylül ve Aralık 2020 tarihleri arasında Market0Day ve sonrasında Spoxy isimli yasa dışı siber suç pazaryerlerini yönetmekle suçlanmaktadır. Saldırganın, özellikle Amerikan finans kurumlarını hedef alan kimlik avı kitleri geliştirdiği ve bu platformlar üzerinden toplu kısa mesaj servisleri sunarak kitlesel dolandırıcılık faaliyetlerine aracılık ettiği tespit edilmiştir. Hedefler arasında JPMorgan Chase, American Express, Bank of America ve Wells Fargo gibi dev finans kuruluşlarının yanı sıra Birleşik Krallık merkezli kurumlar da yer almaktadır. Soruşturma kapsamında Ocak 2020 ile Ocak 2023 arasında Belmili'nin kontrolündeki hesaplara yaklaşık 900.000 dolar yatırıldığı ve dünya genelinde 5.600 kurbanın etkilendiği belirlenmiştir. Bu operasyon, Amerika Birleşik Devletleri'nin sınır ötesi siber suçluları yıllar sonra bile yargı önüne çıkarma stratejisinin bir parçası olarak gerçekleştirilmiştir. Belmili, banka dolandırıcılığı yapmak için komplo kurmak suçlamasıyla 30 yıla kadar hapis istemiyle yargılanmak üzere tutuklu bulunmaktadır.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/algerian-man-extradited-to-us-for-running-cybercrime-marketplaces/" target="_blank">securityweek.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-19">
+                <div class="news-title"><b>Kanadalı London Hydro Şirketinin Müşteri Verilerinin Sızdırılmasını Açıklaması</b></div>
+                <p class="news-content">Kanada'nın Ontario eyaletinde yaklaşık 170.000 konut, ticari ve endüstriyel müşteriye hizmet veren elektrik dağıtım şirketi London Hydro, sistemlerine yönelik bir siber saldırı gerçekleştiğini duyurmuştur. 20 Haziran tarihinde tespit edilen olayda, saldırganların şirketin veri tabanlarına sızarak müşterilere ait kişisel bilgilere erişim sağladığı belirtilmektedir. Sızdırılan veriler arasında müşteri isimleri, fiziksel adresler, e-posta adresleri ve telefon numaralarının yanı sıra hesap numaraları, fatura detayları, hizmet adresleri, sözleşme tarihleri ve sayaç tipleri gibi operasyonel bilgiler yer almaktadır. Şirket tarafından yapılan resmi açıklamada, doğum tarihleri, hükümet kimlik numaraları, ödeme kartı detayları veya banka bilgileri gibi hassas finansal verilerin bu ihlalden etkilenmediği ifade edilmiştir. Saldırının arkasındaki aktörün kimliği veya herhangi bir devlet bağlantısı henüz belirlenememiş olup, hiçbir siber suç grubu olayın sorumluluğunu üstlenmemiştir. London Hydro, etkilenen müşterilerini olası kimlik avı saldırılarına karşı dikkatli olmaları konusunda uyarırken, ilgili makamlarla birlikte veri güvenliği olayına ilişkin kapsamlı bir inceleme yürütmektedir. Olay, kritik altyapı hizmeti sunan kuruluşların veri güvenliği süreçlerinin doğrudan hedef alınması bağlamında değerlendirilmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/canadian-electricity-provider-london-hydro-discloses-data-breach/" target="_blank">securityweek.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item" id="haber-20">
+                <div class="news-title"><b>Bulut Depolama Alanlarında Küresel İsim Alanı Risklerinin Tespit Edilmesi</b></div>
+                <p class="news-content">Unit 42 araştırmacıları, Google Cloud, AWS ve Microsoft Azure gibi dev bulut servis sağlayıcılarını etkileyen 'evrensel depolama birimi ele geçirme' (bucket hijacking) adlı yeni bir saldırı tekniği keşfetmiştir. Bu teknik, bulut mimarisindeki depolama birimi isimlerinin küresel olarak benzersiz olması zorunluluğundan kaynaklanan temel bir tasarım açığını istismar etmektedir. Saldırganlar, hedef organizasyonun bir depolama birimini silip aynı isimle kendi hesaplarında yeniden oluşturarak, kritik veri akışlarını ve günlük kayıtlarını sessizce kendi ortamlarına yönlendirebilmektedir. Bu durum, hassas verilerin ve sistem günlüklerinin saldırganın kontrolündeki bir alana sızdırılmasına yol açarak ciddi bir casusluk ve veri hırsızlığı riski oluşturmaktadır. Araştırma ekibi, bu yöntemin Pub/Sub ve veri transfer servisleri gibi birçok farklı bulut hizmetinde uygulanabilir olduğunu simülasyonlarla kanıtlamıştır. Henüz sahada aktif bir istismar tespit edilmemiş olsa da, bulut sağlayıcıları konu hakkında bilgilendirilmiş ve savunma mekanizmalarının güçlendirilmesi önerilmiştir. Bu bulgu, bulut altyapılarındaki yetkilendirme modellerinin ve isim alanı yönetiminin stratejik önemini ortaya koymaktadır. Palo Alto Networks, müşterilerine bu tür tespit edilmesi zor saldırılara karşı bulut güvenlik değerlendirmeleri yapmalarını tavsiye etmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://unit42.paloaltonetworks.com/cloud-bucket-hijacking-risks/" target="_blank">unit42.paloaltonetworks.com</a>, 23.06.2026)</b></p>
+            </div>
+<div class="social-signals"><h2>Sosyal Medya Sinyalleri</h2><div class="signal-list"><div class="signal-item github-item">  <div class="signal-meta">    <span class="signal-platform-label">GitHub Advisory</span>    <span class="signal-engagement">ÖNEM: KRİTİK  |  CVSS: 9.6</span>  </div>  <a href="https://github.com/advisories/GHSA-w7mq-r738-x278" target="_blank" rel="noopener noreferrer">Budibase'in, workspace-builder aracılığıyla PWA-zip symlink yüklemesi üzerinden rastgele dosya okuma zafiyetine sahip olduğu tespit edilmiştir.</a></div>
+<div class="signal-item mastodon-item">  <div class="signal-meta">    <span class="signal-platform-label">Mastodon</span>    <span class="signal-engagement">★0  |  ↺1</span>  </div>  <a href="https://social.raytec.co/@techbot/116799792626251498" target="_blank" rel="noopener noreferrer">Operation FlutterBridge: The FlutterShell macOS Backdoor Pulse ID: 6a3a8f992914be78dcdd6641 Pulse Link: https:// otx.alienvault.com/pulse/6a3a8 f992914be78dcdd6641 Pulse Author: CyberHunter_NL Created</a></div>
+<div class="signal-item mastodon-item">  <div class="signal-meta">    <span class="signal-platform-label">Mastodon</span>    <span class="signal-engagement">★0  |  ↺1</span>  </div>  <a href="https://privacysafe.social/@ivycyber/116799788745829735" target="_blank" rel="noopener noreferrer">Meta'nın, dahili bir veri sızıntısının ardından çalışan takip programını durdurduğu bildirilmiştir.</a></div>
+<div class="signal-item mastodon-item">  <div class="signal-meta">    <span class="signal-platform-label">Mastodon</span>    <span class="signal-engagement">★0</span>  </div>  <a href="https://social.gamefan.net/@techwire/116799792347069119" target="_blank" rel="noopener noreferrer">Bir Google Pixel hayranı için Prime Day döneminde değerlendirilmesi gereken 5 fırsat sunulmuştur.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲50</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1udd723/cloudflare_patches_copyfail_across_all_servers_in/" target="_blank" rel="noopener noreferrer">Cloudflare, tüm sunucularındaki Copy-Fail zafiyetini iki gün içinde yamalamıştır.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲49</span>  </div>  <a href="https://www.reddit.com/r/netsec/comments/1udd811/cloudflare_patches_copyfail_across_every_server/" target="_blank" rel="noopener noreferrer">Cloudflare, her sunucusundaki Copy-Fail zafiyetini iki gün içinde yamalamıştır.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲48</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1udc9ss/bbc_news_how_100_hospitals_switched_to_pen_and/" target="_blank" rel="noopener noreferrer">BBC News, 100 hastanenin ulusal bir siber saldırıyı bertaraf etmek için kalem ve kağıt kullanımına nasıl geçtiğini ve Romanya'nın bu süreçteki mücadelesini anlatan bir belgesel yayımlamıştır.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲47</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1ud1mku/feeling_burnt_out/" target="_blank" rel="noopener noreferrer">Tükenmişlik hissi yaşandığı ifade edilmiştir.</a></div>
+<div class="signal-item reddit-item">  <div class="signal-meta">    <span class="signal-platform-label">Reddit</span>    <span class="signal-engagement">▲46</span>  </div>  <a href="https://www.reddit.com/r/cybersecurity/comments/1uddo01/two_months_in_assessing_the_impact_of_nists/" target="_blank" rel="noopener noreferrer">İkinci ayın sonunda, NIST'in zenginleştirme kesintilerinin etkileri değerlendirilmiştir.</a></div>
+</div></div>
+            <div class="vuln-section-heading" id="guvenlik-aciklari">
+                <h2>&#128272; Güvenlik Açıkları</h2>
+            </div>
+            <div class="news-item vuln-item" id="haber-21">
+                <div class="news-title"><b>Microsoft'un SharePoint Sunucularındaki Zafiyetlerin Birden Fazla Saldırgan Tarafından İstismar Edilmesi</b></div>
+                <p class="news-content">Microsoft Algılama ve Yanıt Ekibi (DART), bir fidye yazılımı soruşturması sırasında aynı kurban ağında birbirinden bağımsız iki farklı saldırgan grubun eş zamanlı faaliyet gösterdiğini tespit etmiştir. Olay, Storm-2603 olarak adlandırılan ve fidye yazılımı yayılımıyla bilinen bir tehdit aktörünün yerel SharePoint sunucularındaki yamalanmamış güvenlik açıklarını istismar etmesiyle başlamıştır. İncelemeler sırasında, fidye yazılımı operatörünün taktik ve prosedürleriyle uyuşmayan ikinci bir saldırı zinciri daha ortaya çıkarılmıştır. İkinci aktörün özel arka kapılar, DLL yan yükleme teknikleri ve Active Directory kimlik bilgisi veritabanlarına erişim girişimleri kullandığı belirlenmiştir. Microsoft, bu iki grubun faaliyetlerinin birbirini maskelediğini ve bu durumun sızma girişiminin tam kapsamının belirlenmesini zorlaştırdığını raporlamıştır. Analizler, saldırganların ilk ağın ötesine geçerek bağlantılı ikinci bir kuruluşu daha hedef aldığını doğrulamıştır. Güvenlik araştırmacıları, bu tür durumların genellikle koordineli bir çaba olmadığını, aksine farklı grupların aynı zafiyet beslemelerini takip ederek açıkta kalan sunucuları hedeflemesiyle oluştuğunu belirtmektedir. Müdahale süreci, kimlik, uç nokta ve bulut telemetrisinin birleştirilmesiyle her iki grubun da ağdan temizlenmesiyle sonuçlanmıştır. Microsoft, internete açık sistemlerin öncelikli olarak yamalanması ve ayrıcalıklı kimliklerin ana saldırı yüzeyi olarak korunması gerektiğini duyurmuştur. Olayın temel nedeni, internete bakan bir sistemin birden fazla aktörün içeri girmesine yetecek kadar uzun süre yamalanmadan bırakılması olarak kaydedilmiştir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.csoonline.com/article/4188359/unpatched-sharepoint-servers-opened-the-door-to-multiple-attackers-microsoft-finds.html" target="_blank">csoonline.com</a>, 23.06.2026)</b></p>
+            </div>
+            <div class="news-item vuln-item" id="haber-22">
+                <div class="news-title"><b>Samsung'un Galaxy Cihazlarındaki Sekiz Yıllık Güvenlik Açığını Gidermesi</b></div>
+                <p class="news-content">Samsung'un KNOX güvenlik çerçevesinde, Galaxy S9'dan S25'e kadar olan milyonlarca Android cihazı etkileyen sekiz yıllık bir güvenlik açığı tespit edilmiştir. CVE-2026-20971 koduyla tanımlanan bu yüksek riskli zafiyet, işletim sistemi çekirdeğindeki süreç doğrulama mekanizmalarının hatalı etkileşiminden kaynaklanmaktadır. LucidBit Labs araştırmacıları, bu açığın kötü niyetli bir uygulama aracılığıyla tetiklenebileceğini ve saldırganlara cihaz üzerinde derin kontrol sağlayan çekirdek bellek bozulmasına yol açabileceğini belirtmektedir. Zafiyet, hem Exynos hem de Qualcomm tabanlı modelleri kapsayan geniş bir donanım yelpazesini etkilemektedir. Stratejik açıdan bu durum, mobil cihazların kurumsal ağlara sızmak için birer atlama tahtası olarak kullanılabileceği jeopolitik riskleri barındırmaktadır. Samsung, söz konusu sorunu Ocak 2026 güvenlik güncellemesiyle çözüme kavuşturmuştur. Saldırganların bu tür yerel erişim gerektiren açıkları, uzaktan erişim sağlayan diğer yöntemlerle birleştirerek karmaşık operasyonlar yürütebileceği vurgulanmaktadır. Savunma ekiplerinin, kendi güvenlik katmanlarını dahi potansiyel bir saldırı yüzeyi olarak değerlendirmesi gerektiği ifade edilmektedir. Kullanıcıların cihazlarını en son sürüme güncellemeleri, bu tür uzun süreli risklerin ortadan kaldırılması için kritik bir adım olarak görülmektedir.</p>
+                <p class="source"><b>(XXXXXXX, AÇIK - <a href="https://www.securityweek.com/eight-year-old-samsung-knox-flaw-exposed-millions-of-galaxy-devices-to-kernel-attacks/" target="_blank">securityweek.com</a>, 23.06.2026)</b></p>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="back-to-top" title="Başa Dön"
+       onclick="window.scrollTo({top:0,behavior:'smooth'});history.replaceState(null,'',window.location.pathname);return false;">↑</a>
+<script>
+// Mod döngüsü: Gece ↔ Gündüz (varsayılan: Gece)
+// 'light' dışındaki her değer (eski 'auto' dahil) gece olarak normalize edilir.
+function _applyTheme() {
+    var mode = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', mode);
+    document.getElementById('theme-icon-moon').classList.toggle('dim', mode !== 'dark');
+    document.getElementById('theme-icon-sun').classList.toggle('dim',  mode !== 'light');
+}
+function toggleTheme() {
+    var cur = (localStorage.getItem('theme') === 'light') ? 'light' : 'dark';
+    localStorage.setItem('theme', cur === 'dark' ? 'light' : 'dark');
+    _applyTheme();
+}
+_applyTheme();
+function _getBlockText() {
+    var lines = [];
+    var cards = document.querySelectorAll('#onemli-gelismeler-block .top3-card');
+    cards.forEach(function(card, i) {
+        var title   = (card.querySelector('.top3-card-title')    || {}).textContent || '';
+        var para    = (card.querySelector('.top3-card-paragraph') || {}).textContent || '';
+        var source  = (card.querySelector('.source')              || {}).textContent || '';
+        lines.push(title.trim());
+        lines.push('');
+        lines.push(para.trim());
+        lines.push('');
+        lines.push(source.trim());
+        if (i < cards.length - 1) { lines.push('-'.repeat(60)); lines.push(''); }
+    });
+    return lines.join('\n');
+}
+function _flashBtn(btn, label) {
+    var orig = btn.innerHTML;
+    btn.classList.add('success');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ' + label;
+    setTimeout(function() { btn.classList.remove('success'); btn.innerHTML = orig; }, 1800);
+}
+function copyBlock(btn) {
+    var text = _getBlockText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() { _flashBtn(btn, 'Kopyalandı!'); }).catch(function() { _fallbackCopy(text, btn); });
+    } else { _fallbackCopy(text, btn); }
+}
+function _fallbackCopy(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); _flashBtn(btn, 'Kopyalandı!'); } catch(e) { alert('Kopyalama desteklenmiyor.'); }
+    document.body.removeChild(ta);
+}
+function saveBlock(btn) {
+    var text = _getBlockText();
+    var blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href = url; a.download = '23.06.2026.txt';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    _flashBtn(btn, 'Kaydedildi!');
+}
+function initDragFile() {
+    document.querySelectorAll('.drag-file-chip').forEach(function(chip) {
+        chip.addEventListener('dragstart', function(e) {
+            var text = _getBlockText();
+            var filename = chip.dataset.filename;
+            var b64 = btoa(unescape(encodeURIComponent(text)));
+            e.dataTransfer.setData('DownloadURL', 'text/plain:' + filename + ':data:text/plain;base64,' + b64);
+            e.dataTransfer.setData('text/plain', text);
+            e.dataTransfer.items.add(new File([text], filename, {type: 'text/plain'}));
+            chip.classList.add('dragging');
+        });
+        chip.addEventListener('dragend', function() { chip.classList.remove('dragging'); });
+    });
+}
+document.addEventListener('DOMContentLoaded', initDragFile);
+</script>
+
+    <div class="archive-section">
+        <h3>📚 Arşiv - Son 30 Gün</h3>
+        <div class="archive-links">
+            <a href="./2026-06-22.html" class="archive-link">22.06.2026</a>
+            <a href="./2026-06-21.html" class="archive-link">21.06.2026</a>
+            <a href="./2026-06-20.html" class="archive-link">20.06.2026</a>
+            <a href="./2026-06-19.html" class="archive-link">19.06.2026</a>
+            <a href="./2026-06-18.html" class="archive-link">18.06.2026</a>
+            <a href="./2026-06-17.html" class="archive-link">17.06.2026</a>
+            <a href="./2026-06-16.html" class="archive-link">16.06.2026</a>
+            <a href="./2026-06-15.html" class="archive-link">15.06.2026</a>
+            <a href="./2026-06-14.html" class="archive-link">14.06.2026</a>
+            <a href="./2026-06-13.html" class="archive-link">13.06.2026</a>
+            <a href="./2026-06-12.html" class="archive-link">12.06.2026</a>
+            <a href="./2026-06-10.html" class="archive-link">10.06.2026</a>
+            <a href="./2026-06-09.html" class="archive-link">09.06.2026</a>
+            <a href="./2026-06-08.html" class="archive-link">08.06.2026</a>
+            <a href="./2026-06-07.html" class="archive-link">07.06.2026</a>
+            <a href="./2026-06-06.html" class="archive-link">06.06.2026</a>
+            <a href="./2026-06-05.html" class="archive-link">05.06.2026</a>
+            <a href="./2026-06-04.html" class="archive-link">04.06.2026</a>
+            <a href="./2026-06-03.html" class="archive-link">03.06.2026</a>
+            <a href="./2026-06-02.html" class="archive-link">02.06.2026</a>
+            <a href="./2026-06-01.html" class="archive-link">01.06.2026</a>
+            <a href="./2026-05-31.html" class="archive-link">31.05.2026</a>
+            <a href="./2026-05-30.html" class="archive-link">30.05.2026</a>
+            <a href="./2026-05-29.html" class="archive-link">29.05.2026</a>
+            <a href="./2026-05-28.html" class="archive-link">28.05.2026</a>
+            <a href="./2026-05-27.html" class="archive-link">27.05.2026</a>
+            <a href="./2026-05-26.html" class="archive-link">26.05.2026</a>
+            <a href="./2026-05-25.html" class="archive-link">25.05.2026</a>
+        </div>
+    </div>
+
+</body>
+</html>
