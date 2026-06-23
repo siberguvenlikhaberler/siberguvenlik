@@ -458,9 +458,29 @@ Her haber için iki şey üret:
    ───────────────────────────────────────────────────────────────────────────
 
    - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
-   - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BITIRME
-   - MUTLAK YASAK SON KELIMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
-   - Son cümle somut bir bulgu veya operasyonel/stratejik tespit olacak
+
+   ⛔⛔ UYDURMA DEĞERLENDİRME / YORUM CÜMLESİ — KESİN YASAK (EN ÖNEMLİ KURAL) ⛔⛔
+   Paragrafın HİÇBİR yerine, ÖZELLİKLE SONUNA, kaynak metinde AÇIKÇA yazmayan
+   bir "önem/anlam/sonuç değerlendirmesi" cümlesi EKLEME. Senin yorumun, çıkarımın,
+   "bu ne anlama geliyor", "bu ne kadar önemli", "neyi teyit/kanıt ediyor" türünden
+   YARGILARIN tamamen YASAKTIR. Paragrafta YALNIZCA kaynak metinde yazan olgular
+   (kim, ne yaptı, kime, ne zaman, hangi sayı/kurum/teknik önlem) yer alır.
+   • Bu, raporda en sık yapılan ve en çok şikâyet edilen hatadır — ASLA yapma.
+   • Örnek YASAK kapanış (ASLA böyle bitirme): "Hükümetin bu yaklaşımı, kuantum
+     teknolojilerini ... bir beka meselesi olarak gördüğünü teyit etmektedir."
+     Bu cümle kaynakta yoktur; senin uydurman bir değerlendirmedir.
+
+   - ⛔ Paragrafı, ÖZNESİ NE OLURSA OLSUN ("Bu olay/durum/gelişme/saldırı/
+     operasyon/yaklaşım...", "Söz konusu...", "Hükümetin bu...", "Yaşanan bu..."
+     fark etmez) aşağıdaki fiillerden BİRİYLE BİTEN bir cümleyle BİTİRME:
+       göstermektedir, göstermiştir, ortaya koymaktadır, ortaya koymuştur,
+       vurgulamaktadır, kanıtlamaktadır, teyit etmektedir, yansıtmaktadır,
+       gözler önüne sermektedir, anlamına gelmektedir, işaret etmektedir,
+       teşkil etmektedir, önem arz etmektedir, önem taşımaktadır, darbe vurmuştur,
+       dikkat çekmektedir, haline geldiğini göstermektedir/kanıtlamaktadır.
+   - Son cümle, kaynakta geçen SOMUT bir olgu olacak (kim ne yaptı, hangi sayı,
+     hangi tarih, hangi kurum, hangi teknik önlem) — soyut "önemlidir/stratejiktir/
+     kritiktir" yargısı DEĞİL.
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
@@ -537,9 +557,21 @@ Her haber için:
    ───────────────────────────────────────────────────────────────────────────
 
    - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
-   - MUTLAK YASAK: Paragrafı "Bu olay...", "Bu saldırı...", "Bu gelişme...", "Bu operasyon...", "Bu yaklaşım..." ile başlayan herhangi bir cümleyle BİTİRME
-   - MUTLAK YASAK SON KELİMELER: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "kanıtlamaktadır", "darbe vurmuştur", "önem arz etmektedir"
-   - Son cümle somut bir bulgu veya operasyonel/stratejik tespit olacak
+
+   ⛔⛔ UYDURMA DEĞERLENDİRME / YORUM CÜMLESİ — KESİN YASAK (EN ÖNEMLİ KURAL) ⛔⛔
+   Paragrafın HİÇBİR yerine, ÖZELLİKLE SONUNA, kaynak metinde AÇIKÇA yazmayan
+   bir "önem/anlam/sonuç değerlendirmesi" cümlesi EKLEME. Senin yorumun, çıkarımın,
+   "bu ne anlama geliyor / ne kadar önemli / neyi teyit-kanıt ediyor" türünden
+   YARGILARIN tamamen YASAKTIR. Yalnızca kaynak metinde yazan olgular yer alır.
+   - ⛔ Paragrafı, ÖZNESİ NE OLURSA OLSUN ("Bu olay/durum/gelişme/saldırı/yaklaşım",
+     "Söz konusu...", "Hükümetin bu..." fark etmez) şu fiillerden biriyle BİTEN bir
+     cümleyle BİTİRME: göstermektedir, göstermiştir, ortaya koymaktadır, ortaya
+     koymuştur, vurgulamaktadır, kanıtlamaktadır, teyit etmektedir, yansıtmaktadır,
+     gözler önüne sermektedir, anlamına gelmektedir, işaret etmektedir, teşkil
+     etmektedir, önem arz etmektedir, önem taşımaktadır, darbe vurmuştur, dikkat
+     çekmektedir.
+   - Son cümle, kaynakta geçen SOMUT bir olgu olacak (kim ne yaptı, hangi sayı/
+     tarih/kurum/teknik önlem) — soyut "önemlidir/stratejiktir" yargısı DEĞİL.
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{

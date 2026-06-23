@@ -3293,59 +3293,82 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
     # Kritik CSS sınıfları — bunlar eksikse sayfa düzgün görünmez
     def _remove_commentary_sentences(self, html):
-        """Gemini'nin haber paragraflarının sonuna eklediği yapay yorum cümlelerini sil.
+        """Gemini'nin paragrafların sonuna eklediği UYDURMA değerlendirme/yorum
+        cümlelerini sil. Kaynak metinde olmayan "bu ne anlama geliyor / ne kadar
+        önemli / neyi teyit ediyor" türü editoryal kapanış cümleleri kaldırılır.
 
-        Hedef kalıplar (Türkçe):
-          - "Bu olay/saldırı/durum ... göstermektedir."
-          - "Bu yaklaşım/metodoloji ... ortaya koymaktadır."
-          - "... bir kez daha ... vurgulamaktadır."
-          - "Bu gelişme ... kanıtlamaktadır."
-        Sadece <p class="news-content"> paragrafları içinde temizleme yapılır.
+        İki katmanlı temizlik:
+          1) Öznesi ne olursa olsun (Bu olay…, Söz konusu…, Hükümetin bu…) bir
+             değerlendirme FİİLİYLE biten cümleler — yani editoryal kapanışlar.
+          2) Eski "Bu X … fiil" ve "… bir kez daha … fiil" kalıpları.
+        Haber, top3 kart ve yönetici özeti paragraflarının HEPSİNDE çalışır.
         """
         import re
 
-        # Yorum/analiz cümlelerini tanıyan regex
-        # "Bu X ... fiil." kalıbı
-        BU_RE = re.compile(
-            r'[^.!?]*\bBu\s+\w+(?:\s+\w+){0,5}\s*[^<.!?]{0,350}?'
-            r'(?:göstermektedir|ortaya koymaktadır|vurgulamaktadır|kanıtlamaktadır|'
-            r'taşımaktadır|darbe vurmuştur|önem arz etmektedir|'
-            r'gözler önüne sermektedir|açıkça ortaya çıkmaktadır|'
-            r'farkındalık yaratmaktadır|ne denli önemli olduğunu göstermektedir)\s*\.',
-            re.IGNORECASE | re.DOTALL
+        # Editoryal/değerlendirme fiilleri — biçimsel haber dilinde neredeyse
+        # yalnızca "yorum kapanışı" olarak kullanılırlar. Olgusal cümleler bunun
+        # yerine açıklamıştır/bildirilmiştir/duyurmuştur/belirtilmiştir kullanır.
+        # Belirsiz olabilen fiillerde (teyit/yansıt/vurgula) YALNIZCA şimdiki
+        # zaman "-maktadır/-mektedir" biçimi alınır; bu biçim editoryal kapanışın
+        # imzasıdır. Geçmiş "-miştir" biçimi çoğu kez olgusaldır (ör. "şirket
+        # ihlali teyit etmiştir") ve KORUNUR.
+        EVAL_VERBS = (
+            r'(?:göstermektedir|göstermiştir|ortaya koymaktadır|ortaya koymuştur|'
+            r'gözler önüne sermektedir|gözler önüne sermiştir|darbe vurmuştur|'
+            r'vurgulamaktadır|kanıtlamaktadır|teyit etmektedir|yansıtmaktadır|'
+            r'anlamına gelmektedir|işaret etmektedir|teşkil etmektedir|'
+            r'önem arz etmektedir|önem taşımaktadır|dikkat çekmektedir|'
+            r'açıkça ortaya çıkmaktadır|farkındalık yaratmaktadır)'
         )
-        # "... bir kez daha ..." kalıbı
-        BIRKEZDAHA_RE = re.compile(
-            r'[^.!?]{0,200}bir kez daha[^<.!?]{0,150}?'
-            r'(?:göstermektedir|vurgulamaktadır|ortaya koymaktadır|kanıtlamaktadır)\s*\.',
-            re.IGNORECASE | re.DOTALL
+
+        # Yalnızca paragrafın SON cümlesini hedefler: son cümle bir değerlendirme
+        # fiiliyle bitiyorsa (özne ne olursa olsun) o cümle editoryal kapanıştır
+        # ve silinir. Paragraf ortasındaki olgusal cümlelere DOKUNULMAZ — böylece
+        # haberin bilgileri korunur, yalnızca uydurma kapanış yorumu kalkar.
+        LAST_EVAL_RE = re.compile(
+            r'[^.!?<]*' + EVAL_VERBS + r'\s*[.!?]?\s*$',
+            re.IGNORECASE
         )
 
         def _strip_commentary(text):
-            text = BU_RE.sub('', text)
-            text = BIRKEZDAHA_RE.sub('', text)
-            return text.strip()
+            text = text.strip()
+            # Arka arkaya birden fazla editoryal kapanış olabilir (ör. iki
+            # değerlendirme cümlesi); son cümle olgusal olana dek soy.
+            while True:
+                m = LAST_EVAL_RE.search(text)
+                # m.start() == 0 → paragrafın tamamı tek editoryal cümle;
+                # boşaltma, en az bir cümle kalsın.
+                if not m or m.start() == 0:
+                    break
+                candidate = text[:m.start()].rstrip()
+                if not candidate:
+                    break
+                text = candidate
+            return re.sub(r'\s{2,}', ' ', text).strip()
 
         cleaned_count = 0
 
-        def process_paragraph(m):
-            nonlocal cleaned_count
-            content = m.group(1)
-            cleaned = _strip_commentary(content)
-            cleaned = re.sub(r'  +', ' ', cleaned)
-            if cleaned != content:
-                cleaned_count += 1
-            return f'<p class="news-content">{cleaned}</p>'
+        def make_processor(cls):
+            def process_paragraph(m):
+                nonlocal cleaned_count
+                content = m.group(1)
+                cleaned = _strip_commentary(content)
+                if cleaned != content.strip():
+                    cleaned_count += 1
+                return f'<p class="{cls}">{cleaned}</p>'
+            return process_paragraph
 
-        fixed = re.sub(
-            r'<p class="news-content">(.*?)</p>',
-            process_paragraph,
-            html,
-            flags=re.DOTALL
-        )
+        fixed = html
+        for cls in ('news-content', 'top3-card-paragraph', 'exec-brief-paragraph'):
+            fixed = re.sub(
+                r'<p class="' + cls + r'">(.*?)</p>',
+                make_processor(cls),
+                fixed,
+                flags=re.DOTALL
+            )
 
         if cleaned_count > 0:
-            print(f"   ✅ {cleaned_count} paragraftan yorum cümlesi temizlendi")
+            print(f"   ✅ {cleaned_count} paragraftan uydurma yorum cümlesi temizlendi")
         return fixed
 
     def _add_archive_links(self, html, is_archive=False):
