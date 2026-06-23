@@ -2618,8 +2618,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # edilecek TÜM haberleri LLM'den bağımsız tarayıp İngilizce kalanları
         # önce yeniden üret, hâlâ İngilizce ise yansız çeviriyle Türkçeye çevir.
         rendered_now = list(top10_ids) + list(remaining_ids)
+        # İçeriği hiç gelmemiş (boş/None) haberler de _safe_content üzerinden ham
+        # İngilizce render edilir → onları da yeniden üretim kapsamına al.
         english_leftovers = [aid for aid in rendered_now
-                             if self._content_is_english(content_by_id.get(aid, {}))]
+                             if not content_by_id.get(aid)
+                             or self._content_is_english(content_by_id.get(aid, {}))]
         if english_leftovers:
             print(f"   🔁 Deterministik İngilizce süpürme: {english_leftovers}")
             for rid in english_leftovers:
