@@ -326,7 +326,9 @@ GÖREV:
 - Paragrafa güncel siber tehdit ortamına bağlamsal bir GİRİŞ CÜMLESİYLE başla. Örnek çerçeveler (kelimesi kelimesine kopyalama; aynı tonu koruyarak doğal biçimde yeniden ifade et):
   • "Küresel siber tehdit ortamında öne çıkan gelişmeler incelendiğinde..."
   • "Son 48 saatin siber güvenlik gündeminde belirleyici olan gelişmeler değerlendirildiğinde..."
-  • "Bugünün siber tehdit tablosu, [öne çıkan temayı] merkeze alarak şekillenmiştir..."
+  • "Geçen 48 saat içinde siber tehdit ortamında yaşanan gelişmeler ele alındığında..."
+  • "Son iki günde küresel siber güvenlik gündemini şekillendiren başlıca olaylar incelendiğinde..."
+  ⛔ YASAK GİRİŞLER: "Bugünün…", "Bugün siber…", "Bu günün…" ile başlayan ifadeler KULLANILMAZ — rapor son 48 saati kapsar, yalnızca bugünü değil.
   Giriş cümlesi bağlama uygun ve özgün olsun; her gün aynı kalıpla başlama.
 - Giriş cümlesinin ardından, verilen haberleri TEK BİR paragraf içinde özetlemeye devam et (madde işareti, başlık, alt başlık YOK).
 - Bir yönetici tek okuyuşta, son 48 saatte siber güvenlik dünyasında yaşanan en önemli gelişmeler hakkında doğrudan fikir sahibi olabilmeli.
