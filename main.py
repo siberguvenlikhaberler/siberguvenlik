@@ -1505,12 +1505,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 </html>"""
         return html
 
-    def _inject_manual_add(self, html):
+    def _inject_manual_add(self, html, today_str):
         """'Manuel Haber Ekle' butonu + pop-up scriptini YALNIZCA anasayfaya ekler.
 
         Arşiv raporlarına eklenmez (buton sadece güncel rapor = index.html üzerinde
         çalışmalı). Asıl iş sunucu tarafındaki Vercel fonksiyonunda yapılır; bu
-        dosya yalnızca arayüzü (docs/manual-add.js) yükler.
+        dosya yalnızca arayüzü (docs/manual-add.js) yükler. Script'e ?v=<tarih>
+        eklenir ki tarayıcı/Pages önbelleği her günkü raporda tazelensin.
         """
         button_html = (
             '            <button class="manual-add-btn" onclick="openManualAddModal()" '
@@ -1529,7 +1530,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         )
         html = html.replace(
             '</body>',
-            '    <script src="/siberguvenlik/manual-add.js"></script>\n</body>',
+            f'    <script src="/siberguvenlik/manual-add.js?v={today_str}"></script>\n</body>',
             1,
         )
         return html
@@ -2793,7 +2794,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         html = self._remove_commentary_sentences(html)
         html = self._sanitize_html(html)
 
-        html_index   = self._inject_manual_add(self._add_archive_links(html, is_archive=False))
+        html_index   = self._inject_manual_add(self._add_archive_links(html, is_archive=False), today_str)
         html_archive = self._add_archive_links(html, is_archive=True)
 
         os.makedirs("docs/raporlar", exist_ok=True)
@@ -3150,7 +3151,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         html = self._remove_commentary_sentences(html)
         html = self._sanitize_html(html)
 
-        html_index   = self._inject_manual_add(self._add_archive_links(html, is_archive=False))
+        html_index   = self._inject_manual_add(self._add_archive_links(html, is_archive=False), today_str)
         html_archive = self._add_archive_links(html, is_archive=True)
 
         os.makedirs("docs/raporlar", exist_ok=True)
