@@ -1695,7 +1695,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 root = ET.fromstring(r.content)
 
                 if root.tag.endswith('feed'):  # Atom
-                    for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:15]:
+                    for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:40]:
                         t = entry.find('{http://www.w3.org/2005/Atom}title')
                         l = entry.find('{http://www.w3.org/2005/Atom}link')
                         s = entry.find('{http://www.w3.org/2005/Atom}summary')
@@ -1709,7 +1709,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                                 'source': source_name
                             })
                 else:  # RSS
-                    for item in root.findall('.//item')[:15]:
+                    for item in root.findall('.//item')[:40]:
                         t = item.find('title')
                         l = item.find('link')
                         d = item.find('description')
@@ -1989,82 +1989,86 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         return filtered
 
-    def _filter_old_articles(self, all_news):
-        """Son 48 saatte yayınlanmayan haberleri filtrele.
+    # Haber zaman penceresi (saat). 72 saat: günde tek çalışma + GitHub cron
+    # slotlarının düşebilmesi nedeniyle, bir günlük çalışma tamamen kaçsa bile
+    # ertesi gün telafi penceresi bırakır. Mükerrer haber riski yoktur çünkü
+    # tekrar önleme görevini URL deduplikasyonu (haberler_linkler.txt) üstlenir.
+    NEWS_WINDOW_HOURS = 72
 
-        Tarih değil datetime karşılaştırması kullanılır:
-        - "yesterday_tr" (tarih bazlı) sabah 07 UTC çalışmasında
-          tüm dünü kabul eder → %70 dünkü haber dolardı.
-        - "today_tr" (tarih bazlı) sabah 07 UTC'de yalnızca 1-2 haber bırakır
-          (ABD iş saatlerindeki haberler henüz yayınlanmamış).
-        - 48 saatlik datetime penceresi her iki sorunu da çözer; hafta
-          sonu / tatil yayın kuraklığında da yeterli havuz bırakır.
-          Tekrar önleme görevini zaten URL deduplikasyonu
-          (haberler_linkler.txt) üstlendiği için pencereyi genişletmek
-          mükerrer haber riski yaratmaz.
-        """
+    def _news_cutoff_dt(self):
+        """Haber zaman penceresinin alt sınırı (timezone-aware, UTC)."""
         from datetime import timezone, timedelta as td
+        return datetime.now(timezone.utc) - td(hours=self.NEWS_WINDOW_HOURS)
+
+    def _article_within_window(self, art, cutoff_dt):
+        """Haberin yayın tarihi pencere içinde mi? Parse edilemezse güvenli
+        tarafta kalıp True döner (haber dahil edilir).
+
+        Tarih değil datetime karşılaştırması kullanılır: tarih bazlı kontrol
+        sabah çalışmalarında ya tüm dünü doldurur ya da ABD iş saatlerindeki
+        haberleri henüz yayınlanmadığı için dışarıda bırakırdı.
+        """
+        from datetime import timezone
         UTC = timezone.utc
-        cutoff_dt = datetime.now(UTC) - td(hours=48)
+        raw_date = art.get('date', '')
+        art_dt = None
+
+        # Timezone-aware formatları dene
+        for fmt in [
+            '%a, %d %b %Y %H:%M:%S %z',
+            '%Y-%m-%dT%H:%M:%S%z',
+            '%Y-%m-%dT%H:%M:%S.%f%z',
+        ]:
+            try:
+                art_dt = datetime.strptime(raw_date, fmt)
+                break
+            except Exception:
+                pass
+
+        # Z sonekini dene
+        if art_dt is None and isinstance(raw_date, str) and raw_date.endswith('Z'):
+            for fmt in ['%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ']:
+                try:
+                    art_dt = datetime.strptime(raw_date, fmt).replace(tzinfo=UTC)
+                    break
+                except Exception:
+                    pass
+
+        # RFC 2822 isimli timezone'lar (GMT, EST, ...) — strptime %z bunları
+        # kabul etmez; parsedate_to_datetime kabul eder. Bu fallback olmadan
+        # "... GMT" tarihli eski haberler parse edilemeyip filtreyi atlardı.
+        if art_dt is None and isinstance(raw_date, str) and raw_date.strip():
+            try:
+                import email.utils as _eu
+                art_dt = _eu.parsedate_to_datetime(raw_date)
+            except Exception:
+                art_dt = None
+
+        if art_dt is None:
+            # Tarih parse edilemezse dahil et (güvenli taraf)
+            return True
+
+        if not art_dt.tzinfo:
+            art_dt = art_dt.replace(tzinfo=UTC)
+
+        return art_dt >= cutoff_dt
+
+    def _filter_old_articles(self, all_news):
+        """Pencere dışında (>NEWS_WINDOW_HOURS saat) kalan haberleri filtrele."""
+        cutoff_dt = self._news_cutoff_dt()
 
         filtered = {}
         removed_count = 0
 
         for src, articles in all_news.items():
-            filtered_articles = []
-            for art in articles:
-                raw_date = art.get('date', '')
-                art_dt = None
-
-                # Timezone-aware formatları dene
-                for fmt in [
-                    '%a, %d %b %Y %H:%M:%S %z',
-                    '%Y-%m-%dT%H:%M:%S%z',
-                    '%Y-%m-%dT%H:%M:%S.%f%z',
-                ]:
-                    try:
-                        art_dt = datetime.strptime(raw_date, fmt)
-                        break
-                    except Exception:
-                        pass
-
-                # Z sonekini dene
-                if art_dt is None and isinstance(raw_date, str) and raw_date.endswith('Z'):
-                    for fmt in ['%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ']:
-                        try:
-                            art_dt = datetime.strptime(raw_date, fmt).replace(tzinfo=UTC)
-                            break
-                        except Exception:
-                            pass
-
-                # RFC 2822 isimli timezone'lar (GMT, EST, ...) — strptime %z bunları
-                # kabul etmez; parsedate_to_datetime kabul eder. Bu fallback olmadan
-                # "... GMT" tarihli eski haberler parse edilemeyip filtreyi atlardı.
-                if art_dt is None and isinstance(raw_date, str) and raw_date.strip():
-                    try:
-                        import email.utils as _eu
-                        art_dt = _eu.parsedate_to_datetime(raw_date)
-                    except Exception:
-                        art_dt = None
-
-                if art_dt is None:
-                    # Tarih parse edilemezse dahil et (güvenli taraf)
-                    filtered_articles.append(art)
-                    continue
-
-                if not art_dt.tzinfo:
-                    art_dt = art_dt.replace(tzinfo=UTC)
-
-                if art_dt >= cutoff_dt:
-                    filtered_articles.append(art)
-                else:
-                    removed_count += 1
-
+            filtered_articles = [a for a in articles
+                                 if self._article_within_window(a, cutoff_dt)]
+            removed_count += len(articles) - len(filtered_articles)
             if filtered_articles:
                 filtered[src] = filtered_articles
 
         if removed_count > 0:
-            print(f"📅 {removed_count} eski haber filtrelendi (>48 saat)")
+            print(f"📅 {removed_count} eski haber filtrelendi (>{self.NEWS_WINDOW_HOURS} saat)")
 
         return filtered
 
@@ -2082,6 +2086,18 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         for idx, (src, url) in enumerate(self.sources.items(), 1):
             print(f"[{idx}/{len(self.sources)}] 🔍 {src}")
             articles = self.fetch_rss(url, src)
+
+            # Tarih filtresini tam metin çekiminden ÖNCE uygula: pencere dışı
+            # haberlerin tam metnini/newsletter sayfasını boş yere çekmeyelim.
+            # (Tarihsiz haberler güvenli tarafta kalıp geçer; son filtrede
+            # newsletter'dan türeyen haberler de tarihe göre tekrar elenir.)
+            if articles:
+                cutoff_dt = self._news_cutoff_dt()
+                before = len(articles)
+                articles = [a for a in articles
+                            if self._article_within_window(a, cutoff_dt)]
+                if before - len(articles) > 0:
+                    print(f"   └─ 📅 {before - len(articles)} pencere dışı haber atlandı (>{self.NEWS_WINDOW_HOURS}s)")
 
             if articles:
                 # Newsletter URL'lerini ayır: atlamak yerine içlerindeki
