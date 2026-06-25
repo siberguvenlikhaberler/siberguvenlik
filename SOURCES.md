@@ -48,6 +48,18 @@ soruşturmalara ağırlık veren kaynaklar — raporun stratejik çekirdeği.
 | Proofpoint Threat Insight | proofpoint.com/us/rss.xml | Phishing kampanyaları, e-posta tabanlı APT |
 | Schneier on Security | schneier.com/blog/atom.xml | Güvenlik politikası, kriptografi, stratejik analiz |
 
+### Bölgesel / Orta Doğu Jeopolitik Kaynaklar
+
+İran/İsrail/Orta Doğu siber-jeopolitik olaylarını (örn. İran iç bankacılık kesintisi —
+Bank Melli/Saderat/Tejarat) yakalamak için eklendi; Batı merkezli feed'ler bu tür
+bölgesel olayları çoğu zaman hiç ya da gecikmeli taşıyor.
+
+| Kaynak | Feed | Odak |
+|---|---|---|
+| The Cyber Express | thecyberexpress.com/feed | Bölgesel saldırı/ihlal/kesinti haberleri |
+| Industrial Cyber | industrialcyber.co/feed | Kritik altyapı / OT / finans |
+| Times of Israel | timesofisrael.com/feed | İsrail tarafı, Predatory Sparrow/Gonjeshke tipi olaylar |
+
 ---
 
 ## Sosyal Medya Sinyalleri

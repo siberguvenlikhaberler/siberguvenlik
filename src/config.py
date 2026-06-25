@@ -636,6 +636,15 @@ NEWS_SOURCES = {
     'SentinelOne Labs': 'https://www.sentinelone.com/labs/feed/',
     'Proofpoint Threat Insight': 'https://www.proofpoint.com/us/rss.xml',
     'Schneier on Security': 'https://www.schneier.com/blog/atom.xml',
+    # Bölgesel / Orta Doğu jeopolitik kaynaklar (kullanıcı tarafından doğrulandı 2026-06-25)
+    # Eklenme gerekçesi: İran iç bankacılık kesintisi (Bank Melli/Saderat/Tejarat) gibi
+    # bölgesel siber-jeopolitik olaylar Batı merkezli feed'lerde ya hiç ya da gecikmeli
+    # yer alıyordu. Bu grup İran/İsrail/Orta Doğu kapsamasındaki boşluğu kapatır.
+    # NOT: Bu ortamın egress politikası tüm dış haber domainlerini engellediği için
+    # (mevcut feed'ler dahil 403) doğrulama kullanıcı tarafından dışarıdan yapılmıştır.
+    'The Cyber Express': 'https://www.thecyberexpress.com/feed/',
+    'Industrial Cyber': 'https://industrialcyber.co/feed/',
+    'Times of Israel': 'https://www.timesofisrael.com/feed/',
 }
 
 
