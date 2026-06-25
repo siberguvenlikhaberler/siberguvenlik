@@ -115,13 +115,18 @@ def generate_content(url, full_text, report_date):
         f"Link: {url}\n\n"
         f"TAM METİN:\n{full_text}\n"
     )
+    model = os.getenv("OPENROUTER_MODEL", "") or "google/gemini-3-flash-preview (varsayılan)"
     data = llm_client.generate_json(
         get_deep_analysis_prompt(block),
         max_output_tokens=4096,
         label="ManuelEkle",
     )
     if not data:
-        return None, None
+        return None, None, (
+            f"LLM yanıt döndürmedi. OPENROUTER_API_KEY geçerli mi ve "
+            f"OPENROUTER_MODEL ('{model}') hesabında erişilebilir mi? "
+            f"(Vercel env + redeploy gerekir.)"
+        )
 
     # Çıktı şekli: {"1": {tr_title, paragraph}} veya {tr_title, paragraph}
     entry = None
@@ -134,8 +139,8 @@ def generate_content(url, full_text, report_date):
                     entry = v
                     break
     if not entry:
-        return None, None
-    return (entry.get("tr_title") or "").strip(), (entry.get("paragraph") or "").strip()
+        return None, None, f"LLM beklenmeyen biçim döndürdü: {list(data)[:5]}"
+    return (entry.get("tr_title") or "").strip(), (entry.get("paragraph") or "").strip(), None
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -264,11 +269,11 @@ def process(payload):
 
     # 3) BİZİM formatımızda içerik üret
     try:
-        tr_title, paragraph = generate_content(url, full_text, report_date)
+        tr_title, paragraph, gen_err = generate_content(url, full_text, report_date)
     except Exception as e:
-        return 502, {"error": f"İçerik üretilemedi: {str(e)[:160]}"}
+        return 502, {"error": f"İçerik üretilemedi: {str(e)[:200]}"}
     if not tr_title or not paragraph:
-        return 502, {"error": "LLM geçerli başlık/paragraf döndürmedi."}
+        return 502, {"error": gen_err or "LLM geçerli başlık/paragraf döndürmedi."}
 
     # 4) Kartı kur ve her iki dosyada ilgili kartı değiştir
     card_html = build_card_html(tr_title, paragraph, url, domain, report_date)
