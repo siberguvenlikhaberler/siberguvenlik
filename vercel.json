@@ -1,6 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "builds": [
-    { "src": "api/manual_add.py", "use": "@vercel/python" }
+    {
+      "src": "api/manual_add.py",
+      "use": "@vercel/python",
+      "config": { "includeFiles": "src/**" }
+    }
   ]
 }
