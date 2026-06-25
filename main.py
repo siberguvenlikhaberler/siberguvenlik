@@ -1505,6 +1505,35 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 </html>"""
         return html
 
+    def _inject_manual_add(self, html):
+        """'Manuel Haber Ekle' butonu + pop-up scriptini YALNIZCA anasayfaya ekler.
+
+        Arşiv raporlarına eklenmez (buton sadece güncel rapor = index.html üzerinde
+        çalışmalı). Asıl iş sunucu tarafındaki Vercel fonksiyonunda yapılır; bu
+        dosya yalnızca arayüzü (docs/manual-add.js) yükler.
+        """
+        button_html = (
+            '            <button class="manual-add-btn" onclick="openManualAddModal()" '
+            'title="Rapora manuel haber ekle">\n'
+            '                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" '
+            'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" '
+            'stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/>'
+            '<line x1="5" y1="12" x2="19" y2="12"/></svg>\n'
+            '                Manuel Haber Ekle\n'
+            '            </button>\n'
+        )
+        html = html.replace(
+            '            <button class="theme-toggle"',
+            button_html + '            <button class="theme-toggle"',
+            1,
+        )
+        html = html.replace(
+            '</body>',
+            '    <script src="/siberguvenlik/manual-add.js"></script>\n</body>',
+            1,
+        )
+        return html
+
     def fetch_full_article(self, url, source_name):
         """Tam metin çeker — max 10 saniye, sonra geç"""
         import threading
@@ -2764,7 +2793,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         html = self._remove_commentary_sentences(html)
         html = self._sanitize_html(html)
 
-        html_index   = self._add_archive_links(html, is_archive=False)
+        html_index   = self._inject_manual_add(self._add_archive_links(html, is_archive=False))
         html_archive = self._add_archive_links(html, is_archive=True)
 
         os.makedirs("docs/raporlar", exist_ok=True)
@@ -3121,7 +3150,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         html = self._remove_commentary_sentences(html)
         html = self._sanitize_html(html)
 
-        html_index   = self._add_archive_links(html, is_archive=False)
+        html_index   = self._inject_manual_add(self._add_archive_links(html, is_archive=False))
         html_archive = self._add_archive_links(html, is_archive=True)
 
         os.makedirs("docs/raporlar", exist_ok=True)
