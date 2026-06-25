@@ -19,8 +19,7 @@
 
   // ── Sunucu uç noktası — Vercel'e deploy ettikten sonra BURAYI doldur ──────
   // Dosya api/manual_add.py olduğundan yol /api/manual_add olur:
-  // Örn: "https://siberguvenlik-xxxx.vercel.app/api/manual_add"
-  var MANUAL_ADD_ENDPOINT = "";
+  var MANUAL_ADD_ENDPOINT = "https://siberguvenlik-5hqc.vercel.app/api/manual_add";
 
   // ── Stiller (kendi içine enjekte eder, ayrı CSS dosyası gerekmez) ─────────
   var CSS = [
