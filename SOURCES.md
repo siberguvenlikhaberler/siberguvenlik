@@ -59,6 +59,7 @@ bölgesel olayları çoğu zaman hiç ya da gecikmeli taşıyor.
 | The Cyber Express | thecyberexpress.com/feed | Bölgesel saldırı/ihlal/kesinti haberleri |
 | Industrial Cyber | industrialcyber.co/feed | Kritik altyapı / OT / finans |
 | Times of Israel | timesofisrael.com/feed | İsrail tarafı, Predatory Sparrow/Gonjeshke tipi olaylar |
+| IranWire | iranwire.com/en/feed | İran iç siber olayları, bankacılık kesintileri, internet blackout |
 
 ---
 

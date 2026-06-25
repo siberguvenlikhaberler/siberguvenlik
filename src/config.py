@@ -645,6 +645,7 @@ NEWS_SOURCES = {
     'The Cyber Express': 'https://www.thecyberexpress.com/feed/',
     'Industrial Cyber': 'https://industrialcyber.co/feed/',
     'Times of Israel': 'https://www.timesofisrael.com/feed/',
+    'IranWire': 'https://iranwire.com/en/feed/',
 }
 
 
