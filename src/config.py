@@ -108,8 +108,9 @@ ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
 3. Stratejik kurum/devlet saldırısı: devlet başkanlığı, bakanlık, meclis, büyükelçilik,
    istihbarat servisi, savunma müteahhidi veya uluslararası kurum (Avrupa Konseyi, AB
    kurumları, BM ajansları, NATO karargahı) hedefli saldırı/ihlal
-4. Jeopolitik/diplomatik siber gelişme + devlet destekli APT/casusluk operasyonu
-   (ülkeler arası atıf, siber savaş; Rusya, Çin, İran, Kuzey Kore vb.)
+4. Jeopolitik/diplomatik SİBER gelişme + devlet destekli APT/casusluk operasyonu
+   (ülkeler arası siber saldırı/casusluk atfı; Rusya, Çin, İran, Kuzey Kore vb.)
+   ⛔ Siber boyutu olmayan saf diplomatik/askeri haberler buraya GİRMEZ
 5. Kritik altyapı saldırıları (enerji / sağlık / finans / hükümet)
 6. Tedarik zinciri (supply chain) saldırıları — yaygın paket/araç/güncelleme mekanizması
 7. Milli güvenliği etkileyen büyük veri ihlali (devlet/ordu/savunma verisi, pasaport/
@@ -144,13 +145,29 @@ def get_top3_selection_prompt(articles_brief):
 NOT: Haber içerikleri İngilizce olabilir; dil fark etmez, anlam ve stratejik öneme göre değerlendir.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-TEMEL İLKE — STRATEJİK DEĞER TESTİ
+TEMEL İLKE — SİBER BOYUT ZORUNLULUĞU
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Bu bir SİBER GÜVENLİK bültenidir. Top 3'e girecek her haberin mutlaka
+bir siber boyutu olmalıdır: saldırı, zararlı yazılım, güvenlik açığı,
+casusluk yazılımı, veri ihlali, siber operasyon veya bunları doğrudan
+etkileyen politika/hukuk kararı.
+
+⛔ Aşağıdakiler ne kadar stratejik görünürse görünsün top 3'e GİRMEZ:
+   • Saf diplomatik/askeri anlaşmalar (siber bileşeni olmayan): ateşkes,
+     dekonfliction hattı, askeri diyalog kanalı, barış müzakeresi
+   • Saf askeri haberler: silah sistemleri, konvansiyonel saldırı/savunma,
+     kara/deniz/hava operasyonları (siber boyutu olmadıkça)
+   • Saf ekonomi/ticaret haberleri: yaptırım, enerji fiyatı, ticaret anlaşması
+     (siber güvenliği doğrudan etkilemiyorsa)
+   → Bu tür haberler için "başka seçenek yok" bahanesi geçersizdir.
+     Siber boyutu olmayan haber her zaman Kategori 3'teki en zayıf
+     siber haberden bile daha düşük önceliğe sahiptir.
+
 Her haberi değerlendirirken şu soruyu sor:
-"Bu olay; hükümetleri, uluslararası ilişkileri, ulusal güvenliği veya
- devletlerin siber kapasitesini doğrudan ya da dolaylı olarak etkiliyor mu?"
-→ EVET: Kategori 1 veya 2 adayı.
-→ HAYIR: Önce Kategori 3'e bak, orada da yer yoksa seçme.
+"Bu haberin özünde bir siber saldırı, güvenlik açığı, casusluk yazılımı,
+ veri ihlali veya siber operasyon var mı?"
+→ EVET: Stratejik değer testine geç (Kategori 0-3).
+→ HAYIR: Top 3'e ALMA, ne kadar önemli görünürse görünsün.
 
 ⚠️ SAAT SIFIR KURALI: Stratejik haber olmayan günler de olur.
 Bu durumda top 3'ü boş bırakmak yerine Kategori 3'ten en iyi 3'ü seç.
@@ -283,8 +300,16 @@ Aşağıdaki haber türleri ne kadar büyük görünürse görünsün top 3'e AL
 ✗ İçerik haberleri
    — Genel tavsiye makalesi, röportaj, konferans duyurusu, pazar araştırması
 
+✗ Siber boyutu olmayan saf diplomatik/askeri/siyasi haberler
+   — Ateşkes, barış anlaşması, askeri diyalog kanalı, dekonfliction hattı
+   — Silah anlaşması, konvansiyonel saldırı/savunma operasyonu
+   — Diplomatik ziyaret, uluslararası müzakere (siber gündem yoksa)
+   — Örnekler: "ABD-İran Doha dekonfliction hattı" → SEÇİLMEZ
+                "NATO üyesi ülkeye silah yardımı" → SEÇİLMEZ
+                "BM Güvenlik Konseyi ateşkes kararı" → SEÇİLMEZ
+
 KURAL: Bir haber "büyük rakam" içerse de (milyonlarca kullanıcı, milyarlarca dolar zarar)
-stratejik/jeopolitik/istihbari boyutu yoksa top 3'e GİREMEZ.
+ya da çok stratejik görünse de, özünde siber boyutu yoksa top 3'e GİREMEZ.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 KARAR AKIŞI
