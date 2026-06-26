@@ -23,12 +23,10 @@
 
   // ── Stiller (kendi içine enjekte eder, ayrı CSS dosyası gerekmez) ─────────
   var CSS = [
-    ".manual-add-btn{position:absolute;top:50%;right:150px;transform:translateY(-50%);",
-    "background:#1d4ed8;color:#fff;border:none;border-radius:20px;padding:7px 14px;",
+    ".manual-add-btn{background:#1d4ed8;color:#fff;border:none;border-radius:20px;padding:7px 14px;",
     "cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;",
-    "z-index:10;transition:background .2s;font-family:inherit;}",
+    "transition:background .2s;font-family:inherit;}",
     ".manual-add-btn:hover{background:#1e40af;}",
-    "@media (max-width:760px){.manual-add-btn{position:static;transform:none;margin:10px auto 0;}}",
     "[data-theme='dark'] .manual-add-btn{background:#388bfd;}",
     "[data-theme='dark'] .manual-add-btn:hover{background:#58a6ff;}",
     ".ma-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;",

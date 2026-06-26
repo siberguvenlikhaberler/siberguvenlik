@@ -262,18 +262,21 @@
         }
         .back-to-top:hover { opacity: 1; }
         /* ── DARK MODE ─────────────────────────────────────────── */
+        .header-actions {
+            position: absolute; top: 14px; right: 40px;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 8px; z-index: 10;
+        }
         .theme-toggle {
-            position: absolute; top: 50%; right: 40px; transform: translateY(-50%);
             background: none; border: 1px solid #e2e8f0; border-radius: 20px;
             padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
             color: #64748b; display: flex; align-items: center; gap: 4px;
-            transition: all 0.2s; user-select: none; z-index: 10;
+            transition: all 0.2s; user-select: none;
         }
         .theme-toggle:hover { background: #f1f5f9; border-color: #94a3b8; }
         .theme-toggle .sep { color: #cbd5e1; font-size: 11px; margin: 0 1px; }
         .theme-toggle svg { transition: opacity 0.2s; }
         .theme-toggle svg.dim { opacity: 0.25; }
-        @media (max-width: 640px) { .theme-toggle { right: 12px; padding: 5px 10px; } }
+        @media (max-width: 640px) { .header-actions { right: 12px; top: 10px; } }
         [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
         [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
         [data-theme="dark"] .report-header { background: #161b22; border-bottom-color: #30363d; }
@@ -340,15 +343,17 @@
     <div class="container">
         <div class="report-header">
             <h1><span class="header-date">26.06.2026</span> Siber Güvenlik Haber Özetleri</h1>
-            <button class="manual-add-btn" onclick="openManualAddModal()" title="Rapora manuel haber ekle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Manuel Haber Ekle
-            </button>
+            <div class="header-actions">
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
                 <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 <span class="sep">/</span>
                 <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             </button>
+            <button class="manual-add-btn" onclick="openManualAddModal()" title="Rapora manuel haber ekle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Manuel Haber Ekle
+            </button>
+            </div>
         </div>
 
         <div class="exec-brief" id="yonetici-ozeti-block">
@@ -748,6 +753,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         </div>
     </div>
 
-    <script src="/siberguvenlik/manual-add.js?v=26.06.2026"></script>
+    <script src="/siberguvenlik/manual-add.js?v=2026-06-26"></script>
 </body>
 </html>
