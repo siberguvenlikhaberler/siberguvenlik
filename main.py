@@ -1142,6 +1142,13 @@ class HaberSistemi:
         .theme-toggle .sep { color: #cbd5e1; font-size: 11px; margin: 0 1px; }
         .theme-toggle svg { transition: opacity 0.2s; }
         .theme-toggle svg.dim { opacity: 0.25; }
+        .manual-add-btn {
+            background: #1d4ed8; color: #fff; border: none; border-radius: 20px;
+            padding: 6px 13px; cursor: pointer; font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+            transition: background 0.2s; font-family: inherit; white-space: nowrap;
+        }
+        .manual-add-btn:hover { background: #1e40af; }
         @media (max-width: 640px) { .header-actions { right: 12px; top: 10px; } }
         [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
         [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
@@ -1202,6 +1209,8 @@ class HaberSistemi:
         [data-theme="dark"] .theme-toggle { background: #161b22; border-color: #30363d; color: #8b949e; }
         [data-theme="dark"] .theme-toggle:hover { background: #21262d; border-color: #58a6ff; color: #e6edf3; }
         [data-theme="dark"] .theme-toggle .sep { color: #30363d; }
+        [data-theme="dark"] .manual-add-btn { background: #388bfd; }
+        [data-theme="dark"] .manual-add-btn:hover { background: #58a6ff; }
         /* ── MOBİL (≤640px): tam genişlik, sıkı kenar payı, küçük başlık/buton ── */
         @media (max-width: 640px) {
             body { padding: 0; }

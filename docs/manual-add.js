@@ -21,14 +21,8 @@
   // Dosya api/manual_add.py olduğundan yol /api/manual_add olur:
   var MANUAL_ADD_ENDPOINT = "https://siberguvenlik-5hqc.vercel.app/api/manual_add";
 
-  // ── Stiller (kendi içine enjekte eder, ayrı CSS dosyası gerekmez) ─────────
+  // ── Stiller (yalnızca MODAL stilleri; buton stili artık ana sayfa CSS'inde) ──
   var CSS = [
-    ".manual-add-btn{background:#1d4ed8;color:#fff;border:none;border-radius:20px;padding:7px 14px;",
-    "cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;",
-    "transition:background .2s;font-family:inherit;}",
-    ".manual-add-btn:hover{background:#1e40af;}",
-    "[data-theme='dark'] .manual-add-btn{background:#388bfd;}",
-    "[data-theme='dark'] .manual-add-btn:hover{background:#58a6ff;}",
     ".ma-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;",
     "align-items:center;justify-content:center;z-index:9999;padding:16px;}",
     ".ma-modal{background:#fff;border-radius:12px;max-width:540px;width:100%;",
