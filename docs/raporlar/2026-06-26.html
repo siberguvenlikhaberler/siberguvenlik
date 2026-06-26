@@ -333,6 +333,47 @@
         [data-theme="dark"] .theme-toggle { background: #161b22; border-color: #30363d; color: #8b949e; }
         [data-theme="dark"] .theme-toggle:hover { background: #21262d; border-color: #58a6ff; color: #e6edf3; }
         [data-theme="dark"] .theme-toggle .sep { color: #30363d; }
+        /* ── MOBİL (≤640px): tam genişlik, sıkı kenar payı, küçük başlık/buton ── */
+        @media (max-width: 640px) {
+            body { padding: 0; }
+            .container { border-radius: 0; box-shadow: none; }
+            /* Başlık alanı */
+            .report-header { padding: 16px 12px 14px; }
+            .report-header h1 { font-size: 17px; line-height: 1.35; }
+            .header-actions {
+                position: static; right: auto; top: auto;
+                flex-direction: row; flex-wrap: wrap; justify-content: center;
+                gap: 8px; margin-top: 12px;
+            }
+            /* Bölüm kapsayıcıları — yatay boşluğu en aza indir */
+            .exec-brief { padding: 16px 12px; }
+            .executive-summary { padding: 14px 6px; }
+            .important-news { padding: 14px 8px; }
+            .news-section { padding: 14px 6px; }
+            .social-signals { padding: 14px 10px; }
+            .vuln-section-heading { padding: 12px 14px; }
+            /* İç kartlar */
+            .top3-card { padding: 14px 12px; }
+            .news-item { padding: 14px 12px; margin-bottom: 16px; }
+            /* Başlıkları küçült */
+            .exec-brief h2, .important-news h2 { font-size: 17px; margin-bottom: 14px; }
+            .executive-summary h2 { font-size: 16px; }
+            .news-title { font-size: 16px; }
+            .top3-card-title { font-size: 14.5px; }
+            .vuln-section-heading h2 { font-size: 16px; }
+            .social-signals h2 { font-size: 16px; }
+            /* "Önemli Gelişmeler" başlık satırı — taşarsa alta sar */
+            .onemli-header { flex-wrap: wrap; gap: 8px; }
+            /* Butonlar — kompakt */
+            .block-action-btn { padding: 4px 9px; font-size: 11px; }
+            .block-actions, .block-actions-bottom { gap: 5px; }
+            /* Mobilde sürükle-bırak (drag) butonu gereksiz — gizle */
+            .drag-file-chip { display: none !important; }
+            /* Gövde metinleri okunur boyut + sola hizalı (justify mobilde bozuk durur) */
+            .exec-brief-paragraph { font-size: 15px; line-height: 1.7; text-align: left; }
+            .news-content { font-size: 14.5px; }
+            .top3-card-paragraph { font-size: 14px; }
+        }
             </style>
     <script>(function(){var m=(localStorage.getItem('theme')==='light')?'light':'dark';document.documentElement.setAttribute('data-theme',m);})()</script>
 </head>
