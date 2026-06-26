@@ -28,6 +28,8 @@ import sys
 import json
 import base64
 import hmac
+import socket
+import ipaddress
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse
@@ -59,7 +61,33 @@ CORS_HEADERS = {
 # Makale metni çekme (main.py: HaberSistemi.fetch_full_article mantığının
 # tek-iş parçacıklı, genel-seçicili sadeleştirilmiş kopyası)
 # ─────────────────────────────────────────────────────────────────────────────
+def assert_public_url(url):
+    """SSRF koruması: URL şemasını ve çözümlenen TÜM IP'leri doğrular.
+
+    Uç nokta şifre korumalı olsa bile, kullanıcı verdiği URL sunucu tarafında
+    çekildiğinden iç ağ / bulut metadata uçları (169.254.169.254 vb.) hedef
+    alınabilir. Bu yüzden yalnızca http/https'e ve PUBLIC (özel/loopback/
+    link-local/reserved olmayan) IP'lere izin verilir. Sorun varsa ValueError.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme.lower() not in ("http", "https"):
+        raise ValueError("Yalnızca http/https URL'lerine izin verilir.")
+    host = parsed.hostname
+    if not host:
+        raise ValueError("URL host bilgisi yok.")
+    try:
+        infos = socket.getaddrinfo(host, parsed.port or 0, proto=socket.IPPROTO_TCP)
+    except socket.gaierror as e:
+        raise ValueError(f"Host çözümlenemedi: {e}")
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0])
+        if (ip.is_private or ip.is_loopback or ip.is_link_local
+                or ip.is_reserved or ip.is_multicast or ip.is_unspecified):
+            raise ValueError("Özel/iç ağ adreslerine istek yapılamaz.")
+
+
 def fetch_article(url):
+    assert_public_url(url)
     r = requests_get_with_retry(url, headers=HEADERS, timeout=(5, 12), stream=True)
     chunks, total = [], 0
     for chunk in r.iter_content(chunk_size=8192):
@@ -159,8 +187,11 @@ def build_card_html(tr_title, paragraph, link, domain, art_date):
     )
 
 
+# NOT: main.py:create_html kart şablonu 16 boşluk girintiyle üretir; ancak
+# girinti ileride değişirse regex SESSİZCE kırılmasın diye baştaki/kapanıştaki
+# boşluk esnek bırakıldı ([ \t]*). Kapanış </div> kendi satırında olmalıdır.
 _CARD_RE = re.compile(
-    r'                <div class="top3-card">.*?\n                </div>\n',
+    r'[ \t]*<div class="top3-card">.*?\n[ \t]*</div>\n',
     re.DOTALL,
 )
 
@@ -219,6 +250,56 @@ def gh_put_file(path, new_content, sha, token, message):
             "branch": BRANCH,
         },
         timeout=30,
+    )
+    r.raise_for_status()
+    return r.json()
+
+
+def gh_commit_files(files, token, message):
+    """Birden çok dosyayı TEK commit'te ATOMİK yazar (Git Data API).
+
+    files: [(path, content_str), ...]. Contents API ile dosya-dosya commit
+    yapıldığında index güncellenip arşiv güncellenmeden hata olursa tutarsız
+    durum doğardı. Tek tree + tek commit ile ya hepsi ya hiçbiri uygulanır.
+    """
+    h = _gh_headers(token)
+    base = f"{GH_API}/repos/{REPO}/git"
+
+    r = requests.get(f"{base}/ref/heads/{BRANCH}", headers=h, timeout=30)
+    r.raise_for_status()
+    base_commit_sha = r.json()["object"]["sha"]
+
+    r = requests.get(f"{base}/commits/{base_commit_sha}", headers=h, timeout=30)
+    r.raise_for_status()
+    base_tree_sha = r.json()["tree"]["sha"]
+
+    tree = []
+    for path, content in files:
+        r = requests.post(
+            f"{base}/blobs", headers=h, timeout=30,
+            json={"content": base64.b64encode(content.encode("utf-8")).decode("ascii"),
+                  "encoding": "base64"},
+        )
+        r.raise_for_status()
+        tree.append({"path": path, "mode": "100644", "type": "blob", "sha": r.json()["sha"]})
+
+    r = requests.post(
+        f"{base}/trees", headers=h, timeout=30,
+        json={"base_tree": base_tree_sha, "tree": tree},
+    )
+    r.raise_for_status()
+    new_tree_sha = r.json()["sha"]
+
+    r = requests.post(
+        f"{base}/commits", headers=h, timeout=30,
+        json={"message": message, "tree": new_tree_sha, "parents": [base_commit_sha]},
+    )
+    r.raise_for_status()
+    new_commit_sha = r.json()["sha"]
+
+    r = requests.patch(
+        f"{base}/refs/heads/{BRANCH}", headers=h, timeout=30,
+        json={"sha": new_commit_sha, "force": False},
     )
     r.raise_for_status()
     return r.json()
@@ -290,12 +371,13 @@ def process(payload):
         # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
         new_archive = None
 
-    # 5) Commit
+    # 5) Commit — index + (varsa) arşiv TEK atomik commit'te yazılır.
     msg = f"manuel: kritik haber güncellendi ({report_date})"
+    files = [(INDEX_PATH, new_index)]
+    if new_archive is not None:
+        files.append((archive_path, new_archive))
     try:
-        gh_put_file(INDEX_PATH, new_index, index_sha, token, msg)
-        if new_archive is not None:
-            gh_put_file(archive_path, new_archive, archive_sha, token, msg)
+        gh_commit_files(files, token, msg)
     except Exception as e:
         return 502, {"error": f"Commit başarısız: {str(e)[:160]}"}
 

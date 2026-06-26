@@ -2306,6 +2306,124 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         return txt
 
+    # Siber sinyal sözlüğü (TR+EN) — bir haberin gerçekten siber boyutu olup
+    # olmadığını deterministik kontrol etmek için. Geniş tutulur: amaç gerçek
+    # siber haberi YANLIŞLIKLA elemek değil, "teknik arıza/saf diplomatik"
+    # gibi siber boyutu OLMAYAN kartları top3'ten ayıklamaktır.
+    _CYBER_SIGNALS = (
+        'siber', 'cyber', 'hack', 'saldır', 'attack', 'zararlı', 'malware',
+        'ransom', 'fidye', 'casus', 'spyware', 'surveillance', 'gözetim',
+        'ihlal', 'breach', 'sızdır', 'sızma', 'sızıntı', 'leak', 'exfiltr',
+        'exploit', 'açığ', 'açık', 'zafiyet', 'vulnerab', 'cve-', 'phish',
+        'kimlik avı', 'botnet', 'apt', 'tehdit aktör', 'threat actor',
+        'ddos', 'backdoor', 'arka kapı', 'trojan', 'truva', 'infostealer',
+        'bilgi çal', 'keylogger', 'rootkit', 'zero-day', 'zero day', 'sıfır gün',
+        'şifrele', 'encrypt', 'c2', 'command and control', 'intrusion',
+        'ele geçir', 'compromise', 'takedown', 'çökert', 'deface', 'espionage',
+        'casusluk', 'hacktivist', 'data breach', 'veri ihlal', 'kötü amaçlı',
+        'virüs', 'worm', 'solucan', 'wiper', 'apt2', 'apt3', 'apt4',
+        'darkweb', 'dark web', 'lockbit', 'pegasus', 'nso ', 'predator',
+    )
+
+    def _has_cyber_signal(self, *texts):
+        """Verilen metinlerde (TR ve/veya EN) bir siber boyut sinyali var mı?"""
+        blob = ' '.join(t for t in texts if t).lower()
+        if not blob:
+            return False
+        return any(sig in blob for sig in self._CYBER_SIGNALS)
+
+    def _cyber_text_for(self, art_id, content_by_id, articles_by_id):
+        """Bir haber için siber-sinyal taraması yapılacak birleşik metni döndürür."""
+        c = content_by_id.get(art_id, {})
+        a = articles_by_id.get(art_id, {})
+        return ' '.join((
+            c.get('tr_title', ''), c.get('paragraph', ''),
+            a.get('title', ''), ' '.join((a.get('full_text', '') or '').split()[:120]),
+        ))
+
+    def _select_top3(self, non_vuln_ids, content_by_id, articles_by_id,
+                     summit_ids, pool_ids, label):
+        """Pass 4 top3 seçimi — TEK kaynak (hem ana hem legacy yol kullanır).
+
+        Adımlar: brief üret → LLM seçimi → siber-boyut guard → <3 ise tamamla →
+        NATO zirve haberini 1. sıraya sabitle. Boş top3 ASLA döndürülmez
+        (aday varsa fallback ile doldurulur).
+        """
+        top3_ids = []
+        if non_vuln_ids:
+            brief_lines = []
+            for aid in non_vuln_ids:
+                a = articles_by_id.get(aid, {})
+                c = content_by_id.get(aid, {})
+                orig_title = a.get('title', '')
+                tr_title   = c.get('tr_title', '')
+                full_text  = a.get('full_text', '') or c.get('paragraph', '')
+                snippet    = ' '.join(full_text.split()[:160])
+                brief_lines.append(
+                    f"=== HABER ID: {aid} ===\n"
+                    f"Başlık: {orig_title}\n"
+                    + (f"TR Başlık: {tr_title}\n" if tr_title else "")
+                    + f"İçerik: {snippet}\n"
+                )
+            top3_data = self._gemini_call_json(
+                get_top3_selection_prompt('\n'.join(brief_lines),
+                                          recent_events=self._load_recent_events()),
+                max_output_tokens=256,
+                label=label,
+            )
+            if top3_data and 'top3' in top3_data:
+                raw_top3 = [int(x) for x in top3_data['top3']
+                            if str(x).strip().lstrip('-').isdigit()]
+                non_vuln_set = set(non_vuln_ids)
+                top3_ids = [aid for aid in raw_top3 if aid in non_vuln_set][:3]
+        if not top3_ids and non_vuln_ids:
+            top3_ids = non_vuln_ids[:3]
+
+        # ── SİBER-BOYUT GUARD ────────────────────────────────────────────
+        # LLM, siber boyutu olmayan bir haberi (ör. "demiryolu teknik arızası")
+        # top3'e koymuş olabilir. Seçilmiş bir kartta siber sinyal YOKSA ve
+        # havuzda siber sinyalLİ kullanılmamış bir aday VARSA, kartı onunla
+        # değiştir. NATO zirve haberleri muaftır (ayrıca sabitlenir). Asla
+        # top3'ü boşaltmaz — yalnızca daha iyi aday varsa takas eder.
+        summit_set = set(summit_ids)
+        replacement_pool = [aid for aid in non_vuln_ids
+                            if aid not in set(top3_ids)
+                            and self._has_cyber_signal(
+                                self._cyber_text_for(aid, content_by_id, articles_by_id))]
+        guarded = []
+        for aid in top3_ids:
+            if (aid in summit_set
+                    or self._has_cyber_signal(
+                        self._cyber_text_for(aid, content_by_id, articles_by_id))):
+                guarded.append(aid)
+            elif replacement_pool:
+                repl = replacement_pool.pop(0)
+                guarded.append(repl)
+                print(f"   🧹 Siber-boyut guard: ID {aid} (siber sinyal yok) → "
+                      f"ID {repl} ile değiştirildi.")
+            else:
+                guarded.append(aid)  # daha iyi aday yok, koru
+        top3_ids = guarded
+
+        # <3 ise non_vuln başından tamamla
+        if len(top3_ids) < 3:
+            existing = set(top3_ids)
+            for aid in non_vuln_ids:
+                if aid not in existing:
+                    top3_ids.append(aid)
+                    existing.add(aid)
+                if len(top3_ids) == 3:
+                    break
+
+        # NATO zirve haberini 1. sıraya sabitle
+        summit_top3 = [sid for sid in summit_ids if sid in set(pool_ids)]
+        if summit_top3 and not all(sid in top3_ids for sid in summit_top3):
+            top3_ids = (summit_top3
+                        + [i for i in top3_ids if i not in set(summit_top3)])[:3]
+            print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi: {summit_top3}")
+
+        return top3_ids[:3]
+
     def _load_recent_events(self, days=3):
         """Son `days` günde raporlanan haber BAŞLIKLARINI arşivden okur ve
         Pass 1 (sıralama) + Pass 4 (top3) promptlarına 'tekrar alma' listesi
@@ -2338,7 +2456,56 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if not titles:
                 return ''
             titles = titles[:160]  # token şişmesini önle
-            return '\n'.join(f'• {t}' for t in titles)
+
+            # ── DİL-BAĞIMSIZ ENTITY İNDEKSİ (diller-arası dedup güçlendirmesi) ──
+            # Arşiv başlıkları TÜRKÇE üretilir; gelen haberler ise İNGİLİZCE. TR
+            # başlık ↔ EN haber eşleşmesi zayıftır. Ancak kampanya/zararlı/aktör
+            # KOD ADLARI ve CVE'ler dilden bağımsızdır (FortiBleed, StealC,
+            # UNC6508, APT28, CL-STA-1062, CVE-2026-1234). Son günlerin
+            # bloklarından yalnızca YÜKSEK ÖZGÜLLÜKTE kodları çıkarıp ayrı bir
+            # liste olarak veriyoruz; jenerik ülke/sözcükler (Rusya, Ukrayna)
+            # KASTEN dışarıda bırakılır (aşırı eleme yapmamak için).
+            # Her bloğun İLK satırı '📅 <tarih> - EN ÖNEMLİ 43 HABER...' başlığıdır;
+            # entity taramasına dahil edilirse JUNE/HABER gibi gürültü üretir →
+            # blok başlığını at, yalnızca gövdeden entity çıkar.
+            bodies = []
+            for blk in recent:
+                nl = blk.find('\n')
+                bodies.append(blk[nl + 1:] if nl != -1 else '')
+            recent_text = '\n'.join(bodies)
+            entity_pats = (
+                r'CVE-\d{4}-\d{4,7}',                 # CVE kimlikleri
+                r'\b[A-Za-z]+[A-Z][A-Za-z0-9]{2,}\b',  # CamelCase / iç-büyükharf (FortiBleed, REDCap)
+                r'\b[A-Z][a-z]+[A-Z]+\b',              # sonu-büyükharf kod adı (StealC, GootB)
+                r'\b[A-Z]{2,}[A-Z0-9]*-?[0-9]{2,}\b',  # kod+rakam (UNC6508, APT28, CL-STA-1062, STORM-2697)
+                r'\b[A-Z]{4,}\b',                      # tümü-büyük >=4 (STOCKSTAY)
+            )
+            # Tek başına ayırt edici olmayan / yapısal gürültü sözcükleri
+            _stop = {
+                'NATO', 'CISA', 'CERT', 'APT', 'ABD', 'FBI', 'HABER', 'HABERLER',
+                'SEÇILMIŞ', 'ÖNEMLI', 'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL',
+                'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER',
+                'DECEMBER', 'OCAK', 'ŞUBAT', 'MART', 'NISAN', 'MAYIS', 'HAZIRAN',
+                'TEMMUZ', 'AĞUSTOS', 'EYLÜL', 'EKIM', 'KASIM', 'ARALIK',
+            }
+            entities = []
+            for pat in entity_pats:
+                for m in re.finditer(pat, recent_text):
+                    e = m.group(0)
+                    if e.upper() in _stop:
+                        continue
+                    if e not in entities:
+                        entities.append(e)
+            entities = entities[:80]
+
+            out = '\n'.join(f'• {t}' for t in titles)
+            if entities:
+                out += (
+                    '\n\n🔑 ANAHTAR İSİMLER/KODLAR (son günler — bunlardan biri '
+                    'bugünkü bir haberde geçiyorsa MÜKERRER kabul et):\n'
+                    + ', '.join(entities)
+                )
+            return out
         except Exception as e:
             print(f"⚠️  Recent events yüklenemedi: {e}")
             return ''
@@ -2591,58 +2758,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         all_ids_p4 = list(top10_ids) + list(remaining_ids)
         non_vuln_ids_p4 = [aid for aid in all_ids_p4 if not _is_vuln_p4(aid)]
 
-        top3_ids = []
-        if non_vuln_ids_p4:
-            # Seçim HAM kaynak metin üzerinden yapılır (Pass 2/3 özetinden DEĞİL),
-            # böylece özetlemede kaybolan nüanslar seçim aşamasında korunur.
-            brief_lines_p4 = []
-            for aid in non_vuln_ids_p4:
-                c = content_by_id.get(aid, {})
-                a = articles_by_id.get(aid, {})
-                orig_title = a.get('title', '')
-                tr_title   = c.get('tr_title', '')
-                full_text  = a.get('full_text', '') or c.get('paragraph', '')
-                snippet    = ' '.join(full_text.split()[:160])
-                brief_lines_p4.append(
-                    f"=== HABER ID: {aid} ===\n"
-                    f"Başlık: {orig_title}\n"
-                    + (f"TR Başlık: {tr_title}\n" if tr_title else "")
-                    + f"İçerik: {snippet}\n"
-                )
-            top3_data = self._gemini_call_json(
-                get_top3_selection_prompt('\n'.join(brief_lines_p4), recent_events=self._load_recent_events()),
-                max_output_tokens=256,
-                label='Pass4-Top3Secim',
-            )
-            if top3_data and 'top3' in top3_data:
-                raw_top3 = [int(x) for x in top3_data['top3']
-                            if str(x).strip().lstrip('-').isdigit()]
-                non_vuln_set = set(non_vuln_ids_p4)
-                top3_ids = [aid for aid in raw_top3 if aid in non_vuln_set][:3]
-        if not top3_ids and non_vuln_ids_p4:
-            top3_ids = non_vuln_ids_p4[:3]
-
-        # LLM 3'ten az geçerli ID döndürmüşse (filtrelenmiş veya <3 gönderilmiş)
-        # non_vuln listesinin başından tamamla — eksik kalan slotları doldur.
-        if len(top3_ids) < 3:
-            existing = set(top3_ids)
-            for aid in non_vuln_ids_p4:
-                if aid not in existing:
-                    top3_ids.append(aid)
-                    existing.add(aid)
-                if len(top3_ids) == 3:
-                    break
-
-        # ── NATO TÜRKİYE ZİRVESİ GÜVENLİK AĞI (Pass 4) ───────────────────
-        # LLM zirve haberini top3'e koymadıysa kod düzeyinde 1. sıraya sabitle.
-        # Yalnızca havuzda (top10+remaining) gerçekten bulunan zirve haberi
-        # zorlanır; uydurma ID eklenmez.
-        pool_p4 = set(all_ids_p4)
-        summit_top3 = [sid for sid in summit_ids if sid in pool_p4]
-        if summit_top3 and not all(sid in top3_ids for sid in summit_top3):
-            top3_ids = summit_top3 + [i for i in top3_ids if i not in set(summit_top3)]
-            top3_ids = top3_ids[:3]
-            print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi: {summit_top3}")
+        # Seçim HAM kaynak metin üzerinden yapılır (Pass 2/3 özetinden DEĞİL),
+        # böylece özetlemede kaybolan nüanslar seçim aşamasında korunur.
+        # Brief üretimi + LLM seçimi + siber-boyut guard + zirve sabitleme,
+        # ana ve legacy yolun ORTAK kullandığı _select_top3'e devredilir.
+        top3_ids = self._select_top3(
+            non_vuln_ids_p4, content_by_id, articles_by_id,
+            summit_ids, all_ids_p4, label='Pass4-Top3Secim',
+        )
 
         print(f"   Seçilen Top 3 ID: {top3_ids}")
 
@@ -3167,7 +3290,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             'güvenlik açığı', 'vulnerability', 'patch', 'yama', 'zero-day',
             'exploit', 'zafiyet', 'güncelleme', 'update', 'advisory',
         ]
-        top3_ids = []
         non_vuln_ids = []
         for a in articles:
             aid = a['id']
@@ -3181,50 +3303,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if not is_vuln:
                 non_vuln_ids.append(aid)
 
-        if non_vuln_ids:
-            brief_lines_p4 = []
-            for aid in non_vuln_ids:
-                a  = id_to_article.get(aid, {})
-                c  = content_by_id.get(aid, {})
-                orig_title = a.get('title', '')
-                tr_title   = c.get('tr_title', '')
-                full_text  = a.get('full_text', '') or c.get('paragraph', '')
-                snippet    = ' '.join(full_text.split()[:160])
-                brief_lines_p4.append(
-                    f"=== HABER ID: {aid} ===\n"
-                    f"Başlık: {orig_title}\n"
-                    + (f"TR Başlık: {tr_title}\n" if tr_title else "")
-                    + f"İçerik: {snippet}\n"
-                )
-            top3_data = self._gemini_call_json(
-                get_top3_selection_prompt('\n'.join(brief_lines_p4), recent_events=self._load_recent_events()),
-                max_output_tokens=256,
-                label='Legacy-Top3',
-            )
-            if top3_data and 'top3' in top3_data:
-                raw_top3 = [int(x) for x in top3_data['top3']
-                            if str(x).strip().lstrip('-').isdigit()]
-                non_vuln_set = set(non_vuln_ids)
-                top3_ids = [aid for aid in raw_top3 if aid in non_vuln_set][:3]
-        if not top3_ids and non_vuln_ids:
-            top3_ids = non_vuln_ids[:3]
-
-        # LLM <3 ID döndürmüşse tamamla (legacy yolu).
-        if len(top3_ids) < 3:
-            existing = set(top3_ids)
-            for aid in non_vuln_ids:
-                if aid not in existing:
-                    top3_ids.append(aid)
-                    existing.add(aid)
-                if len(top3_ids) == 3:
-                    break
-
-        # NATO zirve haberini top3'ün 1. sırasına sabitle (legacy yolu).
-        pool_legacy = set(top10_ids) | set(remaining_ids)
-        summit_top3 = [sid for sid in summit_ids if sid in pool_legacy]
-        if summit_top3 and not all(sid in top3_ids for sid in summit_top3):
-            top3_ids = (summit_top3 + [i for i in top3_ids if i not in set(summit_top3)])[:3]
-            print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi (legacy): {summit_top3}")
+        # Ana yol ile ORTAK helper: brief + LLM + siber-boyut guard + zirve sabit.
+        top3_ids = self._select_top3(
+            non_vuln_ids, content_by_id, id_to_article,
+            summit_ids, list(set(top10_ids) | set(remaining_ids)),
+            label='Legacy-Top3',
+        )
 
         print(f"   Seçilen Top 3 ID: {top3_ids}")
 

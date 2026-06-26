@@ -16,9 +16,11 @@ TAVILY_API_KEY = os.getenv('TAVILY_API_KEY', '')
 # OpenRouter, OpenAI uyumlu bir API sunar; bu yüzden mevcut `openai` paketiyle
 # (requirements.txt'te zaten var) yalnızca base_url değiştirilerek kullanılır.
 #   Endpoint : https://openrouter.ai/api/v1/chat/completions
-#   Model    : google/gemini-3.5-flash  (GA — 19 May 2026; Flash sınıfı, 1M bağlam)
-#   Not      : google/gemini-3-flash-preview hâlâ "preview" olduğundan üretimde
-#              kararlı GA modeli (3.5 Flash) varsayılan alındı; preview yedekte tutulur.
+#   Birincil : google/gemini-3-flash-preview  (OPENROUTER_MODEL varsayılanı)
+#   Yedek    : google/gemini-3.5-flash  (GA — 19 May 2026; Flash sınıfı, 1M bağlam)
+#   Not      : Birincil model env (OPENROUTER_MODEL / Actions vars) ile değiştirilebilir;
+#              tanımsızsa preview kullanılır, başarısızlıkta GA 3.5 Flash'a düşer.
+#              (Aşağıdaki OPENROUTER_MODEL / OPENROUTER_FALLBACK_MODELS ile birebir tutarlı.)
 #
 # Gemini 3.x Flash bir "thinking" modelidir; reasoning gücü `reasoning.effort` ile
 # ayarlanır: minimal | low | medium | high | xhigh. JSON üretim görevlerinde
@@ -766,8 +768,16 @@ CONTENT_SELECTORS = {
     'ANSSI (CERT-FR)': [{'class': 'article-content'}, {'class': 'content'}],
 }
 
-# ===== YENİ: ÖNEM SCORING SİSTEMİ (v2.0) =====
-# Bu ağırlıklar haberleri kategorize etmek için kullanılır
+# ===== ÖNEM SCORING SİSTEMİ (v2.0) — ⚠️ KULLANILMIYOR (DEAD CODE) =====
+# ⚠️ DİKKAT: Bu iki sözlük (IMPORTANCE_WEIGHTS + DETECTION_PATTERNS) mevcut
+# boru hattında HİÇBİR yerde kullanılmıyor (main.py / api / src genelinde import
+# yok; yalnızca tests/test_importance_scoring.py yapısal olarak doğruluyor).
+# Sıralama/seçim tamamen LLM promptlarıyla (get_ranking_prompt /
+# get_top3_selection_prompt) yapılır. Buradaki jenerik anahtar kelimeler
+# ('nato', 'ukraine', 'russia' vb.) bugünkü "siber-boyut zorunluluğu"
+# felsefesiyle ÇELİŞİR; yanlışlıkla boru hattına bağlanırsa siber boyutu
+# olmayan jeopolitik haberleri yükseltebilir. Yeniden etkinleştirmeden ÖNCE
+# anahtar kelimeleri siber-boyut kuralına göre gözden geçirin.
 IMPORTANCE_WEIGHTS = {
     'nato_turkey_summit': {
         'weight': 130,

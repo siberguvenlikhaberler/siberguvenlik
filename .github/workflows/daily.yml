@@ -31,6 +31,15 @@ on:
     types: [scheduled-report]
   workflow_dispatch:
 
+# schedule ve repository_dispatch BİLEREK aynı 8 dakikaya hizalandığı için iki
+# tetikleme AYNI ANDA çalışabilir; her ikisi de cron_basarili.txt işaretini henüz
+# görmeden rapor üretip git push'ta çakışabilir. concurrency grubu aynı anda tek
+# bir çalıştırmaya izin verir (cancel-in-progress: false → devam eden raporu
+# yarıda kesmeyiz, ikinci tetikleme sıraya girer ve idempotency'yle erken çıkar).
+concurrency:
+  group: gunluk-rapor
+  cancel-in-progress: false
+
 jobs:
   run:
     runs-on: ubuntu-latest
