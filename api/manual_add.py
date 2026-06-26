@@ -100,33 +100,83 @@ def fetch_article(url):
     soup = BeautifulSoup(raw, "html.parser")
     domain = urlparse(url).netloc.replace("www.", "")
 
+    # Gövde metnini kirleten yapısal öğeleri en baştan ayıkla (nav/menü/altbilgi
+    # vb.). Bunlar kalırsa "20+ karakter" filtresini geçen menü/footer bağlantıları
+    # metne karışıp hem gürültü yapar hem de yanlış öğenin seçilmesine yol açar.
+    for junk in soup.find_all(["script", "style", "noscript", "nav", "header",
+                               "footer", "aside", "form"]):
+        junk.decompose()
+
+    _SKIP = ("cookie", "subscribe", "newsletter", "abone ol", "çerez",
+             "gizlilik politika", "tüm hakları", "all rights reserved",
+             "advertisement", "reklam")
+
     def _extract(element):
         if not element:
             return ""
-        parts = []
-        for p in element.find_all(["p", "h1", "h2", "h3", "li"]):
-            t = p.get_text().strip()
-            if len(t) > 20 and not any(
-                x in t.lower() for x in ["cookie", "subscribe", "newsletter"]
-            ):
-                parts.append(t)
+        parts, seen = [], set()
+        for p in element.find_all(["p", "h1", "h2", "h3", "h4", "li", "blockquote"]):
+            t = " ".join(p.get_text().split())  # iç boşlukları normalize et
+            if len(t) <= 20 or any(x in t.lower() for x in _SKIP):
+                continue
+            if t in seen:  # tekrar eden öğeleri (ör. iki kez basılmış başlık) atla
+                continue
+            seen.add(t)
+            parts.append(t)
         return "\n\n".join(parts)
 
+    # 1) Anlamsal ana içerik etiketleri
     text = ""
     for tag in ["article", "main"]:
         el = soup.find(tag)
         if el:
             text = _extract(el)
-            if text:
+            if len(text.split()) >= 50:
                 break
-    if not text:
-        el = soup.find(
-            "div",
-            class_=lambda c: c
-            and any(x in str(c).lower() for x in ["content", "article", "body", "post"]),
+
+    # 2) Sık kullanılan içerik kapsayıcıları: class VEYA id'de tipik kalıplar,
+    #    div dışında section/figure gibi etiketleri de kapsar. Birden çok aday
+    #    bulunursa EN UZUN metni veren seçilir (gövde genelde en zengin bloktur).
+    if len(text.split()) < 50:
+        _PAT = ("content", "article", "article-body", "story", "entry",
+                "post", "haber", "icerik", "metin", "detay", "main-text",
+                "news-body", "body-text", "text-body")
+
+        def _looks_like_content(val):
+            return val and any(x in str(val).lower() for x in _PAT)
+
+        candidates = soup.find_all(
+            ["div", "section"],
+            attrs={"class": _looks_like_content},
+        ) + soup.find_all(
+            ["div", "section"],
+            attrs={"id": _looks_like_content},
         )
-        if el:
-            text = _extract(el)
+        best = text
+        for el in candidates:
+            cand = _extract(el)
+            if len(cand.split()) > len(best.split()):
+                best = cand
+        text = best
+
+    # 3) Son çare: tüm sayfadaki <p>'ler (yapısı kalıba uymayan siteler için)
+    if len(text.split()) < 50:
+        fallback = _extract(soup.body or soup)
+        if len(fallback.split()) > len(text.split()):
+            text = fallback
+
+    # 4) Hâlâ kısaysa meta açıklama/og:description ile destekle — JS ile render
+    #    edilen sayfalarda en azından özet metni yakalamayı sağlar.
+    if len(text.split()) < 50:
+        metas = []
+        for attr, key in (("name", "description"), ("property", "og:description"),
+                          ("name", "twitter:description")):
+            m = soup.find("meta", attrs={attr: key})
+            if m and m.get("content"):
+                metas.append(" ".join(m["content"].split()))
+        if metas:
+            text = (text + "\n\n" + "\n\n".join(metas)).strip()
+
     text = text.replace("\t", " ").replace("\r", "")
     return text, domain
 
@@ -156,18 +206,33 @@ def generate_content(url, full_text, report_date):
             f"(Vercel env + redeploy gerekir.)"
         )
 
-    # Çıktı şekli: {"1": {tr_title, paragraph}} veya {tr_title, paragraph}
-    entry = None
-    if isinstance(data, dict):
-        if "tr_title" in data or "paragraph" in data:
-            entry = data
-        else:
-            for v in data.values():
-                if isinstance(v, dict) and ("tr_title" in v or "paragraph" in v):
-                    entry = v
-                    break
+    # LLM çıktısı farklı biçimlerde gelebilir; hepsini özyinelemeli tara:
+    #   {tr_title, paragraph}
+    #   {"1": {tr_title, paragraph}}
+    #   [{tr_title, paragraph}]
+    #   [{"1": {tr_title, paragraph}}]   ← gözlemlenen biçim
+    # İlk geçerli (tr_title/paragraph içeren) sözlük kabul edilir.
+    def _find_entry(node, depth=0):
+        if depth > 6:
+            return None
+        if isinstance(node, dict):
+            if "tr_title" in node or "paragraph" in node:
+                return node
+            for v in node.values():
+                found = _find_entry(v, depth + 1)
+                if found:
+                    return found
+        elif isinstance(node, list):
+            for v in node:
+                found = _find_entry(v, depth + 1)
+                if found:
+                    return found
+        return None
+
+    entry = _find_entry(data)
     if not entry:
-        return None, None, f"LLM beklenmeyen biçim döndürdü: {list(data)[:5]}"
+        preview = list(data)[:5] if isinstance(data, (dict, list)) else str(data)[:160]
+        return None, None, f"LLM beklenmeyen biçim döndürdü: {preview}"
     return (entry.get("tr_title") or "").strip(), (entry.get("paragraph") or "").strip(), None
 
 
