@@ -135,10 +135,11 @@ HABERLER:
 {articles_brief}"""
 
 
-def get_top3_selection_prompt(articles_brief):
+def get_top3_selection_prompt(articles_brief, recent_events=''):
     """
     Pass 4: Tüm non-CVE haberler arasından istihbari/stratejik açıdan EN KRİTİK 3'ü seç.
     articles_brief: "=== HABER ID: N ===\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
+    recent_events: son günlerde raporlanan haber başlıkları (mükerrer engelleme).
     """
     return f"""Sen bir siber tehdit istihbarat analistisin. Görevin: aşağıdaki haberler arasından yalnızca STRATEJİK, JEOPOLİTİK veya İSTİHBARİ değeri olan EN KRİTİK 3 haberi seçmek.
 
@@ -312,9 +313,29 @@ KURAL: Bir haber "büyük rakam" içerse de (milyonlarca kullanıcı, milyarlarc
 ya da çok stratejik görünse de, özünde siber boyutu yoksa top 3'e GİREMEZ.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GEÇMİŞ GÜNLERDE İŞLENEN OLAYLAR — TEKRAR KRİTİĞE ALMA (MÜKERRER ENGELİ)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aşağıdaki olaylar SON GÜNLERDE zaten rapor edilmiştir. Bunlardan herhangi
+biriyle AYNI olay/kampanya/operasyon (aynı kod adı, aynı zararlı yazılım,
+ya da aynı aktör + aynı mağdur eşleşmesi) bugün:
+   • farklı bir kaynaktan gelse,
+   • farklı rakamlarla (ör. "73 bin" yerine "110 milyon") sunulsa,
+   • biraz güncellenmiş/yeni gelişme olarak yazılsa bile
+TOP 3'E ALINMAZ. Mükerrer olaylar kritiğe çıkmaz; günün GERÇEKTEN YENİ
+en kritik haberini seç.
+🔑 GÜÇLÜ SİNYAL: Kampanya/operasyon/zararlı yazılım KOD ADI (ör. "FortiBleed",
+   "Amadey", "StealC", "STOCKSTAY") aşağıdaki listede geçiyorsa → MÜKERRER, ELE.
+
+SON GÜNLERDE RAPORLANAN OLAYLAR:
+{recent_events if recent_events else "(Geçmiş kayıt yok)"}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 KARAR AKIŞI
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-0. Kategori 0 (NATO Türkiye Zirvesi) adaylarını say.
+0. "Geçmiş günlerde işlenen olaylar" listesiyle eşleşen TÜM adayları en baştan ELE.
+   (Mükerrer haberler hiçbir kategoride değerlendirilmez.)
+
+0.5 Kategori 0 (NATO Türkiye Zirvesi) adaylarını say.
    → Varsa: önce bunları 1. sıradan başlayarak seç, kalan yerleri adım 1'den tamamla.
    → Yoksa: adım 1'e geç.
 
@@ -330,7 +351,8 @@ KARAR AKIŞI
 
 3. Kategori 3'ten en iyi adayları seçerek 3'ü tamamla.
 
-4. Her adımda: "Seçilmez" listesindeki haber KESİNLİKLE alınmaz, başka seçenek olmasa bile.
+4. Her adımda: "Seçilmez" listesindeki ve "Geçmiş günlerde işlenen olaylar"
+   listesindeki haber KESİNLİKLE alınmaz, başka seçenek olmasa bile.
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{"top3": [42, 7, 15]}}

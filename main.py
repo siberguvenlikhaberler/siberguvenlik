@@ -2306,6 +2306,43 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         return txt
 
+    def _load_recent_events(self, days=3):
+        """Son `days` günde raporlanan haber BAŞLIKLARINI arşivden okur ve
+        Pass 1 (sıralama) + Pass 4 (top3) promptlarına 'tekrar alma' listesi
+        olarak verir. Bu, GÜNLER ARASI MÜKERRER haberleri engeller.
+
+        Not: Bu metot olmadan recent_events her zaman boş kalıyordu; arşiv
+        yazılıyor ama hiç GERİ OKUNMUYORDU — dedup fiilen çalışmıyordu.
+
+        Arşiv yoksa/okunamazsa boş string döner (eski güvenli davranış).
+        """
+        try:
+            if not os.path.exists(ARCHIVE_FILE):
+                return ''
+            size = os.path.getsize(ARCHIVE_FILE)
+            with open(ARCHIVE_FILE, 'r', encoding='utf-8', errors='replace') as f:
+                # Yalnızca son ~600 KB yeterli (birkaç günlük blok); tam dosya gereksiz
+                if size > 600_000:
+                    f.seek(size - 600_000)
+                text = f.read()
+            # Gün blokları '📅 <tarih> - EN ÖNEMLİ ...' başlığıyla ayrılır.
+            blocks = re.split(r'\n=+\n📅 ', text)
+            recent = blocks[-days:] if len(blocks) > days else blocks
+            titles = []
+            for blk in recent:
+                # Arşiv başlık satırları:  "[ 1] Başlık", "[10] Başlık" ...
+                for m in re.finditer(r'\n\[\s*\d+\]\s*(.+)', blk):
+                    t = m.group(1).strip()
+                    if t and t not in titles:
+                        titles.append(t)
+            if not titles:
+                return ''
+            titles = titles[:160]  # token şişmesini önle
+            return '\n'.join(f'• {t}' for t in titles)
+        except Exception as e:
+            print(f"⚠️  Recent events yüklenemedi: {e}")
+            return ''
+
     def save_summary_to_archive(self, html_content):
         """Gemini'nin seçtiği EN ÖNEMLİ 43 HABERİ TXT arşivine EKLE (sürekli birikim)"""
         print("📚 En önemli 43 haber arşive ekleniyor...")
@@ -2420,7 +2457,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 f"Özet: {snippet}\n"
             )
         ranking_data = self._gemini_call_json(
-            get_ranking_prompt('\n'.join(brief_lines)),
+            get_ranking_prompt('\n'.join(brief_lines), recent_events=self._load_recent_events()),
             max_output_tokens=2048,
             label='Pass1-Sıralama',
         )
@@ -2573,7 +2610,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     + f"İçerik: {snippet}\n"
                 )
             top3_data = self._gemini_call_json(
-                get_top3_selection_prompt('\n'.join(brief_lines_p4)),
+                get_top3_selection_prompt('\n'.join(brief_lines_p4), recent_events=self._load_recent_events()),
                 max_output_tokens=256,
                 label='Pass4-Top3Secim',
             )
@@ -3160,7 +3197,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     + f"İçerik: {snippet}\n"
                 )
             top3_data = self._gemini_call_json(
-                get_top3_selection_prompt('\n'.join(brief_lines_p4)),
+                get_top3_selection_prompt('\n'.join(brief_lines_p4), recent_events=self._load_recent_events()),
                 max_output_tokens=256,
                 label='Legacy-Top3',
             )
