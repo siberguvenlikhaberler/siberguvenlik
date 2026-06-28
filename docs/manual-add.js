@@ -1,15 +1,21 @@
 /*
- * Manuel Haber Ekle — anasayfa (index.html) pop-up'ı.
+ * Haber Ekle / Değiştir — anasayfa (index.html) pop-up'ı.
  *
  * Akış:
- *   1. Anasayfada sağ üstteki "Manuel Haber Ekle" butonu bu pop-up'ı açar.
- *   2. Kullanıcı: şifre + eklenecek haberin URL'si girer, 3 kritik haberden
- *      çıkarılacak olanı işaretler.
- *   3. "Tamam" → sunucudaki /api/manual-add uç noktasına POST gider.
- *      Sunucu URL'yi çeker, BİZİM sistemin promptu/formatıyla paragraf üretir,
- *      docs/index.html + o günün arşiv raporundaki YALNIZCA ilgili kritik
- *      kartı değiştirip main'e commit eder ve üretilen kartı geri döner.
- *   4. Dönen kart, sayfadaki ilgili kart ile ANINDA değiştirilir.
+ *   1. Anasayfada sağ üstteki "Haber ekle/değiştir" butonu bu pop-up'ı açar.
+ *   2. Kullanıcı: şifre girer, 3 kritik haberden çıkarılacak olanı işaretler ve
+ *      o boşluğu doldurmak için KAYNAK seçer:
+ *        (a) URL ile yeni haber  → bir URL girilir (sunucu çeker + LLM ile üretir).
+ *        (b) Rapordan haber seç  → raporun alt bölümündeki diğer haberlerden biri
+ *            (yalnızca BAŞLIKLARI listelenir) seçilir. Bu seçenek URL/LLM gerektirmez;
+ *            içerik zaten raporda vardır. Seçilen haber alt listeden ÇIKARILIP
+ *            (taşınıp) kritik karta dönüştürülür.
+ *   3. "Tamam" → sunucudaki /api/manual_add uç noktasına POST gider.
+ *      Sunucu YALNIZCA ilgili kritik kartı (ve rapor modunda taşınan haberi)
+ *      docs/index.html + o günün arşiv raporunda değiştirip main'e commit eder ve
+ *      üretilen kartı geri döner.
+ *   4. Dönen kart, sayfadaki ilgili kart ile ANINDA değiştirilir; rapor modunda
+ *      taşınan haber alt listeden ANINDA kaldırılır.
  *
  * NOT: Tüm asıl iş (URL getirme, LLM, dosya yazma, commit) SUNUCU tarafında
  * çalışır. Bu dosya yalnızca arayüz + uç noktaya istek atar.
@@ -43,6 +49,15 @@
     ".ma-remove-list .opt:hover{background:#f8fafc;}",
     ".ma-remove-list .opt input{margin-top:3px;}",
     ".ma-hint{font-size:12px;color:#64748b;margin:4px 0 0;}",
+    // Kaynak seçici sekmeleri
+    ".ma-tabs{display:flex;gap:8px;margin:6px 0 0;}",
+    ".ma-tab{flex:1;text-align:center;padding:9px 8px;border:1px solid #cbd5e1;border-radius:8px;",
+    "font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#475569;}",
+    ".ma-tab:hover{background:#f1f5f9;}",
+    ".ma-tab.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;}",
+    ".ma-tab:disabled{opacity:.5;cursor:not-allowed;}",
+    ".ma-source-block{display:none;}",
+    ".ma-source-block.active{display:block;}",
     ".ma-actions{padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;}",
     ".ma-btn{padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;",
     "border:1px solid transparent;font-family:inherit;}",
@@ -61,6 +76,9 @@
     "[data-theme='dark'] .ma-remove-list{border-color:#30363d;}",
     "[data-theme='dark'] .ma-remove-list .opt{border-bottom-color:#21262d;}",
     "[data-theme='dark'] .ma-remove-list .opt:hover{background:#21262d;}",
+    "[data-theme='dark'] .ma-tab{background:#161b22;color:#c9d1d9;border-color:#30363d;}",
+    "[data-theme='dark'] .ma-tab:hover{background:#21262d;}",
+    "[data-theme='dark'] .ma-tab.active{background:#388bfd;color:#fff;border-color:#388bfd;}",
     "[data-theme='dark'] .ma-actions{border-top-color:#30363d;}",
     "[data-theme='dark'] .ma-btn.cancel{background:#161b22;color:#c9d1d9;border-color:#30363d;}"
   ].join("");
@@ -77,6 +95,20 @@
     return Array.prototype.slice.call(
       document.querySelectorAll("#onemli-gelismeler-block .top3-card")
     );
+  }
+
+  // Raporun alt bölümündeki "diğer haberler" — kritik-3 kartları HARİÇ.
+  // Her birinin başlığı + sabit kimliği (id="haber-N") döner.
+  function otherNewsItems() {
+    var items = Array.prototype.slice.call(
+      document.querySelectorAll(".news-section .news-item[id]")
+    );
+    return items
+      .filter(function (el) { return /^haber-\d+$/.test(el.id); })
+      .map(function (el) {
+        var t = el.querySelector(".news-title");
+        return { id: el.id, title: t ? t.textContent.trim() : "(başlık okunamadı)" };
+      });
   }
 
   function cardTitle(card) {
@@ -102,6 +134,16 @@
     m.textContent = text;
   }
 
+  // Aktif kaynak modu ("url" | "report") — sekmeleri ve blokları senkronlar.
+  function setMode(mode) {
+    ["url", "report"].forEach(function (m) {
+      var tab = document.getElementById("ma-tab-" + m);
+      var blk = document.getElementById("ma-src-" + m);
+      if (tab) tab.classList.toggle("active", m === mode);
+      if (blk) blk.classList.toggle("active", m === mode);
+    });
+  }
+
   window.openManualAddModal = function () {
     injectStyles();
     closeModal();
@@ -119,21 +161,44 @@
       );
     }).join("");
 
+    var others = otherNewsItems();
+    var hasOthers = others.length > 0;
+    var reportOptsHtml = hasOthers
+      ? others.map(function (n) {
+          return (
+            '<label class="opt"><input type="radio" name="ma-news" value="' + esc(n.id) + '">' +
+            "<span>" + esc(n.title) + "</span></label>"
+          );
+        }).join("")
+      : '<div class="opt"><span style="color:#94a3b8;">Bu raporda taşınabilecek başka haber yok.</span></div>';
+
     var overlay = document.createElement("div");
     overlay.className = "ma-overlay";
     overlay.id = "ma-overlay";
     overlay.innerHTML =
       '<div class="ma-modal" role="dialog" aria-modal="true">' +
-        "<h3>Manuel Haber Ekle</h3>" +
+        "<h3>Haber Ekle / Değiştir</h3>" +
         '<div class="ma-msg" id="ma-msg"></div>' +
         '<div class="ma-body">' +
           '<label class="fld" for="ma-pass">Şifre</label>' +
           '<input type="password" id="ma-pass" autocomplete="off" placeholder="••••••••">' +
-          '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
-          '<input type="url" id="ma-url" placeholder="https://...">' +
-          '<label class="fld">Çıkarılacak haberi işaretleyin</label>' +
+          '<label class="fld">Çıkarılacak kritik haberi işaretleyin</label>' +
           '<div class="ma-remove-list">' + optsHtml + "</div>" +
-          '<p class="ma-hint">İşaretlenen kritik haber, URL\'den üretilecek yeni haberle değiştirilecek. Raporda başka hiçbir şey değişmez.</p>' +
+          '<label class="fld">Yerine ne eklensin?</label>' +
+          '<div class="ma-tabs">' +
+            '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber</button>' +
+            '<button type="button" class="ma-tab" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Rapordan haber seç</button>" +
+          "</div>" +
+          '<div class="ma-source-block" id="ma-src-url">' +
+            '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
+            '<input type="url" id="ma-url" placeholder="https://...">' +
+            '<p class="ma-hint">URL\'den üretilen yeni haber, işaretlenen kritik haberle değiştirilecek.</p>' +
+          "</div>" +
+          '<div class="ma-source-block" id="ma-src-report">' +
+            '<label class="fld">Eklenecek haberi seçin</label>' +
+            '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
+            '<p class="ma-hint">Seçilen haber alt listeden çıkarılıp (taşınıp) işaretlenen kritik haberin yerine eklenecek.</p>' +
+          "</div>" +
         "</div>" +
         '<div class="ma-actions">' +
           '<button class="ma-btn cancel" id="ma-cancel">İptal</button>' +
@@ -148,30 +213,54 @@
     });
     document.getElementById("ma-cancel").addEventListener("click", closeModal);
     document.getElementById("ma-ok").addEventListener("click", submit);
+    document.getElementById("ma-tab-url").addEventListener("click", function () { setMode("url"); });
+    var reportTab = document.getElementById("ma-tab-report");
+    if (hasOthers) reportTab.addEventListener("click", function () { setMode("report"); });
+
+    setMode("url");  // varsayılan: URL ile yeni haber
   };
+
+  function currentMode() {
+    var rt = document.getElementById("ma-tab-report");
+    return (rt && rt.classList.contains("active")) ? "report" : "url";
+  }
 
   function submit() {
     var pass = (document.getElementById("ma-pass").value || "").trim();
-    var url = (document.getElementById("ma-url").value || "").trim();
     var checked = document.querySelector('input[name="ma-remove"]:checked');
+    var mode = currentMode();
 
     if (!pass) { showMsg("err", "Şifre giriniz."); return; }
-    if (!/^https?:\/\//i.test(url)) { showMsg("err", "Geçerli bir URL giriniz (http/https)."); return; }
-    if (!checked) { showMsg("err", "Çıkarılacak haberi işaretleyiniz."); return; }
+    if (!checked) { showMsg("err", "Çıkarılacak kritik haberi işaretleyiniz."); return; }
     if (!MANUAL_ADD_ENDPOINT) {
       showMsg("err", "Sunucu uç noktası yapılandırılmamış (manual-add.js → MANUAL_ADD_ENDPOINT).");
       return;
     }
 
     var removeIndex = parseInt(checked.value, 10);
+    var payload = { password: pass, mode: mode, remove_index: removeIndex };
+    var waitMsg;
+
+    if (mode === "url") {
+      var url = (document.getElementById("ma-url").value || "").trim();
+      if (!/^https?:\/\//i.test(url)) { showMsg("err", "Geçerli bir URL giriniz (http/https)."); return; }
+      payload.url = url;
+      waitMsg = "Haber çekiliyor ve sistem formatında hazırlanıyor… (bu işlem biraz sürebilir)";
+    } else {
+      var newsChecked = document.querySelector('input[name="ma-news"]:checked');
+      if (!newsChecked) { showMsg("err", "Eklenecek haberi seçiniz."); return; }
+      payload.news_id = newsChecked.value;
+      waitMsg = "Seçilen haber kritik bölüme taşınıyor…";
+    }
+
     var okBtn = document.getElementById("ma-ok");
     okBtn.disabled = true;
-    showMsg("info", "Haber çekiliyor ve sistem formatında hazırlanıyor… (bu işlem biraz sürebilir)");
+    showMsg("info", waitMsg);
 
     fetch(MANUAL_ADD_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password: pass, url: url, remove_index: removeIndex })
+      body: JSON.stringify(payload)
     })
       .then(function (r) {
         return r.json().then(function (data) { return { status: r.status, data: data }; });
@@ -179,6 +268,7 @@
       .then(function (res) {
         if (res.status === 200 && res.data && res.data.ok) {
           applyCard(removeIndex, res.data.card_html);
+          if (res.data.removed_news_id) removeNewsItem(res.data.removed_news_id);
           showMsg("ok", "Haber eklendi ve rapor güncellendi.");
           setTimeout(closeModal, 1200);
         } else {
@@ -201,5 +291,16 @@
     tmp.innerHTML = cardHtml.trim();
     var newCard = tmp.querySelector(".top3-card") || tmp.firstChild;
     if (newCard) cards[index].parentNode.replaceChild(newCard, cards[index]);
+  }
+
+  // Rapor modunda: taşınan haberi (ve varsa yönetici tablosundaki satırını) anında kaldırır.
+  function removeNewsItem(newsId) {
+    var item = document.getElementById(newsId);
+    if (item && item.parentNode) item.parentNode.removeChild(item);
+    var link = document.querySelector('.executive-table a[href="#' + newsId + '"]');
+    if (link) {
+      var row = link.closest ? link.closest("tr") : null;
+      if (row && row.parentNode) row.parentNode.removeChild(row);
+    }
   }
 })();

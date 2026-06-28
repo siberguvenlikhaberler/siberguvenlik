@@ -261,6 +261,61 @@ _CARD_RE = re.compile(
 )
 
 
+# Rapordaki "diğer haber" (.news-item) bloğu — _CARD_RE ile aynı mantık: dış
+# <div> kapanışı KENDİ satırında (indentasyonlu) olduğundan, news-title'ın
+# satır-içi </div>'i değil, dış kapanış yakalanır. id'ye göre tekil eşleşir.
+def _news_item_re(news_id):
+    return re.compile(
+        r'[ \t]*<div class="news-item[^"]*" id="' + re.escape(news_id) + r'">'
+        r'.*?\n[ \t]*</div>\n',
+        re.DOTALL,
+    )
+
+
+def extract_news_item(html, news_id):
+    """Verilen news-item bloğundan (tr_title, paragraph, link, domain, art_date) çıkarır.
+
+    Yalnızca eşleşen FRAGMAN BeautifulSoup ile parse edilir; tüm döküman yeniden
+    serialize EDİLMEZ (mevcut format/diff korunur).
+    """
+    m = _news_item_re(news_id).search(html)
+    if not m:
+        raise ValueError("haber bloğu bulunamadı")
+    frag = BeautifulSoup(m.group(0), "html.parser")
+    title_el = frag.find(class_="news-title")
+    content_el = frag.find(class_="news-content")
+    source_el = frag.find(class_="source")
+
+    tr_title = title_el.get_text(" ", strip=True) if title_el else ""
+    paragraph = content_el.decode_contents().strip() if content_el else ""
+    link = domain = art_date = ""
+    if source_el:
+        a = source_el.find("a")
+        if a:
+            link = a.get("href", "")
+            domain = a.get_text(strip=True)
+        dm = re.search(r"\d{2}\.\d{2}\.\d{4}", source_el.get_text())
+        if dm:
+            art_date = dm.group(0)
+    if not tr_title or not paragraph:
+        raise ValueError("başlık/metin çıkarılamadı")
+    return tr_title, paragraph, link, domain, art_date
+
+
+def remove_news_item(html, news_id):
+    """news-item bloğunu ve (varsa) yönetici tablosundaki ilgili satırı kaldırır.
+
+    Yönetici tablosu satırı best-effort silinir; bulunamazsa sessizce geçilir.
+    """
+    new_html = _news_item_re(news_id).sub("", html, count=1)
+    row_re = re.compile(
+        r'[ \t]*<tr>\s*<td><a href="#' + re.escape(news_id) + r'">.*?</a></td>\s*</tr>\n',
+        re.DOTALL,
+    )
+    new_html = row_re.sub("", new_html, count=1)
+    return new_html
+
+
 def replace_top3_card(html, index, new_card_html):
     matches = list(_CARD_RE.finditer(html))
     if len(matches) < 3:
@@ -374,12 +429,16 @@ def gh_commit_files(files, token, message):
 # Çekirdek iş akışı
 # ─────────────────────────────────────────────────────────────────────────────
 def process(payload):
+    """Ortak doğrulama + moda göre dallanma.
+
+    mode = "url"    → URL'den LLM ile yeni haber üret (mevcut akış).
+    mode = "report" → rapordaki diğer bir haberi kritik karta TAŞI (URL/LLM yok).
+    Geriye dönük uyum: mode yoksa ama url varsa "url" kabul edilir.
+    """
     password = (payload.get("password") or "")
-    url = (payload.get("url") or "").strip()
-    try:
-        remove_index = int(payload.get("remove_index"))
-    except (TypeError, ValueError):
-        return 400, {"error": "Geçersiz remove_index."}
+    mode = (payload.get("mode") or "").strip().lower()
+    if not mode:
+        mode = "url" if (payload.get("url") or "").strip() else ""
 
     expected = os.getenv("MANUAL_ADD_PASSWORD", "")
     if not expected:
@@ -387,14 +446,81 @@ def process(payload):
     if not hmac.compare_digest(password, expected):
         return 401, {"error": "Şifre hatalı."}
 
-    if not re.match(r"^https?://", url, re.IGNORECASE):
-        return 400, {"error": "Geçerli bir URL giriniz."}
+    try:
+        remove_index = int(payload.get("remove_index"))
+    except (TypeError, ValueError):
+        return 400, {"error": "Geçersiz remove_index."}
     if remove_index not in (0, 1, 2):
         return 400, {"error": "Çıkarılacak haber 0-2 aralığında olmalı."}
 
     token = os.getenv("GH_TOKEN", "")
     if not token:
         return 500, {"error": "Sunucuda GH_TOKEN tanımlı değil."}
+
+    if mode == "report":
+        return process_report(payload, remove_index, token)
+    if mode == "url":
+        return process_url(payload, remove_index, token)
+    return 400, {"error": "Geçersiz mod."}
+
+
+def process_report(payload, remove_index, token):
+    """Rapordaki bir 'diğer haber'i kritik karta TAŞI: kritik kartı değiştir,
+    seçilen haberi alt listeden (ve yönetici tablosundan) kaldır. URL/LLM yok."""
+    news_id = (payload.get("news_id") or "").strip()
+    if not re.match(r"^haber-\d+$", news_id):
+        return 400, {"error": "Geçersiz haber kimliği."}
+
+    try:
+        index_html, _ = gh_get_file(INDEX_PATH, token)
+        report_date, archive_path = report_date_from_html(index_html)
+    except Exception as e:
+        return 502, {"error": f"index.html okunamadı: {str(e)[:160]}"}
+
+    try:
+        tr_title, paragraph, link, domain, art_date = extract_news_item(index_html, news_id)
+    except Exception as e:
+        return 422, {"error": f"Seçilen haber çıkarılamadı: {str(e)[:160]}"}
+
+    card_html = build_card_html(tr_title, paragraph, link, domain, art_date or report_date)
+    try:
+        new_index = replace_top3_card(index_html, remove_index, card_html)
+        new_index = remove_news_item(new_index, news_id)
+    except Exception as e:
+        return 500, {"error": f"index.html güncellenemedi: {str(e)[:160]}"}
+
+    try:
+        archive_html, _ = gh_get_file(archive_path, token)
+        new_archive = remove_news_item(
+            replace_top3_card(archive_html, remove_index, card_html), news_id
+        )
+    except Exception:
+        # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
+        new_archive = None
+
+    msg = f"manuel: kritik haber rapordan taşındı ({report_date})"
+    files = [(INDEX_PATH, new_index)]
+    if new_archive is not None:
+        files.append((archive_path, new_archive))
+    try:
+        gh_commit_files(files, token, msg)
+    except Exception as e:
+        return 502, {"error": f"Commit başarısız: {str(e)[:160]}"}
+
+    return 200, {
+        "ok": True,
+        "card_html": card_html,
+        "removed_news_id": news_id,
+        "tr_title": tr_title,
+        "domain": domain,
+        "date": report_date,
+    }
+
+
+def process_url(payload, remove_index, token):
+    url = (payload.get("url") or "").strip()
+    if not re.match(r"^https?://", url, re.IGNORECASE):
+        return 400, {"error": "Geçerli bir URL giriniz."}
     if not os.getenv("OPENROUTER_API_KEY", ""):
         return 500, {"error": "Sunucuda OPENROUTER_API_KEY tanımlı değil."}
 
