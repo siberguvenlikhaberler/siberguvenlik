@@ -62,6 +62,13 @@ def is_openrouter_active():
 # Dosya yolları
 ARCHIVE_FILE = "data/haberler_arsiv.txt"
 
+# Son günlerde KRİTİK 3'e (üst manşet) giren haberlerin zengin parmak-izi deposu.
+# Çapraz-gün deterministik dedup (src.dedup.same_event cross_day) bu dosyayı
+# okuyarak aynı olayın üst üste iki gün KRİTİK 3 manşeti olmasını engeller.
+KRITIK3_HISTORY_FILE = "data/kritik3_gecmis.json"
+# Çapraz-gün KRİTİK 3 dedup penceresi (gün).
+KRITIK3_HISTORY_DAYS = 7
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 3-PASS MİMARİSİ İÇİN PROMPT FONKSİYONLARI

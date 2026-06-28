@@ -122,3 +122,61 @@ def test_drop_duplicates_against_top3():
     body = dedup.drop_duplicates_against([1, 3, 9], reference_ids=[4], get_view=_views(mapping))
     assert 1 not in body, "Dup gövdeye sızdı"
     assert 3 in body and 9 in body
+
+
+# ── ÇAPRAZ-GÜN (cross_day) dedup ────────────────────────────────────────────
+# Gerçek arşiv verisinden türetildi: çapraz-günde Kural 4 (saf TR başlık
+# benzerliği) jenerik Türkçe kalıpları yanlışlıkla eşleştiriyordu.
+XDAY_BRAZIL = {  # 23 Haziran — farklı olay
+    'tr_title': 'Bir Bilgisayar Korsanının Brezilya Ulusal Uyarı Sistemini Ele Geçirmesi',
+    'title': '', 'full_text': '',
+    'paragraph': 'Bir saldırgan Brezilya ulusal acil durum uyarı sistemine sızdı.',
+}
+XDAY_JAGUAR = {  # 27 Haziran — farklı olay, ama TR başlık kalıbı benzer
+    'tr_title': "Rus Bilgisayar Korsanlarının Jaguar Land Rover'ın Sistemlerini Ele Geçirmesi",
+    'title': '', 'full_text': '',
+    'paragraph': 'Rus bağlantılı bir grup Jaguar Land Rover üretim ağına sızdı.',
+}
+XDAY_PIXELSMASH_A = {  # ortak kod adı — GERÇEK mükerrer
+    'tr_title': 'FFmpeg Yazılımındaki PixelSmash Açığının Uzaktan Kod Yürütülmesine İzin Vermesi',
+    'title': '', 'full_text': '',
+    'paragraph': 'FFmpeg kütüphanesindeki PixelSmash açığı uzaktan kod yürütmeye olanak tanıyor.',
+}
+XDAY_PIXELSMASH_B = {
+    'tr_title': 'FFmpeg Yazılımındaki PixelSmash Açığının Küresel Medya Sunucularını Riske Atması',
+    'title': '', 'full_text': '',
+    'paragraph': 'PixelSmash açığı dünya genelinde medya sunucularını tehdit ediyor.',
+}
+
+
+def test_cross_day_no_false_positive_from_trtitle():
+    """Çapraz-günde jenerik TR başlık kalıbı (Kural 4) yanlış-pozitif ÜRETMEZ.
+
+    Aynı haberler same-run modunda (cross_day=False) Kural 4 ile YANLIŞ eşleşir;
+    cross_day=True bunu engellemelidir."""
+    assert dedup.same_event(XDAY_BRAZIL, XDAY_JAGUAR), \
+        "Sabit: same-run modunda Kural 4 bunları (yanlışlıkla) eşleştirir"
+    assert not dedup.same_event(XDAY_BRAZIL, XDAY_JAGUAR, cross_day=True), \
+        "Çapraz-günde farklı olaylar AYNI sayılmamalı (Kural 4 devre dışı olmalı)"
+
+
+def test_cross_day_keeps_codename_match():
+    """Çapraz-günde ortak kod adı (PixelSmash) GERÇEK mükerreri yine yakalar."""
+    assert dedup.same_event(XDAY_PIXELSMASH_A, XDAY_PIXELSMASH_B, cross_day=True)
+
+
+def test_pick_distinct_excludes_recent_kritik3():
+    """exclude_views: son günlerde KRİTİK 3 olmuş olay bugün manşete ALINMAZ."""
+    mapping = {7: XDAY_PIXELSMASH_B, 8: SHARKLOADER, 9: MOZILLA}
+    # Dün PixelSmash manşetti → bugün PixelSmash (id 7) atlanmalı, diğerleri gelir
+    picked = dedup.pick_distinct(
+        [7, 8, 9], _views(mapping), n=3, exclude_views=[XDAY_PIXELSMASH_A])
+    assert 7 not in picked, "Çapraz-gün mükerrer KRİTİK 3'e sızdı"
+    assert 8 in picked and 9 in picked
+
+
+def test_pick_distinct_without_exclude_views_unchanged():
+    """exclude_views=None ise eski davranış korunur (geriye-uyumluluk)."""
+    mapping = {4: SIGNAL_A, 1: SIGNAL_B, 9: SHARKLOADER, 3: MOZILLA, 2: OPENAI}
+    top3 = dedup.pick_distinct([4, 1, 9, 3, 2], _views(mapping), n=3)
+    assert len(top3) == 3 and 4 in top3 and 1 not in top3

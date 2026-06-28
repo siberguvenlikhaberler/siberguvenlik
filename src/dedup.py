@@ -140,6 +140,16 @@ _TOPIC_WITH_ACTOR = 0.10   # ortak aktör/CVE varsa düşük konu örtüşmesi y
 _TOPIC_ALONE      = 0.42   # tek başına yüksek konu örtüşmesi
 _TRTITLE_RATIO    = 0.62   # Türkçe başlık benzerliği
 
+# ── Çapraz-GÜN eşikleri (cross_day=True) ──────────────────────────────────
+# Aynı run içi karşılaştırmada aday havuzu küçük olduğu için gevşek Kural 4
+# (saf TR başlık SequenceMatcher) sorun çıkarmaz. Ancak GÜNLER ARASI 43'er
+# haberlik bloklarda jenerik Türkçe başlık kalıpları ("...Ele Geçirmesi",
+# "...Kritik Güvenlik Açığı") yanlışlıkla eşleşip FARKLI olayları aynı sayar.
+# Bu yüzden çapraz-günde Kural 4 DEVRE DIŞIDIR ve aktör+konu eşiği yükseltilir;
+# yalnızca YÜKSEK ÖZGÜLLÜKTE sinyaller (ortak kod adı / ortak aktör+konu /
+# yüksek konu örtüşmesi) kullanılır. Gerçek arşiv verisiyle doğrulandı.
+_TOPIC_WITH_ACTOR_XDAY = 0.18
+
 
 def _bundle(view):
     """Bir haber 'görünümü'nü (tr_title/paragraph/title/full_text) metin
@@ -152,11 +162,15 @@ def _bundle(view):
     return head_title, paragraph, en_title, full_text
 
 
-def same_event(view_a, view_b, explain=False):
+def same_event(view_a, view_b, explain=False, cross_day=False):
     """İki haber aynı olayı/kampanyayı/zafiyeti mi anlatıyor? (deterministik)
 
     view_*: {'tr_title','paragraph','title','full_text'} (eksik alanlar boş kabul).
     explain=True ise (bool, gerekçe) döner; aksi halde yalnızca bool.
+    cross_day=True ise YALNIZCA yüksek-özgüllükte sinyaller kullanılır: gevşek
+    TR başlık benzerliği (Kural 4) DEVRE DIŞI bırakılır ve aktör+konu eşiği
+    yükseltilir. Günler-arası karşılaştırmada yanlış-pozitifi (jenerik Türkçe
+    başlık kalıpları) önlemek için (bkz. _TOPIC_WITH_ACTOR_XDAY).
     """
     ha, pa, ea, fa = _bundle(view_a)
     hb, pb, eb, fb = _bundle(view_b)
@@ -182,7 +196,8 @@ def same_event(view_a, view_b, explain=False):
     # 2) Ortak yapısal/adlandırılmış aktör veya CVE + konu örtüşmesi
     actors_a, actors_b = extract_actors(blob_a), extract_actors(blob_b)
     shared_actors = actors_a & actors_b
-    if shared_actors and topic >= _TOPIC_WITH_ACTOR:
+    actor_topic_min = _TOPIC_WITH_ACTOR_XDAY if cross_day else _TOPIC_WITH_ACTOR
+    if shared_actors and topic >= actor_topic_min:
         return _ret(True, f'actor:{",".join(sorted(shared_actors))}+topic={topic:.2f}')
 
     # 2b) Her iki haberde de yapısal kimlik (CVE/aktör) var ama ORTAK YOK →
@@ -196,8 +211,9 @@ def same_event(view_a, view_b, explain=False):
     if topic >= _TOPIC_ALONE:
         return _ret(True, f'topic={topic:.2f}')
 
-    # 4) Türkçe başlık benzerliği
-    if ha and hb:
+    # 4) Türkçe başlık benzerliği — yalnızca AYNI RUN içinde. Çapraz-günde
+    #    jenerik TR başlık kalıpları yanlış-pozitif ürettiği için atlanır.
+    if not cross_day and ha and hb:
         ratio = SequenceMatcher(None, ha.lower(), hb.lower()).ratio()
         if ratio >= _TRTITLE_RATIO:
             return _ret(True, f'trtitle={ratio:.2f}')
@@ -205,19 +221,26 @@ def same_event(view_a, view_b, explain=False):
     return _ret(False, '')
 
 
-def pick_distinct(ordered_ids, get_view, n=3):
+def pick_distinct(ordered_ids, get_view, n=3, exclude_views=None):
     """Sıralı aday listesinden, çiftler-arası AYNI-OLAY OLMAYAN en fazla n haber
     seçer (sıra korunur). KRİTİK 3 garantisinin çekirdeği.
 
     ordered_ids: öncelik sırasına dizili haber ID'leri (en iyi başta).
     get_view:    id -> {'tr_title','paragraph','title','full_text'} fonksiyonu.
+    exclude_views: SON GÜNLERDE KRİTİK 3'e girmiş haberlerin görünüm listesi.
+        Bunlardan biriyle aynı olayı anlatan aday ATLANIR (çapraz-gün, yüksek
+        özgüllük: cross_day=True). Böylece aynı olay üst üste iki gün KRİTİK 3
+        manşeti olamaz. None ise çapraz-gün kontrolü yapılmaz (eski davranış).
     Döndürür: seçilen ID listesi (≤ n).
     """
+    excl = exclude_views or []
     picked = []
     for aid in ordered_ids:
         if aid in picked:
             continue
         view = get_view(aid)
+        if any(same_event(view, ev, cross_day=True) for ev in excl):
+            continue
         if any(same_event(view, get_view(p)) for p in picked):
             continue
         picked.append(aid)

@@ -19,7 +19,7 @@ from google.genai import types as genai_types
 
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
-    ARCHIVE_FILE,
+    ARCHIVE_FILE, KRITIK3_HISTORY_FILE, KRITIK3_HISTORY_DAYS,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_legacy_json_prompt, get_quality_review_prompt,
@@ -2361,6 +2361,82 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         """pick_distinct / drop_duplicates_against için id→view fonksiyonu üretir."""
         return lambda aid: self._dedup_view(aid, content_by_id, articles_by_id)
 
+    def _load_recent_kritik3_views(self, days=KRITIK3_HISTORY_DAYS):
+        """Son `days` günde KRİTİK 3'e (üst manşet) giren haberlerin zengin
+        görünümlerini (tr_title/paragraph/title/full_text) okur.
+
+        Çapraz-gün deterministik dedup için referans kümesidir: bugünkü top3
+        adayları bu görünümlerle `same_event(cross_day=True)` üzerinden
+        karşılaştırılır; eşleşen aday KRİTİK 3'e ALINMAZ (gövdede serbest kalır).
+
+        Dosya yoksa/bozuksa boş liste döner (eski güvenli davranış)."""
+        try:
+            if not os.path.exists(KRITIK3_HISTORY_FILE):
+                return []
+            with open(KRITIK3_HISTORY_FILE, 'r', encoding='utf-8') as f:
+                records = json.load(f)
+        except Exception as e:
+            print(f"⚠️  KRİTİK 3 geçmişi okunamadı: {e}")
+            return []
+
+        cutoff = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
+        views = []
+        for rec in records:
+            if not isinstance(rec, dict):
+                continue
+            # Bugünün kayıtlarını HARİÇ TUT — yalnızca GEÇMİŞ günlerle karşılaştır
+            # (aksi halde aynı run içinde yeni yazılmış kayıt kendini eler).
+            if rec.get('date', '') < cutoff:
+                continue
+            for v in rec.get('views', []):
+                if isinstance(v, dict) and (v.get('tr_title') or v.get('paragraph')):
+                    views.append(v)
+        return views
+
+    def _save_kritik3_history(self, top3_ids, content_by_id, articles_by_id):
+        """Bugünkü KRİTİK 3 haberlerinin zengin görünümünü parmak-izi deposuna
+        ekler ve `days` penceresinden eski kayıtları budar. Çapraz-gün dedup'ın
+        referansını besler. İçerik yoksa sessizce atlar."""
+        if not top3_ids:
+            return
+        today = datetime.now().strftime('%Y-%m-%d')
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+        views = []
+        for aid in top3_ids:
+            v = view_fn(aid)
+            views.append({
+                'tr_title':  v.get('tr_title', ''),
+                'paragraph': (v.get('paragraph', '') or '')[:600],
+                'title':     v.get('title', ''),
+                'full_text': (v.get('full_text', '') or '')[:600],
+            })
+
+        records = []
+        if os.path.exists(KRITIK3_HISTORY_FILE):
+            try:
+                with open(KRITIK3_HISTORY_FILE, 'r', encoding='utf-8') as f:
+                    records = json.load(f)
+                if not isinstance(records, list):
+                    records = []
+            except Exception:
+                records = []
+
+        # Aynı gün tekrar çalışırsa bugünün kaydını değiştir (mükerrer blok olmasın)
+        records = [r for r in records if isinstance(r, dict) and r.get('date') != today]
+        # Pencereden eski kayıtları buda
+        cutoff = (datetime.now() - timedelta(days=KRITIK3_HISTORY_DAYS)).strftime('%Y-%m-%d')
+        records = [r for r in records if r.get('date', '') >= cutoff]
+        records.append({'date': today, 'views': views})
+
+        os.makedirs("data", exist_ok=True)
+        try:
+            with open(KRITIK3_HISTORY_FILE, 'w', encoding='utf-8') as f:
+                json.dump(records, f, ensure_ascii=False, indent=1)
+            print(f"📌 KRİTİK 3 parmak-izi kaydedildi ({len(views)} haber, "
+                  f"{KRITIK3_HISTORY_FILE})")
+        except IOError as e:
+            print(f"   ❌ KRİTİK 3 geçmişi yazılamadı: {e}")
+
     def _select_top3(self, non_vuln_ids, content_by_id, articles_by_id,
                      summit_ids, pool_ids, label):
         """Pass 4 top3 seçimi — TEK kaynak (hem ana hem legacy yol kullanır).
@@ -2439,12 +2515,26 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
         before = list(top3_ids)
-        top3_ids = _dedup.pick_distinct(ordered_pool, view_fn, n=3)
+        # ── ÇAPRAZ-GÜN KRİTİK 3 DEDUP ────────────────────────────────────
+        # Son 7 günde KRİTİK 3 manşeti olmuş bir olay bugün TEKRAR manşet
+        # OLAMAZ (gövdede 'gelişme' olarak serbest). Deterministik, LLM'den
+        # bağımsız; same_event(cross_day=True) yüksek-özgüllük sinyalleriyle.
+        recent_k3 = self._load_recent_kritik3_views()
+        top3_ids = _dedup.pick_distinct(ordered_pool, view_fn, n=3,
+                                        exclude_views=recent_k3)
 
         dropped = [aid for aid in before if aid not in top3_ids]
         if dropped:
             print(f"   🔁 Aynı-olay dedup: KRİTİK 3'ten mükerrer ID(ler) elendi "
                   f"{dropped}, ayrık adaylarla dolduruldu → {top3_ids}")
+        if recent_k3:
+            xday_dropped = [aid for aid in before
+                            if aid not in top3_ids
+                            and any(_dedup.same_event(view_fn(aid), ev, cross_day=True)
+                                    for ev in recent_k3)]
+            if xday_dropped:
+                print(f"   📅 Çapraz-gün KRİTİK 3 dedup: son {KRITIK3_HISTORY_DAYS} "
+                      f"günde manşet olan olay(lar) elendi {xday_dropped}")
         if summit_top3 and any(sid in top3_ids for sid in summit_top3):
             print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi: "
                   f"{[s for s in summit_top3 if s in top3_ids]}")
@@ -2880,7 +2970,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     if aid not in ordered_pool:
                         ordered_pool.append(aid)
                 top3_ids = _dedup.pick_distinct(
-                    ordered_pool, self._dedup_view_fn(content_by_id, articles_by_id), n=3)
+                    ordered_pool, self._dedup_view_fn(content_by_id, articles_by_id), n=3,
+                    exclude_views=self._load_recent_kritik3_views())
                 if len(top3_ids) < 3:
                     print(f"   ⚠️  Pass 5 sonrası top3 {len(top3_ids)}'e düştü, "
                           f"tamamlanacak ayrık haber bulunamadı")
@@ -3067,6 +3158,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         print("✅ docs/index.html")
         print(f"✅ docs/raporlar/{now.strftime('%Y-%m-%d')}.html")
 
+        # Çapraz-gün dedup referansı: bugünkü KRİTİK 3'ü parmak-izi deposuna yaz.
+        self._save_kritik3_history(top3_ids, content_by_id, articles_by_id)
         self.save_summary_to_archive(html)
         self._cleanup_old_reports()
         return html
@@ -3397,6 +3490,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         print("✅ docs/index.html (legacy)")
         print(f"✅ docs/raporlar/{now.strftime('%Y-%m-%d')}.html (legacy)")
+        # Çapraz-gün dedup referansı: bugünkü KRİTİK 3'ü parmak-izi deposuna yaz.
+        self._save_kritik3_history(top3_ids, content_by_id, id_to_article)
         self.save_summary_to_archive(html)
         self._cleanup_old_reports()
         return html
