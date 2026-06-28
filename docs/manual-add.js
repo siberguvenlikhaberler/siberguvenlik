@@ -65,10 +65,6 @@
     "@keyframes ma-pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.6);}",
     "50%{box-shadow:0 0 0 7px rgba(245,158,11,0);}}",
     "@media (prefers-reduced-motion:reduce){.ma-tab-report{animation:none!important;}}",
-    // Sayfadaki haber sayısını gösteren küçük rozet.
-    ".ma-tab-badge{display:inline-block;min-width:18px;padding:0 5px;margin-left:6px;",
-    "border-radius:9px;background:rgba(255,255,255,.9);color:#b45309;font-size:11px;",
-    "font-weight:800;line-height:18px;vertical-align:middle;}",
     ".ma-source-block{display:none;}",
     ".ma-source-block.active{display:block;}",
     ".ma-actions{padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;}",
@@ -202,8 +198,7 @@
           '<label class="fld">Yerine ne eklensin?</label>' +
           '<div class="ma-tabs">' +
             '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber ekle</button>' +
-            '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç" +
-              (hasOthers ? '<span class="ma-tab-badge">' + others.length + "</span>" : "") + "</button>" +
+            '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç</button>" +
           "</div>" +
           '<div class="ma-source-block" id="ma-src-url">' +
             '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
