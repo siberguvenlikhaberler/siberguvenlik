@@ -30,6 +30,9 @@ from src.http_utils import requests_get_with_retry as _requests_get_with_retry
 # OpenRouter (Gemini 3 Flash) — PASİF altyapı. Yalnızca is_openrouter_active()
 # True iken devreye girer; aksi halde tüm LLM çağrıları Gemini üzerinden gider.
 from src import llm_client as _llm
+# Aynı-olay (same-event) dedup — KRİTİK 3 içinde ve rapor genelinde mükerrer
+# haberleri DETERMİNİSTİK (LLM'den bağımsız) olarak engeller. Bkz. src/dedup.py.
+from src import dedup as _dedup
 
 
 # ===== YARDIMCI FONKSİYONLAR =====
@@ -2341,6 +2344,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             a.get('title', ''), ' '.join((a.get('full_text', '') or '').split()[:120]),
         ))
 
+    @staticmethod
+    def _dedup_view(art_id, content_by_id, articles_by_id):
+        """src.dedup.same_event için bir haber 'görünümü' (tr_title/paragraph/
+        title/full_text) kurar. LLM içeriği + ham metni birleştirir."""
+        c = content_by_id.get(art_id, {})
+        a = articles_by_id.get(art_id, {})
+        return {
+            'tr_title':  c.get('tr_title', ''),
+            'paragraph': c.get('paragraph', ''),
+            'title':     a.get('title', ''),
+            'full_text': a.get('full_text', ''),
+        }
+
+    def _dedup_view_fn(self, content_by_id, articles_by_id):
+        """pick_distinct / drop_duplicates_against için id→view fonksiyonu üretir."""
+        return lambda aid: self._dedup_view(aid, content_by_id, articles_by_id)
+
     def _select_top3(self, non_vuln_ids, content_by_id, articles_by_id,
                      summit_ids, pool_ids, label):
         """Pass 4 top3 seçimi — TEK kaynak (hem ana hem legacy yol kullanır).
@@ -2405,22 +2425,29 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 guarded.append(aid)  # daha iyi aday yok, koru
         top3_ids = guarded
 
-        # <3 ise non_vuln başından tamamla
-        if len(top3_ids) < 3:
-            existing = set(top3_ids)
-            for aid in non_vuln_ids:
-                if aid not in existing:
-                    top3_ids.append(aid)
-                    existing.add(aid)
-                if len(top3_ids) == 3:
-                    break
-
-        # NATO zirve haberini 1. sıraya sabitle
+        # ── AYNI-OLAY DEDUP + 3'E TAMAMLAMA — KRİTİK 3 GARANTİSİ ──────────
+        # Öncelik sırası: (1) NATO zirve haberi, (2) LLM/guard'ın seçtiği top3,
+        # (3) kalan tüm non_vuln adaylar (yedek). pick_distinct bu sıradan
+        # ÇİFTLER-ARASI AYNI-OLAY OLMAYAN ilk 3'ü seçer; bir aday daha önce
+        # seçilenle aynı olayı anlatıyorsa ATLANIR ve yerine sıradaki ayrık
+        # aday gelir. Böylece KRİTİK 3 içinde mükerrer haber İMKÂNSIZDIR.
         summit_top3 = [sid for sid in summit_ids if sid in set(pool_ids)]
-        if summit_top3 and not all(sid in top3_ids for sid in summit_top3):
-            top3_ids = (summit_top3
-                        + [i for i in top3_ids if i not in set(summit_top3)])[:3]
-            print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi: {summit_top3}")
+        ordered_pool = []
+        for aid in summit_top3 + list(top3_ids) + list(non_vuln_ids):
+            if aid not in ordered_pool:
+                ordered_pool.append(aid)
+
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+        before = list(top3_ids)
+        top3_ids = _dedup.pick_distinct(ordered_pool, view_fn, n=3)
+
+        dropped = [aid for aid in before if aid not in top3_ids]
+        if dropped:
+            print(f"   🔁 Aynı-olay dedup: KRİTİK 3'ten mükerrer ID(ler) elendi "
+                  f"{dropped}, ayrık adaylarla dolduruldu → {top3_ids}")
+        if summit_top3 and any(sid in top3_ids for sid in summit_top3):
+            print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi: "
+                  f"{[s for s in summit_top3 if s in top3_ids]}")
 
         return top3_ids[:3]
 
@@ -2842,21 +2869,21 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             top10_ids     = [i for i in top10_ids     if i not in p5_remove]
             remaining_ids = [i for i in remaining_ids if i not in p5_remove]
             top3_ids      = [i for i in top3_ids      if i not in p5_remove]
-            # Pass 5 top3'ten haber çıkardıysa 3'e tamamla (non_vuln + kalan tüm
-            # haberler havuzundan, p5_remove ve mevcut top3 dışındakilerden).
+            # Pass 5 top3'ten haber çıkardıysa 3'e tamamla. Tamamlama da AYNI-OLAY
+            # dedup'tan geçer (pick_distinct) — KRİTİK 3 garantisi backfill'de de
+            # korunur; mevcut top3 ile mükerrer aday asla eklenmez.
             if len(top3_ids) < 3:
                 remaining_pool = ([i for i in non_vuln_ids_p4 if i not in p5_remove]
                                   + [i for i in all_ids_p4 if i not in p5_remove])
-                existing_t3 = set(top3_ids)
-                for aid in remaining_pool:
-                    if aid not in existing_t3:
-                        top3_ids.append(aid)
-                        existing_t3.add(aid)
-                    if len(top3_ids) == 3:
-                        break
+                ordered_pool = []
+                for aid in list(top3_ids) + remaining_pool:
+                    if aid not in ordered_pool:
+                        ordered_pool.append(aid)
+                top3_ids = _dedup.pick_distinct(
+                    ordered_pool, self._dedup_view_fn(content_by_id, articles_by_id), n=3)
                 if len(top3_ids) < 3:
                     print(f"   ⚠️  Pass 5 sonrası top3 {len(top3_ids)}'e düştü, "
-                          f"tamamlanacak haber bulunamadı")
+                          f"tamamlanacak ayrık haber bulunamadı")
 
         if p5_regenerate:
             print(f"   🔄 Yeniden üretilen (İngilizce içerik): {p5_regenerate}")
@@ -2906,6 +2933,25 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         print(f"   🌐 Çeviriyle kurtarıldı: ID={rid}")
                     else:
                         print(f"   ⚠️  ID={rid} Türkçeleştirilemedi (içerik filtresi olası).")
+
+        # ── RAPOR GENELİ AYNI-OLAY DEDUP (gövde ↔ KRİTİK 3 + gövde içi) ──
+        # KRİTİK 3'e alınan bir olay, gövdede (Önemli Gelişmeler / paragraflar /
+        # Yönetici Özeti tablosu) İKİNCİ KEZ görünmemeli; ayrıca gövde içindeki
+        # iki haber aynı olayı anlatmamalı. _build_html zaten top3 ID'lerini
+        # gövdeden çıkarır ama AYNI olayın FARKLI ID'li kopyasını yakalamaz —
+        # bu yüzden deterministik same_event ile burada eleriz.
+        if top3_ids:
+            view_fn_body = self._dedup_view_fn(content_by_id, articles_by_id)
+            kept_body = _dedup.drop_duplicates_against(
+                list(top10_ids) + list(remaining_ids), list(top3_ids), view_fn_body)
+            kept_set = set(kept_body) | set(top3_ids)
+            dropped_body = [aid for aid in (list(top10_ids) + list(remaining_ids))
+                            if aid not in kept_set]
+            if dropped_body:
+                print(f"   🔁 Gövde aynı-olay dedup: KRİTİK 3/gövde mükerreri elendi "
+                      f"{dropped_body}")
+                top10_ids     = [i for i in top10_ids     if i in kept_set]
+                remaining_ids = [i for i in remaining_ids if i in kept_set]
 
         # ── AZ-HABER GUARD ───────────────────────────────────────────────
         # Çok az haber olan günlerde (ör. hafta sonu kıtlığı + dedup) tüm
@@ -3311,6 +3357,19 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         )
 
         print(f"   Seçilen Top 3 ID: {top3_ids}")
+
+        # Rapor geneli aynı-olay dedup (gövde ↔ KRİTİK 3 + gövde içi) — ana yolla aynı.
+        if top3_ids:
+            view_fn_body = self._dedup_view_fn(content_by_id, id_to_article)
+            kept_body = _dedup.drop_duplicates_against(
+                list(top10_ids) + list(remaining_ids), list(top3_ids), view_fn_body)
+            kept_set = set(kept_body) | set(top3_ids)
+            dropped_body = [aid for aid in (list(top10_ids) + list(remaining_ids))
+                            if aid not in kept_set]
+            if dropped_body:
+                print(f"   🔁 Gövde aynı-olay dedup (legacy): mükerrer elendi {dropped_body}")
+                top10_ids     = [i for i in top10_ids     if i in kept_set]
+                remaining_ids = [i for i in remaining_ids if i in kept_set]
 
         # HTML oluştur
         html = self._build_html(

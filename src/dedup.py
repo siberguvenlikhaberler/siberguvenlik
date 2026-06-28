@@ -1,0 +1,244 @@
+"""
+Aynı-olay (same-event) tespiti — KRİTİK 3 ve rapor genelinde mükerrer haberleri
+DETERMİNİSTİK (LLM'den bağımsız) olarak engellemek için.
+
+NEDEN AYRI BİR MODÜL:
+main._filter_duplicates yalnızca HAM İngilizce başlık üzerinde çalışır
+(SequenceMatcher / keyword-Jaccard / kod adı). Aynı olayı farklı sözcüklerle
+anlatan iki kaynak haberini (ör. "Signal Recovery Keys" vs "Fake Support Texts")
+eşik altında kaldığı için KAÇIRIR; bu haberler hem dedup'ı geçer hem de LLM
+(Pass 1 eleme / Pass 4 top3) onları gözden kaçırırsa KRİTİK 3'e iki kez girebilir.
+
+Bu modül, LLM üretimi ZENGİN Türkçe içerik (tr_title + paragraf) + ham metin
+üzerinde, sözcük örtüşmesinden bağımsız güçlü sinyallerle çalışır:
+  1) Ortak ayırt edici kampanya/kod adı (FortiBleed, SharkLoader...).
+  2) Ortak yapısal tehdit-aktörü/CVE tanımlayıcısı (UNC5792, APT29, CVE-2026-1234)
+     + konu örtüşmesi. (Aynı aktörün FARKLI saldırısını yanlışlıkla birleştirmemek
+     için tek başına aktör örtüşmesi yetmez; konu da örtüşmeli.)
+  3) Yüksek içerik (keyword-Jaccard) örtüşmesi.
+  4) Türkçe başlık benzerliği (SequenceMatcher).
+
+Hiçbiri ham veriye/LLM'e güvenmez; saf string işidir, kolayca test edilir.
+"""
+import re
+from difflib import SequenceMatcher
+
+# Yaygın vendor/ürün adları — tek başına "aynı olay" sinyali DEĞİLDİR; kod adı
+# sayılmaz. (main.config._CODENAME_DENYLIST ile aynı liste; tek kaynak burada.)
+CODENAME_DENYLIST = {
+    'fortigate', 'fortinet', 'fortios', 'fortisandbox', 'fortiweb', 'fortimanager',
+    'windows', 'microsoft', 'macos', 'ipados', 'iphone', 'iphones', 'ipad', 'ipads',
+    'github', 'gitlab', 'linkedin', 'whatsapp', 'youtube', 'facebook', 'instagram',
+    'openai', 'chatgpt', 'powershell', 'javascript', 'typescript', 'nodejs',
+    'wordpress', 'bleepingcomputer', 'crowdstrike', 'virustotal', 'cloudflare',
+    'paypal', 'mongodb', 'postgresql', 'mysql', 'kubernetes', 'dropbox', 'onedrive',
+    'sharepoint', 'teamviewer', 'anydesk', 'lastpass', 'bitlocker', 'sentinelone',
+    'sonicwall', 'paloalto', 'checkpoint', 'proofpoint', 'mimecast', 'manageengine',
+    'autogen', 'deepseek', 'blackberry', 'quickbooks', 'salesforce', 'servicenow',
+    'pytorch', 'tensorflow', 'macbook', 'airpods', 'playstation',
+    # TR/sık geçen ek gürültü
+    'cobalt', 'anyconnect', 'cloudstrike', 'androidos',
+}
+
+
+def extract_codenames(text):
+    """Metinden ayırt edici kampanya/operasyon/zararlı kod adlarını çıkarır.
+
+    Heuristik: küçük→büyük harf geçişi içeren (CamelCase) ve uzunluğu ≥5 olan
+    token'lar (FortiBleed, SharkLoader, StrikeShark...). Yaygın vendor/ürün
+    adları (CODENAME_DENYLIST) hariç. Bunlar nadir ve olaya özgüdür."""
+    out = set()
+    for w in re.findall(r'[A-Za-z][A-Za-z0-9]+', text or ''):
+        if len(w) >= 5 and re.search(r'[a-z][A-Z]', w) and w.lower() not in CODENAME_DENYLIST:
+            out.add(w.lower())
+    return out
+
+
+# Yapısal tehdit-aktörü / zafiyet tanımlayıcıları — bir olayın çok güçlü
+# "parmak izi"dir. Aynı tanımlayıcı iki haberde de geçiyorsa büyük olasılıkla
+# aynı kampanya/zafiyettir (konu örtüşmesiyle birlikte değerlendirilir).
+_ACTOR_ID_RE = re.compile(
+    r'\b(?:'
+    r'UNC\d{3,5}'            # Mandiant uncategorized (UNC5792)
+    r'|UAC-\d{3,4}'          # CERT-UA (UAC-0185)
+    r'|APT[\s-]?\d{1,3}'     # APT29, APT 41
+    r'|TA\d{3,4}'            # Proofpoint (TA505)
+    r'|FIN\d{1,2}'           # FIN7
+    r'|CVE-\d{4}-\d{4,7}'    # zafiyet
+    r'|GHSA-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}'  # GitHub advisory
+    r')\b',
+    re.IGNORECASE,
+)
+
+# Adlandırılmış aktör/operasyon takma adları (regex'e uymayanlar). Substring
+# olarak aranır; düşük kelimeli ortak adlar bilinçli olarak listelenmemiştir.
+_NAMED_ACTORS = (
+    'star blizzard', 'sandworm', 'lazarus', 'fancy bear', 'cozy bear',
+    'midnight blizzard', 'cozy', 'turla', 'kimsuky', 'andariel', 'kontti',
+    'salt typhoon', 'volt typhoon', 'flax typhoon', 'silk typhoon',
+    'lockbit', 'blackcat', 'alphv', 'cl0p', 'clop', 'scattered spider',
+    'shinyhunters', 'fin7', 'wizard spider', 'gamaredon', 'mustang panda',
+    'charming kitten', 'apt28', 'apt29', 'apt40', 'apt41',
+)
+
+
+def extract_actors(text):
+    """Metindeki tüm yapısal + adlandırılmış tehdit-aktörü/zafiyet kimliklerini
+    normalize edilmiş bir kümeye çıkarır (boşluk/tire silinir, küçük harf)."""
+    blob = (text or '').lower()
+    out = set()
+    for m in _ACTOR_ID_RE.findall(blob):
+        out.add(re.sub(r'[\s-]', '', m.lower()))
+    for name in _NAMED_ACTORS:
+        if name in blob:
+            out.add(name.replace(' ', ''))
+    return out
+
+
+# Konu örtüşmesi (keyword-Jaccard) için elenecek sık sözcükler (TR + EN).
+_STOPWORDS = {
+    # TR
+    've', 'ile', 'bir', 'bu', 'şu', 'için', 'olan', 'olarak', 'gibi', 'daha',
+    'çok', 'ancak', 'ası', 'göre', 'kadar', 'sonra', 'önce', 'her', 'tüm',
+    'veya', 'ya', 'de', 'da', 'ki', 'ise', 'hem', 'ne', 'en', 'ait', 'üzere',
+    'tarafından', 'arasında', 'içinde', 'üzerinde', 'yönelik', 'karşı',
+    'edilmiştir', 'edildiği', 'olduğu', 'olduğunu', 'belirtilmektedir',
+    'bildirilmektedir', 'yapılmıştır', 'etmiştir', 'etmektedir', 'açıklamıştır',
+    'duyurmuştur', 'tespit', 'söz', 'konusu', 'ayrıca', 'ilgili', 'amacıyla',
+    # EN
+    'the', 'and', 'of', 'to', 'in', 'a', 'an', 'is', 'are', 'for', 'on', 'by',
+    'with', 'as', 'at', 'from', 'that', 'this', 'it', 'its', 'has', 'have',
+    'was', 'were', 'be', 'been', 'or', 'into', 'their', 'they', 'which', 'said',
+    'new', 'also', 'using', 'used', 'use', 'after', 'over', 'than', 'who',
+}
+
+
+def event_keywords(text):
+    """Metni konu-örtüşmesi karşılaştırması için sadeleştirilmiş bir köke-indirgenmiş
+    anahtar-kelime kümesine çevirir: küçük harf, noktalama atılır, stop-word ve
+    kısa (<4) token'lar elenir, her token ilk 5 karaktere köklenir."""
+    blob = (text or '').lower()
+    # CVE/aktör kimlikleri konu örtüşmesinde gürültü yapmasın (ayrı sinyal)
+    blob = _ACTOR_ID_RE.sub(' ', blob)
+    tokens = re.findall(r'[0-9a-zçğıöşü]+', blob, re.IGNORECASE)
+    out = set()
+    for t in tokens:
+        if len(t) < 4 or t in _STOPWORDS:
+            continue
+        out.add(t[:5])
+    return out
+
+
+def _jaccard(a, b):
+    if not a or not b:
+        return 0.0
+    return len(a & b) / len(a | b)
+
+
+# ── Eşikler (bugünkü gerçek veriyle doğrulandı; bkz. tests/test_dedup.py) ──
+_TOPIC_WITH_ACTOR = 0.10   # ortak aktör/CVE varsa düşük konu örtüşmesi yeter
+_TOPIC_ALONE      = 0.42   # tek başına yüksek konu örtüşmesi
+_TRTITLE_RATIO    = 0.62   # Türkçe başlık benzerliği
+
+
+def _bundle(view):
+    """Bir haber 'görünümü'nü (tr_title/paragraph/title/full_text) metin
+    bileşenlerine ayırır. Eksik alanlar boş string olur."""
+    tr_title  = (view.get('tr_title') or '').strip()
+    paragraph = (view.get('paragraph') or '').strip()
+    en_title  = (view.get('title') or '').strip()
+    full_text = (view.get('full_text') or '')[:2000]
+    head_title = tr_title or en_title
+    return head_title, paragraph, en_title, full_text
+
+
+def same_event(view_a, view_b, explain=False):
+    """İki haber aynı olayı/kampanyayı/zafiyeti mi anlatıyor? (deterministik)
+
+    view_*: {'tr_title','paragraph','title','full_text'} (eksik alanlar boş kabul).
+    explain=True ise (bool, gerekçe) döner; aksi halde yalnızca bool.
+    """
+    ha, pa, ea, fa = _bundle(view_a)
+    hb, pb, eb, fb = _bundle(view_b)
+    blob_a = ' '.join((ha, pa, ea, fa))
+    blob_b = ' '.join((hb, pb, eb, fb))
+
+    def _ret(val, why=''):
+        return (val, why) if explain else val
+
+    # 1) Ortak ayırt edici kod adı (başlık + TR başlık)
+    ca = extract_codenames(ha + ' ' + ea)
+    cb = extract_codenames(hb + ' ' + eb)
+    shared_cn = ca & cb
+    if shared_cn:
+        return _ret(True, 'codename:' + ','.join(sorted(shared_cn)))
+
+    # Konu örtüşmesi: paragraf VEYA (başlık+ham metin) üzerinden en yükseği
+    topic = max(
+        _jaccard(event_keywords(pa), event_keywords(pb)),
+        _jaccard(event_keywords(blob_a), event_keywords(blob_b)),
+    )
+
+    # 2) Ortak yapısal/adlandırılmış aktör veya CVE + konu örtüşmesi
+    actors_a, actors_b = extract_actors(blob_a), extract_actors(blob_b)
+    shared_actors = actors_a & actors_b
+    if shared_actors and topic >= _TOPIC_WITH_ACTOR:
+        return _ret(True, f'actor:{",".join(sorted(shared_actors))}+topic={topic:.2f}')
+
+    # 2b) Her iki haberde de yapısal kimlik (CVE/aktör) var ama ORTAK YOK →
+    #     farklı olay. (Farklı CVE = farklı zafiyet; main._keyword_jaccard ile
+    #     aynı felsefe.) Bu, "CVE-2026-XXXX Açığı" gibi kalıp başlıkların
+    #     SequenceMatcher'da yanlışlıkla eşleşmesini (rule 4) engeller.
+    if actors_a and actors_b and not shared_actors:
+        return _ret(False, '')
+
+    # 3) Yüksek içerik örtüşmesi tek başına
+    if topic >= _TOPIC_ALONE:
+        return _ret(True, f'topic={topic:.2f}')
+
+    # 4) Türkçe başlık benzerliği
+    if ha and hb:
+        ratio = SequenceMatcher(None, ha.lower(), hb.lower()).ratio()
+        if ratio >= _TRTITLE_RATIO:
+            return _ret(True, f'trtitle={ratio:.2f}')
+
+    return _ret(False, '')
+
+
+def pick_distinct(ordered_ids, get_view, n=3):
+    """Sıralı aday listesinden, çiftler-arası AYNI-OLAY OLMAYAN en fazla n haber
+    seçer (sıra korunur). KRİTİK 3 garantisinin çekirdeği.
+
+    ordered_ids: öncelik sırasına dizili haber ID'leri (en iyi başta).
+    get_view:    id -> {'tr_title','paragraph','title','full_text'} fonksiyonu.
+    Döndürür: seçilen ID listesi (≤ n).
+    """
+    picked = []
+    for aid in ordered_ids:
+        if aid in picked:
+            continue
+        view = get_view(aid)
+        if any(same_event(view, get_view(p)) for p in picked):
+            continue
+        picked.append(aid)
+        if len(picked) >= n:
+            break
+    return picked
+
+
+def drop_duplicates_against(candidate_ids, reference_ids, get_view):
+    """reference_ids'teki herhangi bir haberle aynı-olay olan adayları (ve aday
+    listesi içindeki kendi mükerrerlerini) eler. Sıra korunur.
+
+    Gövde haberlerini KRİTİK 3 ile (ve birbirleriyle) tekilleştirmek için."""
+    kept = []
+    for aid in candidate_ids:
+        if aid in kept or aid in reference_ids:
+            continue
+        view = get_view(aid)
+        if any(same_event(view, get_view(r)) for r in reference_ids):
+            continue
+        if any(same_event(view, get_view(k)) for k in kept):
+            continue
+        kept.append(aid)
+    return kept
