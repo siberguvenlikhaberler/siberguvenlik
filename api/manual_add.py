@@ -40,7 +40,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import requests
 from bs4 import BeautifulSoup
 
-from src.config import HEADERS, get_deep_analysis_prompt
+from src.config import HEADERS, get_deep_analysis_prompt, get_executive_summary_prompt
 from src import llm_client
 from src.http_utils import requests_get_with_retry
 
@@ -336,6 +336,119 @@ def report_date_from_html(html):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Yönetici Özeti senkronizasyonu
+#
+# Sorun: bir kritik kart takas edildiğinde (URL ile yeni haber VEYA rapordan
+# taşıma) #yonetici-ozeti-block içindeki özet paragrafı dokunulmadan kaldığı
+# için çıkarılan habere değinmeye devam eder, yeni haberden hiç söz etmez.
+#
+# Çözüm: takas HTML'e uygulandıktan SONRA, güncel sayfadan main.py:Pass6 ile
+# AYNI kaynak kümesini (3 kritik kart + belge sırasındaki ilk 6 normal haber)
+# toplayıp get_executive_summary_prompt ile paragrafı bütün olarak yeniden üret;
+# yalnızca .exec-brief-paragraph içeriğini değiştir. LLM başarısız olursa
+# main.py'deki deterministik başlık-tabanlı yedeğin aynısıyla doldur — böylece
+# bayat/yanlış metin asla kalmaz.
+# ─────────────────────────────────────────────────────────────────────────────
+_EXEC_BRIEF_PARA_RE = re.compile(
+    r'(<p class="exec-brief-paragraph">).*?(</p>)', re.DOTALL
+)
+
+
+def _collect_exec_sources(html):
+    """Güncel HTML'den özet kaynak kümesini (en fazla 9 kalem) çıkarır.
+
+    main.py:Pass6 mantığı: 3 kritik kart (top3) + belge sırasındaki ilk 6 normal
+    haber (.news-item). Her kalem (tr_title, snippet) olarak döner.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    items = []
+
+    for card in soup.select(".top3-card"):
+        title_el = card.find(class_="top3-card-title")
+        para_el = card.find(class_="top3-card-paragraph")
+        tr_title = title_el.get_text(" ", strip=True) if title_el else ""
+        paragraph = para_el.get_text(" ", strip=True) if para_el else ""
+        if tr_title:
+            items.append((tr_title, paragraph))
+
+    regular = 0
+    for ni in soup.select(".news-item"):
+        if regular >= 6:
+            break
+        title_el = ni.find(class_="news-title")
+        para_el = ni.find(class_="news-content")
+        tr_title = title_el.get_text(" ", strip=True) if title_el else ""
+        paragraph = para_el.get_text(" ", strip=True) if para_el else ""
+        if tr_title:
+            items.append((tr_title, paragraph))
+            regular += 1
+
+    return items
+
+
+def _deterministic_exec_summary(items):
+    """LLM başarısızsa main.py:Pass6 yedeğinin aynısı — başlıklardan tek paragraf."""
+    titles = [t.strip().rstrip(".") for t, _ in items if t and t.strip()]
+    if not titles:
+        return ""
+    lead = ("Son 48 saatin siber güvenlik gündeminde öne çıkan "
+            "başlıca gelişmeler şunlardır: ")
+    return lead + "; ".join(titles[:8]) + "."
+
+
+def regenerate_exec_summary(html):
+    """Güncel HTML'e göre Yönetici Özeti paragrafını yeniden üretir.
+
+    .exec-brief-paragraph içeriği yeni özetle değiştirilmiş HTML döner. Özet
+    bloğu yoksa veya kaynak çıkmıyorsa HTML değiştirilmeden döner (best-effort).
+    """
+    if not _EXEC_BRIEF_PARA_RE.search(html):
+        return html  # Bu raporda Yönetici Özeti kutusu yok → dokunma.
+
+    items = _collect_exec_sources(html)
+    if not items:
+        return html
+
+    es_lines = []
+    for i, (tr_title, paragraph) in enumerate(items, 1):
+        snippet = " ".join(paragraph.split()[:90])
+        es_lines.append(
+            f"=== HABER {i} ===\n"
+            f"Başlık: {tr_title}\n"
+            f"Özet: {snippet}\n"
+        )
+
+    # main.py:Pass6 ile aynı: tek geçici hatada özet kaybolmasın diye 3 deneme.
+    exec_summary = ""
+    if os.getenv("OPENROUTER_API_KEY", ""):
+        for attempt in range(3):
+            try:
+                data = llm_client.generate_json(
+                    get_executive_summary_prompt("\n".join(es_lines)),
+                    max_output_tokens=1024,
+                    label=f"ManuelEkle-YoneticiOzeti(d{attempt + 1})",
+                )
+            except Exception:
+                data = None
+            if data and isinstance(data.get("ozet"), str) and data["ozet"].strip():
+                exec_summary = data["ozet"].strip()
+                break
+
+    # Deterministik yedek — LLM yok/başarısız olsa bile bayat metin kalmaz.
+    if not exec_summary:
+        exec_summary = _deterministic_exec_summary(items)
+    if not exec_summary:
+        return html
+
+    # HTML kaçışı: özet metni HTML gövdesine düz metin olarak girer; <, &
+    # karakterleri kaçırılmazsa sayfayı bozabilir.
+    safe = exec_summary.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return _EXEC_BRIEF_PARA_RE.sub(
+        lambda m: m.group(1) + safe + m.group(2), html, count=1
+    )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # GitHub Contents API yardımcıları
 # ─────────────────────────────────────────────────────────────────────────────
 def _gh_headers(token):
@@ -486,6 +599,8 @@ def process_report(payload, remove_index, token):
     try:
         new_index = replace_top3_card(index_html, remove_index, card_html)
         new_index = remove_news_item(new_index, news_id)
+        # Takas sonrası Yönetici Özeti'ni güncel kart kümesine göre yeniden üret.
+        new_index = regenerate_exec_summary(new_index)
     except Exception as e:
         return 500, {"error": f"index.html güncellenemedi: {str(e)[:160]}"}
 
@@ -494,6 +609,7 @@ def process_report(payload, remove_index, token):
         new_archive = remove_news_item(
             replace_top3_card(archive_html, remove_index, card_html), news_id
         )
+        new_archive = regenerate_exec_summary(new_archive)
     except Exception:
         # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
         new_archive = None
@@ -551,6 +667,8 @@ def process_url(payload, remove_index, token):
     card_html = build_card_html(tr_title, paragraph, url, domain, report_date)
     try:
         new_index = replace_top3_card(index_html, remove_index, card_html)
+        # Takas sonrası Yönetici Özeti'ni güncel kart kümesine göre yeniden üret.
+        new_index = regenerate_exec_summary(new_index)
     except Exception as e:
         return 500, {"error": f"index.html kart değişimi başarısız: {str(e)[:160]}"}
 
@@ -558,6 +676,7 @@ def process_url(payload, remove_index, token):
     try:
         archive_html, archive_sha = gh_get_file(archive_path, token)
         new_archive = replace_top3_card(archive_html, remove_index, card_html)
+        new_archive = regenerate_exec_summary(new_archive)
     except Exception:
         # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
         new_archive = None
