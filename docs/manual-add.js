@@ -51,11 +51,15 @@
     ".ma-hint{font-size:12px;color:#64748b;margin:4px 0 0;}",
     // Kaynak seçici sekmeleri
     ".ma-tabs{display:flex;gap:8px;margin:6px 0 0;}",
-    ".ma-tab{flex:1;text-align:center;padding:9px 8px;border:1px solid #cbd5e1;border-radius:8px;",
-    "font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#475569;}",
-    ".ma-tab:hover{background:#f1f5f9;}",
-    ".ma-tab.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;}",
+    // Pasif sekmeler artık arka planla aynı DEĞİL: dolgulu zemin + belirgin kenarlık.
+    ".ma-tab{flex:1;text-align:center;padding:9px 8px;border:1.5px solid #94a3b8;border-radius:8px;",
+    "font-size:13px;font-weight:600;cursor:pointer;background:#e8edf5;color:#334155;transition:all .15s;}",
+    ".ma-tab:hover{background:#dbe3ef;}",
+    ".ma-tab.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;box-shadow:0 2px 6px rgba(29,78,216,.3);}",
     ".ma-tab:disabled{opacity:.5;cursor:not-allowed;}",
+    // "Diğer Haberlerden Seç" sekmesi pasifken indigo vurgusuyla dikkat çeker.
+    ".ma-tab-report:not(.active):not(:disabled){background:#eef2ff;border-color:#6366f1;color:#4338ca;font-weight:700;}",
+    ".ma-tab-report:not(.active):not(:disabled):hover{background:#e0e7ff;}",
     ".ma-source-block{display:none;}",
     ".ma-source-block.active{display:block;}",
     ".ma-actions{padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;}",
@@ -76,9 +80,11 @@
     "[data-theme='dark'] .ma-remove-list{border-color:#30363d;}",
     "[data-theme='dark'] .ma-remove-list .opt{border-bottom-color:#21262d;}",
     "[data-theme='dark'] .ma-remove-list .opt:hover{background:#21262d;}",
-    "[data-theme='dark'] .ma-tab{background:#161b22;color:#c9d1d9;border-color:#30363d;}",
-    "[data-theme='dark'] .ma-tab:hover{background:#21262d;}",
-    "[data-theme='dark'] .ma-tab.active{background:#388bfd;color:#fff;border-color:#388bfd;}",
+    "[data-theme='dark'] .ma-tab{background:#21262d;color:#c9d1d9;border-color:#484f58;}",
+    "[data-theme='dark'] .ma-tab:hover{background:#2d333b;}",
+    "[data-theme='dark'] .ma-tab.active{background:#388bfd;color:#fff;border-color:#388bfd;box-shadow:0 2px 6px rgba(56,139,253,.35);}",
+    "[data-theme='dark'] .ma-tab-report:not(.active):not(:disabled){background:#1e2230;border-color:#6366f1;color:#a5b4fc;}",
+    "[data-theme='dark'] .ma-tab-report:not(.active):not(:disabled):hover{background:#262b3d;}",
     "[data-theme='dark'] .ma-actions{border-top-color:#30363d;}",
     "[data-theme='dark'] .ma-btn.cancel{background:#161b22;color:#c9d1d9;border-color:#30363d;}"
   ].join("");
@@ -182,12 +188,12 @@
         '<div class="ma-body">' +
           '<label class="fld" for="ma-pass">Şifre</label>' +
           '<input type="password" id="ma-pass" autocomplete="off" placeholder="••••••••">' +
-          '<label class="fld">Çıkarılacak kritik haberi işaretleyin</label>' +
+          '<label class="fld">Çıkarılacak haberi işaretleyin</label>' +
           '<div class="ma-remove-list">' + optsHtml + "</div>" +
           '<label class="fld">Yerine ne eklensin?</label>' +
           '<div class="ma-tabs">' +
-            '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber</button>' +
-            '<button type="button" class="ma-tab" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Rapordan haber seç</button>" +
+            '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber ekle</button>' +
+            '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç</button>" +
           "</div>" +
           '<div class="ma-source-block" id="ma-src-url">' +
             '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
@@ -231,7 +237,7 @@
     var mode = currentMode();
 
     if (!pass) { showMsg("err", "Şifre giriniz."); return; }
-    if (!checked) { showMsg("err", "Çıkarılacak kritik haberi işaretleyiniz."); return; }
+    if (!checked) { showMsg("err", "Çıkarılacak haberi işaretleyiniz."); return; }
     if (!MANUAL_ADD_ENDPOINT) {
       showMsg("err", "Sunucu uç noktası yapılandırılmamış (manual-add.js → MANUAL_ADD_ENDPOINT).");
       return;
