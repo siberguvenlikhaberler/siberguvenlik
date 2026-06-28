@@ -57,9 +57,18 @@
     ".ma-tab:hover{background:#dbe3ef;}",
     ".ma-tab.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;box-shadow:0 2px 6px rgba(29,78,216,.3);}",
     ".ma-tab:disabled{opacity:.5;cursor:not-allowed;}",
-    // "Diğer Haberlerden Seç" sekmesi pasifken indigo vurgusuyla dikkat çeker.
-    ".ma-tab-report:not(.active):not(:disabled){background:#eef2ff;border-color:#6366f1;color:#4338ca;font-weight:700;}",
-    ".ma-tab-report:not(.active):not(:disabled):hover{background:#e0e7ff;}",
+    // "Diğer Haberlerden Seç" sekmesi pasifken amber dolgu + nabız parıltısıyla
+    // gözü ANINDA çeker; üzerine gelince/aktifken animasyon durur.
+    ".ma-tab-report:not(.active):not(:disabled){background:#f59e0b;border-color:#d97706;color:#fff;",
+    "font-weight:700;animation:ma-pulse 1.7s ease-in-out infinite;}",
+    ".ma-tab-report:not(.active):not(:disabled):hover{background:#d97706;animation:none;}",
+    "@keyframes ma-pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.6);}",
+    "50%{box-shadow:0 0 0 7px rgba(245,158,11,0);}}",
+    "@media (prefers-reduced-motion:reduce){.ma-tab-report{animation:none!important;}}",
+    // Sayfadaki haber sayısını gösteren küçük rozet.
+    ".ma-tab-badge{display:inline-block;min-width:18px;padding:0 5px;margin-left:6px;",
+    "border-radius:9px;background:rgba(255,255,255,.9);color:#b45309;font-size:11px;",
+    "font-weight:800;line-height:18px;vertical-align:middle;}",
     ".ma-source-block{display:none;}",
     ".ma-source-block.active{display:block;}",
     ".ma-actions{padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;}",
@@ -83,8 +92,8 @@
     "[data-theme='dark'] .ma-tab{background:#21262d;color:#c9d1d9;border-color:#484f58;}",
     "[data-theme='dark'] .ma-tab:hover{background:#2d333b;}",
     "[data-theme='dark'] .ma-tab.active{background:#388bfd;color:#fff;border-color:#388bfd;box-shadow:0 2px 6px rgba(56,139,253,.35);}",
-    "[data-theme='dark'] .ma-tab-report:not(.active):not(:disabled){background:#1e2230;border-color:#6366f1;color:#a5b4fc;}",
-    "[data-theme='dark'] .ma-tab-report:not(.active):not(:disabled):hover{background:#262b3d;}",
+    "[data-theme='dark'] .ma-tab-report:not(.active):not(:disabled){background:#d97706;border-color:#f59e0b;color:#fff;}",
+    "[data-theme='dark'] .ma-tab-report:not(.active):not(:disabled):hover{background:#b45309;}",
     "[data-theme='dark'] .ma-actions{border-top-color:#30363d;}",
     "[data-theme='dark'] .ma-btn.cancel{background:#161b22;color:#c9d1d9;border-color:#30363d;}"
   ].join("");
@@ -193,7 +202,8 @@
           '<label class="fld">Yerine ne eklensin?</label>' +
           '<div class="ma-tabs">' +
             '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber ekle</button>' +
-            '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç</button>" +
+            '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç" +
+              (hasOthers ? '<span class="ma-tab-badge">' + others.length + "</span>" : "") + "</button>" +
           "</div>" +
           '<div class="ma-source-block" id="ma-src-url">' +
             '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
