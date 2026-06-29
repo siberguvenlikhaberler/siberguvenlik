@@ -697,8 +697,10 @@ class HaberSistemi:
         self.sources = NEWS_SOURCES
         self.selectors = CONTENT_SELECTORS
         self.rss_errors = []
+        self.dropped_log = []  # elenen haberler (dedup + tam-metin-yok) — denetim kaydı
         self.used_links_file = "data/haberler_linkler.txt"
         self.rss_errors_file = "data/rss_errors.txt"
+        self.dropped_log_file = "data/dedup_dropped.txt"
         self.social_data = []  # fetch_social_signals() sonuçları; topla() tarafından doldurulur
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -1980,6 +1982,49 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         print(f"⚠️  {len(self.rss_errors)} RSS hatası kaydedildi: {self.rss_errors_file}")
 
+    def _save_dropped_log(self):
+        """Elenen haberleri kaydet (7 günden eski olanları sil).
+
+        Amaç: dedup/tam-metin elemelerinin yalnızca SAYISI değil, HANGİ
+        başlıkların ve neye eşleşerek atıldığı denetlenebilsin — böylece
+        agresif tekilleştirmenin önemli haber atlayıp atlamadığı veriyle
+        görülebilir. _save_rss_errors ile aynı 7-gün budama mantığı; dosya
+        sabit boyutta kalır, sürekli büyümez.
+        """
+        if not self.dropped_log:
+            return
+
+        now = datetime.now()
+        cutoff = now - timedelta(days=7)
+
+        existing = []
+        if os.path.exists(self.dropped_log_file):
+            with open(self.dropped_log_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        date_str = line.split(' | ')[0]
+                        date = datetime.strptime(date_str, '%Y-%m-%d %H:%M')
+                        if date >= cutoff:
+                            existing.append(line)
+                    except Exception:
+                        pass
+
+        timestamp = now.strftime('%Y-%m-%d %H:%M')
+        for reason, title, matched in self.dropped_log:
+            # Sekme/yeni-satır temizle — tek satır = tek kayıt garantisi
+            title = ' '.join(str(title).split())
+            matched = ' '.join(str(matched).split())
+            existing.append(f"{timestamp} | {reason} | {title} | ↔ {matched}")
+
+        os.makedirs("data", exist_ok=True)
+        with open(self.dropped_log_file, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(existing) + '\n')
+
+        print(f"🗑️  {len(self.dropped_log)} elenen haber kaydedildi: {self.dropped_log_file}")
+
     def _filter_duplicates(self, all_news):
         """
         Tekrar eden haberleri filtrele (3 seviye: link + hash + benzerlik)
@@ -2008,6 +2053,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 if link_norm in used_links:
                     removed_count += 1
                     detail_removed['link'] += 1
+                    self.dropped_log.append(('URL', title, link_norm))
                     continue
 
                 # Seviye 2: Content hash kontrolü
@@ -2015,6 +2061,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 if content_hash in used_hashes:
                     removed_count += 1
                     detail_removed['hash'] += 1
+                    self.dropped_log.append(('hash', title, ''))
                     continue
 
                 # Seviye 3: Başlık benzerliği
@@ -2027,6 +2074,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         is_similar = True
                         removed_count += 1
                         detail_removed['similarity'] += 1
+                        self.dropped_log.append(
+                            (f'benzerlik({similarity:.2f})', title, used_title))
                         break
 
                 if is_similar:
@@ -2036,10 +2085,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 # Aynı olay farklı kaynaklardan farklı anlatımla geldiğinde
                 # Seviye 3'ün kaçırdığı durumları yakalar (örn. "Grupların" vs "Saldırganların").
                 for used_title in used_titles.values():
-                    if self._keyword_jaccard_similarity(title, used_title) >= 0.45:
+                    jac = self._keyword_jaccard_similarity(title, used_title)
+                    if jac >= 0.45:
                         is_similar = True
                         removed_count += 1
                         detail_removed['keyword'] += 1
+                        self.dropped_log.append(
+                            (f'anahtar-kelime({jac:.2f})', title, used_title))
                         break
 
                 if is_similar:
@@ -2054,6 +2106,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 if shared_codename:
                     removed_count += 1
                     detail_removed['codename'] += 1
+                    self.dropped_log.append(
+                        (f'kod-adı:{shared_codename}', title,
+                         run_codenames.get(shared_codename, '')))
                     continue
 
                 # Geçen haberi mevcut run içindeki karşılaştırma havuzuna ekle
@@ -2272,6 +2327,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 # Gemini içerik üretemez ve halüsinasyon yapar, bu yüzden kesinlikle dışla
                 if not art.get('success') or art.get('word_count', 0) == 0:
                     skipped_no_content += 1
+                    self.dropped_log.append(
+                        ('tam-metin-yok', art.get('title', ''), art.get('link', '')))
                     continue
                 num += 1
                 txt += f"[{num}] {src} - {art['title']}\n{'─' * 80}\n"
@@ -2306,6 +2363,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         print(f"✅ data/haberler_ham.txt (günlük - üzerine yazıldı)")
 
         self._save_used_links(all_articles)
+        self._save_dropped_log()
 
         return txt
 
