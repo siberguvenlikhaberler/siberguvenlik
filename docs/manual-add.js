@@ -116,7 +116,9 @@
     "[data-theme='dark'] .ma-progress-card{background:#161b22;color:#e6edf3;}",
     "[data-theme='dark'] .ma-spinner{border-color:#30363d;border-top-color:#388bfd;}",
     "[data-theme='dark'] .ma-progress-title{color:#79c0ff;}",
-    "[data-theme='dark'] .ma-progress-step{color:#c9d1d9;}"
+    "[data-theme='dark'] .ma-progress-step{color:#c9d1d9;}",
+    ".ma-progress-sub b{color:#b45309;}",
+    "[data-theme='dark'] .ma-progress-sub b{color:#fbbf24;}"
   ].join("");
 
   function injectStyles() {
@@ -159,6 +161,7 @@
   }
 
   function closeModal() {
+    stopProgress();  // varsa ilerleme zamanlayıcısını da durdur (sızıntı önle)
     var ov = document.getElementById("ma-overlay");
     if (ov) ov.parentNode.removeChild(ov);
   }
@@ -195,8 +198,9 @@
     if (_progressTimer) clearInterval(_progressTimer);
     _progressTimer = setInterval(function () {
       if (i < steps.length - 1) { i += 1; stepEl.textContent = steps[i]; }
-      // Son aşamaya gelindiyse orada kalınır; animasyon sürdüğü için sorun yok.
-    }, 2200);
+      // Son aşamaya gelindiyse orada kalınır; işlem 2-3 dk sürebildiğinden
+      // spinner + nokta animasyonu sürdükçe "donmuş" izlenimi oluşmaz.
+    }, 4500);
   }
   function stopProgress() {
     if (_progressTimer) { clearInterval(_progressTimer); _progressTimer = null; }
@@ -284,8 +288,8 @@
             '<span id="ma-progress-step">Hazırlanıyor</span>' +
             '<span class="ma-progress-dots"></span>' +
           "</div>" +
-          '<p class="ma-progress-sub">Lütfen bekleyin; bu işlem birkaç saniye sürebilir. ' +
-          'Bu pencereyi kapatmayın.</p>' +
+          '<p class="ma-progress-sub">Lütfen bekleyin; <b>bu işlem 2-3 dakika sürebilir.</b> ' +
+          'İşlem tamamlanınca bu pencere kendiliğinden kapanacaktır; lütfen kapatmayın.</p>' +
         "</div>" +
       "</div>";
 
@@ -350,15 +354,25 @@
     okBtn.disabled = true;
     startProgress(steps);
 
+    // FAILSAFE: işlem normalde 2-3 dk sürebilir; ama sunucu gerçekten takılırsa
+    // spinner sonsuza dönmesin. 5 dk sonra isteği iptal edip kullanıcıya net
+    // bilgi ver (değişiklik arka planda tamamlanmış olabilir → yenile/kontrol et).
+    var controller = (typeof AbortController !== "undefined") ? new AbortController() : null;
+    var failsafe = setTimeout(function () {
+      if (controller) controller.abort();
+    }, 300000);
+
     fetch(MANUAL_ADD_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      signal: controller ? controller.signal : undefined
     })
       .then(function (r) {
         return r.json().then(function (data) { return { status: r.status, data: data }; });
       })
       .then(function (res) {
+        clearTimeout(failsafe);
         stopProgress();
         if (res.status === 200 && res.data && res.data.ok) {
           applyCard(removeIndex, res.data.card_html);
@@ -379,9 +393,15 @@
         }
       })
       .catch(function (e) {
+        clearTimeout(failsafe);
         stopProgress();
         okBtn.disabled = false;
-        showMsg("err", "Sunucuya ulaşılamadı: " + e.message);
+        if (e && e.name === "AbortError") {
+          showMsg("err", "İşlem beklenenden uzun sürdü ve durduruldu. Değişiklik arka " +
+            "planda tamamlanmış OLABİLİR — bu pencereyi kapatıp sayfayı yenileyerek kontrol edin.");
+        } else {
+          showMsg("err", "Sunucuya ulaşılamadı: " + (e && e.message ? e.message : e));
+        }
       });
   }
 
