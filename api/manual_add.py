@@ -386,6 +386,23 @@ def _collect_exec_sources(html):
     return items
 
 
+def _summary_warning(mode):
+    """Yönetici Özeti LLM ile üretilemediyse kullanıcıya gösterilecek uyarı.
+
+    'llm'/'yok' durumunda uyarı yok (None). Aksi halde özet basit başlık-listesi
+    yedeğiyle dolduruldu demektir; kullanıcı bunu bilmeli ki Vercel ortam
+    değişkenini (OPENROUTER_API_KEY) düzeltebilsin.
+    """
+    if mode == "atlandi":
+        return ("Yönetici Özeti akıcı biçimde yeniden üretilemedi: sunucuda "
+                "OPENROUTER_API_KEY tanımlı değil; geçici olarak başlık-listesi "
+                "özeti kullanıldı.")
+    if mode == "deterministik":
+        return ("Yönetici Özeti LLM ile üretilemedi (geçici hata); geçici olarak "
+                "başlık-listesi özeti kullanıldı. Tekrar denenebilir.")
+    return None
+
+
 def _deterministic_exec_summary(items):
     """LLM başarısızsa main.py:Pass6 yedeğinin aynısı — başlıklardan tek paragraf."""
     titles = [t.strip().rstrip(".") for t, _ in items if t and t.strip()]
@@ -399,15 +416,19 @@ def _deterministic_exec_summary(items):
 def regenerate_exec_summary(html):
     """Güncel HTML'e göre Yönetici Özeti paragrafını yeniden üretir.
 
-    .exec-brief-paragraph içeriği yeni özetle değiştirilmiş HTML döner. Özet
-    bloğu yoksa veya kaynak çıkmıyorsa HTML değiştirilmeden döner (best-effort).
+    (yeni_html, mod) döner. mod ∈ {"llm", "deterministik", "yok", "atlandi"}:
+      - "llm"           : LLM akıcı özet üretti (istenen durum).
+      - "deterministik" : LLM başarısız → başlık-tabanlı yedek kullanıldı.
+      - "yok"           : Bu raporda Yönetici Özeti kutusu/kaynak yok → dokunulmadı.
+      - "atlandi"       : OPENROUTER_API_KEY tanımsız → LLM hiç denenmedi.
+    Özet bloğu yoksa veya kaynak çıkmıyorsa HTML değiştirilmeden döner.
     """
     if not _EXEC_BRIEF_PARA_RE.search(html):
-        return html  # Bu raporda Yönetici Özeti kutusu yok → dokunma.
+        return html, "yok"  # Bu raporda Yönetici Özeti kutusu yok → dokunma.
 
     items = _collect_exec_sources(html)
     if not items:
-        return html
+        return html, "yok"
 
     es_lines = []
     for i, (tr_title, paragraph) in enumerate(items, 1):
@@ -419,13 +440,19 @@ def regenerate_exec_summary(html):
         )
 
     # main.py:Pass6 ile aynı: tek geçici hatada özet kaybolmasın diye 3 deneme.
+    # max_output_tokens 1024 DEĞİL 4096: Gemini 3 Flash bir "thinking" modeli
+    # ve OpenRouter'da reasoning token'ları da BU bütçeden harcanır. 1024 ile
+    # reasoning bütçeyi tüketip JSON çıktısını yarım bırakıyor → parse başarısız
+    # → her seferinde deterministik yedeğe düşülüyordu. İçerik üretimiyle (4096)
+    # aynı geniş bütçe, akıcı özetin güvenle dönmesini sağlar.
     exec_summary = ""
-    if os.getenv("OPENROUTER_API_KEY", ""):
+    key_present = bool(os.getenv("OPENROUTER_API_KEY", ""))
+    if key_present:
         for attempt in range(3):
             try:
                 data = llm_client.generate_json(
                     get_executive_summary_prompt("\n".join(es_lines)),
-                    max_output_tokens=1024,
+                    max_output_tokens=4096,
                     label=f"ManuelEkle-YoneticiOzeti(d{attempt + 1})",
                 )
             except Exception:
@@ -434,18 +461,21 @@ def regenerate_exec_summary(html):
                 exec_summary = data["ozet"].strip()
                 break
 
+    mode = "llm" if exec_summary else ("atlandi" if not key_present else "deterministik")
+
     # Deterministik yedek — LLM yok/başarısız olsa bile bayat metin kalmaz.
     if not exec_summary:
         exec_summary = _deterministic_exec_summary(items)
     if not exec_summary:
-        return html
+        return html, "yok"
 
     # HTML kaçışı: özet metni HTML gövdesine düz metin olarak girer; <, &
     # karakterleri kaçırılmazsa sayfayı bozabilir.
     safe = exec_summary.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    return _EXEC_BRIEF_PARA_RE.sub(
+    new_html = _EXEC_BRIEF_PARA_RE.sub(
         lambda m: m.group(1) + safe + m.group(2), html, count=1
     )
+    return new_html, mode
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -600,7 +630,7 @@ def process_report(payload, remove_index, token):
         new_index = replace_top3_card(index_html, remove_index, card_html)
         new_index = remove_news_item(new_index, news_id)
         # Takas sonrası Yönetici Özeti'ni güncel kart kümesine göre yeniden üret.
-        new_index = regenerate_exec_summary(new_index)
+        new_index, summary_mode = regenerate_exec_summary(new_index)
     except Exception as e:
         return 500, {"error": f"index.html güncellenemedi: {str(e)[:160]}"}
 
@@ -609,7 +639,7 @@ def process_report(payload, remove_index, token):
         new_archive = remove_news_item(
             replace_top3_card(archive_html, remove_index, card_html), news_id
         )
-        new_archive = regenerate_exec_summary(new_archive)
+        new_archive, _ = regenerate_exec_summary(new_archive)
     except Exception:
         # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
         new_archive = None
@@ -630,6 +660,8 @@ def process_report(payload, remove_index, token):
         "tr_title": tr_title,
         "domain": domain,
         "date": report_date,
+        "summary_mode": summary_mode,
+        "summary_warning": _summary_warning(summary_mode),
     }
 
 
@@ -668,7 +700,7 @@ def process_url(payload, remove_index, token):
     try:
         new_index = replace_top3_card(index_html, remove_index, card_html)
         # Takas sonrası Yönetici Özeti'ni güncel kart kümesine göre yeniden üret.
-        new_index = regenerate_exec_summary(new_index)
+        new_index, summary_mode = regenerate_exec_summary(new_index)
     except Exception as e:
         return 500, {"error": f"index.html kart değişimi başarısız: {str(e)[:160]}"}
 
@@ -676,7 +708,7 @@ def process_url(payload, remove_index, token):
     try:
         archive_html, archive_sha = gh_get_file(archive_path, token)
         new_archive = replace_top3_card(archive_html, remove_index, card_html)
-        new_archive = regenerate_exec_summary(new_archive)
+        new_archive, _ = regenerate_exec_summary(new_archive)
     except Exception:
         # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
         new_archive = None
@@ -697,6 +729,8 @@ def process_url(payload, remove_index, token):
         "tr_title": tr_title,
         "domain": domain,
         "date": report_date,
+        "summary_mode": summary_mode,
+        "summary_warning": _summary_warning(summary_mode),
     }
 
 

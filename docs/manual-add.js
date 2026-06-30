@@ -280,8 +280,15 @@
         if (res.status === 200 && res.data && res.data.ok) {
           applyCard(removeIndex, res.data.card_html);
           if (res.data.removed_news_id) removeNewsItem(res.data.removed_news_id);
-          showMsg("ok", "Haber eklendi ve rapor güncellendi.");
-          setTimeout(closeModal, 1200);
+          if (res.data.summary_warning) {
+            // Kart güncellendi ama Yönetici Özeti akıcı biçimde üretilemedi —
+            // kullanıcıyı bilgilendir, modalı hemen kapatma.
+            showMsg("err", "Haber güncellendi. UYARI: " + res.data.summary_warning);
+            okBtn.disabled = false;
+          } else {
+            showMsg("ok", "Haber eklendi ve rapor güncellendi.");
+            setTimeout(closeModal, 1200);
+          }
         } else {
           okBtn.disabled = false;
           var err = (res.data && res.data.error) ? res.data.error : ("Hata (HTTP " + res.status + ")");
