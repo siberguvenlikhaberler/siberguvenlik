@@ -280,7 +280,10 @@ def extract_news_item(html, news_id):
     """
     m = _news_item_re(news_id).search(html)
     if not m:
-        raise ValueError("haber bloğu bulunamadı")
+        # Haber gövdesi raporda yok — neredeyse her zaman bu haber DAHA ÖNCE
+        # kritik bölüme taşınmış olduğu içindir (sayfanız bayat kalmış olabilir).
+        raise ValueError("bu haber raporda yok; muhtemelen daha önce taşındı. "
+                         "Lütfen sayfayı yenileyip tekrar deneyin")
     frag = BeautifulSoup(m.group(0), "html.parser")
     title_el = frag.find(class_="news-title")
     content_el = frag.find(class_="news-content")
@@ -303,16 +306,22 @@ def extract_news_item(html, news_id):
 
 
 def remove_news_item(html, news_id):
-    """news-item bloğunu ve (varsa) yönetici tablosundaki ilgili satırı kaldırır.
+    """news-item bloğunu ve yönetici tablosundaki ilgili HÜCREYİ kaldırır.
 
-    Yönetici tablosu satırı best-effort silinir; bulunamazsa sessizce geçilir.
+    Yönetici tablosu İKİ SÜTUNLUDUR (<tr><td>A</td><td>B</td></tr>). Bu yüzden
+    tüm <tr>'yi silmek YANLIŞ olur — aynı satırdaki komşu haberi de götürürdü.
+    Önceki sürüm tek-sütun (<tr><td>...</td></tr>) varsayıp eşleşemiyor ve
+    sessizce geçiyordu; sonuçta taşınan habere ait ÖLÜ bir bağlantı (#haber-N)
+    tabloda kalıyordu. Artık yalnızca o haberin <td> hücresi BOŞ <td></td> ile
+    değiştirilir: ölü bağlantı gider, sütun hizası ve komşu haber korunur
+    (tek-haberlik satırlardaki boş hücre kalıbıyla tutarlı).
     """
     new_html = _news_item_re(news_id).sub("", html, count=1)
-    row_re = re.compile(
-        r'[ \t]*<tr>\s*<td><a href="#' + re.escape(news_id) + r'">.*?</a></td>\s*</tr>\n',
+    cell_re = re.compile(
+        r'([ \t]*)<td><a href="#' + re.escape(news_id) + r'">.*?</a></td>\n',
         re.DOTALL,
     )
-    new_html = row_re.sub("", new_html, count=1)
+    new_html = cell_re.sub(lambda m: m.group(1) + "<td></td>\n", new_html, count=1)
     return new_html
 
 
