@@ -91,7 +91,32 @@
     "[data-theme='dark'] .ma-tab-report:not(.active):not(:disabled){background:#d97706;border-color:#f59e0b;color:#fff;}",
     "[data-theme='dark'] .ma-tab-report:not(.active):not(:disabled):hover{background:#b45309;}",
     "[data-theme='dark'] .ma-actions{border-top-color:#30363d;}",
-    "[data-theme='dark'] .ma-btn.cancel{background:#161b22;color:#c9d1d9;border-color:#30363d;}"
+    "[data-theme='dark'] .ma-btn.cancel{background:#161b22;color:#c9d1d9;border-color:#30363d;}",
+    // ── İlerleme katmanı (işlem sürerken) ───────────────────────────────────
+    // Ekrana SABİT (fixed) konumlanır; kullanıcı modal içinde nereye kaydırmış
+    // olursa olsun her zaman görünür. İşlem boyunca formun üstünü kaplar ve
+    // etkileşimi bloklar (yanlışlıkla ikinci gönderimi önler).
+    ".ma-progress{position:fixed;inset:0;z-index:10000;display:none;align-items:center;",
+    "justify-content:center;padding:16px;background:rgba(15,23,42,.55);}",
+    ".ma-progress.show{display:flex;}",
+    ".ma-progress-card{background:#fff;border-radius:12px;max-width:430px;width:100%;",
+    "padding:30px 26px;box-shadow:0 20px 50px rgba(0,0,0,.35);text-align:center;",
+    "font-family:inherit;color:#1e293b;}",
+    ".ma-spinner{width:48px;height:48px;margin:0 auto 20px;border:4px solid #dbe3ef;",
+    "border-top-color:#1d4ed8;border-radius:50%;animation:ma-spin .8s linear infinite;}",
+    "@keyframes ma-spin{to{transform:rotate(360deg);}}",
+    ".ma-progress-title{font-size:17px;font-weight:700;margin-bottom:10px;color:#1d4ed8;}",
+    ".ma-progress-step{font-size:14.5px;line-height:1.5;color:#334155;min-height:22px;font-weight:600;}",
+    ".ma-progress-dots::after{display:inline-block;width:1.2em;text-align:left;",
+    "content:'';animation:ma-dots 1.4s steps(1,end) infinite;}",
+    "@keyframes ma-dots{0%{content:'';}25%{content:'.';}50%{content:'..';}75%{content:'...';}}",
+    ".ma-progress-sub{font-size:12px;color:#64748b;margin-top:14px;line-height:1.5;}",
+    "@media (prefers-reduced-motion:reduce){.ma-spinner{animation-duration:2.4s;}",
+    ".ma-progress-dots::after{animation:none;content:'…';}}",
+    "[data-theme='dark'] .ma-progress-card{background:#161b22;color:#e6edf3;}",
+    "[data-theme='dark'] .ma-spinner{border-color:#30363d;border-top-color:#388bfd;}",
+    "[data-theme='dark'] .ma-progress-title{color:#79c0ff;}",
+    "[data-theme='dark'] .ma-progress-step{color:#c9d1d9;}"
   ].join("");
 
   function injectStyles() {
@@ -143,6 +168,40 @@
     if (!m) return;
     m.className = "ma-msg " + kind;
     m.textContent = text;
+    // Mesaj modalın EN ÜSTÜNDE; kullanıcı aşağı kaymışsa görünmez. Sonucu/uyarıyı
+    // kaçırmasın diye modalı en üste kaydır.
+    scrollModalTop();
+  }
+
+  function scrollModalTop() {
+    var modal = document.querySelector("#ma-overlay .ma-modal");
+    if (modal && typeof modal.scrollTo === "function") modal.scrollTo({ top: 0, behavior: "smooth" });
+    else if (modal) modal.scrollTop = 0;
+  }
+
+  // ── İşlem ilerleme göstergesi ─────────────────────────────────────────────
+  // Tek bir HTTP isteği olduğundan sunucudan gerçek-zamanlı ilerleme gelmez;
+  // bu yüzden beklenen aşamalar (taşıma → özetleme → kaydetme) zamanlayıcıyla
+  // sırayla gösterilir. Spinner + nokta animasyonu sürekli döndüğü için son
+  // aşamada beklenirken bile "donmuş/çalışmıyor" izlenimi oluşmaz.
+  var _progressTimer = null;
+  function startProgress(steps) {
+    var layer = document.getElementById("ma-progress");
+    var stepEl = document.getElementById("ma-progress-step");
+    if (!layer || !stepEl) return;
+    var i = 0;
+    stepEl.textContent = steps[0];
+    layer.classList.add("show");
+    if (_progressTimer) clearInterval(_progressTimer);
+    _progressTimer = setInterval(function () {
+      if (i < steps.length - 1) { i += 1; stepEl.textContent = steps[i]; }
+      // Son aşamaya gelindiyse orada kalınır; animasyon sürdüğü için sorun yok.
+    }, 2200);
+  }
+  function stopProgress() {
+    if (_progressTimer) { clearInterval(_progressTimer); _progressTimer = null; }
+    var layer = document.getElementById("ma-progress");
+    if (layer) layer.classList.remove("show");
   }
 
   // Aktif kaynak modu ("url" | "report") — sekmeleri ve blokları senkronlar.
@@ -215,6 +274,19 @@
           '<button class="ma-btn cancel" id="ma-cancel">İptal</button>' +
           '<button class="ma-btn ok" id="ma-ok">Tamam</button>' +
         "</div>" +
+      "</div>" +
+      // İşlem sürerken gösterilen, ekrana sabit ilerleme katmanı.
+      '<div class="ma-progress" id="ma-progress" role="status" aria-live="polite">' +
+        '<div class="ma-progress-card">' +
+          '<div class="ma-spinner"></div>' +
+          '<div class="ma-progress-title">İşleminiz sürüyor</div>' +
+          '<div class="ma-progress-step">' +
+            '<span id="ma-progress-step">Hazırlanıyor</span>' +
+            '<span class="ma-progress-dots"></span>' +
+          "</div>" +
+          '<p class="ma-progress-sub">Lütfen bekleyin; bu işlem birkaç saniye sürebilir. ' +
+          'Bu pencereyi kapatmayın.</p>' +
+        "</div>" +
       "</div>";
 
     document.body.appendChild(overlay);
@@ -250,23 +322,33 @@
 
     var removeIndex = parseInt(checked.value, 10);
     var payload = { password: pass, mode: mode, remove_index: removeIndex };
-    var waitMsg;
+    var steps;
 
     if (mode === "url") {
       var url = (document.getElementById("ma-url").value || "").trim();
       if (!/^https?:\/\//i.test(url)) { showMsg("err", "Geçerli bir URL giriniz (http/https)."); return; }
       payload.url = url;
-      waitMsg = "Haber çekiliyor ve sistem formatında hazırlanıyor… (bu işlem biraz sürebilir)";
+      steps = [
+        "Haber kaynağına bağlanılıyor",
+        "Makale metni çıkarılıyor",
+        "Yapay zekâ ile Türkçe başlık ve özet üretiliyor",
+        "Yönetici Özeti güncelleniyor",
+        "Değişiklikler kaydediliyor"
+      ];
     } else {
       var newsChecked = document.querySelector('input[name="ma-news"]:checked');
       if (!newsChecked) { showMsg("err", "Eklenecek haberi seçiniz."); return; }
       payload.news_id = newsChecked.value;
-      waitMsg = "Seçilen haber kritik bölüme taşınıyor…";
+      steps = [
+        "Seçilen haber kritik bölüme taşınıyor",
+        "Yönetici Özeti yeni habere göre yeniden oluşturuluyor",
+        "Değişiklikler kaydediliyor"
+      ];
     }
 
     var okBtn = document.getElementById("ma-ok");
     okBtn.disabled = true;
-    showMsg("info", waitMsg);
+    startProgress(steps);
 
     fetch(MANUAL_ADD_ENDPOINT, {
       method: "POST",
@@ -277,6 +359,7 @@
         return r.json().then(function (data) { return { status: r.status, data: data }; });
       })
       .then(function (res) {
+        stopProgress();
         if (res.status === 200 && res.data && res.data.ok) {
           applyCard(removeIndex, res.data.card_html);
           if (res.data.removed_news_id) removeNewsItem(res.data.removed_news_id);
@@ -287,7 +370,7 @@
             okBtn.disabled = false;
           } else {
             showMsg("ok", "Haber eklendi ve rapor güncellendi.");
-            setTimeout(closeModal, 1200);
+            setTimeout(closeModal, 1400);
           }
         } else {
           okBtn.disabled = false;
@@ -296,6 +379,7 @@
         }
       })
       .catch(function (e) {
+        stopProgress();
         okBtn.disabled = false;
         showMsg("err", "Sunucuya ulaşılamadı: " + e.message);
       });
