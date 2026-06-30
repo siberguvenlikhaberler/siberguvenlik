@@ -22,7 +22,8 @@ from src.config import (
     ARCHIVE_FILE, KRITIK3_HISTORY_FILE, KRITIK3_HISTORY_DAYS,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
-    get_top3_selection_prompt, get_legacy_json_prompt, get_quality_review_prompt,
+    get_top3_selection_prompt, get_top3_verification_prompt,
+    get_legacy_json_prompt, get_quality_review_prompt,
     get_executive_summary_prompt, get_title_rescue_prompt,
     is_openrouter_active,
 )
@@ -2389,6 +2390,77 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         except IOError as e:
             print(f"   ❌ KRİTİK 3 geçmişi yazılamadı: {e}")
 
+    def _verify_top3(self, top3_ids, non_vuln_ids, content_by_id,
+                     articles_by_id, label):
+        """Pass 4.5 — seçili KRİTİK 3'ü LLM ile DENETLER/teyit eder.
+
+        Seçili 3 + havuz (seçilmemiş non_vuln adaylar) içerikleriyle LLM'e
+        verilir; LLM (1) her seçili haberin siber boyutunu ve çerçeve-içerik
+        tutarlılığını teyit eder, (2) havuzda daha kritik bir haber varsa takas
+        önerir. Dönen top3 doğrulanır (id'ler havuz içinde, tam 3, tekrarsız).
+        Geçersiz/başarısız/değişiklik yoksa MEVCUT seçim korunur.
+        """
+        if not top3_ids:
+            return top3_ids
+        selected_set = set(top3_ids)
+        pool_ids = [aid for aid in non_vuln_ids if aid not in selected_set]
+        # Havuz boşsa kıyaslayacak alternatif yok; yine de teyit için çağırmaya
+        # değmez — takas imkânı olmadığından mevcut seçim aynen kalır.
+        if not pool_ids:
+            return top3_ids
+
+        def _brief(ids, cap=160):
+            lines = []
+            for aid in ids:
+                a = articles_by_id.get(aid, {})
+                c = content_by_id.get(aid, {})
+                orig_title = a.get('title', '')
+                tr_title   = c.get('tr_title', '')
+                full_text  = a.get('full_text', '') or c.get('paragraph', '')
+                snippet    = ' '.join(full_text.split()[:cap])
+                lines.append(
+                    f"=== HABER ID: {aid} ===\n"
+                    f"Başlık: {orig_title}\n"
+                    + (f"TR Başlık: {tr_title}\n" if tr_title else "")
+                    + f"İçerik: {snippet}\n"
+                )
+            return '\n'.join(lines)
+
+        # Havuz çok büyükse promptu şişirmemek için ilk ~12 adayla sınırla
+        # (sıralama zaten kritiklik önceliğine göre; en güçlü adaylar baştadır).
+        pool_capped = pool_ids[:12]
+        data = self._gemini_call_json(
+            get_top3_verification_prompt(_brief(top3_ids), _brief(pool_capped)),
+            max_output_tokens=512,
+            label=f'{label}-Denetim',
+        )
+        if not data or 'top3' not in data:
+            return top3_ids
+
+        valid = set(top3_ids) | set(pool_capped)
+        revised = []
+        for x in data.get('top3', []):
+            if str(x).strip().lstrip('-').isdigit():
+                aid = int(x)
+                if aid in valid and aid not in revised:
+                    revised.append(aid)
+        # Güvenlik: tam 3 ayrık geçerli id gelmediyse mevcut seçimi koru.
+        if len(revised) != 3:
+            return top3_ids
+
+        if set(revised) != set(top3_ids):
+            cikan = set(top3_ids) - set(revised)
+            giren = set(revised) - set(top3_ids)
+            print(f"   🔎 Top3 denetim: {sorted(cikan)} çıkarıldı, "
+                  f"{sorted(giren)} eklendi → {revised}")
+            for ch in data.get('degisiklikler', []) or []:
+                neden = (ch.get('neden') or '').strip()
+                if neden:
+                    print(f"      • {ch.get('cikan')}→{ch.get('giren')}: {neden[:160]}")
+        else:
+            print("   🔎 Top3 denetim: seçim doğrulandı, değişiklik yok.")
+        return revised
+
     def _select_top3(self, non_vuln_ids, content_by_id, articles_by_id,
                      pool_ids, label):
         """Pass 4 top3 seçimi — TEK kaynak (hem ana hem legacy yol kullanır).
@@ -2450,6 +2522,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             else:
                 guarded.append(aid)  # daha iyi aday yok, koru
         top3_ids = guarded
+
+        # ── PASS 4.5 — TOP3 DENETİM/TEYİT (LLM ikinci görüş) ─────────────
+        # Seçili 3'ü, içerikleriyle birlikte havuza karşı bağımsız bir gözle
+        # denetle: (1) her seçili haberin kriterlere uygunluğunu ve çerçeve-
+        # içerik tutarlılığını TEYİT et, (2) havuzda daha kritik bir haber
+        # varsa en zayıf seçili haberle takas et. Deterministik değil, LLM
+        # kararı; başarısız/şüpheli olursa mevcut seçim korunur.
+        top3_ids = self._verify_top3(top3_ids, non_vuln_ids,
+                                     content_by_id, articles_by_id, label)
 
         # ── AYNI-OLAY DEDUP + 3'E TAMAMLAMA — KRİTİK 3 GARANTİSİ ──────────
         # Öncelik sırası: (1) LLM/guard'ın seçtiği top3, (2) kalan tüm non_vuln

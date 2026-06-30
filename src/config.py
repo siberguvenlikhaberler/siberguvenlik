@@ -354,6 +354,69 @@ HABERLER:
 {articles_brief}"""
 
 
+def get_top3_verification_prompt(selected_brief, pool_brief):
+    """
+    Pass 4.5: Seçilmiş KRİTİK 3'ü DENETLER ve gerekiyorsa düzeltir.
+
+    İki iş: (1) seçili 3 haberi okuyup gerçekten kriterlere uyduklarını ve
+    çerçeve/içerik tutarlılığını TEYİT etmek (bir haber belirli bir olaya —
+    ör. NATO zirvesi — atıfla sunuluyorsa içerik GERÇEKTEN o olayla mı ilgili);
+    (2) havuzdaki seçilmemiş haberlerle KIYASLAYIP daha kritik bir haber varsa
+    en zayıf seçili haberi onunla değiştirmek.
+    selected_brief / pool_brief: "=== HABER ID: N ===\\nBaşlık: ...\\nİçerik: ...\n".
+    """
+    return f"""Sen kıdemli bir siber tehdit istihbarat editörüsün. Bir önceki adımda günün KRİTİK 3 haberi seçildi. Görevin bu seçimi bağımsız bir gözle DENETLEMEK ve yalnızca gerektiğinde düzeltmek.
+
+NOT: Haber içerikleri İngilizce olabilir; dil fark etmez, anlam ve stratejik öneme göre değerlendir.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GÖREV 1 — TEYİT (her seçili haberi OKU ve doğrula)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Seçili 3 haberin HER BİRİ için:
+ a) SİBER BOYUT: Haberin özünde somut bir siber boyut var mı? (saldırı, casusluk
+    yazılımı, zafiyet istismarı, veri ihlali, siber operasyon, ya da bunları
+    doğrudan etkileyen politika/hukuk kararı). Yoksa → uygun DEĞİL.
+ b) ÇERÇEVE–İÇERİK TUTARLILIĞI: Haber belirli bir olaya/bağlama atıfla sunuluyorsa
+    (ör. "NATO zirvesi", belirli bir kuruma/ülkeye yönelik saldırı), İÇERİK
+    GERÇEKTEN o olayla ilgili mi? Yalnızca kelime benzerliği veya yan değinme
+    YETMEZ; haberin ANA KONUSU o olay olmalı. Örn. metinde "NATO" ve "summit"
+    kelimelerinin ayrı ayrı geçmesi, haberi NATO zirvesi haberi YAPMAZ.
+ → Bir seçili haber (a) veya (b)'den kalıyorsa hatalı seçimdir; Görev 2'de
+   havuzdan uygun bir haberle DEĞİŞTİRİLMELİDİR.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GÖREV 2 — KIYAS (havuzla karşılaştır, gerekiyorsa takas et)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Aşağıdaki ÖNCELİK kriterlerine göre havuzdaki (seçilmemiş) haberleri seçili 3 ile
+kıyasla. Havuzda, seçili bir haberden DAHA KRİTİK bir haber varsa, en zayıf
+seçili haberi onunla değiştir.
+ÖNCELİK (yüksekten düşüğe): devlet destekli casusluk/casus yazılımı; ülkeler arası
+siber saldırı/atıf, siber operasyon; stratejik kuruma (devlet/ordu/kritik altyapı/
+uluslararası kurum) saldırı; siber güvenlik boyutu olan büyük hukuk/yaptırım kararı;
+geniş etkili tedarik zinciri saldırısı; milli güvenliği etkileyen büyük veri ihlali;
+APT kampanyaları ve kritik altyapı/fidye olayları.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KURALLAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Sonuç HER ZAMAN tam 3 haberden oluşur; id'ler yalnızca aşağıda verilen
+  (seçili + havuz) haberlerden olabilir.
+- DEĞİŞİKLİK İÇİN YÜKSEK EŞİK: Yalnızca bir seçili haber kriterlere açıkça
+  uymuyorsa VEYA havuzda gözle görülür biçimde daha kritik bir haber varsa takas
+  yap. Emin değilsen mevcut seçimi KORU — gereksiz oynama yapma.
+- Çıkardığın her haber için kısa, somut bir gerekçe yaz.
+
+SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
+{{"top3": [42, 7, 15], "degisiklikler": [{{"cikan": 7, "giren": 23, "neden": "..."}}]}}
+(Hiç değişiklik gerekmiyorsa: "degisiklikler": [] ve top3 = mevcut seçim.)
+
+━━━━━━ SEÇİLİ KRİTİK 3 ━━━━━━
+{selected_brief}
+
+━━━━━━ HAVUZ (seçilmemiş adaylar) ━━━━━━
+{pool_brief}"""
+
+
 def get_executive_summary_prompt(articles_brief, source_count=None, news_count=None):
     """
     Yönetici Özeti: O günün en önemli 9 haberini (top3 + sonraki 6) tek bir
