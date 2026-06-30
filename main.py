@@ -2390,12 +2390,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"   ❌ KRİTİK 3 geçmişi yazılamadı: {e}")
 
     def _select_top3(self, non_vuln_ids, content_by_id, articles_by_id,
-                     summit_ids, pool_ids, label):
+                     pool_ids, label):
         """Pass 4 top3 seçimi — TEK kaynak (hem ana hem legacy yol kullanır).
 
-        Adımlar: brief üret → LLM seçimi → siber-boyut guard → <3 ise tamamla →
-        NATO zirve haberini 1. sıraya sabitle. Boş top3 ASLA döndürülmez
-        (aday varsa fallback ile doldurulur).
+        Adımlar: brief üret → LLM seçimi → siber-boyut guard → <3 ise tamamla.
+        Boş top3 ASLA döndürülmez (aday varsa fallback ile doldurulur).
+        Top3 kararı tamamen LLM + siber-sinyal guard'ındadır; hiçbir haber
+        deterministik olarak öne sabitlenmez.
         """
         top3_ids = []
         if non_vuln_ids:
@@ -2431,18 +2432,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # LLM, siber boyutu olmayan bir haberi (ör. "demiryolu teknik arızası")
         # top3'e koymuş olabilir. Seçilmiş bir kartta siber sinyal YOKSA ve
         # havuzda siber sinyalLİ kullanılmamış bir aday VARSA, kartı onunla
-        # değiştir. NATO zirve haberleri muaftır (ayrıca sabitlenir). Asla
-        # top3'ü boşaltmaz — yalnızca daha iyi aday varsa takas eder.
-        summit_set = set(summit_ids)
+        # değiştir. Asla top3'ü boşaltmaz — yalnızca daha iyi aday varsa takas eder.
         replacement_pool = [aid for aid in non_vuln_ids
                             if aid not in set(top3_ids)
                             and self._has_cyber_signal(
                                 self._cyber_text_for(aid, content_by_id, articles_by_id))]
         guarded = []
         for aid in top3_ids:
-            if (aid in summit_set
-                    or self._has_cyber_signal(
-                        self._cyber_text_for(aid, content_by_id, articles_by_id))):
+            if self._has_cyber_signal(
+                    self._cyber_text_for(aid, content_by_id, articles_by_id)):
                 guarded.append(aid)
             elif replacement_pool:
                 repl = replacement_pool.pop(0)
@@ -2454,14 +2452,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         top3_ids = guarded
 
         # ── AYNI-OLAY DEDUP + 3'E TAMAMLAMA — KRİTİK 3 GARANTİSİ ──────────
-        # Öncelik sırası: (1) NATO zirve haberi, (2) LLM/guard'ın seçtiği top3,
-        # (3) kalan tüm non_vuln adaylar (yedek). pick_distinct bu sıradan
-        # ÇİFTLER-ARASI AYNI-OLAY OLMAYAN ilk 3'ü seçer; bir aday daha önce
-        # seçilenle aynı olayı anlatıyorsa ATLANIR ve yerine sıradaki ayrık
-        # aday gelir. Böylece KRİTİK 3 içinde mükerrer haber İMKÂNSIZDIR.
-        summit_top3 = [sid for sid in summit_ids if sid in set(pool_ids)]
+        # Öncelik sırası: (1) LLM/guard'ın seçtiği top3, (2) kalan tüm non_vuln
+        # adaylar (yedek). pick_distinct bu sıradan ÇİFTLER-ARASI AYNI-OLAY
+        # OLMAYAN ilk 3'ü seçer; bir aday daha önce seçilenle aynı olayı
+        # anlatıyorsa ATLANIR ve yerine sıradaki ayrık aday gelir. Böylece
+        # KRİTİK 3 içinde mükerrer haber İMKÂNSIZDIR.
         ordered_pool = []
-        for aid in summit_top3 + list(top3_ids) + list(non_vuln_ids):
+        for aid in list(top3_ids) + list(non_vuln_ids):
             if aid not in ordered_pool:
                 ordered_pool.append(aid)
 
@@ -2487,10 +2484,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if xday_dropped:
                 print(f"   📅 Çapraz-gün KRİTİK 3 dedup: son {KRITIK3_HISTORY_DAYS} "
                       f"günde manşet olan olay(lar) elendi {xday_dropped}")
-        if summit_top3 and any(sid in top3_ids for sid in summit_top3):
-            print(f"   🛡️  NATO zirve haberi top3 1. sıraya sabitlendi: "
-                  f"{[s for s in summit_top3 if s in top3_ids]}")
-
         return top3_ids[:3]
 
     def _load_recent_events(self, days=3):
@@ -2811,11 +2804,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         # Seçim HAM kaynak metin üzerinden yapılır (Pass 2/3 özetinden DEĞİL),
         # böylece özetlemede kaybolan nüanslar seçim aşamasında korunur.
-        # Brief üretimi + LLM seçimi + siber-boyut guard + zirve sabitleme,
-        # ana ve legacy yolun ORTAK kullandığı _select_top3'e devredilir.
+        # Brief üretimi + LLM seçimi + siber-boyut guard, ana ve legacy yolun
+        # ORTAK kullandığı _select_top3'e devredilir.
         top3_ids = self._select_top3(
             non_vuln_ids_p4, content_by_id, articles_by_id,
-            summit_ids, all_ids_p4, label='Pass4-Top3Secim',
+            all_ids_p4, label='Pass4-Top3Secim',
         )
 
         print(f"   Seçilen Top 3 ID: {top3_ids}")
@@ -2873,20 +2866,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         regen_set.add(rid)
                         continue
                 p5_remove.add(rid)
-
-        # ── NATO TÜRKİYE ZİRVESİ GÜVENLİK AĞI (Pass 5) ───────────────────
-        # Zirve haberi kalite kontrolde "kaldır" işaretlense bile ASLA çıkarma;
-        # gerekiyorsa içeriği yeniden üretilsin ama haber havuzda kalsın.
-        protected = set(summit_ids) & p5_remove
-        if protected:
-            print(f"   🛡️  NATO zirve haberi kalite kontrolde korundu (kaldırılmadı): {sorted(protected)}")
-            p5_remove -= set(summit_ids)
-            for sid in protected:
-                if sid not in p5_regenerate and sid in content_by_id:
-                    # İçeriği şüpheliyse yeniden üret, ama haberi at-ma
-                    c = content_by_id.get(sid, {})
-                    if len(c.get('paragraph', '').split()) < 50:
-                        p5_regenerate.append(sid)
 
         if p5_remove:
             print(f"   🗑️  Kaldırılan: {sorted(p5_remove)}")
@@ -3365,10 +3344,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if not is_vuln:
                 non_vuln_ids.append(aid)
 
-        # Ana yol ile ORTAK helper: brief + LLM + siber-boyut guard + zirve sabit.
+        # Ana yol ile ORTAK helper: brief + LLM + siber-boyut guard.
         top3_ids = self._select_top3(
             non_vuln_ids, content_by_id, id_to_article,
-            summit_ids, list(set(top10_ids) | set(remaining_ids)),
+            list(set(top10_ids) | set(remaining_ids)),
             label='Legacy-Top3',
         )
 

@@ -176,7 +176,7 @@ etkileyen politika/hukuk kararı.
 Her haberi değerlendirirken şu soruyu sor:
 "Bu haberin özünde bir siber saldırı, güvenlik açığı, casusluk yazılımı,
  veri ihlali veya siber operasyon var mı?"
-→ EVET: Stratejik değer testine geç (Kategori 0-3).
+→ EVET: Stratejik değer testine geç (Kategori 1-3).
 → HAYIR: Top 3'e ALMA, ne kadar önemli görünürse görünsün.
 
 ⚠️ SAAT SIFIR KURALI: Stratejik haber olmayan günler de olur.
@@ -184,29 +184,7 @@ Bu durumda top 3'ü boş bırakmak yerine Kategori 3'ten en iyi 3'ü seç.
 "Seçilmez" listesi her zaman geçerlidir — başka seçenek olmasa bile o listeden seçme.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-KATEGORİ 0 — NATO TÜRKİYE ZİRVESİ (MUTLAK ÖNCELİK — HER ŞEYİN ÜSTÜNDE)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ DAR KAPSAM: Bu kategori SADECE doğrudan NATO TÜRKİYE ZİRVESİ (Temmuz 2026) ile
-ilgili haberleri içerir. Haberin NATO Türkiye Zirvesi'nden açıkça söz etmesi veya
-açıkça zirveyi hedef/konu alması ŞARTTIR.
-Yalnızca zirveye bağlıysa KOŞULSUZ top 3'e alınır (1. sıraya yerleştirilir):
-   • Zirveyi hedef alan APT faaliyeti, siber casusluk, saldırı, keşif, hazırlık
-   • Zirve güvenliğine dair uyarı, tehdit değerlendirmesi, güvenlik önlemi
-   • Türk kurumlarının veya katılımcı ülkelerin doğrudan zirveye yönelik gelişmeleri
-   • Zirveyi konu alan dezenformasyon / hack & leak / etki operasyonu
-   • Zirve bağlamında ilgili aktörler: Rusya (APT28/APT29/Sandworm), Çin (APT10/APT40), İran, Kuzey Kore
-   • Anahtar kelimeler: "NATO summit", "NATO Turkey/Türkiye summit", "NATO Antalya",
-     "NATO 2026 zirvesi", "summit security"
-
-⛔ BU KATEGORİYE GİRMEZ (genel NATO haberi ≠ zirve haberi):
-   • Zirveden bahsetmeyen genel NATO siber politikası, NATO savunma/üyelik haberleri
-   • NATO üyesi bir ülkeye yönelik, zirveyle bağı OLMAYAN herhangi bir saldırı
-   • "NATO" kelimesi geçen ama Türkiye Zirvesi'yle ilgisi olmayan her haber
-   → Bunlar Kategori 0 DEĞİLDİR; uygunsa Kategori 1/2'de normal değerlendirilir.
-→ Zirveyle doğrudan ilgili haber varsa: önce onu/onları seç, kalanı Kategori 1'den tamamla.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-KATEGORİ 1 — EN YÜKSEK ÖNCELİK (NATO zirvesi haberi yoksa)
+KATEGORİ 1 — EN YÜKSEK ÖNCELİK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Aşağıdaki türde haber varsa, diğer tüm kategorilere ÖNCE bu seçilir:
 
@@ -226,6 +204,16 @@ B) JEOPOLİTİK & DİPLOMATİK SİBER GELİŞMELER
      (FBI, CISA, Five Eyes, Europol, NCSC, CSE, AIVD ve benzeri kurumlar dahil)
    • Uluslararası anlaşma, diplomatik kriz, yaptırım, sınır dışı etme kararı
    • NATO, AB, BM, OSCE gibi uluslararası örgütlerin siber güvenlik kararı veya politikası
+   • Belirli bir uluslararası zirve/etkinliği (ör. NATO zirvesi) DOĞRUDAN hedef alan
+     APT faaliyeti, casusluk, hazırlık veya etki operasyonu
+
+   ⚠️ ALAKA TESTİ (yanlış-pozitif önleme): Bir haberi "zirve/etkinlik haberi"
+   saymak için haberin ÖZÜNÜN o zirveyle ilgili olması ŞARTTIR. Metnin bir
+   yerinde "NATO" geçmesi + başka bir yerinde "summit"/"zirve" geçmesi (ör.
+   gövdeye yapışmış "Cloud Security Summit" reklamı, "Summit Partners" şirket
+   adı, alakasız bir senatör/etkinlik bağlamı) o haberi zirve haberi YAPMAZ.
+   Kelimelerin aynı metinde bulunması ≠ konu birliği. Şüpheye düşersen
+   haberin BAŞLIĞI ve ANA KONUSU neyse ona göre kategorize et.
 
 C) STRATEJİK KURUM/DEVLET SALDIRISI
    Saldırının HEDEF kurumu stratejik değer taşımalıdır:
@@ -343,10 +331,6 @@ KARAR AKIŞI
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 0. "Geçmiş günlerde işlenen olaylar" listesiyle eşleşen TÜM adayları en baştan ELE.
    (Mükerrer haberler hiçbir kategoride değerlendirilmez.)
-
-0.5 Kategori 0 (NATO Türkiye Zirvesi) adaylarını say.
-   → Varsa: önce bunları 1. sıradan başlayarak seç, kalan yerleri adım 1'den tamamla.
-   → Yoksa: adım 1'e geç.
 
 1. Kategori 1'den (A→B→C→D) adayları say.
    → 3 veya daha fazla aday: ilk 3'ü seç, bitti.
