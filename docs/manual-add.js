@@ -118,7 +118,10 @@
     "[data-theme='dark'] .ma-progress-title{color:#79c0ff;}",
     "[data-theme='dark'] .ma-progress-step{color:#c9d1d9;}",
     ".ma-progress-sub b{color:#b45309;}",
-    "[data-theme='dark'] .ma-progress-sub b{color:#fbbf24;}"
+    "[data-theme='dark'] .ma-progress-sub b{color:#fbbf24;}",
+    ".ma-progress-elapsed{font-size:12.5px;color:#64748b;margin-top:10px;",
+    "font-variant-numeric:tabular-nums;font-weight:600;}",
+    "[data-theme='dark'] .ma-progress-elapsed{color:#8b949e;}"
   ].join("");
 
   function injectStyles() {
@@ -183,27 +186,46 @@
   }
 
   // ── İşlem ilerleme göstergesi ─────────────────────────────────────────────
-  // Tek bir HTTP isteği olduğundan sunucudan gerçek-zamanlı ilerleme gelmez;
-  // bu yüzden beklenen aşamalar (taşıma → özetleme → kaydetme) zamanlayıcıyla
-  // sırayla gösterilir. Spinner + nokta animasyonu sürekli döndüğü için son
-  // aşamada beklenirken bile "donmuş/çalışmıyor" izlenimi oluşmaz.
+  // Aşamalar (steps) sunucunun GERÇEK iş sırasını yansıtır ve sırayla gösterilir.
+  // İşin uzun kuyruğu yapay zekâ (içerik + Yönetici Özeti üretimi) olduğundan,
+  // son aşamalara gelindiğinde tek satırda DONUP KALMAMAK için son iki mesaj
+  // arasında dönülür; ayrıca CANLI geçen-süre sayacı işin sürdüğünü saniye
+  // saniye gösterir. (Sunucu tek yanıt döndürdüğü için aşamalar istemcide
+  // zamanlanır; sıralama ve son uzun-adım gerçek pipeline ile birebir aynıdır.)
   var _progressTimer = null;
+  var _elapsedTimer = null;
+  function _fmtElapsed(sec) {
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
   function startProgress(steps) {
     var layer = document.getElementById("ma-progress");
     var stepEl = document.getElementById("ma-progress-step");
+    var elapsedEl = document.getElementById("ma-progress-elapsed");
     if (!layer || !stepEl) return;
     var i = 0;
+    var loopStart = Math.max(0, steps.length - 2); // son iki mesaj kuyrukta döner
     stepEl.textContent = steps[0];
     layer.classList.add("show");
     if (_progressTimer) clearInterval(_progressTimer);
+    if (_elapsedTimer) clearInterval(_elapsedTimer);
     _progressTimer = setInterval(function () {
-      if (i < steps.length - 1) { i += 1; stepEl.textContent = steps[i]; }
-      // Son aşamaya gelindiyse orada kalınır; işlem 2-3 dk sürebildiğinden
-      // spinner + nokta animasyonu sürdükçe "donmuş" izlenimi oluşmaz.
+      i = (i < steps.length - 1) ? i + 1 : loopStart;
+      stepEl.textContent = steps[i];
     }, 4500);
+    // Canlı geçen-süre sayacı (saniyede bir) — işin sürdüğünün somut kanıtı.
+    var startTs = Date.now();
+    if (elapsedEl) {
+      elapsedEl.textContent = "Geçen süre: 0:00";
+      _elapsedTimer = setInterval(function () {
+        elapsedEl.textContent = "Geçen süre: " +
+          _fmtElapsed(Math.round((Date.now() - startTs) / 1000));
+      }, 1000);
+    }
   }
   function stopProgress() {
     if (_progressTimer) { clearInterval(_progressTimer); _progressTimer = null; }
+    if (_elapsedTimer) { clearInterval(_elapsedTimer); _elapsedTimer = null; }
     var layer = document.getElementById("ma-progress");
     if (layer) layer.classList.remove("show");
   }
@@ -290,6 +312,7 @@
           "</div>" +
           '<p class="ma-progress-sub">Lütfen bekleyin; <b>bu işlem 2-3 dakika sürebilir.</b> ' +
           'İşlem tamamlanınca bu pencere kendiliğinden kapanacaktır; lütfen kapatmayın.</p>' +
+          '<p class="ma-progress-elapsed" id="ma-progress-elapsed"></p>' +
         "</div>" +
       "</div>";
 
@@ -336,8 +359,9 @@
         "Haber kaynağına bağlanılıyor",
         "Makale metni çıkarılıyor",
         "Yapay zekâ ile Türkçe başlık ve özet üretiliyor",
-        "Yönetici Özeti güncelleniyor",
-        "Değişiklikler kaydediliyor"
+        "Yönetici Özeti yeniden oluşturuluyor (en uzun adım)",
+        "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
+        "Değişiklikler GitHub'a kaydediliyor"
       ];
     } else {
       var newsChecked = document.querySelector('input[name="ma-news"]:checked');
@@ -345,8 +369,9 @@
       payload.news_id = newsChecked.value;
       steps = [
         "Seçilen haber kritik bölüme taşınıyor",
-        "Yönetici Özeti yeni habere göre yeniden oluşturuluyor",
-        "Değişiklikler kaydediliyor"
+        "Yönetici Özeti yeni habere göre yeniden oluşturuluyor (en uzun adım)",
+        "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
+        "Değişiklikler GitHub'a kaydediliyor"
       ];
     }
 
