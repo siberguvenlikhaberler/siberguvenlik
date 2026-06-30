@@ -750,18 +750,25 @@ class HaberSistemi:
 
         _MODELS = ['gemini-2.5-pro', 'gemini-2.5-pro',
                    'gemini-2.5-flash', 'gemini-2.5-flash']
-        # Büyük çıktılar (>8K token) için daha uzun HTTP timeout (ms)
-        http_timeout_ms = 300_000 if max_output_tokens > 8000 else 180_000
         client = genai.Client(api_key=GEMINI_API_KEY)
+
+        # Kesilme (MAX_TOKENS) güvenliği: thinking modellerinde reasoning de
+        # max_output_tokens bütçesinden harcanır; bütçe yetmezse çıktı yarıda
+        # kesilir (yarım JSON → parse hatası). Bu durumda bütçe katlanıp aynı
+        # istek tekrarlanır. _TRUNC_BUDGET_CAP sonsuz büyümeyi engeller.
+        _TRUNC_BUDGET_CAP = 65536
+        budget = max_output_tokens
 
         for attempt, model in enumerate(_MODELS):
             try:
-                print(f"   [{label}] Deneme {attempt + 1}/4 [{model}]...")
+                print(f"   [{label}] Deneme {attempt + 1}/4 [{model}] (bütçe={budget})...")
+                # Büyük çıktılar (>8K token) için daha uzun HTTP timeout (ms)
+                http_timeout_ms = 300_000 if budget > 8000 else 180_000
                 response = client.models.generate_content(
                     model=model,
                     contents=prompt,
                     config=genai_types.GenerateContentConfig(
-                        max_output_tokens=max_output_tokens,
+                        max_output_tokens=budget,
                         temperature=0.3,
                         http_options=genai_types.HttpOptions(timeout=http_timeout_ms),
                         safety_settings=[
@@ -784,10 +791,20 @@ class HaberSistemi:
                         ],
                     ),
                 )
+                fr = (response.candidates[0].finish_reason.name
+                      if response.candidates else '')
                 # PROHIBITED_CONTENT: içerik filtresi tetiklendi, retry faydasız
-                if (response.candidates and
-                        response.candidates[0].finish_reason.name == 'PROHIBITED_CONTENT'):
+                if fr == 'PROHIBITED_CONTENT':
                     print(f"   [{label}] ⚠️  İçerik filtresi (PROHIBITED_CONTENT) — sonraki model deneniyor.")
+                    continue
+                # MAX_TOKENS: çıktı bütçeye takılıp kesildi → bütçeyi katla ve
+                # sonraki denemede daha büyük bütçeyle tekrar dene. Bütçe her
+                # kesilmede ikiye katlandığından birkaç deneme içinde yetişir.
+                if fr == 'MAX_TOKENS' and budget < _TRUNC_BUDGET_CAP:
+                    new_budget = min(budget * 2, _TRUNC_BUDGET_CAP)
+                    print(f"   [{label}] ✂️  Çıktı kesildi (MAX_TOKENS, bütçe={budget}); "
+                          f"bütçe {new_budget}'e çıkarılıp yeniden deneniyor.")
+                    budget = new_budget
                     continue
                 raw = response.text or ''
                 data = _extract_json_from_text(raw)
@@ -2489,7 +2506,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             top3_data = self._gemini_call_json(
                 get_top3_selection_prompt('\n'.join(brief_lines),
                                           recent_events=self._load_recent_events()),
-                max_output_tokens=256,
+                max_output_tokens=1024,  # thinking modelinde 256 reasoning'e takılıp boş dönebiliyor
                 label=label,
             )
             if top3_data and 'top3' in top3_data:
@@ -3091,7 +3108,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 es_data = self._gemini_call_json(
                     get_executive_summary_prompt(
                         '\n'.join(es_lines), es_source_count, es_news_count),
-                    max_output_tokens=1024,
+                    max_output_tokens=4096,  # thinking modelinde 1024 kesiliyordu
                     label=f'Pass6-YoneticiOzeti(d{es_attempt + 1})',
                 )
                 if (es_data and isinstance(es_data.get('ozet'), str)
@@ -3534,7 +3551,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     model=model_name,
                     contents=prompt,
                     config=genai_types.GenerateContentConfig(
-                        max_output_tokens=2048,
+                        # Çıktı sosyal sinyal SAYISIYLA ölçeklenir; thinking payı
+                        # da eklenince 2048 sondaki satırları kesebiliyordu.
+                        max_output_tokens=4096,
                         temperature=0.2,
                     ),
                 ):

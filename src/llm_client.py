@@ -35,6 +35,13 @@ from src.config import (
 # Geçerli reasoning effort seviyeleri (OpenRouter birleşik reasoning şeması)
 _VALID_EFFORTS = {'minimal', 'low', 'medium', 'high', 'xhigh'}
 
+# Kesilme (truncation) güvenliği: Gemini 3 Flash bir "thinking" modeli ve
+# OpenRouter'da reasoning token'ları da max_tokens bütçesinden harcanır. Bütçe
+# yetmezse çıktı finish_reason='length' ile YARIDA kesilir (yarım JSON / kesik
+# cümle). Böyle bir durumda bütçe iki katına çıkarılıp yeniden denenir; üst
+# sınır _TRUNC_BUDGET_CAP'tir (sonsuz büyümeyi ve maliyet patlamasını önler).
+_TRUNC_BUDGET_CAP = 32000
+
 
 def _extract_json_from_text(text):
     """AI yanıtından JSON nesnesini güvenli biçimde çıkarır.
@@ -143,15 +150,30 @@ def generate_text(prompt, max_output_tokens=4096, temperature=None,
     for attempt, model in enumerate(models):
         try:
             print(f"   [{label}] OpenRouter deneme {attempt + 1}/{len(models)} [{model}]...")
-            resp = client.chat.completions.create(
-                model=model,
-                messages=[{'role': 'user', 'content': prompt}],
-                max_tokens=max_output_tokens,
-                temperature=temp,
-                extra_body=extra_body or None,
-                **kwargs,
-            )
-            text = resp.choices[0].message.content or ''
+            # Kesilme olursa AYNI model üzerinde bütçeyi katlayarak yeniden dene.
+            budget = max_output_tokens
+            text = ''
+            while True:
+                resp = client.chat.completions.create(
+                    model=model,
+                    messages=[{'role': 'user', 'content': prompt}],
+                    max_tokens=budget,
+                    temperature=temp,
+                    extra_body=extra_body or None,
+                    **kwargs,
+                )
+                choice = resp.choices[0]
+                text = choice.message.content or ''
+                finish = getattr(choice, 'finish_reason', None)
+                # finish_reason='length' → çıktı bütçeye takılıp kesildi (çıktı
+                # boş da olabilir: tüm bütçe reasoning'e gitmiş). Bütçeyi büyüt.
+                if finish == 'length' and budget < _TRUNC_BUDGET_CAP:
+                    new_budget = min(budget * 2, _TRUNC_BUDGET_CAP)
+                    print(f"   [{label}] ✂️  Çıktı kesildi (length, bütçe={budget}); "
+                          f"bütçe {new_budget}'e çıkarılıp yeniden deneniyor.")
+                    budget = new_budget
+                    continue
+                break
             if not text.strip():
                 print(f"   [{label}] ⚠️  Boş yanıt — sonraki model deneniyor.")
                 continue
