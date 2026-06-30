@@ -408,8 +408,10 @@
             showMsg("err", "Haber güncellendi. UYARI: " + res.data.summary_warning);
             okBtn.disabled = false;
           } else {
-            showMsg("ok", "Haber eklendi ve rapor güncellendi.");
-            setTimeout(closeModal, 1400);
+            showMsg("ok", "Haber kaydedildi. Sayfada hemen görünür; ancak yeniden " +
+              "yüklersen GitHub Pages önbelleği nedeniyle güncel hâlin gelmesi 1-2 dk " +
+              "sürebilir (kaybolmadı, kaydedildi).");
+            setTimeout(closeModal, 3500);
           }
         } else {
           okBtn.disabled = false;
