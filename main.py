@@ -199,43 +199,6 @@ def _cap_fulltext(text):
     return ' '.join(words[:_FULLTEXT_PROMPT_WORD_CAP])
 
 
-def _is_nato_summit(*texts):
-    """NATO Türkiye Zirvesi (Temmuz 2026) haberini deterministik tespit eder.
-
-    DAR KAPSAM (false-positive koruması): tek başına 'nato' YETMEZ — genel
-    NATO haberi ≠ zirve haberi. Bir 'nato/türkiye' bağlamı ile bir 'summit/
-    zirve' sinyali BİRLİKTE geçmelidir. Bu sayede genel NATO siber-politika
-    haberleri eşleşmez; yalnızca zirveyi konu/hedef alan haberler yakalanır.
-
-    LLM (Pass 1 eleme / Pass 4 top3 / Pass 5 kalite) zirveyi gözden kaçırsa
-    bile kod düzeyinde güvenlik ağı olarak kullanılır.
-
-    NOT (substring değil, KELİME-SINIRI): Eşleşmeler \b kelime sınırıyla
-    aranır. Aksi hâlde 'nato' substring'i seNATOr / expaNATOry / doNATO gibi
-    alakasız kelimelerin İÇİNDE eşleşip (özellikle ABD siber-politika
-    haberlerinde 'senator' + 'summit' birlikteliği) alakasız bir haberi
-    yanlışlıkla top3'e sabitler. Türkçe sözcükler için sınır esnetilir
-    (ör. 'türkiye'nin', 'zirvede') — sonek almaları normaldir.
-    """
-    blob = ' '.join(t for t in texts if t).lower()
-    if not blob:
-        return False
-    # 'summit' kelime sınırıyla; 'zirve' Türkçe çekim eklerine izin verecek
-    # şekilde sözcük başında aranır (zirvede, zirveye, zirvenin...).
-    has_summit = bool(re.search(r'\bsummit\b', blob) or re.search(r'\bzirve', blob))
-    if not has_summit:
-        return False
-    # Bağlam kelimeleri kelime sınırıyla; Türkçe olanlarda sondaki çekim
-    # eklerine izin ver (türkiye'nin, türkiyede...).
-    has_context = bool(
-        re.search(r'\bnato\b', blob)
-        or re.search(r'\bt[üu]rkiye', blob)
-        or re.search(r'\bturkey\b', blob)
-        or re.search(r'\bantalya', blob)
-    )
-    return has_context
-
-
 # Kod adı dedup (Seviye 5) için ortak vendor/ürün adları — bunlar tek başına
 # "aynı olay" sinyali DEĞİLDİR (birçok farklı haberde geçer). Kod adı olarak
 # sayılmaz; yalnızca gerçek kampanya/operasyon/zararlı kod adları (FortiBleed,
@@ -1039,11 +1002,6 @@ class HaberSistemi:
             padding: 20px; border-left: 4px solid #1a237e;
         }
         .news-title { color: #1a237e; font-size: 18px; font-weight: 600; margin-bottom: 12px; line-height: 1.3; }
-        .nato-star {
-            display: inline-block; font-size: 13px; color: #ffffff; background: #003087;
-            border-radius: 3px; padding: 1px 6px; margin-right: 7px; vertical-align: middle;
-            letter-spacing: 0.5px; font-weight: 700; line-height: 1.6;
-        }
         .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
         .source { color: #666; font-size: 13px; margin: 0; }
         .source a { color: #1a237e; text-decoration: none; }
@@ -1322,15 +1280,9 @@ class HaberSistemi:
                 link     = art.get('link', '#')
                 domain   = art.get('domain', '')
                 art_date = art.get('art_date', '')
-                # Yalnızca gerçekten zirve haberi olan kartta NATO rozeti göster.
-                # Deterministik güvenlik ağıyla aynı dar ölçüt kullanılır; genel
-                # NATO haberinde rozet ÇIKMAZ.
-                nato_badge = ('<span class="nato-star">NATO ZİRVESİ</span>'
-                              if _is_nato_summit(art.get('title', ''),
-                                                 art.get('full_text', '')) else '')
                 top3_cards_html += (
                     f'                <div class="top3-card">\n'
-                    f'                    <div class="top3-card-title">{nato_badge}'
+                    f'                    <div class="top3-card-title">'
                     f'<a href="{link}" target="_blank" style="color:inherit;text-decoration:none;">'
                     f'{tr_title}</a></div>\n'
                     f'                    <p class="top3-card-paragraph">{paragraph}</p>\n'
@@ -2764,24 +2716,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if a['id'] not in ranked_set:
                 remaining_ids.append(a['id'])
 
-        # ── NATO TÜRKİYE ZİRVESİ GÜVENLİK AĞI (Pass 1) ───────────────────
-        # Zirve haberi LLM tarafından yanlışlıkla elenmiş (filtered) veya
-        # alt sıraya atılmış olabilir. Deterministik olarak yakala, elemeden
-        # kurtar ve top10'un EN BAŞINA al ki Pass 4 top3 seçiminde mutlaka
-        # değerlendirilsin.
-        summit_ids = [a['id'] for a in articles
-                      if _is_nato_summit(a.get('title', ''), a.get('full_text', ''))]
-        if summit_ids:
-            sset = set(summit_ids)
-            rescued = [sid for sid in summit_ids if sid in filtered_ids]
-            if rescued:
-                print(f"   🛡️  NATO zirve güvenlik ağı: {rescued} elemeden kurtarıldı → top10")
-            filtered_ids -= sset
-            remaining_ids = [i for i in remaining_ids if i not in sset]
-            top10_rest = [i for i in top10_ids if i not in sset]
-            top10_ids = summit_ids + top10_rest  # zirve haberleri en başta
-            print(f"   🛡️  NATO zirve haberi top10 başına alındı: {summit_ids}")
-
         print(f"   Top-10: {top10_ids}")
         print(f"   Kalan : {len(remaining_ids)} haber  |  Filtrelenen: {len(filtered_ids)} haber")
 
@@ -3386,17 +3320,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         for a in articles:
             if a['id'] not in ranked_set:
                 remaining_ids.append(a['id'])
-
-        # NATO Türkiye Zirvesi güvenlik ağı (legacy yolu): elemeden kurtar,
-        # top10 başına al — ana pipeline ile aynı garanti.
-        summit_ids = [a['id'] for a in articles
-                      if _is_nato_summit(a.get('title', ''), a.get('full_text', ''))]
-        if summit_ids:
-            sset = set(summit_ids)
-            filtered_ids -= sset
-            remaining_ids = [i for i in remaining_ids if i not in sset]
-            top10_ids = summit_ids + [i for i in top10_ids if i not in sset]
-            print(f"   🛡️  NATO zirve güvenlik ağı (legacy): {summit_ids} top10 başına alındı")
 
         content_by_id = {}
         for s in data.get('summaries', []):
