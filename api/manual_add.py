@@ -325,6 +325,86 @@ def remove_news_item(html, news_id):
     return new_html
 
 
+def _esc_html_text(s):
+    """Tablo hücresine düz metin yazmak için minimal HTML kaçışı."""
+    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+_EXEC_TABLE_RE = re.compile(
+    r'(<table class="executive-table">\n).*?(\n[ \t]*</table>)', re.DOTALL
+)
+
+
+def renumber_and_reflow(html):
+    """Haber numaralarını GÖVDE SIRASINA göre 1..N (regular) / N+1..M (vuln)
+    olarak yeniden verir ve indeks tablosunu (executive-table) boşluksuz, temiz
+    2 sütun olarak yeniden kurar.
+
+    Neden: manuel taşıma bir haberi listeden çıkarınca (remove_news_item) kalan
+    haberler yeniden numaralanmıyordu; tablo boşluklu (#3'ten başlıyor, boş
+    <td></td>) kalıyordu. main.py:_build_html'deki numaralandırma şemasıyla
+    (regular 1..N, vuln N+1..M; tabloda yalnızca regular) aynıdır.
+
+    Yazma cerrahidir: yalnızca gövde id'leri ve executive-table bloğu değişir;
+    dosyanın geri kalanı (biçim/diff) korunur. Gövde/tablo yoksa HTML aynen döner.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    regular, vuln = [], []
+    for el in soup.select(".news-item[id]"):
+        nid = el.get("id", "")
+        if not re.match(r"^haber-\d+$", nid):
+            continue
+        title_el = el.find(class_="news-title")
+        title = title_el.get_text(" ", strip=True) if title_el else ""
+        if "vuln-item" in (el.get("class") or []):
+            vuln.append((nid, title))
+        else:
+            regular.append((nid, title))
+    if not regular and not vuln:
+        return html
+
+    # Belge sırasına göre yeni numara: regular 1..N, sonra vuln N+1..M.
+    mapping = {}      # eski_id -> yeni_num
+    regular_new = []  # tablo için (yeni_num, başlık)
+    n = 0
+    for nid, title in regular:
+        n += 1
+        mapping[nid] = n
+        regular_new.append((n, title))
+    for nid, _title in vuln:
+        n += 1
+        mapping[nid] = n
+
+    # 1) Gövde id'lerini iki fazlı (çakışmasız) güncelle. Tek geçişli global
+    #    replace, eski/yeni aralıklar çakıştığında cascade'e yol açar.
+    new_html = html
+    for nid in mapping:
+        new_html = new_html.replace('id="%s"' % nid, 'id="__MA_ID_%s__"' % nid)
+    for nid, num in mapping.items():
+        new_html = new_html.replace('id="__MA_ID_%s__"' % nid, 'id="haber-%d"' % num)
+
+    # 2) İndeks tablosunu yalnızca regular haberlerden yeniden kur (vuln tabloda
+    #    yer almaz — main.py ile aynı). Tek-haberlik satırda boş hücre kalıbı.
+    row_indent, cell_indent = " " * 16, " " * 20
+    rows = []
+    for i in range(0, len(regular_new), 2):
+        pair = regular_new[i:i + 2]
+        cells = ""
+        for num, title in pair:
+            cells += ('%s<td><a href="#haber-%d">%d. %s</a></td>\n'
+                      % (cell_indent, num, num, _esc_html_text(title)))
+        if len(pair) == 1:
+            cells += "%s<td></td>\n" % cell_indent
+        rows.append("%s<tr>\n%s%s</tr>\n" % (row_indent, cells, row_indent))
+    table_inner = "".join(rows).rstrip("\n")
+
+    if regular_new and _EXEC_TABLE_RE.search(new_html):
+        new_html = _EXEC_TABLE_RE.sub(
+            lambda m: m.group(1) + table_inner + m.group(2), new_html, count=1
+        )
+    return new_html
+
+
 def replace_top3_card(html, index, new_card_html):
     matches = list(_CARD_RE.finditer(html))
     if len(matches) < 3:
@@ -638,6 +718,8 @@ def process_report(payload, remove_index, token):
     try:
         new_index = replace_top3_card(index_html, remove_index, card_html)
         new_index = remove_news_item(new_index, news_id)
+        # Haber çıkınca kalan listeyi 1..N yeniden numarala + tabloyu boşluksuz kur.
+        new_index = renumber_and_reflow(new_index)
         # Takas sonrası Yönetici Özeti'ni güncel kart kümesine göre yeniden üret.
         new_index, summary_mode = regenerate_exec_summary(new_index)
     except Exception as e:
@@ -648,6 +730,7 @@ def process_report(payload, remove_index, token):
         new_archive = remove_news_item(
             replace_top3_card(archive_html, remove_index, card_html), news_id
         )
+        new_archive = renumber_and_reflow(new_archive)
         new_archive, _ = regenerate_exec_summary(new_archive)
     except Exception:
         # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
