@@ -548,6 +548,18 @@ Her haber için şunları belirle:
 
    İLKE: "Büyük rakam" (milyonlarca kullanıcı, milyarlarca dolar) TEK BAŞINA yüksek stratejik puan getirmez. Stratejik/jeopolitik/istihbari değer her zaman önceliklidir.
 
+   🚔 BÜYÜK KOLLUK OPERASYONU İSTİSNASI (kör-nokta düzeltmesi): SİMGESEL/BÜYÜK bir
+   suç altyapısının çökertilmesi/ele geçirilmesi veya kilit failin tutuklanması —
+   amiral bir siber suç forumu (ör. XSS.is, Exploit, BreachForums), büyük bir
+   botnet, önemli bir fidye yazılımı operasyonu/RaaS, uluslararası koordineli
+   takedown — üst düzey bir olaydır:
+     • s (stratejik): 36-40 — ekosisteme vurulan darbe stratejik/istihbari değerdir.
+     • a (aciliyet): 18-20 — bu bir BREAKING gelişmedir; "tamamlandı/olmuş bitmiş"
+       diye DÜŞÜRME. Büyük bir operasyon, aktif bir tehdit kadar günceldir.
+     • e (etki): altyapının ekosistem çapındaki erişimini yansıt (çoğu kez 20-24).
+   ⚠️ Bu istisna YALNIZCA büyük/simgesel altyapı içindir; rutin/yerel tutuklama
+   veya küçük dolandırıcılık operasyonu için geçerli DEĞİLDİR (onlar normal puanlanır).
+
 4) MÜKERRER (mukerrer): Bu haber, aşağıdaki "SON GÜNLERDE RAPORLANAN OLAYLAR" listesindeki bir olayla AYNI mı (aynı kampanya/operasyon/kod adı, ya da aynı aktör + aynı mağdur)?
    → aynı = 1 (mükerrer, rapordan çıkarılacak) ; yeni/farklı = 0.
    🔑 Kampanya/operasyon/zararlı yazılım KOD ADI listede geçiyorsa → mukerrer=1.
