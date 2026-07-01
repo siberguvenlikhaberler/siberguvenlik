@@ -325,6 +325,68 @@ def remove_news_item(html, news_id):
     return new_html
 
 
+def extract_top3_card(html, index):
+    """index'inci kritik kartın içeriğini (tr_title, paragraph, link, domain,
+    art_date) çıkarır. Kart gövdeye TAŞINIRKEN (silinmek yerine) kullanılır.
+    Kart yoksa/eksikse None döner."""
+    matches = list(_CARD_RE.finditer(html))
+    if index < 0 or index >= len(matches):
+        return None
+    frag = BeautifulSoup(matches[index].group(0), "html.parser")
+    title_el = frag.find(class_="top3-card-title")
+    para_el = frag.find(class_="top3-card-paragraph")
+    source_el = frag.find(class_="source")
+    tr_title = title_el.get_text(" ", strip=True) if title_el else ""
+    paragraph = para_el.decode_contents().strip() if para_el else ""
+    link = domain = art_date = ""
+    if source_el:
+        a = source_el.find("a")
+        if a:
+            link = a.get("href", "")
+            domain = a.get_text(strip=True)
+        dm = re.search(r"\d{2}\.\d{2}\.\d{4}", source_el.get_text())
+        if dm:
+            art_date = dm.group(0)
+    if not tr_title or not paragraph:
+        return None
+    return tr_title, paragraph, link, domain, art_date
+
+
+def build_news_item_html(tr_title, paragraph, link, domain, art_date, item_id="haber-90000"):
+    """main.py:_render_item kalıbının aynısıyla bir gövde haber bloğu üretir.
+    item_id geçici verilir; insert sonrası renumber_and_reflow yeniden numaralar."""
+    return (
+        f'            <div class="news-item" id="{item_id}">\n'
+        f'                <div class="news-title"><b>{tr_title}</b></div>\n'
+        f'                <p class="news-content">{paragraph}</p>\n'
+        '                <p class="source"><b>(XXXXXXX, AÇIK - '
+        f'<a href="{link}" target="_blank">{domain}</a>, {art_date})</b></p>\n'
+        "            </div>\n"
+    )
+
+
+def insert_body_news_item(html, item_html):
+    """Bir gövde haber bloğunu 'diğer haberler' listesinin SONUNA (regular
+    haberlerin bittiği yere) ekler. Sıra: sosyal kutudan / zafiyet başlığından
+    hemen ÖNCE; hiçbiri yoksa son regular haberin ardına. Böylece çıkarılan
+    kritik haber silinmez, gövdeye taşınır (renumber_and_reflow sonra numaralar)."""
+    for anchor in ('<div class="social-signals">',
+                   '<!-- SOCIAL_SIGNALS_HERE -->',
+                   '<div class="vuln-section-heading"'):
+        idx = html.find(anchor)
+        if idx != -1:
+            line_start = html.rfind("\n", 0, idx) + 1
+            return html[:line_start] + item_html + html[line_start:]
+    # Son çare: son REGULAR haber bloğunun ardına (vuln-item'ları hariç tutar).
+    reg = list(re.finditer(
+        r'[ \t]*<div class="news-item" id="haber-\d+">.*?\n[ \t]*</div>\n',
+        html, re.DOTALL))
+    if reg:
+        m = reg[-1]
+        return html[: m.end()] + item_html + html[m.end():]
+    return html + item_html
+
+
 def _esc_html_text(s):
     """Tablo hücresine düz metin yazmak için minimal HTML kaçışı."""
     return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -811,16 +873,21 @@ def process_replace(payload, token):
         return err
 
     def _t(html):
+        # Çıkarılan kritik haber SİLİNMEZ: içeriğini al, kart yenisiyle değişince
+        # gövdedeki 'diğer haberler' listesine taşı.
+        demoted = extract_top3_card(html, remove_index)
         html = replace_top3_card(html, remove_index, card_html)
         if news_id:
             html = remove_news_item(html, news_id)
+        if demoted:
+            html = insert_body_news_item(html, build_news_item_html(*demoted))
         html = renumber_and_reflow(html)
         return regenerate_exec_summary(html)
 
     return _commit_transform(
         index_html, archive_path, _t, token,
-        f"manuel: kritik haber güncellendi ({report_date})",
-        {"card_html": card_html, "removed_news_id": news_id},
+        f"manuel: kritik haber güncellendi, çıkarılan haber gövdeye taşındı ({report_date})",
+        {"card_html": card_html, "removed_news_id": news_id, "demoted_to_body": True},
     )
 
 
