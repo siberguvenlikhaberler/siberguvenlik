@@ -407,12 +407,33 @@ def renumber_and_reflow(html):
 
 def replace_top3_card(html, index, new_card_html):
     matches = list(_CARD_RE.finditer(html))
-    if len(matches) < 3:
-        raise ValueError(f"Beklenen 3 kritik kart bulunamadı (bulunan: {len(matches)}).")
+    if len(matches) < 1:
+        raise ValueError(f"Kritik kart bulunamadı (bulunan: {len(matches)}).")
     if index < 0 or index >= len(matches):
         raise ValueError("Geçersiz kart indeksi.")
     m = matches[index]
     return html[: m.start()] + new_card_html + html[m.end():]
+
+
+def add_top3_card(html, new_card_html):
+    """Yeni kritik kartı mevcut kartların SONUNA ekler (mevcut hiçbirini silmez).
+    Kartlar top3-section içinde; son kartın hemen ardına, section kapanışından
+    ÖNCE yerleştirilir. En az 1 kart olmalıdır (konum referansı için)."""
+    matches = list(_CARD_RE.finditer(html))
+    if not matches:
+        raise ValueError("Kritik kart bulunamadı; eklenecek konum belirlenemedi.")
+    last = matches[-1]
+    return html[: last.end()] + new_card_html + html[last.end():]
+
+
+def delete_top3_card(html, index):
+    """index'inci kritik kartı siler (yerine bir şey koymaz). Kalan kart sayısı
+    azalır; günlük otomatik üretim ertesi gün yeniden 3 kart kurar."""
+    matches = list(_CARD_RE.finditer(html))
+    if index < 0 or index >= len(matches):
+        raise ValueError("Geçersiz kart indeksi.")
+    m = matches[index]
+    return html[: m.start()] + html[m.end():]
 
 
 def report_date_from_html(html):
@@ -661,169 +682,220 @@ def gh_commit_files(files, token, message):
 # Çekirdek iş akışı
 # ─────────────────────────────────────────────────────────────────────────────
 def process(payload):
-    """Ortak doğrulama + moda göre dallanma.
+    """Ortak doğrulama + İŞLEME göre dallanma.
 
-    mode = "url"    → URL'den LLM ile yeni haber üret (mevcut akış).
-    mode = "report" → rapordaki diğer bir haberi kritik karta TAŞI (URL/LLM yok).
-    Geriye dönük uyum: mode yoksa ama url varsa "url" kabul edilir.
+    action = "replace" → bir kritik kartı çıkar + yerine ekle (URL/rapor kaynağı).
+    action = "add"     → mevcut hiçbirini SİLMEDEN yeni kritik kart ekle (4'e çıkar).
+    action = "delete"  → bir haberi SİL (kritik kart VEYA alt liste haberi).
+    Geriye dönük uyum: action yoksa "replace" kabul edilir.
     """
     password = (payload.get("password") or "")
-    mode = (payload.get("mode") or "").strip().lower()
-    if not mode:
-        mode = "url" if (payload.get("url") or "").strip() else ""
-
     expected = os.getenv("MANUAL_ADD_PASSWORD", "")
     if not expected:
         return 500, {"error": "Sunucuda MANUAL_ADD_PASSWORD tanımlı değil."}
     if not hmac.compare_digest(password, expected):
         return 401, {"error": "Şifre hatalı."}
 
-    try:
-        remove_index = int(payload.get("remove_index"))
-    except (TypeError, ValueError):
-        return 400, {"error": "Geçersiz remove_index."}
-    if remove_index not in (0, 1, 2):
-        return 400, {"error": "Çıkarılacak haber 0-2 aralığında olmalı."}
-
     token = os.getenv("GH_TOKEN", "")
     if not token:
         return 500, {"error": "Sunucuda GH_TOKEN tanımlı değil."}
 
-    if mode == "report":
-        return process_report(payload, remove_index, token)
-    if mode == "url":
-        return process_url(payload, remove_index, token)
-    return 400, {"error": "Geçersiz mod."}
+    action = (payload.get("action") or "replace").strip().lower()
+    if action == "delete":
+        return process_delete(payload, token)
+    if action == "add":
+        return process_add(payload, token)
+    if action == "replace":
+        return process_replace(payload, token)
+    return 400, {"error": "Geçersiz işlem."}
 
 
-def process_report(payload, remove_index, token):
-    """Rapordaki bir 'diğer haber'i kritik karta TAŞI: kritik kartı değiştir,
-    seçilen haberi alt listeden (ve yönetici tablosundan) kaldır. URL/LLM yok."""
-    news_id = (payload.get("news_id") or "").strip()
-    if not re.match(r"^haber-\d+$", news_id):
-        return 400, {"error": "Geçersiz haber kimliği."}
+def _read_index(token):
+    """index.html'i oku; (html, rapor_tarihi, arşiv_yolu) döner."""
+    index_html, _ = gh_get_file(INDEX_PATH, token)
+    report_date, archive_path = report_date_from_html(index_html)
+    return index_html, report_date, archive_path
 
+
+def _commit_transform(index_html, archive_path, transform, token, msg, extra):
+    """`transform(html) -> (yeni_html, summary_mode)` fonksiyonunu index'e ve
+    (varsa) arşive uygular, TEK atomik commit'te yazar. Ortak yazma yolu:
+    replace/add/delete işlemlerinin hepsi bunu kullanır."""
     try:
-        index_html, _ = gh_get_file(INDEX_PATH, token)
-        report_date, archive_path = report_date_from_html(index_html)
-    except Exception as e:
-        return 502, {"error": f"index.html okunamadı: {str(e)[:160]}"}
-
-    try:
-        tr_title, paragraph, link, domain, art_date = extract_news_item(index_html, news_id)
-    except Exception as e:
-        return 422, {"error": f"Seçilen haber çıkarılamadı: {str(e)[:160]}"}
-
-    card_html = build_card_html(tr_title, paragraph, link, domain, art_date or report_date)
-    try:
-        new_index = replace_top3_card(index_html, remove_index, card_html)
-        new_index = remove_news_item(new_index, news_id)
-        # Haber çıkınca kalan listeyi 1..N yeniden numarala + tabloyu boşluksuz kur.
-        new_index = renumber_and_reflow(new_index)
-        # Takas sonrası Yönetici Özeti'ni güncel kart kümesine göre yeniden üret.
-        new_index, summary_mode = regenerate_exec_summary(new_index)
+        new_index, summary_mode = transform(index_html)
     except Exception as e:
         return 500, {"error": f"index.html güncellenemedi: {str(e)[:160]}"}
 
+    files = [(INDEX_PATH, new_index)]
     try:
         archive_html, _ = gh_get_file(archive_path, token)
-        new_archive = remove_news_item(
-            replace_top3_card(archive_html, remove_index, card_html), news_id
-        )
-        new_archive = renumber_and_reflow(new_archive)
-        new_archive, _ = regenerate_exec_summary(new_archive)
+        new_archive, _ = transform(archive_html)
+        files.append((archive_path, new_archive))
     except Exception:
         # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
-        new_archive = None
+        pass
 
-    msg = f"manuel: kritik haber rapordan taşındı ({report_date})"
-    files = [(INDEX_PATH, new_index)]
-    if new_archive is not None:
-        files.append((archive_path, new_archive))
     try:
         gh_commit_files(files, token, msg)
     except Exception as e:
         return 502, {"error": f"Commit başarısız: {str(e)[:160]}"}
 
-    return 200, {
-        "ok": True,
-        "card_html": card_html,
-        "removed_news_id": news_id,
-        "tr_title": tr_title,
-        "domain": domain,
-        "date": report_date,
-        "summary_mode": summary_mode,
-        "summary_warning": _summary_warning(summary_mode),
-    }
+    resp = {"ok": True, "summary_mode": summary_mode,
+            "summary_warning": _summary_warning(summary_mode)}
+    resp.update(extra or {})
+    return 200, resp
 
 
-def process_url(payload, remove_index, token):
-    url = (payload.get("url") or "").strip()
-    if not re.match(r"^https?://", url, re.IGNORECASE):
-        return 400, {"error": "Geçerli bir URL giriniz."}
-    if not os.getenv("OPENROUTER_API_KEY", ""):
-        return 500, {"error": "Sunucuda OPENROUTER_API_KEY tanımlı değil."}
+def _card_from_source(payload, index_html, report_date, token):
+    """Kaynağa (mode) göre kritik kart HTML'i üretir.
 
-    # 1) Makaleyi çek
+    mode = "report" → rapordaki bir haberi karta dönüştür (alt listeden TAŞINIR).
+    mode = "url"    → URL'yi çek + LLM ile içerik üret.
+    Dönüş: (card_html, tasinan_news_id | None, hata | None). Hata varsa
+    (code, body) tuple'ıdır; çağıran doğrudan döndürür."""
+    mode = (payload.get("mode") or "").strip().lower()
+    if not mode:
+        mode = "url" if (payload.get("url") or "").strip() else ""
+
+    if mode == "report":
+        news_id = (payload.get("news_id") or "").strip()
+        if not re.match(r"^haber-\d+$", news_id):
+            return None, None, (400, {"error": "Geçersiz haber kimliği."})
+        try:
+            tr_title, paragraph, link, domain, art_date = extract_news_item(index_html, news_id)
+        except Exception as e:
+            return None, None, (422, {"error": f"Seçilen haber çıkarılamadı: {str(e)[:160]}"})
+        card_html = build_card_html(tr_title, paragraph, link, domain, art_date or report_date)
+        return card_html, news_id, None
+
+    if mode == "url":
+        url = (payload.get("url") or "").strip()
+        if not re.match(r"^https?://", url, re.IGNORECASE):
+            return None, None, (400, {"error": "Geçerli bir URL giriniz."})
+        if not os.getenv("OPENROUTER_API_KEY", ""):
+            return None, None, (500, {"error": "Sunucuda OPENROUTER_API_KEY tanımlı değil."})
+        try:
+            full_text, domain = fetch_article(url)
+        except Exception as e:
+            return None, None, (502, {"error": f"URL çekilemedi: {str(e)[:160]}"})
+        if not full_text or len(full_text.split()) < 50:
+            return None, None, (422, {"error": "Makale metni çıkarılamadı veya çok kısa."})
+        try:
+            tr_title, paragraph, gen_err = generate_content(url, full_text, report_date)
+        except Exception as e:
+            return None, None, (502, {"error": f"İçerik üretilemedi: {str(e)[:200]}"})
+        if not tr_title or not paragraph:
+            return None, None, (502, {"error": gen_err or "LLM geçerli başlık/paragraf döndürmedi."})
+        card_html = build_card_html(tr_title, paragraph, url, domain, report_date)
+        return card_html, None, None
+
+    return None, None, (400, {"error": "Geçersiz kaynak modu."})
+
+
+def process_replace(payload, token):
+    """Bir kritik kartı çıkar + yerine (URL/rapor) yeni kart koy. (Mevcut akış.)"""
     try:
-        full_text, domain = fetch_article(url)
-    except Exception as e:
-        return 502, {"error": f"URL çekilemedi: {str(e)[:160]}"}
-    if not full_text or len(full_text.split()) < 50:
-        return 422, {"error": "Makale metni çıkarılamadı veya çok kısa."}
+        remove_index = int(payload.get("remove_index"))
+    except (TypeError, ValueError):
+        return 400, {"error": "Geçersiz remove_index."}
+    if remove_index < 0:
+        return 400, {"error": "Geçersiz remove_index."}
 
-    # 2) index.html + tarih + arşiv yolu
     try:
-        index_html, index_sha = gh_get_file(INDEX_PATH, token)
-        report_date, archive_path = report_date_from_html(index_html)
+        index_html, report_date, archive_path = _read_index(token)
     except Exception as e:
         return 502, {"error": f"index.html okunamadı: {str(e)[:160]}"}
 
-    # 3) BİZİM formatımızda içerik üret
+    card_html, news_id, err = _card_from_source(payload, index_html, report_date, token)
+    if err:
+        return err
+
+    def _t(html):
+        html = replace_top3_card(html, remove_index, card_html)
+        if news_id:
+            html = remove_news_item(html, news_id)
+        html = renumber_and_reflow(html)
+        return regenerate_exec_summary(html)
+
+    return _commit_transform(
+        index_html, archive_path, _t, token,
+        f"manuel: kritik haber güncellendi ({report_date})",
+        {"card_html": card_html, "removed_news_id": news_id},
+    )
+
+
+def process_add(payload, token):
+    """Mevcut hiçbirini SİLMEDEN yeni bir kritik kart ekle (kritik sayısı +1).
+    Kaynak URL ise LLM ile üretilir; rapor ise seçilen haber alt listeden
+    TAŞINIR (yeni karta dönüşür, gövdeden kaldırılır)."""
     try:
-        tr_title, paragraph, gen_err = generate_content(url, full_text, report_date)
+        index_html, report_date, archive_path = _read_index(token)
     except Exception as e:
-        return 502, {"error": f"İçerik üretilemedi: {str(e)[:200]}"}
-    if not tr_title or not paragraph:
-        return 502, {"error": gen_err or "LLM geçerli başlık/paragraf döndürmedi."}
+        return 502, {"error": f"index.html okunamadı: {str(e)[:160]}"}
 
-    # 4) Kartı kur ve her iki dosyada ilgili kartı değiştir
-    card_html = build_card_html(tr_title, paragraph, url, domain, report_date)
+    card_html, news_id, err = _card_from_source(payload, index_html, report_date, token)
+    if err:
+        return err
+
+    def _t(html):
+        html = add_top3_card(html, card_html)
+        if news_id:
+            html = remove_news_item(html, news_id)
+        html = renumber_and_reflow(html)
+        return regenerate_exec_summary(html)
+
+    return _commit_transform(
+        index_html, archive_path, _t, token,
+        f"manuel: kritik habere ekleme yapıldı ({report_date})",
+        {"card_html": card_html, "removed_news_id": news_id, "added": True},
+    )
+
+
+def process_delete(payload, token):
+    """Bir haberi SİL. delete_target = "critical" (kritik kart, remove_index)
+    veya "body" (alt liste haberi, news_id). Yerine bir şey konmaz."""
+    target = (payload.get("delete_target") or "").strip().lower()
     try:
-        new_index = replace_top3_card(index_html, remove_index, card_html)
-        # Takas sonrası Yönetici Özeti'ni güncel kart kümesine göre yeniden üret.
-        new_index, summary_mode = regenerate_exec_summary(new_index)
+        index_html, report_date, archive_path = _read_index(token)
     except Exception as e:
-        return 500, {"error": f"index.html kart değişimi başarısız: {str(e)[:160]}"}
+        return 502, {"error": f"index.html okunamadı: {str(e)[:160]}"}
 
-    archive_html = archive_sha = None
-    try:
-        archive_html, archive_sha = gh_get_file(archive_path, token)
-        new_archive = replace_top3_card(archive_html, remove_index, card_html)
-        new_archive, _ = regenerate_exec_summary(new_archive)
-    except Exception:
-        # Arşiv dosyası yoksa/okunamıyorsa yalnızca index güncellenir.
-        new_archive = None
+    if target == "critical":
+        try:
+            idx = int(payload.get("remove_index"))
+        except (TypeError, ValueError):
+            return 400, {"error": "Geçersiz remove_index."}
+        if idx < 0:
+            return 400, {"error": "Geçersiz remove_index."}
 
-    # 5) Commit — index + (varsa) arşiv TEK atomik commit'te yazılır.
-    msg = f"manuel: kritik haber güncellendi ({report_date})"
-    files = [(INDEX_PATH, new_index)]
-    if new_archive is not None:
-        files.append((archive_path, new_archive))
-    try:
-        gh_commit_files(files, token, msg)
-    except Exception as e:
-        return 502, {"error": f"Commit başarısız: {str(e)[:160]}"}
+        def _t(html):
+            html = delete_top3_card(html, idx)
+            html = renumber_and_reflow(html)
+            return regenerate_exec_summary(html)
 
-    return 200, {
-        "ok": True,
-        "card_html": card_html,
-        "tr_title": tr_title,
-        "domain": domain,
-        "date": report_date,
-        "summary_mode": summary_mode,
-        "summary_warning": _summary_warning(summary_mode),
-    }
+        return _commit_transform(
+            index_html, archive_path, _t, token,
+            f"manuel: kritik haber silindi ({report_date})",
+            {"deleted_index": idx},
+        )
+
+    if target == "body":
+        news_id = (payload.get("news_id") or "").strip()
+        if not re.match(r"^haber-\d+$", news_id):
+            return 400, {"error": "Geçersiz haber kimliği."}
+
+        def _t(html):
+            html = remove_news_item(html, news_id)
+            html = renumber_and_reflow(html)
+            return regenerate_exec_summary(html)
+
+        return _commit_transform(
+            index_html, archive_path, _t, token,
+            f"manuel: haber silindi ({report_date})",
+            {"removed_news_id": news_id},
+        )
+
+    return 400, {"error": "Geçersiz silme hedefi."}
 
 
 class handler(BaseHTTPRequestHandler):

@@ -1,33 +1,24 @@
 /*
- * Haber Ekle / Değiştir — anasayfa (index.html) pop-up'ı.
+ * Haber Ekle / Değiştir / Sil — anasayfa (index.html) pop-up'ı.
  *
- * Akış:
- *   1. Anasayfada sağ üstteki "Haber ekle/değiştir" butonu bu pop-up'ı açar.
- *   2. Kullanıcı: şifre girer, 3 kritik haberden çıkarılacak olanı işaretler ve
- *      o boşluğu doldurmak için KAYNAK seçer:
- *        (a) URL ile yeni haber  → bir URL girilir (sunucu çeker + LLM ile üretir).
- *        (b) Rapordan haber seç  → raporun alt bölümündeki diğer haberlerden biri
- *            (yalnızca BAŞLIKLARI listelenir) seçilir. Bu seçenek URL/LLM gerektirmez;
- *            içerik zaten raporda vardır. Seçilen haber alt listeden ÇIKARILIP
- *            (taşınıp) kritik karta dönüştürülür.
- *   3. "Tamam" → sunucudaki /api/manual_add uç noktasına POST gider.
- *      Sunucu YALNIZCA ilgili kritik kartı (ve rapor modunda taşınan haberi)
- *      docs/index.html + o günün arşiv raporunda değiştirip main'e commit eder ve
- *      üretilen kartı geri döner.
- *   4. Dönen kart, sayfadaki ilgili kart ile ANINDA değiştirilir; rapor modunda
- *      taşınan haber alt listeden ANINDA kaldırılır.
+ * Üç işlem:
+ *   • Değiştir : bir kritik haberi çıkar + yerine ekle (URL ile yeni haber VEYA
+ *                rapordaki başka bir haberi taşı).
+ *   • Ekle     : mevcut hiçbirini SİLMEDEN yeni bir kritik kart ekle (kritik 4'e
+ *                çıkar). Kaynak URL veya rapordaki bir haber olabilir.
+ *   • Sil      : bir haberi SİL — kritik 3'ten biri (o an 2 kart kalır) VEYA alt
+ *                listedeki (diğer haberler) bir haber. Yerine bir şey konmaz.
  *
- * NOT: Tüm asıl iş (URL getirme, LLM, dosya yazma, commit) SUNUCU tarafında
- * çalışır. Bu dosya yalnızca arayüz + uç noktaya istek atar.
+ * Tüm asıl iş (URL getirme, LLM, dosya yazma, commit) SUNUCU tarafında
+ * (/api/manual_add) çalışır. Bu dosya yalnızca arayüz + uç noktaya istek atar.
  */
 (function () {
   "use strict";
 
   // ── Sunucu uç noktası — Vercel'e deploy ettikten sonra BURAYI doldur ──────
-  // Dosya api/manual_add.py olduğundan yol /api/manual_add olur:
   var MANUAL_ADD_ENDPOINT = "https://siberguvenlik-5hqc.vercel.app/api/manual_add";
 
-  // ── Stiller (yalnızca MODAL stilleri; buton stili artık ana sayfa CSS'inde) ──
+  // ── Stiller (yalnızca MODAL stilleri; buton stili ana sayfa CSS'inde) ──
   var CSS = [
     ".ma-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;",
     "align-items:center;justify-content:center;z-index:9999;padding:16px;}",
@@ -48,25 +39,33 @@
     ".ma-remove-list .opt:last-child{border-bottom:none;}",
     ".ma-remove-list .opt:hover{background:#f8fafc;}",
     ".ma-remove-list .opt input{margin-top:3px;}",
+    ".ma-tag{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;",
+    "margin-right:6px;vertical-align:middle;letter-spacing:.3px;}",
+    ".ma-tag.crit{background:#fee2e2;color:#b91c1c;}",
+    ".ma-tag.body{background:#e0e7ff;color:#3730a3;}",
     ".ma-hint{font-size:12px;color:#64748b;margin:4px 0 0;}",
-    // Kaynak seçici sekmeleri
+    // İşlem seçici + kaynak sekmeleri (ortak .ma-tab görünümü)
     ".ma-tabs{display:flex;gap:8px;margin:6px 0 0;}",
-    // Pasif sekmeler artık arka planla aynı DEĞİL: dolgulu zemin + belirgin kenarlık.
     ".ma-tab{flex:1;text-align:center;padding:9px 8px;border:1.5px solid #94a3b8;border-radius:8px;",
     "font-size:13px;font-weight:600;cursor:pointer;background:#e8edf5;color:#334155;transition:all .15s;}",
     ".ma-tab:hover{background:#dbe3ef;}",
     ".ma-tab.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8;box-shadow:0 2px 6px rgba(29,78,216,.3);}",
     ".ma-tab:disabled{opacity:.5;cursor:not-allowed;}",
-    // "Diğer Haberlerden Seç" sekmesi pasifken amber dolgu + nabız parıltısıyla
-    // gözü ANINDA çeker; üzerine gelince/aktifken animasyon durur.
+    // "Diğer Haberlerden Seç" sekmesi pasifken amber dolgu + nabız parıltısı
     ".ma-tab-report:not(.active):not(:disabled){background:#f59e0b;border-color:#d97706;color:#fff;",
     "font-weight:700;animation:ma-pulse 1.7s ease-in-out infinite;}",
     ".ma-tab-report:not(.active):not(:disabled):hover{background:#d97706;animation:none;}",
     "@keyframes ma-pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.6);}",
     "50%{box-shadow:0 0 0 7px rgba(245,158,11,0);}}",
     "@media (prefers-reduced-motion:reduce){.ma-tab-report{animation:none!important;}}",
+    // Sil sekmesi vurgusu (aktifken kırmızı)
+    ".ma-op-delete.active{background:#dc2626!important;border-color:#dc2626!important;",
+    "box-shadow:0 2px 6px rgba(220,38,38,.3)!important;}",
     ".ma-source-block{display:none;}",
     ".ma-source-block.active{display:block;}",
+    // İşlem blokları (değiştir/ekle/sil) — yalnızca aktif olan gösterilir
+    ".ma-op-block{display:none;}",
+    ".ma-op-block.active{display:block;}",
     ".ma-actions{padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;}",
     ".ma-btn{padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;",
     "border:1px solid transparent;font-family:inherit;}",
@@ -85,6 +84,8 @@
     "[data-theme='dark'] .ma-remove-list{border-color:#30363d;}",
     "[data-theme='dark'] .ma-remove-list .opt{border-bottom-color:#21262d;}",
     "[data-theme='dark'] .ma-remove-list .opt:hover{background:#21262d;}",
+    "[data-theme='dark'] .ma-tag.crit{background:#3b1116;color:#fca5a5;}",
+    "[data-theme='dark'] .ma-tag.body{background:#1e1b4b;color:#a5b4fc;}",
     "[data-theme='dark'] .ma-tab{background:#21262d;color:#c9d1d9;border-color:#484f58;}",
     "[data-theme='dark'] .ma-tab:hover{background:#2d333b;}",
     "[data-theme='dark'] .ma-tab.active{background:#388bfd;color:#fff;border-color:#388bfd;box-shadow:0 2px 6px rgba(56,139,253,.35);}",
@@ -93,9 +94,6 @@
     "[data-theme='dark'] .ma-actions{border-top-color:#30363d;}",
     "[data-theme='dark'] .ma-btn.cancel{background:#161b22;color:#c9d1d9;border-color:#30363d;}",
     // ── İlerleme katmanı (işlem sürerken) ───────────────────────────────────
-    // Ekrana SABİT (fixed) konumlanır; kullanıcı modal içinde nereye kaydırmış
-    // olursa olsun her zaman görünür. İşlem boyunca formun üstünü kaplar ve
-    // etkileşimi bloklar (yanlışlıkla ikinci gönderimi önler).
     ".ma-progress{position:fixed;inset:0;z-index:10000;display:none;align-items:center;",
     "justify-content:center;padding:16px;background:rgba(15,23,42,.55);}",
     ".ma-progress.show{display:flex;}",
@@ -138,8 +136,11 @@
     );
   }
 
+  function top3Section() {
+    return document.querySelector("#onemli-gelismeler-block .top3-section");
+  }
+
   // Raporun alt bölümündeki "diğer haberler" — kritik-3 kartları HARİÇ.
-  // Her birinin başlığı + sabit kimliği (id="haber-N") döner.
   function otherNewsItems() {
     var items = Array.prototype.slice.call(
       document.querySelectorAll(".news-section .news-item[id]")
@@ -164,7 +165,7 @@
   }
 
   function closeModal() {
-    stopProgress();  // varsa ilerleme zamanlayıcısını da durdur (sızıntı önle)
+    stopProgress();
     var ov = document.getElementById("ma-overlay");
     if (ov) ov.parentNode.removeChild(ov);
   }
@@ -174,8 +175,6 @@
     if (!m) return;
     m.className = "ma-msg " + kind;
     m.textContent = text;
-    // Mesaj modalın EN ÜSTÜNDE; kullanıcı aşağı kaymışsa görünmez. Sonucu/uyarıyı
-    // kaçırmasın diye modalı en üste kaydır.
     scrollModalTop();
   }
 
@@ -186,12 +185,6 @@
   }
 
   // ── İşlem ilerleme göstergesi ─────────────────────────────────────────────
-  // Aşamalar (steps) sunucunun GERÇEK iş sırasını yansıtır ve sırayla gösterilir.
-  // İşin uzun kuyruğu yapay zekâ (içerik + Yönetici Özeti üretimi) olduğundan,
-  // son aşamalara gelindiğinde tek satırda DONUP KALMAMAK için son iki mesaj
-  // arasında dönülür; ayrıca CANLI geçen-süre sayacı işin sürdüğünü saniye
-  // saniye gösterir. (Sunucu tek yanıt döndürdüğü için aşamalar istemcide
-  // zamanlanır; sıralama ve son uzun-adım gerçek pipeline ile birebir aynıdır.)
   var _progressTimer = null;
   var _elapsedTimer = null;
   function _fmtElapsed(sec) {
@@ -204,7 +197,7 @@
     var elapsedEl = document.getElementById("ma-progress-elapsed");
     if (!layer || !stepEl) return;
     var i = 0;
-    var loopStart = Math.max(0, steps.length - 2); // son iki mesaj kuyrukta döner
+    var loopStart = Math.max(0, steps.length - 2);
     stepEl.textContent = steps[0];
     layer.classList.add("show");
     if (_progressTimer) clearInterval(_progressTimer);
@@ -213,7 +206,6 @@
       i = (i < steps.length - 1) ? i + 1 : loopStart;
       stepEl.textContent = steps[i];
     }, 4500);
-    // Canlı geçen-süre sayacı (saniyede bir) — işin sürdüğünün somut kanıtı.
     var startTs = Date.now();
     if (elapsedEl) {
       elapsedEl.textContent = "Geçen süre: 0:00";
@@ -230,7 +222,7 @@
     if (layer) layer.classList.remove("show");
   }
 
-  // Aktif kaynak modu ("url" | "report") — sekmeleri ve blokları senkronlar.
+  // Aktif KAYNAK modu ("url" | "report") — değiştir/ekle işlemlerinde kullanılır.
   function setMode(mode) {
     ["url", "report"].forEach(function (m) {
       var tab = document.getElementById("ma-tab-" + m);
@@ -238,6 +230,42 @@
       if (tab) tab.classList.toggle("active", m === mode);
       if (blk) blk.classList.toggle("active", m === mode);
     });
+  }
+
+  function currentMode() {
+    var rt = document.getElementById("ma-tab-report");
+    return (rt && rt.classList.contains("active")) ? "report" : "url";
+  }
+
+  // Aktif İŞLEM ("replace" | "add" | "delete") — blokları gösterir/gizler.
+  function setOp(op) {
+    ["replace", "add", "delete"].forEach(function (o) {
+      var tab = document.getElementById("ma-op-" + o);
+      if (tab) tab.classList.toggle("active", o === op);
+    });
+    // Bloklar: değiştir → çıkarılacak liste + kaynak; ekle → yalnız kaynak;
+    // sil → yalnız silinecek liste.
+    var showRemove = (op === "replace");
+    var showSource = (op === "replace" || op === "add");
+    var showDelete = (op === "delete");
+    var b;
+    if ((b = document.getElementById("ma-blk-replace-remove"))) b.classList.toggle("active", showRemove);
+    if ((b = document.getElementById("ma-blk-source"))) b.classList.toggle("active", showSource);
+    if ((b = document.getElementById("ma-blk-delete"))) b.classList.toggle("active", showDelete);
+    // Kaynak başlığı işleme göre değişir.
+    var lbl = document.getElementById("ma-src-label");
+    if (lbl) lbl.textContent = (op === "add")
+      ? "Ne eklensin? (yeni bir kritik kart olarak eklenecek)"
+      : "Yerine ne eklensin?";
+  }
+
+  function currentOp() {
+    var ops = ["add", "delete"];
+    for (var i = 0; i < ops.length; i++) {
+      var t = document.getElementById("ma-op-" + ops[i]);
+      if (t && t.classList.contains("active")) return ops[i];
+    }
+    return "replace";
   }
 
   window.openManualAddModal = function () {
@@ -250,7 +278,8 @@
       return;
     }
 
-    var optsHtml = cards.map(function (c, i) {
+    // Değiştir: çıkarılacak kritik haber listesi.
+    var removeOptsHtml = cards.map(function (c, i) {
       return (
         '<label class="opt"><input type="radio" name="ma-remove" value="' + i + '">' +
         "<span>" + esc(cardTitle(c)) + "</span></label>"
@@ -259,6 +288,8 @@
 
     var others = otherNewsItems();
     var hasOthers = others.length > 0;
+
+    // Ekle/Değiştir kaynağı: rapordan taşınacak haber listesi.
     var reportOptsHtml = hasOthers
       ? others.map(function (n) {
           return (
@@ -268,32 +299,68 @@
         }).join("")
       : '<div class="opt"><span style="color:#94a3b8;">Bu raporda taşınabilecek başka haber yok.</span></div>';
 
+    // Sil: kritik kartlar + alt liste haberleri (birleşik). value = "crit:i" | "body:id".
+    var deleteOptsHtml = cards.map(function (c, i) {
+      return (
+        '<label class="opt"><input type="radio" name="ma-delete" value="crit:' + i + '">' +
+        '<span><span class="ma-tag crit">KRİTİK</span>' + esc(cardTitle(c)) + "</span></label>"
+      );
+    }).join("") + others.map(function (n) {
+      return (
+        '<label class="opt"><input type="radio" name="ma-delete" value="body:' + esc(n.id) + '">' +
+        '<span><span class="ma-tag body">HABER</span>' + esc(n.title) + "</span></label>"
+      );
+    }).join("");
+
     var overlay = document.createElement("div");
     overlay.className = "ma-overlay";
     overlay.id = "ma-overlay";
     overlay.innerHTML =
       '<div class="ma-modal" role="dialog" aria-modal="true">' +
-        "<h3>Haber Ekle / Değiştir</h3>" +
+        "<h3>Haber Ekle / Değiştir / Sil</h3>" +
         '<div class="ma-msg" id="ma-msg"></div>' +
         '<div class="ma-body">' +
           '<label class="fld" for="ma-pass">Şifre</label>' +
           '<input type="password" id="ma-pass" autocomplete="off" placeholder="••••••••">' +
-          '<label class="fld">Çıkarılacak haberi işaretleyin</label>' +
-          '<div class="ma-remove-list">' + optsHtml + "</div>" +
-          '<label class="fld">Yerine ne eklensin?</label>' +
+
+          '<label class="fld">İşlem</label>' +
           '<div class="ma-tabs">' +
-            '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber ekle</button>' +
-            '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç</button>" +
+            '<button type="button" class="ma-tab" id="ma-op-replace">Değiştir</button>' +
+            '<button type="button" class="ma-tab" id="ma-op-add">Ekle</button>' +
+            '<button type="button" class="ma-tab ma-op-delete" id="ma-op-delete">Sil</button>' +
           "</div>" +
-          '<div class="ma-source-block" id="ma-src-url">' +
-            '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
-            '<input type="url" id="ma-url" placeholder="https://...">' +
-            '<p class="ma-hint">URL\'den üretilen yeni haber, işaretlenen kritik haberle değiştirilecek.</p>' +
+
+          // DEĞİŞTİR: çıkarılacak kritik haber
+          '<div class="ma-op-block" id="ma-blk-replace-remove">' +
+            '<label class="fld">Çıkarılacak kritik haberi işaretleyin</label>' +
+            '<div class="ma-remove-list">' + removeOptsHtml + "</div>" +
           "</div>" +
-          '<div class="ma-source-block" id="ma-src-report">' +
-            '<label class="fld">Eklenecek haberi seçin</label>' +
-            '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
-            '<p class="ma-hint">Seçilen haber alt listeden çıkarılıp (taşınıp) işaretlenen kritik haberin yerine eklenecek.</p>' +
+
+          // KAYNAK (değiştir + ekle ortak)
+          '<div class="ma-op-block" id="ma-blk-source">' +
+            '<label class="fld" id="ma-src-label">Yerine ne eklensin?</label>' +
+            '<div class="ma-tabs">' +
+              '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber ekle</button>' +
+              '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç</button>" +
+            "</div>" +
+            '<div class="ma-source-block" id="ma-src-url">' +
+              '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
+              '<input type="url" id="ma-url" placeholder="https://...">' +
+              '<p class="ma-hint">URL\'den üretilen yeni haber kritik bölüme eklenir.</p>' +
+            "</div>" +
+            '<div class="ma-source-block" id="ma-src-report">' +
+              '<label class="fld">Eklenecek haberi seçin</label>' +
+              '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
+              '<p class="ma-hint">Seçilen haber alt listeden çıkarılıp (taşınıp) kritik bölüme eklenir.</p>' +
+            "</div>" +
+          "</div>" +
+
+          // SİL: kritik + alt liste birleşik
+          '<div class="ma-op-block" id="ma-blk-delete">' +
+            '<label class="fld">Silinecek haberi seçin</label>' +
+            '<div class="ma-remove-list">' + deleteOptsHtml + "</div>" +
+            '<p class="ma-hint">Seçilen haber rapordan kaldırılır (yerine bir şey konmaz). ' +
+            'Kritik bir haber silinirse o an 2 kart kalır; ertesi günkü otomatik rapor yine 3 üretir.</p>' +
           "</div>" +
         "</div>" +
         '<div class="ma-actions">' +
@@ -301,7 +368,6 @@
           '<button class="ma-btn ok" id="ma-ok">Tamam</button>' +
         "</div>" +
       "</div>" +
-      // İşlem sürerken gösterilen, ekrana sabit ilerleme katmanı.
       '<div class="ma-progress" id="ma-progress" role="status" aria-live="polite">' +
         '<div class="ma-progress-card">' +
           '<div class="ma-spinner"></div>' +
@@ -323,65 +389,92 @@
     });
     document.getElementById("ma-cancel").addEventListener("click", closeModal);
     document.getElementById("ma-ok").addEventListener("click", submit);
+    document.getElementById("ma-op-replace").addEventListener("click", function () { setOp("replace"); });
+    document.getElementById("ma-op-add").addEventListener("click", function () { setOp("add"); });
+    document.getElementById("ma-op-delete").addEventListener("click", function () { setOp("delete"); });
     document.getElementById("ma-tab-url").addEventListener("click", function () { setMode("url"); });
     var reportTab = document.getElementById("ma-tab-report");
     if (hasOthers) reportTab.addEventListener("click", function () { setMode("report"); });
 
-    setMode("url");  // varsayılan: URL ile yeni haber
+    setOp("replace");  // varsayılan işlem: Değiştir
+    setMode("url");    // varsayılan kaynak: URL ile yeni haber
   };
-
-  function currentMode() {
-    var rt = document.getElementById("ma-tab-report");
-    return (rt && rt.classList.contains("active")) ? "report" : "url";
-  }
 
   function submit() {
     var pass = (document.getElementById("ma-pass").value || "").trim();
-    var checked = document.querySelector('input[name="ma-remove"]:checked');
-    var mode = currentMode();
-
     if (!pass) { showMsg("err", "Şifre giriniz."); return; }
-    if (!checked) { showMsg("err", "Çıkarılacak haberi işaretleyiniz."); return; }
     if (!MANUAL_ADD_ENDPOINT) {
       showMsg("err", "Sunucu uç noktası yapılandırılmamış (manual-add.js → MANUAL_ADD_ENDPOINT).");
       return;
     }
 
-    var removeIndex = parseInt(checked.value, 10);
-    var payload = { password: pass, mode: mode, remove_index: removeIndex };
+    var op = currentOp();
+    var payload = { password: pass, action: op };
     var steps;
+    // Başarıda istemci-tarafı DOM güncellemesi için bağlam.
+    var ctx = { op: op, removeIndex: -1 };
 
-    if (mode === "url") {
-      var url = (document.getElementById("ma-url").value || "").trim();
-      if (!/^https?:\/\//i.test(url)) { showMsg("err", "Geçerli bir URL giriniz (http/https)."); return; }
-      payload.url = url;
+    if (op === "delete") {
+      var del = document.querySelector('input[name="ma-delete"]:checked');
+      if (!del) { showMsg("err", "Silinecek haberi seçiniz."); return; }
+      var val = del.value;
+      if (val.indexOf("crit:") === 0) {
+        payload.delete_target = "critical";
+        payload.remove_index = parseInt(val.slice(5), 10);
+        ctx.deleteCritIndex = payload.remove_index;
+      } else {
+        payload.delete_target = "body";
+        payload.news_id = val.slice(5);
+        ctx.deleteBodyId = payload.news_id;
+      }
       steps = [
-        "Haber kaynağına bağlanılıyor",
-        "Makale metni çıkarılıyor",
-        "Yapay zekâ ile Türkçe başlık ve özet üretiliyor",
+        "Haber rapordan kaldırılıyor",
+        "Numaralandırma ve indeks tablosu güncelleniyor",
         "Yönetici Özeti yeniden oluşturuluyor (en uzun adım)",
-        "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
         "Değişiklikler GitHub'a kaydediliyor"
       ];
     } else {
-      var newsChecked = document.querySelector('input[name="ma-news"]:checked');
-      if (!newsChecked) { showMsg("err", "Eklenecek haberi seçiniz."); return; }
-      payload.news_id = newsChecked.value;
-      steps = [
-        "Seçilen haber kritik bölüme taşınıyor",
-        "Yönetici Özeti yeni habere göre yeniden oluşturuluyor (en uzun adım)",
-        "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
-        "Değişiklikler GitHub'a kaydediliyor"
-      ];
+      // replace veya add — kaynak (url/report) gerekir.
+      var mode = currentMode();
+      payload.mode = mode;
+
+      if (op === "replace") {
+        var checked = document.querySelector('input[name="ma-remove"]:checked');
+        if (!checked) { showMsg("err", "Çıkarılacak kritik haberi işaretleyiniz."); return; }
+        payload.remove_index = parseInt(checked.value, 10);
+        ctx.removeIndex = payload.remove_index;
+      }
+
+      if (mode === "url") {
+        var url = (document.getElementById("ma-url").value || "").trim();
+        if (!/^https?:\/\//i.test(url)) { showMsg("err", "Geçerli bir URL giriniz (http/https)."); return; }
+        payload.url = url;
+        steps = [
+          "Haber kaynağına bağlanılıyor",
+          "Makale metni çıkarılıyor",
+          "Yapay zekâ ile Türkçe başlık ve özet üretiliyor",
+          "Yönetici Özeti yeniden oluşturuluyor (en uzun adım)",
+          "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
+          "Değişiklikler GitHub'a kaydediliyor"
+        ];
+      } else {
+        var newsChecked = document.querySelector('input[name="ma-news"]:checked');
+        if (!newsChecked) { showMsg("err", "Eklenecek haberi seçiniz."); return; }
+        payload.news_id = newsChecked.value;
+        ctx.movedNewsId = newsChecked.value;
+        steps = [
+          "Seçilen haber kritik bölüme taşınıyor",
+          "Yönetici Özeti yeni habere göre yeniden oluşturuluyor (en uzun adım)",
+          "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
+          "Değişiklikler GitHub'a kaydediliyor"
+        ];
+      }
     }
 
     var okBtn = document.getElementById("ma-ok");
     okBtn.disabled = true;
     startProgress(steps);
 
-    // FAILSAFE: işlem normalde 2-3 dk sürebilir; ama sunucu gerçekten takılırsa
-    // spinner sonsuza dönmesin. 5 dk sonra isteği iptal edip kullanıcıya net
-    // bilgi ver (değişiklik arka planda tamamlanmış olabilir → yenile/kontrol et).
     var controller = (typeof AbortController !== "undefined") ? new AbortController() : null;
     var failsafe = setTimeout(function () {
       if (controller) controller.abort();
@@ -400,15 +493,12 @@
         clearTimeout(failsafe);
         stopProgress();
         if (res.status === 200 && res.data && res.data.ok) {
-          applyCard(removeIndex, res.data.card_html);
-          if (res.data.removed_news_id) removeNewsItem(res.data.removed_news_id);
+          applyResult(ctx, res.data);
           if (res.data.summary_warning) {
-            // Kart güncellendi ama Yönetici Özeti akıcı biçimde üretilemedi —
-            // kullanıcıyı bilgilendir, modalı hemen kapatma.
-            showMsg("err", "Haber güncellendi. UYARI: " + res.data.summary_warning);
+            showMsg("err", "İşlem tamamlandı. UYARI: " + res.data.summary_warning);
             okBtn.disabled = false;
           } else {
-            showMsg("ok", "Haber kaydedildi. Sayfada hemen görünür; ancak yeniden " +
+            showMsg("ok", "İşlem kaydedildi. Sayfada hemen görünür; ancak yeniden " +
               "yüklersen GitHub Pages önbelleği nedeniyle güncel hâlin gelmesi 1-2 dk " +
               "sürebilir (kaybolmadı, kaydedildi).");
             setTimeout(closeModal, 3500);
@@ -432,7 +522,21 @@
       });
   }
 
-  // Sayfadaki ilgili kritik kartı, sunucudan dönen kartla anında değiştirir.
+  // Sunucu sonucunu sayfaya ANINDA yansıt (işleme göre).
+  function applyResult(ctx, data) {
+    if (ctx.op === "replace") {
+      applyCard(ctx.removeIndex, data.card_html);
+      if (data.removed_news_id) removeNewsItem(data.removed_news_id);
+    } else if (ctx.op === "add") {
+      appendCard(data.card_html);
+      if (data.removed_news_id) removeNewsItem(data.removed_news_id);
+    } else if (ctx.op === "delete") {
+      if (data.deleted_index != null) deleteCard(data.deleted_index);
+      if (data.removed_news_id) removeNewsItem(data.removed_news_id);
+    }
+  }
+
+  // Değiştir: index'inci kritik kartı sunucudan dönen kartla değiştirir.
   function applyCard(index, cardHtml) {
     var cards = topCards();
     if (!cardHtml || index < 0 || index >= cards.length) return;
@@ -442,7 +546,25 @@
     if (newCard) cards[index].parentNode.replaceChild(newCard, cards[index]);
   }
 
-  // Rapor modunda: taşınan haberi (ve varsa yönetici tablosundaki satırını) anında kaldırır.
+  // Ekle: yeni kritik kartı kartların sonuna ekler.
+  function appendCard(cardHtml) {
+    var section = top3Section();
+    if (!section || !cardHtml) return;
+    var tmp = document.createElement("div");
+    tmp.innerHTML = cardHtml.trim();
+    var newCard = tmp.querySelector(".top3-card") || tmp.firstChild;
+    if (newCard) section.appendChild(newCard);
+  }
+
+  // Sil (kritik): index'inci kritik kartı sayfadan kaldırır.
+  function deleteCard(index) {
+    var cards = topCards();
+    if (index >= 0 && index < cards.length && cards[index].parentNode) {
+      cards[index].parentNode.removeChild(cards[index]);
+    }
+  }
+
+  // Alt listeden bir haberi (ve varsa yönetici tablosundaki satırını) kaldırır.
   function removeNewsItem(newsId) {
     var item = document.getElementById(newsId);
     if (item && item.parentNode) item.parentNode.removeChild(item);
