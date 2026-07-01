@@ -2607,14 +2607,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                       f"günde manşet olan olay(lar) elendi {xday_dropped}")
         return top3_ids[:3]
 
-    def _load_recent_events(self, days=7):
+    def _load_recent_events(self, days=5):
         """Son `days` günde raporlanan haber BAŞLIKLARINI arşivden okur ve
         skorlama + Kritik 3 promptlarına 'tekrar alma' listesi olarak verir.
-        Bu, GÜNLER ARASI (HAFTALIK) MÜKERRER haberleri engeller.
+        Bu, GÜNLER ARASI MÜKERRER haberleri engeller.
 
-        Pencere 3→7 güne çıkarıldı: skorlayıcı `mukerrer` bayrağı, son bir
-        haftada raporlanmış olayları da yakalar. Başlık (160) + kod adı (80)
-        üst sınırları korunduğundan 7 gün token'ı belirgin şişirmez.
+        Pencere 5 gün (denge): 3 gün haftalık mükerreri kaçırıyordu, 7 gün ise
+        'geçen hafta yama → bu hafta aktif istismar' gibi GELİŞEN haberleri
+        yanlışlıkla eleyebiliyordu. Başlık (160) + kod adı (80) üst sınırları
+        korunduğundan token belirgin şişmez.
 
         Not: Bu metot olmadan recent_events her zaman boş kalıyordu; arşiv
         yazılıyor ama hiç GERİ OKUNMUYORDU — dedup fiilen çalışmıyordu.

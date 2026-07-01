@@ -525,6 +525,16 @@ Her haber için şunları belirle:
    - Bir kolluk operasyonu (ör. "Polis XSS.is forumunu çökertti") KATEGORİSİ `kolluk_operasyonu`dur; başlıkta "XSS" geçmesi onu zafiyet YAPMAZ.
    - "API üzerinden ele geçirme / tam yetki / RCE" gibi teknik ele geçirmeler, aktif APT istismarı + atıf YOKSA `zafiyet_rutin`dir (`zafiyet_aktif_apt` DEĞİL).
    - `zafiyet_aktif_apt` yüksek eşiktir: hem AKTİF istismar hem de nation-state/APT atfı METİNDE açıkça olmalı; şüphedeysen `zafiyet_rutin` ver.
+   - ⛔ SOMUT OLAY ZORUNLULUĞU: `nation_state_apt`, `stratejik_kurum_saldirisi`,
+     `casus_yazilim`, `tedarik_zinciri` etiketleri YALNIZCA gerçekleşmiş/süren
+     SOMUT BİR OLAY (saldırı, kampanya, keşif, operasyon) anlatan haberlere verilir.
+   - ANALİZ / GÖRÜŞ / RİSK DEĞERLENDİRMESİ / TAHMİN yazıları — somut bir olay
+     bildirmiyorsa — `urun_icerik`tir. Sinyaller: "what the numbers say",
+     "the realities of", "lessons from", "how to", "is your", "the state of",
+     "risk", "outlook", "trends", "predictions", genel durum değerlendirmesi.
+     Konusu siber olsa bile OLAY yoksa `urun_icerik` ver, stratejik kategoriye
+     ŞİŞİRME. (Ör. "FIFA 2026 Siber Riski Üzerine Sayılar" bir saldırı DEĞİL,
+     analizdir → `urun_icerik`.)
 
 2) SİBER KAPISI (siber): Haberin ÖZÜNDE somut bir siber boyut (saldırı/zararlı yazılım/zafiyet/casus yazılımı/veri ihlali/siber operasyon ya da bunları DOĞRUDAN etkileyen politika-hukuk) var mı?
    → var = 1 ; yok = 0.  (siber=0 ise haber otomatik gündem dışı kalır; kategori genelde siber_disi/urun_icerik olur.)
@@ -569,6 +579,10 @@ Her haber için şu denetimleri yap:
    • Kolluk operasyonu (forum/botnet çökertme, takedown, tutuklama) yanlışlıkla `zafiyet_*` etiketlenmiş mi? Başlıktaki "XSS", "SQL", "RCE" gibi teknik kelimeler yüzünden yanlış sınıflanmış olabilir → `kolluk_operasyonu` na düzelt.
    • `zafiyet_aktif_apt` etiketi HAK EDİLMİŞ mi? Metinde HEM aktif istismar HEM devlet/APT atfı açıkça var mı? Yoksa `zafiyet_rutin`e indir. (Ör. "API üzerinden tam yetkiyle ele geçirme" tek başına aktif-APT değildir.)
    • Ürün/webinar/röportaj/tavsiye haberi kritik bir kategoriye mi konmuş → `urun_icerik`e düzelt.
+   • ⛔ ANALİZ/GÖRÜŞ/RİSK yazısı stratejik kategoriye mi ŞİŞİRİLMİŞ? Somut bir
+     olay (saldırı/kampanya/keşif) bildirmeyen değerlendirme/tahmin/genel durum
+     yazıları (ör. "FIFA riski üzerine sayılar", "AI gözetiminin gerçekleri")
+     `nation_state_apt`/`stratejik_kurum_saldirisi` OLAMAZ → `urun_icerik`e indir.
 
 2) SİBER BOYUT GERÇEK Mİ?
    • siber=1 verilmiş ama haberin özü aslında saf diplomatik/askeri/ekonomik/siyasi mi? Kelime benzerliği siber boyut değildir → siber=0 ve kat=`siber_disi` yap. (Ör. "istihbarat bütçesi yönetiminin devralınması" → siber=0.)
