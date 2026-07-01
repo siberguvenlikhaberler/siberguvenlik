@@ -44,5 +44,28 @@
     "full_text": "The China-aligned espionage group Mustang Panda is running two campaigns against the Indian government and hydropower targets, deploying new malware and turning a legitimate cloud service into its command channel.\n\nAcronis Threat Research Unit found active compromises inside Indian government networks, including machines used by senior administrative staff, and worked with CERT-In on notification and cleanup.\n\nThe malware abuses Zoho WorkDrive, a cloud storage platform common in India's government sector, to pass commands and exfiltrate data. That is the whole idea: the traffic looks like ordi"
    }
   ]
+ },
+ {
+  "date": "2026-07-01",
+  "views": [
+   {
+    "tr_title": "Çin Bağlantılı Zararlı Yazılımların Japonya Kara Öz Savunma Kuvvetleri Ağlarına Sızması",
+    "paragraph": "Sızdırılan dahili belgeler, Japonya Kara Öz Savunma Kuvvetleri'nin (JGSDF) hassas askeri ağlara bağlı bilgisayarlarda yaklaşık bir yıl boyunca Çinli bilgisayar korsanlığı operasyonlarıyla bağlantılı zararlı yazılım içeren sahte USB bellekler kullandığını ortaya koymuştur. Nikkei Asia tarafından yapılan araştırmaya göre, bu bellekler Mart 2024 tarihinde Japonya'nın merkezindeki bir deprem sonrası yürütülen afet yardım operasyonları sırasında standart tedarik kanalları dışından askeri kullanıma girmiştir. Zararlı yazılım, Şubat 2025'te Osaka yakınlarındaki Itami'de bulunan Orta Ordu karargahında",
+    "title": "USB drives carrying China-linked malware infected Japanese military networks for nearly a year",
+    "full_text": "Leaked internal documents have revealed that for nearly a year Japan's Ground Self-Defense Force (JGSDF) used counterfeit USB flash drives infected with malware on computers connected to sensitive military networks. The USB drives have been linked to Chinese hacking operations, according to an investigation by Nikkei Asia.\n\nNikkei Asia reports that the poisoned flash drives were delivered to the JGSDF in March 2024, during disaster relief operations following an earthquake in central Japan. Via this route they were able to enter military use without having passed through standard procurement c"
+   },
+   {
+    "tr_title": "ToddyCat APT Grubunun Umbrij Aracıyla Kurumsal E-Posta Verilerini Çalması",
+    "paragraph": "ToddyCat isimli gelişmiş kalıcı tehdit grubunun, kurumsal Gmail hesaplarına erişim sağlamak amacıyla Umbrij adlı yeni bir otomasyon aracı geliştirdiği tespit edilmiştir. Siber casusluk faaliyetleri yürüten bu grubun, özellikle devlet kurumları ve kritik altyapı sektörlerindeki e-posta yazışmalarını hedef aldığı belirtilmektedir. Saldırganlar, güvenlik çözümlerini atlatmak için OAuth 2.0 protokolünü istismar ederek tarayıcıların uzaktan hata ayıklama portları üzerinden yetkilendirme kodları ele geçirmektedir. Bu yöntemle Chromium tabanlı tarayıcılarda aktif oturumu bulunan kullanıcıların verile",
+    "title": "ToddyCat: your hidden email assistant. Part 2",
+    "full_text": "We continue to share details on the malicious techniques and toolsets used by the ToddyCat APT group. In the first part of this report, we examined the group’s attacks aimed at stealing data from browsers, as well as from local and cloud email services. The methods used in that campaign indicated that ToddyCat was attempting to access corporate correspondence while evading monitoring tools. However, all of the group’s methods we described previously are effectively detected by EPP and EDR solutions.\n\nThe attackers continued their search for ways to bypass security solutions and developed a new"
+   },
+   {
+    "tr_title": "Progress Kemp LoadMaster'ın API Üzerinden Tam Yetkiyle Ele Geçirilmesi",
+    "paragraph": "Progress Software tarafından geliştirilen Kemp LoadMaster uygulama teslim kontrolcüsü ve yük dengeleyici cihazlarında, kimlik doğrulaması gerektirmeyen kritik bir komut çalıştırma açığı tespit edilmiştir. CVE-2026-8037 olarak izlenen bu zafiyet, ağın uç noktasında yer alan ve sunucu trafiğini yöneten kurumsal cihazların API arayüzü üzerinden doğrudan hedef alınmasına imkan tanımaktadır. Saldırganlar, özel olarak yapılandırılmış JSON taleplerini ilgili uç noktaya göndererek herhangi bir kullanıcı adı veya şifreye ihtiyaç duymadan sistem üzerinde en yüksek yetki seviyesi olan kök kullanıcı hakla",
+    "title": "Progress Kemp LoadMaster Flaw Could Let Attackers Run Root Commands Pre-Auth",
+    "full_text": "A critical vulnerability in Progress Kemp LoadMaster can let an unauthenticated attacker execute arbitrary commands as root on the appliance by sending a crafted request to its API.\n\nThe flaw, tracked as CVE-2026-8037, carries a CVSS score of 9.8 according to ZDI. A patch is available. If you run LoadMaster with the API enabled, update now.\n\nProgress published its advisory on June 4 and says it has not received any reports of exploitation. On June 29, researchers at watchTowr Labs published a detailed technical write-up that walks through the full exploit chain.\n\nLoadMaster is an application d"
+   }
+  ]
  }
 ]
