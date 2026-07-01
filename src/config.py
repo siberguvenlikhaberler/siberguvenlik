@@ -71,6 +71,58 @@ KRITIK3_HISTORY_DAYS = 7
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# PUAN TABANLI DETERMİNİSTİK SEÇİM — RUBRİK & KATEGORİLER
+# ─────────────────────────────────────────────────────────────────────────────
+# Her haber, Skorlayıcı ajan tarafından 4 boyutta puanlanır; toplam (0-100) KOD
+# tarafından hesaplanır ve sıralama/Kritik 3 kararı DETERMİNİSTİK verilir.
+# Ağırlıklar tek yerde — kalibrasyon için buradan değiştirin (her boyutun üst
+# sınırı; Skorlayıcı 0..üst-sınır arası puan verir).
+SCORING_WEIGHTS = {
+    'stratejik':    40,   # Stratejik/istihbari değer (casus yazılım, nation-state APT, stratejik kurum)
+    'etki':         25,   # Etki/ölçek (kaç kurum/ülke/kullanıcı, kritik altyapı)
+    'aciliyet':     20,   # Aciliyet/güncellik (aktif istismar, yeni gelişme)
+    'kaynak_guven': 15,   # Kaynak güveni/doğrulama (birincil kaynak, resmi advisory)
+}
+
+# Skorlayıcının atayabileceği kategori etiketleri (yönlendirme için).
+SCORING_CATEGORIES = (
+    'casus_yazilim',              # ticari/devlet casus yazılımı (NSO/Pegasus, Intellexa vb.)
+    'nation_state_apt',           # devlet destekli APT / ülkeler-arası siber operasyon
+    'stratejik_kurum_saldirisi',  # devlet/ordu/uluslararası kurum/kritik altyapı hedefli
+    'kolluk_operasyonu',          # forum/botnet çökertme, takedown, tutuklama, dava
+    'tedarik_zinciri',            # supply-chain (paket/araç/güncelleme mekanizması)
+    'veri_ihlali',                # veri sızıntısı/ihlali
+    'politika_hukuk',             # siber boyutu olan yasa/yaptırım/mahkeme kararı
+    'zafiyet_aktif_apt',          # zafiyet + AKTİF istismar + APT/nation-state atfı
+    'zafiyet_rutin',              # CVE/patch/PoC — rutin teknik zafiyet
+    'urun_icerik',                # ürün lansmanı, webinar, röportaj, inceleme, tavsiye
+    'siber_disi',                 # doğrudan siber boyutu olmayan haber
+)
+
+# Zafiyet sayılan kategoriler → HTML'de "Güvenlik Açıkları" bölümüne yönlendirilir.
+ZAFIYET_KATEGORILERI = {'zafiyet_rutin', 'zafiyet_aktif_apt'}
+
+# Kritik 3'e ASLA giremeyen kategoriler. Not: 'zafiyet_aktif_apt' listede YOK —
+# aktif istismar + APT atfı olan zafiyet, puanı yeterse Kritik 3'e girebilir.
+KRITIK3_HARIC_KATEGORILER = {'zafiyet_rutin', 'urun_icerik', 'siber_disi'}
+
+# Deterministik eşitlik-bozucu: aynı toplam puanda kategori önceliği (yüksek=önce).
+KATEGORI_ONCELIK = {
+    'casus_yazilim':             9,
+    'nation_state_apt':          8,
+    'stratejik_kurum_saldirisi': 7,
+    'politika_hukuk':            6,
+    'tedarik_zinciri':           5,
+    'kolluk_operasyonu':         4,
+    'veri_ihlali':               3,
+    'zafiyet_aktif_apt':         2,
+    'zafiyet_rutin':             1,
+    'urun_icerik':               0,
+    'siber_disi':                0,
+}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 3-PASS MİMARİSİ İÇİN PROMPT FONKSİYONLARI
 # Pass 1 → Sıralama (JSON)
 # Pass 2 → Top-10 derin analiz (JSON)
@@ -415,6 +467,95 @@ SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 
 ━━━━━━ HAVUZ (seçilmemiş adaylar) ━━━━━━
 {pool_brief}"""
+
+
+def get_scoring_prompt(articles_brief, recent_events=''):
+    """
+    SKORLAMA (Skorlayıcı ajan) — her habere kategori + siber-kapı + rubrik puanı.
+    Sıralama ve Kritik 3 kararı burada VERİLMEZ; sadece haberler puanlanır.
+    Sıralama KOD tarafından deterministik yapılır.
+    articles_brief: "=== HABER ID: N ===\\nKaynak: ...\\nBaşlık: ...\\nÖzet: ...\n".
+    """
+    return f"""Sen kıdemli bir siber güvenlik analistisin. Görevin: aşağıdaki haberlerin HER BİRİNİ sabit bir rubriğe göre TEK TEK puanlamak. Sıralama YAPMA, seçim YAPMA — yalnızca her haberi adil ve tutarlı biçimde puanla. Sıralamayı kod yapacak.
+
+Her haber için şunları belirle:
+
+1) KATEGORİ (tam olarak şu etiketlerden BİRİ):
+   • casus_yazilim              → ticari/devlet casus yazılımı (NSO/Pegasus, Intellexa/Predator, Candiru, Paragon vb.)
+   • nation_state_apt           → devlet destekli APT, ülkeler-arası siber saldırı/casusluk/atıf, siber operasyon
+   • stratejik_kurum_saldirisi  → devlet başkanlığı/bakanlık/meclis/istihbarat/ordu/savunma/uluslararası kurum/kritik altyapı HEDEFLİ saldırı
+   • kolluk_operasyonu          → forum/botnet/altyapı ÇÖKERTME, takedown, tutuklama, iade, kovuşturma (kolluğun failleri hedef aldığı operasyon)
+   • tedarik_zinciri            → supply-chain (yaygın paket/araç/güncelleme mekanizmasına arka kapı/zararlı kod)
+   • veri_ihlali                → veri sızıntısı/ihlali
+   • politika_hukuk             → siber boyutu olan yasa/direktif/yaptırım/mahkeme kararı (belirli bir saldırı değil)
+   • zafiyet_aktif_apt          → güvenlik açığı + KANITLANMIŞ aktif istismar + devlet/APT atfı (ikisi de olmalı)
+   • zafiyet_rutin              → CVE/yama/PoC/güvenlik açığı tespiti (aktif APT istismarı YOKSA buraya)
+   • urun_icerik                → ürün lansmanı, beta, webinar, konferans, röportaj, inceleme, genel tavsiye, pazar araştırması
+   • siber_disi                 → doğrudan siber boyutu OLMAYAN haber (saf diplomatik/askeri/ekonomik/siyasi)
+
+   ⚠️ KATEGORİ AYRIMI — SIK YAPILAN HATALAR (dikkat):
+   - Bir kolluk operasyonu (ör. "Polis XSS.is forumunu çökertti") KATEGORİSİ `kolluk_operasyonu`dur; başlıkta "XSS" geçmesi onu zafiyet YAPMAZ.
+   - "API üzerinden ele geçirme / tam yetki / RCE" gibi teknik ele geçirmeler, aktif APT istismarı + atıf YOKSA `zafiyet_rutin`dir (`zafiyet_aktif_apt` DEĞİL).
+   - `zafiyet_aktif_apt` yüksek eşiktir: hem AKTİF istismar hem de nation-state/APT atfı METİNDE açıkça olmalı; şüphedeysen `zafiyet_rutin` ver.
+
+2) SİBER KAPISI (siber): Haberin ÖZÜNDE somut bir siber boyut (saldırı/zararlı yazılım/zafiyet/casus yazılımı/veri ihlali/siber operasyon ya da bunları DOĞRUDAN etkileyen politika-hukuk) var mı?
+   → var = 1 ; yok = 0.  (siber=0 ise haber otomatik gündem dışı kalır; kategori genelde siber_disi/urun_icerik olur.)
+   ⚠️ Kelimelerin metinde geçmesi ≠ siber boyut. Ör. "istihbarat bütçesi yönetiminin devralınması" siber bir olay değildir → siber=0.
+
+3) RUBRİK PUANLARI (her boyutu 0 ile üst sınır arasında ver; abartma, adil ol):
+   • s = STRATEJİK/İSTİHBARİ değer          (0-40): casus yazılım, nation-state APT, stratejik kurum, jeopolitik siber boyut
+   • e = ETKİ/ÖLÇEK                          (0-25): kaç kurum/ülke/kullanıcı, kritik altyapı, milli güvenlik
+   • a = ACİLİYET/GÜNCELLİK                  (0-20): aktif istismar, yeni/gelişen olay, zaman-hassas uyarı
+   • k = KAYNAK GÜVENİ/DOĞRULAMA            (0-15): birincil kaynak, resmi advisory, teyitli atıf
+
+   İLKE: "Büyük rakam" (milyonlarca kullanıcı, milyarlarca dolar) TEK BAŞINA yüksek stratejik puan getirmez. Stratejik/jeopolitik/istihbari değer her zaman önceliklidir.
+
+SON GÜNLERDE RAPORLANAN OLAYLAR (bunlarla AYNI olay/kampanya/kod adı ise a ve s puanını DÜŞÜK ver — mükerrer):
+{recent_events if recent_events else "(Geçmiş kayıt yok)"}
+
+SADECE JSON DÖNDÜR — başka hiçbir şey yazma. "skorlar" altında her haber için tam bir nesne:
+{{"skorlar": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "s": 30, "e": 12, "a": 10, "k": 12}}]}}
+
+HABERLER:
+{articles_brief}"""
+
+
+def get_critique_prompt(scored_brief, recent_events=''):
+    """
+    CRITIQUE (Denetçi ajan) — Skorlayıcıdan BAĞIMSIZ ikinci görüş.
+    Skorlanmış üst adayları okur, HATA ARAR ve gerekiyorsa kategori/kapı/puan
+    düzeltir. Yalnızca DEĞİŞTİRDİĞİ haberleri döndürür.
+    scored_brief: her haber için "=== HABER ID: N ===\\nMevcut skor: kat=.. siber=.. toplam=..\\nBaşlık: ...\\nİçerik: ...\n".
+    """
+    return f"""Sen kıdemli bir siber güvenlik, strateji ve politika uzmanısın. Yılların saha ve istihbarat tecrübesiyle, bir siber güvenlik bülteninin editöryal denetçisisin. Bir önceki adımda bir analist her haberi puanladı ve kategorilere ayırdı. Görevin bu puanlamayı ONAYLAMAK DEĞİL, bağımsız ve eleştirel bir gözle DENETLEMEK: yanlış kategori, sahte/zorlama siber boyut ve şişirilmiş/düşük puan AVLA. Kıdemli bir uzman olarak, her karara "bunu neden reddederim?" diye yaklaş.
+
+NOT: Haber içerikleri İngilizce olabilir; dil fark etmez, anlam ve stratejik öneme göre değerlendir.
+
+Her haber için şu denetimleri yap:
+
+1) KATEGORİ DOĞRU MU?
+   • Kolluk operasyonu (forum/botnet çökertme, takedown, tutuklama) yanlışlıkla `zafiyet_*` etiketlenmiş mi? Başlıktaki "XSS", "SQL", "RCE" gibi teknik kelimeler yüzünden yanlış sınıflanmış olabilir → `kolluk_operasyonu` na düzelt.
+   • `zafiyet_aktif_apt` etiketi HAK EDİLMİŞ mi? Metinde HEM aktif istismar HEM devlet/APT atfı açıkça var mı? Yoksa `zafiyet_rutin`e indir. (Ör. "API üzerinden tam yetkiyle ele geçirme" tek başına aktif-APT değildir.)
+   • Ürün/webinar/röportaj/tavsiye haberi kritik bir kategoriye mi konmuş → `urun_icerik`e düzelt.
+
+2) SİBER BOYUT GERÇEK Mİ?
+   • siber=1 verilmiş ama haberin özü aslında saf diplomatik/askeri/ekonomik/siyasi mi? Kelime benzerliği siber boyut değildir → siber=0 ve kat=`siber_disi` yap. (Ör. "istihbarat bütçesi yönetiminin devralınması" → siber=0.)
+
+3) PUAN ADİL Mİ?
+   • Stratejik değeri düşük bir haber şişirilmiş mi (özellikle sadece "büyük rakam" yüzünden)? Düşür.
+   • Gerçekten kritik (casus yazılım, nation-state APT, stratejik kurum saldırısı) bir haber hak ettiğinden düşük mü puanlanmış? Yükselt.
+
+YÜKSEK EŞİK: Yalnızca AÇIK bir hata gördüğünde düzelt. Puanlama makulse DOKUNMA — gereksiz oynama yapma.
+
+SON GÜNLERDE RAPORLANAN OLAYLAR (bunlarla aynı olay ise mükerrerdir, a/s puanı düşük olmalı):
+{recent_events if recent_events else "(Geçmiş kayıt yok)"}
+
+SADECE JSON DÖNDÜR — yalnızca DEĞİŞTİRDİĞİN haberleri listele (değişmeyenleri YAZMA):
+{{"duzeltmeler": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "s": 18, "e": 10, "a": 6, "k": 12, "neden": "Forum çökertme operasyonu — zafiyet değil"}}]}}
+(Hiçbir düzeltme gerekmiyorsa: {{"duzeltmeler": []}})
+
+DENETLENECEK HABERLER (skorlarıyla birlikte):
+{scored_brief}"""
 
 
 def get_executive_summary_prompt(articles_brief, source_count=None, news_count=None):

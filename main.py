@@ -25,6 +25,9 @@ from src.config import (
     get_top3_selection_prompt, get_top3_verification_prompt,
     get_legacy_json_prompt, get_quality_review_prompt,
     get_executive_summary_prompt, get_title_rescue_prompt,
+    get_scoring_prompt, get_critique_prompt,
+    SCORING_WEIGHTS, SCORING_CATEGORIES, ZAFIYET_KATEGORILERI,
+    KRITIK3_HARIC_KATEGORILER, KATEGORI_ONCELIK,
     is_openrouter_active,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
@@ -844,14 +847,17 @@ class HaberSistemi:
 
     @staticmethod
     def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str,
-                    top3_ids=None, exec_summary=''):
+                    top3_ids=None, exec_summary='', category_by_id=None):
         """
         Yapılandırılmış içerikten tam HTML raporu üretir (kod tarafı assembly).
         content_by_id: {art_id: {'tr_title': str, 'paragraph': str}}
         top10_ids: sıralı ID listesi (önemli gelişmeler kutusu)
         remaining_ids: sıralı ID listesi (tablo + kalan paragraflar)
         exec_summary: en önemli 9 haberi özetleyen Yönetici Özeti paragrafı (opsiyonel)
+        category_by_id: {art_id: kategori} — zafiyet bölümü yönlendirmesi kategori
+            etiketiyle yapılır; verilmezse (legacy yol) keyword tespitine düşülür.
         """
+        category_by_id = category_by_id or {}
         articles_by_id = {a['id']: a for a in articles}
 
         css = """
@@ -1252,6 +1258,12 @@ class HaberSistemi:
             return tr_title, paragraph
 
         def _is_vuln(art_id):
+            # Kategori etiketi varsa (yeni puan tabanlı yol) DETERMİNİSTİK ona güven:
+            # zafiyet_rutin/zafiyet_aktif_apt → Güvenlik Açıkları bölümü. Etiket
+            # yoksa (legacy yol) eski keyword tespitine düş.
+            kat = category_by_id.get(art_id)
+            if kat is not None:
+                return kat in ZAFIYET_KATEGORILERI
             tr_title, _ = _safe_content(art_id)
             orig_title = articles_by_id.get(art_id, {}).get('title', '')
             combined = (tr_title + ' ' + orig_title).lower()
@@ -2732,6 +2744,201 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print("")
 
     # ═══════════════════════════════════════════════════════════════
+    # PUAN TABANLI DETERMİNİSTİK SEÇİM (Skorlayıcı + Critique ajanları)
+    # ═══════════════════════════════════════════════════════════════
+    @staticmethod
+    def _clamp_score(val, hi):
+        """Bir rubrik boyutunu 0..hi aralığına güvenle sıkıştırır."""
+        try:
+            v = int(round(float(val)))
+        except (TypeError, ValueError):
+            return 0
+        return max(0, min(hi, v))
+
+    def _normalize_record(self, raw):
+        """LLM'den gelen ham skor nesnesini güvenli, tam bir kayda dönüştürür.
+        Geçersiz kategori → 'siber_disi'; eksik alanlar → 0. Toplam KOD hesaplar.
+        """
+        kat = str(raw.get('kat', '')).strip().lower()
+        if kat not in SCORING_CATEGORIES:
+            kat = 'siber_disi'
+        siber = 1 if str(raw.get('siber', 0)).strip() in ('1', 'true', 'True', 'evet') else 0
+        rec = {
+            'kat':   kat,
+            'siber': siber,
+            's': self._clamp_score(raw.get('s'), SCORING_WEIGHTS['stratejik']),
+            'e': self._clamp_score(raw.get('e'), SCORING_WEIGHTS['etki']),
+            'a': self._clamp_score(raw.get('a'), SCORING_WEIGHTS['aciliyet']),
+            'k': self._clamp_score(raw.get('k'), SCORING_WEIGHTS['kaynak_guven']),
+        }
+        rec['toplam'] = self._record_total(rec)
+        return rec
+
+    @staticmethod
+    def _record_total(rec):
+        """Rubrik toplamı (0-100). siber kapısı kapalıysa toplam 0 (gündem dışı)."""
+        if not rec.get('siber'):
+            return 0
+        if rec.get('kat') in ('urun_icerik', 'siber_disi'):
+            return 0
+        return rec['s'] + rec['e'] + rec['a'] + rec['k']
+
+    def _score_articles(self, articles, recent_events):
+        """SKORLAMA ajanı — her habere kategori + siber kapısı + rubrik puanı.
+        Büyük listelerde token taşmasını önlemek için 45'lik batch'lerle çağırır
+        (aynı-olay dedup zaten topla() içinde yapıldığından batch bağımsız güvenli).
+        Dönüş: {art_id: normalize edilmiş kayıt}. Skorlanamayan haber çağıran
+        tarafta güvenli varsayılana düşürülür.
+        """
+        records = {}
+        batch_size = 45
+        batches = [articles[i:i + batch_size]
+                   for i in range(0, len(articles), batch_size)]
+        for b_idx, batch in enumerate(batches):
+            brief_lines = []
+            for a in batch:
+                snippet = a['full_text'][:250].replace('\n', ' ')
+                brief_lines.append(
+                    f"=== HABER ID: {a['id']} ===\n"
+                    f"Kaynak: {a['source']}\n"
+                    f"Başlık: {a['title']}\n"
+                    f"Özet: {snippet}\n"
+                )
+            data = self._gemini_call_json(
+                get_scoring_prompt('\n'.join(brief_lines), recent_events=recent_events),
+                max_output_tokens=8000,
+                label=f'Skorlama-B{b_idx + 1}/{len(batches)}',
+            )
+            rows = (data or {}).get('skorlar', []) if isinstance(data, dict) else []
+            batch_ids = {a['id'] for a in batch}
+            for row in rows:
+                try:
+                    rid = int(row.get('id'))
+                except (TypeError, ValueError):
+                    continue
+                if rid in batch_ids:
+                    records[rid] = self._normalize_record(row)
+        return records
+
+    def _critique_scores(self, records, articles_by_id, recent_events, top_k=20):
+        """CRITIQUE ajanı (kıdemli siber güvenlik/strateji/politika uzmanı) —
+        Skorlayıcıdan BAĞIMSIZ ikinci görüş. En yüksek puanlı ~top_k adayı (artı
+        tüm zafiyet_aktif_apt etiketlileri) denetler; yanlış kategori/sahte siber
+        boyut/şişirilmiş puan bulursa düzeltir. records'u YERİNDE günceller ve
+        değişen id kümesini döndürür.
+        """
+        if not records:
+            return set()
+        # Denetim kapsamı: en yüksek toplam puanlı top_k + tüm zafiyet_aktif_apt
+        ranked = sorted(records.keys(),
+                        key=lambda aid: records[aid]['toplam'], reverse=True)
+        scope = list(ranked[:top_k])
+        for aid, rec in records.items():
+            if rec['kat'] == 'zafiyet_aktif_apt' and aid not in scope:
+                scope.append(aid)
+        if not scope:
+            return set()
+
+        brief_lines = []
+        for aid in scope:
+            rec = records[aid]
+            a = articles_by_id.get(aid, {})
+            snippet = ' '.join((a.get('full_text', '') or a.get('title', '')).split()[:150])
+            brief_lines.append(
+                f"=== HABER ID: {aid} ===\n"
+                f"Mevcut skor: kat={rec['kat']} siber={rec['siber']} toplam={rec['toplam']} "
+                f"(s={rec['s']} e={rec['e']} a={rec['a']} k={rec['k']})\n"
+                f"Başlık: {a.get('title', '')}\n"
+                f"İçerik: {snippet}\n"
+            )
+        data = self._gemini_call_json(
+            get_critique_prompt('\n'.join(brief_lines), recent_events=recent_events),
+            max_output_tokens=4096,
+            label='Critique-Denetim',
+        )
+        changed = set()
+        if not data or 'duzeltmeler' not in data:
+            print("   🧐 Critique: düzeltme dönmedi, skorlar korunuyor.")
+            return changed
+        for fix in data.get('duzeltmeler', []) or []:
+            try:
+                fid = int(fix.get('id'))
+            except (TypeError, ValueError):
+                continue
+            if fid not in records:
+                continue
+            old = dict(records[fid])
+            records[fid] = self._normalize_record(fix)
+            if records[fid] != old:
+                changed.add(fid)
+                neden = str(fix.get('neden', '')).strip()[:140]
+                print(f"   🧐 Critique düzeltti ID {fid}: "
+                      f"{old['kat']}→{records[fid]['kat']} "
+                      f"toplam {old['toplam']}→{records[fid]['toplam']}"
+                      + (f"  | {neden}" if neden else ""))
+        if not changed:
+            print("   🧐 Critique: denetim tamam, düzeltme gerekmedi.")
+        return changed
+
+    def _rank_by_score(self, articles, records):
+        """DETERMİNİSTİK sıralama — düzeltilmiş skorlara göre kod tarafında sırala.
+        Dönüş: (top10_ids, remaining_ids, filtered_ids, category_by_id).
+        - Elenen: siber kapısı kapalı VEYA kategori urun_icerik/siber_disi (toplam 0).
+        - Sıra: toplam DESC; eşitlik bozucu: kategori önceliği → kaynak güveni →
+          aciliyet → id (tam deterministik).
+        """
+        category_by_id = {}
+        source_pos = {a['id']: idx for idx, a in enumerate(articles)}  # kararlı id sırası
+        ranked, filtered_ids = [], []
+        for a in articles:
+            aid = a['id']
+            rec = records.get(aid)
+            if rec is None:
+                # Skorlanamayan haber: güvenli varsayılan — düşük öncelikli ama elenmez.
+                rec = {'kat': 'veri_ihlali', 'siber': 1, 's': 0, 'e': 0,
+                       'a': 0, 'k': 0, 'toplam': 1}
+                records[aid] = rec
+            category_by_id[aid] = rec['kat']
+            if rec['toplam'] <= 0 or rec['kat'] in ('urun_icerik', 'siber_disi') or not rec['siber']:
+                filtered_ids.append(aid)
+            else:
+                ranked.append(aid)
+
+        ranked.sort(key=lambda aid: (
+            -records[aid]['toplam'],
+            -KATEGORI_ONCELIK.get(records[aid]['kat'], 0),
+            -records[aid]['k'],
+            -records[aid]['a'],
+            source_pos.get(aid, 1 << 30),
+        ))
+        top10_ids = ranked[:10]
+        remaining_ids = ranked[10:]
+        return top10_ids, remaining_ids, filtered_ids, category_by_id
+
+    def _derive_top3_by_score(self, ranked_ids, records, content_by_id,
+                              articles_by_id):
+        """KRİTİK 3 — deterministik: en yüksek puanlı, Kritik-3'e uygun ilk 3.
+        KRITIK3_HARIC_KATEGORILER (zafiyet_rutin/urun_icerik/siber_disi) hariç;
+        zafiyet_aktif_apt puanı yeterse girebilir. Mevcut aynı-olay ve çapraz-gün
+        KRİTİK 3 dedup güvenceleri KORUNUR.
+        """
+        eligible = [aid for aid in ranked_ids
+                    if records.get(aid, {}).get('kat') not in KRITIK3_HARIC_KATEGORILER]
+        # ranked_ids zaten puan sırasında; en güçlü adaylar başta.
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+        recent_k3 = self._load_recent_kritik3_views()
+        top3_ids = _dedup.pick_distinct(eligible, view_fn, n=3,
+                                        exclude_views=recent_k3)
+        if len(top3_ids) < 3:
+            # Ayrık aday yetmezse uygun havuzdan sırayla tamamla (dedup korunur).
+            for aid in eligible:
+                if aid not in top3_ids:
+                    top3_ids.append(aid)
+                if len(top3_ids) >= 3:
+                    break
+        return top3_ids[:3]
+
+    # ═══════════════════════════════════════════════════════════════
     # HTML OLUŞTURMA — DOĞRULAMA + TAMAMLAMA MEKANİZMALI (v2.1)
     # ═══════════════════════════════════════════════════════════════
 
@@ -2771,41 +2978,29 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         print(f"📋 {len(articles)} makale ayrıştırıldı.")
 
         # ════════════════════════════════════════════════════════════════
-        # PASS 1 — SIRALAMA
+        # PASS 1 — PUAN TABANLI DETERMİNİSTİK SIRALAMA
+        #   1a) SKORLAMA ajanı → her habere kategori + siber kapısı + rubrik puanı
+        #   1b) CRITIQUE ajanı → bağımsız denetim, yanlış kategori/puan düzeltme
+        #   1c) KOD → düzeltilmiş puanlara göre DETERMİNİSTİK sırala
         # ════════════════════════════════════════════════════════════════
-        print("\n🔢 Pass 1 — Sıralama başlıyor...")
-        brief_lines = []
-        for a in articles:
-            snippet = a['full_text'][:250].replace('\n', ' ')
-            brief_lines.append(
-                f"=== HABER ID: {a['id']} ===\n"
-                f"Kaynak: {a['source']}\n"
-                f"Başlık: {a['title']}\n"
-                f"Özet: {snippet}\n"
-            )
-        ranking_data = self._gemini_call_json(
-            get_ranking_prompt('\n'.join(brief_lines), recent_events=self._load_recent_events()),
-            max_output_tokens=2048,
-            label='Pass1-Sıralama',
-        )
+        recent_events = self._load_recent_events()
+        print("\n🔢 Pass 1a — Skorlama (kategori + siber kapısı + rubrik puanı)...")
+        score_records = self._score_articles(articles, recent_events)
+        articles_by_id = {a['id']: a for a in articles}
 
-        if ranking_data is None:
-            # Pass 1 başarısız → eski tek-çağrı yöntemine düş
-            print("⚠️  Pass 1 başarısız — eski tek-çağrı yöntemine dönülüyor...")
+        # Skorlama tamamen başarısızsa (tek haber bile puanlanmadıysa) eski yola düş.
+        if not score_records:
+            print("⚠️  Skorlama başarısız — eski tek-çağrı yöntemine dönülüyor...")
             return self._create_html_legacy(txt_content)
 
-        all_ids     = {a['id'] for a in articles}
-        top10_ids   = [int(i) for i in ranking_data.get('top10', [])   if int(i) in all_ids]
-        filtered_ids = {int(i) for i in ranking_data.get('filtered', []) if int(i) in all_ids}
-        remaining_ids = [
-            int(i) for i in ranking_data.get('remaining', [])
-            if int(i) in all_ids and int(i) not in set(top10_ids) and int(i) not in filtered_ids
-        ]
-        # Sıralamada yer almayan ama filtrelenmemiş makaleleri sona ekle
-        ranked_set = set(top10_ids) | set(remaining_ids) | filtered_ids
-        for a in articles:
-            if a['id'] not in ranked_set:
-                remaining_ids.append(a['id'])
+        print(f"   ✅ {len(score_records)}/{len(articles)} haber skorlandı.")
+        print("\n🧐 Pass 1b — Critique (bağımsız uzman denetimi)...")
+        self._critique_scores(score_records, articles_by_id, recent_events)
+
+        print("\n📐 Pass 1c — Deterministik sıralama...")
+        top10_ids, remaining_ids, filtered_list, category_by_id = \
+            self._rank_by_score(articles, score_records)
+        filtered_ids = set(filtered_list)
 
         print(f"   Top-10: {top10_ids}")
         print(f"   Kalan : {len(remaining_ids)} haber  |  Filtrelenen: {len(filtered_ids)} haber")
@@ -2873,40 +3068,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             )
 
         # ════════════════════════════════════════════════════════════════
-        # PASS 4 — GÜNÜN EN KRİTİK 3 HABERİ (istihbari/stratejik seçim)
+        # PASS 4 — GÜNÜN EN KRİTİK 3 HABERİ (DETERMİNİSTİK, puana göre)
+        #   Kritik 3 = en yüksek puanlı, Kritik-3'e uygun ilk 3 (kod kararı).
+        #   Zafiyet_rutin/urun_icerik/siber_disi hariç; zafiyet_aktif_apt puanı
+        #   yeterse girebilir. Aynı-olay ve çapraz-gün dedup KORUNUR.
+        #   LLM'in doğrudan "seç" demesi YERİNE kod en yüksek 3 puanı alır.
         # ════════════════════════════════════════════════════════════════
-        import re as _re4
-        _CVE_PAT4 = _re4.compile(r'CVE-\d{4}-\d{4,7}', _re4.IGNORECASE)
-        _VULN_KW4 = (
-            'güvenlik açığı', 'açık bulundu', 'açık kapatıldı', 'zafiyet',
-            'yama yayınlandı', 'güvenlik yaması', 'sıfır gün', 'zero-day',
-            'zero day', 'exploit', 'uzaktan kod çalıştırma',
-            'sql injection', 'xss', 'path traversal', 'buffer overflow',
-            'vulnerability', 'vulnerabilities', 'patched', 'critical flaw',
-            'security flaw', 'arbitrary code',
-        )
-
-        def _is_vuln_p4(art_id):
-            c = content_by_id.get(art_id, {})
-            a = articles_by_id.get(art_id, {})
-            tr_title  = c.get('tr_title') or a.get('title', '')
-            orig_title = a.get('title', '')
-            combined = (tr_title + ' ' + orig_title).lower()
-            if _CVE_PAT4.search(combined):
-                return True
-            return any(kw in combined for kw in _VULN_KW4)
-
-        print("\n🎯 Pass 4 — Günün en kritik 3 haberi seçiliyor...")
-        all_ids_p4 = list(top10_ids) + list(remaining_ids)
-        non_vuln_ids_p4 = [aid for aid in all_ids_p4 if not _is_vuln_p4(aid)]
-
-        # Seçim HAM kaynak metin üzerinden yapılır (Pass 2/3 özetinden DEĞİL),
-        # böylece özetlemede kaybolan nüanslar seçim aşamasında korunur.
-        # Brief üretimi + LLM seçimi + siber-boyut guard, ana ve legacy yolun
-        # ORTAK kullandığı _select_top3'e devredilir.
-        top3_ids = self._select_top3(
-            non_vuln_ids_p4, content_by_id, articles_by_id,
-            all_ids_p4, label='Pass4-Top3Secim',
+        print("\n🎯 Pass 4 — Günün en kritik 3 haberi (puana göre deterministik)...")
+        ranked_all = list(top10_ids) + list(remaining_ids)  # zaten puan sırasında
+        top3_ids = self._derive_top3_by_score(
+            ranked_all, score_records, content_by_id, articles_by_id,
         )
 
         print(f"   Seçilen Top 3 ID: {top3_ids}")
@@ -2974,15 +3145,20 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             # dedup'tan geçer (pick_distinct) — KRİTİK 3 garantisi backfill'de de
             # korunur; mevcut top3 ile mükerrer aday asla eklenmez.
             if len(top3_ids) < 3:
-                remaining_pool = ([i for i in non_vuln_ids_p4 if i not in p5_remove]
-                                  + [i for i in all_ids_p4 if i not in p5_remove])
+                # Kritik-3'e uygun (kategori bazlı) kalan adaylardan, puan sırasında
+                # tamamla. Deterministik derive metodu aynı-olay + çapraz-gün dedup'ı
+                # zaten uygular; başa mevcut top3'ü koyup uygun havuzu ekliyoruz.
+                eligible_backfill = [
+                    aid for aid in (list(top10_ids) + list(remaining_ids))
+                    if aid not in p5_remove
+                    and score_records.get(aid, {}).get('kat') not in KRITIK3_HARIC_KATEGORILER
+                ]
                 ordered_pool = []
-                for aid in list(top3_ids) + remaining_pool:
+                for aid in list(top3_ids) + eligible_backfill:
                     if aid not in ordered_pool:
                         ordered_pool.append(aid)
-                top3_ids = _dedup.pick_distinct(
-                    ordered_pool, self._dedup_view_fn(content_by_id, articles_by_id), n=3,
-                    exclude_views=self._load_recent_kritik3_views())
+                top3_ids = self._derive_top3_by_score(
+                    ordered_pool, score_records, content_by_id, articles_by_id)
                 if len(top3_ids) < 3:
                     print(f"   ⚠️  Pass 5 sonrası top3 {len(top3_ids)}'e düştü, "
                           f"tamamlanacak ayrık haber bulunamadı")
@@ -3077,7 +3253,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         print("\n📝 Pass 6 — Yönetici Özeti oluşturuluyor...")
         top3_set_p6 = set(top3_ids)
         top10_regular_p6 = [aid for aid in top10_ids
-                            if not _is_vuln_p4(aid) and aid not in top3_set_p6]
+                            if score_records.get(aid, {}).get('kat') not in ZAFIYET_KATEGORILERI
+                            and aid not in top3_set_p6]
         exec_ids = list(top3_ids) + top10_regular_p6[:6]
 
         # Giriş cümlesi için: son 24 saatte analiz edilen toplam haber ve kaynak sayısı
@@ -3147,6 +3324,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             today_str   = today_str,
             top3_ids    = top3_ids,
             exec_summary = exec_summary,
+            category_by_id = category_by_id,
         )
         print(f"✅ HTML oluşturuldu ({len(html)} karakter, "
               f"{len(top10_ids) + len(remaining_ids)} haber)")
