@@ -510,11 +510,15 @@ Her haber için şunları belirle:
 
    İLKE: "Büyük rakam" (milyonlarca kullanıcı, milyarlarca dolar) TEK BAŞINA yüksek stratejik puan getirmez. Stratejik/jeopolitik/istihbari değer her zaman önceliklidir.
 
-SON GÜNLERDE RAPORLANAN OLAYLAR (bunlarla AYNI olay/kampanya/kod adı ise a ve s puanını DÜŞÜK ver — mükerrer):
+4) MÜKERRER (mukerrer): Bu haber, aşağıdaki "SON GÜNLERDE RAPORLANAN OLAYLAR" listesindeki bir olayla AYNI mı (aynı kampanya/operasyon/kod adı, ya da aynı aktör + aynı mağdur)?
+   → aynı = 1 (mükerrer, rapordan çıkarılacak) ; yeni/farklı = 0.
+   🔑 Kampanya/operasyon/zararlı yazılım KOD ADI listede geçiyorsa → mukerrer=1.
+
+SON GÜNLERDE RAPORLANAN OLAYLAR:
 {recent_events if recent_events else "(Geçmiş kayıt yok)"}
 
 SADECE JSON DÖNDÜR — başka hiçbir şey yazma. "skorlar" altında her haber için tam bir nesne:
-{{"skorlar": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "s": 30, "e": 12, "a": 10, "k": 12}}]}}
+{{"skorlar": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "mukerrer": 0, "s": 30, "e": 12, "a": 10, "k": 12}}]}}
 
 HABERLER:
 {articles_brief}"""
@@ -545,13 +549,17 @@ Her haber için şu denetimleri yap:
    • Stratejik değeri düşük bir haber şişirilmiş mi (özellikle sadece "büyük rakam" yüzünden)? Düşür.
    • Gerçekten kritik (casus yazılım, nation-state APT, stratejik kurum saldırısı) bir haber hak ettiğinden düşük mü puanlanmış? Yükselt.
 
+4) MÜKERRER Mİ?
+   • Haber, aşağıdaki "SON GÜNLERDE RAPORLANAN OLAYLAR" ile aynı olaysa (aynı kampanya/kod adı ya da aynı aktör+mağdur) mukerrer=1 yap; analist kaçırmış olabilir.
+
 YÜKSEK EŞİK: Yalnızca AÇIK bir hata gördüğünde düzelt. Puanlama makulse DOKUNMA — gereksiz oynama yapma.
 
-SON GÜNLERDE RAPORLANAN OLAYLAR (bunlarla aynı olay ise mükerrerdir, a/s puanı düşük olmalı):
+SON GÜNLERDE RAPORLANAN OLAYLAR:
 {recent_events if recent_events else "(Geçmiş kayıt yok)"}
 
-SADECE JSON DÖNDÜR — yalnızca DEĞİŞTİRDİĞİN haberleri listele (değişmeyenleri YAZMA):
-{{"duzeltmeler": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "s": 18, "e": 10, "a": 6, "k": 12, "neden": "Forum çökertme operasyonu — zafiyet değil"}}]}}
+SADECE JSON DÖNDÜR — yalnızca DEĞİŞTİRDİĞİN haberleri listele (değişmeyenleri YAZMA).
+Düzelttiğin haber için TÜM alanları yaz (kat, siber, mukerrer, s, e, a, k):
+{{"duzeltmeler": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "mukerrer": 0, "s": 18, "e": 10, "a": 6, "k": 12, "neden": "Forum çökertme operasyonu — zafiyet değil"}}]}}
 (Hiçbir düzeltme gerekmiyorsa: {{"duzeltmeler": []}})
 
 DENETLENECEK HABERLER (skorlarıyla birlikte):

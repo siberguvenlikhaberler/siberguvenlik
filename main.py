@@ -2763,9 +2763,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if kat not in SCORING_CATEGORIES:
             kat = 'siber_disi'
         siber = 1 if str(raw.get('siber', 0)).strip() in ('1', 'true', 'True', 'evet') else 0
+        mukerrer = 1 if str(raw.get('mukerrer', 0)).strip() in ('1', 'true', 'True', 'evet') else 0
         rec = {
-            'kat':   kat,
-            'siber': siber,
+            'kat':      kat,
+            'siber':    siber,
+            'mukerrer': mukerrer,
             's': self._clamp_score(raw.get('s'), SCORING_WEIGHTS['stratejik']),
             'e': self._clamp_score(raw.get('e'), SCORING_WEIGHTS['etki']),
             'a': self._clamp_score(raw.get('a'), SCORING_WEIGHTS['aciliyet']),
@@ -2797,7 +2799,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         for b_idx, batch in enumerate(batches):
             brief_lines = []
             for a in batch:
-                snippet = a['full_text'][:250].replace('\n', ' ')
+                # Kategori doğruluğu bu mimarinin bel kemiği; ilk ~120 kelime
+                # (250 karakter değil) sınıflamayı belirgin biçimde güçlendirir.
+                snippet = ' '.join((a['full_text'] or '').split()[:120])
                 brief_lines.append(
                     f"=== HABER ID: {a['id']} ===\n"
                     f"Kaynak: {a['source']}\n"
@@ -2895,11 +2899,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             rec = records.get(aid)
             if rec is None:
                 # Skorlanamayan haber: güvenli varsayılan — düşük öncelikli ama elenmez.
-                rec = {'kat': 'veri_ihlali', 'siber': 1, 's': 0, 'e': 0,
-                       'a': 0, 'k': 0, 'toplam': 1}
+                rec = {'kat': 'veri_ihlali', 'siber': 1, 'mukerrer': 0, 's': 0,
+                       'e': 0, 'a': 0, 'k': 0, 'toplam': 1}
                 records[aid] = rec
             category_by_id[aid] = rec['kat']
-            if rec['toplam'] <= 0 or rec['kat'] in ('urun_icerik', 'siber_disi') or not rec['siber']:
+            # Elenenler: siber kapısı kapalı / ürün-içerik-dışı / MÜKERRER (çapraz-gün)
+            if (rec['toplam'] <= 0 or rec.get('mukerrer')
+                    or rec['kat'] in ('urun_icerik', 'siber_disi') or not rec['siber']):
                 filtered_ids.append(aid)
             else:
                 ranked.append(aid)
