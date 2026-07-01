@@ -129,6 +129,28 @@ KATEGORI_ONCELIK = {
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# EV TARZI — tüm yazılı çıktılarda (Pass 2/3 paragraf + Pass 6 özet) AYNEN
+# uygulanan ortak üslup bloğu. Ayrı bir "yazar ajan" yerine tek kaynaktan tutarlı
+# ton sağlar; olgusal sadakati bozmadan register/cümle/terim tutarlılığını dayatır.
+# ─────────────────────────────────────────────────────────────────────────────
+EV_TARZI = """━━━━━━ EV TARZI (tüm yazılı çıktılarda AYNEN uygulanır) ━━━━━━
+• REGISTER: Resmî, nesnel, haber-analiz üslubu. Abartı, duygusal dil, reklam tonu ve
+  öznel sıfatlar (çarpıcı, korkutucu, devasa) YOK. Ton rapor boyunca TUTARLI olmalı —
+  bir paragraf resmî, diğeri laubali olamaz.
+• DİL: Yalnızca Türkçe. Şirket/ürün/kişi adları, CVE kodları ve kampanya kod adları
+  ORİJİNAL bırakılır (çevrilmez).
+• CÜMLE: Bir cümlede en fazla iki gelişme bağlanır ("ve/ayrıca/öte yandan"). Üç veya
+  daha fazla olayı tek cümlede ZİNCİRLEME. Bir cümlede en fazla bir yan cümle; virgülle
+  şişirilmiş aşırı uzun cümlelerden kaçın.
+• SADAKAT: Yalnızca kaynak metindeki olgular. Sayı, tarih, kurum ve isimleri UYDURMA;
+  kaynaktakini birebir kullan. Kaynakta olmayan bilgi eklenmez.
+• YORUM YASAĞI: Kaynakta açıkça yazmayan "önem/anlam/sonuç" değerlendirmesi EKLEME.
+  Metin somut bir olguyla biter, soyut bir yargıyla değil.
+• TERİM TUTARLILIĞI: Aynı aktör/kurum/kampanya için metin boyunca AYNI adlandırmayı
+  kullan (bir yerde tam ad, başka yerde farklı kısaltma olmaz)."""
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 3-PASS MİMARİSİ İÇİN PROMPT FONKSİYONLARI
 # Pass 1 → Sıralama (JSON)
 # Pass 2 → Top-10 derin analiz (JSON)
@@ -583,6 +605,8 @@ def get_executive_summary_prompt(articles_brief, source_count=None, news_count=N
 
 ⚠️ DİL KURALI: Çıktı YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile özet kesinlikle Türkçe yazılacak. (Şirket adları, CVE kodları ve ürün adları orijinal kalabilir.)
 
+{EV_TARZI}
+
 GÖREV:
 - Paragrafa güncel siber tehdit ortamına bağlamsal bir GİRİŞ CÜMLESİYLE başla.
   ⚠️ ZORUNLU: Giriş cümlesinde mutlaka "son 48 saat", "son iki gün", "geçen 48 saat" veya
@@ -650,6 +674,8 @@ def get_deep_analysis_prompt(articles_full):
     return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri TAM METİN ile analiz et.
 
 ⚠️ DİL KURALI: Tüm çıktılar YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile yanıt kesinlikle Türkçe yazılacak.
+
+{EV_TARZI}
 
 Her haber için iki şey üret:
 1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
@@ -769,6 +795,8 @@ def get_summary_batch_prompt(articles_full):
     return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri TAM METİN ile analiz et.
 
 ⚠️ DİL KURALI: Tüm çıktılar YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile yanıt kesinlikle Türkçe yazılacak.
+
+{EV_TARZI}
 
 Her haber için:
 1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı

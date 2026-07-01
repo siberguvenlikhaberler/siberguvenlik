@@ -1256,6 +1256,13 @@ class HaberSistemi:
             art = articles_by_id.get(art_id, {})
             tr_title  = c.get('tr_title')  or art.get('title', f'Haber #{art_id}')
             paragraph = c.get('paragraph') or art.get('full_text', '')[:500]
+            # LLM içerik metni (tr_title/paragraph) HTML'e DOĞRUDAN gömülüyor;
+            # model '<', '&' ya da bir etiket üretirse düzeni bozabilir/enjekte
+            # edebilir. Bu iki alan düz Türkçe metindir → entity kaçışı güvenli.
+            # quote=False: apostrof (Google'da) &#x27;e dönüşüp çirkinleşmesin.
+            import html as _h
+            tr_title  = _h.escape(str(tr_title), quote=False)
+            paragraph = _h.escape(str(paragraph), quote=False)
             return tr_title, paragraph
 
         def _is_vuln(art_id):
@@ -1382,6 +1389,9 @@ class HaberSistemi:
         # ── Yönetici Özeti kutusu (en önemli 9 haberin tek paragraf özeti) ─
         exec_brief_html = ''
         if exec_summary and exec_summary.strip():
+            # Yönetici Özeti de LLM metni → HTML'e gömülmeden entity kaçışı yap.
+            import html as _h
+            exec_summary = _h.escape(exec_summary.strip(), quote=False)
             vuln_link_html = ''
             if vuln_ids:
                 vuln_link_html = (
@@ -2597,10 +2607,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                       f"günde manşet olan olay(lar) elendi {xday_dropped}")
         return top3_ids[:3]
 
-    def _load_recent_events(self, days=3):
+    def _load_recent_events(self, days=7):
         """Son `days` günde raporlanan haber BAŞLIKLARINI arşivden okur ve
-        Pass 1 (sıralama) + Pass 4 (top3) promptlarına 'tekrar alma' listesi
-        olarak verir. Bu, GÜNLER ARASI MÜKERRER haberleri engeller.
+        skorlama + Kritik 3 promptlarına 'tekrar alma' listesi olarak verir.
+        Bu, GÜNLER ARASI (HAFTALIK) MÜKERRER haberleri engeller.
+
+        Pencere 3→7 güne çıkarıldı: skorlayıcı `mukerrer` bayrağı, son bir
+        haftada raporlanmış olayları da yakalar. Başlık (160) + kod adı (80)
+        üst sınırları korunduğundan 7 gün token'ı belirgin şişirmez.
 
         Not: Bu metot olmadan recent_events her zaman boş kalıyordu; arşiv
         yazılıyor ama hiç GERİ OKUNMUYORDU — dedup fiilen çalışmıyordu.
