@@ -20,6 +20,7 @@ from google.genai import types as genai_types
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, KRITIK3_HISTORY_FILE, KRITIK3_HISTORY_DAYS,
+    SCORING_LOG_FILE, SCORING_LOG_MAX_LINES,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_top3_verification_prompt,
@@ -2944,6 +2945,60 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     break
         return top3_ids[:3]
 
+    def _write_scoring_log(self, articles, records, top10_ids, remaining_ids,
+                           top3_ids, critique_changed):
+        """Kalibrasyon/denetim log'u — her haber için bir JSONL satırı yazar.
+        Rubrik ağırlıklarını gerçek raporlarla ayarlamak için: kategori/puan/
+        yerleşim + Critique düzeltti mi. İşlevsel değil; hata olursa sessiz geçer.
+        """
+        try:
+            date_str = datetime.now().strftime('%Y-%m-%d')
+            top10_set, top3_set = set(top10_ids), set(top3_ids)
+            remaining_set = set(remaining_ids)
+            articles_by_id = {a['id']: a for a in articles}
+            lines = []
+            for aid in sorted(records.keys()):
+                rec = records[aid]
+                a = articles_by_id.get(aid, {})
+                if aid in top3_set:
+                    yerlesim = 'kritik3'
+                elif aid in top10_set:
+                    yerlesim = 'top10'
+                elif aid in remaining_set:
+                    yerlesim = 'govde'
+                else:
+                    yerlesim = 'elenen'
+                lines.append(json.dumps({
+                    'tarih':    date_str,
+                    'id':       aid,
+                    'kaynak':   a.get('source', ''),
+                    'baslik':   (a.get('title', '') or '')[:200],
+                    'kat':      rec.get('kat'),
+                    'siber':    rec.get('siber'),
+                    'mukerrer': rec.get('mukerrer'),
+                    's': rec.get('s'), 'e': rec.get('e'),
+                    'a': rec.get('a'), 'k': rec.get('k'),
+                    'toplam':   rec.get('toplam'),
+                    'critique': 1 if aid in critique_changed else 0,
+                    'yerlesim': yerlesim,
+                }, ensure_ascii=False))
+
+            os.makedirs(os.path.dirname(SCORING_LOG_FILE) or '.', exist_ok=True)
+            existing = []
+            if os.path.exists(SCORING_LOG_FILE):
+                with open(SCORING_LOG_FILE, 'r', encoding='utf-8') as f:
+                    existing = f.read().splitlines()
+            all_lines = existing + lines
+            # Dosya şişmesin: yalnızca en yeni SCORING_LOG_MAX_LINES satırı tut.
+            if len(all_lines) > SCORING_LOG_MAX_LINES:
+                all_lines = all_lines[-SCORING_LOG_MAX_LINES:]
+            with open(SCORING_LOG_FILE, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(all_lines) + '\n')
+            print(f"   📊 Skorlama log'u yazıldı: {len(lines)} haber "
+                  f"({SCORING_LOG_FILE})")
+        except Exception as e:
+            print(f"   ⚠️  Skorlama log'u yazılamadı (atlanıyor): {str(e)[:120]}")
+
     # ═══════════════════════════════════════════════════════════════
     # HTML OLUŞTURMA — DOĞRULAMA + TAMAMLAMA MEKANİZMALI (v2.1)
     # ═══════════════════════════════════════════════════════════════
@@ -3001,7 +3056,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         print(f"   ✅ {len(score_records)}/{len(articles)} haber skorlandı.")
         print("\n🧐 Pass 1b — Critique (bağımsız uzman denetimi)...")
-        self._critique_scores(score_records, articles_by_id, recent_events)
+        critique_changed = self._critique_scores(
+            score_records, articles_by_id, recent_events)
 
         print("\n📐 Pass 1c — Deterministik sıralama...")
         top10_ids, remaining_ids, filtered_list, category_by_id = \
@@ -3087,6 +3143,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         )
 
         print(f"   Seçilen Top 3 ID: {top3_ids}")
+
+        # Kalibrasyon/denetim log'u — kategori/puan/yerleşim + Critique izi.
+        self._write_scoring_log(articles, score_records, top10_ids,
+                                remaining_ids, top3_ids, critique_changed)
 
         # ════════════════════════════════════════════════════════════════
         # PASS 5 — KALİTE KONTROL (boş/İngilizce/kriter dışı/kopya)

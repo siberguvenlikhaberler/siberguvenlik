@@ -69,6 +69,12 @@ KRITIK3_HISTORY_FILE = "data/kritik3_gecmis.json"
 # Çapraz-gün KRİTİK 3 dedup penceresi (gün).
 KRITIK3_HISTORY_DAYS = 7
 
+# Skorlama/critique kalibrasyon log'u (JSONL — her satır bir haber). Rubrik
+# ağırlıklarını gerçek raporlarla ayarlamak için: hangi haber hangi kategori/
+# puanla nereye yerleşti, Critique düzeltti mi. İşlevsel değil, denetim amaçlı.
+SCORING_LOG_FILE = "data/skorlama_log.jsonl"
+SCORING_LOG_MAX_LINES = 5000   # dosya büyürse en yeni bu kadar satır tutulur
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PUAN TABANLI DETERMİNİSTİK SEÇİM — RUBRİK & KATEGORİLER
