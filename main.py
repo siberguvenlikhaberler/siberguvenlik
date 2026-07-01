@@ -3104,7 +3104,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             )
         if full_lines:
             deep_data = self._gemini_call_json(
-                get_deep_analysis_prompt('\n'.join(full_lines)),
+                get_deep_analysis_prompt('\n'.join(full_lines),
+                                         today=now.strftime('%Y-%m-%d')),
                 max_output_tokens=16000,
                 label='Pass2-DerinAnaliz',
             )
@@ -3365,7 +3366,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             for es_attempt in range(3):
                 es_data = self._gemini_call_json(
                     get_executive_summary_prompt(
-                        '\n'.join(es_lines), es_source_count, es_news_count),
+                        '\n'.join(es_lines), es_source_count, es_news_count,
+                        today=now.strftime('%Y-%m-%d')),
                     max_output_tokens=4096,  # thinking modelinde 1024 kesiliyordu
                     label=f'Pass6-YoneticiOzeti(d{es_attempt + 1})',
                 )
@@ -3541,7 +3543,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         max_tokens = min(4096 + len(batch) * 200, 8000)
 
         data = self._gemini_call_json(
-            get_summary_batch_prompt(self._format_batch_for_prompt(batch, articles_by_id)),
+            get_summary_batch_prompt(self._format_batch_for_prompt(batch, articles_by_id),
+                                     today=datetime.now().strftime('%Y-%m-%d')),
             max_output_tokens=max_tokens,
             label=f'{label_prefix}(n={len(batch)})',
         )

@@ -150,6 +150,20 @@ EV_TARZI = """━━━━━━ EV TARZI (tüm yazılı çıktılarda AYNEN uyg
   kullan (bir yerde tam ad, başka yerde farklı kısaltma olmaz)."""
 
 
+def get_zaman_kurali(today):
+    """Bugünün tarihini verip olayların geçmiş/süren/gelecek konumunu ve doğru
+    Türkçe zaman kipini dayatan ortak blok. Pass 2/3 paragraf + Pass 6 özetine
+    enjekte edilir. today: 'YYYY-MM-DD' (boşsa blok üretilmez)."""
+    if not today:
+        return ""
+    return f"""━━━━━━ ZAMAN / TARİH FARKINDALIĞI (BUGÜN: {today}) ━━━━━━
+• Tüm olayları BUGÜNÜN tarihine ({today}) göre konumlandır ve Türkçe zaman kipini buna göre seç.
+• Bugünden ÖNCE gerçekleşmiş/başlamış bir olay → geçmiş ya da SÜREN kip (gerçekleşti, başladı, sürüyor, tamamlandı). Onu "yaklaşan / olacak / öncesinde" gibi GELECEĞE dönük anlatma.
+• Bugünden önce BAŞLAYIP hâlâ süren bir etkinlik (turnuva, zirve, seçim, fuar) için "öncesinde / öncesi / hazırlığında / arifesinde" KULLANMA; bunun yerine "sürerken / döneminde / kapsamında / -e yönelik olarak" gibi ifadeler kullan.
+• "öncesinde", "yaklaşan" ve gelecek kip YALNIZCA başlangıç tarihi bugünden ({today}) SONRA olan olaylar için kullanılır.
+• Bir etkinliğin başlangıç/bitiş tarihi metinde geçiyorsa, o tarihi BUGÜN ({today}) ile KIYASLA ve kipini ona göre seç; başlamış bir etkinliği asla "yaklaşan/henüz başlamamış" gibi sunma."""
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 3-PASS MİMARİSİ İÇİN PROMPT FONKSİYONLARI
 # Pass 1 → Sıralama (JSON)
@@ -620,18 +634,21 @@ DENETLENECEK HABERLER (skorlarıyla birlikte):
 {scored_brief}"""
 
 
-def get_executive_summary_prompt(articles_brief, source_count=None, news_count=None):
+def get_executive_summary_prompt(articles_brief, source_count=None, news_count=None, today=''):
     """
     Yönetici Özeti: O günün en önemli 9 haberini (top3 + sonraki 6) tek bir
     akıcı paragrafta özetler.
     articles_brief: "=== HABER N ===\\nBaşlık: ...\\nÖzet: ...\n" formatında string.
     source_count, news_count: artık kullanılmıyor (geriye dönük uyumluluk için imzada bırakıldı).
+    today: 'YYYY-MM-DD' — doğru zaman kipi için bugünün tarihi.
     """
     return f"""Sen bir siber güvenlik istihbarat bülteni editörüsün. Görevin: aşağıda verilen, o günün EN ÖNEMLİ haberlerini tek bir AKICI YÖNETİCİ ÖZETİ paragrafında toparlamak.
 
 ⚠️ DİL KURALI: Çıktı YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile özet kesinlikle Türkçe yazılacak. (Şirket adları, CVE kodları ve ürün adları orijinal kalabilir.)
 
 {EV_TARZI}
+
+{get_zaman_kurali(today)}
 
 GÖREV:
 - Paragrafa güncel siber tehdit ortamına bağlamsal bir GİRİŞ CÜMLESİYLE başla.
@@ -692,16 +709,19 @@ METİN:
 {body}"""
 
 
-def get_deep_analysis_prompt(articles_full):
+def get_deep_analysis_prompt(articles_full, today=''):
     """
     Pass 2: Top-10 haberin TAM metni → Türkçe başlık + 120+ kelime paragraf (JSON).
     articles_full: "=== HABER ID: N ===\\nKaynak: ...\\nTAM METİN:\\n..." formatında string.
+    today: 'YYYY-MM-DD' — doğru zaman kipi için bugünün tarihi.
     """
     return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri TAM METİN ile analiz et.
 
 ⚠️ DİL KURALI: Tüm çıktılar YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile yanıt kesinlikle Türkçe yazılacak.
 
 {EV_TARZI}
+
+{get_zaman_kurali(today)}
 
 Her haber için iki şey üret:
 1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
@@ -813,16 +833,19 @@ HABERLER:
 {articles_full}"""
 
 
-def get_summary_batch_prompt(articles_full):
+def get_summary_batch_prompt(articles_full, today=''):
     """
     Pass 3: Bir batch haberin TAM METNİ → Türkçe başlık + 100+ kelime paragraf (JSON).
     articles_full: "=== HABER ID: N ===\\nKaynak: ...\\nTAM METİN:\\n..." formatında string.
+    today: 'YYYY-MM-DD' — doğru zaman kipi için bugünün tarihi.
     """
     return f"""Sen siber güvenlik analistisin. Aşağıdaki haberleri TAM METİN ile analiz et.
 
 ⚠️ DİL KURALI: Tüm çıktılar YALNIZCA TÜRKÇE olacak. İngilizce kelime, cümle veya paragraf YASAKTIR. Haberler İngilizce olsa bile yanıt kesinlikle Türkçe yazılacak.
 
 {EV_TARZI}
+
+{get_zaman_kurali(today)}
 
 Her haber için:
 1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
