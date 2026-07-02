@@ -986,7 +986,7 @@ def process_delete(payload, token):
       • "critical" → kritik kartı sil (o an 2 kart kalır).
       • "body"     → alt liste haberini sil.
     Not: bir kritik haberi silmeden gövdeye indirmek istiyorsan Ekle işleminde
-    'yerine geçecek kritik haber' seçeneğini kullan — o haber gövdeye iner."""
+    'Çıkarılacak Haber' seçeneğini kullan — o haber gövdeye iner."""
     target = (payload.get("delete_target") or "").strip().lower()
     try:
         index_html, report_date, archive_path = _read_index(token)

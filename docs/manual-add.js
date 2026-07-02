@@ -3,7 +3,7 @@
  *
  * İki işlem:
  *   • Ekle : yeni bir kritik kart ekle (kaynak URL veya rapordaki bir haber).
- *            Opsiyonel: "yerine geçecek kritik haber" seçilirse o haber SİLİNMEZ,
+ *            Opsiyonel: "Çıkarılacak Haber" seçilirse o haber SİLİNMEZ,
  *            gövdeye ('diğer haberler') iner ve yeni haber onun yerine geçer
  *            (kritik sayısı 3'te kalır; eski "Değiştir" işlevi buraya taşındı).
  *            Hiçbiri seçilmezse yeni haber eklenir (kritik 4'e çıkar).
@@ -278,8 +278,9 @@
         }).join("")
       : '<div class="opt"><span style="color:#94a3b8;">Bu raporda taşınabilecek başka haber yok.</span></div>';
 
-    // Ekle: (opsiyonel) yerine geçecek kritik haber. Seçilirse o kart gövdeye
-    // iner, yeni haber onun yerine geçer (3'te kalır). Varsayılan "Hiçbiri" → düz ekle.
+    // Ekle: (opsiyonel) çıkarılacak haber. Seçilirse o kart kritik-3'ten
+    // çıkarılıp gövdeye iner, yeni haber onun yerine geçer (3'te kalır).
+    // Varsayılan "Hiçbiri" → düz ekle.
     var replaceOptsHtml =
       '<label class="opt"><input type="radio" name="ma-replace" value="" checked>' +
       "<span>Hiçbiri — yeni haberi ekle (kritik 4'e çıkar)</span></label>" +
@@ -340,8 +341,8 @@
               '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
               '<p class="ma-hint">Seçilen haber alt listeden çıkarılıp (taşınıp) kritik bölüme eklenir.</p>' +
             "</div>" +
-            // Opsiyonel: yerine geçecek kritik haber (seçilirse gövdeye iner)
-            '<label class="fld" style="margin-top:12px;">Yerine geçecek kritik haber (opsiyonel)</label>' +
+            // Opsiyonel: çıkarılacak haber (seçilirse kritik-3'ten çıkarılıp gövdeye iner)
+            '<label class="fld" style="margin-top:12px;">Çıkarılacak Haber (opsiyonel)</label>' +
             '<div class="ma-remove-list">' + replaceOptsHtml + "</div>" +
             '<p class="ma-hint">Bir kritik haber seçersen o haber SİLİNMEZ; alttaki ' +
             '"diğer haberler" listesine iner ve yeni haber onun yerine geçer (kritik ' +
@@ -355,7 +356,7 @@
             '<p class="ma-hint">Seçilen haber rapordan TAMAMEN silinir (yerine bir şey ' +
             'konmaz). Kritik bir haber silinirse o an 2 kart kalır; ertesi günkü otomatik ' +
             'rapor yine 3 üretir. (Silmeden gövdeye indirmek istersen Ekle işlemindeki ' +
-            '"yerine geçecek kritik haber" seçeneğini kullan.)</p>' +
+            '"Çıkarılacak Haber" seçeneğini kullan.)</p>' +
           "</div>" +
         "</div>" +
         '<div class="ma-actions">' +
@@ -428,8 +429,8 @@
         "Değişiklikler GitHub'a kaydediliyor"
       ];
     } else {
-      // add — kaynak (url/report) gerekir. Opsiyonel "yerine geçecek kritik
-      // haber" seçilmişse işlem sunucuda replace'e döner (o kart gövdeye iner,
+      // add — kaynak (url/report) gerekir. Opsiyonel "Çıkarılacak Haber"
+      // seçilmişse işlem sunucuda replace'e döner (o kart gövdeye iner,
       // yeni haber onun yerine geçer); seçilmemişse düz ekleme (kritik 4'e çıkar).
       var mode = currentMode();
       payload.mode = mode;
@@ -522,7 +523,7 @@
   // Sunucu sonucunu sayfaya ANINDA yansıt (işleme göre).
   function applyResult(ctx, data) {
     if (ctx.op === "replace") {
-      // Ekle + "yerine geçecek kritik": yeni kart seçilen kartın yerine geçer;
+      // Ekle + "Çıkarılacak Haber": yeni kart seçilen kartın yerine geçer;
       // çıkarılan kritik gövdeye iner (kopya sayfa yeniden yüklenince görünür).
       applyCard(ctx.removeIndex, data.card_html);
       if (data.removed_news_id) removeNewsItem(data.removed_news_id);
