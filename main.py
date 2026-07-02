@@ -896,8 +896,13 @@ class HaberSistemi:
         }
         .report-header {
             background: #ffffff;
-            padding: 30px 40px 26px;
-            text-align: center;
+            padding: 24px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            text-align: left;
             position: relative;
             border-bottom: 1px solid #e2e8f0;
         }
@@ -912,6 +917,7 @@ class HaberSistemi:
             font-size: 26px;
             font-weight: 600;
             margin: 0;
+            text-align: left;
             letter-spacing: 0.3px;
             color: #1e293b;
         }
@@ -1129,9 +1135,10 @@ class HaberSistemi:
         }
         .back-to-top:hover { opacity: 1; }
         /* ── DARK MODE ─────────────────────────────────────────── */
+        /* Başlığın sağında, tek satırda: manuel buton + tema butonu bir arada
+           (report-header'ın flex justify-content:space-between'i ile sağa yaslanır). */
         .header-actions {
-            position: absolute; top: 14px; right: 40px;
-            display: flex; flex-direction: column; align-items: flex-end; gap: 8px; z-index: 10;
+            display: flex; align-items: center; gap: 8px; flex-shrink: 0; z-index: 10;
         }
         .theme-toggle {
             background: none; border: 1px solid #e2e8f0; border-radius: 20px;
@@ -1150,15 +1157,8 @@ class HaberSistemi:
             transition: background 0.2s; font-family: inherit; white-space: nowrap;
         }
         .manual-add-btn:hover { background: #1e40af; }
-        /* Manuel buton BAŞLIKLA AYNI SATIRDA (header-title-row) — ayrı bir
-           buton satırına ihtiyaç kalmadığından üst başlık kısmı daha dar/kısa olur. */
-        .header-title-row {
-            display: flex; align-items: center; justify-content: center;
-            gap: 14px; flex-wrap: wrap;
-        }
         @media (max-width: 640px) {
-            .header-actions { right: 12px; top: 10px; }
-            .header-title-row { gap: 8px; }
+            .header-actions { gap: 6px; }
         }
         [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
         [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
@@ -1226,13 +1226,9 @@ class HaberSistemi:
             body { padding: 0; }
             .container { border-radius: 0; box-shadow: none; }
             /* Başlık alanı */
-            .report-header { padding: 16px 12px 14px; }
+            .report-header { padding: 14px 12px; }
             .report-header h1 { font-size: 17px; line-height: 1.35; }
-            .header-actions {
-                position: static; right: auto; top: auto;
-                flex-direction: row; flex-wrap: wrap; justify-content: center;
-                gap: 8px; margin-top: 12px;
-            }
+            .header-actions { flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
             /* Bölüm kapsayıcıları — yatay boşluğu en aza indir */
             .exec-brief { padding: 16px 12px; }
             .executive-summary { padding: 14px 6px; }
@@ -1448,9 +1444,7 @@ class HaberSistemi:
 <body>
     <div class="container">
         <div class="report-header">
-            <div class="header-title-row">
-                <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
-            </div>
+            <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
             <div class="header-actions">
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
                 <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -1607,22 +1601,22 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 cache_bust = hashlib.md5(_f.read()).hexdigest()[:10]
         except IOError:
             cache_bust = today_str  # dosya okunamazsa eski davranışa düş
-        # Buton, header-title-row içinde H1 ile AYNI SATIRDA yer alır (ayrı bir
-        # alt satır/bar yok) — böylece üst başlık kısmı daha dar/kısa kalır.
+        # Buton, header-actions içine tema butonuyla AYNI SATIRDA (önüne)
+        # eklenir — başlık sola yaslı, ikisi birlikte sağa yaslı tek grup olur.
         button_html = (
-            '                <button class="manual-add-btn" onclick="openManualAddModal()" '
+            '            <button class="manual-add-btn" onclick="openManualAddModal()" '
             'title="Rapora haber ekle / sil">\n'
-            '                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" '
+            '                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" '
             'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" '
             'stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/>'
             '<line x1="5" y1="12" x2="19" y2="12"/></svg>\n'
-            '                    Haber Ekle / Sil\n'
-            '                </button>\n'
+            '                Haber Ekle / Sil\n'
+            '            </button>\n'
         )
-        # H1'in hemen ardına, header-title-row'un kapanışından ÖNCE yerleştir.
+        # header-actions'ın açılışından hemen sonra (tema butonundan ÖNCE) yerleştir.
         html = html.replace(
-            '</h1>\n            </div>\n            <div class="header-actions">',
-            '</h1>\n' + button_html + '            </div>\n            <div class="header-actions">',
+            '<div class="header-actions">\n',
+            '<div class="header-actions">\n' + button_html,
             1,
         )
         html = html.replace(
