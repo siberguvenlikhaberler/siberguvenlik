@@ -7,7 +7,6 @@
 | The Hacker News | feeds.feedburner.com/TheHackersNews |
 | BleepingComputer | bleepingcomputer.com/feed |
 | Krebs on Security | krebsonsecurity.com/feed |
-| Threatpost | threatpost.com/feed |
 | Security Affairs | securityaffairs.com/feed |
 | Graham Cluley | grahamcluley.com/feed |
 | SANS ISC | isc.sans.edu/rssfeed.xml |
@@ -17,7 +16,7 @@
 | TechCrunch Security | techcrunch.com/category/security/feed |
 | CSO Online | csoonline.com/feed |
 | Infoblox Blog | blogs.infoblox.com/feed |
-| Dark Reading | darkreading.com/rss.xml |
+| Dark Reading | darkreading.com/rss.xml — ⚠️ şu an her gün HTTP 404 veriyor (bkz. data/rss_errors.txt); alternatif URL doğrulanamadığı için değiştirilmedi |
 | SecurityWeek | feeds.feedburner.com/securityweek |
 | Help Net Security | helpnetsecurity.com/feed |
 | The Record | therecord.media/feed |
@@ -57,7 +56,7 @@ bölgesel olayları çoğu zaman hiç ya da gecikmeli taşıyor.
 | Kaynak | Feed | Odak |
 |---|---|---|
 | The Cyber Express | thecyberexpress.com/feed | Bölgesel saldırı/ihlal/kesinti haberleri |
-| Industrial Cyber | industrialcyber.co/feed | Kritik altyapı / OT / finans |
+| Industrial Cyber | industrialcyber.co/feed — ⚠️ şu an her gün XML parse hatası veriyor (bkz. data/rss_errors.txt) | Kritik altyapı / OT / finans |
 | Times of Israel | timesofisrael.com/feed | İsrail tarafı, Predatory Sparrow/Gonjeshke tipi olaylar |
 | IranWire | iranwire.com/en/feed | İran iç siber olayları, bankacılık kesintileri, internet blackout |
 
@@ -109,18 +108,26 @@ Toplam sosyal sinyal sayısı: 5 (ana) + en fazla 3 (X.com) = en fazla 8.
 
 ---
 
-## Önem Sıralaması (Top 5 seçimi)
+## Önem Sıralaması (KRİTİK 3 + skorlama)
 
-Günlük raporun "Önemli Gelişmeler" kutusuna giren 5 haber aşağıdaki öncelik sırasına göre belirlenir:
+Seçim iki aşamalıdır (bkz. `src/config.py: get_scoring_prompt`):
 
-1. **Kritik altyapı saldırısı** — enerji, sağlık, finans, hükümet, SCADA/ICS sistemleri
-2. **Zero-day + APT grubu aktivitesi** — devlet destekli tehdit aktörleri, daha önce bilinmeyen açıklar
-3. **Jeopolitik kritik durumlar** — ülkeler arası siber savaş, seçim sistemleri, kritik altyapı hedefleme
-4. **Ulusal güvenlik / Türkiye** — Türkiye'yi, NATO'yu veya Türk kurumlarını doğrudan etkileyen gelişmeler
-5. **5 milyon+ kullanıcı veri ihlali** — büyük şirketler, kişisel/finansal veri sızıntıları
-6. **Yasal düzenlemeler** — siber güvenliğe yönelik yeni yasa ve yönetmelikler
+**1) LLM puanlaması** — her habere şunlar atanır:
+- **Kategori** (tek etiket): casus_yazilim, nation_state_apt,
+  stratejik_kurum_saldirisi, kolluk_operasyonu, tedarik_zinciri, veri_ihlali,
+  politika_hukuk, zafiyet_aktif_apt, zafiyet_rutin, urun_icerik, siber_disi
+- **Siber kapısı** (0/1): özünde somut siber boyut yoksa haber gündem dışı kalır
+- **Rubrik puanı** (`SCORING_WEIGHTS`): stratejik/istihbari değer **40** +
+  etki/ölçek **25** + aciliyet/güncellik **20** + kaynak güveni **15** = 100
 
-Top 5 karşılanamadığında bir alt seviyedeki haberlerden tamamlanır; toplam sayı her zaman tam 5'tir.
+**2) Deterministik sıralama (kod)** — LLM sıralama YAPMAZ; kod toplam puana
+göre sıralar, eşitlikte `KATEGORI_ONCELIK` (casus_yazilim > nation_state_apt >
+stratejik_kurum_saldirisi > ...) bozar. Raporun üstündeki **KRİTİK 3** kartı bu
+sıralamanın başından seçilir; `zafiyet_rutin`, `urun_icerik` ve `siber_disi`
+kategorileri KRİTİK 3'e giremez (`KRITIK3_HARIC_KATEGORILER`). Son 7 günde
+KRİTİK 3'te yer almış olaylar (`data/kritik3_gecmis.json`) tekrar seçilmez.
+`zafiyet_rutin`/`zafiyet_aktif_apt` kategorili haberler HTML'de "Güvenlik
+Açıkları" bölümüne yönlendirilir.
 
 ---
 
