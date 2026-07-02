@@ -1818,8 +1818,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         if t is not None and (t.text or '').strip():
                             result_holder['articles'].append({
                                 'title': t.text.strip(),
-                                'link': l.get('href') if l is not None else '',
-                                'description': s.text if s is not None else '',
+                                'link': (l.get('href') or '') if l is not None else '',
+                                'description': (s.text or '') if s is not None else '',
                                 'date': d.text if d is not None else '',
                                 'source': source_name
                             })
@@ -1833,8 +1833,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         if t is not None and (t.text or '').strip():
                             result_holder['articles'].append({
                                 'title': t.text.strip(),
-                                'link': l.text if l is not None else '',
-                                'description': d.text if d is not None else '',
+                                'link': (l.text or '') if l is not None else '',
+                                'description': (d.text or '') if d is not None else '',
                                 'date': p.text if p is not None else '',
                                 'source': source_name
                             })
@@ -2767,6 +2767,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 with open(ARCHIVE_FILE, encoding='utf-8') as f:
                     if today_header in f.read():
                         print("   ℹ️  Bugünün arşiv bloğu zaten mevcut — eklenmedi.")
+                        self._check_archive_size()
                         return
             except IOError:
                 pass
@@ -3966,6 +3967,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             'mastodon':          'Mastodon',
         }
 
+        import html as _h
         items_html = ''
         for post in self.social_data:
             platform    = post.get('platform', '')
@@ -3975,7 +3977,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             title       = raw_title.replace('<', '&lt;').replace('>', '&gt;')
             # link href attribute'una gömülüyor: tırnak/şema enjeksiyonuna karşı
             # yalnızca http/https kabul et, tırnak dahil escape et.
-            import html as _h
             link = str(post.get('link') or '#').strip()
             if not re.match(r'^https?://', link, re.IGNORECASE):
                 link = '#'
