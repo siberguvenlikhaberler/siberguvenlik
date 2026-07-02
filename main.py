@@ -4227,9 +4227,12 @@ def main():
     #   (2) O işarete karşılık gelen rapor gerçekten başarılı (fallback değil) mi?
     # İkisi de sağlanırsa atlanır. Aksi halde rapor üretimi sürer.
     #
-    # ÖNEMLİ: Manuel (workflow_dispatch) tetiklemeyle üretilmiş rapor bu işareti
-    # KOYMAZ. Bu yüzden elle rapor üretilmiş olsa bile cron saati gelince cron
-    # YİNE çalışır. Rapor fallback ise işaret konmaz → sıradaki cron slotu dener.
+    # ⚠️ YALNIZCA ZAMANLANMIŞ (schedule/dispatch) çalıştırmalar atlanır. MANUEL
+    # (workflow_dispatch) çalıştırma bu atlamaya TABİ DEĞİLDİR: kullanıcı elle
+    # "Run workflow" dediğinde her zaman TAZE rapor ister. (Artık tek tetikleyici
+    # workflow_dispatch olduğundan bu blok pratikte hep geçilir; yine de eski
+    # işaret dosyası bir manuel çalıştırmayı yanlışlıkla ATLATMASIN diye is_schedule
+    # koşulu şarttır.)
     cron_basarili_bugun = False
     if os.path.exists(cron_marker_path):
         try:
@@ -4239,7 +4242,7 @@ def main():
         except Exception:
             pass
 
-    if cron_basarili_bugun and os.path.exists(today_report):
+    if is_schedule and cron_basarili_bugun and os.path.exists(today_report):
         try:
             with open(today_report, encoding='utf-8') as f:
                 report_content = f.read()

@@ -1,41 +1,25 @@
 name: Günlük Rapor
 
 on:
-  # NOT: GitHub scheduled workflow'ları "best-effort" kuyruğa alır. Dakika :00
-  # (tepe saat) en sıkışık slottur; yoğun saatlerde tetiklenmeler saatlerce
-  # gecikir, hatta tamamen DÜŞÜRÜLÜR (özellikle sabah 06–10 UTC slotları pratikte
-  # neredeyse hiç ateşlenmez). Bu yüzden:
-  #   1) dakika :00 yerine düzensiz bir dakika (:23) kullanılır,
-  #   2) denemeler 06:23–20:53 UTC arasına geniş yayılır (8 deneme),
-  #   3) ASIL GÜVENİLİR tetikleme harici zamanlayıcıdan (cron-job.org) gelir:
-  #      'repository_dispatch' (event_type: scheduled-report) ile AYNI 8 saat/sıralama
-  #      dakikası dakikasına tetiklenir. GitHub'ın kendi 'schedule' bloğu yedek olarak
-  #      KALIR (idempotency sayesinde zararsızdır; harici tetikleme başarılı raporu
-  #      ürettiyse geç gelen GitHub cron'u atlar). Kurulum: docs/CRON_SETUP.md
-  # main.py idempotenttir: AYNI GÜN içinde CRON (schedule VEYA repository_dispatch)
-  # başarılı bir rapor ürettiyse (data/cron_basarili.txt işareti) sonraki slotlar hemen
-  # çıkar. Manuel (workflow_dispatch) tetikleme bu işareti KOYMAZ; dolayısıyla elle
-  # çalıştırma yapılsa bile cron saati gelince cron yine çalışır. Rapor fallback'se
-  # işaret yazılmaz → bir sonraki slot yeniden dener (Kontrol 1).
-  schedule:
-    - cron: '23 6 * * *'    # 1. deneme — 06:23 UTC
-    - cron: '23 8 * * *'    # 2. deneme — 08:23 UTC
-    - cron: '23 10 * * *'   # 3. deneme — 10:23 UTC
-    - cron: '23 12 * * *'   # 4. deneme — 12:23 UTC
-    - cron: '23 14 * * *'   # 5. deneme — 14:23 UTC
-    - cron: '23 16 * * *'   # 6. deneme — 16:23 UTC
-    - cron: '23 18 * * *'   # 7. deneme — 18:23 UTC
-    - cron: '53 20 * * *'   # 8. deneme — 20:53 UTC (son güvenlik ağı)
-  # Harici zamanlayıcı (cron-job.org) bu olayı tetikler — bkz. docs/CRON_SETUP.md
-  repository_dispatch:
-    types: [scheduled-report]
+  # ─────────────────────────────────────────────────────────────────────────
+  # SADECE MANUEL TETİKLEME.
+  # Rapor YALNIZCA GitHub arayüzünden elle "Run workflow" (workflow_dispatch)
+  # ile üretilir. Otomatik tetikleyiciler (schedule + repository_dispatch)
+  # KASITLI OLARAK KALDIRILDI.
+  #
+  # Neden: Zamanlanmış cron slotları, o gün BAŞARILI bir rapor zaten varken bile
+  # tekrar çalışıp raporu yeniden üretebiliyordu (idempotency işareti temizlenirse
+  # veya manuel rapor işaret koymadığı için). Bu, 2026-07-01'de raporun aynı-gün
+  # dedup çöküşüyle BOŞALMASINA yol açtı. Manuel-tek tetikleme ile "otomatik
+  # yeniden üretim" artık İMKÂNSIZDIR; her rapor bilinçli bir manuel eylemdir.
+  #
+  # (Geçmiş: 8 GitHub schedule slotu 06:23–20:53 UTC + cron-job.org üzerinden
+  #  repository_dispatch[scheduled-report] vardı; ikisi de kaldırıldı.)
+  # ─────────────────────────────────────────────────────────────────────────
   workflow_dispatch:
 
-# schedule ve repository_dispatch BİLEREK aynı 8 dakikaya hizalandığı için iki
-# tetikleme AYNI ANDA çalışabilir; her ikisi de cron_basarili.txt işaretini henüz
-# görmeden rapor üretip git push'ta çakışabilir. concurrency grubu aynı anda tek
-# bir çalıştırmaya izin verir (cancel-in-progress: false → devam eden raporu
-# yarıda kesmeyiz, ikinci tetikleme sıraya girer ve idempotency'yle erken çıkar).
+# Elle iki kez üst üste tetiklenirse aynı anda iki çalıştırma olmasın (git push
+# çakışmasını önler); devam eden çalıştırma yarıda kesilmez, ikincisi sıraya girer.
 concurrency:
   group: gunluk-rapor
   cancel-in-progress: false
@@ -48,19 +32,19 @@ jobs:
       contents: write
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -U google-genai
           pip install -r requirements.txt
-      
+
       - env:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
@@ -69,7 +53,7 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
         run: python -u main.py
-      
+
       - run: |
           git config user.name "Bot"
           git config user.email "bot@github.com"
