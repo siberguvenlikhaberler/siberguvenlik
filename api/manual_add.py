@@ -31,6 +31,7 @@ import hmac
 import socket
 import ipaddress
 from datetime import datetime
+from html import escape as _html_escape
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse
 
@@ -87,8 +88,24 @@ def assert_public_url(url):
 
 
 def fetch_article(url):
-    assert_public_url(url)
-    r = requests_get_with_retry(url, headers=HEADERS, timeout=(5, 12), stream=True)
+    # Redirect'ler ELLE izlenir: requests'in otomatik takibi her hop'u
+    # doğrulamadan çeker; public bir URL 302 ile iç ağa / bulut metadata'ya
+    # (169.254.169.254) yönlendirilerek assert_public_url atlatılabilirdi.
+    # Her hop'ta şema + çözümlenen IP'ler yeniden doğrulanır.
+    for _ in range(5):
+        assert_public_url(url)
+        r = requests_get_with_retry(url, headers=HEADERS, timeout=(5, 12),
+                                    stream=True, allow_redirects=False)
+        if r.is_redirect or r.is_permanent_redirect:
+            location = r.headers.get("Location", "")
+            r.close()
+            if not location:
+                raise ValueError("Yönlendirme hedefi (Location) boş.")
+            url = requests.compat.urljoin(url, location)
+            continue
+        break
+    else:
+        raise ValueError("Çok fazla yönlendirme (5+).")
     chunks, total = [], 0
     for chunk in r.iter_content(chunk_size=8192):
         chunks.append(chunk)
@@ -236,10 +253,29 @@ def generate_content(url, full_text, report_date):
     return (entry.get("tr_title") or "").strip(), (entry.get("paragraph") or "").strip(), None
 
 
+def _safe_href(link):
+    """href attribute'una girecek bağlantıyı güvenli hale getirir: yalnızca
+    http/https şemasına izin verir (javascript: vb. reddedilir), tırnak dahil
+    escape eder. main.py'deki _safe_content korumasının manuel araçtaki dengi."""
+    link = (link or "").strip()
+    if not re.match(r"^https?://", link, re.IGNORECASE):
+        return "#"
+    return _html_escape(link, quote=True)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Kritik kart HTML'i — main.py:1275 kalıbının BİREBİR aynısı (NATO rozeti yok)
+# paragraph_is_html: rapordan çıkarılan (decode_contents ile alınmış, zaten
+# escape'li) paragraf yeniden escape edilirse çift-escape olur; o yol True geçer.
 # ─────────────────────────────────────────────────────────────────────────────
-def build_card_html(tr_title, paragraph, link, domain, art_date):
+def build_card_html(tr_title, paragraph, link, domain, art_date,
+                    paragraph_is_html=False):
+    tr_title = _html_escape(tr_title or "")
+    if not paragraph_is_html:
+        paragraph = _html_escape(paragraph or "")
+    link = _safe_href(link)
+    domain = _html_escape(domain or "")
+    art_date = _html_escape(art_date or "")
     return (
         '                <div class="top3-card">\n'
         '                    <div class="top3-card-title">'
@@ -352,9 +388,17 @@ def extract_top3_card(html, index):
     return tr_title, paragraph, link, domain, art_date
 
 
-def build_news_item_html(tr_title, paragraph, link, domain, art_date, item_id="haber-90000"):
+def build_news_item_html(tr_title, paragraph, link, domain, art_date, item_id="haber-90000",
+                         paragraph_is_html=False):
     """main.py:_render_item kalıbının aynısıyla bir gövde haber bloğu üretir.
-    item_id geçici verilir; insert sonrası renumber_and_reflow yeniden numaralar."""
+    item_id geçici verilir; insert sonrası renumber_and_reflow yeniden numaralar.
+    paragraph_is_html: build_card_html'deki ile aynı çift-escape koruması."""
+    tr_title = _html_escape(tr_title or "")
+    if not paragraph_is_html:
+        paragraph = _html_escape(paragraph or "")
+    link = _safe_href(link)
+    domain = _html_escape(domain or "")
+    art_date = _html_escape(art_date or "")
     return (
         f'            <div class="news-item" id="{item_id}">\n'
         f'                <div class="news-title"><b>{tr_title}</b></div>\n'
@@ -842,7 +886,9 @@ def _card_from_source(payload, index_html, report_date, token):
             tr_title, paragraph, link, domain, art_date = extract_news_item(index_html, news_id)
         except Exception as e:
             return None, None, (422, {"error": f"Seçilen haber çıkarılamadı: {str(e)[:160]}"})
-        card_html = build_card_html(tr_title, paragraph, link, domain, art_date or report_date)
+        # paragraph rapordan decode_contents ile alındı — zaten escape'li HTML.
+        card_html = build_card_html(tr_title, paragraph, link, domain,
+                                    art_date or report_date, paragraph_is_html=True)
         return card_html, news_id, None
 
     if mode == "url":
@@ -895,7 +941,9 @@ def process_replace(payload, token):
         if news_id:
             html = remove_news_item(html, news_id)
         if demoted:
-            html = insert_body_news_item(html, build_news_item_html(*demoted))
+            # demoted paragrafı karttan decode_contents ile geldi — zaten escape'li.
+            html = insert_body_news_item(
+                html, build_news_item_html(*demoted, paragraph_is_html=True))
         html = renumber_and_reflow(html)
         return regenerate_exec_summary(html)
 
