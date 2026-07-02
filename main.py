@@ -8,6 +8,7 @@ import re
 import json
 import time
 import hashlib
+import html as _html_mod
 import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
@@ -1271,6 +1272,19 @@ class HaberSistemi:
             paragraph = _h.escape(str(paragraph), quote=False)
             return tr_title, paragraph
 
+        def _safe_source(art):
+            # RSS'ten gelen link/domain/tarih href ve attribute içine gömülüyor;
+            # tırnak içeren ya da javascript: şemalı bir link attribute'tan
+            # kaçabilir. Yalnızca http/https'e izin ver, tırnak dahil escape et.
+            import html as _h
+            link = str(art.get('link') or '#').strip()
+            if not re.match(r'^https?://', link, re.IGNORECASE):
+                link = '#'
+            link     = _h.escape(link, quote=True)
+            domain   = _h.escape(str(art.get('domain') or ''), quote=False)
+            art_date = _h.escape(str(art.get('art_date') or ''), quote=False)
+            return link, domain, art_date
+
         def _is_vuln(art_id):
             # Kategori etiketi varsa (yeni puan tabanlı yol) DETERMİNİSTİK ona güven:
             # zafiyet_rutin/zafiyet_aktif_apt → Güvenlik Açıkları bölümü. Etiket
@@ -1321,9 +1335,7 @@ class HaberSistemi:
             for art_id in top3_ids:
                 art = articles_by_id.get(art_id, {})
                 tr_title, paragraph = _safe_content(art_id)
-                link     = art.get('link', '#')
-                domain   = art.get('domain', '')
-                art_date = art.get('art_date', '')
+                link, domain, art_date = _safe_source(art)
                 top3_cards_html += (
                     f'                <div class="top3-card">\n'
                     f'                    <div class="top3-card-title">'
@@ -1358,9 +1370,7 @@ class HaberSistemi:
             art = articles_by_id.get(art_id, {})
             tr_title, paragraph = _safe_content(art_id)
             num      = id_to_num[art_id]
-            link     = art.get('link', '#')
-            domain   = art.get('domain', '')
-            art_date = art.get('art_date', '')
+            link, domain, art_date = _safe_source(art)
             return (
                 f'            <div class="news-item{css_extra}" id="haber-{num}">\n'
                 f'                <div class="news-title"><b>{tr_title}</b></div>\n'
@@ -3929,7 +3939,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             # title_tr varsa (Gemini çevirisi) onu kullan, yoksa orijinal başlık
             raw_title   = post.get('title_tr') or post.get('title', '')
             title       = raw_title.replace('<', '&lt;').replace('>', '&gt;')
-            link        = post.get('link', '#')
+            # link href attribute'una gömülüyor: tırnak/şema enjeksiyonuna karşı
+            # yalnızca http/https kabul et, tırnak dahil escape et.
+            import html as _h
+            link = str(post.get('link') or '#').strip()
+            if not re.match(r'^https?://', link, re.IGNORECASE):
+                link = '#'
+            link = _h.escape(link, quote=True)
             score       = post.get('score', 0)
             comments    = post.get('comments', 0)
             item_cls    = platform_css.get(platform, '')
@@ -4165,7 +4181,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 '<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8">'
                 f'<title>Siber Güvenlik Raporu [FALLBACK]</title></head><body>'
                 f'<h2>⚠️ Gemini API yanıt vermedi</h2>'
-                f'<pre style="font-size:13px">{txt_content[:3000] if txt_content else ""}</pre>'
+                f'<pre style="font-size:13px">'
+                f'{_html_mod.escape(txt_content[:3000]) if txt_content else ""}</pre>'
                 '</body></html>'
             )
 
