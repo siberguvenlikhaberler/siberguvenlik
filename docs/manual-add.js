@@ -273,18 +273,18 @@
     closeModal();
 
     var cards = topCards();
-    if (cards.length === 0) {
-      alert("Kritik haber kartları bulunamadı.");
-      return;
-    }
+    var hasCards = cards.length > 0;
 
-    // Değiştir: çıkarılacak kritik haber listesi.
-    var removeOptsHtml = cards.map(function (c, i) {
-      return (
-        '<label class="opt"><input type="radio" name="ma-remove" value="' + i + '">' +
-        "<span>" + esc(cardTitle(c)) + "</span></label>"
-      );
-    }).join("");
+    // Değiştir: çıkarılacak kritik haber listesi. Kart yoksa (dejenere rapor)
+    // modal yine AÇILIR — silme/ekleme kullanılabilir kalsın (P2).
+    var removeOptsHtml = hasCards
+      ? cards.map(function (c, i) {
+          return (
+            '<label class="opt"><input type="radio" name="ma-remove" value="' + i + '">' +
+            "<span>" + esc(cardTitle(c)) + "</span></label>"
+          );
+        }).join("")
+      : '<div class="opt"><span style="color:#94a3b8;">Bu raporda kritik kart yok — Değiştir kullanılamaz. Ekle veya Sil kullanın.</span></div>';
 
     var others = otherNewsItems();
     var hasOthers = others.length > 0;
@@ -311,6 +311,9 @@
         '<span><span class="ma-tag body">HABER</span>' + esc(n.title) + "</span></label>"
       );
     }).join("");
+    if (!deleteOptsHtml) {
+      deleteOptsHtml = '<div class="opt"><span style="color:#94a3b8;">Silinecek haber yok.</span></div>';
+    }
 
     var overlay = document.createElement("div");
     overlay.className = "ma-overlay";
@@ -396,7 +399,8 @@
     var reportTab = document.getElementById("ma-tab-report");
     if (hasOthers) reportTab.addEventListener("click", function () { setMode("report"); });
 
-    setOp("replace");  // varsayılan işlem: Değiştir
+    // Kart yoksa Değiştir kullanılamaz → varsayılanı Ekle yap.
+    setOp(hasCards ? "replace" : "add");
     setMode("url");    // varsayılan kaynak: URL ile yeni haber
   };
 
@@ -546,14 +550,23 @@
     if (newCard) cards[index].parentNode.replaceChild(newCard, cards[index]);
   }
 
-  // Ekle: yeni kritik kartı kartların sonuna ekler.
+  // Ekle: yeni kritik kartı kartların sonuna ekler. Bölüm yoksa (kartsız/
+  // dejenere rapor) top3-section'ı oluşturup Önemli Gelişmeler kutusuna koyar.
   function appendCard(cardHtml) {
-    var section = top3Section();
-    if (!section || !cardHtml) return;
+    if (!cardHtml) return;
     var tmp = document.createElement("div");
     tmp.innerHTML = cardHtml.trim();
     var newCard = tmp.querySelector(".top3-card") || tmp.firstChild;
-    if (newCard) section.appendChild(newCard);
+    if (!newCard) return;
+    var section = top3Section();
+    if (section) { section.appendChild(newCard); return; }
+    var block = document.getElementById("onemli-gelismeler-block");
+    if (!block) return;
+    var sec = document.createElement("div");
+    sec.className = "top3-section";
+    sec.appendChild(newCard);
+    var bottom = block.querySelector(".block-actions-bottom");
+    if (bottom) block.insertBefore(sec, bottom); else block.appendChild(sec);
   }
 
   // Sil (kritik): index'inci kritik kartı sayfadan kaldırır.

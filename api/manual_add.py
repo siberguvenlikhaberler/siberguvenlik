@@ -479,13 +479,28 @@ def replace_top3_card(html, index, new_card_html):
 
 def add_top3_card(html, new_card_html):
     """Yeni kritik kartı mevcut kartların SONUNA ekler (mevcut hiçbirini silmez).
-    Kartlar top3-section içinde; son kartın hemen ardına, section kapanışından
-    ÖNCE yerleştirilir. En az 1 kart olmalıdır (konum referansı için)."""
+    Kartlar top3-section içinde; son kartın hemen ardına yerleştirilir.
+
+    Kart HİÇ yoksa (az-haber guard top3'ü boşaltmış — dejenere rapor): yeni bir
+    top3-section kurar ve Önemli Gelişmeler kutusundaki alt aksiyon çubuğundan
+    (block-actions-bottom) ÖNCE yerleştirir. Böylece kartsız raporda bile ekleme
+    yapılabilir (P2)."""
     matches = list(_CARD_RE.finditer(html))
-    if not matches:
-        raise ValueError("Kritik kart bulunamadı; eklenecek konum belirlenemedi.")
-    last = matches[-1]
-    return html[: last.end()] + new_card_html + html[last.end():]
+    if matches:
+        last = matches[-1]
+        return html[: last.end()] + new_card_html + html[last.end():]
+    # Hiç kart yok → bölümü sıfırdan kur.
+    section = ('            <div class="top3-section">\n' + new_card_html
+               + '            </div>\n')
+    idx = html.find('<div class="block-actions-bottom">')
+    if idx != -1:
+        line_start = html.rfind("\n", 0, idx) + 1
+        return html[:line_start] + section + html[line_start:]
+    # Son çare: Önemli Gelişmeler blok başlığının hemen ardına.
+    m = re.search(r'id="onemli-gelismeler-block">[ \t]*\n', html)
+    if m:
+        return html[: m.end()] + section + html[m.end():]
+    raise ValueError("Kritik kart eklenecek konum bulunamadı.")
 
 
 def delete_top3_card(html, index):

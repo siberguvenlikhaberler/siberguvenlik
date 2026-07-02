@@ -2384,14 +2384,19 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"⚠️  KRİTİK 3 geçmişi okunamadı: {e}")
             return []
 
+        today  = datetime.now().strftime('%Y-%m-%d')
         cutoff = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
         views = []
         for rec in records:
             if not isinstance(rec, dict):
                 continue
-            # Bugünün kayıtlarını HARİÇ TUT — yalnızca GEÇMİŞ günlerle karşılaştır
-            # (aksi halde aynı run içinde yeni yazılmış kayıt kendini eler).
-            if rec.get('date', '') < cutoff:
+            # Yalnızca GEÇMİŞ günlerle karşılaştır: eski (< cutoff) VEYA BUGÜN/gelecek
+            # (>= today) kayıtları HARİÇ TUT. Bugün hariç tutulmazsa, aynı gün 2. kez
+            # üretimde bugünün KRİTİK 3'ü KENDİ arşiv kaydıyla çakışıp elenir ve
+            # backfill boşa düşer (rapor boşalma zincirinin bir halkası). Önceki
+            # sürüm yalnızca eskiyi atıyor, bugünü tutuyordu (yorumla çelişik bug).
+            d = rec.get('date', '')
+            if d < cutoff or d >= today:
                 continue
             for v in rec.get('views', []):
                 if isinstance(v, dict) and (v.get('tr_title') or v.get('paragraph')):
@@ -2645,6 +2650,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 text = f.read()
             # Gün blokları '📅 <tarih> - EN ÖNEMLİ ...' başlığıyla ayrılır.
             blocks = re.split(r'\n=+\n📅 ', text)
+            # ── AYNI-GÜN KORUMASI (kritik) ──────────────────────────────────
+            # Bugünün raporu arşive zaten yazılmış olabilir (aynı gün 2. kez
+            # üretim; ör. zamanlanmış tekrar çalışma). O blok dedup referansına
+            # GİRERSE bugünün haberleri KENDİ arşiv kopyasıyla 'mükerrer' sayılıp
+            # toplu elenir ve rapor BOŞALIR (07-01'de yaşandı). Bu yüzden bugünün
+            # tarihli blok(lar)ı referanstan çıkar — dedup yalnızca ÖNCEKİ günlere
+            # karşı çalışır. (Arşiv başlığı: save_summary_to_archive ile aynı format.)
+            today_hdr = datetime.now().strftime('%d %B %Y').upper()
+            blocks = [b for b in blocks if not b.lstrip().startswith(today_hdr)]
             recent = blocks[-days:] if len(blocks) > days else blocks
             titles = []
             for blk in recent:
@@ -2921,6 +2935,27 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         """
         category_by_id = {}
         source_pos = {a['id']: idx for idx, a in enumerate(articles)}  # kararlı id sırası
+
+        # ── GÜVENLİK TABANI: mükerrer eleme raporu ASLA boşaltamaz ───────────
+        # Siber kapısından geçen (mükerrer hariç değerlendirilen) haberleri say.
+        # Bunların büyük kısmı 'mükerrer' diye elenirse bu ANORMALDİR — neredeyse
+        # her zaman aynı-gün yeniden üretim artefaktıdır (bugünün haberleri kendi
+        # arşiv kopyasıyla kıyaslanır). Böyle bir durumda mükerrer bayrağını TÜMDEN
+        # yok say; deterministik sıralama mükerrersiz yapılır. 07-01'de rapor bu
+        # yüzden boşalmıştı; bu taban o zinciri kesin olarak kırar.
+        def _cyber_ok(rec):
+            return (rec.get('siber') and rec.get('toplam', 0) > 0
+                    and rec.get('kat') not in ('urun_icerik', 'siber_disi'))
+        cyber_pool = [a['id'] for a in articles
+                      if records.get(a['id']) and _cyber_ok(records[a['id']])]
+        muk = sum(1 for aid in cyber_pool if records[aid].get('mukerrer'))
+        apply_mukerrer = True
+        if cyber_pool and muk and (muk / len(cyber_pool) > 0.5 or len(cyber_pool) - muk < 12):
+            apply_mukerrer = False
+            print(f"   🛟 Güvenlik tabanı: {muk}/{len(cyber_pool)} siber haber 'mükerrer' "
+                  f"işaretli (kalacak {len(cyber_pool) - muk}) — anormal, mükerrer elemesi "
+                  f"YOK SAYILIYOR (aynı-gün yeniden üretim artefaktı; rapor boşalmasın).")
+
         ranked, filtered_ids = [], []
         for a in articles:
             aid = a['id']
@@ -2931,8 +2966,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                        'e': 0, 'a': 0, 'k': 0, 'toplam': 1}
                 records[aid] = rec
             category_by_id[aid] = rec['kat']
+            is_muk = bool(rec.get('mukerrer')) and apply_mukerrer
             # Elenenler: siber kapısı kapalı / ürün-içerik-dışı / MÜKERRER (çapraz-gün)
-            if (rec['toplam'] <= 0 or rec.get('mukerrer')
+            if (rec['toplam'] <= 0 or is_muk
                     or rec['kat'] in ('urun_icerik', 'siber_disi') or not rec['siber']):
                 filtered_ids.append(aid)
             else:
