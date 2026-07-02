@@ -12,6 +12,20 @@ import html as _html_mod
 import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
+# Rapor/dosya adı/idempotency gün damgaları TÜRKİYE gününe göre atılır.
+# GitHub Actions UTC çalıştığından naive datetime.now() TR gece yarısı
+# civarında (00:00-03:00 TR) bir ÖNCEKİ günü üretir: rapor dünkü dosyaya
+# yazılır, "bugünün raporu var mı" kontrolü yanlış güne bakardı.
+# Naive (tzinfo'suz) döner ki mevcut strftime/timedelta aritmetiğiyle ve
+# naive datetime karşılaştırmalarıyla uyumlu kalsın. Saat-TABANLI mutlak
+# kesim pencereleri (timedelta(hours=...) + .timestamp()) bilinçli olarak
+# datetime.now() ile bırakıldı — onlar duvar saatinden bağımsızdır.
+_TR_TZ = ZoneInfo("Europe/Istanbul")
+
+def _now_tr():
+    return datetime.now(_TR_TZ).replace(tzinfo=None)
 from difflib import SequenceMatcher
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
@@ -1858,7 +1872,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if not os.path.exists(self.used_links_file):
             return set(), {}, set()
 
-        cutoff = datetime.now() - timedelta(days=7)
+        cutoff = _now_tr() - timedelta(days=7)
         used_links = set()
         used_titles = {}
         used_hashes = set()
@@ -1928,7 +1942,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if not articles:
             return
 
-        now = datetime.now()
+        now = _now_tr()
         cutoff = now - timedelta(days=7)
 
         existing = []
@@ -1974,7 +1988,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if not self.rss_errors:
             return
 
-        now = datetime.now()
+        now = _now_tr()
         cutoff = now - timedelta(days=7)
 
         existing = []
@@ -2276,7 +2290,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
     def save_txt(self, news_data):
         """Ham RSS'i günlük kaydet (üzerine yaz)"""
         print("💾 TXT dosyaları kaydediliyor...")
-        now = datetime.now()
+        now = _now_tr()
         os.makedirs("data", exist_ok=True)
 
         # SESSION_DATE ilk satırda — git checkout mtime'a güvenmek yerine
@@ -2401,8 +2415,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"⚠️  KRİTİK 3 geçmişi okunamadı: {e}")
             return []
 
-        today  = datetime.now().strftime('%Y-%m-%d')
-        cutoff = (datetime.now() - timedelta(days=days)).strftime('%Y-%m-%d')
+        today  = _now_tr().strftime('%Y-%m-%d')
+        cutoff = (_now_tr() - timedelta(days=days)).strftime('%Y-%m-%d')
         views = []
         for rec in records:
             if not isinstance(rec, dict):
@@ -2426,7 +2440,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         referansını besler. İçerik yoksa sessizce atlar."""
         if not top3_ids:
             return
-        today = datetime.now().strftime('%Y-%m-%d')
+        today = _now_tr().strftime('%Y-%m-%d')
         view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
         views = []
         for aid in top3_ids:
@@ -2451,7 +2465,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # Aynı gün tekrar çalışırsa bugünün kaydını değiştir (mükerrer blok olmasın)
         records = [r for r in records if isinstance(r, dict) and r.get('date') != today]
         # Pencereden eski kayıtları buda
-        cutoff = (datetime.now() - timedelta(days=KRITIK3_HISTORY_DAYS)).strftime('%Y-%m-%d')
+        cutoff = (_now_tr() - timedelta(days=KRITIK3_HISTORY_DAYS)).strftime('%Y-%m-%d')
         records = [r for r in records if r.get('date', '') >= cutoff]
         records.append({'date': today, 'views': views})
 
@@ -2674,7 +2688,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             # toplu elenir ve rapor BOŞALIR (07-01'de yaşandı). Bu yüzden bugünün
             # tarihli blok(lar)ı referanstan çıkar — dedup yalnızca ÖNCEKİ günlere
             # karşı çalışır. (Arşiv başlığı: save_summary_to_archive ile aynı format.)
-            today_hdr = datetime.now().strftime('%d %B %Y').upper()
+            today_hdr = _now_tr().strftime('%d %B %Y').upper()
             blocks = [b for b in blocks if not b.lstrip().startswith(today_hdr)]
             recent = blocks[-days:] if len(blocks) > days else blocks
             titles = []
@@ -2744,11 +2758,24 @@ document.addEventListener('DOMContentLoaded', initDragFile);
     def save_summary_to_archive(self, html_content):
         """Gemini'nin seçtiği EN ÖNEMLİ 43 HABERİ TXT arşivine EKLE (sürekli birikim)"""
         print("📚 En önemli 43 haber arşive ekleniyor...")
-        now = datetime.now()
+        now = _now_tr()
 
         soup = BeautifulSoup(html_content, 'html.parser')
 
-        archive_entry = f"\n{'=' * 80}\n📅 {now.strftime('%d %B %Y').upper()} - EN ÖNEMLİ 43 HABER (SEÇİLMİŞ)\n{'=' * 80}\n\n"
+        today_header = f"📅 {now.strftime('%d %B %Y').upper()} - EN ÖNEMLİ 43 HABER (SEÇİLMİŞ)"
+
+        # Aynı gün ikinci koşuda (manuel tetikleme / retry) blok mükerrer
+        # eklenmesin: bugünün başlığı arşivde zaten varsa atla.
+        if os.path.exists(ARCHIVE_FILE):
+            try:
+                with open(ARCHIVE_FILE, encoding='utf-8') as f:
+                    if today_header in f.read():
+                        print("   ℹ️  Bugünün arşiv bloğu zaten mevcut — eklenmedi.")
+                        return
+            except IOError:
+                pass
+
+        archive_entry = f"\n{'=' * 80}\n{today_header}\n{'=' * 80}\n\n"
 
         news_items = soup.find_all('div', class_='news-item')[:43]
 
@@ -2792,7 +2819,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print("=" * 70)
             print(f"📁 Dosya: {ARCHIVE_FILE}")
             print(f"📏 Boyut: {file_size:.1f} MB")
-            print(f"📅 Tarih: {datetime.now().strftime('%d.%m.%Y %H:%M')}")
+            print(f"📅 Tarih: {_now_tr().strftime('%d.%m.%Y %H:%M')}")
             print("")
             print("⚠️  Lütfen aşağıdaki adımlardan birini uygulayın:")
             print("   1. Dosyayı yedekleyip harici depolamaya taşıyın")
@@ -3045,7 +3072,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         yerleşim + Critique düzeltti mi. İşlevsel değil; hata olursa sessiz geçer.
         """
         try:
-            date_str = datetime.now().strftime('%Y-%m-%d')
+            date_str = _now_tr().strftime('%Y-%m-%d')
             top10_set, top3_set = set(top10_ids), set(top3_ids)
             remaining_set = set(remaining_ids)
             articles_by_id = {a['id']: a for a in articles}
@@ -3120,7 +3147,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 error_message="GEMINI_API_KEY mevcut değil"
             )
 
-        now      = datetime.now()
+        now      = _now_tr()
         today_str = now.strftime('%d.%m.%Y')
 
         # ── Makaleleri ayrıştır ──────────────────────────────────────────
@@ -3624,7 +3651,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         data = self._gemini_call_json(
             get_summary_batch_prompt(self._format_batch_for_prompt(batch, articles_by_id),
-                                     today=datetime.now().strftime('%Y-%m-%d')),
+                                     today=_now_tr().strftime('%Y-%m-%d')),
             max_output_tokens=max_tokens,
             label=f'{label_prefix}(n={len(batch)})',
         )
@@ -3691,7 +3718,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 error_message="LLM API anahtarı mevcut değil"
             )
 
-        now       = datetime.now()
+        now       = _now_tr()
         today_str = now.strftime('%d.%m.%Y')
 
         articles = self._parse_articles_from_txt(txt_content)
@@ -4109,7 +4136,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         reports = []
         for i in range(30):
-            date = datetime.now() - timedelta(days=i)
+            date = _now_tr() - timedelta(days=i)
             filepath = f"docs/raporlar/{date.strftime('%Y-%m-%d')}.html"
             if os.path.exists(filepath):
                 reports.append({
@@ -4147,7 +4174,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
     def _create_fallback_html(self, txt_content, error_type=None, error_message=None):
         """Gemini API başarısız olursa — yeni format layout'u, ham İngilizce içerikle"""
-        now       = datetime.now()
+        now       = _now_tr()
         today_str = now.strftime('%d.%m.%Y')
 
         articles = self._parse_articles_from_txt(txt_content) if txt_content else []
@@ -4197,6 +4224,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 '</body></html>'
             )
 
+        # YAPISAL fallback işareti: idempotency kontrolü (_rapor_basarili) daha
+        # önce 'Gemini API yanıt vermedi' alt-dizesine bakıyordu — Gemini
+        # hakkındaki meşru bir haber bu cümleyi içerirse İYİ rapor "başarısız"
+        # sayılıp üzerine yazılabilirdi. Fallback sayfayı yalnızca bu yorum
+        # işaretiyle kesin olarak damgalıyoruz.
+        html = html.replace('</body>', '<!-- RAPOR_DURUM: FALLBACK -->\n</body>', 1)
+
         os.makedirs("docs/raporlar", exist_ok=True)
         with open("docs/index.html", 'w', encoding='utf-8') as f:
             f.write(html)
@@ -4210,7 +4244,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         """30 günden eski raporları sil"""
         import glob
 
-        cutoff = datetime.now() - timedelta(days=30)
+        cutoff = _now_tr() - timedelta(days=30)
         deleted = 0
 
         for filepath in glob.glob("docs/raporlar/*.html"):
@@ -4238,10 +4272,10 @@ def main():
     print("\n" + "=" * 70)
     print("🔒 SİBER GÜVENLİK HABERLERİ")
     print("=" * 70)
-    print(f"📅 {datetime.now().strftime('%d %B %Y %H:%M')}")
+    print(f"📅 {_now_tr().strftime('%d %B %Y %H:%M')}")
     print("=" * 70 + "\n")
 
-    now = datetime.now()
+    now = _now_tr()
     today_str = now.strftime('%Y-%m-%d')
     today_report = f"docs/raporlar/{today_str}.html"
     ham_txt_path = "data/haberler_ham.txt"
@@ -4259,10 +4293,16 @@ def main():
     is_schedule = os.environ.get('GITHUB_EVENT_NAME') in ('schedule', 'repository_dispatch')
 
     def _rapor_basarili(content: str) -> bool:
-        """Rapor fallback/hata içermiyorsa (gerçekten başarılıysa) True döner."""
-        return ('[FALLBACK]' not in content
-                and 'error-box' not in content
-                and 'Gemini API yanıt vermedi' not in content)
+        """Rapor fallback/hata içermiyorsa (gerçekten başarılıysa) True döner.
+
+        Birincil sinyal _create_fallback_html'in bastığı YAPISAL yorum
+        işaretidir (RAPOR_DURUM: FALLBACK). Eski işaretler ([FALLBACK] başlığı,
+        uyarı bandı cümlesi) yalnızca bu işaret eklenmeden önce üretilmiş eski
+        raporlar için ikincil olarak korunur. ('error-box' kontrolü kaldırıldı:
+        o class hiçbir yerde üretilmiyordu — ölü kontroldü.)"""
+        return ('RAPOR_DURUM: FALLBACK' not in content
+                and '[FALLBACK]' not in content
+                and 'Gemini API yanıt vermedi — içerik çevrilmedi' not in content)
 
     # ── Kontrol 1: Bugünün BAŞARILI raporu zaten var mı? (KURŞUNGEÇİRMEZ) ────
     # Idempotency sinyali RAPORUN KENDİSİdir: docs/raporlar/<bugün>.html dosyası
