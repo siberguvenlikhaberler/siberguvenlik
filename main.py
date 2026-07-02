@@ -1803,9 +1803,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         l = entry.find('{http://www.w3.org/2005/Atom}link')
                         s = entry.find('{http://www.w3.org/2005/Atom}summary')
                         d = entry.find('{http://www.w3.org/2005/Atom}published')
-                        if t is not None:
+                        # Boş <title></title> → t.text=None; sonraki title.lower()
+                        # çağrıları AttributeError ile tüm koşuyu düşürür — atla.
+                        if t is not None and (t.text or '').strip():
                             result_holder['articles'].append({
-                                'title': t.text,
+                                'title': t.text.strip(),
                                 'link': l.get('href') if l is not None else '',
                                 'description': s.text if s is not None else '',
                                 'date': d.text if d is not None else '',
@@ -1817,9 +1819,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         l = item.find('link')
                         d = item.find('description')
                         p = item.find('pubDate')
-                        if t is not None:
+                        # Aynı boş-başlık koruması (RSS dalı).
+                        if t is not None and (t.text or '').strip():
                             result_holder['articles'].append({
-                                'title': t.text,
+                                'title': t.text.strip(),
                                 'link': l.text if l is not None else '',
                                 'description': d.text if d is not None else '',
                                 'date': p.text if p is not None else '',
@@ -1953,7 +1956,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 title = art.get('title', '')
                 description = art.get('description', '')
                 content_hash = _calculate_content_hash(title, description)
-                existing.append(f"{today}\t{art['link']}\t{title}\t{content_hash}")
+                # Dosya satır-tabanlı TSV: başlıktaki sekme sütunları kaydırır,
+                # newline kaydı böler ve okuyucuyu bozar — düz boşluğa çevir.
+                clean_title = ' '.join(str(title).split())
+                clean_link = ' '.join(str(art['link']).split())
+                existing.append(f"{today}\t{clean_link}\t{clean_title}\t{content_hash}")
 
         os.makedirs("data", exist_ok=True)
         try:
@@ -3719,14 +3726,18 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 error_message="Legacy JSON çağrısı başarısız"
             )
 
-        # Veriyi çözümle
+        # Veriyi çözümle — LLM "N/A"/"12a" gibi sayısal olmayan id döndürürse
+        # int() ValueError fırlatıp tüm legacy yolu düşürüyordu; ana yoldaki
+        # isdigit korumasının aynısı uygulanır.
+        def _valid_ids(seq):
+            return [int(i) for i in seq
+                    if str(i).lstrip('-').isdigit() and int(i) in all_ids]
+
         all_ids       = {a['id'] for a in articles}
-        top10_ids     = [int(i) for i in data.get('top10', [])    if int(i) in all_ids]
-        filtered_ids  = {int(i) for i in data.get('filtered', []) if int(i) in all_ids}
-        remaining_ids = [int(i) for i in data.get('remaining', [])
-                         if int(i) in all_ids
-                         and int(i) not in set(top10_ids)
-                         and int(i) not in filtered_ids]
+        top10_ids     = _valid_ids(data.get('top10', []))
+        filtered_ids  = set(_valid_ids(data.get('filtered', [])))
+        remaining_ids = [i for i in _valid_ids(data.get('remaining', []))
+                         if i not in set(top10_ids) and i not in filtered_ids]
         # Sıralamada yer almayan ama filtrelenmemiş makaleleri sona ekle
         ranked_set = set(top10_ids) | set(remaining_ids) | filtered_ids
         for a in articles:
