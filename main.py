@@ -896,7 +896,7 @@ class HaberSistemi:
         }
         .report-header {
             background: #ffffff;
-            padding: 36px 40px 30px;
+            padding: 30px 40px 26px;
             text-align: center;
             position: relative;
             border-bottom: 1px solid #e2e8f0;
@@ -1150,12 +1150,15 @@ class HaberSistemi:
             transition: background 0.2s; font-family: inherit; white-space: nowrap;
         }
         .manual-add-btn:hover { background: #1e40af; }
-        /* Manuel buton artık başlığın ALTINDA kendi satırında (sağa yaslı) —
-           mutlak köşe kutusundan çıkarıldı ki ortalanmış H1 ile çakışmasın. */
-        .manual-add-bar { display: flex; justify-content: flex-end; margin-top: 14px; }
+        /* Manuel buton BAŞLIKLA AYNI SATIRDA (header-title-row) — ayrı bir
+           buton satırına ihtiyaç kalmadığından üst başlık kısmı daha dar/kısa olur. */
+        .header-title-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 14px; flex-wrap: wrap;
+        }
         @media (max-width: 640px) {
             .header-actions { right: 12px; top: 10px; }
-            .manual-add-bar { justify-content: center; margin-top: 10px; }
+            .header-title-row { gap: 8px; }
         }
         [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
         [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
@@ -1445,7 +1448,9 @@ class HaberSistemi:
 <body>
     <div class="container">
         <div class="report-header">
-            <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
+            <div class="header-title-row">
+                <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
+            </div>
             <div class="header-actions">
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
                 <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -1590,11 +1595,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         dosya yalnızca arayüzü (docs/manual-add.js) yükler. Script'e ?v=<tarih>
         eklenir ki tarayıcı/Pages önbelleği her günkü raporda tazelensin.
         """
-        # Buton, mutlak konumlu köşe kutusu (header-actions) yerine BAŞLIĞIN
-        # ALTINDA kendi satırında (sağa yaslı bar) yer alır; böylece metni ne
-        # kadar uzun olursa olsun ortalanmış H1 başlığıyla çakışmaz.
-        button_bar_html = (
-            '            <div class="manual-add-bar">\n'
+        # Buton, header-title-row içinde H1 ile AYNI SATIRDA yer alır (ayrı bir
+        # alt satır/bar yok) — böylece üst başlık kısmı daha dar/kısa kalır.
+        button_html = (
             '                <button class="manual-add-btn" onclick="openManualAddModal()" '
             'title="Rapora haber ekle / sil">\n'
             '                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" '
@@ -1603,12 +1606,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             '<line x1="5" y1="12" x2="19" y2="12"/></svg>\n'
             '                    Haber Ekle / Sil\n'
             '                </button>\n'
-            '            </div>\n'
         )
-        # H1 başlığının hemen ardına (header-actions'tan ÖNCE) yerleştir.
+        # H1'in hemen ardına, header-title-row'un kapanışından ÖNCE yerleştir.
         html = html.replace(
-            '</h1>\n            <div class="header-actions">',
-            '</h1>\n' + button_bar_html + '            <div class="header-actions">',
+            '</h1>\n            </div>\n            <div class="header-actions">',
+            '</h1>\n' + button_html + '            </div>\n            <div class="header-actions">',
             1,
         )
         html = html.replace(
