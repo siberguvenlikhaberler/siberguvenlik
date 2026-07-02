@@ -2,24 +2,38 @@ name: Günlük Rapor
 
 on:
   # ─────────────────────────────────────────────────────────────────────────
-  # SADECE MANUEL TETİKLEME.
-  # Rapor YALNIZCA GitHub arayüzünden elle "Run workflow" (workflow_dispatch)
-  # ile üretilir. Otomatik tetikleyiciler (schedule + repository_dispatch)
-  # KASITLI OLARAK KALDIRILDI.
+  # GÜNLÜK OTOMATİK ÜRETİM — ama GÜNDE EN FAZLA 1 BAŞARILI RAPOR.
   #
-  # Neden: Zamanlanmış cron slotları, o gün BAŞARILI bir rapor zaten varken bile
-  # tekrar çalışıp raporu yeniden üretebiliyordu (idempotency işareti temizlenirse
-  # veya manuel rapor işaret koymadığı için). Bu, 2026-07-01'de raporun aynı-gün
-  # dedup çöküşüyle BOŞALMASINA yol açtı. Manuel-tek tetikleme ile "otomatik
-  # yeniden üretim" artık İMKÂNSIZDIR; her rapor bilinçli bir manuel eylemdir.
+  # GitHub scheduled workflow'ları "best-effort"tur: yoğun saatlerde gecikir,
+  # hatta düşürülür (özellikle sabah UTC slotları). Bu yüzden gün içine yayılmış
+  # 8 deneme + harici zamanlayıcıdan (cron-job.org) repository_dispatch kullanılır.
   #
-  # (Geçmiş: 8 GitHub schedule slotu 06:23–20:53 UTC + cron-job.org üzerinden
-  #  repository_dispatch[scheduled-report] vardı; ikisi de kaldırıldı.)
+  # KURŞUNGEÇİRMEZ IDEMPOTENCY (bkz. main.py Kontrol 1): O gün için BAŞARILI rapor
+  # dosyası (docs/raporlar/<bugün>.html) ZATEN varsa, sonraki tüm otomatik
+  # çalışmalar HEMEN çıkar — raporun ÜZERİNE ASLA YAZILMAZ. Sinyal raporun
+  # KENDİSİdir (işaret dosyasına bağlı değil); işaret silinse bile başarılı rapor
+  # yeniden üretilmez. Böylece "başarılı rapor otomatik bozulması" imkânsızdır.
+  #
+  # Manuel (workflow_dispatch) çalıştırma bu atlamaya TABİ DEĞİLDİR: elle "Run
+  # workflow" her zaman TAZE rapor üretir (bilinçli eylem).
   # ─────────────────────────────────────────────────────────────────────────
+  schedule:
+    - cron: '23 6 * * *'    # 1. deneme — 06:23 UTC
+    - cron: '23 8 * * *'    # 2. deneme — 08:23 UTC
+    - cron: '23 10 * * *'   # 3. deneme — 10:23 UTC
+    - cron: '23 12 * * *'   # 4. deneme — 12:23 UTC
+    - cron: '23 14 * * *'   # 5. deneme — 14:23 UTC
+    - cron: '23 16 * * *'   # 6. deneme — 16:23 UTC
+    - cron: '23 18 * * *'   # 7. deneme — 18:23 UTC
+    - cron: '53 20 * * *'   # 8. deneme — 20:53 UTC (son güvenlik ağı)
+  # Harici zamanlayıcı (cron-job.org) bu olayı tetikler — bkz. docs/CRON_SETUP.md
+  repository_dispatch:
+    types: [scheduled-report]
   workflow_dispatch:
 
-# Elle iki kez üst üste tetiklenirse aynı anda iki çalıştırma olmasın (git push
-# çakışmasını önler); devam eden çalıştırma yarıda kesilmez, ikincisi sıraya girer.
+# Aynı anda birden fazla tetikleme gelebilir (schedule + dispatch). concurrency
+# aynı anda tek çalıştırmaya izin verir; devam eden yarıda kesilmez, ikinci
+# tetikleme sıraya girer ve idempotency ile (başarılı rapor varsa) hemen çıkar.
 concurrency:
   group: gunluk-rapor
   cancel-in-progress: false

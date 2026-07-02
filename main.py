@@ -4221,37 +4221,30 @@ def main():
                 and 'error-box' not in content
                 and 'Gemini API yanıt vermedi' not in content)
 
-    # ── Kontrol 1: Bugün CRON başarıyla çalışıp BAŞARILI rapor üretti mi? ───
-    # Görevin "tamamlandı" sayılması için İKİ şart BİRLİKTE aranır:
-    #   (1) Bugüne ait CRON başarı işareti var mı?  (data/cron_basarili.txt == bugün)
-    #   (2) O işarete karşılık gelen rapor gerçekten başarılı (fallback değil) mi?
-    # İkisi de sağlanırsa atlanır. Aksi halde rapor üretimi sürer.
+    # ── Kontrol 1: Bugünün BAŞARILI raporu zaten var mı? (KURŞUNGEÇİRMEZ) ────
+    # Idempotency sinyali RAPORUN KENDİSİdir: docs/raporlar/<bugün>.html dosyası
+    # varsa VE fallback/hata içermiyorsa, o gün için başarılı rapor üretilmiş
+    # demektir. Bu durumda OTOMATİK (schedule/dispatch) çalıştırma HEMEN çıkar —
+    # başarılı raporun ÜZERİNE ASLA YAZILMAZ. (Dosya adı bugünün tarihini içerir;
+    # git checkout mtime'ına güvenilmez, dosya-adı tarihi kesin sinyaldir.)
     #
-    # ⚠️ YALNIZCA ZAMANLANMIŞ (schedule/dispatch) çalıştırmalar atlanır. MANUEL
-    # (workflow_dispatch) çalıştırma bu atlamaya TABİ DEĞİLDİR: kullanıcı elle
-    # "Run workflow" dediğinde her zaman TAZE rapor ister. (Artık tek tetikleyici
-    # workflow_dispatch olduğundan bu blok pratikte hep geçilir; yine de eski
-    # işaret dosyası bir manuel çalıştırmayı yanlışlıkla ATLATMASIN diye is_schedule
-    # koşulu şarttır.)
-    cron_basarili_bugun = False
-    if os.path.exists(cron_marker_path):
-        try:
-            with open(cron_marker_path, encoding='utf-8') as f:
-                if f.read().strip() == today_str:
-                    cron_basarili_bugun = True
-        except Exception:
-            pass
-
-    if is_schedule and cron_basarili_bugun and os.path.exists(today_report):
+    # Neden işaret dosyası (cron_basarili.txt) DEĞİL de rapor dosyası? İşaret
+    # silinir/kaybolursa (07-01'de olduğu gibi) marker-tabanlı kontrol atlar ve
+    # rapor yeniden üretilip BOZULABİLİR. Rapor dosyası tek doğruluk kaynağı
+    # olduğundan bu zincir kesin olarak kırılır.
+    #
+    # ⚠️ MANUEL (workflow_dispatch) çalıştırma bu atlamaya TABİ DEĞİLDİR: elle
+    # "Run workflow" her zaman TAZE rapor üretir.
+    if is_schedule and os.path.exists(today_report):
         try:
             with open(today_report, encoding='utf-8') as f:
                 report_content = f.read()
             if _rapor_basarili(report_content):
-                print(f"✅ Bugün CRON zaten başarılı rapor üretti: {today_report}")
-                print("   Görev tamamlanmış — yeniden oluşturma atlanıyor.")
+                print(f"✅ Bugünün başarılı raporu zaten var: {today_report}")
+                print("   Otomatik çalıştırma atlanıyor — başarılı raporun üzerine yazılmaz.")
                 return 0
             else:
-                print("⚠️  CRON işareti bugünü gösteriyor ama rapor fallback — yeniden denenecek.")
+                print("⚠️  Bugünün raporu fallback/hatalı — yeniden denenecek.")
         except Exception:
             pass  # Okuma hatası varsa devam et
 
