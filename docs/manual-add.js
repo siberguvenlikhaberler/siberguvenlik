@@ -1,13 +1,14 @@
 /*
- * Haber Ekle / Değiştir / Sil — anasayfa (index.html) pop-up'ı.
+ * Haber Ekle / Sil — anasayfa (index.html) pop-up'ı.
  *
- * Üç işlem:
- *   • Değiştir : bir kritik haberi çıkar + yerine ekle (URL ile yeni haber VEYA
- *                rapordaki başka bir haberi taşı).
- *   • Ekle     : mevcut hiçbirini SİLMEDEN yeni bir kritik kart ekle (kritik 4'e
- *                çıkar). Kaynak URL veya rapordaki bir haber olabilir.
- *   • Sil      : bir haberi SİL — kritik 3'ten biri (o an 2 kart kalır) VEYA alt
- *                listedeki (diğer haberler) bir haber. Yerine bir şey konmaz.
+ * İki işlem:
+ *   • Ekle : mevcut hiçbirini SİLMEDEN yeni bir kritik kart ekle (kritik 4'e
+ *            çıkar). Kaynak URL veya rapordaki bir haber olabilir.
+ *   • Sil  : bir haberi kaldır.
+ *            – Kritik kart → SİLİNMEZ, gövdeye ('diğer haberler') iner
+ *              (eski "Değiştir" sekmesinin taşıma işlevi buraya taşındı;
+ *               yerine yeni kart koymak için ayrıca Ekle kullanılır).
+ *            – Alt liste (gövde) haberi → tamamen silinir.
  *
  * Tüm asıl iş (URL getirme, LLM, dosya yazma, commit) SUNUCU tarafında
  * (/api/manual_add) çalışır. Bu dosya yalnızca arayüz + uç noktaya istek atar.
@@ -63,7 +64,7 @@
     "box-shadow:0 2px 6px rgba(220,38,38,.3)!important;}",
     ".ma-source-block{display:none;}",
     ".ma-source-block.active{display:block;}",
-    // İşlem blokları (değiştir/ekle/sil) — yalnızca aktif olan gösterilir
+    // İşlem blokları (ekle/sil) — yalnızca aktif olan gösterilir
     ".ma-op-block{display:none;}",
     ".ma-op-block.active{display:block;}",
     ".ma-actions{padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;}",
@@ -222,7 +223,7 @@
     if (layer) layer.classList.remove("show");
   }
 
-  // Aktif KAYNAK modu ("url" | "report") — değiştir/ekle işlemlerinde kullanılır.
+  // Aktif KAYNAK modu ("url" | "report") — Ekle işleminde kullanılır.
   function setMode(mode) {
     ["url", "report"].forEach(function (m) {
       var tab = document.getElementById("ma-tab-" + m);
@@ -237,35 +238,25 @@
     return (rt && rt.classList.contains("active")) ? "report" : "url";
   }
 
-  // Aktif İŞLEM ("replace" | "add" | "delete") — blokları gösterir/gizler.
+  // Aktif İŞLEM ("add" | "delete") — blokları gösterir/gizler.
   function setOp(op) {
-    ["replace", "add", "delete"].forEach(function (o) {
+    ["add", "delete"].forEach(function (o) {
       var tab = document.getElementById("ma-op-" + o);
       if (tab) tab.classList.toggle("active", o === op);
     });
-    // Bloklar: değiştir → çıkarılacak liste + kaynak; ekle → yalnız kaynak;
-    // sil → yalnız silinecek liste.
-    var showRemove = (op === "replace");
-    var showSource = (op === "replace" || op === "add");
+    // Bloklar: ekle → yalnız kaynak; sil → yalnız silinecek liste.
+    var showSource = (op === "add");
     var showDelete = (op === "delete");
     var b;
-    if ((b = document.getElementById("ma-blk-replace-remove"))) b.classList.toggle("active", showRemove);
     if ((b = document.getElementById("ma-blk-source"))) b.classList.toggle("active", showSource);
     if ((b = document.getElementById("ma-blk-delete"))) b.classList.toggle("active", showDelete);
-    // Kaynak başlığı işleme göre değişir.
     var lbl = document.getElementById("ma-src-label");
-    if (lbl) lbl.textContent = (op === "add")
-      ? "Ne eklensin? (yeni bir kritik kart olarak eklenecek)"
-      : "Yerine ne eklensin?";
+    if (lbl) lbl.textContent = "Ne eklensin? (yeni bir kritik kart olarak eklenecek)";
   }
 
   function currentOp() {
-    var ops = ["add", "delete"];
-    for (var i = 0; i < ops.length; i++) {
-      var t = document.getElementById("ma-op-" + ops[i]);
-      if (t && t.classList.contains("active")) return ops[i];
-    }
-    return "replace";
+    var t = document.getElementById("ma-op-delete");
+    return (t && t.classList.contains("active")) ? "delete" : "add";
   }
 
   window.openManualAddModal = function () {
@@ -273,23 +264,11 @@
     closeModal();
 
     var cards = topCards();
-    var hasCards = cards.length > 0;
-
-    // Değiştir: çıkarılacak kritik haber listesi. Kart yoksa (dejenere rapor)
-    // modal yine AÇILIR — silme/ekleme kullanılabilir kalsın (P2).
-    var removeOptsHtml = hasCards
-      ? cards.map(function (c, i) {
-          return (
-            '<label class="opt"><input type="radio" name="ma-remove" value="' + i + '">' +
-            "<span>" + esc(cardTitle(c)) + "</span></label>"
-          );
-        }).join("")
-      : '<div class="opt"><span style="color:#94a3b8;">Bu raporda kritik kart yok — Değiştir kullanılamaz. Ekle veya Sil kullanın.</span></div>';
 
     var others = otherNewsItems();
     var hasOthers = others.length > 0;
 
-    // Ekle/Değiştir kaynağı: rapordan taşınacak haber listesi.
+    // Ekle kaynağı: rapordan taşınacak haber listesi.
     var reportOptsHtml = hasOthers
       ? others.map(function (n) {
           return (
@@ -320,7 +299,7 @@
     overlay.id = "ma-overlay";
     overlay.innerHTML =
       '<div class="ma-modal" role="dialog" aria-modal="true">' +
-        "<h3>Haber Ekle / Değiştir / Sil</h3>" +
+        "<h3>Haber Ekle / Sil</h3>" +
         '<div class="ma-msg" id="ma-msg"></div>' +
         '<div class="ma-body">' +
           '<label class="fld" for="ma-pass">Şifre</label>' +
@@ -328,20 +307,13 @@
 
           '<label class="fld">İşlem</label>' +
           '<div class="ma-tabs">' +
-            '<button type="button" class="ma-tab" id="ma-op-replace">Değiştir</button>' +
             '<button type="button" class="ma-tab" id="ma-op-add">Ekle</button>' +
             '<button type="button" class="ma-tab ma-op-delete" id="ma-op-delete">Sil</button>' +
           "</div>" +
 
-          // DEĞİŞTİR: çıkarılacak kritik haber
-          '<div class="ma-op-block" id="ma-blk-replace-remove">' +
-            '<label class="fld">Çıkarılacak kritik haberi işaretleyin</label>' +
-            '<div class="ma-remove-list">' + removeOptsHtml + "</div>" +
-          "</div>" +
-
-          // KAYNAK (değiştir + ekle ortak)
+          // KAYNAK (ekle)
           '<div class="ma-op-block" id="ma-blk-source">' +
-            '<label class="fld" id="ma-src-label">Yerine ne eklensin?</label>' +
+            '<label class="fld" id="ma-src-label">Ne eklensin? (yeni bir kritik kart olarak eklenecek)</label>' +
             '<div class="ma-tabs">' +
               '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber ekle</button>' +
               '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç</button>" +
@@ -362,8 +334,10 @@
           '<div class="ma-op-block" id="ma-blk-delete">' +
             '<label class="fld">Silinecek haberi seçin</label>' +
             '<div class="ma-remove-list">' + deleteOptsHtml + "</div>" +
-            '<p class="ma-hint">Seçilen haber rapordan kaldırılır (yerine bir şey konmaz). ' +
-            'Kritik bir haber silinirse o an 2 kart kalır; ertesi günkü otomatik rapor yine 3 üretir.</p>' +
+            '<p class="ma-hint">Kritik bir haberi silersen o haber SİLİNMEZ, alttaki ' +
+            '"diğer haberler" listesine iner (kritik bölümde o an 2 kart kalır; ertesi ' +
+            'günkü otomatik rapor yine 3 üretir). Tamamen kaldırmak için indikten sonra ' +
+            'alt listeden tekrar sil. Alt listedeki bir haber ise doğrudan tamamen silinir.</p>' +
           "</div>" +
         "</div>" +
         '<div class="ma-actions">' +
@@ -392,15 +366,13 @@
     });
     document.getElementById("ma-cancel").addEventListener("click", closeModal);
     document.getElementById("ma-ok").addEventListener("click", submit);
-    document.getElementById("ma-op-replace").addEventListener("click", function () { setOp("replace"); });
     document.getElementById("ma-op-add").addEventListener("click", function () { setOp("add"); });
     document.getElementById("ma-op-delete").addEventListener("click", function () { setOp("delete"); });
     document.getElementById("ma-tab-url").addEventListener("click", function () { setMode("url"); });
     var reportTab = document.getElementById("ma-tab-report");
     if (hasOthers) reportTab.addEventListener("click", function () { setMode("report"); });
 
-    // Kart yoksa Değiştir kullanılamaz → varsayılanı Ekle yap.
-    setOp(hasCards ? "replace" : "add");
+    setOp("add");      // varsayılan işlem: Ekle
     setMode("url");    // varsayılan kaynak: URL ile yeni haber
   };
 
@@ -438,16 +410,9 @@
         "Değişiklikler GitHub'a kaydediliyor"
       ];
     } else {
-      // replace veya add — kaynak (url/report) gerekir.
+      // add — kaynak (url/report) gerekir.
       var mode = currentMode();
       payload.mode = mode;
-
-      if (op === "replace") {
-        var checked = document.querySelector('input[name="ma-remove"]:checked');
-        if (!checked) { showMsg("err", "Çıkarılacak kritik haberi işaretleyiniz."); return; }
-        payload.remove_index = parseInt(checked.value, 10);
-        ctx.removeIndex = payload.remove_index;
-      }
 
       if (mode === "url") {
         var url = (document.getElementById("ma-url").value || "").trim();
@@ -528,26 +493,17 @@
 
   // Sunucu sonucunu sayfaya ANINDA yansıt (işleme göre).
   function applyResult(ctx, data) {
-    if (ctx.op === "replace") {
-      applyCard(ctx.removeIndex, data.card_html);
-      if (data.removed_news_id) removeNewsItem(data.removed_news_id);
-    } else if (ctx.op === "add") {
+    if (ctx.op === "add") {
       appendCard(data.card_html);
       if (data.removed_news_id) removeNewsItem(data.removed_news_id);
     } else if (ctx.op === "delete") {
+      // Kritik silme artık "gövdeye indirme" (demoted_index). Eski sürümlerle
+      // uyum için deleted_index de desteklenir. Her iki durumda kart kritik
+      // bölümden kaldırılır; gövdeye inen kopya sayfa yeniden yüklenince görünür.
+      if (data.demoted_index != null) deleteCard(data.demoted_index);
       if (data.deleted_index != null) deleteCard(data.deleted_index);
       if (data.removed_news_id) removeNewsItem(data.removed_news_id);
     }
-  }
-
-  // Değiştir: index'inci kritik kartı sunucudan dönen kartla değiştirir.
-  function applyCard(index, cardHtml) {
-    var cards = topCards();
-    if (!cardHtml || index < 0 || index >= cards.length) return;
-    var tmp = document.createElement("div");
-    tmp.innerHTML = cardHtml.trim();
-    var newCard = tmp.querySelector(".top3-card") || tmp.firstChild;
-    if (newCard) cards[index].parentNode.replaceChild(newCard, cards[index]);
   }
 
   // Ekle: yeni kritik kartı kartların sonuna ekler. Bölüm yoksa (kartsız/

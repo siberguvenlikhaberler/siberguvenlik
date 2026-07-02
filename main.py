@@ -1576,12 +1576,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         button_bar_html = (
             '            <div class="manual-add-bar">\n'
             '                <button class="manual-add-btn" onclick="openManualAddModal()" '
-            'title="Rapora haber ekle / değiştir / sil">\n'
+            'title="Rapora haber ekle / sil">\n'
             '                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" '
             'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" '
             'stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/>'
             '<line x1="5" y1="12" x2="19" y2="12"/></svg>\n'
-            '                    Haber Ekle / Değiştir / Sil\n'
+            '                    Haber Ekle / Sil\n'
             '                </button>\n'
             '            </div>\n'
         )
@@ -2871,10 +2871,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         Skorlayıcıdan BAĞIMSIZ ikinci görüş. En yüksek puanlı ~top_k adayı (artı
         tüm zafiyet_aktif_apt etiketlileri) denetler; yanlış kategori/sahte siber
         boyut/şişirilmiş puan bulursa düzeltir. records'u YERİNDE günceller ve
-        değişen id kümesini döndürür.
+        {değişen id: gerekçe} sözlüğünü döndürür (log'a düzeltme nedeni yazılır).
         """
         if not records:
-            return set()
+            return {}
         # Denetim kapsamı: en yüksek toplam puanlı top_k + tüm zafiyet_aktif_apt
         ranked = sorted(records.keys(),
                         key=lambda aid: records[aid]['toplam'], reverse=True)
@@ -2883,7 +2883,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if rec['kat'] == 'zafiyet_aktif_apt' and aid not in scope:
                 scope.append(aid)
         if not scope:
-            return set()
+            return {}
 
         brief_lines = []
         for aid in scope:
@@ -2902,7 +2902,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             max_output_tokens=4096,
             label='Critique-Denetim',
         )
-        changed = set()
+        changed = {}
         if not data or 'duzeltmeler' not in data:
             print("   🧐 Critique: düzeltme dönmedi, skorlar korunuyor.")
             return changed
@@ -2914,10 +2914,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if fid not in records:
                 continue
             old = dict(records[fid])
-            records[fid] = self._normalize_record(fix)
+            new_rec = self._normalize_record(fix)
+            neden = str(fix.get('neden', '')).strip()[:140]
+            # ── TUTARLILIK KORUMASI: siber_disi ⇒ siber=0 olmalı ────────────
+            # 'siber_disi' tanımı gereği siber boyutu OLMAYAN haberdir; critique
+            # prompt'u bu kategoriyi verirken siber=0 yapmayı ŞART koşar. Bir
+            # haberi siber_disi'ye çekip siber=1 bırakmak iç çelişkidir ve
+            # skorlayıcının net siber saydığı bir haberi haksız yere sıfırlar
+            # (2026-07-02: FortiBleed & BEC phishing kiti tam da bu çelişkiyle
+            # elenmişti). Çelişkili düzeltmeyi REDDET — skorlayıcı kararı korunur.
+            if new_rec['kat'] == 'siber_disi' and new_rec['siber'] == 1:
+                print(f"   🛡️  Critique reddedildi ID {fid}: siber_disi + siber=1 "
+                      f"çelişkisi, skorlayıcı kararı korunuyor"
+                      + (f"  | {neden}" if neden else ""))
+                continue
+            records[fid] = new_rec
             if records[fid] != old:
-                changed.add(fid)
-                neden = str(fix.get('neden', '')).strip()[:140]
+                changed[fid] = neden
                 print(f"   🧐 Critique düzeltti ID {fid}: "
                       f"{old['kat']}→{records[fid]['kat']} "
                       f"toplam {old['toplam']}→{records[fid]['toplam']}"
@@ -3043,6 +3056,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     'a': rec.get('a'), 'k': rec.get('k'),
                     'toplam':   rec.get('toplam'),
                     'critique': 1 if aid in critique_changed else 0,
+                    'critique_neden': (critique_changed.get(aid, '')
+                                       if isinstance(critique_changed, dict) else ''),
                     'yerlesim': yerlesim,
                 }, ensure_ascii=False))
 
