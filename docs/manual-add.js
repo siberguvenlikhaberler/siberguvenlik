@@ -287,7 +287,7 @@
       cards.map(function (c, i) {
         return (
           '<label class="opt"><input type="radio" name="ma-replace" value="' + i + '">' +
-          '<span><span class="ma-tag crit">KRİTİK</span>' + esc(cardTitle(c)) + " → gövdeye insin</span></label>"
+          '<span><span class="ma-tag crit">KRİTİK</span>' + esc(cardTitle(c)) + " → çıkarılsın</span></label>"
         );
       }).join("");
 

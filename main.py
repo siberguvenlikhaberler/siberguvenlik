@@ -1592,9 +1592,21 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         Arşiv raporlarına eklenmez (buton sadece güncel rapor = index.html üzerinde
         çalışmalı). Asıl iş sunucu tarafındaki Vercel fonksiyonunda yapılır; bu
-        dosya yalnızca arayüzü (docs/manual-add.js) yükler. Script'e ?v=<tarih>
-        eklenir ki tarayıcı/Pages önbelleği her günkü raporda tazelensin.
+        dosya yalnızca arayüzü (docs/manual-add.js) yükler.
+
+        Script'e ?v=<dosya içeriği hash'i> eklenir. Önceden ?v=<tarih> (yalnızca
+        gün) kullanılıyordu: aynı gün içinde manual-add.js birden fazla kez
+        değişirse (elle düzenleme / aynı günde birden fazla commit) sürüm dizesi
+        AYNI kalıyor, tarayıcı/Pages CDN'i eski önbellek kopyasını sunmaya devam
+        ediyordu (gerçekte yaşandı: 2026-07-02'de metin değişikliği bu yüzden
+        canlıya yansımadı). İçerik hash'i, dosya her değiştiğinde otomatik olarak
+        farklı bir URL üretir — manuel sürüm numarası bakımı gerekmez.
         """
+        try:
+            with open('docs/manual-add.js', 'rb') as _f:
+                cache_bust = hashlib.md5(_f.read()).hexdigest()[:10]
+        except IOError:
+            cache_bust = today_str  # dosya okunamazsa eski davranışa düş
         # Buton, header-title-row içinde H1 ile AYNI SATIRDA yer alır (ayrı bir
         # alt satır/bar yok) — böylece üst başlık kısmı daha dar/kısa kalır.
         button_html = (
@@ -1615,7 +1627,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         )
         html = html.replace(
             '</body>',
-            f'    <script src="/siberguvenlik/manual-add.js?v={today_str}"></script>\n</body>',
+            f'    <script src="/siberguvenlik/manual-add.js?v={cache_bust}"></script>\n</body>',
             1,
         )
         return html
