@@ -1054,62 +1054,6 @@ CONTENT_SELECTORS = {
     'ANSSI (CERT-FR)': [{'class': 'article-content'}, {'class': 'content'}],
 }
 
-# ===== ÖNEM SCORING SİSTEMİ (v2.0) — ⚠️ KULLANILMIYOR (DEAD CODE) =====
-# ⚠️ DİKKAT: Bu iki sözlük (IMPORTANCE_WEIGHTS + DETECTION_PATTERNS) mevcut
-# boru hattında HİÇBİR yerde kullanılmıyor (main.py / api / src genelinde import
-# yok; yalnızca tests/test_importance_scoring.py yapısal olarak doğruluyor).
-# Sıralama/seçim tamamen LLM promptlarıyla (get_ranking_prompt /
-# get_top3_selection_prompt) yapılır. Buradaki jenerik anahtar kelimeler
-# ('nato', 'ukraine', 'russia' vb.) bugünkü "siber-boyut zorunluluğu"
-# felsefesiyle ÇELİŞİR; yanlışlıkla boru hattına bağlanırsa siber boyutu
-# olmayan jeopolitik haberleri yükseltebilir. Yeniden etkinleştirmeden ÖNCE
-# anahtar kelimeleri siber-boyut kuralına göre gözden geçirin.
-IMPORTANCE_WEIGHTS = {
-    'nato_turkey_summit': {
-        'weight': 130,
-        'description': 'SADECE doğrudan NATO Türkiye Zirvesi (Temmuz 2026) haberleri — zirveyi konu/hedef alanlar. Genel NATO haberleri dahil DEĞİL.',
-        'keywords': ['nato summit', 'nato turkey summit', 'nato türkiye zirvesi', 'nato antalya', 'nato 2026 summit', 'nato zirvesi', 'türkiye zirvesi', 'summit security']
-    },
-    'infrastructure_attack': {
-        'weight': 100,
-        'description': 'Enerji, sağlık, finans, hükümet altyapısına saldırı',
-        'keywords': ['critical infrastructure', 'power grid', 'hospital', 'healthcare', 'financial', 'government', 'scada', 'industrial control']
-    },
-    'large_breach': {
-        'weight': 80,
-        'description': '5 milyon+ kullanıcı verisi ihlali',
-        'keywords': ['5 million', '10 million', 'million users', 'data breach', 'personal information', 'credit card', 'ssn']
-    },
-    'zero_day_apt': {
-        'weight': 95,
-        'description': 'Zero-day + APT grubu aktivitesi',
-        'keywords': ['zero-day', 'apt28', 'apt29', 'lazarus', 'nation-state', 'previously unknown', 'threat actor', 'advanced persistent']
-    },
-    'national_security': {
-        'weight': 110,
-        'description': 'Ulusal güvenlik / Türkiye',
-        'keywords': ['national security', 'government agencies', 'türkiye', 'nato', 'avrupa birliği', 'gendarmerie', 'moi']
-    },
-    'geopolitical_critical': {
-        'weight': 120,
-        'description': 'Jeopolitik kritik durumlar (siber savaş, ülke çatışması)',
-        'keywords': ['cyber warfare', 'nation-state conflict', 'diplomatic crisis', 'ukraine', 'russia', 'china', 'iran', 'north korea', 'election', 'voting']
-    },
-    'legal_regulation': {
-        'weight': 50,
-        'description': 'Yasal düzenlemeler ve yönetmelikler',
-        'keywords': ['regulation', 'legislation', 'law', 'compliance', 'gdpr', 'kvkk', 'dpa', 'directive', 'act', 'bill']
-    }
-}
-
-# Pattern tanımları (REGEX) - Otomatik kategorizasyon için
-DETECTION_PATTERNS = {
-    'cve': r'CVE-\d{4}-\d{4,5}',
-    'apt_groups': r'\b(APT\d+|Lazarus|Wizard Spider|LockBit|Conti|REvil|DarkSide|Emotet|Aqua|Scattered)\b',
-    'large_number': r'(\d+)\s*(?:million|M|B)',
-    'sectors': r'\b(healthcare|health|hospital|energy|power|financ(?:e|ial)|bank|government|military|defense)\b',
-    'countries': r'\b(Ukraine|Russia|China|Iran|Korea|Israel|US|USA|UK|United States)\b',
-}
 
 def get_quality_review_prompt(articles_content):
     """
