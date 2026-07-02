@@ -2,13 +2,13 @@
  * Haber Ekle / Sil — anasayfa (index.html) pop-up'ı.
  *
  * İki işlem:
- *   • Ekle : mevcut hiçbirini SİLMEDEN yeni bir kritik kart ekle (kritik 4'e
- *            çıkar). Kaynak URL veya rapordaki bir haber olabilir.
- *   • Sil  : bir haberi kaldır.
- *            – Kritik kart → SİLİNMEZ, gövdeye ('diğer haberler') iner
- *              (eski "Değiştir" sekmesinin taşıma işlevi buraya taşındı;
- *               yerine yeni kart koymak için ayrıca Ekle kullanılır).
- *            – Alt liste (gövde) haberi → tamamen silinir.
+ *   • Ekle : yeni bir kritik kart ekle (kaynak URL veya rapordaki bir haber).
+ *            Opsiyonel: "yerine geçecek kritik haber" seçilirse o haber SİLİNMEZ,
+ *            gövdeye ('diğer haberler') iner ve yeni haber onun yerine geçer
+ *            (kritik sayısı 3'te kalır; eski "Değiştir" işlevi buraya taşındı).
+ *            Hiçbiri seçilmezse yeni haber eklenir (kritik 4'e çıkar).
+ *   • Sil  : bir haberi tamamen SİL (yerine bir şey konmaz) — kritik kart VEYA
+ *            alt listedeki (diğer haberler) bir haber.
  *
  * Tüm asıl iş (URL getirme, LLM, dosya yazma, commit) SUNUCU tarafında
  * (/api/manual_add) çalışır. Bu dosya yalnızca arayüz + uç noktaya istek atar.
@@ -278,6 +278,18 @@
         }).join("")
       : '<div class="opt"><span style="color:#94a3b8;">Bu raporda taşınabilecek başka haber yok.</span></div>';
 
+    // Ekle: (opsiyonel) yerine geçecek kritik haber. Seçilirse o kart gövdeye
+    // iner, yeni haber onun yerine geçer (3'te kalır). Varsayılan "Hiçbiri" → düz ekle.
+    var replaceOptsHtml =
+      '<label class="opt"><input type="radio" name="ma-replace" value="" checked>' +
+      "<span>Hiçbiri — yeni haberi ekle (kritik 4'e çıkar)</span></label>" +
+      cards.map(function (c, i) {
+        return (
+          '<label class="opt"><input type="radio" name="ma-replace" value="' + i + '">' +
+          '<span><span class="ma-tag crit">KRİTİK</span>' + esc(cardTitle(c)) + " → gövdeye insin</span></label>"
+        );
+      }).join("");
+
     // Sil: kritik kartlar + alt liste haberleri (birleşik). value = "crit:i" | "body:id".
     var deleteOptsHtml = cards.map(function (c, i) {
       return (
@@ -328,16 +340,22 @@
               '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
               '<p class="ma-hint">Seçilen haber alt listeden çıkarılıp (taşınıp) kritik bölüme eklenir.</p>' +
             "</div>" +
+            // Opsiyonel: yerine geçecek kritik haber (seçilirse gövdeye iner)
+            '<label class="fld" style="margin-top:12px;">Yerine geçecek kritik haber (opsiyonel)</label>' +
+            '<div class="ma-remove-list">' + replaceOptsHtml + "</div>" +
+            '<p class="ma-hint">Bir kritik haber seçersen o haber SİLİNMEZ; alttaki ' +
+            '"diğer haberler" listesine iner ve yeni haber onun yerine geçer (kritik ' +
+            'sayısı 3\'te kalır). "Hiçbiri" seçiliyse yeni haber eklenir (kritik 4\'e çıkar).</p>' +
           "</div>" +
 
           // SİL: kritik + alt liste birleşik
           '<div class="ma-op-block" id="ma-blk-delete">' +
             '<label class="fld">Silinecek haberi seçin</label>' +
             '<div class="ma-remove-list">' + deleteOptsHtml + "</div>" +
-            '<p class="ma-hint">Kritik bir haberi silersen o haber SİLİNMEZ, alttaki ' +
-            '"diğer haberler" listesine iner (kritik bölümde o an 2 kart kalır; ertesi ' +
-            'günkü otomatik rapor yine 3 üretir). Tamamen kaldırmak için indikten sonra ' +
-            'alt listeden tekrar sil. Alt listedeki bir haber ise doğrudan tamamen silinir.</p>' +
+            '<p class="ma-hint">Seçilen haber rapordan TAMAMEN silinir (yerine bir şey ' +
+            'konmaz). Kritik bir haber silinirse o an 2 kart kalır; ertesi günkü otomatik ' +
+            'rapor yine 3 üretir. (Silmeden gövdeye indirmek istersen Ekle işlemindeki ' +
+            '"yerine geçecek kritik haber" seçeneğini kullan.)</p>' +
           "</div>" +
         "</div>" +
         '<div class="ma-actions">' +
@@ -410,9 +428,19 @@
         "Değişiklikler GitHub'a kaydediliyor"
       ];
     } else {
-      // add — kaynak (url/report) gerekir.
+      // add — kaynak (url/report) gerekir. Opsiyonel "yerine geçecek kritik
+      // haber" seçilmişse işlem sunucuda replace'e döner (o kart gövdeye iner,
+      // yeni haber onun yerine geçer); seçilmemişse düz ekleme (kritik 4'e çıkar).
       var mode = currentMode();
       payload.mode = mode;
+
+      var repl = document.querySelector('input[name="ma-replace"]:checked');
+      if (repl && repl.value !== "") {
+        payload.action = "replace";
+        payload.remove_index = parseInt(repl.value, 10);
+        ctx.op = "replace";
+        ctx.removeIndex = payload.remove_index;
+      }
 
       if (mode === "url") {
         var url = (document.getElementById("ma-url").value || "").trim();
@@ -493,17 +521,28 @@
 
   // Sunucu sonucunu sayfaya ANINDA yansıt (işleme göre).
   function applyResult(ctx, data) {
-    if (ctx.op === "add") {
+    if (ctx.op === "replace") {
+      // Ekle + "yerine geçecek kritik": yeni kart seçilen kartın yerine geçer;
+      // çıkarılan kritik gövdeye iner (kopya sayfa yeniden yüklenince görünür).
+      applyCard(ctx.removeIndex, data.card_html);
+      if (data.removed_news_id) removeNewsItem(data.removed_news_id);
+    } else if (ctx.op === "add") {
       appendCard(data.card_html);
       if (data.removed_news_id) removeNewsItem(data.removed_news_id);
     } else if (ctx.op === "delete") {
-      // Kritik silme artık "gövdeye indirme" (demoted_index). Eski sürümlerle
-      // uyum için deleted_index de desteklenir. Her iki durumda kart kritik
-      // bölümden kaldırılır; gövdeye inen kopya sayfa yeniden yüklenince görünür.
-      if (data.demoted_index != null) deleteCard(data.demoted_index);
       if (data.deleted_index != null) deleteCard(data.deleted_index);
       if (data.removed_news_id) removeNewsItem(data.removed_news_id);
     }
+  }
+
+  // Ekle+yerine-koy: index'inci kritik kartı sunucudan dönen kartla değiştirir.
+  function applyCard(index, cardHtml) {
+    var cards = topCards();
+    if (!cardHtml || index < 0 || index >= cards.length) return;
+    var tmp = document.createElement("div");
+    tmp.innerHTML = cardHtml.trim();
+    var newCard = tmp.querySelector(".top3-card") || tmp.firstChild;
+    if (newCard) cards[index].parentNode.replaceChild(newCard, cards[index]);
   }
 
   // Ekle: yeni kritik kartı kartların sonuna ekler. Bölüm yoksa (kartsız/

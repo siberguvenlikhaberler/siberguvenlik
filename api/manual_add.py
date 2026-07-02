@@ -934,12 +934,11 @@ def process_add(payload, token):
 
 
 def process_delete(payload, token):
-    """Bir haberi kaldır. delete_target:
-      • "critical" → kritik kartı KRİTİK bölümden çıkar. SİLİNMEZ: içeriği
-        korunarak gövdedeki 'diğer haberler' listesine İNDİRİLİR (eski "Değiştir"
-        sekmesinin taşıma davranışı buraya taşındı). Kritiği tamamen silmek için
-        önce buradan indir, sonra gövdeden sil.
-      • "body"     → alt liste haberini tamamen SİL (yerine bir şey konmaz)."""
+    """Bir haberi SİL (tamamen; yerine bir şey konmaz). delete_target:
+      • "critical" → kritik kartı sil (o an 2 kart kalır).
+      • "body"     → alt liste haberini sil.
+    Not: bir kritik haberi silmeden gövdeye indirmek istiyorsan Ekle işleminde
+    'yerine geçecek kritik haber' seçeneğini kullan — o haber gövdeye iner."""
     target = (payload.get("delete_target") or "").strip().lower()
     try:
         index_html, report_date, archive_path = _read_index(token)
@@ -955,20 +954,14 @@ def process_delete(payload, token):
             return 400, {"error": "Geçersiz remove_index."}
 
         def _t(html):
-            # Kritik kartı silmek yerine gövdeye indir: içeriğini al, karttan
-            # çıkar, gövde listesine ekle. İçerik çıkarılamazsa (dejenere kart)
-            # güvenli varsayılan — düz silmeye düş.
-            demoted = extract_top3_card(html, idx)
             html = delete_top3_card(html, idx)
-            if demoted:
-                html = insert_body_news_item(html, build_news_item_html(*demoted))
             html = renumber_and_reflow(html)
             return regenerate_exec_summary(html)
 
         return _commit_transform(
             index_html, archive_path, _t, token,
-            f"manuel: kritik haber gövdeye indirildi ({report_date})",
-            {"demoted_index": idx, "demoted_to_body": True},
+            f"manuel: kritik haber silindi ({report_date})",
+            {"deleted_index": idx},
         )
 
     if target == "body":
