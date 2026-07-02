@@ -1135,7 +1135,13 @@ class HaberSistemi:
             transition: background 0.2s; font-family: inherit; white-space: nowrap;
         }
         .manual-add-btn:hover { background: #1e40af; }
-        @media (max-width: 640px) { .header-actions { right: 12px; top: 10px; } }
+        /* Manuel buton artık başlığın ALTINDA kendi satırında (sağa yaslı) —
+           mutlak köşe kutusundan çıkarıldı ki ortalanmış H1 ile çakışmasın. */
+        .manual-add-bar { display: flex; justify-content: flex-end; margin-top: 14px; }
+        @media (max-width: 640px) {
+            .header-actions { right: 12px; top: 10px; }
+            .manual-add-bar { justify-content: center; margin-top: 10px; }
+        }
         [data-theme="dark"] body { color: #e6edf3; background: #0d1117; }
         [data-theme="dark"] .container { background: #161b22; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
         [data-theme="dark"] .report-header { background: #161b22; border-bottom-color: #30363d; }
@@ -1564,19 +1570,25 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         dosya yalnızca arayüzü (docs/manual-add.js) yükler. Script'e ?v=<tarih>
         eklenir ki tarayıcı/Pages önbelleği her günkü raporda tazelensin.
         """
-        button_html = (
-            '            <button class="manual-add-btn" onclick="openManualAddModal()" '
+        # Buton, mutlak konumlu köşe kutusu (header-actions) yerine BAŞLIĞIN
+        # ALTINDA kendi satırında (sağa yaslı bar) yer alır; böylece metni ne
+        # kadar uzun olursa olsun ortalanmış H1 başlığıyla çakışmaz.
+        button_bar_html = (
+            '            <div class="manual-add-bar">\n'
+            '                <button class="manual-add-btn" onclick="openManualAddModal()" '
             'title="Rapora haber ekle / değiştir / sil">\n'
-            '                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" '
+            '                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" '
             'stroke="currentColor" stroke-width="2.2" stroke-linecap="round" '
             'stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/>'
             '<line x1="5" y1="12" x2="19" y2="12"/></svg>\n'
-            '                Haber ekle değiştir sil\n'
-            '            </button>\n'
+            '                    Haber Ekle / Değiştir / Sil\n'
+            '                </button>\n'
+            '            </div>\n'
         )
+        # H1 başlığının hemen ardına (header-actions'tan ÖNCE) yerleştir.
         html = html.replace(
-            '            </button>\n            </div>\n        </div>',
-            '            </button>\n' + button_html + '            </div>\n        </div>',
+            '</h1>\n            <div class="header-actions">',
+            '</h1>\n' + button_bar_html + '            <div class="header-actions">',
             1,
         )
         html = html.replace(
