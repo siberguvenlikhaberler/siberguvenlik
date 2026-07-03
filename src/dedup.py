@@ -79,6 +79,14 @@ _NAMED_ACTORS = (
     'lockbit', 'blackcat', 'alphv', 'cl0p', 'clop', 'scattered spider',
     'shinyhunters', 'fin7', 'wizard spider', 'gamaredon', 'mustang panda',
     'charming kitten', 'apt28', 'apt29', 'apt40', 'apt41',
+    # Paralı-asker (mercenary) casus yazılım aileleri + satıcıları. Belirli bir
+    # ürün/aile adı, aynı olayın çok güçlü parmak izidir (ör. "Pegasus" iki
+    # haberde de geçiyorsa büyük olasılıkla aynı kampanya/vaka). Yaygın sözcükle
+    # karışan jenerik adlar (graphite/paragon) BİLİNÇLİ olarak dışarıda; yalnızca
+    # ayırt edici, tek-anlamlı adlar. (Rule 2 yine konu örtüşmesiyle birlikte
+    # değerlendirir; tek başına aktör yetmez.)
+    'pegasus', 'nso group', 'intellexa', 'predator', 'candiru', 'cytrox',
+    'quadream', 'finfisher',
 )
 
 
@@ -113,10 +121,16 @@ _STOPWORDS = {
 }
 
 
-def event_keywords(text):
+def event_keywords(text, limit=None):
     """Metni konu-örtüşmesi karşılaştırması için sadeleştirilmiş bir köke-indirgenmiş
     anahtar-kelime kümesine çevirir: küçük harf, noktalama atılır, stop-word ve
-    kısa (<4) token'lar elenir, her token ilk 5 karaktere köklenir."""
+    kısa (<4) token'lar elenir, her token ilk 5 karaktere köklenir.
+
+    limit verilirse yalnızca metnin BAŞINDAN itibaren ilk `limit` AYIRT EDİCİ
+    (distinct) kök alınır. Haber metinleri ters-piramit yapısındadır (kilit
+    olgular başta yoğunlaşır); uzun paragraflarda Jaccard, kuyruğa doğru dağılan
+    ayrıntılarla SEYRELİR ve aynı olay eşik altında kalabilir. Baş-pencere,
+    aynı olayın ortak çekirdeğini yakalayıp bu seyrelmeyi telafi eder."""
     blob = (text or '').lower()
     # CVE/aktör kimlikleri konu örtüşmesinde gürültü yapmasın (ayrı sinyal)
     blob = _ACTOR_ID_RE.sub(' ', blob)
@@ -126,6 +140,8 @@ def event_keywords(text):
         if len(t) < 4 or t in _STOPWORDS:
             continue
         out.add(t[:5])
+        if limit is not None and len(out) >= limit:
+            break
     return out
 
 
@@ -139,6 +155,10 @@ def _jaccard(a, b):
 _TOPIC_WITH_ACTOR = 0.10   # ortak aktör/CVE varsa düşük konu örtüşmesi yeter
 _TOPIC_ALONE      = 0.42   # tek başına yüksek konu örtüşmesi
 _TRTITLE_RATIO    = 0.62   # Türkçe başlık benzerliği
+# Baş-pencere konu örtüşmesi için token sayısı (event_keywords limit). Uzun
+# paragraflarda Jaccard seyrelmesini telafi eder (bkz. event_keywords docstring).
+# Gerçek veriyle: aynı olayda baş-pencere ~0.43-0.48, farklı olayda ≤0.25.
+_TOPIC_LEAD_TOKENS = 40
 
 # ── Çapraz-GÜN eşikleri (cross_day=True) ──────────────────────────────────
 # Aynı run içi karşılaştırmada aday havuzu küçük olduğu için gevşek Kural 4
@@ -187,10 +207,15 @@ def same_event(view_a, view_b, explain=False, cross_day=False):
     if shared_cn:
         return _ret(True, 'codename:' + ','.join(sorted(shared_cn)))
 
-    # Konu örtüşmesi: paragraf VEYA (başlık+ham metin) üzerinden en yükseği
+    # Konu örtüşmesi: paragraf VEYA (başlık+ham metin) üzerinden en yükseği.
+    # Ayrıca paragrafın BAŞ-PENCERESİ (ilk _TOPIC_LEAD_TOKENS kök): uzun aynı-olay
+    # paragraflarında tam-metin Jaccard'ı seyrelip eşik altında kaldığında
+    # (kuyruğa dağılan farklı ayrıntılar) ortak çekirdeği yakalar.
     topic = max(
         _jaccard(event_keywords(pa), event_keywords(pb)),
         _jaccard(event_keywords(blob_a), event_keywords(blob_b)),
+        _jaccard(event_keywords(pa, limit=_TOPIC_LEAD_TOKENS),
+                 event_keywords(pb, limit=_TOPIC_LEAD_TOKENS)),
     )
 
     # 2) Ortak yapısal/adlandırılmış aktör veya CVE + konu örtüşmesi

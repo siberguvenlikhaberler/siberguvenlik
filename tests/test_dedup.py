@@ -180,3 +180,66 @@ def test_pick_distinct_without_exclude_views_unchanged():
     mapping = {4: SIGNAL_A, 1: SIGNAL_B, 9: SHARKLOADER, 3: MOZILLA, 2: OPENAI}
     top3 = dedup.pick_distinct([4, 1, 9, 3, 2], _views(mapping), n=3)
     assert len(top3) == 3 and 4 in top3 and 1 not in top3
+
+
+# Gerçek üretim kaçağı (03.07.2026): aynı olay iki farklı kaynaktan farklı
+# İngilizce başlık + farklı URL ile geldi; uzun TR paragraflarda tam-metin
+# Jaccard 0.28'e SEYRELDİ (eşik 0.42 altı), tr_title benzerliği 0.56 (eşik 0.62
+# altı), "Pegasus" CamelCase olmadığından kod adı çıkmadı → 4 kural da kaçırdı
+# ve mükerrer rapora sızdı. Fix: (a) Pegasus vb. paralı-asker casus yazılımlar
+# named-actor, (b) paragraf baş-penceresi topic (event_keywords limit).
+KOULOGLOU_A = {
+    'tr_title': "Avrupa Parlamentosu Üyesi Stelios Kouloglou'nun Pegasus Casus Yazılımıyla Hedeflenmesi",
+    'title': 'European Parliament Member Investigating Spyware Was Hacked With Pegasus',
+    'full_text': '',
+    'paragraph': (
+        "Citizen Lab tarafından yayımlanan rapor, eski Avrupa Parlamentosu Üyesi "
+        "Stelios Kouloglou'nun mobil cihazının Pegasus casus yazılımıyla defalarca "
+        "hedef alındığını ortaya çıkarmıştır. Kouloglou, saldırıların gerçekleştiği "
+        "dönemde Avrupa Birliği bünyesinde ticari gözetim araçlarının kötüye "
+        "kullanımını araştırmakla görevli PEGA Komitesi'nde görev yapmaktadır. Adli "
+        "analizler cihaza 21 Ekim 2022 ile Mart 2023 tarihlerinde sızıldığını "
+        "göstermektedir. Apple'ın akıllı ev yazılımındaki bir sıfır tıklama açığı "
+        "kullanılmıştır."),
+}
+KOULOGLOU_B = {
+    'tr_title': "Pegasus Casus Yazılımının PEGA Komitesi Üyesi Stelios Kouloglou'yu Hedeflemesi",
+    'title': 'Someone infected a spyware probe overseer with spyware',
+    'full_text': '',
+    'paragraph': (
+        "Citizen Lab tarafından yayımlanan rapor, Avrupa Birliği bünyesindeki casus "
+        "yazılım suiistimallerini araştırmakla görevli PEGA Komitesi'nin üyesi "
+        "Stelios Kouloglou'nun telefonuna Pegasus yazılımının bulaştırıldığını ortaya "
+        "koymuştur. Yunan gazeteci ve eski Avrupa Parlamentosu üyesi Kouloglou'nun "
+        "cihazı Ekim 2022 ve Mart 2023 tarihlerinde iki kez hedef alınmıştır. NSO "
+        "Group tarafından geliştirilen bu paralı asker yazılımının demokratik "
+        "süreçleri ihlal amacıyla kullanıldığı değerlendirilmektedir."),
+}
+
+
+def test_same_event_shared_spyware_family():
+    """Aynı casus yazılım (Pegasus) + konu örtüşmesi → aynı olay (within-run)."""
+    assert dedup.same_event(KOULOGLOU_A, KOULOGLOU_B)
+
+
+def test_same_event_shared_spyware_family_cross_day():
+    """Çapraz-günde de yakalanmalı (yüksek-özgüllük: ortak aktör + konu)."""
+    assert dedup.same_event(KOULOGLOU_A, KOULOGLOU_B, cross_day=True)
+
+
+def test_lead_window_topic_catches_diluted_long_paragraphs():
+    """Baş-pencere topic'i, uzun paragrafta seyrelen Jaccard'ı telafi eder:
+    Pegasus adını KALDIRSAK bile baş-pencere ortak çekirdeği yakalamalı."""
+    import re as _re
+    a = dict(KOULOGLOU_A); b = dict(KOULOGLOU_B)
+    scrub = lambda s: _re.sub(r'(?i)pegasus|nso group', 'X', s)
+    for v in (a, b):
+        v['tr_title'] = scrub(v['tr_title']); v['title'] = scrub(v['title'])
+        v['paragraph'] = scrub(v['paragraph'])
+    assert dedup.same_event(a, b), "Baş-pencere topic seyrelmiş paragrafı yakalamalı"
+
+
+def test_lead_window_no_false_positive_distinct_events():
+    """Baş-pencere farklı olayları AYNI saymamalı (yanlış-pozitif üretmemeli)."""
+    assert not dedup.same_event(MOZILLA, OPENAI)
+    assert not dedup.same_event(SHARKLOADER, MOZILLA)
