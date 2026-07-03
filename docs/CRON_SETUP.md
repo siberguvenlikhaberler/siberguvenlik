@@ -7,16 +7,23 @@ GitHub Actions'ın kendi `schedule` (cron) tetikleyicisi **güvenilmez**: tetikl
 gün ~11:00 UTC'den önce çalışmadığı görüldü → sabah raporu hiç üretilmiyordu.
 
 Çözüm: Zamanlamayı **harici** bir servise (cron-job.org, ücretsiz) taşıyıp GitHub'ı
-`repository_dispatch` API'siyle dakikası dakikasına tetiklemek. GitHub'ın kendi
-`schedule` bloğu **yedek olarak korunur** (idempotency sayesinde zararsız: harici
-tetikleme başarılı raporu ürettiyse geç gelen GitHub cron'u atlar).
+`repository_dispatch` API'siyle dakikası dakikasına tetiklemek. Böylece **asıl
+zamanlayıcı cron-job.org**'dur; aşağıdaki slotları o gönderir.
+
+GitHub'ın kendi `schedule` bloğu artık **tek bir yedek çalıştırmaya** indirildi
+(`23 8 * * *` = 08:23 UTC = TR 11:23, normal üretim saati). Amacı yalnızca
+cron-job.org tamamen düşerse günü kurtarmaktır. Eskiden GitHub'da da 8 slot vardı;
+kaldırıldı çünkü (a) tekrarları zaten cron-job.org yapıyor, (b) geç/gece slotlar
+GitHub kuyruğunda gecikince TR gece yarısını aşıp bir sonraki günün raporunu
+geceleyin erkenden üretiyordu. Tek yedek slot birkaç saat gecikse bile TR günü
+içinde kalır.
 
 `main.py` `repository_dispatch` event'ini `schedule` ile aynı sayar → aynı gün
 başarılı rapor üretildiyse sonraki slotlar otomatik atlanır (çift rapor olmaz).
 
 ---
 
-## Tetiklenecek 8 slot (GitHub'daki ile birebir aynı saat & sıra — hepsi UTC)
+## cron-job.org'un göndereceği 8 slot (asıl zamanlama — hepsi UTC)
 
 | # | Saat (UTC) |
 |---|-----------|

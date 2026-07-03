@@ -4,9 +4,16 @@ on:
   # ─────────────────────────────────────────────────────────────────────────
   # GÜNLÜK OTOMATİK ÜRETİM — ama GÜNDE EN FAZLA 1 BAŞARILI RAPOR.
   #
-  # GitHub scheduled workflow'ları "best-effort"tur: yoğun saatlerde gecikir,
-  # hatta düşürülür (özellikle sabah UTC slotları). Bu yüzden gün içine yayılmış
-  # 8 deneme + harici zamanlayıcıdan (cron-job.org) repository_dispatch kullanılır.
+  # ASIL ZAMANLAYICI: harici cron-job.org, gün içindeki tüm slotları
+  # repository_dispatch ile dakikası dakikasına tetikler (bkz. docs/CRON_SETUP.md).
+  # GitHub'ın kendi `schedule`'ı SADECE YEDEK: cron-job.org tamamen düşerse diye
+  # normal üretim saatinde TEK bir çalıştırma bırakıldı. Gün içine yayılmış 8
+  # deneme KALDIRILDI — çünkü (a) tekrarları zaten cron-job.org yapıyor, (b) geç
+  # (gece) slotlar GitHub kuyruğunda gecikince TR gece yarısını aşıp bir sonraki
+  # günün raporunu geceleyin erkenden üretiyordu.
+  #
+  # TEK YEDEK SLOT: 08:23 UTC = TR 11:23 (normal üretim saati). Bu slot GitHub
+  # kuyruğunda birkaç saat gecikse bile TR günü içinde kalır (gece yarısını aşmaz).
   #
   # KURŞUNGEÇİRMEZ IDEMPOTENCY (bkz. main.py Kontrol 1): O gün için BAŞARILI rapor
   # dosyası (docs/raporlar/<bugün>.html) ZATEN varsa, sonraki tüm otomatik
@@ -18,22 +25,18 @@ on:
   # workflow" her zaman TAZE rapor üretir (bilinçli eylem).
   # ─────────────────────────────────────────────────────────────────────────
   schedule:
-    - cron: '23 6 * * *'    # 1. deneme — 06:23 UTC
-    - cron: '23 8 * * *'    # 2. deneme — 08:23 UTC
-    - cron: '23 10 * * *'   # 3. deneme — 10:23 UTC
-    - cron: '23 12 * * *'   # 4. deneme — 12:23 UTC
-    - cron: '23 14 * * *'   # 5. deneme — 14:23 UTC
-    - cron: '23 16 * * *'   # 6. deneme — 16:23 UTC
-    - cron: '23 18 * * *'   # 7. deneme — 18:23 UTC
-    - cron: '53 20 * * *'   # 8. deneme — 20:53 UTC (son güvenlik ağı)
-  # Harici zamanlayıcı (cron-job.org) bu olayı tetikler — bkz. docs/CRON_SETUP.md
+    - cron: '23 8 * * *'    # Yedek — 08:23 UTC = TR 11:23 (normal üretim saati)
+  # Asıl tetikleyici: harici cron-job.org bu olayı gönderir — bkz. docs/CRON_SETUP.md
   repository_dispatch:
     types: [scheduled-report]
   workflow_dispatch:
 
-# Aynı anda birden fazla tetikleme gelebilir (schedule + dispatch). concurrency
-# aynı anda tek çalıştırmaya izin verir; devam eden yarıda kesilmez, ikinci
-# tetikleme sıraya girer ve idempotency ile (başarılı rapor varsa) hemen çıkar.
+# schedule (yedek) ile repository_dispatch (cron-job.org) çakışabilir: örn. yedek
+# slot gecikince asıl tetiklemeyle aynı ana denk gelebilir; her ikisi de
+# cron_basarili.txt işaretini henüz görmeden rapor üretip git push'ta çakışabilir.
+# concurrency grubu aynı anda tek bir çalıştırmaya izin verir (cancel-in-progress:
+# false → devam eden raporu yarıda kesmeyiz, ikinci tetikleme sıraya girer ve
+# idempotency'yle erken çıkar).
 concurrency:
   group: gunluk-rapor
   cancel-in-progress: false
