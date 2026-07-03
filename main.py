@@ -896,7 +896,7 @@ class HaberSistemi:
         }
         .report-header {
             background: #ffffff;
-            padding: 24px 40px;
+            padding: 14px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -914,7 +914,7 @@ class HaberSistemi:
             background: linear-gradient(90deg, #1d4ed8 0%, #6366f1 55%, #a855f7 100%);
         }
         .report-header h1 {
-            font-size: 26px;
+            font-size: 20px;
             font-weight: 600;
             margin: 0;
             text-align: left;
@@ -949,15 +949,15 @@ class HaberSistemi:
         .exec-brief {
             background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
             color: #2c3e50;
-            padding: 25px 30px;
-            margin: 0 0 20px 0;
+            padding: 14px 24px;
+            margin: 0 0 14px 0;
             border: 1px solid #bbdefb;
             border-radius: 8px;
             position: relative;
         }
-        .exec-brief h2 { color: #1565c0; font-size: 20px; font-weight: 600; margin-bottom: 16px; }
-        .exec-brief-paragraph { font-size: 15.5px; line-height: 1.85; text-align: justify; margin: 0; }
-        .exec-brief-vuln-link { margin: 16px 0 0 0; text-align: right; }
+        .exec-brief h2 { color: #1565c0; font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .exec-brief-paragraph { font-size: 14.5px; line-height: 1.55; text-align: justify; margin: 0; }
+        .exec-brief-vuln-link { margin: 10px 0 0 0; text-align: right; }
         .exec-brief-vuln-link a {
             color: #e65100; font-weight: 700; font-size: 14.5px; text-decoration: none;
         }
