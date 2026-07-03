@@ -69,6 +69,15 @@ KRITIK3_HISTORY_FILE = "data/kritik3_gecmis.json"
 # Çapraz-gün KRİTİK 3 dedup penceresi (gün).
 KRITIK3_HISTORY_DAYS = 7
 
+# Son günlerde RAPORA giren TÜM haberlerin (KRİTİK 3 + gövde) zengin parmak-izi
+# deposu. Çapraz-gün deterministik dedup (src.dedup.same_event cross_day) bu
+# dosyayı okuyarak, KRİTİK 3'te olsun gövdede olsun, son REPORT_HISTORY_DAYS
+# günde raporlanmış bir olayın FARKLI ID/URL/sözcüklerle tekrar rapora
+# girmesini engeller. (kritik3_gecmis.json yalnızca üst manşeti kapsıyordu.)
+REPORT_HISTORY_FILE = "data/rapor_gecmis.json"
+# Çapraz-gün rapor-geneli dedup penceresi (gün).
+REPORT_HISTORY_DAYS = 7
+
 # Skorlama/critique kalibrasyon log'u (JSONL — her satır bir haber). Rubrik
 # ağırlıklarını gerçek raporlarla ayarlamak için: hangi haber hangi kategori/
 # puanla nereye yerleşti, Critique düzeltti mi. İşlevsel değil, denetim amaçlı.

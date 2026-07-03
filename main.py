@@ -35,6 +35,7 @@ from google.genai import types as genai_types
 from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, KRITIK3_HISTORY_FILE, KRITIK3_HISTORY_DAYS,
+    REPORT_HISTORY_FILE, REPORT_HISTORY_DAYS,
     SCORING_LOG_FILE, SCORING_LOG_MAX_LINES,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
@@ -2492,6 +2493,111 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         except IOError as e:
             print(f"   ❌ KRİTİK 3 geçmişi yazılamadı: {e}")
 
+    def _load_recent_report_views(self, days=REPORT_HISTORY_DAYS):
+        """Son `days` günde RAPORA giren TÜM haberlerin (KRİTİK 3 + gövde)
+        zengin görünümlerini (tr_title/paragraph/title/full_text) okur.
+
+        Çapraz-gün rapor-geneli deterministik dedup için referans kümesidir:
+        bugünkü gövde adayları bu görünümlerle `same_event(cross_day=True)`
+        üzerinden karşılaştırılır; eşleşen aday rapora ALINMAZ. Böylece bir olay,
+        KRİTİK 3'te olsun gövdede olsun, son `days` günde raporlanmışsa FARKLI
+        ID/URL/sözcüklerle tekrar rapora giremez. Bugünün/gelecek kayıtları
+        HARİÇ tutulur (aynı-gün 2. üretimde kendi kopyasıyla çakışmayı önler;
+        _load_recent_kritik3_views ile aynı mantık). Dosya yoksa/bozuksa boş
+        liste döner (eski güvenli davranış)."""
+        try:
+            if not os.path.exists(REPORT_HISTORY_FILE):
+                return []
+            with open(REPORT_HISTORY_FILE, 'r', encoding='utf-8') as f:
+                records = json.load(f)
+        except Exception as e:
+            print(f"⚠️  Rapor geçmişi okunamadı: {e}")
+            return []
+
+        today  = _now_tr().strftime('%Y-%m-%d')
+        cutoff = (_now_tr() - timedelta(days=days)).strftime('%Y-%m-%d')
+        views = []
+        for rec in records:
+            if not isinstance(rec, dict):
+                continue
+            d = rec.get('date', '')
+            if d < cutoff or d >= today:
+                continue
+            for v in rec.get('views', []):
+                if isinstance(v, dict) and (v.get('tr_title') or v.get('paragraph')):
+                    views.append(v)
+        return views
+
+    def _save_report_history(self, rendered_ids, content_by_id, articles_by_id):
+        """Bugün RAPORA giren TÜM haberlerin (KRİTİK 3 + gövde) zengin görünümünü
+        parmak-izi deposuna ekler ve REPORT_HISTORY_DAYS penceresinden eski
+        kayıtları budar. Çapraz-gün rapor-geneli dedup'ın referansını besler.
+        İçerik yoksa sessizce atlar."""
+        if not rendered_ids:
+            return
+        today = _now_tr().strftime('%Y-%m-%d')
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+        views, seen = [], set()
+        for aid in rendered_ids:
+            if aid in seen:
+                continue
+            seen.add(aid)
+            v = view_fn(aid)
+            views.append({
+                'tr_title':  v.get('tr_title', ''),
+                'paragraph': (v.get('paragraph', '') or '')[:500],
+                'title':     v.get('title', ''),
+                'full_text': (v.get('full_text', '') or '')[:400],
+            })
+
+        records = []
+        if os.path.exists(REPORT_HISTORY_FILE):
+            try:
+                with open(REPORT_HISTORY_FILE, 'r', encoding='utf-8') as f:
+                    records = json.load(f)
+                if not isinstance(records, list):
+                    records = []
+            except Exception:
+                records = []
+
+        # Aynı gün tekrar çalışırsa bugünün kaydını değiştir (mükerrer blok olmasın)
+        records = [r for r in records if isinstance(r, dict) and r.get('date') != today]
+        # Pencereden eski kayıtları buda
+        cutoff = (_now_tr() - timedelta(days=REPORT_HISTORY_DAYS)).strftime('%Y-%m-%d')
+        records = [r for r in records if r.get('date', '') >= cutoff]
+        records.append({'date': today, 'views': views})
+
+        os.makedirs("data", exist_ok=True)
+        try:
+            with open(REPORT_HISTORY_FILE, 'w', encoding='utf-8') as f:
+                json.dump(records, f, ensure_ascii=False, indent=1)
+            print(f"📌 Rapor parmak-izi kaydedildi ({len(views)} haber, "
+                  f"{REPORT_HISTORY_FILE})")
+        except IOError as e:
+            print(f"   ❌ Rapor geçmişi yazılamadı: {e}")
+
+    def _dedup_body_cross_day(self, body_ids, view_fn, recent_views, label=''):
+        """Gövde adaylarından, son REPORT_HISTORY_DAYS günde RAPORLANMIŞ bir
+        olayla AYNI olanları (deterministik same_event cross_day) eler. Sıra
+        korunur. recent_views boşsa aday listesi değişmeden döner.
+
+        Yüksek-özgüllük modu (cross_day=True): yalnızca ortak kod adı / ortak
+        aktör+konu / yüksek konu örtüşmesi eşleşir; jenerik TR başlık kalıpları
+        yanlış-pozitif üretmez (bkz. src.dedup.same_event)."""
+        if not recent_views or not body_ids:
+            return list(body_ids)
+        kept, dropped = [], []
+        for aid in body_ids:
+            view = view_fn(aid)
+            if any(_dedup.same_event(view, ev, cross_day=True) for ev in recent_views):
+                dropped.append(aid)
+                continue
+            kept.append(aid)
+        if dropped:
+            print(f"   📅 Çapraz-gün rapor dedup{(' (' + label + ')') if label else ''}: "
+                  f"son {REPORT_HISTORY_DAYS} günde raporlanan olay(lar) elendi {dropped}")
+        return kept
+
     def _verify_top3(self, top3_ids, non_vuln_ids, content_by_id,
                      articles_by_id, label):
         """Pass 4.5 — seçili KRİTİK 3'ü LLM ile DENETLER/teyit eder.
@@ -2648,10 +2754,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
         before = list(top3_ids)
         # ── ÇAPRAZ-GÜN KRİTİK 3 DEDUP ────────────────────────────────────
-        # Son 7 günde KRİTİK 3 manşeti olmuş bir olay bugün TEKRAR manşet
-        # OLAMAZ (gövdede 'gelişme' olarak serbest). Deterministik, LLM'den
-        # bağımsız; same_event(cross_day=True) yüksek-özgüllük sinyalleriyle.
-        recent_k3 = self._load_recent_kritik3_views()
+        # Son 7 günde raporlanmış bir olay bugün TEKRAR KRİTİK 3 manşeti
+        # OLAMAZ. Deterministik, LLM'den bağımsız; same_event(cross_day=True)
+        # yüksek-özgüllük sinyalleriyle. Referans = son 7 gün KRİTİK 3 (kritik3_
+        # gecmis.json) ∪ son 7 gün TÜM rapor (rapor_gecmis.json); böylece
+        # geçmişte GÖVDEDE çıkmış bir olay da bugün manşete taşınıp mükerrer
+        # olmaz. (İki depo geçişte birbirini tamamlar: rapor geçmişi henüz
+        # birikmemişken kritik3 geçmişi çalışmayı sürdürür.)
+        recent_k3 = self._load_recent_kritik3_views() + self._load_recent_report_views()
         top3_ids = _dedup.pick_distinct(ordered_pool, view_fn, n=3,
                                         exclude_views=recent_k3)
 
@@ -2665,19 +2775,24 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                             and any(_dedup.same_event(view_fn(aid), ev, cross_day=True)
                                     for ev in recent_k3)]
             if xday_dropped:
-                print(f"   📅 Çapraz-gün KRİTİK 3 dedup: son {KRITIK3_HISTORY_DAYS} "
-                      f"günde manşet olan olay(lar) elendi {xday_dropped}")
+                print(f"   📅 Çapraz-gün KRİTİK 3 dedup: son {REPORT_HISTORY_DAYS} "
+                      f"günde raporlanan olay(lar) manşetten elendi {xday_dropped}")
         return top3_ids[:3]
 
-    def _load_recent_events(self, days=5):
+    def _load_recent_events(self, days=REPORT_HISTORY_DAYS):
         """Son `days` günde raporlanan haber BAŞLIKLARINI arşivden okur ve
         skorlama + Kritik 3 promptlarına 'tekrar alma' listesi olarak verir.
         Bu, GÜNLER ARASI MÜKERRER haberleri engeller.
 
-        Pencere 5 gün (denge): 3 gün haftalık mükerreri kaçırıyordu, 7 gün ise
-        'geçen hafta yama → bu hafta aktif istismar' gibi GELİŞEN haberleri
-        yanlışlıkla eleyebiliyordu. Başlık (160) + kod adı (80) üst sınırları
-        korunduğundan token belirgin şişmez.
+        Pencere 7 gün: rapor-geneli dedup penceresiyle (REPORT_HISTORY_DAYS ve
+        deterministik same_event neti) HİZALI olması için 5'ten 7'ye çekildi;
+        böylece 'hiçbir veri son 7 günde mükerrer olmasın' güvencesi LLM ve
+        deterministik katmanda aynı pencereyi görür. NOT (denge): 7 günlük
+        pencere, 'geçen hafta yama → bu hafta aktif istismar' gibi GELİŞEN
+        haberleri LLM'e mükerrer gibi gösterebilir; bunlar gerçek mükerrer
+        DEĞİL, gelişmedir. Prompt bu listeyi mutlak yasak değil güçlü sinyal
+        olarak kullanmalı. Başlık (160) + kod adı (80) üst sınırları korunduğundan
+        token belirgin şişmez.
 
         Not: Bu metot olmadan recent_events her zaman boş kalıyordu; arşiv
         yazılıyor ama hiç GERİ OKUNMUYORDU — dedup fiilen çalışmıyordu.
@@ -3435,6 +3550,18 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 top10_ids     = [i for i in top10_ids     if i in kept_set]
                 remaining_ids = [i for i in remaining_ids if i in kept_set]
 
+        # ── ÇAPRAZ-GÜN RAPOR-GENELİ DEDUP (gövde ↔ son 7 gün raporu) ──────
+        # Yukarıdaki blok yalnızca AYNI RUN içinde (gövde ↔ bugünkü KRİTİK 3 +
+        # gövde içi) tekilleştirir. Burada gövde adaylarını SON 7 GÜNDE
+        # raporlanmış TÜM haberlere (KRİTİK 3 + gövde) karşı deterministik
+        # same_event(cross_day=True) ile eleriz: bir olay son 7 günde
+        # raporlandıysa FARKLI ID/URL/sözcüklerle gövdede tekrar görünemez.
+        recent_report = self._load_recent_report_views()
+        if recent_report:
+            view_fn_x = self._dedup_view_fn(content_by_id, articles_by_id)
+            top10_ids     = self._dedup_body_cross_day(top10_ids,     view_fn_x, recent_report)
+            remaining_ids = self._dedup_body_cross_day(remaining_ids, view_fn_x, recent_report)
+
         # ── AZ-HABER GUARD ───────────────────────────────────────────────
         # Çok az haber olan günlerde (ör. hafta sonu kıtlığı + dedup) tüm
         # haberler top3'e girip gövde tamamen boş kalabiliyor (21 Haz 2026:
@@ -3554,6 +3681,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         # Çapraz-gün dedup referansı: bugünkü KRİTİK 3'ü parmak-izi deposuna yaz.
         self._save_kritik3_history(top3_ids, content_by_id, articles_by_id)
+        # Çapraz-gün rapor-geneli dedup referansı: bugün RAPORA giren TÜM haberleri
+        # (KRİTİK 3 + gövde) parmak-izi deposuna yaz.
+        self._save_report_history(
+            list(top3_ids) + list(top10_ids) + list(remaining_ids),
+            content_by_id, articles_by_id)
         self.save_summary_to_archive(html)
         self._cleanup_old_reports()
         return html
@@ -3852,6 +3984,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 top10_ids     = [i for i in top10_ids     if i in kept_set]
                 remaining_ids = [i for i in remaining_ids if i in kept_set]
 
+        # Çapraz-gün rapor-geneli dedup (gövde ↔ son 7 gün raporu) — ana yolla aynı.
+        recent_report = self._load_recent_report_views()
+        if recent_report:
+            view_fn_x = self._dedup_view_fn(content_by_id, id_to_article)
+            top10_ids     = self._dedup_body_cross_day(top10_ids,     view_fn_x, recent_report, label='legacy')
+            remaining_ids = self._dedup_body_cross_day(remaining_ids, view_fn_x, recent_report, label='legacy')
+
         # HTML oluştur
         html = self._build_html(
             articles      = articles,
@@ -3880,6 +4019,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         print(f"✅ docs/raporlar/{now.strftime('%Y-%m-%d')}.html (legacy)")
         # Çapraz-gün dedup referansı: bugünkü KRİTİK 3'ü parmak-izi deposuna yaz.
         self._save_kritik3_history(top3_ids, content_by_id, id_to_article)
+        # Çapraz-gün rapor-geneli dedup referansı: bugün RAPORA giren TÜM haberler.
+        self._save_report_history(
+            list(top3_ids) + list(top10_ids) + list(remaining_ids),
+            content_by_id, id_to_article)
         self.save_summary_to_archive(html)
         self._cleanup_old_reports()
         return html
