@@ -11,30 +11,33 @@ gün ~11:00 UTC'den önce çalışmadığı görüldü → sabah raporu hiç ür
 zamanlayıcı cron-job.org**'dur; aşağıdaki slotları o gönderir.
 
 GitHub'ın kendi `schedule` bloğu artık **tek bir yedek çalıştırmaya** indirildi
-(`23 8 * * *` = 08:23 UTC = TR 11:23, normal üretim saati). Amacı yalnızca
-cron-job.org tamamen düşerse günü kurtarmaktır. Eskiden GitHub'da da 8 slot vardı;
-kaldırıldı çünkü (a) tekrarları zaten cron-job.org yapıyor, (b) geç/gece slotlar
-GitHub kuyruğunda gecikince TR gece yarısını aşıp bir sonraki günün raporunu
-geceleyin erkenden üretiyordu. Tek yedek slot birkaç saat gecikse bile TR günü
-içinde kalır.
+(`7 9 * * *` = 09:07 UTC = TR 12:07, cron-job.org'un ilk denemesinden hemen sonra).
+Amacı yalnızca cron-job.org tamamen düşerse (servis kesintisi, token expire) günü
+kurtarmaktır. Eskiden GitHub'da 8 slot (06:23–20:53 UTC) vardı; kaldırıldı çünkü
+(a) tekrarları zaten cron-job.org yapıyor, (b) geç/gece slotlar GitHub kuyruğunda
+gecikince TR gece yarısını aşıp bir sonraki günün raporunu geceleyin erkenden
+üretiyordu. Tek yedek slot (TR 12:07) birkaç saat gecikse bile TR günü içinde kalır.
+
+Bu yedek, cron-job.org'un TR 12:00 slotuyla aynı ana denk gelse bile sorun
+yaratmaz: `daily.yml`'deki `concurrency` grubu aynı anda tek çalıştırmaya izin
+verir, ikinci tetikleme kuyruğa girer ve raporun zaten üretildiğini görüp anında
+çıkar (main.py Kontrol 1).
 
 `main.py` `repository_dispatch` event'ini `schedule` ile aynı sayar → aynı gün
 başarılı rapor üretildiyse sonraki slotlar otomatik atlanır (çift rapor olmaz).
 
 ---
 
-## cron-job.org'un göndereceği 8 slot (asıl zamanlama — hepsi UTC)
+## cron-job.org'un göndereceği slotlar (asıl zamanlama — GÜNCEL)
 
-| # | Saat (UTC) |
-|---|-----------|
-| 1 | 06:23 |
-| 2 | 08:23 |
-| 3 | 10:23 |
-| 4 | 12:23 |
-| 5 | 14:23 |
-| 6 | 16:23 |
-| 7 | 18:23 |
-| 8 | 20:53 (son güvenlik ağı) |
+| # | TR saati | UTC |
+|---|----------|-----|
+| 1 | 12:00 | 09:00 |
+| 2 | 13:00 | 10:00 |
+| 3 | 14:00 | 11:00 |
+
+(Önceki sürümde 06:23–20:53 UTC arasına yayılmış 8 slot vardı; program TR öğlen
+ile 14:00 arasına toplanan 3 slota indirildi.)
 
 ---
 
@@ -62,11 +65,11 @@ başarılı rapor üretildiyse sonraki slotlar otomatik atlanır (çift rapor ol
 
 ---
 
-## Adım 2 — cron-job.org'da 2 iş oluştur
+## Adım 2 — cron-job.org'da iş oluştur
 
 Hesap aç: https://console.cron-job.org  → **CREATE CRONJOB**
 
-Her iki iş için **ortak ayarlar (REQUEST sekmesi):**
+**Ortak ayarlar (REQUEST sekmesi):**
 
 - **URL:** `https://api.github.com/repos/siberguvenlikhaberler/siberguvenlik/dispatches`
 - **Request method:** `POST`
@@ -76,34 +79,26 @@ Her iki iş için **ortak ayarlar (REQUEST sekmesi):**
   - `X-GitHub-Api-Version: 2022-11-28`
   - `User-Agent: cron-job.org`   ← GitHub API User-Agent ister, boş bırakma
 - **Request body:** `{"event_type":"scheduled-report"}`
-- **TIMEZONE:** **UTC** (çok önemli — saatler UTC'ye göre)
+- **TIMEZONE:** **Europe/Istanbul** (TR saatine göre kurulacaksa) — veya UTC seçip
+  saatleri yukarıdaki tabloya göre UTC girin. Hangisini kullandığınızı tutarlı tutun.
 
-### İş A — "Siber Rapor (gündüz, 7 slot)"
+### "Siber Rapor (öğlen, 3 slot)"
 SCHEDULE sekmesi (Expert / custom):
-- **Minutes:** `23`
-- **Hours:** `6, 8, 10, 12, 14, 16, 18`
+- **Minutes:** `0`
+- **Hours:** `12, 13, 14` (TIMEZONE Europe/Istanbul ise) veya `9, 10, 11` (TIMEZONE UTC ise)
 - **Days of month:** her gün (`*`)
 - **Months:** her ay (`*`)
 - **Days of week:** her gün (`*`)
 
-→ Cron karşılığı: `23 6,8,10,12,14,16,18 * * *`
-
-### İş B — "Siber Rapor (gece güvenlik ağı)"
-SCHEDULE sekmesi:
-- **Minutes:** `53`
-- **Hours:** `20`
-- Geri kalan: her gün/her ay
-
-→ Cron karşılığı: `53 20 * * *`
-
-Bu iki iş, GitHub'daki 8 slotun tamamını birebir karşılar.
+→ Cron karşılığı (Istanbul): `0 12,13,14 * * *`
 
 ---
 
 ## Davranış (kurulduktan sonra)
 - cron-job.org her slotta `repository_dispatch` atar → GitHub workflow **anında** başlar
   (GitHub schedule kuyruğunu beklemez).
-- Günün ilk **başarılı** raporu `data/cron_basarili.txt` işaretini yazar; aynı günün
-  kalan slotları (hem harici hem GitHub'ın yedek schedule'ı) işareti görüp **atlar**.
+- Günün ilk **başarılı** raporu `docs/raporlar/<bugün>.html` dosyasını üretir; aynı
+  günün kalan slotları (hem harici hem GitHub'ın TR 12:07 yedeği) bu dosyayı görüp
+  **atlar** — üzerine asla yazılmaz (main.py Kontrol 1).
 - Rapor fallback üretirse işaret yazılmaz → sıradaki slot yeniden dener.
 - Token süresi dolarsa cron-job.org "Execution history"de 401 görünür → Adım 1'i tekrarla.

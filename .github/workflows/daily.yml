@@ -12,8 +12,15 @@ on:
   # (gece) slotlar GitHub kuyruğunda gecikince TR gece yarısını aşıp bir sonraki
   # günün raporunu geceleyin erkenden üretiyordu.
   #
-  # TEK YEDEK SLOT: 08:23 UTC = TR 11:23 (normal üretim saati). Bu slot GitHub
-  # kuyruğunda birkaç saat gecikse bile TR günü içinde kalır (gece yarısını aşmaz).
+  # TEK YEDEK SLOT: 09:07 UTC = TR 12:07 (cron-job.org'un TR 12:00 ilk denemesinden
+  # hemen sonra). Dakika :00 yerine :07 kullanılır — GitHub'ın kendi dokümantasyonuna
+  # göre tam saat başı en sıkışık slottur. Bu slot GitHub kuyruğunda birkaç saat
+  # gecikse bile TR günü içinde kalır (gece yarısını aşmaz).
+  #
+  # cron-job.org GÜNCEL PROGRAM (TR saati): 12:00, 13:00, 14:00 — bkz. docs/CRON_SETUP.md.
+  # GitHub'ın 12:07 yedeği ile cron-job.org'un 12:00 slotu AYNI ANA denk gelse bile
+  # sorun yok: concurrency grubu (aşağıda) ikinci çalıştırmayı kuyruğa alır, o da
+  # başladığında raporun zaten üretilmiş olduğunu görüp anında çıkar (Kontrol 1).
   #
   # KURŞUNGEÇİRMEZ IDEMPOTENCY (bkz. main.py Kontrol 1): O gün için BAŞARILI rapor
   # dosyası (docs/raporlar/<bugün>.html) ZATEN varsa, sonraki tüm otomatik
@@ -25,7 +32,7 @@ on:
   # workflow" her zaman TAZE rapor üretir (bilinçli eylem).
   # ─────────────────────────────────────────────────────────────────────────
   schedule:
-    - cron: '23 8 * * *'    # Yedek — 08:23 UTC = TR 11:23 (normal üretim saati)
+    - cron: '7 9 * * *'    # Yedek — 09:07 UTC = TR 12:07 (cron-job.org 12:00 hemen sonrası)
   # Asıl tetikleyici: harici cron-job.org bu olayı gönderir — bkz. docs/CRON_SETUP.md
   repository_dispatch:
     types: [scheduled-report]
