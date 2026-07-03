@@ -922,6 +922,12 @@ class HaberSistemi:
             color: #1e293b;
         }
         .header-date { color: #2563eb; font-weight: 700; }
+        .header-subtitle {
+            font-size: 12px;
+            font-weight: 400;
+            color: #64748b;
+            margin: 2px 0 0 0;
+        }
         .important-news {
             background: linear-gradient(135deg, #e3f2fd 0%, #f1f8ff 100%);
             color: #2c3e50;
@@ -1165,6 +1171,7 @@ class HaberSistemi:
         [data-theme="dark"] .report-header { background: #161b22; border-bottom-color: #30363d; }
         [data-theme="dark"] .report-header h1 { color: #e6edf3; }
         [data-theme="dark"] .header-date { color: #79c0ff; }
+        [data-theme="dark"] .header-subtitle { color: #8b949e; }
         [data-theme="dark"] .important-news {
             background: linear-gradient(135deg, #1c2d4a 0%, #162038 100%);
             border-color: #2d4a7a; color: #e6edf3;
@@ -1444,7 +1451,10 @@ class HaberSistemi:
 <body>
     <div class="container">
         <div class="report-header">
-            <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
+            <div>
+                <h1><span class="header-date">{today_str}</span> Siber Güvenlik Haber Özetleri</h1>
+                <p class="header-subtitle">Rapor, saat 12:15 civarı güncellenmektedir.</p>
+            </div>
             <div class="header-actions">
             <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Gece / Gündüz tema geçişi">
                 <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
