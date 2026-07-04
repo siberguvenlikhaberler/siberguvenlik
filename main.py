@@ -40,7 +40,7 @@ from src.config import (
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_top3_verification_prompt,
-    get_legacy_json_prompt, get_quality_review_prompt,
+    get_legacy_json_prompt, get_quality_review_prompt, get_dedup_review_prompt,
     get_executive_summary_prompt, get_title_rescue_prompt,
     get_scoring_prompt, get_critique_prompt,
     SCORING_WEIGHTS, SCORING_CATEGORIES, ZAFIYET_KATEGORILERI,
@@ -2598,6 +2598,67 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"son {REPORT_HISTORY_DAYS} günde raporlanan olay(lar) elendi {dropped}")
         return kept
 
+    def _dedup_review_llm(self, candidate_ids, content_by_id, articles_by_id,
+                          protected_ids=None, label=''):
+        """Pass 5.5 — ADANMIŞ LLM MÜKERRER DENETİMİ (tek işi mükerrer bulmak).
+
+        candidate_ids'teki TÜM haberleri LLM'e verip aynı-olay gruplarını alır;
+        her grupta EN ZENGİN (en uzun kaynak metni) haberi tutar, diğerlerini
+        'kaldırılacak' döndürür. Deterministik same_event'in (bag-of-words)
+        kaçırdığı 'aynı olay, farklı sözcükler' mükerrerlerini SEMANTİK yakalar
+        — asıl güvence katmanı budur (Pass 5 KONTROL 4 gömülü/güvenilmezdi).
+
+        protected_ids (ör. KRİTİK 3) ASLA kaldırılmaz; grupta korunan bir üye
+        varsa o tutulur, mükerrer gövde haberleri kaldırılır. LLM boş/başarısız
+        dönerse boş küme (güvenli: deterministik katmanlar zaten çalışır).
+
+        Döndürür: kaldırılacak id kümesi."""
+        prot = set(protected_ids or [])
+        ids = [i for i in candidate_ids
+               if i in content_by_id or i in articles_by_id]
+        if len(ids) < 2:
+            return set()
+        lines = []
+        for aid in ids:
+            c = content_by_id.get(aid, {})
+            a = articles_by_id.get(aid, {})
+            tr_title = c.get('tr_title') or a.get('title', '')
+            snippet = ' '.join((c.get('paragraph', '') or '').split()[:90])
+            lines.append(f"=== HABER ID: {aid} ===\n"
+                         f"Başlık: {tr_title}\nÖzet: {snippet}\n")
+        data = self._gemini_call_json(
+            get_dedup_review_prompt('\n'.join(lines)),
+            max_output_tokens=512, label=label or 'Pass5.5-MükerrerDenetimi')
+        if not data:
+            return set()
+        idset = set(ids)
+
+        def _completeness(i):
+            a = articles_by_id.get(i, {}); c = content_by_id.get(i, {})
+            return (len((a.get('full_text', '') or '').split()),
+                    len((c.get('paragraph', '') or '').split()))
+
+        remove = set()
+        for group in (data.get('groups', []) or []):
+            g = []
+            for x in group:
+                try:
+                    xi = int(x)
+                except (TypeError, ValueError):
+                    continue
+                if xi in idset and xi not in g:
+                    g.append(xi)
+            if len(g) < 2:
+                continue
+            # Korunan (KRİTİK 3) üye varsa onu tut; yoksa en zengin haberi tut.
+            anchor = next((i for i in g if i in prot), None)
+            if anchor is None:
+                anchor = max(g, key=_completeness)
+            for i in g:
+                if i != anchor and i not in prot:
+                    remove.add(i)
+        return remove
+
     def _verify_top3(self, top3_ids, non_vuln_ids, content_by_id,
                      articles_by_id, label):
         """Pass 4.5 — seçili KRİTİK 3'ü LLM ile DENETLER/teyit eder.
@@ -3531,6 +3592,22 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     else:
                         print(f"   ⚠️  ID={rid} Türkçeleştirilemedi (içerik filtresi olası).")
 
+        # ── PASS 5.5 — ADANMIŞ LLM MÜKERRER DENETİMİ (semantik güvence) ──────
+        # Deterministik same_event bag-of-words'tür; 'aynı olay, farklı sözcükler'
+        # durumunu (ortak kod adı/CVE/aktör yoksa) kaçırabilir (03.07 Kouloglou
+        # vakası). Bu geçiş TÜM rapor haberlerini LLM'e verip aynı-olay gruplarını
+        # bulur; KRİTİK 3 korunur, mükerrer gövde haberleri kaldırılır.
+        print("\n🔁 Pass 5.5 — Adanmış mükerrer denetimi...")
+        dup_remove = self._dedup_review_llm(
+            list(top3_ids) + list(top10_ids) + list(remaining_ids),
+            content_by_id, articles_by_id, protected_ids=top3_ids)
+        if dup_remove:
+            print(f"   🗑️  LLM mükerrer olarak kaldırdı: {sorted(dup_remove)}")
+            top10_ids     = [i for i in top10_ids     if i not in dup_remove]
+            remaining_ids = [i for i in remaining_ids if i not in dup_remove]
+        else:
+            print("   ✅ LLM ek mükerrer bulmadı")
+
         # ── RAPOR GENELİ AYNI-OLAY DEDUP (gövde ↔ KRİTİK 3 + gövde içi) ──
         # KRİTİK 3'e alınan bir olay, gövdede (Önemli Gelişmeler / paragraflar /
         # Yönetici Özeti tablosu) İKİNCİ KEZ görünmemeli; ayrıca gövde içindeki
@@ -3970,6 +4047,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         )
 
         print(f"   Seçilen Top 3 ID: {top3_ids}")
+
+        # Pass 5.5 — adanmış LLM mükerrer denetimi (ana yolla aynı; semantik güvence).
+        dup_remove = self._dedup_review_llm(
+            list(top3_ids) + list(top10_ids) + list(remaining_ids),
+            content_by_id, id_to_article, protected_ids=top3_ids, label='Legacy-MükerrerDenetimi')
+        if dup_remove:
+            print(f"   🗑️  LLM mükerrer olarak kaldırdı (legacy): {sorted(dup_remove)}")
+            top10_ids     = [i for i in top10_ids     if i not in dup_remove]
+            remaining_ids = [i for i in remaining_ids if i not in dup_remove]
 
         # Rapor geneli aynı-olay dedup (gövde ↔ KRİTİK 3 + gövde içi) — ana yolla aynı.
         if top3_ids:

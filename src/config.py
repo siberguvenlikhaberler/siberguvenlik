@@ -1114,6 +1114,47 @@ HABERLER:
 {articles_content}"""
 
 
+def get_dedup_review_prompt(items_content):
+    """Pass 5.5 — ADANMIŞ MÜKERRER DENETİMİ (tek işi bu).
+
+    Rapordaki TÜM haberleri alır ve AYNI temel olayı/olguyu anlatan haberleri
+    gruplar. Pass 5'in KONTROL 4'ü (4 kontrolden biri, kısa snippet, gömülü)
+    mükerreri güvenilmez yakalıyordu; bu geçiş yalnızca mükerrere odaklanır,
+    tüm listeyi görür ve daha uzun özet alır → semantik "aynı olay" ayrımını
+    (farklı kaynak/başlık/sözcük olsa da) çok daha güvenilir yapar.
+
+    items_content: "=== HABER ID: N ===\\nBaşlık: ...\\nÖzet: ...\n" formatı.
+    Döndürülen JSON: {"groups": [[id, id, ...], ...]} — her iç liste AYNI olayı
+    anlatan ID'ler (yalnızca ≥2 üyeli gerçek mükerrer gruplar)."""
+    return f"""Sen bir siber güvenlik haber editörüsün. Görevin TEK: aşağıdaki
+haber listesinde AYNI temel olayı/olguyu anlatan MÜKERRER haberleri bulup
+gruplamak.
+
+AYNI OLAY ölçütü — şu unsurların ÖRTÜŞMESİ (farklı kaynak, farklı başlık, farklı
+kelimelerle yazılmış olsalar bile aynı olaydır):
+- Aynı mağdur/hedef + aynı saldırgan/aktör + aynı olay (ör. aynı kişinin aynı
+  casus yazılımla hedeflenmesi; aynı şirkete aynı ihlal),
+- VEYA aynı zafiyet (aynı CVE/ürün) hakkında aynı gelişme,
+- VEYA aynı kampanya/operasyon/takedown hakkında aynı haber.
+
+FARKLI OLAY (gruplama!):
+- Aynı ürün/aktör ama FARKLI zafiyet/olay (ör. SharePoint RCE ≠ Cisco CM açığı;
+  aynı grubun iki ayrı saldırısı),
+- Aynı konu ama farklı vaka (ör. iki ayrı kurumda iki ayrı fidye saldırısı).
+
+Emin değilsen GRUPLAMA (yalnızca açıkça aynı olan haberleri grupla — yanlışlıkla
+farklı haberleri birleştirmek, mükerreri kaçırmaktan daha kötüdür).
+
+SADECE JSON — başka hiçbir şey yazma. Her iç liste 2+ ID içeren gerçek bir
+mükerrer grubudur; mükerrer yoksa boş liste döndür:
+{{
+  "groups": [[2, 3], [11, 19]]
+}}
+
+HABERLER:
+{items_content}"""
+
+
 def get_legacy_json_prompt(articles_brief):
     """
     Legacy tek-çağrı fallback için: sıralama + Türkçe özet birleşik JSON prompt.
