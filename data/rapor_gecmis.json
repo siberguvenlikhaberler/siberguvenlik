@@ -153,5 +153,58 @@
     "full_text": "Cybersecurity researchers have flagged a new macOS information stealer called PamStealer that employs a series of clever tricks to infect systems and siphon sensitive data.\n\nThe stealer, discovered by Jamf Threat Labs, is distributed as a compiled AppleScript (.scpt) file impersonating Maccy, a legitimate open-source clipboard manager. It has been codenamed PamStealer owing to its ability to valid"
    }
   ]
+ },
+ {
+  "date": "2026-07-04",
+  "views": [
+   {
+    "tr_title": "FortiBleed Aktörlerinin Inc ve Lynx Fidye Yazılımı Gruplarıyla İş Birliği Yapması",
+    "paragraph": "FortiBleed olarak adlandırılan küresel kimlik bilgisi hasadı kampanyasının arkasındaki ilk erişim aracılarının (IAB), Inc Ransom ve Lynx fidye yazılımı gruplarıyla doğrudan iş birliği içinde olduğu ortaya çıkarılmıştır. Yapılan araştırmalar, Fortinet FortiGate güvenlik duvarlarından sızdırılan yönetici düzeyindeki erişim yetkilerinin, fidye yazılımı operatörlerine aktarıldığını ve bu durumun en az 12 farklı kuruluşta veri şifreleme saldırısıyla sonuçlandığını doğrulamıştır. Saldırganların yaklaş",
+    "title": "FortiBleed Actors Collaborating With Inc, Lynx Ransomware Gangs",
+    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\nFortiBleed Actors Collaborating With Inc, Lynx Ransomware Gangs\n\nAfter gaining a foothold in thousands of Fortinet firewalls, the attackers are starting to monetize that access, a"
+   },
+   {
+    "tr_title": "TeamPCP'nin Geliştirici Araçlarını Zehirleyerek Bulut Kimlik Bilgilerini Çalması",
+    "paragraph": "FBI tarafından yayımlanan uyarı raporuna göre, TeamPCP adlı siber suç grubu, yaygın olarak kullanılan yazılım geliştirme ve güvenlik tarama araçlarını hedef alan geniş kapsamlı tedarik zinciri saldırıları gerçekleştirmiştir. Saldırganlar, Trivy, KICS ve LiteLLM gibi popüler araçların kaynak kodlarına kötü amaçlı yazılımlar enjekte ederek, bu araçları kullanan kuruluşların bulut erişim anahtarlarını, Kubernetes sırlarını ve SSH anahtarlarını ele geçirmiştir. Özellikle OpenAI çalışanlarını da etki",
+    "title": "FBI: TeamPCP Compromised Dev Tools to Steal Cloud Credentials",
+    "full_text": "FBI: TeamPCP Compromised Dev Tools to Steal Cloud Credentials\n\nFBI says TeamPCP poisoned trusted developer tools to steal cloud credentials, spread malware through software updates, and extort victims.\n\nOn July 2, 2026, the FBI published a FLASH alert identifying the criminal group called TeamPCP and detailing how it compromised widely used developer and security tools to steal credentials from vi"
+   },
+   {
+    "tr_title": "Yeni CitrixBleed Güvenlik Açığının Kamuoyuna Açıklanmasının Ardından İstismar Edilmesi",
+    "paragraph": "NetScaler cihazlarını etkileyen ve CitrixBleed olarak adlandırılan yeni bir kritik güvenlik açığının, teknik detaylarının kamuoyuna duyurulmasının hemen ardından saldırganlar tarafından aktif olarak istismar edilmeye başlandığı tespit edilmiştir. Siber saldırganların, paylaşılan kavram kanıtlama (PoC) kodlarını kullanarak hedef sistemlerin bellek içeriklerine yetkisiz erişim sağladığı ve hassas verileri HTTP yanıtları üzerinden sızdırdığı belirlenmiştir. Bu durum, kritik ağ altyapısı bileşenleri",
+    "title": "New CitrixBleed Vulnerability Exploited Immediately After Public Disclosure",
+    "full_text": "New CitrixBleed Vulnerability Exploited Immediately After Public Disclosure\n\nHackers are targeting NetScaler appliances using public PoC code to retrieve arbitrary memory content in the HTTP response.\n\nFlipboard\n\n\n\n\n\nReddit\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nEmail\n\nRelated: Cisco Confirms In-the-Wild Exploitation of Unified CM Vulnerability\nRelated: CISA Warns of Actively Exploited Microsoft SharePo"
+   },
+   {
+    "tr_title": "Kuzey Kore Bağlantılı Aktörlerin Geliştirici Sırlarını Çalmak İçin npm Paketlerini Taklit Etmesi",
+    "paragraph": "Kuzey Kore bağlantılı olduğu değerlendirilen Lazarus grubuyla ilişkili tehdit aktörlerinin, popüler Rollup araçlarını taklit eden sahte npm paketleri aracılığıyla yazılım geliştiricileri hedef aldığı tespit edilmiştir. JFrog araştırmacıları tarafından ortaya çıkarılan bu operasyonda, saldırganların meşru paket isimlerine çok benzeyen isimler kullanarak geliştiricilerin iş istasyonlarına ve CI/CD hatlarına sızdığı belirlenmiştir. İki aşamalı bir saldırı mekanizması kullanan kötü amaçlı yazılım, i",
+    "title": "North Korea-Linked npm Packages Mimic Rollup Polyfills to Steal Developer Secrets",
+    "full_text": "Threat actors with ties to North Korea have been linked to a fresh set of malicious npm packages that masquerade as Rollup polyfill tooling to facilitate remote access and data theft.\n\nAccording to JFrog, the packages \"rollup-packages-polyfill-core\" and \"rollup-runtime-polyfill-core\" mimic the legitimate \"rollup-plugin-polyfill-node\" project, down to the description, repository metadata, and packa"
+   },
+   {
+    "tr_title": "Milyonlarca Gömülü Cihazda Kullanılan FatFs Dosya Sisteminde Yamalanmamış Açıkların Bulunması",
+    "paragraph": "Güvenlik firması runZero, USB sürücüler ve SD kartlarda yaygın olarak kullanılan FatFs adlı küçük dosya sistemi kütüphanesinde yedi adet kritik güvenlik açığı tespit edildiğini duyurmuştur. Bu açıklar, güvenlik kameraları, dronlar, endüstriyel kontrolörler ve donanım kripto cüzdanları gibi milyonlarca gömülü cihazı doğrudan etkilemektedir. Saldırganların, kötü amaçlı olarak yapılandırılmış bir depolama birimi veya yazılım güncelleme dosyası aracılığıyla cihazın belleğini bozabileceği ve yetkisiz",
+    "title": "Unpatched Flaws Disclosed in Filesystem Bundled Into Millions of Embedded Devices",
+    "full_text": "Security firm runZero has disclosed seven vulnerabilities in FatFs, a small filesystem library that lets a device read and write the FAT and exFAT formats used on USB drives and SD cards.\n\nThe flaws matter because FatFs is nearly everywhere. It ships inside the firmware that runs security cameras, drones, industrial controllers, hardware crypto wallets, and other devices built on real-time operati"
+   },
+   {
+    "tr_title": "Linux Çekirdeğindeki Bad Epoll Açığının Yetkisiz Erişime İzin Vermesi",
+    "paragraph": "Linux çekirdeğinde tespit edilen ve Bad Epoll olarak adlandırılan CVE-2026-46242 kodlu yeni bir güvenlik açığı, düşük yetkili kullanıcıların sistem üzerinde tam yönetici hakları elde etmesine olanak tanımaktadır. Araştırmacı Jaeyoung Chung tarafından keşfedilen bu zafiyet, Linux masaüstü sistemlerini, sunucuları ve Android işletim sistemini doğrudan etkilemektedir. Teknik olarak bir bellek hatası olan bu durum, çekirdeğin epoll özelliğindeki bir yarış koşulundan kaynaklanmaktadır ve saldırganlar",
+    "title": "New \"Bad Epoll\" Linux Kernel Flaw Lets Unprivileged Users Gain Root, Hits Android",
+    "full_text": "A newly disclosed Linux kernel flaw called Bad Epoll (CVE-2026-46242) lets an ordinary user with no special access take full control of a machine as root. It affects Linux desktops, servers, and Android, and a fix is out.\n\nBad Epoll sits in the same small stretch of kernel code where Anthropic's most powerful AI model, Mythos, recently found a different bug.\n\nThe AI caught one flaw and missed this"
+   },
+   {
+    "tr_title": "Microsoft 365 Kullanıcılarının Otomatik Parola Püskürtme Saldırısına Maruz Kalması",
+    "paragraph": "Microsoft 365 kullanıcıları, 12 Haziran ile 26 Haziran 2026 tarihleri arasında gerçekleşen ve geniş bir kitleyi hedef alan otomatik bir parola püskürtme saldırısına maruz kalmıştır. Güvenlik firması Huntress tarafından yapılan incelemeler, saldırganların bu süreçte firmanın müşterilerine ait hesaplara 81 milyon oturum açma girişimi gerçekleştirdiğini ve en az 78 vakada başarıya ulaştığını ortaya koymuştur. Saldırıların tamamı, internet servis sağlayıcısı LSHIY LLC tarafından kontrol edilen tek b",
+    "title": "Microsoft 365 users fall victim to one-in-a-million password spray attack",
+    "full_text": "The attack exploited previously exposed credentials and flaws in enterprises’ multi-factor authentication configurations.\n\nMicrosoft users have been hit by a massive, automated password spray attack.\n\nAmong those targeted by the attack were clients of security company Huntress. It reported that the attackers made 81 million attempts to log into its customers’ accounts between June 12 and 26 — and "
+   },
+   {
+    "tr_title": "Avalon Kötü Amaçlı Yazılım Çerçevesinin CrownX Fidye Yazılımı Yeteneklerini Barındırması",
+    "paragraph": "Siber güvenlik araştırmacıları, geleneksel güvenlik kontrollerini atlatabilen ve çok aşamalı kimlik avı zincirleri aracılığıyla dağıtılan Avalon adlı modüler bir kötü amaçlı yazılım çerçevesini tespit etmiştir. Blackpoint Cyber tarafından yapılan incelemeye göre bu yapı; kimlik bilgisi toplama, ağda yanal hareket, uzaktan erişim ve CrownX olarak adlandırılan fidye yazılımı bileşenini tek bir çatı altında birleştirmektedir. Saldırganlar, Proton Drive üzerinde barındırılan ve parola ile korunan ar",
+    "title": "New Avalon Malware Framework Packs CrownX Ransomware Capabilities",
+    "full_text": "Cybersecurity researchers have discovered a previously undocumented modular malware framework codenamed Avalon that's distributed by means of a multi-stage phishing chain capable of bypassing traditional security controls.\n\nAvalon combines credential collection, lateral movement, remote access, recovery disruption, and ransomware execution, bringing together diverse functions under one umbrella. T"
+   }
+  ]
  }
 ]
