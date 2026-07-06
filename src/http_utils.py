@@ -20,6 +20,11 @@ def requests_get_with_retry(url, headers, timeout, max_retries=3,
         requests.exceptions.ConnectionError,
         requests.exceptions.Timeout,
         requests.exceptions.ChunkedEncodingError,
+        # WAF/anti-bot sistemleri ara sıra bir istekte sonsuz yönlendirme
+        # döngüsü üretebiliyor (ör. Help Net Security: "Exceeded 30 redirects").
+        # Aralıklı olduğu için (aynı feed çoğu gün sorunsuz), tek seferlik
+        # başarısızlık yerine yeniden deneme genelde kurtarır.
+        requests.exceptions.TooManyRedirects,
     )
     for attempt in range(max_retries + 1):
         try:

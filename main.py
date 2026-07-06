@@ -1821,6 +1821,34 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         print(f"   └─ ✅ {len(result)}/{len(crawled_articles)} newsletter makalesi tam metin çekildi")
         return result
 
+    @staticmethod
+    def _lenient_xml_parse(raw_bytes):
+        """stdlib ET.fromstring KALICI olarak bozuk feed'lerde (ör. Industrial
+        Cyber — her gün AYNI 'mismatched tag: line 74, column 2' hatasıyla
+        düşer) tüm feed'i kaybettiriyor. Kaynağın kendi XML şablonundaki bir
+        kaçış hatası (genelde description alanına kaçışsız HTML/`&` sızması)
+        stdlib'in katı ayrıştırıcısını durduruyor.
+
+        lxml (requirements.txt'te zaten var) recover=True ile bozuk kısımları
+        ATLAYIP geri kalan geçerli öğeleri kurtarabilir. Kurtarılan ağaç stdlib
+        ET Element'ine çevrilir ki çağıran kod (root.findall(...)) değişmeden
+        çalışsın. lxml yoksa/kurtarma da başarısızsa None döner (orijinal
+        ParseError çağıran tarafından rapor edilmeye devam eder — davranış
+        REGRESSION değil, sadece kurtarma bir olasılık daha).
+        """
+        try:
+            from lxml import etree as _lxml_etree
+        except ImportError:
+            return None
+        try:
+            parser = _lxml_etree.XMLParser(recover=True)
+            lxml_root = _lxml_etree.fromstring(raw_bytes, parser=parser)
+            if lxml_root is None:
+                return None
+            return ET.fromstring(_lxml_etree.tostring(lxml_root))
+        except Exception:
+            return None
+
     def fetch_rss(self, url, source_name):
         """RSS çeker — max 15 saniye timeout korumalı"""
         import threading
@@ -1832,7 +1860,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 if r.status_code != 200:
                     result_holder['error'] = Exception(f"HTTP {r.status_code}")
                     return
-                root = ET.fromstring(r.content)
+                try:
+                    root = ET.fromstring(r.content)
+                except ET.ParseError as parse_err:
+                    root = self._lenient_xml_parse(r.content)
+                    if root is None:
+                        raise parse_err
 
                 if root.tag.endswith('feed'):  # Atom
                     for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry')[:40]:
