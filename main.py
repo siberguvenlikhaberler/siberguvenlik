@@ -864,7 +864,8 @@ class HaberSistemi:
 
     @staticmethod
     def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str,
-                    top3_ids=None, exec_summary='', category_by_id=None):
+                    top3_ids=None, exec_summary='', category_by_id=None,
+                    promote_ids=None):
         """
         Yapılandırılmış içerikten tam HTML raporu üretir (kod tarafı assembly).
         content_by_id: {art_id: {'tr_title': str, 'paragraph': str}}
@@ -1306,7 +1307,14 @@ class HaberSistemi:
             art_date = _h.escape(str(art.get('art_date') or ''), quote=False)
             return link, domain, art_date
 
+        _promote = set(promote_ids or [])
+
         def _is_vuln(art_id):
+            # Gövde ince olduğunda "Önemli Gelişmeler"e terfi ettirilen güçlü
+            # güvenlik açıkları normal haber gibi akışa girer (ve Güvenlik
+            # Açıkları bölümünde TEKRAR gösterilmez — çift-render olmaz).
+            if art_id in _promote:
+                return False
             # Kategori etiketi varsa (yeni puan tabanlı yol) DETERMİNİSTİK ona güven:
             # zafiyet_rutin/zafiyet_aktif_apt → Güvenlik Açıkları bölümü. Etiket
             # yoksa (legacy yol) eski keyword tespitine düş.
@@ -3241,25 +3249,51 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
     def _derive_top3_by_score(self, ranked_ids, records, content_by_id,
                               articles_by_id):
-        """KRİTİK 3 — deterministik: en yüksek puanlı, Kritik-3'e uygun ilk 3.
-        KRITIK3_HARIC_KATEGORILER (zafiyet_rutin/urun_icerik/siber_disi) hariç;
-        zafiyet_aktif_apt puanı yeterse girebilir. Mevcut aynı-olay ve çapraz-gün
-        KRİTİK 3 dedup güvenceleri KORUNUR.
+        """KRİTİK 3 — deterministik, GARANTİLİ 3 haber.
+
+        Öncelik sırası (kademeli, her kademe bir öncekini tamamlar):
+          1) KRITIK3_HARIC_KATEGORILER dışı (gerçek manşet adayları), çapraz-gün
+             + aynı-olay AYRIK ilk 3.
+          2) Yetmezse aynı uygun havuzdan çapraz-gün kısıtı GEVŞETİLEREK tamamla.
+          3) Hâlâ <3 ise KRİTİK KRİTERLERE EN YAKIN güvenlik açıkları (en yüksek
+             puanlı zafiyet; ranked_ids puan sırasında) manşete alınır.
+          4) SON ÇARE: hâlâ <3 ise tüm sıralı havuzdan doldur.
+        Rapor ≥3 haber içerdiği sürece KRİTİK 3 ASLA 3'ten az kalmaz. Aynı-olay
+        ayrıklığı her kademede korunur (3'e ulaşmak zorunluysa en son gevşer).
         """
-        eligible = [aid for aid in ranked_ids
-                    if records.get(aid, {}).get('kat') not in KRITIK3_HARIC_KATEGORILER]
-        # ranked_ids zaten puan sırasında; en güçlü adaylar başta.
         view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
         recent_k3 = self._load_recent_kritik3_views()
+
+        # ranked_ids zaten puan sırasında; en güçlü adaylar başta.
+        eligible = [aid for aid in ranked_ids
+                    if records.get(aid, {}).get('kat') not in KRITIK3_HARIC_KATEGORILER]
+
+        # Kademe 1 — tercih edilen adaylar, çapraz-gün + aynı-olay ayrık
         top3_ids = _dedup.pick_distinct(eligible, view_fn, n=3,
                                         exclude_views=recent_k3)
+
+        # Kademe 2 — çapraz-gün gevşet, uygun havuzdan aynı-olay ayrık tamamla
         if len(top3_ids) < 3:
-            # Ayrık aday yetmezse uygun havuzdan sırayla tamamla (dedup korunur).
-            for aid in eligible:
+            top3_ids = _dedup.pick_distinct(list(top3_ids) + eligible, view_fn, n=3)
+
+        # Kademe 3 — kritik kriterlere en yakın güvenlik açıklarını manşete al
+        if len(top3_ids) < 3:
+            vuln_pool = [aid for aid in ranked_ids
+                         if aid not in top3_ids
+                         and records.get(aid, {}).get('kat') in ZAFIYET_KATEGORILERI]
+            if vuln_pool:
+                print(f"   🛡️→🎯 KRİTİK 3 eksik ({len(top3_ids)}/3) — kritik "
+                      f"kriterlere en yakın güvenlik açık(lar)ı manşete alınıyor.")
+                top3_ids = _dedup.pick_distinct(list(top3_ids) + vuln_pool, view_fn, n=3)
+
+        # Kademe 4 — SON ÇARE: aynı-olay ayrıklığını da gevşet, 3'e tamamla
+        if len(top3_ids) < 3:
+            for aid in ranked_ids:
                 if aid not in top3_ids:
                     top3_ids.append(aid)
                 if len(top3_ids) >= 3:
                     break
+
         return top3_ids[:3]
 
     def _write_scoring_log(self, articles, records, top10_ids, remaining_ids,
@@ -3731,6 +3765,27 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # ASSEMBLY — Kod tarafı HTML oluşturma
         # ════════════════════════════════════════════════════════════════
         print("\n🔨 HTML assembly başlıyor...")
+
+        # ── GÖVDE ZENGİNLEŞTİRME: zafiyet-ağırlıklı günlerde "Önemli Gelişmeler"
+        # boş kalmasın. Gövdeye düşen (top3 dışı, zafiyet olmayan) haber sayısı
+        # eşiğin altındaysa, EN YÜKSEK PUANLI güvenlik açıklarını ana akışa
+        # terfi ettir. Terfi edenler Güvenlik Açıkları bölümünden çıkar (çift-
+        # render yok). Zafiyet-dışı haber bolsa terfi olmaz (promote_ids boş).
+        BODY_MIN = 5
+        _top3_set = set(top3_ids)
+        _body_pool = [aid for aid in (list(top10_ids) + list(remaining_ids))
+                      if aid not in _top3_set]
+        _regular = [aid for aid in _body_pool
+                    if score_records.get(aid, {}).get('kat') not in ZAFIYET_KATEGORILERI]
+        promote_ids = set()
+        if len(_regular) < BODY_MIN:
+            _vulns = [aid for aid in _body_pool
+                      if score_records.get(aid, {}).get('kat') in ZAFIYET_KATEGORILERI]
+            promote_ids = set(_vulns[:BODY_MIN - len(_regular)])
+            if promote_ids:
+                print(f"   🛡️→📰 Gövde ince ({len(_regular)}<{BODY_MIN}) — en güçlü "
+                      f"{len(promote_ids)} güvenlik açığı 'Önemli Gelişmeler'e çıkarıldı.")
+
         html = self._build_html(
             articles    = articles,
             top10_ids   = top10_ids,
@@ -3740,6 +3795,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             top3_ids    = top3_ids,
             exec_summary = exec_summary,
             category_by_id = category_by_id,
+            promote_ids = promote_ids,
         )
         _rapor_haber_sayisi = len(top10_ids) + len(remaining_ids)
         print(f"✅ HTML oluşturuldu ({len(html)} karakter, "
