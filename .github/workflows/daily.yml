@@ -4,23 +4,10 @@ on:
   # ─────────────────────────────────────────────────────────────────────────
   # GÜNLÜK OTOMATİK ÜRETİM — ama GÜNDE EN FAZLA 1 BAŞARILI RAPOR.
   #
-  # ASIL ZAMANLAYICI: harici cron-job.org, gün içindeki tüm slotları
-  # repository_dispatch ile dakikası dakikasına tetikler (bkz. docs/CRON_SETUP.md).
-  # GitHub'ın kendi `schedule`'ı SADECE YEDEK: cron-job.org tamamen düşerse diye
-  # normal üretim saatinde TEK bir çalıştırma bırakıldı. Gün içine yayılmış 8
-  # deneme KALDIRILDI — çünkü (a) tekrarları zaten cron-job.org yapıyor, (b) geç
-  # (gece) slotlar GitHub kuyruğunda gecikince TR gece yarısını aşıp bir sonraki
-  # günün raporunu geceleyin erkenden üretiyordu.
-  #
-  # TEK YEDEK SLOT: 09:07 UTC = TR 12:07 (cron-job.org'un TR 12:00 ilk denemesinden
-  # hemen sonra). Dakika :00 yerine :07 kullanılır — GitHub'ın kendi dokümantasyonuna
-  # göre tam saat başı en sıkışık slottur. Bu slot GitHub kuyruğunda birkaç saat
-  # gecikse bile TR günü içinde kalır (gece yarısını aşmaz).
-  #
-  # cron-job.org GÜNCEL PROGRAM (TR saati): 12:00, 13:00, 14:00 — bkz. docs/CRON_SETUP.md.
-  # GitHub'ın 12:07 yedeği ile cron-job.org'un 12:00 slotu AYNI ANA denk gelse bile
-  # sorun yok: concurrency grubu (aşağıda) ikinci çalıştırmayı kuyruğa alır, o da
-  # başladığında raporun zaten üretilmiş olduğunu görüp anında çıkar (Kontrol 1).
+  # GitHub'ın kendi `schedule`'ı ÜÇ slotta doğrudan tetikler (TR 12:00, 13:00,
+  # 14:00 = UTC 09:00, 10:00, 11:00). Ayrıca harici cron-job.org da aynı
+  # slotlarda repository_dispatch gönderebilir (bkz. docs/CRON_SETUP.md) —
+  # ikisi çakışsa bile sorun olmaz (aşağıdaki concurrency + Kontrol 1).
   #
   # KURŞUNGEÇİRMEZ IDEMPOTENCY (bkz. main.py Kontrol 1): O gün için BAŞARILI rapor
   # dosyası (docs/raporlar/<bugün>.html) ZATEN varsa, sonraki tüm otomatik
@@ -32,7 +19,9 @@ on:
   # workflow" her zaman TAZE rapor üretir (bilinçli eylem).
   # ─────────────────────────────────────────────────────────────────────────
   schedule:
-    - cron: '7 9 * * *'    # Yedek — 09:07 UTC = TR 12:07 (cron-job.org 12:00 hemen sonrası)
+    - cron: '0 9 * * *'    # TR 12:00
+    - cron: '0 10 * * *'   # TR 13:00
+    - cron: '0 11 * * *'   # TR 14:00
   # Asıl tetikleyici: harici cron-job.org bu olayı gönderir — bkz. docs/CRON_SETUP.md
   repository_dispatch:
     types: [scheduled-report]
