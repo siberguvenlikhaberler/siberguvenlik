@@ -3741,8 +3741,27 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             exec_summary = exec_summary,
             category_by_id = category_by_id,
         )
+        _rapor_haber_sayisi = len(top10_ids) + len(remaining_ids)
         print(f"✅ HTML oluşturuldu ({len(html)} karakter, "
-              f"{len(top10_ids) + len(remaining_ids)} haber)")
+              f"{_rapor_haber_sayisi} haber)")
+
+        # ── TABAN GÜVENLİK AĞI ──────────────────────────────────────────────
+        # Rapor beklenenden AZ haber içeriyorsa görünür uyarı bas (Actions
+        # logunda ve rss_errors.txt'de iz bırakır). Üretimi ENGELLEMEZ — sadece
+        # "2 haber rezaleti" gibi sessiz daralmaları erken görünür kılar ki
+        # havuz açlığı (feed/dedup/pencere) fark edilmeden geçmesin.
+        REPORT_FLOOR = 10
+        if _rapor_haber_sayisi < REPORT_FLOOR:
+            uyari = (f"⚠️  TABAN UYARISI: rapor yalnızca {_rapor_haber_sayisi} haber "
+                     f"içeriyor (beklenen ≥{REPORT_FLOOR}). Havuz açlığı olası — "
+                     f"feed/dedup/tarih-penceresi kontrol edilmeli.")
+            print(uyari)
+            try:
+                self.rss_errors.append(
+                    f"TABAN UYARISI - rapor {_rapor_haber_sayisi} haber (<{REPORT_FLOOR})")
+                self._save_rss_errors()
+            except Exception:
+                pass
 
         # ── Post-processing ───────────────────────────────────────────
         self._translate_social_signals()
@@ -4518,12 +4537,86 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print("📁 Arşiv temiz (30 gün içinde)")
 
 
+def _reset_today_state():
+    """Bugünün durum dosyalarını CLAUDE.md 'Taze Rapor İçin Reset' prosedürüne
+    göre CERRAHİ olarak sıfırlar; eski günlere / append-only geçmişe DOKUNMAZ.
+
+    Tetikleme: workflow_dispatch input `reset_today=true` → env RESET_TODAY.
+    Amaç: idempotency (Kontrol 1 rapor + Kontrol 2 ham) aynı gün taze üretimi
+    atlarken, tek tıkla raporu SIFIRDAN ürettirmek. GitHub Actions 'Run workflow'
+    kimlik doğrulamayı kendisi yapar — tarayıcıya token gömülmez.
+
+    SİL (taze üretimi engelleyen durum): bugünün raporu, ham, cron başarı işareti.
+    CERRAHİ (sadece bugünü çıkar): linkler'de bugünün satırları, arşivde bugünün
+    bloğu. DOKUNMA: kritik3/rapor geçmişi (json), skorlama_log, rss_errors, index.
+    """
+    now = _now_tr()
+    today_str = now.strftime('%Y-%m-%d')
+    today_header = f"📅 {now.strftime('%d %B %Y').upper()} - EN ÖNEMLİ 43 HABER (SEÇİLMİŞ)"
+    print("🧹 RESET_TODAY: bugünün durumu sıfırlanıyor (taze üretim zorlanıyor)...")
+
+    # 1) SİL — taze üretimi engelleyen durum dosyaları
+    for path in (f"docs/raporlar/{today_str}.html", "data/haberler_ham.txt",
+                 "data/cron_basarili.txt"):
+        try:
+            if os.path.exists(path):
+                os.remove(path)
+                print(f"   🗑️  silindi: {path}")
+        except OSError as e:
+            print(f"   ⚠️  silinemedi {path}: {e}")
+
+    # 2) CERRAHİ — haberler_linkler.txt: SADECE bugünün satırlarını çıkar
+    #    (eski günler 7-günlük çapraz-gün dedup geçmişi için KORUNUR)
+    links_path = "data/haberler_linkler.txt"
+    if os.path.exists(links_path):
+        try:
+            with open(links_path, encoding='utf-8') as f:
+                lines = f.readlines()
+            kept = [ln for ln in lines if not ln.startswith(f"{today_str}\t")]
+            with open(links_path, 'w', encoding='utf-8') as f:
+                f.writelines(kept)
+            print(f"   ✂️  linkler: {len(lines) - len(kept)} bugün satırı çıkarıldı "
+                  f"(eski günler korundu)")
+        except IOError as e:
+            print(f"   ⚠️  linkler düzenlenemedi: {e}")
+
+    # 3) CERRAHİ — haberler_arsiv.txt: SADECE bugünün bloğunu çıkar
+    #    Blok = '\n' + 80×'=' + '\n' + today_header + ... → sonraki gün bloğuna/EOF'a kadar.
+    if os.path.exists(ARCHIVE_FILE):
+        try:
+            with open(ARCHIVE_FILE, encoding='utf-8') as f:
+                content = f.read()
+            sep = '=' * 80
+            marker = f"\n{sep}\n{today_header}\n"
+            start = content.find(marker)
+            if start != -1:
+                nxt = content.find(f"\n{sep}\n📅 ", start + len(marker))
+                end = nxt if nxt != -1 else len(content)
+                content = content[:start] + content[end:]
+                with open(ARCHIVE_FILE, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                print(f"   ✂️  arşiv: bugünün bloğu çıkarıldı ({today_header})")
+            else:
+                print("   ℹ️  arşivde bugünün bloğu yok — atlandı")
+        except IOError as e:
+            print(f"   ⚠️  arşiv düzenlenemedi: {e}")
+
+    print("   ✅ RESET_TODAY tamam — pipeline sıfırdan çalışacak.\n")
+
+
 def main():
     print("\n" + "=" * 70)
     print("🔒 SİBER GÜVENLİK HABERLERİ")
     print("=" * 70)
     print(f"📅 {_now_tr().strftime('%d %B %Y %H:%M')}")
     print("=" * 70 + "\n")
+
+    # ── RESET_TODAY: elle taze üretim (workflow_dispatch input) ─────────────
+    # Idempotency'den ÖNCE çalışır; bugünün durumunu sıfırlayıp aşağıdaki
+    # Kontrol 1/2'nin taze fetch + rapor üretmesini sağlar. Sadece env işareti
+    # açıkça verildiğinde tetiklenir (otomatik cron/dispatch'te ASLA çalışmaz).
+    if os.environ.get('RESET_TODAY', '').strip().lower() in ('1', 'true', 'yes', 'on'):
+        _reset_today_state()
 
     now = _now_tr()
     today_str = now.strftime('%Y-%m-%d')

@@ -37,6 +37,11 @@ on:
   repository_dispatch:
     types: [scheduled-report]
   workflow_dispatch:
+    inputs:
+      reset_today:
+        description: "Bugünün raporunu SIFIRDAN yeniden üret (durum reset: ham + linkler/arşiv bugün + rapor silinir)"
+        type: boolean
+        default: false
 
 # schedule (yedek) ile repository_dispatch (cron-job.org) çakışabilir: örn. yedek
 # slot gecikince asıl tetiklemeyle aynı ana denk gelebilir; her ikisi de
@@ -75,6 +80,9 @@ jobs:
           LLM_PROVIDER: openrouter
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
+          # Elle "Run workflow" → reset_today işaretlenirse bugünü sıfırdan üretir.
+          # Otomatik cron/dispatch'te input gelmez → boş → reset ÇALIŞMAZ.
+          RESET_TODAY: ${{ github.event.inputs.reset_today }}
         run: python -u main.py
 
       - run: |
