@@ -18,6 +18,9 @@
 
   // ── Sunucu uç noktası — Vercel'e deploy ettikten sonra BURAYI doldur ──────
   var MANUAL_ADD_ENDPOINT = "https://siberguvenlik-5hqc.vercel.app/api/manual_add";
+  // "Sıfırla & Yeniden Üret" ucu — aynı Vercel host'unda /api/reset_regenerate.
+  // Sabit URL uydurmadan, doğrulanmış manual_add host'undan türetilir.
+  var RESET_ENDPOINT = MANUAL_ADD_ENDPOINT.replace(/\/manual_add(\/?)$/, "/reset_regenerate");
 
   // ── Stiller (yalnızca MODAL stilleri; buton stili ana sayfa CSS'inde) ──
   var CSS = [
@@ -360,6 +363,8 @@
           "</div>" +
         "</div>" +
         '<div class="ma-actions">' +
+          '<button class="ma-btn" id="ma-reset" style="margin-right:auto;background:#b45309;color:#fff;border-color:#b45309;" ' +
+            'title="Bugünün raporunu sıfırdan yeniden üretir (ham veri yeniden çekilir).">🔄 Sıfırla &amp; Yeniden Üret</button>' +
           '<button class="ma-btn cancel" id="ma-cancel">İptal</button>' +
           '<button class="ma-btn ok" id="ma-ok">Tamam</button>' +
         "</div>" +
@@ -385,6 +390,7 @@
     });
     document.getElementById("ma-cancel").addEventListener("click", closeModal);
     document.getElementById("ma-ok").addEventListener("click", submit);
+    document.getElementById("ma-reset").addEventListener("click", submitReset);
     document.getElementById("ma-op-add").addEventListener("click", function () { setOp("add"); });
     document.getElementById("ma-op-delete").addEventListener("click", function () { setOp("delete"); });
     document.getElementById("ma-tab-url").addEventListener("click", function () { setMode("url"); });
@@ -514,6 +520,67 @@
         if (e && e.name === "AbortError") {
           showMsg("err", "İşlem beklenenden uzun sürdü ve durduruldu. Değişiklik arka " +
             "planda tamamlanmış OLABİLİR — bu pencereyi kapatıp sayfayı yenileyerek kontrol edin.");
+        } else {
+          showMsg("err", "Sunucuya ulaşılamadı: " + (e && e.message ? e.message : e));
+        }
+      });
+  }
+
+  // ── SIFIRLA & YENİDEN ÜRET ────────────────────────────────────────────────
+  // Bugünün raporunu SIFIRDAN yeniden ürettirir: şifre doğrulanır, sonra
+  // Vercel ucu GitHub Actions'ı reset_today=true ile tetikler. Gerçek reset +
+  // taze fetch + üretim Actions'ta (~10 dk) olur; bu buton yalnızca tetikler.
+  function submitReset() {
+    var pass = (document.getElementById("ma-pass").value || "").trim();
+    if (!pass) { showMsg("err", "Şifre giriniz."); return; }
+    if (!RESET_ENDPOINT) {
+      showMsg("err", "Sunucu uç noktası yapılandırılmamış (reset_regenerate)."); return;
+    }
+    var onay = window.confirm(
+      "Bugünün raporu SIFIRDAN yeniden üretilecek:\n\n" +
+      "• Bugünkü ham veri, rapor ve durum işaretleri silinir\n" +
+      "• Haberler yeniden çekilir ve rapor baştan oluşturulur\n" +
+      "• İşlem GitHub Actions'ta ~10 dakika sürer\n\n" +
+      "Eski günlerin raporları ETKİLENMEZ. Devam edilsin mi?");
+    if (!onay) return;
+
+    var resetBtn = document.getElementById("ma-reset");
+    var okBtn = document.getElementById("ma-ok");
+    resetBtn.disabled = true; okBtn.disabled = true;
+    // Bu uç HIZLI döner (sadece tetikler); asıl 10 dk'lık iş Actions'ta.
+    startProgress(["GitHub Actions tetikleniyor", "Onay bekleniyor"]);
+
+    var controller = (typeof AbortController !== "undefined") ? new AbortController() : null;
+    var failsafe = setTimeout(function () { if (controller) controller.abort(); }, 30000);
+
+    fetch(RESET_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: pass, action: "reset_regenerate" }),
+      signal: controller ? controller.signal : undefined
+    })
+      .then(function (r) {
+        return r.json().then(function (data) { return { status: r.status, data: data }; });
+      })
+      .then(function (res) {
+        clearTimeout(failsafe);
+        stopProgress();
+        resetBtn.disabled = false; okBtn.disabled = false;
+        if (res.status === 200 && res.data && res.data.ok) {
+          showMsg("ok", res.data.message ||
+            "Reset tetiklendi. Rapor ~10 dakika içinde güncellenecek; sonra sayfayı sert yenileyin (Ctrl+F5).");
+        } else {
+          var err = (res.data && res.data.error) ? res.data.error : ("Hata (HTTP " + res.status + ")");
+          showMsg("err", err);
+        }
+      })
+      .catch(function (e) {
+        clearTimeout(failsafe);
+        stopProgress();
+        resetBtn.disabled = false; okBtn.disabled = false;
+        if (e && e.name === "AbortError") {
+          showMsg("err", "Tetikleme yanıtı gecikti. Tetikleme yine de gitmiş OLABİLİR — " +
+            "birkaç dakika sonra raporu kontrol edin.");
         } else {
           showMsg("err", "Sunucuya ulaşılamadı: " + (e && e.message ? e.message : e));
         }

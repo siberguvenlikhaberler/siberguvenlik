@@ -1,0 +1,127 @@
+"""
+Vercel serverless fonksiyonu — "Raporu Sıfırla & Yeniden Üret" uç noktası
+(/api/reset_regenerate).
+
+Anasayfadaki pop-up buraya POST eder:
+    { "password": "...", "action": "reset_regenerate" }
+
+Yaptığı TEK iş: şifreyi doğrular ve GitHub Actions "Günlük Rapor" workflow'unu
+`workflow_dispatch` ile, `reset_today=true` input'uyla TETİKLER. Gerçek reset +
+taze üretim işini main.py (_reset_today_state) Actions içinde yapar — bu uç
+nokta hiçbir dosya yazmaz, LLM çağırmaz; sadece tetikleyicidir (hızlı döner).
+
+Gerekli ortam değişkenleri (Vercel — manual_add ile AYNI değişkenler yeterli):
+  MANUAL_ADD_PASSWORD  — pop-up'ta girilecek şifre (manual_add ile ortak).
+  GH_TOKEN             — bu repoda GitHub Actions'ı tetikleyebilen token.
+                         ⚠️ workflow_dispatch için token'ın Actions: read/write
+                         (fine-grained PAT) VEYA klasik token'da `workflow`
+                         kapsamı OLMALIDIR. (manual_add'ın kullandığı contents:
+                         write TEK BAŞINA yetmez — token'a Actions yetkisi ekle.)
+"""
+import os
+import json
+import hmac
+from http.server import BaseHTTPRequestHandler
+
+import requests
+
+REPO = "siberguvenlikhaberler/siberguvenlik"
+BRANCH = "main"
+WORKFLOW_FILE = "daily.yml"
+GH_API = "https://api.github.com"
+
+# Tarayıcı (github.io) → fonksiyon (vercel.app) çapraz-köken istekleri için CORS.
+CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+}
+
+
+def process(payload):
+    """POST gövdesini işler → (http_code, result_dict) döndürür."""
+    password = (payload.get("password") or "").strip()
+    if not password:
+        return 400, {"ok": False, "error": "Şifre giriniz."}
+
+    expected = os.getenv("MANUAL_ADD_PASSWORD", "")
+    if not expected:
+        return 500, {"ok": False, "error": "Sunucuda MANUAL_ADD_PASSWORD tanımlı değil."}
+    if not hmac.compare_digest(password, expected):
+        return 403, {"ok": False, "error": "Şifre yanlış."}
+
+    token = os.getenv("GH_TOKEN", "")
+    if not token:
+        return 500, {"ok": False, "error": "Sunucuda GH_TOKEN tanımlı değil."}
+
+    url = f"{GH_API}/repos/{REPO}/actions/workflows/{WORKFLOW_FILE}/dispatches"
+    try:
+        r = requests.post(
+            url,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+                "User-Agent": "siberguvenlik-reset",
+            },
+            # reset_today input'u main.py'de RESET_TODAY env'ine geçer → bugünün
+            # ham/rapor/cron-işareti silinir, linkler+arşivde bugün cerrahi
+            # çıkarılır, pipeline SIFIRDAN taze fetch + rapor üretir.
+            json={"ref": BRANCH, "inputs": {"reset_today": "true"}},
+            timeout=20,
+        )
+    except requests.RequestException as e:
+        return 502, {"ok": False, "error": f"GitHub'a bağlanılamadı: {str(e)[:160]}"}
+
+    if r.status_code == 204:
+        return 200, {
+            "ok": True,
+            "message": ("Reset + taze üretim tetiklendi. Rapor GitHub Actions'ta "
+                        "sıfırdan üretiliyor; ~10 dakika içinde güncellenecek. "
+                        "Sayfayı biraz sonra sert yenileyin (Ctrl+F5)."),
+        }
+    # 401/403 → token yetkisiz (Actions yetkisi yok); 404 → workflow/branch yok
+    detail = ""
+    try:
+        detail = (r.json() or {}).get("message", "")
+    except Exception:
+        detail = r.text[:160]
+    hint = ""
+    if r.status_code in (401, 403):
+        hint = (" (GH_TOKEN'da Actions: read/write yetkisi yok — fine-grained "
+                "PAT'te Actions'ı yaz'a açın veya klasik token'a `workflow` "
+                "kapsamı ekleyin.)")
+    return 502, {"ok": False,
+                 "error": f"GitHub dispatch başarısız (HTTP {r.status_code}): {detail}{hint}"}
+
+
+class handler(BaseHTTPRequestHandler):
+    def _send(self, code, payload):
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        for k, v in CORS_HEADERS.items():
+            self.send_header(k, v)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        for k, v in CORS_HEADERS.items():
+            self.send_header(k, v)
+        self.end_headers()
+
+    def do_POST(self):
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+            raw = self.rfile.read(length) if length else b"{}"
+            payload = json.loads(raw.decode("utf-8") or "{}")
+        except Exception:
+            self._send(400, {"ok": False, "error": "Geçersiz istek gövdesi."})
+            return
+        try:
+            code, result = process(payload)
+        except Exception as e:
+            code, result = 500, {"ok": False, "error": f"Beklenmeyen hata: {str(e)[:200]}"}
+        self._send(code, result)
