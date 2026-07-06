@@ -223,5 +223,46 @@
     "full_text": "A U.S. government entity paid about $1 million to keep stolen files from being leaked, according to a new case study by Rakesh Krishnan for Ransom-ISAC, built on a leaked negotiation chat and the blockchain trail the payment left.\n\nThe odd part: the group that took the money calls itself Kairos, but it may not be a ransomware gang at all. Krishnan found no sign that it ever locked a single machine"
    }
   ]
+ },
+ {
+  "date": "2026-07-06",
+  "views": [
+   {
+    "tr_title": "KDDI'nın Altı İnternet Servis Sağlayıcısındaki 14,2 Milyon E-posta Hesabını Etkileyen Veri İhlali",
+    "paragraph": "Japonya'nın en büyük telekomünikasyon şirketlerinden biri olan KDDI Corporation, üçüncü taraf bir yazılımdaki güvenlik açığının istismar edilmesi sonucunda altı farklı internet servis sağlayıcısını kapsayan büyük bir veri ihlali yaşandığını duyurmuştur. Şirket tarafından yapılan açıklamaya göre, 17 Haziran 2026 tarihinde tespit edilen bu siber saldırıdan yaklaşık 14,2 milyon e-posta hesabı etkilenmiştir. İhlalden etkilenen kurumlar arasında STNet, KDDI Web Communications, JCOM, Chubu Telecommuni",
+    "title": "KDDI Data Breach Impacts up to 14.2 Million Email Accounts at Six ISPs",
+    "full_text": "KDDI Data Breach Impacts up to 14.2 Million Email Accounts at Six ISPs\n\nKDDI Corporation disclosed a breach affecting up to 14.2 million email accounts after attackers exploited a vulnerability in third-party software.\n\nKDDI Corporation disclosed a data breach that exposed up to 14.2 million email accounts across six Japanese internet service providers.\n\nKDDI Corporation is one of Japan’s largest "
+   },
+   {
+    "tr_title": "Shandong Üniversitesi'nin TrojPix Yöntemiyle İzole Sistemlerden Veri Sızdırması",
+    "paragraph": "Shandong Üniversitesi bünyesindeki araştırmacılar, herhangi bir ağa bağlı olmayan ve dış dünyadan izole edilmiş bilgisayarlardan veri sızdırmak amacıyla TrojPix olarak adlandırılan yeni bir yöntem geliştirmiştir. Bu teknik, ekrandaki piksellerin insan gözüyle fark edilemeyecek şekilde değiştirilmesi yoluyla video kablolarının zayıf radyo sinyalleri yaymasını sağlamakta ve bu sinyallerin yakındaki bir alıcı tarafından deşifre edilmesine dayanmaktadır. TrojPix yönteminin kullanılabilmesi için hede",
+    "title": "New TrojPix Attack Leaks Data From Air-Gapped Systems via Video Cable Emissions",
+    "full_text": "Researchers at Shandong University have shown a fast new way to pull data off computers that are cut off from every network. The technique, called TrojPix, tweaks on-screen pixels in ways the eye cannot see, so that the video cable carrying them radiates a faint radio signal a nearby receiver can decode.\n\nBut TrojPix works only once malware is already on the target machine, so it is a way for stol"
+   },
+   {
+    "tr_title": "Cisco Talos'un ClamAV Tarayıcısındaki Yirmi Yıllık Güvenlik Açıklarını Yamalaması",
+    "paragraph": "Cisco bünyesindeki Talos grubu tarafından yönetilen açık kaynaklı antivirüs tarama motoru ClamAV için yedi adet güvenlik açığını gideren 1.5.3 ve 1.4.5 sürümleri yayınlanmıştır. Bu tarama motoru, her ölçekteki kuruluşun e-posta ağ geçitlerinde, dosya yükleme kontrollerinde ve uç nokta araçlarında yaygın olarak kullanılmaktadır. Giderilen hataların büyük bir kısmı, yürütülebilir dosya formatlarını açan ve ayrıştıran kod bölümlerinde yer almaktadır. CVE-2026-20213 ve CVE-2026-20214 kodlu açıklar, ",
+    "title": "New ClamAV security patch closes seven scanner bugs dating back two decades",
+    "full_text": "New ClamAV security patch closes seven scanner bugs dating back two decades\n\nOpen source antivirus scanning sits inside mail gateways, file upload checks, and endpoint tooling at organizations of every size. Much of that work runs through ClamAV, the scanning engine maintained by Cisco’s Talos group. The project released two patch versions, 1.5.3 and 1.4.5, carrying fixes for seven security flaws "
+   },
+   {
+    "tr_title": "Opera GX'in Kötü Amaçlı Eklentiler Aracılığıyla Kullanıcı Verilerini Sızdırması",
+    "paragraph": "Opera GX tarayıcısında, kötü niyetli web sitelerinin kullanıcı onayı olmaksızın eklenti yüklemesine ve ziyaret edilen sayfalardan veri çalmasına olanak tanıyan kritik bir güvenlik açığı tespit edilmiştir. Araştırmacılar, bu açığı kullanarak bir kullanıcının Gmail adresini herhangi bir etkileşim gerektirmeden ele geçirmeyi başarmıştır. Sorun, Opera GX'in mod yükleme mekanizmasının kullanıcıya onay penceresi sunmadan otomatik olarak çalışmasından kaynaklanmaktadır. Saldırganlar, hazırladıkları köt",
+    "title": "Opera GX Flaw Let Malicious Sites Auto-Install Mods to Steal Data From Visited Pages",
+    "full_text": "Researchers found a flaw in Opera GX, the gaming-focused version of the Opera browser, that let a malicious website silently install a browser add-on and use it to lift specific data from the pages a victim visits.\n\nIn a proof of concept, they reconstructed a signed-in user's full Gmail address from a single visit, with no click. Opera has patched the flaw and says it found no evidence that it was"
+   },
+   {
+    "tr_title": "SKILLCLOAK Yönteminin Yapay Zeka Araçlarındaki Güvenlik Taramalarını Atlatması",
+    "paragraph": "Hong Kong Bilim ve Teknoloji Üniversitesi araştırmacıları, yapay zeka kodlama asistanları için geliştirilen kötü amaçlı eklentilerin statik tarayıcılardan gizlenmesini sağlayan SKILLCLOAK adlı yeni bir teknik geliştirmiştir. Bu yöntem, kötü amaçlı yazılımları kendi kendini çıkaran paketler halinde gizleyerek mevcut güvenlik tarayıcılarının %90'ından fazlasını başarıyla atlatabilmektedir. Claude Code ve OpenAI Codex gibi popüler platformları etkileyen bu durum, saldırganların kimlik bilgilerini ç",
+    "title": "SkillCloak Lets Malicious AI Agent Skills Evade Static Scanners with Self-Extracting Packing",
+    "full_text": "Scanners meant to catch malicious add-on \"skills\" for AI coding agents can be fooled by a few simple changes that leave the malware working, according to a new study from researchers at the Hong Kong University of Science and Technology.\n\nTheir strongest trick slipped past every scanner tested more than 90% of the time, and the same team built a runtime checker that catches most of the disguised s"
+   },
+   {
+    "tr_title": "LevelBlue'nun Java Tabanlı QuimaRAT Zararlı Yazılım Hizmetini Tespit Etmesi",
+    "paragraph": "Siber güvenlik araştırmacıları, Windows, Linux ve macOS işletim sistemlerini hedef alabilen QuimaRAT adlı yeni bir Java tabanlı uzaktan erişim truva atını tespit etmiştir. LevelBlue tarafından yapılan analize göre bu çapraz platform destekli zararlı yazılım, bir ay için 150 dolardan ömür boyu erişim için 1.200 dolara kadar değişen fiyatlarla bir hizmet olarak zararlı yazılım modeli kapsamında pazarlanmaktadır. Modüler bir mimari üzerine inşa edilen QuimaRAT, komuta ve kontrol altyapısı üzerinden",
+    "title": "New Java-Based QuimaRAT MaaS Built to Run on Windows, Linux, and macOS",
+    "full_text": "Cybersecurity researchers have flagged a novel Java-based remote access trojan (RAT) called QuimaRAT that's capable of targeting Windows, Linux, and macOS environments.\n\nAccording to LevelBlue, the cross-platform malware is advertised under a malware-as-a-service (MaaS) model, costing anywhere between $150 for one month to $1,200 for lifetime access. Other subscription tiers include $300 for three"
+   }
+  ]
  }
 ]
