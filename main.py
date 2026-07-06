@@ -2128,11 +2128,17 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         return filtered
 
-    # Haber zaman penceresi (saat). 72 saat: günde tek çalışma + GitHub cron
-    # slotlarının düşebilmesi nedeniyle, bir günlük çalışma tamamen kaçsa bile
-    # ertesi gün telafi penceresi bırakır. Mükerrer haber riski yoktur çünkü
-    # tekrar önleme görevini URL deduplikasyonu (haberler_linkler.txt) üstlenir.
-    NEWS_WINDOW_HOURS = 72
+    # Haber zaman penceresi (saat). 168 saat = 7 gün: URL deduplikasyon penceresi
+    # (haberler_linkler.txt, 7 gün) ile HİZALI tutulur. Tekrar önleme görevini
+    # zaten dedup üstlendiği için daha dar bir pencere hiçbir dedup faydası
+    # sağlamaz; yalnızca GÜNLÜK YAYINLAMAYAN yüksek-değerli threat-intel
+    # feed'lerini (ANSSI, NCSC, CERT-EU, NIST, Microsoft, Mandiant, CrowdStrike,
+    # Unit 42, Talos, DFIR, SentinelOne, Proofpoint, Recorded Future) tamamen
+    # eler ve rapor havuzunu açlığa sürüklerdi. 72s pencere 2026-07-01'de (3cf94c4)
+    # eklendikten sonra günlük benzersiz havuz ~90'dan ~30'a düştü ve raporlar
+    # 2-5 habere indi; 7 güne genişletmek bu regresyonu telafi eder. Her haber
+    # yine dedup sayesinde yalnızca BİR KEZ raporlanır.
+    NEWS_WINDOW_HOURS = 168
 
     def _news_cutoff_dt(self):
         """Haber zaman penceresinin alt sınırı (timezone-aware, UTC)."""
