@@ -957,12 +957,57 @@ def process_replace(payload, token):
 def process_add(payload, token):
     """Mevcut hiçbirini SİLMEDEN yeni bir kritik kart ekle (kritik sayısı +1).
     Kaynak URL ise LLM ile üretilir; rapor ise seçilen haber alt listeden
-    TAŞINIR (yeni karta dönüşür, gövdeden kaldırılır)."""
+    TAŞINIR (yeni karta dönüşür, gövdeden kaldırılır).
+
+    ÇOKLU: payload['news_ids'] bir liste ise (rapordan çoklu seçim), seçilen
+    TÜM haberler tek işlemde gövdeden kritik bölüme taşınır (tek commit, tek
+    Yönetici Özeti yeniden üretimi). Tekli 'news_id'/'url' yolu korunur."""
     try:
         index_html, report_date, archive_path = _read_index(token)
     except Exception as e:
         return 502, {"error": f"index.html okunamadı: {str(e)[:160]}"}
 
+    # ── ÇOKLU rapordan taşıma (news_ids listesi) ──────────────────────────────
+    news_ids = payload.get("news_ids")
+    if isinstance(news_ids, list) and news_ids:
+        seen, ordered = set(), []
+        for raw in news_ids:
+            nid = (str(raw) or "").strip()
+            if not re.match(r"^haber-\d+$", nid):
+                return 400, {"error": f"Geçersiz haber kimliği: {nid[:40]}"}
+            if nid not in seen:
+                seen.add(nid)
+                ordered.append(nid)
+        # Yanıt için kartları ORİJİNAL index'ten önden üret (hepsi hâlâ mevcut;
+        # id'ler bağımsız olduğundan sırayla çıkarmak güvenli). Bu aynı zamanda
+        # transform çalışmadan önce her id'nin gerçekten var olduğunu doğrular.
+        pre_cards = []
+        for nid in ordered:
+            try:
+                tr_title, paragraph, link, domain, art_date = extract_news_item(index_html, nid)
+            except Exception as e:
+                return 422, {"error": f"Seçilen haber çıkarılamadı ({nid}): {str(e)[:120]}"}
+            pre_cards.append(build_card_html(
+                tr_title, paragraph, link, domain, art_date or report_date,
+                paragraph_is_html=True))
+
+        def _t_multi(html):
+            for nid in ordered:
+                tr_title, paragraph, link, domain, art_date = extract_news_item(html, nid)
+                card = build_card_html(tr_title, paragraph, link, domain,
+                                       art_date or report_date, paragraph_is_html=True)
+                html = add_top3_card(html, card)
+                html = remove_news_item(html, nid)
+            html = renumber_and_reflow(html)
+            return regenerate_exec_summary(html)
+
+        return _commit_transform(
+            index_html, archive_path, _t_multi, token,
+            f"manuel: {len(ordered)} haber gövdeden kritik bölüme taşındı ({report_date})",
+            {"added_cards": pre_cards, "removed_news_ids": ordered, "added": True},
+        )
+
+    # ── TEKLİ (url veya rapor) — mevcut akış ─────────────────────────────────
     card_html, news_id, err = _card_from_source(payload, index_html, report_date, token)
     if err:
         return err
@@ -982,16 +1027,65 @@ def process_add(payload, token):
 
 
 def process_delete(payload, token):
-    """Bir haberi SİL (tamamen; yerine bir şey konmaz). delete_target:
-      • "critical" → kritik kartı sil (o an 2 kart kalır).
-      • "body"     → alt liste haberini sil.
+    """Bir veya BİRDEN ÇOK haberi SİL (tamamen; yerine bir şey konmaz).
+
+    ÇOKLU: payload['targets'] listesi — her öğe {"t":"critical","i":N} veya
+    {"t":"body","id":"haber-N"}. Kritik kartlar İNDEKS AZALAN sırada silinir
+    (silme sonrası kalan indeksler kaymasın); gövde haberleri id ile silinir
+    (sıra bağımsız). Tek commit, tek Yönetici Özeti yeniden üretimi.
+    TEKLİ: eski delete_target/remove_index/news_id yolu korunur.
+
     Not: bir kritik haberi silmeden gövdeye indirmek istiyorsan Ekle işleminde
     'Çıkarılacak Haber' seçeneğini kullan — o haber gövdeye iner."""
-    target = (payload.get("delete_target") or "").strip().lower()
     try:
         index_html, report_date, archive_path = _read_index(token)
     except Exception as e:
         return 502, {"error": f"index.html okunamadı: {str(e)[:160]}"}
+
+    # ── ÇOKLU silme (targets listesi) ─────────────────────────────────────────
+    targets = payload.get("targets")
+    if isinstance(targets, list) and targets:
+        crit_indices, body_ids = set(), []
+        for t in targets:
+            if not isinstance(t, dict):
+                return 400, {"error": "Geçersiz silme hedefi (öğe biçimi)."}
+            tt = (t.get("t") or t.get("delete_target") or "").strip().lower()
+            if tt == "critical":
+                try:
+                    idx = int(t.get("i", t.get("remove_index")))
+                except (TypeError, ValueError):
+                    return 400, {"error": "Geçersiz kritik kart indeksi."}
+                if idx < 0:
+                    return 400, {"error": "Geçersiz kritik kart indeksi."}
+                crit_indices.add(idx)
+            elif tt == "body":
+                nid = (str(t.get("id") or t.get("news_id") or "")).strip()
+                if not re.match(r"^haber-\d+$", nid):
+                    return 400, {"error": f"Geçersiz haber kimliği: {nid[:40]}"}
+                if nid not in body_ids:
+                    body_ids.append(nid)
+            else:
+                return 400, {"error": "Geçersiz silme hedefi."}
+
+        crit_desc = sorted(crit_indices, reverse=True)
+
+        def _t_multi(html):
+            # Kritik kartlar AZALAN indeksle silinir → erken indeksler geçerli kalır.
+            for idx in crit_desc:
+                html = delete_top3_card(html, idx)
+            for nid in body_ids:
+                html = remove_news_item(html, nid)
+            html = renumber_and_reflow(html)
+            return regenerate_exec_summary(html)
+
+        return _commit_transform(
+            index_html, archive_path, _t_multi, token,
+            f"manuel: {len(crit_desc) + len(body_ids)} haber silindi ({report_date})",
+            {"deleted_indices": crit_desc, "removed_news_ids": body_ids},
+        )
+
+    # ── TEKLİ silme — eski yol ────────────────────────────────────────────────
+    target = (payload.get("delete_target") or "").strip().lower()
 
     if target == "critical":
         try:

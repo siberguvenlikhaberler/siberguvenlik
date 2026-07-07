@@ -275,7 +275,7 @@
     var reportOptsHtml = hasOthers
       ? others.map(function (n) {
           return (
-            '<label class="opt"><input type="radio" name="ma-news" value="' + esc(n.id) + '">' +
+            '<label class="opt"><input type="checkbox" name="ma-news" value="' + esc(n.id) + '">' +
             "<span>" + esc(n.title) + "</span></label>"
           );
         }).join("")
@@ -297,12 +297,12 @@
     // Sil: kritik kartlar + alt liste haberleri (birleşik). value = "crit:i" | "body:id".
     var deleteOptsHtml = cards.map(function (c, i) {
       return (
-        '<label class="opt"><input type="radio" name="ma-delete" value="crit:' + i + '">' +
+        '<label class="opt"><input type="checkbox" name="ma-delete" value="crit:' + i + '">' +
         '<span><span class="ma-tag crit">KRİTİK</span>' + esc(cardTitle(c)) + "</span></label>"
       );
     }).join("") + others.map(function (n) {
       return (
-        '<label class="opt"><input type="radio" name="ma-delete" value="body:' + esc(n.id) + '">' +
+        '<label class="opt"><input type="checkbox" name="ma-delete" value="body:' + esc(n.id) + '">' +
         '<span><span class="ma-tag body">HABER</span>' + esc(n.title) + "</span></label>"
       );
     }).join("");
@@ -340,9 +340,11 @@
               '<p class="ma-hint">URL\'den üretilen yeni haber kritik bölüme eklenir.</p>' +
             "</div>" +
             '<div class="ma-source-block" id="ma-src-report">' +
-              '<label class="fld">Eklenecek haberi seçin</label>' +
+              '<label class="fld">Eklenecek haberleri seçin (birden fazla seçebilirsiniz)</label>' +
               '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
-              '<p class="ma-hint">Seçilen haber alt listeden çıkarılıp (taşınıp) kritik bölüme eklenir.</p>' +
+              '<p class="ma-hint">Seçilen haber(ler) alt listeden çıkarılıp (taşınıp) kritik bölüme ' +
+              'eklenir. Birden fazla seçersen hepsi tek işlemde taşınır (aşağıdaki ' +
+              '"Çıkarılacak Haber" yalnızca TEK haber eklerken geçerlidir).</p>' +
             "</div>" +
             // Opsiyonel: çıkarılacak haber (seçilirse kritik-3'ten çıkarılıp gövdeye iner)
             '<label class="fld" style="margin-top:12px;">Çıkarılacak Haber (opsiyonel)</label>' +
@@ -354,10 +356,10 @@
 
           // SİL: kritik + alt liste birleşik
           '<div class="ma-op-block" id="ma-blk-delete">' +
-            '<label class="fld">Silinecek haberi seçin</label>' +
+            '<label class="fld">Silinecek haberleri seçin (birden fazla seçebilirsiniz)</label>' +
             '<div class="ma-remove-list">' + deleteOptsHtml + "</div>" +
-            '<p class="ma-hint">Seçilen haber rapordan TAMAMEN silinir (yerine bir şey ' +
-            'konmaz). Kritik bir haber silinirse o an 2 kart kalır; ertesi günkü otomatik ' +
+            '<p class="ma-hint">Seçilen haber(ler) rapordan TAMAMEN silinir (yerine bir şey ' +
+            'konmaz). Kritik bir haber silinirse kart sayısı azalır; ertesi günkü otomatik ' +
             'rapor yine 3 üretir. (Silmeden gövdeye indirmek istersen Ekle işlemindeki ' +
             '"Çıkarılacak Haber" seçeneğini kullan.)</p>' +
           "</div>" +
@@ -416,20 +418,18 @@
     var ctx = { op: op, removeIndex: -1 };
 
     if (op === "delete") {
-      var del = document.querySelector('input[name="ma-delete"]:checked');
-      if (!del) { showMsg("err", "Silinecek haberi seçiniz."); return; }
-      var val = del.value;
-      if (val.indexOf("crit:") === 0) {
-        payload.delete_target = "critical";
-        payload.remove_index = parseInt(val.slice(5), 10);
-        ctx.deleteCritIndex = payload.remove_index;
-      } else {
-        payload.delete_target = "body";
-        payload.news_id = val.slice(5);
-        ctx.deleteBodyId = payload.news_id;
-      }
+      // ÇOKLU silme: seçilen tüm kritik/gövde haberleri tek işlemde silinir.
+      var delChecked = Array.prototype.slice.call(
+        document.querySelectorAll('input[name="ma-delete"]:checked'));
+      if (!delChecked.length) { showMsg("err", "Silinecek en az bir haber seçiniz."); return; }
+      payload.targets = delChecked.map(function (el) {
+        var v = el.value;
+        if (v.indexOf("crit:") === 0) return { t: "critical", i: parseInt(v.slice(5), 10) };
+        return { t: "body", id: v.slice(5) };
+      });
+      ctx.batchDelete = true;
       steps = [
-        "Haber rapordan kaldırılıyor",
+        (delChecked.length > 1 ? "Haberler rapordan kaldırılıyor" : "Haber rapordan kaldırılıyor"),
         "Numaralandırma ve indeks tablosu güncelleniyor",
         "Yönetici Özeti yeniden oluşturuluyor (en uzun adım)",
         "Değişiklikler GitHub'a kaydediliyor"
@@ -441,18 +441,17 @@
       var mode = currentMode();
       payload.mode = mode;
 
-      var repl = document.querySelector('input[name="ma-replace"]:checked');
-      if (repl && repl.value !== "") {
-        payload.action = "replace";
-        payload.remove_index = parseInt(repl.value, 10);
-        ctx.op = "replace";
-        ctx.removeIndex = payload.remove_index;
-      }
-
       if (mode === "url") {
         var url = (document.getElementById("ma-url").value || "").trim();
         if (!/^https?:\/\//i.test(url)) { showMsg("err", "Geçerli bir URL giriniz (http/https)."); return; }
         payload.url = url;
+        var replU = document.querySelector('input[name="ma-replace"]:checked');
+        if (replU && replU.value !== "") {
+          payload.action = "replace";
+          payload.remove_index = parseInt(replU.value, 10);
+          ctx.op = "replace";
+          ctx.removeIndex = payload.remove_index;
+        }
         steps = [
           "Haber kaynağına bağlanılıyor",
           "Makale metni çıkarılıyor",
@@ -462,16 +461,38 @@
           "Değişiklikler GitHub'a kaydediliyor"
         ];
       } else {
-        var newsChecked = document.querySelector('input[name="ma-news"]:checked');
-        if (!newsChecked) { showMsg("err", "Eklenecek haberi seçiniz."); return; }
-        payload.news_id = newsChecked.value;
-        ctx.movedNewsId = newsChecked.value;
-        steps = [
-          "Seçilen haber kritik bölüme taşınıyor",
-          "Yönetici Özeti yeni habere göre yeniden oluşturuluyor (en uzun adım)",
-          "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
-          "Değişiklikler GitHub'a kaydediliyor"
-        ];
+        // Rapordan taşıma — çoklu seçim desteklenir.
+        var newsChecked = Array.prototype.slice.call(
+          document.querySelectorAll('input[name="ma-news"]:checked'));
+        if (!newsChecked.length) { showMsg("err", "Eklenecek en az bir haber seçiniz."); return; }
+        if (newsChecked.length === 1) {
+          // Tekli — opsiyonel "Çıkarılacak Haber" (replace) desteklenir.
+          payload.news_id = newsChecked[0].value;
+          ctx.movedNewsId = newsChecked[0].value;
+          var replR = document.querySelector('input[name="ma-replace"]:checked');
+          if (replR && replR.value !== "") {
+            payload.action = "replace";
+            payload.remove_index = parseInt(replR.value, 10);
+            ctx.op = "replace";
+            ctx.removeIndex = payload.remove_index;
+          }
+          steps = [
+            "Seçilen haber kritik bölüme taşınıyor",
+            "Yönetici Özeti yeni habere göre yeniden oluşturuluyor (en uzun adım)",
+            "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
+            "Değişiklikler GitHub'a kaydediliyor"
+          ];
+        } else {
+          // Çoklu — hepsi gövdeden kritik bölüme taşınır ("Çıkarılacak Haber" yok sayılır).
+          payload.news_ids = newsChecked.map(function (el) { return el.value; });
+          ctx.batchAdd = true;
+          steps = [
+            "Seçilen haberler kritik bölüme taşınıyor",
+            "Yönetici Özeti yeni haberlere göre yeniden oluşturuluyor (en uzun adım)",
+            "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
+            "Değişiklikler GitHub'a kaydediliyor"
+          ];
+        }
       }
     }
 
@@ -589,6 +610,20 @@
 
   // Sunucu sonucunu sayfaya ANINDA yansıt (işleme göre).
   function applyResult(ctx, data) {
+    if (ctx.batchAdd) {
+      // Çoklu ekle: sunucudan dönen kartları sırayla ekle, taşınan haberleri kaldır.
+      (data.added_cards || []).forEach(function (h) { appendCard(h); });
+      (data.removed_news_ids || []).forEach(function (id) { removeNewsItem(id); });
+      return;
+    }
+    if (ctx.batchDelete) {
+      // Çoklu sil: kritik kartları AZALAN indeksle sil (DOM'dan silince kalan
+      // kartların indeksi kayar), sonra gövde haberlerini id ile kaldır.
+      (data.deleted_indices || []).slice().sort(function (a, b) { return b - a; })
+        .forEach(function (i) { deleteCard(i); });
+      (data.removed_news_ids || []).forEach(function (id) { removeNewsItem(id); });
+      return;
+    }
     if (ctx.op === "replace") {
       // Ekle + "Çıkarılacak Haber": yeni kart seçilen kartın yerine geçer;
       // çıkarılan kritik gövdeye iner (kopya sayfa yeniden yüklenince görünür).
