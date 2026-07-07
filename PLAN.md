@@ -24,7 +24,9 @@
 4. **İçerik üretimi (LLM)** — derin analiz + özet + yönetici özeti + başlık
    kurtarma ajanları (aşağıdaki tabloya bkz.); sağlayıcı tek bir dispatcher
    (`_gemini_call_json` → Gemini; yedek `src/llm_client.py: generate_json` →
-   OpenRouter). Bir kalite kontrol ajanı üretilen içeriği son bir kez denetler.
+   OpenRouter). Kalite kontrol ajanı üretilen içeriği denetler; ardından
+   **Auditor ajanı** rapor TAMAMEN oluştuktan sonra TÜM haberleri son bir kez
+   tarayıp semantik ("aynı olay, farklı sözcükler") mükerrerleri temizler.
 5. **Rapor** — `main.py:_build_html` → `docs/index.html` +
    `docs/raporlar/YYYY-MM-DD.html` (GitHub Pages). Gün damgaları
    Europe/Istanbul gününe göredir (`_now_tr()`).
@@ -44,10 +46,12 @@
 Sistem otonom bir agent framework'ü (tool-calling döngüsü, planlayıcı, hafıza)
 DEĞİLDİR; **sabit sıralı, çok-rollü bir LLM pipeline'ıdır**. Her rol tek atışlık
 (stateless) bir prompt fonksiyonudur (`src/config.py`) ve tek bir dispatcher
-üzerinden çağrılır. "Agentic" desen olarak *üret → bağımsız denetle* çifti iki
-yerde kuruludur (Skorlayıcı→Critique, Kritik-3 Seçici→Doğrulayıcı).
+üzerinden çağrılır. "Agentic" desen olarak *üret → bağımsız denetle* çifti üç
+yerde kuruludur (Skorlayıcı→Critique, Kritik-3 Seçici→Doğrulayıcı, Kalite
+kontrol→Auditor — sonuncusu rapor TAMAMEN oluştuktan sonra final mükerrer
+denetimi yapar).
 
-Üretimde fiilen çağrılan **9 aktif ajan rolü**:
+Üretimde fiilen çağrılan **10 aktif ajan rolü**:
 
 | # | Ajan | Prompt (`src/config.py`) | Çağrı (`main.py`) |
 |---|------|--------------------------|-------------------|
@@ -60,6 +64,7 @@ yerde kuruludur (Skorlayıcı→Critique, Kritik-3 Seçici→Doğrulayıcı).
 | 7 | Yönetici özeti | `get_executive_summary_prompt` | 3480 |
 | 8 | Başlık kurtarma | `get_title_rescue_prompt` | 3610 |
 | 9 | Özet (batch) | `get_summary_batch_prompt` | 3658 |
+| 10 | Auditor (final mükerrer denetimi, Pass 5.5) | `get_dedup_review_prompt` | 2677 |
 
 Ek olarak **1 fallback ajan** (`get_legacy_json_prompt`, `main.py:3750`) yalnızca
 ana yol çökerse devreye girer.

@@ -2647,7 +2647,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
     def _dedup_review_llm(self, candidate_ids, content_by_id, articles_by_id,
                           protected_ids=None, label=''):
-        """Pass 5.5 — ADANMIŞ LLM MÜKERRER DENETİMİ (tek işi mükerrer bulmak).
+        """Pass 5.5 — AUDITOR ajanı: ADANMIŞ LLM MÜKERRER DENETİMİ (tek işi mükerrer bulmak).
 
         candidate_ids'teki TÜM haberleri LLM'e verip aynı-olay gruplarını alır;
         her grupta EN ZENGİN (en uzun kaynak metni) haberi tutar, diğerlerini
@@ -2675,7 +2675,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                          f"Başlık: {tr_title}\nÖzet: {snippet}\n")
         data = self._gemini_call_json(
             get_dedup_review_prompt('\n'.join(lines)),
-            max_output_tokens=512, label=label or 'Pass5.5-MükerrerDenetimi')
+            max_output_tokens=512, label=label or 'Auditor-MükerrerDenetimi')
         if not data:
             return set()
         idset = set(ids)
@@ -3665,12 +3665,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     else:
                         print(f"   ⚠️  ID={rid} Türkçeleştirilemedi (içerik filtresi olası).")
 
-        # ── PASS 5.5 — ADANMIŞ LLM MÜKERRER DENETİMİ (semantik güvence) ──────
+        # ── PASS 5.5 — AUDITOR (ADANMIŞ LLM MÜKERRER DENETİMİ, semantik güvence) ──
         # Deterministik same_event bag-of-words'tür; 'aynı olay, farklı sözcükler'
         # durumunu (ortak kod adı/CVE/aktör yoksa) kaçırabilir (03.07 Kouloglou
         # vakası). Bu geçiş TÜM rapor haberlerini LLM'e verip aynı-olay gruplarını
         # bulur; KRİTİK 3 korunur, mükerrer gövde haberleri kaldırılır.
-        print("\n🔁 Pass 5.5 — Adanmış mükerrer denetimi...")
+        print("\n🔁 Pass 5.5 — Auditor (adanmış mükerrer denetimi)...")
         dup_remove = self._dedup_review_llm(
             list(top3_ids) + list(top10_ids) + list(remaining_ids),
             content_by_id, articles_by_id, protected_ids=top3_ids)

@@ -1141,7 +1141,7 @@ HABERLER:
 
 
 def get_dedup_review_prompt(items_content):
-    """Pass 5.5 — ADANMIŞ MÜKERRER DENETİMİ (tek işi bu).
+    """Pass 5.5 — AUDITOR ajanı: ADANMIŞ MÜKERRER DENETİMİ (tek işi bu).
 
     Rapordaki TÜM haberleri alır ve AYNI temel olayı/olguyu anlatan haberleri
     gruplar. Pass 5'in KONTROL 4'ü (4 kontrolden biri, kısa snippet, gömülü)
