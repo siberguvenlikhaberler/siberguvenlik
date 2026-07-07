@@ -208,6 +208,10 @@ ADIM 1 — FILTRELE (bunları "filtered" listesine koy):
 ADIM 2 — SIRALA (kalan haberleri önem sırasına göre diz):
 ÖNCELİK İLKESİ: Stratejik / jeopolitik / istihbari değeri olan haberler her zaman üsttedir.
 "Büyük rakam" (milyonlarca kullanıcı, milyarlarca dolar) tek başına üst sıra GETİRMEZ.
+🕵️ Bir istihbarat/güvenlik teşkilatının (CIA, NSA, FBI, MI6, MOSSAD, MİT, BND, FSB, CSE/CSIS vb.)
+   FAİL ya da HEDEF olduğu SİBER olaylar üst sıralara alınır.
+🇹🇷 Doğrudan Türkiye bağı olan SİBER olaylar (PKK/Kürt yanlısı grupların dahil olduğu tahrif/
+   hacktivizm/saldırı ya da Türk kurum/şirketine yönelik siber saldırı) ulusal alaka nedeniyle üst sıralara alınır.
 1. DOĞRUDAN NATO Türkiye Zirvesi (Temmuz 2026) ile ilgili haberler → EN ÜSTTE
    ⚠️ SADECE zirveden açıkça söz eden veya zirveyi hedef/konu alan haberler buraya girer:
    zirveye yönelik saldırı, şüpheli faaliyet, uyarı, güvenlik önlemi, zirveyle bağlantılı
@@ -583,6 +587,26 @@ Her haber için şunları belirle:
    ⚠️ Bu istisna YALNIZCA büyük/simgesel altyapı içindir; rutin/yerel tutuklama
    veya küçük dolandırıcılık operasyonu için geçerli DEĞİLDİR (onlar normal puanlanır).
 
+   🕵️ İSTİHBARAT TEŞKİLATI FAKTÖRÜ (kör-nokta düzeltmesi): Bir haberde bir
+   istihbarat/güvenlik teşkilatı (CIA, NSA, FBI, MI5/MI6/GCHQ, MOSSAD, MİT,
+   BND, DGSE, FSB/SVR/GRU, CSE/CSIS, ASIS, AIVD, MSS vb.) bir SİBER olayın
+   FAİLİ (yürüttüğü casusluk/operasyon/altyapı tasfiyesi) ya da HEDEFİ
+   (teşkilata yönelik saldırı/sızma/ihlal) ise, bu üst düzey istihbari değerdir:
+     • s (stratejik/istihbari): 34-40 — teşkilat düzeyindeki siber faaliyet doğrudan istihbari değerdir.
+   ⚠️ Siber kapısı ŞARTTIR: teşkilat adı geçse de haberin özünde siber boyut
+   yoksa (saf bütçe/atama/diplomasi haberi) bu faktör UYGULANMAZ, siber=0 kalır.
+
+   🇹🇷 TÜRKİYE / PKK-KÜRT NEXUS FAKTÖRÜ (kör-nokta düzeltmesi): Bu bülten Türk
+   okuyucuya yöneliktir; doğrudan Türkiye bağı olan SİBER olaylar ulusal alaka
+   nedeniyle yüksek stratejik değer taşır. Şu iki durum:
+     (a) PKK / Kürt yanlısı grupların DAHİL olduğu siber olay — bu grupların
+         yürüttüğü tahrif (defacement)/hacktivizm/saldırı ya da bu gruplara
+         yönelik siber operasyon;
+     (b) Türk kurum, kamu kuruluşu veya şirketine YÖNELİK siber saldırı/ihlal.
+     → s (stratejik/istihbari): 34-40 ; a (aciliyet): +2-4 bump.
+   ⚠️ Siber kapısı ŞARTTIR: siber boyutu olmayan saf siyasi/askeri Kürt/Türkiye
+   haberi (çatışma, diplomasi, seçim) bu faktörü ALMAZ → siber=0, siber_disi.
+
 4) MÜKERRER (mukerrer): Bu haber, aşağıdaki "SON GÜNLERDE RAPORLANAN OLAYLAR" listesindeki bir olayla AYNI mı (aynı kampanya/operasyon/kod adı, ya da aynı aktör + aynı mağdur)?
    → aynı = 1 (mükerrer, rapordan çıkarılacak) ; yeni/farklı = 0.
    🔑 Kampanya/operasyon/zararlı yazılım KOD ADI listede geçiyorsa → mukerrer=1.
@@ -625,6 +649,8 @@ Her haber için şu denetimleri yap:
 3) PUAN ADİL Mİ?
    • Stratejik değeri düşük bir haber şişirilmiş mi (özellikle sadece "büyük rakam" yüzünden)? Düşür.
    • Gerçekten kritik (casus yazılım, nation-state APT, stratejik kurum saldırısı) bir haber hak ettiğinden düşük mü puanlanmış? Yükselt.
+   • 🕵️ İSTİHBARAT TEŞKİLATI: Bir istihbarat/güvenlik teşkilatının (CIA, NSA, FBI, MI6, MOSSAD, MİT, BND, FSB, CSE/CSIS vb.) FAİL veya HEDEF olduğu SİBER olay hak ettiğinden düşük (s<34) mü puanlanmış? Yükselt (s: 34-40). Siber boyut yoksa dokunma.
+   • 🇹🇷 TÜRKİYE/PKK-KÜRT NEXUS: (a) PKK/Kürt yanlısı grupların dahil olduğu siber olay, ya da (b) Türk kurum/şirketine yönelik siber saldırı düşük mü puanlanmış? Ulusal alaka nedeniyle yükselt (s: 34-40). Siber boyutu olmayan saf siyasi Kürt/Türkiye haberine dokunma (siber=0).
 
 4) MÜKERRER Mİ?
    • Haber, aşağıdaki "SON GÜNLERDE RAPORLANAN OLAYLAR" ile aynı olaysa (aynı kampanya/kod adı ya da aynı aktör+mağdur) mukerrer=1 yap; analist kaçırmış olabilir.
