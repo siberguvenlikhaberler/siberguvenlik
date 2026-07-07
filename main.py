@@ -2779,7 +2779,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             para = c.get('paragraph', '') or ''
             if self._paragraph_looks_truncated(para):
                 trimmed = self._trim_to_last_sentence(para)
-                if trimmed and trimmed != para:
+                # Kırpma yalnızca ANLAMLI metin bırakıyorsa uygulanır. Aksi halde
+                # (ör. paragrafın en başındaki tek noktaya kadar kırpılıp "."
+                # gibi dejenere sonuç doğması) orijinal kesik-ama-dolu metin
+                # KORUNUR — KRİTİK 3'te silinemeyen bir haberde "." göstermektense
+                # bilgilendirici kesik metni bırakmak yeğdir.
+                if trimmed and trimmed != para and len(trimmed.split()) >= 15:
                     c = dict(c)
                     c['paragraph'] = trimmed
                     content_by_id[aid] = c
