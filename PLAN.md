@@ -25,8 +25,10 @@
    kurtarma ajanları (aşağıdaki tabloya bkz.); sağlayıcı tek bir dispatcher
    (`_gemini_call_json` → Gemini; yedek `src/llm_client.py: generate_json` →
    OpenRouter). Kalite kontrol ajanı üretilen içeriği denetler; ardından
-   **Auditor ajanı** rapor TAMAMEN oluştuktan sonra TÜM haberleri son bir kez
-   tarayıp semantik ("aynı olay, farklı sözcükler") mükerrerleri temizler.
+   **Auditor ajanı** rapor TAMAMEN oluştuktan sonra son bütünlük denetimi yapar:
+   (a) semantik ("aynı olay, farklı sözcükler") mükerrerleri temizler,
+   (b) cümle ortasında **kesik paragrafları** bulur — kaynağı varsa yeniden
+   üretir, hâlâ kesikse son tam cümleye kırpar (KRİTİK 3 asla silinmez, kırpılır).
 5. **Rapor** — `main.py:_build_html` → `docs/index.html` +
    `docs/raporlar/YYYY-MM-DD.html` (GitHub Pages). Gün damgaları
    Europe/Istanbul gününe göredir (`_now_tr()`).
@@ -48,8 +50,8 @@ DEĞİLDİR; **sabit sıralı, çok-rollü bir LLM pipeline'ıdır**. Her rol te
 (stateless) bir prompt fonksiyonudur (`src/config.py`) ve tek bir dispatcher
 üzerinden çağrılır. "Agentic" desen olarak *üret → bağımsız denetle* çifti üç
 yerde kuruludur (Skorlayıcı→Critique, Kritik-3 Seçici→Doğrulayıcı, Kalite
-kontrol→Auditor — sonuncusu rapor TAMAMEN oluştuktan sonra final mükerrer
-denetimi yapar).
+kontrol→Auditor — sonuncusu rapor TAMAMEN oluştuktan sonra final bütünlük
+denetimi yapar: mükerrer + kesik paragraf).
 
 Üretimde fiilen çağrılan **10 aktif ajan rolü**:
 
@@ -64,7 +66,14 @@ denetimi yapar).
 | 7 | Yönetici özeti | `get_executive_summary_prompt` | 3480 |
 | 8 | Başlık kurtarma | `get_title_rescue_prompt` | 3610 |
 | 9 | Özet (batch) | `get_summary_batch_prompt` | 3658 |
-| 10 | Auditor (final mükerrer denetimi, Pass 5.5) | `get_dedup_review_prompt` | 2677 |
+| 10 | Auditor (final bütünlük: mükerrer + kesik paragraf, Pass 5.5) | `get_dedup_review_prompt` | 2677 |
+
+**Az-haber günü güvencesi:** `_rank_by_score` içindeki "az-haber kurtarma",
+ranked havuz <6 kalırsa önemlilik barajını KONTROLLÜ düşürür — SADECE
+düşük-puanlı ama YENİ (çapraz-gün mükerrer değil) + gerçek siber + off-topic
+olmayan haberleri havuza geri alır. Böylece az haber günlerinde de KRİTİK 3
+tam gövdeli haberlerle dolar; ince/boş gövdeli rapor üretilmez (eski
+"az-haber guard" — top3'ü boşaltan davranış — kaldırıldı).
 
 Ek olarak **1 fallback ajan** (`get_legacy_json_prompt`, `main.py:3750`) yalnızca
 ana yol çökerse devreye girer.

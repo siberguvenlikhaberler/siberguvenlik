@@ -2706,6 +2706,91 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     remove.add(i)
         return remove
 
+    # ── KESİK PARAGRAF DENETİMİ (Auditor'ın ikinci görevi) ────────────────
+    # Cümle-sonu noktalamaları ve onları izleyebilen kapanış işaretleri
+    # (tırnak/parantez). Bir paragraf bunlardan biriyle bitmiyorsa cümle
+    # ortasında kesilmiş (yarım) kabul edilir.
+    _SENTENCE_END_CHARS = '.!?…'
+    _CLOSER_CHARS = '"\'»”’)]}'
+
+    @classmethod
+    def _paragraph_looks_truncated(cls, text):
+        """Paragraf cümle ortasında kesilmişse True döner. TAM sayılan bitişler:
+        cümle-sonu noktalaması (. ! ? …) VEYA kapanış tırnak/parantezi (ör.
+        `...şöyle dedi: "büyük tehdit"` gibi meşru alıntı bitişleri yanlış
+        pozitif olmasın diye). Harf/virgül/iki nokta gibi bir karakterle biten
+        paragraf KESİK sayılır. Boş metin bu kontrolün konusu değildir (onu
+        Pass 5 kısa-özet kontrolü ele alır) → False."""
+        s = (text or '').rstrip()
+        if not s:
+            return False
+        last = s[-1]
+        return last not in cls._SENTENCE_END_CHARS and last not in cls._CLOSER_CHARS
+
+    @classmethod
+    def _trim_to_last_sentence(cls, text):
+        """Kesik paragrafı SON TAM cümlenin sonuna kırpar. Metinde hiç
+        cümle-sonu noktalaması yoksa (kırpılacak tam cümle yok) metni
+        değiştirmeden döndürür."""
+        s = (text or '').rstrip()
+        idx = max((s.rfind(c) for c in cls._SENTENCE_END_CHARS), default=-1)
+        if idx == -1:
+            return text
+        end = idx + 1
+        while end < len(s) and s[end] in cls._CLOSER_CHARS:
+            end += 1
+        return s[:end]
+
+    def _audit_truncated(self, rendered_ids, protected_ids,
+                         content_by_id, articles_by_id):
+        """AUDITOR — kesik paragraf denetimi. rendered_ids'teki her haberin
+        paragrafı cümle ortasında kesilmiş mi bakar; kesikse:
+          1) Kaynak metni varsa (full_text>80 kelime) içeriği YENİDEN üretir
+             (_gemini_call_json MAX_TOKENS'ta bütçeyi katlar → token kesilmesi
+             düzelir).
+          2) Yeniden üretim DE kesikse paragrafı SON TAM cümleye kırpar.
+        protected_ids (KRİTİK 3) ASLA silinmez — yalnızca kırpılır. Kırpma
+        sonrası GÖVDE haberi <25 kelime kalırsa gövdeden düşürülür.
+        content_by_id'i YERİNDE günceller; gövdeden düşürülecek id kümesini
+        döndürür."""
+        prot = set(protected_ids or [])
+        truncated = [aid for aid in rendered_ids
+                     if self._paragraph_looks_truncated(
+                         content_by_id.get(aid, {}).get('paragraph', ''))]
+        if not truncated:
+            print("   ✅ Kesik paragraf yok.")
+            return set()
+        print(f"   ✂️  Kesik paragraf tespit edildi: {truncated}")
+
+        # 1) Kaynağı zengin olanları yeniden üret (kesme token'dan olabilir).
+        regen = [aid for aid in truncated
+                 if len(articles_by_id.get(aid, {}).get('full_text', '').split()) > 80]
+        for rid in regen:
+            content_by_id.pop(rid, None)
+        for i in range(0, len(regen), 5):
+            self._process_batch_with_split(
+                regen[i:i + 5], articles_by_id, content_by_id,
+                label_prefix='Auditor-KesikYeniden')
+
+        # 2) Hâlâ kesik olanları son tam cümleye kırp; gövde çok kısaysa düşür.
+        drop = set()
+        for aid in truncated:
+            c = content_by_id.get(aid, {})
+            para = c.get('paragraph', '') or ''
+            if self._paragraph_looks_truncated(para):
+                trimmed = self._trim_to_last_sentence(para)
+                if trimmed and trimmed != para:
+                    c = dict(c)
+                    c['paragraph'] = trimmed
+                    content_by_id[aid] = c
+                    para = trimmed
+                    print(f"   ✂️  ID {aid} son tam cümleye kırpıldı "
+                          f"({'KRİTİK 3 korunuyor' if aid in prot else 'gövde'}).")
+            if aid not in prot and len(para.split()) < 25:
+                drop.add(aid)
+                print(f"   🗑️  ID {aid} kırpma sonrası <25 kelime → gövdeden düşürüldü.")
+        return drop
+
     def _verify_top3(self, top3_ids, non_vuln_ids, content_by_id,
                      articles_by_id, label):
         """Pass 4.5 — seçili KRİTİK 3'ü LLM ile DENETLER/teyit eder.
@@ -3269,6 +3354,46 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             else:
                 ranked.append(aid)
 
+        # ── AZ-HABER KURTARMA: baraj düşür — İNCE/BOŞ GÖVDE YAYIMLANMASIN ──────
+        # Hafta sonu gibi az-haber günlerinde katı önemlilik eşiği (toplam<=0)
+        # ranked havuzunu 3 KRİTİK + anlamlı gövde için yetersiz bırakabiliyor.
+        # Eski çözüm top3'ü boşaltıp raporu inceltiyordu (istenmeyen). Bunun
+        # yerine standardı KONTROLLÜ düşür: SADECE 'önemsiz' (toplam<=0) diye
+        # elenmiş ama (a) siber kapısı AÇIK, (b) off-topic/ürün DIŞI, (c)
+        # çapraz-gün MÜKERRER OLMAYAN (daha önce yayımlanmamış) haberleri havuza
+        # geri al. 'Yeni + gerçek siber' şartı KORUNUR — yalnızca önemlilik
+        # eşiği iner; mükerrer/off-topic/non-siber ASLA kurtarılmaz. Böylece az
+        # haber günlerinde de KRİTİK 3 tam gövdeli haberlerle dolar, gövde
+        # inceltilmez.
+        MIN_POOL = 6  # 3 KRİTİK + en az 3 gövde haberi
+        if len(ranked) < MIN_POOL:
+            ranked_set = set(ranked)
+            rescue = []
+            for aid in filtered_ids:
+                rec = records[aid]
+                is_muk = bool(rec.get('mukerrer')) and apply_mukerrer
+                if (rec.get('siber') and not is_muk
+                        and rec['kat'] not in ('urun_icerik', 'siber_disi')
+                        and aid not in ranked_set):
+                    rescue.append(aid)
+            rescue.sort(key=lambda aid: (
+                -records[aid]['toplam'],
+                -KATEGORI_ONCELIK.get(records[aid]['kat'], 0),
+                source_pos.get(aid, 1 << 30),
+            ))
+            promoted = []
+            for aid in rescue:
+                if len(ranked) >= MIN_POOL:
+                    break
+                ranked.append(aid)
+                promoted.append(aid)
+            if promoted:
+                promoted_set = set(promoted)
+                filtered_ids = [i for i in filtered_ids if i not in promoted_set]
+                print(f"   🌥️  Az-haber kurtarma: {len(promoted)} düşük-puanlı ama "
+                      f"YENİ+siber haber havuza alındı (baraj düşürüldü, gövde "
+                      f"inceltilmiyor): {promoted}")
+
         ranked.sort(key=lambda aid: (
             -records[aid]['toplam'],
             -KATEGORI_ONCELIK.get(records[aid]['kat'], 0),
@@ -3665,12 +3790,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     else:
                         print(f"   ⚠️  ID={rid} Türkçeleştirilemedi (içerik filtresi olası).")
 
-        # ── PASS 5.5 — AUDITOR (ADANMIŞ LLM MÜKERRER DENETİMİ, semantik güvence) ──
-        # Deterministik same_event bag-of-words'tür; 'aynı olay, farklı sözcükler'
-        # durumunu (ortak kod adı/CVE/aktör yoksa) kaçırabilir (03.07 Kouloglou
-        # vakası). Bu geçiş TÜM rapor haberlerini LLM'e verip aynı-olay gruplarını
-        # bulur; KRİTİK 3 korunur, mükerrer gövde haberleri kaldırılır.
-        print("\n🔁 Pass 5.5 — Auditor (adanmış mükerrer denetimi)...")
+        # ── PASS 5.5 — AUDITOR (rapor bittikten sonra son bütünlük denetimi) ──
+        # İki görevi var: (1) MÜKERRER — deterministik same_event bag-of-words'tür;
+        # 'aynı olay, farklı sözcükler' durumunu (ortak kod adı/CVE/aktör yoksa)
+        # kaçırabilir (03.07 Kouloglou vakası). LLM TÜM rapor haberlerini görüp
+        # aynı-olay gruplarını bulur; KRİTİK 3 korunur, mükerrer gövde kaldırılır.
+        # (2) KESİK PARAGRAF — cümle ortasında kesilmiş paragrafları bulur;
+        # kaynağı varsa yeniden üretir, hâlâ kesikse son tam cümleye kırpar.
+        print("\n🔁 Pass 5.5 — Auditor: (a) mükerrer denetimi...")
         dup_remove = self._dedup_review_llm(
             list(top3_ids) + list(top10_ids) + list(remaining_ids),
             content_by_id, articles_by_id, protected_ids=top3_ids)
@@ -3680,6 +3807,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             remaining_ids = [i for i in remaining_ids if i not in dup_remove]
         else:
             print("   ✅ LLM ek mükerrer bulmadı")
+
+        # (b) Kesik paragraf denetimi — KRİTİK 3 korunur (kırpılır, silinmez);
+        # düzeltilemeyen ve çok kısalan gövde haberi gövdeden düşürülür.
+        print("   🔎 Auditor: (b) kesik paragraf denetimi...")
+        trunc_drop = self._audit_truncated(
+            list(top3_ids) + list(top10_ids) + list(remaining_ids),
+            top3_ids, content_by_id, articles_by_id)
+        if trunc_drop:
+            top10_ids     = [i for i in top10_ids     if i not in trunc_drop]
+            remaining_ids = [i for i in remaining_ids if i not in trunc_drop]
 
         # ── RAPOR GENELİ AYNI-OLAY DEDUP (gövde ↔ KRİTİK 3 + gövde içi) ──
         # KRİTİK 3'e alınan bir olay, gövdede (Önemli Gelişmeler / paragraflar /
@@ -3712,19 +3849,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             top10_ids     = self._dedup_body_cross_day(top10_ids,     view_fn_x, recent_report)
             remaining_ids = self._dedup_body_cross_day(remaining_ids, view_fn_x, recent_report)
 
-        # ── AZ-HABER GUARD ───────────────────────────────────────────────
-        # Çok az haber olan günlerde (ör. hafta sonu kıtlığı + dedup) tüm
-        # haberler top3'e girip gövde tamamen boş kalabiliyor (21 Haz 2026:
-        # 3 haber → top3=[hepsi] → gövde paragrafı/tablo yok). top3 dışında
-        # render edilecek haber kalmıyorsa top3 kutusunu boşalt; haberler
-        # gövdede normal paragraf olarak gösterilsin.
-        rendered_ids_guard = list(top10_ids) + list(remaining_ids)
-        top3_set_guard = set(top3_ids)
-        if top3_ids and not [aid for aid in rendered_ids_guard
-                             if aid not in top3_set_guard]:
-            print(f"   ⚠️  Az-haber guard: top3 dışında haber kalmıyor → "
-                  f"top3 kutusu atlanıyor, {len(top3_ids)} haber gövdede gösterilecek")
-            top3_ids = []
+        # NOT: Eski "az-haber guard" KALDIRILDI. Önceden az haber günlerinde
+        # top3 dışında gövde haberi kalmayınca KRİTİK 3 kutusu boşaltılıyordu;
+        # bu, ince/boş gövdeli rapor üretiyordu (istenmeyen). Artık az haber
+        # günleri KAYNAKTA çözülüyor: _rank_by_score'daki "az-haber kurtarma"
+        # barajı kontrollü düşürüp YENİ+siber düşük-puanlı haberleri havuza
+        # alıyor → hem KRİTİK 3 hem gövde tam gövdeli haberlerle doluyor.
 
         # ════════════════════════════════════════════════════════════════
         # PASS 6 — YÖNETİCİ ÖZETİ (en önemli 9 haberin tek paragraf özeti)
