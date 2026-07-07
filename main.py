@@ -1056,7 +1056,7 @@ class HaberSistemi:
             padding: 20px; border-left: 4px solid #1a237e;
         }
         .news-title { color: #1a237e; font-size: 18px; font-weight: 600; margin-bottom: 12px; line-height: 1.3; }
-        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+        .news-content { color: #2c3e50; font-size: 15px; line-height: 1.6; margin-bottom: 10px; text-align: justify; }
         .source { color: #666; font-size: 13px; margin: 0; }
         .source a { color: #1a237e; text-decoration: none; }
         .source a:hover { text-decoration: underline; }
@@ -1116,7 +1116,7 @@ class HaberSistemi:
             margin-bottom: 10px; line-height: 1.4;
         }
         .top3-card-paragraph {
-            color: #374151; font-size: 14px; line-height: 1.65; margin-bottom: 10px;
+            color: #374151; font-size: 14px; line-height: 1.65; margin-bottom: 10px; text-align: justify;
         }
         .top3-card .source { color: #64748b; font-size: 12px; margin: 0; }
         .top3-card .source a { color: #1a237e; text-decoration: none; }
@@ -1133,6 +1133,7 @@ class HaberSistemi:
             color: #bf360c; font-size: 18px; font-weight: 700; margin: 0;
         }
         .news-item.vuln-item { border-left-color: #e65100; }
+        .news-item.vuln-item .news-title { color: #bf360c; }
         .back-to-top {
             position: fixed; top: 50%; left: calc(50% - 450px - 48px);
             transform: translateY(-50%); width: 36px; height: 36px;
@@ -1224,6 +1225,7 @@ class HaberSistemi:
         }
         [data-theme="dark"] .vuln-section-heading h2 { color: #fb923c; }
         [data-theme="dark"] .news-item.vuln-item { border-left-color: #f97316; }
+        [data-theme="dark"] .news-item.vuln-item .news-title { color: #f97316; }
         [data-theme="dark"] .back-to-top { background: #388bfd; }
         [data-theme="dark"] .theme-toggle { background: #161b22; border-color: #30363d; color: #8b949e; }
         [data-theme="dark"] .theme-toggle:hover { background: #21262d; border-color: #58a6ff; color: #e6edf3; }
