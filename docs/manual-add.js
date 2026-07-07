@@ -281,18 +281,17 @@
         }).join("")
       : '<div class="opt"><span style="color:#94a3b8;">Bu raporda taşınabilecek başka haber yok.</span></div>';
 
-    // Ekle: (opsiyonel) çıkarılacak haber. Seçilirse o kart kritik-3'ten
-    // çıkarılıp gövdeye iner, yeni haber onun yerine geçer (3'te kalır).
-    // Varsayılan "Hiçbiri" → düz ekle.
-    var replaceOptsHtml =
-      '<label class="opt"><input type="radio" name="ma-replace" value="" checked>' +
-      "<span>Hiçbiri — yeni haberi ekle (kritik 4'e çıkar)</span></label>" +
-      cards.map(function (c, i) {
-        return (
-          '<label class="opt"><input type="radio" name="ma-replace" value="' + i + '">' +
-          '<span><span class="ma-tag crit">KRİTİK</span>' + esc(cardTitle(c)) + " → çıkarılsın</span></label>"
-        );
-      }).join("");
+    // Ekle: (opsiyonel, ÇOKLU) çıkarılacak haber(ler). Seçilen kart(lar)
+    // kritik-3'ten çıkarılıp gövdeye iner; yeni eklenen haber(ler) bunların
+    // yerine geçer (net kritik sayısı dengelenir). Hiçbiri seçilmezse düz ekle.
+    var replaceOptsHtml = cards.length
+      ? cards.map(function (c, i) {
+          return (
+            '<label class="opt"><input type="checkbox" name="ma-replace" value="' + i + '">' +
+            '<span><span class="ma-tag crit">KRİTİK</span>' + esc(cardTitle(c)) + " → çıkarılsın</span></label>"
+          );
+        }).join("")
+      : '<div class="opt"><span style="color:#94a3b8;">Çıkarılacak kritik kart yok.</span></div>';
 
     // Sil: kritik kartlar + alt liste haberleri (birleşik). value = "crit:i" | "body:id".
     var deleteOptsHtml = cards.map(function (c, i) {
@@ -342,16 +341,15 @@
             '<div class="ma-source-block" id="ma-src-report">' +
               '<label class="fld">Eklenecek haberleri seçin (birden fazla seçebilirsiniz)</label>' +
               '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
-              '<p class="ma-hint">Seçilen haber(ler) alt listeden çıkarılıp (taşınıp) kritik bölüme ' +
-              'eklenir. Birden fazla seçersen hepsi tek işlemde taşınır (aşağıdaki ' +
-              '"Çıkarılacak Haber" yalnızca TEK haber eklerken geçerlidir).</p>' +
+              '<p class="ma-hint">Seçilen haber(ler) alt listeden çıkarılıp (taşınıp) kritik bölüme eklenir.</p>' +
             "</div>" +
-            // Opsiyonel: çıkarılacak haber (seçilirse kritik-3'ten çıkarılıp gövdeye iner)
-            '<label class="fld" style="margin-top:12px;">Çıkarılacak Haber (opsiyonel)</label>' +
+            // Opsiyonel (ÇOKLU): çıkarılacak haber(ler) — seçilenler kritik-3'ten
+            // çıkarılıp gövdeye iner, yeni eklenen(ler) onların yerine geçer.
+            '<label class="fld" style="margin-top:12px;">Çıkarılacak Haber(ler) (opsiyonel, birden fazla seçebilirsiniz)</label>' +
             '<div class="ma-remove-list">' + replaceOptsHtml + "</div>" +
-            '<p class="ma-hint">Bir kritik haber seçersen o haber SİLİNMEZ; alttaki ' +
-            '"diğer haberler" listesine iner ve yeni haber onun yerine geçer (kritik ' +
-            'sayısı 3\'te kalır). "Hiçbiri" seçiliyse yeni haber eklenir (kritik 4\'e çıkar).</p>' +
+            '<p class="ma-hint">Seçtiğin kritik haber(ler) SİLİNMEZ; alttaki "diğer haberler" ' +
+            'listesine iner, yeni eklenen(ler) onların yerine geçer. Hiçbirini seçmezsen ' +
+            'yeni haber(ler) mevcutlara EK olarak eklenir (kritik sayısı artar).</p>' +
           "</div>" +
 
           // SİL: kritik + alt liste birleşik
@@ -414,8 +412,9 @@
     var op = currentOp();
     var payload = { password: pass, action: op };
     var steps;
-    // Başarıda istemci-tarafı DOM güncellemesi için bağlam.
-    var ctx = { op: op, removeIndex: -1 };
+    // Başarıda istemci-tarafı DOM güncellemesi için bağlam (batchAdd/batchDelete
+    // aşağıda doldurulur; ikisi de her zaman set edilir — bkz. applyResult).
+    var ctx = {};
 
     if (op === "delete") {
       // ÇOKLU silme: seçilen tüm kritik/gövde haberleri tek işlemde silinir.
@@ -435,23 +434,23 @@
         "Değişiklikler GitHub'a kaydediliyor"
       ];
     } else {
-      // add — kaynak (url/report) gerekir. Opsiyonel "Çıkarılacak Haber"
-      // seçilmişse işlem sunucuda replace'e döner (o kart gövdeye iner,
-      // yeni haber onun yerine geçer); seçilmemişse düz ekleme (kritik 4'e çıkar).
+      // add — kaynak (url/report) gerekir. "Çıkarılacak Haber(ler)" (demote_indices)
+      // opsiyonel ve ÇOKLU: seçilenler kritik-3'ten çıkarılıp gövdeye iner, yeni
+      // eklenen(ler) onların yerine geçer; boşsa düz ekleme (kritik sayısı artar).
       var mode = currentMode();
       payload.mode = mode;
+
+      var demoteChecked = Array.prototype.slice.call(
+        document.querySelectorAll('input[name="ma-replace"]:checked'));
+      if (demoteChecked.length) {
+        payload.demote_indices = demoteChecked.map(function (el) { return parseInt(el.value, 10); });
+      }
 
       if (mode === "url") {
         var url = (document.getElementById("ma-url").value || "").trim();
         if (!/^https?:\/\//i.test(url)) { showMsg("err", "Geçerli bir URL giriniz (http/https)."); return; }
         payload.url = url;
-        var replU = document.querySelector('input[name="ma-replace"]:checked');
-        if (replU && replU.value !== "") {
-          payload.action = "replace";
-          payload.remove_index = parseInt(replU.value, 10);
-          ctx.op = "replace";
-          ctx.removeIndex = payload.remove_index;
-        }
+        ctx.batchAdd = true;
         steps = [
           "Haber kaynağına bağlanılıyor",
           "Makale metni çıkarılıyor",
@@ -461,38 +460,19 @@
           "Değişiklikler GitHub'a kaydediliyor"
         ];
       } else {
-        // Rapordan taşıma — çoklu seçim desteklenir.
+        // Rapordan taşıma — çoklu seçim desteklenir; tekli seçim de aynı
+        // (tek elemanlı) diziyle gönderilir, sunucuda ayrı bir yol gerekmez.
         var newsChecked = Array.prototype.slice.call(
           document.querySelectorAll('input[name="ma-news"]:checked'));
         if (!newsChecked.length) { showMsg("err", "Eklenecek en az bir haber seçiniz."); return; }
-        if (newsChecked.length === 1) {
-          // Tekli — opsiyonel "Çıkarılacak Haber" (replace) desteklenir.
-          payload.news_id = newsChecked[0].value;
-          ctx.movedNewsId = newsChecked[0].value;
-          var replR = document.querySelector('input[name="ma-replace"]:checked');
-          if (replR && replR.value !== "") {
-            payload.action = "replace";
-            payload.remove_index = parseInt(replR.value, 10);
-            ctx.op = "replace";
-            ctx.removeIndex = payload.remove_index;
-          }
-          steps = [
-            "Seçilen haber kritik bölüme taşınıyor",
-            "Yönetici Özeti yeni habere göre yeniden oluşturuluyor (en uzun adım)",
-            "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
-            "Değişiklikler GitHub'a kaydediliyor"
-          ];
-        } else {
-          // Çoklu — hepsi gövdeden kritik bölüme taşınır ("Çıkarılacak Haber" yok sayılır).
-          payload.news_ids = newsChecked.map(function (el) { return el.value; });
-          ctx.batchAdd = true;
-          steps = [
-            "Seçilen haberler kritik bölüme taşınıyor",
-            "Yönetici Özeti yeni haberlere göre yeniden oluşturuluyor (en uzun adım)",
-            "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
-            "Değişiklikler GitHub'a kaydediliyor"
-          ];
-        }
+        payload.news_ids = newsChecked.map(function (el) { return el.value; });
+        ctx.batchAdd = true;
+        steps = [
+          "Seçilen haber(ler) kritik bölüme taşınıyor",
+          "Yönetici Özeti yeni haberlere göre yeniden oluşturuluyor (en uzun adım)",
+          "Yapay zekâ yanıtı tamamlanıyor, lütfen bekleyin",
+          "Değişiklikler GitHub'a kaydediliyor"
+        ];
       }
     }
 
@@ -611,7 +591,14 @@
   // Sunucu sonucunu sayfaya ANINDA yansıt (işleme göre).
   function applyResult(ctx, data) {
     if (ctx.batchAdd) {
-      // Çoklu ekle: sunucudan dönen kartları sırayla ekle, taşınan haberleri kaldır.
+      // Ekle (tekli veya çoklu): önce "Çıkarılacak Haber(ler)" ile demote
+      // edilen kritik kartlar DOM'dan AZALAN indeksle silinir (kartların
+      // gövdeye taşınması sunucuda zaten yapıldı; burada yalnızca üst
+      // kutudaki kartı kaldırıyoruz — gövdeye eklenen hâli sayfa yeniden
+      // yüklenince görünür). Sonra yeni kart(lar) sona eklenir, taşınan
+      // kaynak haberler gövdeden kaldırılır.
+      (data.demoted_indices || []).slice().sort(function (a, b) { return b - a; })
+        .forEach(function (i) { deleteCard(i); });
       (data.added_cards || []).forEach(function (h) { appendCard(h); });
       (data.removed_news_ids || []).forEach(function (id) { removeNewsItem(id); });
       return;
@@ -624,28 +611,6 @@
       (data.removed_news_ids || []).forEach(function (id) { removeNewsItem(id); });
       return;
     }
-    if (ctx.op === "replace") {
-      // Ekle + "Çıkarılacak Haber": yeni kart seçilen kartın yerine geçer;
-      // çıkarılan kritik gövdeye iner (kopya sayfa yeniden yüklenince görünür).
-      applyCard(ctx.removeIndex, data.card_html);
-      if (data.removed_news_id) removeNewsItem(data.removed_news_id);
-    } else if (ctx.op === "add") {
-      appendCard(data.card_html);
-      if (data.removed_news_id) removeNewsItem(data.removed_news_id);
-    } else if (ctx.op === "delete") {
-      if (data.deleted_index != null) deleteCard(data.deleted_index);
-      if (data.removed_news_id) removeNewsItem(data.removed_news_id);
-    }
-  }
-
-  // Ekle+yerine-koy: index'inci kritik kartı sunucudan dönen kartla değiştirir.
-  function applyCard(index, cardHtml) {
-    var cards = topCards();
-    if (!cardHtml || index < 0 || index >= cards.length) return;
-    var tmp = document.createElement("div");
-    tmp.innerHTML = cardHtml.trim();
-    var newCard = tmp.querySelector(".top3-card") || tmp.firstChild;
-    if (newCard) cards[index].parentNode.replaceChild(newCard, cards[index]);
   }
 
   // Ekle: yeni kritik kartı kartların sonuna ekler. Bölüm yoksa (kartsız/

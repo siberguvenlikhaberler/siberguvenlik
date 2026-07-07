@@ -954,21 +954,70 @@ def process_replace(payload, token):
     )
 
 
-def process_add(payload, token):
-    """Mevcut hiçbirini SİLMEDEN yeni bir kritik kart ekle (kritik sayısı +1).
-    Kaynak URL ise LLM ile üretilir; rapor ise seçilen haber alt listeden
-    TAŞINIR (yeni karta dönüşür, gövdeden kaldırılır).
+def _parse_demote_indices(payload, index_html):
+    """payload['demote_indices'] (opsiyonel, ÇOKLU liste) doğrular ve azalan
+    sırada döndürür. Seçilen kritik kartlar SİLİNMEZ — add_top3_card/insert
+    öncesi gövdeye indirilir (bkz. process_add). Sıra azalan olmalı ki
+    delete_top3_card art arda çağrıldığında erken indeksler kaymasın.
+    Geçersiz/aralık dışı indekste (code, body) tuple'ı döner; aksi halde
+    (None, sorted_desc_list)."""
+    raw = payload.get("demote_indices")
+    if not isinstance(raw, list) or not raw:
+        return None, []
+    existing_count = len(list(_CARD_RE.finditer(index_html)))
+    seen, ordered = set(), []
+    for item in raw:
+        try:
+            idx = int(item)
+        except (TypeError, ValueError):
+            return (400, {"error": "Geçersiz çıkarılacak haber indeksi."}), []
+        if idx < 0 or idx >= existing_count:
+            return (400, {"error": f"Geçersiz kritik kart indeksi: {idx}"}), []
+        if idx not in seen:
+            seen.add(idx)
+            ordered.append(idx)
+    return None, sorted(ordered, reverse=True)
 
-    ÇOKLU: payload['news_ids'] bir liste ise (rapordan çoklu seçim), seçilen
-    TÜM haberler tek işlemde gövdeden kritik bölüme taşınır (tek commit, tek
-    Yönetici Özeti yeniden üretimi). Tekli 'news_id'/'url' yolu korunur."""
+
+def _demote_cards(html, demote_desc):
+    """demote_desc'teki (azalan sıralı) kritik kart indekslerini SİLMEDEN
+    gövdeye indirir: içeriğini alır, karttan kaldırır, gövde haberi olarak
+    ekler. Azalan sırada işlendiği için erken indeksler kaymaz."""
+    for idx in demote_desc:
+        demoted = extract_top3_card(html, idx)
+        html = delete_top3_card(html, idx)
+        if demoted:
+            html = insert_body_news_item(
+                html, build_news_item_html(*demoted, paragraph_is_html=True))
+    return html
+
+
+def process_add(payload, token):
+    """Yeni bir veya BİRDEN ÇOK kritik kart ekler. Kaynak URL ise LLM ile
+    üretilir (tek); rapor ise seçilen haber(ler) alt listeden TAŞINIR (yeni
+    karta dönüşür, gövdeden kaldırılır) — payload['news_ids'] listesiyle tekli
+    de çoklu da AYNI yoldan işlenir.
+
+    demote_indices (opsiyonel, ÇOKLU): eklenen yeni kart(lar) için yer açmak
+    üzere seçilen MEVCUT kritik kartlar SİLİNMEZ, gövdeye indirilir. Demote
+    işlemi eklemeden ÖNCE uygulanır (indeksler orijinal kart listesine göre).
+
+    Tek commit, tek Yönetici Özeti yeniden üretimi. Geriye dönük uyum: eski
+    tekli 'news_id' alanı da (liste değilse) kabul edilir."""
     try:
         index_html, report_date, archive_path = _read_index(token)
     except Exception as e:
         return 502, {"error": f"index.html okunamadı: {str(e)[:160]}"}
 
-    # ── ÇOKLU rapordan taşıma (news_ids listesi) ──────────────────────────────
+    demote_err, demote_desc = _parse_demote_indices(payload, index_html)
+    if demote_err:
+        return demote_err
+
+    # 'news_ids' yoksa eski tekli 'news_id' alanını listeye çevir (geriye dönük uyum).
     news_ids = payload.get("news_ids")
+    if not (isinstance(news_ids, list) and news_ids) and payload.get("news_id"):
+        news_ids = [payload.get("news_id")]
+
     if isinstance(news_ids, list) and news_ids:
         seen, ordered = set(), []
         for raw in news_ids:
@@ -992,6 +1041,7 @@ def process_add(payload, token):
                 paragraph_is_html=True))
 
         def _t_multi(html):
+            html = _demote_cards(html, demote_desc)
             for nid in ordered:
                 tr_title, paragraph, link, domain, art_date = extract_news_item(html, nid)
                 card = build_card_html(tr_title, paragraph, link, domain,
@@ -1001,28 +1051,33 @@ def process_add(payload, token):
             html = renumber_and_reflow(html)
             return regenerate_exec_summary(html)
 
+        msg = f"manuel: {len(ordered)} haber gövdeden kritik bölüme taşındı"
+        if demote_desc:
+            msg += f", {len(demote_desc)} haber gövdeye indirildi"
         return _commit_transform(
-            index_html, archive_path, _t_multi, token,
-            f"manuel: {len(ordered)} haber gövdeden kritik bölüme taşındı ({report_date})",
-            {"added_cards": pre_cards, "removed_news_ids": ordered, "added": True},
+            index_html, archive_path, _t_multi, token, f"{msg} ({report_date})",
+            {"added_cards": pre_cards, "removed_news_ids": ordered,
+             "demoted_indices": demote_desc, "added": True},
         )
 
-    # ── TEKLİ (url veya rapor) — mevcut akış ─────────────────────────────────
-    card_html, news_id, err = _card_from_source(payload, index_html, report_date, token)
+    # ── URL modu (tek haber, LLM ile üretim) ─────────────────────────────────
+    card_html, _news_id, err = _card_from_source(payload, index_html, report_date, token)
     if err:
         return err
 
     def _t(html):
+        html = _demote_cards(html, demote_desc)
         html = add_top3_card(html, card_html)
-        if news_id:
-            html = remove_news_item(html, news_id)
         html = renumber_and_reflow(html)
         return regenerate_exec_summary(html)
 
+    msg = "manuel: kritik habere ekleme yapıldı"
+    if demote_desc:
+        msg += f", {len(demote_desc)} haber gövdeye indirildi"
     return _commit_transform(
-        index_html, archive_path, _t, token,
-        f"manuel: kritik habere ekleme yapıldı ({report_date})",
-        {"card_html": card_html, "removed_news_id": news_id, "added": True},
+        index_html, archive_path, _t, token, f"{msg} ({report_date})",
+        {"added_cards": [card_html], "removed_news_ids": [],
+         "demoted_indices": demote_desc, "added": True},
     )
 
 
