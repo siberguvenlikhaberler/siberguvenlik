@@ -421,9 +421,10 @@
             '<span id="ma-progress-step">Hazırlanıyor</span>' +
             '<span class="ma-progress-dots"></span>' +
           "</div>" +
-          '<p class="ma-progress-sub">Lütfen bekleyin; <b>bu işlem 2-3 dakika sürebilir.</b> ' +
+          '<p class="ma-progress-sub" id="ma-progress-sub">Lütfen bekleyin; <b>bu işlem 2-3 dakika sürebilir.</b> ' +
           'İşlem tamamlanınca bu pencere kendiliğinden kapanacaktır; lütfen kapatmayın.</p>' +
           '<p class="ma-progress-elapsed" id="ma-progress-elapsed"></p>' +
+          '<button type="button" class="ma-btn cancel" id="ma-progress-close" style="display:none;margin-top:16px;">Kapat</button>' +
         "</div>" +
       "</div>";
 
@@ -433,6 +434,7 @@
       if (e.target === overlay) closeModal();
     });
     document.getElementById("ma-cancel").addEventListener("click", closeModal);
+    document.getElementById("ma-progress-close").addEventListener("click", closeModal);
     document.getElementById("ma-ok").addEventListener("click", submit);
     document.getElementById("ma-reset").addEventListener("click", submitReset);
     document.getElementById("ma-op-add").addEventListener("click", function () { setOp("add"); });
@@ -596,8 +598,23 @@
     var resetBtn = document.getElementById("ma-reset");
     var okBtn = document.getElementById("ma-ok");
     resetBtn.disabled = true; okBtn.disabled = true;
-    // Bu uç HIZLI döner (sadece tetikler); asıl 10 dk'lık iş Actions'ta.
-    startProgress(["GitHub Actions tetikleniyor", "Onay bekleniyor"]);
+    // Dispatch ucu HIZLI döner (sadece tetikler); asıl ~10 dk'lık üretim Actions'ta.
+    // İlerleme ekranında rapor üretim aşamaları (main.py pipeline'ı) gerçek zamanlı
+    // gibi döngüsel gösterilir — add/delete akışıyla aynı deneyim.
+    startProgress([
+      "Bugünkü rapor ve durum işaretleri sıfırlanıyor",
+      "Haber kaynaklarına (RSS) bağlanılıyor",
+      "Yeni haberler çekiliyor ve ayrıştırılıyor",
+      "Tekrarlanan/eski haberler ayıklanıyor (dedup)",
+      "Yapay zekâ ile haberler puanlanıyor",
+      "En önemli haberler seçiliyor (kritik-3 + liste)",
+      "Türkçe başlık ve özetler üretiliyor",
+      "Yönetici Özeti oluşturuluyor",
+      "Rapor sayfası derleniyor ve arşivleniyor",
+      "Değişiklikler GitHub'a kaydediliyor"
+    ]);
+    var sub0 = document.getElementById("ma-progress-sub");
+    if (sub0) sub0.textContent = "GitHub Actions tetikleniyor, lütfen bekleyin.";
 
     var controller = (typeof AbortController !== "undefined") ? new AbortController() : null;
     var failsafe = setTimeout(function () { if (controller) controller.abort(); }, 30000);
@@ -613,12 +630,21 @@
       })
       .then(function (res) {
         clearTimeout(failsafe);
-        stopProgress();
-        resetBtn.disabled = false; okBtn.disabled = false;
         if (res.status === 200 && res.data && res.data.ok) {
-          showMsg("ok", res.data.message ||
-            "Reset tetiklendi. Rapor ~10 dakika içinde güncellenecek; sonra sayfayı sert yenileyin (Ctrl+F5).");
+          // Tetikleme başarılı. İş artık Actions'ta sürüyor → ilerleme ekranı
+          // AÇIK KALIR (aşamalar dönmeye devam eder), buton DISABLED kalır
+          // (yeniden tetiklemeyi engelle). Kullanıcı Kapat ile çıkabilir.
+          var sub = document.getElementById("ma-progress-sub");
+          if (sub) sub.innerHTML =
+            "Reset tetiklendi. Rapor artık <b>GitHub Actions'ta sıfırdan üretiliyor</b> " +
+            "(~10 dakika). Aşağıdaki aşamalar üretim sürecini temsil eder. Bu pencereyi " +
+            "kapatıp ~10 dk sonra sayfayı sert yenileyebilirsiniz (Ctrl+F5).";
+          var closeBtn = document.getElementById("ma-progress-close");
+          if (closeBtn) closeBtn.style.display = "";
+          // okBtn (Tamam) reset ekranında zaten gizli; resetBtn disabled bırakılır.
         } else {
+          stopProgress();
+          resetBtn.disabled = false; okBtn.disabled = false;
           var err = (res.data && res.data.error) ? res.data.error : ("Hata (HTTP " + res.status + ")");
           showMsg("err", err);
         }
