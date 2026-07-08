@@ -65,6 +65,19 @@
     // Sil sekmesi vurgusu (aktifken kırmızı)
     ".ma-op-delete.active{background:#dc2626!important;border-color:#dc2626!important;",
     "box-shadow:0 2px 6px rgba(220,38,38,.3)!important;}",
+    // "Raporu Yeniden Üret" sekmesi (aktifken amber/turuncu)
+    ".ma-op-reset.active{background:#b45309!important;border-color:#b45309!important;",
+    "box-shadow:0 2px 6px rgba(180,83,9,.3)!important;color:#fff!important;}",
+    // Reset onay ekranı — uyarı kutusu + ortada yeniden-üret butonu
+    ".ma-reset-warn{margin:16px 0 0;padding:14px 16px;border:1.5px solid #fcd34d;",
+    "background:#fffbeb;border-radius:10px;font-size:14px;line-height:1.55;color:#92400e;}",
+    ".ma-reset-warn b{color:#b45309;}",
+    ".ma-reset-actions{margin-top:18px;text-align:center;}",
+    ".ma-btn.reset{background:#b45309;color:#fff;border-color:#b45309;padding:12px 22px;font-size:15px;}",
+    ".ma-btn.reset:hover{background:#92400e;}",
+    ".ma-btn.reset:disabled{background:#94a3b8;border-color:#94a3b8;cursor:not-allowed;}",
+    "[data-theme='dark'] .ma-reset-warn{background:#2d2410;border-color:#7c5e10;color:#fcd34d;}",
+    "[data-theme='dark'] .ma-reset-warn b{color:#fbbf24;}",
     ".ma-source-block{display:none;}",
     ".ma-source-block.active{display:block;}",
     // İşlem blokları (ekle/sil) — yalnızca aktif olan gösterilir
@@ -243,16 +256,18 @@
 
   // Aktif İŞLEM ("add" | "delete") — blokları gösterir/gizler.
   function setOp(op) {
-    ["add", "delete"].forEach(function (o) {
+    ["add", "delete", "reset"].forEach(function (o) {
       var tab = document.getElementById("ma-op-" + o);
       if (tab) tab.classList.toggle("active", o === op);
     });
-    // Bloklar: ekle → yalnız kaynak; sil → yalnız silinecek liste.
-    var showSource = (op === "add");
-    var showDelete = (op === "delete");
+    // Bloklar: ekle → yalnız kaynak; sil → silinecek liste; reset → onay ekranı.
     var b;
-    if ((b = document.getElementById("ma-blk-source"))) b.classList.toggle("active", showSource);
-    if ((b = document.getElementById("ma-blk-delete"))) b.classList.toggle("active", showDelete);
+    if ((b = document.getElementById("ma-blk-source"))) b.classList.toggle("active", op === "add");
+    if ((b = document.getElementById("ma-blk-delete"))) b.classList.toggle("active", op === "delete");
+    if ((b = document.getElementById("ma-blk-reset"))) b.classList.toggle("active", op === "reset");
+    // Reset'in kendi butonu (onay ekranında) var; footer "Tamam" reset'te gizlenir.
+    var okBtn = document.getElementById("ma-ok");
+    if (okBtn) okBtn.style.display = (op === "reset") ? "none" : "";
     var lbl = document.getElementById("ma-src-label");
     if (lbl) lbl.textContent = "Ne eklensin? (yeni bir kritik kart olarak eklenecek)";
   }
@@ -324,6 +339,7 @@
           '<div class="ma-tabs">' +
             '<button type="button" class="ma-tab" id="ma-op-add">Ekle</button>' +
             '<button type="button" class="ma-tab ma-op-delete" id="ma-op-delete">Sil</button>' +
+            '<button type="button" class="ma-tab ma-op-reset" id="ma-op-reset">🔄 Raporu Yeniden Üret</button>' +
           "</div>" +
 
           // KAYNAK (ekle)
@@ -361,10 +377,22 @@
             'rapor yine 3 üretir. (Silmeden gövdeye indirmek istersen Ekle işlemindeki ' +
             '"Çıkarılacak Haber" seçeneğini kullan.)</p>' +
           "</div>" +
+
+          // RAPORU YENİDEN ÜRET — onay ekranı (uyarı + aynı buton)
+          '<div class="ma-op-block" id="ma-blk-reset">' +
+            '<div class="ma-reset-warn">' +
+              "Bugünün <b>raporu silinecek ve sıfırdan yeniden üretilecek.</b> Emin misiniz?" +
+              '<br><br>• Bugünkü ham veri, rapor ve durum işaretleri silinir' +
+              '<br>• Haberler yeniden çekilir ve rapor baştan oluşturulur' +
+              '<br>• İşlem GitHub Actions\'ta ~10 dakika sürer' +
+              '<br>• Eski günlerin raporları <b>etkilenmez</b>' +
+            "</div>" +
+            '<div class="ma-reset-actions">' +
+              '<button type="button" class="ma-btn reset" id="ma-reset">🔄 Raporu Yeniden Üret</button>' +
+            "</div>" +
+          "</div>" +
         "</div>" +
         '<div class="ma-actions">' +
-          '<button class="ma-btn" id="ma-reset" style="margin-right:auto;background:#b45309;color:#fff;border-color:#b45309;" ' +
-            'title="Bugünün raporunu sıfırdan yeniden üretir (ham veri yeniden çekilir).">🔄 Sıfırla &amp; Yeniden Üret</button>' +
           '<button class="ma-btn cancel" id="ma-cancel">İptal</button>' +
           '<button class="ma-btn ok" id="ma-ok">Tamam</button>' +
         "</div>" +
@@ -393,6 +421,7 @@
     document.getElementById("ma-reset").addEventListener("click", submitReset);
     document.getElementById("ma-op-add").addEventListener("click", function () { setOp("add"); });
     document.getElementById("ma-op-delete").addEventListener("click", function () { setOp("delete"); });
+    document.getElementById("ma-op-reset").addEventListener("click", function () { setOp("reset"); });
     document.getElementById("ma-tab-url").addEventListener("click", function () { setMode("url"); });
     var reportTab = document.getElementById("ma-tab-report");
     if (hasOthers) reportTab.addEventListener("click", function () { setMode("report"); });
@@ -537,13 +566,8 @@
     if (!RESET_ENDPOINT) {
       showMsg("err", "Sunucu uç noktası yapılandırılmamış (reset_regenerate)."); return;
     }
-    var onay = window.confirm(
-      "Bugünün raporu SIFIRDAN yeniden üretilecek:\n\n" +
-      "• Bugünkü ham veri, rapor ve durum işaretleri silinir\n" +
-      "• Haberler yeniden çekilir ve rapor baştan oluşturulur\n" +
-      "• İşlem GitHub Actions'ta ~10 dakika sürer\n\n" +
-      "Eski günlerin raporları ETKİLENMEZ. Devam edilsin mi?");
-    if (!onay) return;
+    // Onay artık ayrı bir ekranda (ma-blk-reset uyarısı) gösterildiği için
+    // ayrıca window.confirm sorulmaz — bu butona basmak onayı ifade eder.
 
     var resetBtn = document.getElementById("ma-reset");
     var okBtn = document.getElementById("ma-ok");
