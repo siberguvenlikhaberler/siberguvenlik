@@ -1064,7 +1064,6 @@ NEWS_SOURCES = {
     # (mevcut feed'ler dahil 403) doğrulama kullanıcı tarafından dışarıdan yapılmıştır.
     'The Cyber Express': 'https://www.thecyberexpress.com/feed/',
     'Industrial Cyber': 'https://industrialcyber.co/feed/',
-    'Times of Israel': 'https://www.timesofisrael.com/feed/',
     'IranWire': 'https://iranwire.com/en/feed/',
 }
 
