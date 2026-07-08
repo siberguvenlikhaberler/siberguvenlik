@@ -562,6 +562,16 @@ Her haber için şunları belirle:
      Konusu siber olsa bile OLAY yoksa `urun_icerik` ver, stratejik kategoriye
      ŞİŞİRME. (Ör. "FIFA 2026 Siber Riski Üzerine Sayılar" bir saldırı DEĞİL,
      analizdir → `urun_icerik`.)
+   - ⚖️ İSTİSNA — RESMİ DEVLET STRATEJİSİ/DOKTRİNİ: Bir hükümet/devlet organının
+     (bakanlık, ulusal siber ajans, parlamento, ordu/istihbarat) RESMEN duyurduğu
+     ulusal çaplı siber savunma stratejisi, doktrin değişikliği, yeni kurum/birim
+     kurulması ya da büyük çaplı yasa/düzenleme → bu bir vendor görüşü/analizi
+     DEĞİLDİR, `politika_hukuk` verilir (somut "olay" şartı aranmaz). Vendor/analist
+     kaynaklı risk raporu, tahmin veya genel tavsiye yazısıyla KARIŞTIRMA: fark
+     KAYNAKTIR — resmi devlet açıklaması mı, yoksa şirket/araştırmacı yorumu mu?
+     Yalnızca gerçekten ULUSAL/STRATEJİK ağırlığı olanlar (yeni ulusal strateji,
+     siber komuta kurulması, önemli yasa) bu istisnadan yararlanır; rutin
+     bakanlık açıklaması/basın bülteni `urun_icerik` kalır.
 
 2) SİBER KAPISI (siber): Haberin ÖZÜNDE somut bir siber boyut (saldırı/zararlı yazılım/zafiyet/casus yazılımı/veri ihlali/siber operasyon ya da bunları DOĞRUDAN etkileyen politika-hukuk) var mı?
    → var = 1 ; yok = 0.  (siber=0 ise haber otomatik gündem dışı kalır; kategori genelde siber_disi/urun_icerik olur.)
@@ -642,6 +652,11 @@ Her haber için şu denetimleri yap:
      olay (saldırı/kampanya/keşif) bildirmeyen değerlendirme/tahmin/genel durum
      yazıları (ör. "FIFA riski üzerine sayılar", "AI gözetiminin gerçekleri")
      `nation_state_apt`/`stratejik_kurum_saldirisi` OLAMAZ → `urun_icerik`e indir.
+   • ⚖️ İSTİSNA: RESMİ bir devlet organının (bakanlık, ulusal siber ajans,
+     ordu/istihbarat, parlamento) duyurduğu ulusal siber strateji/doktrin/yeni
+     kurum/büyük yasa `urun_icerik`e YANLIŞLIKLA indirilmiş mi? Bu durumda
+     `politika_hukuk`a düzelt — kaynak vendor/analist değil, resmi devlet
+     açıklamasıysa ve gerçekten ulusal ağırlıklıysa (rutin basın bülteni değil).
 
 2) SİBER BOYUT GERÇEK Mİ?
    • siber=1 verilmiş ama haberin özü aslında saf diplomatik/askeri/ekonomik/siyasi mi? Kelime benzerliği siber boyut değildir → siber=0 ve kat=`siber_disi` yap. (Ör. "istihbarat bütçesi yönetiminin devralınması" → siber=0.)
