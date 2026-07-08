@@ -83,6 +83,9 @@
     // İşlem blokları (ekle/sil) — yalnızca aktif olan gösterilir
     ".ma-op-block{display:none;}",
     ".ma-op-block.active{display:block;}",
+    // Ekle kaynağı seçildikten SONRA açılan detay (url kutusu / haber listesi)
+    ".ma-src-detail{display:none;}",
+    ".ma-src-detail.active{display:block;}",
     ".ma-actions{padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;}",
     ".ma-btn{padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;",
     "border:1px solid transparent;font-family:inherit;}",
@@ -239,7 +242,8 @@
     if (layer) layer.classList.remove("show");
   }
 
-  // Aktif KAYNAK modu ("url" | "report") — Ekle işleminde kullanılır.
+  // Aktif KAYNAK modu ("url" | "report" | null) — Ekle işleminde kullanılır.
+  // null verilince kaynak detayı (kutu/liste) gizlenir; yalnızca alt sekmeler kalır.
   function setMode(mode) {
     ["url", "report"].forEach(function (m) {
       var tab = document.getElementById("ma-tab-" + m);
@@ -247,14 +251,19 @@
       if (tab) tab.classList.toggle("active", m === mode);
       if (blk) blk.classList.toggle("active", m === mode);
     });
+    // Detay (url kutusu / haber listesi) yalnızca bir kaynak seçilince açılır.
+    var detail = document.getElementById("ma-src-detail");
+    if (detail) detail.classList.toggle("active", mode === "url" || mode === "report");
   }
 
   function currentMode() {
-    var rt = document.getElementById("ma-tab-report");
-    return (rt && rt.classList.contains("active")) ? "report" : "url";
+    if (document.getElementById("ma-tab-report").classList.contains("active")) return "report";
+    if (document.getElementById("ma-tab-url").classList.contains("active")) return "url";
+    return null;
   }
 
-  // Aktif İŞLEM ("add" | "delete") — blokları gösterir/gizler.
+  // Aktif İŞLEM ("" | "add" | "delete" | "reset") — blokları gösterir/gizler.
+  // Boş ("") = hiçbir işlem seçili değil; yalnızca Ekle/Sil/Yeniden Üret sekmeleri görünür.
   function setOp(op) {
     ["add", "delete", "reset"].forEach(function (o) {
       var tab = document.getElementById("ma-op-" + o);
@@ -265,6 +274,8 @@
     if ((b = document.getElementById("ma-blk-source"))) b.classList.toggle("active", op === "add");
     if ((b = document.getElementById("ma-blk-delete"))) b.classList.toggle("active", op === "delete");
     if ((b = document.getElementById("ma-blk-reset"))) b.classList.toggle("active", op === "reset");
+    // Ekle'ye her geçişte kaynak seçimi sıfırlanır → yalnızca alt sekmeler görünür.
+    if (op === "add") setMode(null);
     // Reset'in kendi butonu (onay ekranında) var; footer "Tamam" reset'te gizlenir.
     var okBtn = document.getElementById("ma-ok");
     if (okBtn) okBtn.style.display = (op === "reset") ? "none" : "";
@@ -273,8 +284,10 @@
   }
 
   function currentOp() {
-    var t = document.getElementById("ma-op-delete");
-    return (t && t.classList.contains("active")) ? "delete" : "add";
+    if (document.getElementById("ma-op-reset").classList.contains("active")) return "reset";
+    if (document.getElementById("ma-op-delete").classList.contains("active")) return "delete";
+    if (document.getElementById("ma-op-add").classList.contains("active")) return "add";
+    return null;
   }
 
   window.openManualAddModal = function () {
@@ -349,23 +362,26 @@
               '<button type="button" class="ma-tab" id="ma-tab-url">URL ile yeni haber ekle</button>' +
               '<button type="button" class="ma-tab ma-tab-report" id="ma-tab-report"' + (hasOthers ? "" : " disabled") + ">Diğer Haberlerden Seç</button>" +
             "</div>" +
-            '<div class="ma-source-block" id="ma-src-url">' +
-              '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
-              '<input type="url" id="ma-url" placeholder="https://...">' +
-              '<p class="ma-hint">URL\'den üretilen yeni haber kritik bölüme eklenir.</p>' +
+            // Kaynak seçildikten SONRA açılan detay — url kutusu / haber listesi
+            '<div class="ma-src-detail" id="ma-src-detail">' +
+              '<div class="ma-source-block" id="ma-src-url">' +
+                '<label class="fld" for="ma-url">Eklenecek haberin URL\'si</label>' +
+                '<input type="url" id="ma-url" placeholder="https://...">' +
+                '<p class="ma-hint">URL\'den üretilen yeni haber kritik bölüme eklenir.</p>' +
+              "</div>" +
+              '<div class="ma-source-block" id="ma-src-report">' +
+                '<label class="fld">Eklenecek haberleri seçin (birden fazla seçebilirsiniz)</label>' +
+                '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
+                '<p class="ma-hint">Seçilen haber(ler) alt listeden çıkarılıp (taşınıp) kritik bölüme eklenir.</p>' +
+              "</div>" +
+              // Opsiyonel (ÇOKLU): çıkarılacak haber(ler) — seçilenler kritik-3'ten
+              // çıkarılıp gövdeye iner, yeni eklenen(ler) onların yerine geçer.
+              '<label class="fld" style="margin-top:12px;">Çıkarılacak Haber(ler) (opsiyonel, birden fazla seçebilirsiniz)</label>' +
+              '<div class="ma-remove-list">' + replaceOptsHtml + "</div>" +
+              '<p class="ma-hint">Seçtiğin kritik haber(ler) SİLİNMEZ; alttaki "diğer haberler" ' +
+              'listesine iner, yeni eklenen(ler) onların yerine geçer. Hiçbirini seçmezsen ' +
+              'yeni haber(ler) mevcutlara EK olarak eklenir (kritik sayısı artar).</p>' +
             "</div>" +
-            '<div class="ma-source-block" id="ma-src-report">' +
-              '<label class="fld">Eklenecek haberleri seçin (birden fazla seçebilirsiniz)</label>' +
-              '<div class="ma-remove-list">' + reportOptsHtml + "</div>" +
-              '<p class="ma-hint">Seçilen haber(ler) alt listeden çıkarılıp (taşınıp) kritik bölüme eklenir.</p>' +
-            "</div>" +
-            // Opsiyonel (ÇOKLU): çıkarılacak haber(ler) — seçilenler kritik-3'ten
-            // çıkarılıp gövdeye iner, yeni eklenen(ler) onların yerine geçer.
-            '<label class="fld" style="margin-top:12px;">Çıkarılacak Haber(ler) (opsiyonel, birden fazla seçebilirsiniz)</label>' +
-            '<div class="ma-remove-list">' + replaceOptsHtml + "</div>" +
-            '<p class="ma-hint">Seçtiğin kritik haber(ler) SİLİNMEZ; alttaki "diğer haberler" ' +
-            'listesine iner, yeni eklenen(ler) onların yerine geçer. Hiçbirini seçmezsen ' +
-            'yeni haber(ler) mevcutlara EK olarak eklenir (kritik sayısı artar).</p>' +
           "</div>" +
 
           // SİL: kritik + alt liste birleşik
@@ -426,8 +442,9 @@
     var reportTab = document.getElementById("ma-tab-report");
     if (hasOthers) reportTab.addEventListener("click", function () { setMode("report"); });
 
-    setOp("add");      // varsayılan işlem: Ekle
-    setMode("url");    // varsayılan kaynak: URL ile yeni haber
+    // Akordiyon: başta hiçbir işlem seçili değil — yalnızca Ekle/Sil/Yeniden Üret
+    // sekmeleri görünür. Kullanıcı seçtikçe alt seviyeler kademeli açılır.
+    setOp("");
   };
 
   function submit() {
@@ -439,6 +456,9 @@
     }
 
     var op = currentOp();
+    if (op !== "add" && op !== "delete") {
+      showMsg("err", "Önce bir işlem seçiniz (Ekle veya Sil)."); return;
+    }
     var payload = { password: pass, action: op };
     var steps;
     // Başarıda istemci-tarafı DOM güncellemesi için bağlam (batchAdd/batchDelete
@@ -467,6 +487,10 @@
       // opsiyonel ve ÇOKLU: seçilenler kritik-3'ten çıkarılıp gövdeye iner, yeni
       // eklenen(ler) onların yerine geçer; boşsa düz ekleme (kritik sayısı artar).
       var mode = currentMode();
+      if (mode !== "url" && mode !== "report") {
+        showMsg("err", "Bir kaynak seçiniz (URL ile yeni haber ekle veya Diğer Haberlerden Seç).");
+        return;
+      }
       payload.mode = mode;
 
       var demoteChecked = Array.prototype.slice.call(
