@@ -110,6 +110,7 @@ SCORING_CATEGORIES = (
     'politika_hukuk',             # siber boyutu olan yasa/yaptırım/mahkeme kararı
     'zafiyet_aktif_apt',          # zafiyet + AKTİF istismar + APT/nation-state atfı
     'zafiyet_rutin',              # CVE/patch/PoC — rutin teknik zafiyet
+    'phishing_sosyal_muhendislik', # kimlik avı/sosyal mühendislik kampanyası (nation-state atfı YOKSA)
     'urun_icerik',                # ürün lansmanı, webinar, röportaj, inceleme, tavsiye
     'siber_disi',                 # doğrudan siber boyutu olmayan haber
 )
@@ -119,21 +120,25 @@ ZAFIYET_KATEGORILERI = {'zafiyet_rutin', 'zafiyet_aktif_apt'}
 
 # Kritik 3'e ASLA giremeyen kategoriler. Not: 'zafiyet_aktif_apt' listede YOK —
 # aktif istismar + APT atfı olan zafiyet, puanı yeterse Kritik 3'e girebilir.
+# 'phishing_sosyal_muhendislik' de listede YOK — varsayılan puanı düşük tutulduğu
+# için normalde zaten girmez, ama gerçekten stratejik/devlet-hedefli/ekosistem
+# çapında bir vaka varsa (bkz. skorlama promptundaki istisna) Kritik 3'e girebilmeli.
 KRITIK3_HARIC_KATEGORILER = {'zafiyet_rutin', 'urun_icerik', 'siber_disi'}
 
 # Deterministik eşitlik-bozucu: aynı toplam puanda kategori önceliği (yüksek=önce).
 KATEGORI_ONCELIK = {
-    'casus_yazilim':             9,
-    'nation_state_apt':          8,
-    'stratejik_kurum_saldirisi': 7,
-    'politika_hukuk':            6,
-    'tedarik_zinciri':           5,
-    'kolluk_operasyonu':         4,
-    'veri_ihlali':               3,
-    'zafiyet_aktif_apt':         2,
-    'zafiyet_rutin':             1,
-    'urun_icerik':               0,
-    'siber_disi':                0,
+    'casus_yazilim':               9,
+    'nation_state_apt':            8,
+    'stratejik_kurum_saldirisi':   7,
+    'politika_hukuk':              6,
+    'tedarik_zinciri':             5,
+    'kolluk_operasyonu':           4,
+    'veri_ihlali':                 3,
+    'zafiyet_aktif_apt':           2,
+    'zafiyet_rutin':               1,
+    'phishing_sosyal_muhendislik': 1,
+    'urun_icerik':                 0,
+    'siber_disi':                  0,
 }
 
 
@@ -545,12 +550,16 @@ Her haber için şunları belirle:
    • politika_hukuk             → siber boyutu olan yasa/direktif/yaptırım/mahkeme kararı (belirli bir saldırı değil)
    • zafiyet_aktif_apt          → güvenlik açığı + KANITLANMIŞ aktif istismar + devlet/APT atfı (ikisi de olmalı)
    • zafiyet_rutin              → CVE/yama/PoC/güvenlik açığı tespiti (aktif APT istismarı YOKSA buraya)
+   • phishing_sosyal_muhendislik → kimlik avı/sosyal mühendislik/oltalama kampanyası — nation-state atfı YOKSA (varsa `nation_state_apt`)
    • urun_icerik                → ürün lansmanı, beta, webinar, konferans, röportaj, inceleme, genel tavsiye, pazar araştırması
    • siber_disi                 → doğrudan siber boyutu OLMAYAN haber (saf diplomatik/askeri/ekonomik/siyasi)
 
    ⚠️ KATEGORİ AYRIMI — SIK YAPILAN HATALAR (dikkat):
    - Bir kolluk operasyonu (ör. "Polis XSS.is forumunu çökertti") KATEGORİSİ `kolluk_operasyonu`dur; başlıkta "XSS" geçmesi onu zafiyet YAPMAZ.
    - "API üzerinden ele geçirme / tam yetki / RCE" gibi teknik ele geçirmeler, aktif APT istismarı + atıf YOKSA `zafiyet_rutin`dir (`zafiyet_aktif_apt` DEĞİL).
+   - Kimlik avı/sahte iş ilanı/sahte fatura gibi sosyal mühendislik kampanyaları bir
+     CVE/yazılım açığı DEĞİLDİR → `zafiyet_rutin`e KOYMA, `phishing_sosyal_muhendislik`
+     ver (nation-state atfı varsa `nation_state_apt`).
    - `zafiyet_aktif_apt` yüksek eşiktir: hem AKTİF istismar hem de nation-state/APT atfı METİNDE açıkça olmalı; şüphedeysen `zafiyet_rutin` ver.
    - ⛔ SOMUT OLAY ZORUNLULUĞU: `nation_state_apt`, `stratejik_kurum_saldirisi`,
      `casus_yazilim`, `tedarik_zinciri` etiketleri YALNIZCA gerçekleşmiş/süren
@@ -606,6 +615,23 @@ Her haber için şunları belirle:
    ⚠️ Siber kapısı ŞARTTIR: teşkilat adı geçse de haberin özünde siber boyut
    yoksa (saf bütçe/atama/diplomasi haberi) bu faktör UYGULANMAZ, siber=0 kalır.
 
+   🎣 PHISHING/SOSYAL MÜHENDİSLİK TAVANI (kör-nokta düzeltmesi): `phishing_sosyal_muhendislik`
+   kategorisindeki bir haber VARSAYILAN OLARAK DÜŞÜK puanlanır — `urun_icerik` gibi
+   davran (s≤10, e≤10, toplam ~0, elenir). Sıradan marka taklidi, sahte iş ilanı,
+   fatura dolandırıcılığı vb. bu tavanın ÜZERİNE ÇIKMAZ, ne kadar "ilginç" görünürse
+   görünsün.
+   Yalnızca AŞAĞIDAKİLERDEN BİRİ açıkça METİNDE varsa tavan kalkar:
+     (a) Hedef doğrudan bir devlet kurumu/ordu/istihbarat/kritik altyapıysa (spesifik,
+         geniş çaplı) → e (etki) yükselir, gövdeye girebilir (s hâlâ orta: 15-25).
+     (b) Kampanyanın bilinen bir APT/devlet altyapısının parçası olduğuna dair güçlü
+         sinyal varsa (tam atıf yoksa bile) → s: 25-35, gövde/Kritik 3 adayı.
+     (c) Ekosistem/simgesel çapta ise (ör. büyük bir platformun/CDN'in kitlesel
+         istismarı, doğrulanmış çok-ülkeli/milyonlarca mağdurlu, altyapısal boyut) →
+         BÜYÜK KOLLUK OPERASYONU İSTİSNASI'ndaki gibi s: 30-38 verilebilir.
+   ⚠️ Bu üç durumdan biri yoksa YÜKSELTME — "büyük marka isimleri geçiyor" veya
+   "milyonlarca kullanıcı potansiyel hedef" gibi genel ifadeler tavanı KALDIRMAZ;
+   somut, doğrulanmış ölçek/hedef gerekir.
+
    🇹🇷 TÜRKİYE / PKK-KÜRT NEXUS FAKTÖRÜ (kör-nokta düzeltmesi): Bu bülten Türk
    okuyucuya yöneliktir; doğrudan Türkiye bağı olan SİBER olaylar ulusal alaka
    nedeniyle yüksek stratejik değer taşır. Şu iki durum:
@@ -648,6 +674,9 @@ Her haber için şu denetimleri yap:
    • Kolluk operasyonu (forum/botnet çökertme, takedown, tutuklama) yanlışlıkla `zafiyet_*` etiketlenmiş mi? Başlıktaki "XSS", "SQL", "RCE" gibi teknik kelimeler yüzünden yanlış sınıflanmış olabilir → `kolluk_operasyonu` na düzelt.
    • `zafiyet_aktif_apt` etiketi HAK EDİLMİŞ mi? Metinde HEM aktif istismar HEM devlet/APT atfı açıkça var mı? Yoksa `zafiyet_rutin`e indir. (Ör. "API üzerinden tam yetkiyle ele geçirme" tek başına aktif-APT değildir.)
    • Ürün/webinar/röportaj/tavsiye haberi kritik bir kategoriye mi konmuş → `urun_icerik`e düzelt.
+   • Kimlik avı/sahte iş ilanı/sosyal mühendislik kampanyası yanlışlıkla `zafiyet_rutin`e
+     mi konmuş (CVE/yazılım açığı değil)? `phishing_sosyal_muhendislik`e düzelt
+     (nation-state atfı varsa `nation_state_apt`).
    • ⛔ ANALİZ/GÖRÜŞ/RİSK yazısı stratejik kategoriye mi ŞİŞİRİLMİŞ? Somut bir
      olay (saldırı/kampanya/keşif) bildirmeyen değerlendirme/tahmin/genel durum
      yazıları (ör. "FIFA riski üzerine sayılar", "AI gözetiminin gerçekleri")
@@ -666,6 +695,12 @@ Her haber için şu denetimleri yap:
    • Gerçekten kritik (casus yazılım, nation-state APT, stratejik kurum saldırısı) bir haber hak ettiğinden düşük mü puanlanmış? Yükselt.
    • 🕵️ İSTİHBARAT TEŞKİLATI: Bir istihbarat/güvenlik teşkilatının (CIA, NSA, FBI, MI6, MOSSAD, MİT, BND, FSB, CSE/CSIS vb.) FAİL veya HEDEF olduğu SİBER olay hak ettiğinden düşük (s<34) mü puanlanmış? Yükselt (s: 34-40). Siber boyut yoksa dokunma.
    • 🇹🇷 TÜRKİYE/PKK-KÜRT NEXUS: (a) PKK/Kürt yanlısı grupların dahil olduğu siber olay, ya da (b) Türk kurum/şirketine yönelik siber saldırı düşük mü puanlanmış? Ulusal alaka nedeniyle yükselt (s: 34-40). Siber boyutu olmayan saf siyasi Kürt/Türkiye haberine dokunma (siber=0).
+   • 🎣 PHISHING TAVANI: `phishing_sosyal_muhendislik` bir haber, somut bir istisna
+     olmadan (devlet/kritik altyapı hedefi, APT-bağlantı sinyali, ya da doğrulanmış
+     ekosistem çapında ölçek) yüksek puanlanmış mı (s>25)? "Büyük marka isimleri
+     geçiyor" veya "potansiyel milyonlarca kullanıcı" gibi genel gerekçeyle
+     şişirilmişse s≤10'a indir. Tersine, gerçek bir istisna varsa (metinde açıkça
+     devlet/kritik altyapı hedefi ya da APT bağlantısı) ve düşük puanlanmışsa yükselt.
 
 4) MÜKERRER Mİ?
    • Haber, aşağıdaki "SON GÜNLERDE RAPORLANAN OLAYLAR" ile aynı olaysa (aynı kampanya/kod adı ya da aynı aktör+mağdur) mukerrer=1 yap; analist kaçırmış olabilir.
