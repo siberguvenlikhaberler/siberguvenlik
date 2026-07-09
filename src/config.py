@@ -1312,6 +1312,51 @@ HABERLER:
 {items_content}"""
 
 
+def get_cross_day_dedup_prompt(today_items, recent_items):
+    """Çapraz-GÜN semantik mükerrer denetimi (Auditor'ın çapraz-gün eşi).
+
+    Deterministik same_event(cross_day=True) yalnızca yüksek-özgüllük sinyaliyle
+    (ortak kod adı / ortak aktör+konu / yüksek konu örtüşmesi) çalışır; "aynı
+    olay, FARKLI sözcükler" çapraz-gün kopyalarını kaçırır. Bu geçiş, BUGÜNKÜ
+    gövde adaylarını SON GÜNLERDE zaten raporlanmış haberlerle semantik olarak
+    karşılaştırır ve bugün TEKRAR anlatılan (aynı gelişme) adayların ID'lerini
+    döndürür.
+
+    today_items:  "=== HABER ID: N ===\\nBaşlık: ...\\nÖzet: ...\n" (bugünkü adaylar)
+    recent_items: "--- [Rk] Başlık: ...\\nÖzet: ...\n"             (son günler)
+    Döndürülen JSON: {"duplicates": [id, ...]} — SON GÜNLERDE zaten raporlanmış
+    bir olayın AYNISINI (aynı gelişme) anlatan BUGÜNKÜ haber ID'leri."""
+    return f"""Sen bir siber güvenlik haber editörüsün. Görevin TEK: BUGÜNKÜ haber
+adaylarından, SON GÜNLERDE ZATEN RAPORLANMIŞ bir olayın AYNISINI (aynı gelişmeyi)
+anlatan — yani okuyucuya YENİ hiçbir şey katmayan MÜKERRER — olanları bulmak.
+
+AYNI OLAY (mükerrer → BUGÜNKÜ ID'yi işaretle): farklı kaynak/başlık/kelimelerle
+yazılmış olsa bile aynı temel olay/olgu:
+- Aynı mağdur/hedef + aynı saldırgan + aynı olay (aynı ihlal, aynı kampanya),
+- VEYA aynı zafiyet (aynı CVE/ürün) hakkında aynı gelişme,
+- VEYA aynı takedown/kovuşturma/operasyon hakkında aynı haber.
+
+FARKLI OLAY / YENİ GELİŞME (işaretleme! — mükerrer DEĞİL):
+- Aynı olayın YENİ bir gelişmesi (ör. dün 'açık keşfedildi', bugün 'yama çıktı' /
+  'aktif istismar başladı' / 'yeni kurban') → YENİ haber, işaretleme,
+- Aynı ürün/aktör ama FARKLI zafiyet/saldırı,
+- Aynı konu ama farklı vaka (iki ayrı kurumda iki ayrı olay).
+
+Emin değilsen İŞARETLEME (yalnızca açıkça aynı gelişmeyi anlatanları işaretle —
+yeni bir haberi yanlışlıkla elemek, mükerreri kaçırmaktan daha kötüdür).
+
+SADECE JSON — başka hiçbir şey yazma. Mükerrer yoksa boş liste:
+{{
+  "duplicates": [7, 15]
+}}
+
+SON GÜNLERDE ZATEN RAPORLANMIŞ HABERLER:
+{recent_items}
+
+BUGÜNKÜ ADAYLAR:
+{today_items}"""
+
+
 def get_legacy_json_prompt(articles_brief):
     """
     Legacy tek-çağrı fallback için: sıralama + Türkçe özet birleşik JSON prompt.

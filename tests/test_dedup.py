@@ -316,3 +316,46 @@ def test_lead_window_no_false_positive_distinct_events():
     """Baş-pencere farklı olayları AYNI saymamalı (yanlış-pozitif üretmemeli)."""
     assert not dedup.same_event(MOZILLA, OPENAI)
     assert not dedup.same_event(SHARKLOADER, MOZILLA)
+
+
+# ── Jenerik "X-as-a-Service" (-aaS) kod adı yanlış-pozitifi ────────────────
+# 2026-07-08 raporunda "PhaaS" (Phishing-as-a-Service) CamelCase heuristiğiyle
+# AYIRT EDİCİ kod adı sanılıp ÜÇ FARKLI olayı (Hollanda tutuklama / Google-Gemini
+# davası / DEBULL araç seti) yanlışlıkla aynı olay işaretliyordu.
+
+def test_generic_aas_not_a_codename():
+    """PhaaS/RaaS/MaaS gibi iş-modeli terimleri kod adı SAYILMAZ."""
+    assert dedup.extract_codenames('PhaaS platform') == set()
+    assert 'phaas' not in dedup.extract_codenames('A new PhaaS kit emerged')
+    # Gerçek kod adları ETKİLENMEZ
+    assert 'debull' in dedup.extract_codenames('DEBULL toolkit PhaaS')
+    assert 'fortibleed' in dedup.extract_codenames('FortiBleed exploit')
+    assert 'dcrat' in dedup.extract_codenames('DcRAT malware')
+
+
+def test_phaas_no_longer_merges_distinct_events():
+    """Yalnızca 'PhaaS' paylaşan iki FARKLI olay artık AYNI sayılmaz."""
+    a = {'tr_title': "Hollanda'da Kredi Kartı Kimlik Avı Operasyonu Tutuklaması",
+         'paragraph': 'Hollanda polisi bir PhaaS operasyonunda iki kişiyi tutukladı.'}
+    b = {'tr_title': "Google'ın Gemini Yapay Zekasını Kullanan Dolandırıcılara Davası",
+         'paragraph': 'Google, Gemini yapay zekasını kötüye kullanan PhaaS aktörlerine dava açtı.'}
+    assert not dedup.same_event(a, b)
+    assert not dedup.same_event(a, b, cross_day=True)
+
+
+# ── Çapraz-gün SEMANTİK dedup LLM yanıt ayrıştırma ────────────────────────
+
+def test_parse_cross_day_dupes_valid():
+    assert dedup.parse_cross_day_dupes({'duplicates': [7, '15']}, [7, 15, 20]) == {7, 15}
+
+
+def test_parse_cross_day_dupes_filters_unknown_and_garbage():
+    # Aday olmayan (99) ve sayı-olmayan ('x', None) girdiler elenmeli
+    assert dedup.parse_cross_day_dupes(
+        {'duplicates': [7, 99, 'x', None]}, [7, 15]) == {7}
+
+
+def test_parse_cross_day_dupes_safe_on_bad_input():
+    assert dedup.parse_cross_day_dupes(None, [7]) == set()
+    assert dedup.parse_cross_day_dupes({}, [7]) == set()
+    assert dedup.parse_cross_day_dupes({'duplicates': None}, [7]) == set()

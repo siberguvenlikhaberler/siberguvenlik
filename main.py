@@ -41,6 +41,7 @@ from src.config import (
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_top3_verification_prompt,
     get_legacy_json_prompt, get_quality_review_prompt, get_dedup_review_prompt,
+    get_cross_day_dedup_prompt,
     get_executive_summary_prompt, get_title_rescue_prompt,
     get_scoring_prompt, get_critique_prompt,
     SCORING_WEIGHTS, SCORING_CATEGORIES, ZAFIYET_KATEGORILERI,
@@ -2655,6 +2656,47 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"son {REPORT_HISTORY_DAYS} günde raporlanan olay(lar) elendi {dropped}")
         return kept
 
+    def _dedup_body_cross_day_llm(self, body_ids, content_by_id, articles_by_id,
+                                  recent_views, label=''):
+        """Çapraz-gün SEMANTİK mükerrer denetimi (Auditor'ın çapraz-gün eşi).
+
+        Deterministik _dedup_body_cross_day yalnızca yüksek-özgüllük sinyaliyle
+        çalışır ve "aynı olay, FARKLI sözcükler" çapraz-gün kopyalarını kaçırır.
+        Bu geçiş, ELİNDE KALAN gövde adaylarını (deterministik pas sonrası) son
+        günlerin raporlanmış haberleriyle LLM üzerinden karşılaştırır; bugün
+        TEKRAR anlatılan (aynı gelişme) adayları eler. Yalnızca GÖVDE adaylarına
+        uygulanır — KRİTİK 3 buraya hiç gelmez (çağıran koruma sağlar).
+
+        recent_views/body_ids boşsa veya LLM başarısızsa aday listesi DEĞİŞMEZ
+        (güvenli degrade; deterministik katmanlar zaten çalışmıştır)."""
+        if not recent_views or not body_ids:
+            return list(body_ids)
+
+        today_lines = []
+        for aid in body_ids:
+            c = content_by_id.get(aid, {})
+            a = articles_by_id.get(aid, {})
+            tr_title = c.get('tr_title') or a.get('title', '')
+            snippet = ' '.join((c.get('paragraph', '') or '').split()[:80])
+            today_lines.append(f"=== HABER ID: {aid} ===\n"
+                               f"Başlık: {tr_title}\nÖzet: {snippet}\n")
+
+        recent_lines = []
+        for i, ev in enumerate(recent_views, 1):
+            tr_title = ev.get('tr_title') or ev.get('title', '')
+            snippet = ' '.join((ev.get('paragraph', '') or '').split()[:80])
+            recent_lines.append(f"--- [R{i}] Başlık: {tr_title}\nÖzet: {snippet}\n")
+
+        data = self._gemini_call_json(
+            get_cross_day_dedup_prompt('\n'.join(today_lines), '\n'.join(recent_lines)),
+            max_output_tokens=512, label=label or 'Auditor-ÇaprazGünMükerrer')
+        drop = _dedup.parse_cross_day_dupes(data, body_ids)
+        if drop:
+            print(f"   📅 Çapraz-gün SEMANTİK dedup{(' (' + label + ')') if label else ''}: "
+                  f"son {REPORT_HISTORY_DAYS} günde raporlanan olayın tekrarı elendi "
+                  f"{sorted(drop)}")
+        return [aid for aid in body_ids if aid not in drop]
+
     def _dedup_review_llm(self, candidate_ids, content_by_id, articles_by_id,
                           protected_ids=None, label=''):
         """Pass 5.5 — AUDITOR ajanı: ADANMIŞ LLM MÜKERRER DENETİMİ (tek işi mükerrer bulmak).
@@ -3867,6 +3909,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             view_fn_x = self._dedup_view_fn(content_by_id, articles_by_id)
             top10_ids     = self._dedup_body_cross_day(top10_ids,     view_fn_x, recent_report)
             remaining_ids = self._dedup_body_cross_day(remaining_ids, view_fn_x, recent_report)
+            # Deterministik pasın kaçırdığı "aynı olay, farklı sözcükler" çapraz-gün
+            # kopyalarını SEMANTİK (LLM) yakala. KRİTİK 3 buraya gelmez.
+            top10_ids     = self._dedup_body_cross_day_llm(top10_ids,     content_by_id, articles_by_id, recent_report)
+            remaining_ids = self._dedup_body_cross_day_llm(remaining_ids, content_by_id, articles_by_id, recent_report)
 
         # NOT: Eski "az-haber guard" KALDIRILDI. Önceden az haber günlerinde
         # top3 dışında gövde haberi kalmayınca KRİTİK 3 kutusu boşaltılıyordu;
@@ -4339,6 +4385,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             view_fn_x = self._dedup_view_fn(content_by_id, id_to_article)
             top10_ids     = self._dedup_body_cross_day(top10_ids,     view_fn_x, recent_report, label='legacy')
             remaining_ids = self._dedup_body_cross_day(remaining_ids, view_fn_x, recent_report, label='legacy')
+            top10_ids     = self._dedup_body_cross_day_llm(top10_ids,     content_by_id, id_to_article, recent_report, label='legacy')
+            remaining_ids = self._dedup_body_cross_day_llm(remaining_ids, content_by_id, id_to_article, recent_report, label='legacy')
 
         # HTML oluştur
         html = self._build_html(

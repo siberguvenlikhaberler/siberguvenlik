@@ -23,6 +23,14 @@ Hiçbiri ham veriye/LLM'e güvenmez; saf string işidir, kolayca test edilir.
 import re
 from difflib import SequenceMatcher
 
+# "X-as-a-Service" iş-modeli terimleri (PhaaS, RaaS, MaaS, CaaS, DaaS, XaaS...).
+# CamelCase heuristiği bunları ("PhaaS" → küçük→büyük geçişi 'a'→'S') yanlışlıkla
+# AYIRT EDİCİ kod adı sanıp FARKLI olayları (ör. iki ayrı kimlik-avı operasyonu)
+# birleştiriyordu. Bunlar jenerik kategori adlarıdır, bir olayın parmak izi
+# DEĞİLDİR; kod adı çıkarımında elenir. (RaaS/MaaS <5 harf zaten uzunlukta
+# elenir; asıl kaçak ≥5 harfli 'phaas' idi. Desen hepsini kapsar.)
+_GENERIC_AAS_RE = re.compile(r'^[a-z]{1,4}aas$')
+
 # Yaygın vendor/ürün adları — tek başına "aynı olay" sinyali DEĞİLDİR; kod adı
 # sayılmaz. (main.config._CODENAME_DENYLIST ile aynı liste; tek kaynak burada.)
 CODENAME_DENYLIST = {
@@ -78,6 +86,8 @@ def extract_codenames(text):
     for w in re.findall(r'[A-Za-z][A-Za-z0-9]+', text or ''):
         lw = w.lower()
         if len(w) < 5 or lw in CODENAME_DENYLIST or lw in _ACRONYM_DENYLIST:
+            continue
+        if _GENERIC_AAS_RE.match(lw):   # PhaaS/RaaS/MaaS... jenerik, kod adı değil
             continue
         is_camel   = re.search(r'[a-z][A-Z]', w)
         is_allcaps = w.isupper() and w.isalpha()
@@ -355,6 +365,24 @@ def pick_distinct(ordered_ids, get_view, n=3, exclude_views=None):
         if len(picked) >= n:
             break
     return picked
+
+
+def parse_cross_day_dupes(data, candidate_ids):
+    """Çapraz-gün LLM yanıtından ({"duplicates":[...]}) yalnızca GEÇERLİ bugünkü
+    aday ID'lerini içeren bir küme çıkarır. Bozuk/None yanıt → boş küme (güvenli:
+    hiçbir haber elenmez). Pür fonksiyon; LLM'siz test edilir."""
+    idset = set(candidate_ids)
+    out = set()
+    if not isinstance(data, dict):
+        return out
+    for x in (data.get('duplicates', []) or []):
+        try:
+            xi = int(x)
+        except (TypeError, ValueError):
+            continue
+        if xi in idset:
+            out.add(xi)
+    return out
 
 
 def drop_duplicates_against(candidate_ids, reference_ids, get_view):
