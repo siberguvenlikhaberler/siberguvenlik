@@ -819,6 +819,20 @@ Her haber için iki şey üret:
                "Microsoft Exchange'de CVE-2024-1234 Açığının Keşfedilmesi"
    - YASAK: -mıştır, -edilmiştir, -tespit edilmiştir gibi eylem cümlesi yapıları
    - Somut detay: şirket/CVE/ülke adı dahil et
+   - AKTÖR ADLANDIRMA (çıplak kod adı YASAK): Başlığın öznesi bir tehdit
+     aktörü / APT grubu / zararlı-operasyon kod adıysa (ör. UAT-7810, O-UNC-066,
+     Lurking Lizard, LONGLEASH), adı TEK BAŞINA kullanma; başına KISA bir
+     niteleyici koy. Okuyucu o ismi önceden bilmek zorunda değil. 5-9 kelime
+     sınırını korumak için anlatımı buna uydur (adı özneden çıkarıp olayı öne
+     alabilirsin).
+       İyi:  "Çinli APT Grubu UAT-7810'un Yönlendiricilere Arka Kapı Yerleştirmesi"
+             "İran Bağlantılı Grubun Telekom Operatörlerini Hedeflemesi"
+             "APT Grubu Lurking Lizard'ın Kamu Kurumlarını Hedeflemesi"
+       Kötü: "UAT-7810'un Yeni Arka Kapılar Geliştirmesi" (çıplak, niteliksiz)
+             "Lurking Lizard'ın Saldırı Düzenlemesi" (çıplak, niteliksiz)
+     KÖKEN (Çin/İran/Rusya/Kuzey Kore) YALNIZCA kaynak metinde belirtiliyorsa
+     yazılır; kaynak söylemiyorsa köken UYDURMA, yalnızca tür niteleyicisi
+     ("APT Grubu ...", "Fidye Çetesi ...") kullan.
 
 2. PARAGRAF: Resmi Türkçe özet
    - MİNİMUM 120 kelime (daha az yazarsan YANLIŞ sayılır — say ve kontrol et)
@@ -875,6 +889,24 @@ Her haber için iki şey üret:
    ⚠️ Bu kuralı YALNIZCA aktör adı/takma adı kaynak metinlerde açıkça aynıysa
    uygula. Emin değilsen, aktör farklıysa veya yalnızca tek haber aktörden söz
    ediyorsa hiçbir şey değiştirme; her haberi bağımsız yaz.
+   ───────────────────────────────────────────────────────────────────────────
+
+   ── AKTÖR ADLANDIRMA — çıplak kod adı yasağı (zorunlu) ─────────────────────
+   Bir tehdit aktörü / APT grubu / fidye çetesi / casus yazılım ailesi / zararlı
+   yazılım / operasyon kod adı (ör. UAT-7810, O-UNC-066, Lurking Lizard,
+   LONGLEASH) paragrafta İLK kez geçtiğinde, önüne MUTLAKA bir niteleyici koy —
+   okuyucunun o ismin ne olduğunu önceden bilmesi BEKLENMEZ:
+     Biçim: "[köken] [tür] <İsim>"
+     • tür: olaya uygun olan — "siber tehdit aktörü", "APT grubu", "fidye
+       yazılımı çetesi", "casus yazılım ailesi", "zararlı yazılım".
+     • köken: "Çin/İran/Rusya/Kuzey Kore menşeli/bağlantılı" — YALNIZCA kaynak
+       metinde açıkça belirtiliyorsa. Kaynak köken söylemiyorsa KÖKEN UYDURMA
+       (fabrikasyon kesin yasak); yalnızca tür niteleyicisini kullan.
+     İyi:  "Çin bağlantılı siber tehdit aktörü UAT-7810, ..."
+           "İran menşeli APT grubu Lurking Lizard, ..."
+           "Fidye yazılımı çetesi Lynx, ..."  (köken kaynakta yoksa)
+     Kötü: "UAT-7810, ..." / "Lurking Lizard, ..."  (çıplak, niteliksiz)
+   İkinci ve sonraki geçişlerde yalın ad kullanılabilir.
    ───────────────────────────────────────────────────────────────────────────
 
    - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
@@ -943,6 +975,20 @@ Her haber için:
                "Google Chrome'da Sıfır Gün Açığının Aktif Olarak İstismar Edilmesi"
    - YASAK: -mıştır, -edilmiştir, -tespit edilmiştir gibi eylem cümlesi yapıları
    - Somut detay: şirket/CVE/ülke adı dahil et
+   - AKTÖR ADLANDIRMA (çıplak kod adı YASAK): Başlığın öznesi bir tehdit
+     aktörü / APT grubu / zararlı-operasyon kod adıysa (ör. UAT-7810, O-UNC-066,
+     Lurking Lizard, LONGLEASH), adı TEK BAŞINA kullanma; başına KISA bir
+     niteleyici koy. Okuyucu o ismi önceden bilmek zorunda değil. 5-9 kelime
+     sınırını korumak için anlatımı buna uydur (adı özneden çıkarıp olayı öne
+     alabilirsin).
+       İyi:  "Çinli APT Grubu UAT-7810'un Yönlendiricilere Arka Kapı Yerleştirmesi"
+             "İran Bağlantılı Grubun Telekom Operatörlerini Hedeflemesi"
+             "APT Grubu Lurking Lizard'ın Kamu Kurumlarını Hedeflemesi"
+       Kötü: "UAT-7810'un Yeni Arka Kapılar Geliştirmesi" (çıplak, niteliksiz)
+             "Lurking Lizard'ın Saldırı Düzenlemesi" (çıplak, niteliksiz)
+     KÖKEN (Çin/İran/Rusya/Kuzey Kore) YALNIZCA kaynak metinde belirtiliyorsa
+     yazılır; kaynak söylemiyorsa köken UYDURMA, yalnızca tür niteleyicisi
+     ("APT Grubu ...", "Fidye Çetesi ...") kullan.
 
 2. PARAGRAF: Resmi Türkçe özet
    - MİNİMUM 120 kelime (daha az yazarsan YANLIŞ sayılır — say ve kontrol et)
@@ -979,6 +1025,24 @@ Her haber için:
    NOT: Kaynak metin A/B/C/D'nin hiçbirine cevap vermiyorsa (saf teknik/ürün
    haberi), olayın kimi, neyi, ne ölçekte etkilediğini sade dille anlat; yine
    teknik prosedür ayrıntılarına boğma.
+   ───────────────────────────────────────────────────────────────────────────
+
+   ── AKTÖR ADLANDIRMA — çıplak kod adı yasağı (zorunlu) ─────────────────────
+   Bir tehdit aktörü / APT grubu / fidye çetesi / casus yazılım ailesi / zararlı
+   yazılım / operasyon kod adı (ör. UAT-7810, O-UNC-066, Lurking Lizard,
+   LONGLEASH) paragrafta İLK kez geçtiğinde, önüne MUTLAKA bir niteleyici koy —
+   okuyucunun o ismin ne olduğunu önceden bilmesi BEKLENMEZ:
+     Biçim: "[köken] [tür] <İsim>"
+     • tür: olaya uygun olan — "siber tehdit aktörü", "APT grubu", "fidye
+       yazılımı çetesi", "casus yazılım ailesi", "zararlı yazılım".
+     • köken: "Çin/İran/Rusya/Kuzey Kore menşeli/bağlantılı" — YALNIZCA kaynak
+       metinde açıkça belirtiliyorsa. Kaynak köken söylemiyorsa KÖKEN UYDURMA
+       (fabrikasyon kesin yasak); yalnızca tür niteleyicisini kullan.
+     İyi:  "Çin bağlantılı siber tehdit aktörü UAT-7810, ..."
+           "İran menşeli APT grubu Lurking Lizard, ..."
+           "Fidye yazılımı çetesi Lynx, ..."  (köken kaynakta yoksa)
+     Kötü: "UAT-7810, ..." / "Lurking Lizard, ..."  (çıplak, niteliksiz)
+   İkinci ve sonraki geçişlerde yalın ad kullanılabilir.
    ───────────────────────────────────────────────────────────────────────────
 
    - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
@@ -1176,6 +1240,16 @@ Paragraf okunduğunda açıkça şunlardan biri olduğu anlaşılıyorsa → "re
 KONTROL 4 — KOPYALAR (Pass 1'den kaçan):
 Farklı ID'li iki haber aynı olayı anlatıyorsa (aynı mağdur + saldırgan + tarihli olay),
 daha kısa/yüzeysel olanı → "remove" listesine ekle.
+
+KONTROL 5 — ÇIPLAK AKTÖR ADI (niteliksiz kod adı):
+TR Başlık veya Paragraf, bir tehdit aktörü / APT / zararlı-operasyon kod adını
+(UAT-7810, O-UNC-066, Lurking Lizard, LONGLEASH gibi) İLK geçişte NİTELEYİCİSİZ,
+TEK BAŞINA kullanıyorsa (önünde "... APT grubu", "... siber tehdit aktörü",
+"Çin bağlantılı ..." gibi bir tanım YOKSA) okuyucu ismi tanıyamaz:
+  • Kaynak Var: evet → "regenerate" listesine ekle (niteleyiciyle yeniden yazılsın)
+  • Kaynak Var: hayır → dokunma (yeniden üretilemez; kaldırma gerektirmez)
+Not: Yaygın, kendi başına anlaşılır adlar (LockBit, Lazarus, APT29 gibi) sorun
+DEĞİL; asıl hedef okuyucunun bilemeyeceği kriptik kod adları/kümelerdir.
 
 Sorun tespit etmediğin haberleri listeye EKLEME — yalnızca sorunluları bildir.
 
