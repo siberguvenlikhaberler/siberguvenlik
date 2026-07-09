@@ -220,38 +220,12 @@ def _cap_fulltext(text):
     return ' '.join(words[:_FULLTEXT_PROMPT_WORD_CAP])
 
 
-# Kod adı dedup (Seviye 5) için ortak vendor/ürün adları — bunlar tek başına
-# "aynı olay" sinyali DEĞİLDİR (birçok farklı haberde geçer). Kod adı olarak
-# sayılmaz; yalnızca gerçek kampanya/operasyon/zararlı kod adları (FortiBleed,
-# CastleStealer, PixelSmash...) dedup anahtarı olur.
-_CODENAME_DENYLIST = {
-    'fortigate', 'fortinet', 'fortios', 'fortisandbox', 'fortiweb', 'fortimanager',
-    'windows', 'microsoft', 'macos', 'ipados', 'iphone', 'iphones', 'ipad', 'ipads',
-    'github', 'gitlab', 'linkedin', 'whatsapp', 'youtube', 'facebook', 'instagram',
-    'openai', 'chatgpt', 'powershell', 'javascript', 'typescript', 'nodejs',
-    'wordpress', 'bleepingcomputer', 'crowdstrike', 'virustotal', 'cloudflare',
-    'paypal', 'mongodb', 'postgresql', 'mysql', 'kubernetes', 'dropbox', 'onedrive',
-    'sharepoint', 'teamviewer', 'anydesk', 'lastpass', 'bitlocker', 'sentinelone',
-    'sonicwall', 'paloalto', 'checkpoint', 'proofpoint', 'mimecast', 'manageengine',
-    'autogen', 'deepseek', 'blackberry', 'quickbooks', 'salesforce', 'servicenow',
-    'pytorch', 'tensorflow', 'macbook', 'airpods', 'playstation',
-}
-
-
-def _extract_codenames(title):
-    """Başlıktan ayırt edici kampanya/operasyon/zararlı kod adlarını çıkarır.
-
-    Heuristik: içinde küçük→büyük harf geçişi olan (CamelCase) ve uzunluğu ≥5
-    olan token'lar (FortiBleed, CastleStealer, PixelSmash...). Bunlar nadir ve
-    bir olaya özgüdür; aynı kampanyayı farklı kaynaktan/başlıkla anlatan
-    haberleri (genel kelime örtüşmesi düşük olsa bile) bağlamak için güçlü
-    sinyaldir. Yaygın vendor/ürün adları (_CODENAME_DENYLIST) hariç tutulur.
-    """
-    out = set()
-    for w in re.findall(r'[A-Za-z][A-Za-z0-9]+', title):
-        if len(w) >= 5 and re.search(r'[a-z][A-Z]', w) and w.lower() not in _CODENAME_DENYLIST:
-            out.add(w.lower())
-    return out
+# Kod adı çıkarımı TEK KAYNAKTAN gelir: src.dedup.extract_codenames. Böylece
+# Seviye 5 (aynı-run) ve çapraz-gün dedup aynı mantığı (CamelCase + ALL-CAPS +
+# ortak denylist) paylaşır; iki yerde ayrı düzeltme / drift riski ortadan kalkar.
+# (Eskiden burada CamelCase-only bir kopya vardı; ALL-CAPS kod adlarını —
+# LONGLEASH gibi — kaçırıyordu.)
+_extract_codenames = _dedup.extract_codenames
 
 
 def _parse_article_date(date_str, fallback):
@@ -2461,6 +2435,40 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         """pick_distinct / drop_duplicates_against için id→view fonksiyonu üretir."""
         return lambda aid: self._dedup_view(aid, content_by_id, articles_by_id)
 
+    def _log_dedup_nearmiss(self, selected_ids, view_fn, recent_views,
+                            path="data/dedup_log.jsonl"):
+        """Gözlemlenebilirlik: manşete GİREN bir haber, geçmiş bir olayla ORTAK
+        parmak izi (aktör-ID/kod adı) taşıyıp da same_event AYNI OLAY demediyse
+        (konu örtüşmesi eşik altı), bu 'yakın-kaçışı' data/dedup_log.jsonl'a
+        yazar. Davranışı DEĞİŞTİRMEZ; ileride sessiz mükerrer kaçışları veriyle
+        yakalamak içindir. Hata olursa sessiz geçer (kritik yol değil)."""
+        if not recent_views:
+            return
+        try:
+            today = _now_tr().strftime('%Y-%m-%d')
+            rows = []
+            for aid in selected_ids:
+                va = view_fn(aid)
+                for ev in recent_views:
+                    sig = _dedup.nearmiss_signal(va, ev, cross_day=True)
+                    if sig:
+                        rows.append({
+                            'date': today,
+                            'kept_title': (va.get('tr_title') or va.get('title') or '')[:160],
+                            'past_title': (ev.get('tr_title') or ev.get('title') or '')[:160],
+                            'signal': sig,
+                        })
+            if not rows:
+                return
+            os.makedirs("data", exist_ok=True)
+            with open(path, 'a', encoding='utf-8') as f:
+                for r in rows:
+                    f.write(json.dumps(r, ensure_ascii=False) + '\n')
+            print(f"   🔎 Dedup yakın-kaçış: {len(rows)} kayıt {path}'e yazıldı "
+                  f"(ortak parmak izi ama eşik altı — denetim için)")
+        except Exception as e:
+            print(f"   ⚠️  Dedup yakın-kaçış logu yazılamadı: {e}")
+
     def _load_recent_kritik3_views(self, days=KRITIK3_HISTORY_DAYS):
         """Son `days` günde KRİTİK 3'e (üst manşet) giren haberlerin zengin
         görünümlerini (tr_title/paragraph/title/full_text) okur.
@@ -2977,6 +2985,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if xday_dropped:
                 print(f"   📅 Çapraz-gün KRİTİK 3 dedup: son {REPORT_HISTORY_DAYS} "
                       f"günde raporlanan olay(lar) manşetten elendi {xday_dropped}")
+            # Gözlem: manşete GİREN adaylardan biri geçmiş bir olayla ORTAK
+            # parmak izi taşıyıp yine de elenmediyse (konu eşiği altı), sessiz
+            # kaçışı logla — davranış değişmez, yalnızca denetim için.
+            self._log_dedup_nearmiss(top3_ids[:3], view_fn, recent_k3)
         return top3_ids[:3]
 
     def _load_recent_events(self, days=REPORT_HISTORY_DAYS):

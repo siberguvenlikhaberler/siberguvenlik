@@ -41,16 +41,48 @@ CODENAME_DENYLIST = {
 }
 
 
+# ALL-CAPS kod adı çıkarımında (LONGLEASH, DCRAT...) kod adı SAYILMAYAN yaygın
+# akronim / jenerik büyük-harf sözcükler. Çapraz-gün dedup "ortak kod adı"nı
+# tek başına AYNI OLAY sayar; bu yüzden iki farklı haberde de geçebilen ortak
+# akronimlerin (RANSOM, THREAT, HTTPS...) yanlış-pozitif üretmesi engellenir.
+# <5 harfli akronimler (CVE, FBI, NATO, EDR, VPN, DNS, SQL...) zaten uzunluk
+# eşiğinde elenir; buraya yalnızca ≥5 olanlar gerekir.
+_ACRONYM_DENYLIST = {
+    # güvenlik/teknik akronim + jenerik büyük-harf sözcükler (EN)
+    'https', 'oauth', 'mitre', 'owasp', 'hipaa', 'ransom', 'malware', 'threat',
+    'attack', 'exploit', 'botnet', 'phish', 'alert', 'update', 'report',
+    'breaking', 'notice', 'warning', 'critical', 'advisory', 'bulletin',
+    'security', 'privacy', 'network', 'server', 'router', 'backdoor', 'trojan',
+    'spyware', 'stealer', 'loader', 'ransomware', 'breach', 'leaked', 'hacked',
+    # kurum / satıcı / ülke (ALL-CAPS yazıldığında)
+    'linux', 'chrome', 'google', 'apple', 'adobe', 'cisco', 'oracle', 'azure',
+    'intel', 'nvidia', 'amazon', 'nginx', 'apache', 'ubuntu', 'debian',
+    'europol', 'interpol', 'russia', 'china', 'iran', 'korea', 'ukraine',
+    # TR jenerik büyük-harf sözcükler
+    'siber', 'guvenlik', 'saldiri', 'zararli', 'yazilim', 'devlet', 'hukumet',
+    'kurum', 'rapor', 'uyari', 'turkiye',
+}
+
+
 def extract_codenames(text):
     """Metinden ayırt edici kampanya/operasyon/zararlı kod adlarını çıkarır.
 
-    Heuristik: küçük→büyük harf geçişi içeren (CamelCase) ve uzunluğu ≥5 olan
-    token'lar (FortiBleed, SharkLoader, StrikeShark...). Yaygın vendor/ürün
-    adları (CODENAME_DENYLIST) hariç. Bunlar nadir ve olaya özgüdür."""
+    İki heuristik (ikisi de ≥5 karakter, CODENAME/ACRONYM denylist hariç):
+      • CamelCase — küçük→büyük harf geçişi (FortiBleed, SharkLoader).
+      • ALL-CAPS  — tümü büyük harf, salt harf (LONGLEASH, DOGLEASH, MARKIRAT,
+        DCRAT). Tehdit istihbaratında zararlı/operasyon adları çoğu kez tümüyle
+        büyük harf yazılır; yalnızca CamelCase aramak bunları kaçırıyordu.
+    Bunlar nadir ve olaya özgüdür; aynı olayı farklı sözcüklerle anlatan
+    haberleri bağlamak için güçlü sinyaldir."""
     out = set()
     for w in re.findall(r'[A-Za-z][A-Za-z0-9]+', text or ''):
-        if len(w) >= 5 and re.search(r'[a-z][A-Z]', w) and w.lower() not in CODENAME_DENYLIST:
-            out.add(w.lower())
+        lw = w.lower()
+        if len(w) < 5 or lw in CODENAME_DENYLIST or lw in _ACRONYM_DENYLIST:
+            continue
+        is_camel   = re.search(r'[a-z][A-Z]', w)
+        is_allcaps = w.isupper() and w.isalpha()
+        if is_camel or is_allcaps:
+            out.add(lw)
     return out
 
 
@@ -62,6 +94,10 @@ _ACTOR_ID_RE = re.compile(
     r'UNC\d{3,5}'            # Mandiant uncategorized (UNC5792)
     r'|UAT-?\d{3,5}'         # Cisco Talos untargeted/actor (UAT-7810, UAT-5918)
     r'|UAC-\d{3,4}'          # CERT-UA (UAC-0185)
+    r'|TAG-\d{2,4}'          # Google TAG (TAG-110)
+    r'|CL-(?:STA|CRI|UNK)-\d{3,4}'  # Unit42 cluster (CL-STA-0048)
+    r'|DEV-\d{3,5}'          # Microsoft eski (DEV-0537)
+    r'|STORM-\d{3,5}'        # Microsoft (Storm-2077)
     r'|APT[\s-]?\d{1,3}'     # APT29, APT 41
     r'|TA\d{3,4}'            # Proofpoint (TA505)
     r'|FIN\d{1,2}'           # FIN7
@@ -70,6 +106,12 @@ _ACTOR_ID_RE = re.compile(
     r')\b',
     re.IGNORECASE,
 )
+
+# Trend Micro aktör deseni (Water/Earth/Void + Özel-ad): "Earth Lusca",
+# "Water Curupira", "Void Rabisu". _ACTOR_ID_RE IGNORECASE olduğu için buraya
+# konamaz (jenerik "water/earth/void" sözcükleriyle yanlış eşleşirdi); bu yüzden
+# BÜYÜK/küçük-harfe DUYARLI ayrı desen: yalnızca "Water Xxxx" gibi Özel-ad kalıbı.
+_TREND_ACTOR_RE = re.compile(r'\b(?:Water|Earth|Void) [A-Z][a-z]{3,}\b')
 
 # Adlandırılmış aktör/operasyon takma adları (regex'e uymayanlar). Substring
 # olarak aranır; düşük kelimeli ortak adlar bilinçli olarak listelenmemiştir.
@@ -94,13 +136,17 @@ _NAMED_ACTORS = (
 def extract_actors(text):
     """Metindeki tüm yapısal + adlandırılmış tehdit-aktörü/zafiyet kimliklerini
     normalize edilmiş bir kümeye çıkarır (boşluk/tire silinir, küçük harf)."""
-    blob = (text or '').lower()
+    raw = text or ''
+    blob = raw.lower()
     out = set()
     for m in _ACTOR_ID_RE.findall(blob):
         out.add(re.sub(r'[\s-]', '', m.lower()))
     for name in _NAMED_ACTORS:
         if name in blob:
             out.add(name.replace(' ', ''))
+    # Trend Micro deseni yalnızca orijinal (büyük/küçük-harf korunmuş) metinde
+    for m in _TREND_ACTOR_RE.findall(raw):
+        out.add(re.sub(r'[\s-]', '', m.lower()))
     return out
 
 
@@ -226,6 +272,16 @@ def same_event(view_a, view_b, explain=False, cross_day=False):
     if shared_actors and topic >= actor_topic_min:
         return _ret(True, f'actor:{",".join(sorted(shared_actors))}+topic={topic:.2f}')
 
+    # 2c) GÖVDEDE ortak kod adı (başlıkta olmasa da) + konu örtüşmesi. Aynı
+    #     zararlı/operasyon adı (LONGLEASH, DcRAT...) iki haberin metninde geçip
+    #     konu da örtüşüyorsa aynı olaydır. Topic-kapılı olduğu için (aktör
+    #     kuralıyla aynı felsefe) yanlış-birleştirme riski düşük; başlıkta ortak
+    #     kod adı zaten Kural 1'de topic'siz yakalanır — bu, başlıkları farklı
+    #     sözcüklerle yazılmış aynı-zararlı haberleri kurtarır.
+    shared_cn_body = extract_codenames(blob_a) & extract_codenames(blob_b)
+    if shared_cn_body and topic >= actor_topic_min:
+        return _ret(True, f'codename-body:{",".join(sorted(shared_cn_body))}+topic={topic:.2f}')
+
     # 2b) Her iki haberde de yapısal kimlik (CVE/aktör) var ama ORTAK YOK →
     #     farklı olay. (Farklı CVE = farklı zafiyet; main._keyword_jaccard ile
     #     aynı felsefe.) Bu, "CVE-2026-XXXX Açığı" gibi kalıp başlıkların
@@ -245,6 +301,32 @@ def same_event(view_a, view_b, explain=False, cross_day=False):
             return _ret(True, f'trtitle={ratio:.2f}')
 
     return _ret(False, '')
+
+
+def nearmiss_signal(view_a, view_b, cross_day=True):
+    """Gözlem amaçlı: iki haber ORTAK bir parmak izi (aktör-ID veya kod adı)
+    paylaşıyor AMA same_event yine de AYNI OLAY demiyorsa (konu örtüşmesi eşiğin
+    altında kaldığı için), bunu açıklayan bir dize döndürür; aksi halde None.
+
+    Amaç, sessiz kaçışları (aynı olayın farklı gün tekrar seçilmesi gibi)
+    veriyle görünür kılmaktır — davranışı DEĞİŞTİRMEZ, yalnızca raporlanır."""
+    if same_event(view_a, view_b, cross_day=cross_day):
+        return None
+    ha, pa, ea, fa = _bundle(view_a)
+    hb, pb, eb, fb = _bundle(view_b)
+    blob_a = ' '.join((ha, pa, ea, fa))
+    blob_b = ' '.join((hb, pb, eb, fb))
+    shared = (extract_actors(blob_a) & extract_actors(blob_b)) | \
+             (extract_codenames(blob_a) & extract_codenames(blob_b))
+    if not shared:
+        return None
+    topic = max(
+        _jaccard(event_keywords(pa), event_keywords(pb)),
+        _jaccard(event_keywords(blob_a), event_keywords(blob_b)),
+        _jaccard(event_keywords(pa, limit=_TOPIC_LEAD_TOKENS),
+                 event_keywords(pb, limit=_TOPIC_LEAD_TOKENS)),
+    )
+    return f'shared={",".join(sorted(shared))} topic={topic:.2f} (eşik altı)'
 
 
 def pick_distinct(ordered_ids, get_view, n=3, exclude_views=None):

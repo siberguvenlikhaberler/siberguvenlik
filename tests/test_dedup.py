@@ -116,6 +116,62 @@ def test_cross_day_uat_actor_id_dedup():
         'Ortak UAT-7810 aktör kodu + konu örtüşmesi aynı olay olarak görülmeli'
 
 
+def test_allcaps_codename_shared():
+    """TÜMÜ BÜYÜK HARF zararlı/operasyon adları (LONGLEASH, DCRAT) kod adı
+    sayılmalı. Eskiden yalnızca CamelCase yakalanıyordu; ALL-CAPS adlar
+    kaçıyordu (UAT-7810 vakasının bir yüzü)."""
+    assert 'longleash' in dedup.extract_codenames('New LONGLEASH malware found')
+    assert 'dcrat' in dedup.extract_codenames('deploys DCRAT payload')
+    a = {'tr_title': 'X Grubunun LONGLEASH ile Ağ Kurması', 'title': 'Hackers deploy LONGLEASH',
+         'paragraph': '', 'full_text': ''}
+    b = {'tr_title': 'Yeni LONGLEASH Arka Kapısı', 'title': 'LONGLEASH backdoor analyzed',
+         'paragraph': '', 'full_text': ''}
+    assert dedup.same_event(a, b, cross_day=True), 'ortak ALL-CAPS kod adı aynı olay olmalı'
+
+
+def test_acronym_not_codename():
+    """Yaygın akronim/jenerik büyük-harf sözcükler (≥5) kod adı SAYILMAMALI —
+    yoksa iki farklı haber ortak akronimle yanlışlıkla birleşir."""
+    assert dedup.extract_codenames('CISA RANSOM THREAT HTTPS ATTACK REPORT SECURITY') == set()
+    c = {'tr_title': 'CISA Kimlik Avı Uyarısı', 'title': 'CISA warns on phishing',
+         'paragraph': 'CISA phishing advisory for federal email systems.', 'full_text': ''}
+    e = {'tr_title': 'CISA KEV Kataloğu Güncellemesi', 'title': 'CISA adds bug to KEV',
+         'paragraph': 'CISA known exploited vulnerabilities catalog update.', 'full_text': ''}
+    assert not dedup.same_event(c, e, cross_day=True), 'ortak akronim aynı olay saymamalı'
+
+
+def test_new_actor_taxonomies():
+    """Büyük satıcı aktör taksonomileri tanınmalı (Google TAG, Unit42 CL-STA,
+    Microsoft DEV/Storm, Trend Micro Earth/Water/Void, Cisco UAT)."""
+    cases = {
+        'TAG-110': 'tag110', 'CL-STA-0048': 'clsta0048', 'DEV-0537': 'dev0537',
+        'Storm-2077': 'storm2077', 'UAT-7810': 'uat7810', 'Earth Lusca': 'earthlusca',
+        'Water Curupira': 'watercurupira', 'Void Rabisu': 'voidrabisu',
+    }
+    for text, norm in cases.items():
+        assert norm in dedup.extract_actors(text), f'{text} tanınmalı'
+
+
+def test_trend_actor_case_sensitive():
+    """Trend deseni büyük/küçük-harfe duyarlı: jenerik küçük-harf 'water/earth/
+    void' aktör sayılmamalı (yanlış-pozitif önlemi)."""
+    assert dedup.extract_actors('leaked into the water supply and earth around it') == set()
+
+
+def test_nearmiss_signal_observability():
+    """nearmiss_signal: ortak parmak izi var ama konu örtüşmesi eşik altıysa
+    gözlem dizesi döner; same_event zaten AYNI OLAY diyorsa None döner."""
+    # Ortak aktör ama tamamen farklı konu → yakın-kaçış sinyali
+    a = {'tr_title': 'APT41 Enerji Şirketini Hedefledi', 'title': 'APT41 hits energy firm',
+         'paragraph': 'APT41 enerji sektörü fidye saldırısı elektrik şebekesi.', 'full_text': ''}
+    b = {'tr_title': 'APT41 Üniversite Ağına Sızdı', 'title': 'APT41 breaches university',
+         'paragraph': 'APT41 akademik casusluk öğrenci verileri araştırma.', 'full_text': ''}
+    sig = dedup.nearmiss_signal(a, b, cross_day=True)
+    assert sig is not None and 'apt41' in sig
+    # Aynı olay → None
+    assert dedup.nearmiss_signal(SIGNAL_A, SIGNAL_B, cross_day=True) is None
+
+
 def _views(mapping):
     return lambda i: mapping[i]
 
