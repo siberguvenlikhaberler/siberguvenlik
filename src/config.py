@@ -823,13 +823,17 @@ Her haber için iki şey üret:
      aktörü / APT grubu / zararlı-operasyon kod adıysa (ör. UAT-7810, O-UNC-066,
      Lurking Lizard, LONGLEASH), adı TEK BAŞINA kullanma; başına KISA bir
      niteleyici koy. Okuyucu o ismi önceden bilmek zorunda değil. 5-9 kelime
-     sınırını korumak için anlatımı buna uydur (adı özneden çıkarıp olayı öne
-     alabilirsin).
+     sınırını korumak için anlatımı buna uydur.
        İyi:  "Çinli APT Grubu UAT-7810'un Yönlendiricilere Arka Kapı Yerleştirmesi"
              "İran Bağlantılı Grubun Telekom Operatörlerini Hedeflemesi"
              "APT Grubu Lurking Lizard'ın Kamu Kurumlarını Hedeflemesi"
        Kötü: "UAT-7810'un Yeni Arka Kapılar Geliştirmesi" (çıplak, niteliksiz)
              "Lurking Lizard'ın Saldırı Düzenlemesi" (çıplak, niteliksiz)
+     BAŞLIK ÇOK UZUYORSA: aktörün ÖZEL ADINI başlıktan tamamen ÇIKAR ve yalnızca
+     niteleyiciyi özne yap — ad zaten paragrafta geçecek. (Kısa ve anlaşılır
+     kalır; kriptik ad başlıkta hiç görünmez.)
+       İyi:  "Çin Menşeli APT Grubunun Yönlendiricilere Arka Kapı Yerleştirmesi"
+             "İran Bağlantılı Siber Tehdit Aktörünün Telekom Operatörlerini Hedeflemesi"
      KÖKEN (Çin/İran/Rusya/Kuzey Kore) YALNIZCA kaynak metinde belirtiliyorsa
      yazılır; kaynak söylemiyorsa köken UYDURMA, yalnızca tür niteleyicisi
      ("APT Grubu ...", "Fidye Çetesi ...") kullan.
@@ -979,13 +983,17 @@ Her haber için:
      aktörü / APT grubu / zararlı-operasyon kod adıysa (ör. UAT-7810, O-UNC-066,
      Lurking Lizard, LONGLEASH), adı TEK BAŞINA kullanma; başına KISA bir
      niteleyici koy. Okuyucu o ismi önceden bilmek zorunda değil. 5-9 kelime
-     sınırını korumak için anlatımı buna uydur (adı özneden çıkarıp olayı öne
-     alabilirsin).
+     sınırını korumak için anlatımı buna uydur.
        İyi:  "Çinli APT Grubu UAT-7810'un Yönlendiricilere Arka Kapı Yerleştirmesi"
              "İran Bağlantılı Grubun Telekom Operatörlerini Hedeflemesi"
              "APT Grubu Lurking Lizard'ın Kamu Kurumlarını Hedeflemesi"
        Kötü: "UAT-7810'un Yeni Arka Kapılar Geliştirmesi" (çıplak, niteliksiz)
              "Lurking Lizard'ın Saldırı Düzenlemesi" (çıplak, niteliksiz)
+     BAŞLIK ÇOK UZUYORSA: aktörün ÖZEL ADINI başlıktan tamamen ÇIKAR ve yalnızca
+     niteleyiciyi özne yap — ad zaten paragrafta geçecek. (Kısa ve anlaşılır
+     kalır; kriptik ad başlıkta hiç görünmez.)
+       İyi:  "Çin Menşeli APT Grubunun Yönlendiricilere Arka Kapı Yerleştirmesi"
+             "İran Bağlantılı Siber Tehdit Aktörünün Telekom Operatörlerini Hedeflemesi"
      KÖKEN (Çin/İran/Rusya/Kuzey Kore) YALNIZCA kaynak metinde belirtiliyorsa
      yazılır; kaynak söylemiyorsa köken UYDURMA, yalnızca tür niteleyicisi
      ("APT Grubu ...", "Fidye Çetesi ...") kullan.
