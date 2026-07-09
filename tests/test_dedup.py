@@ -99,6 +99,23 @@ def test_different_cve_not_same():
     assert not dedup.same_event(a, b)
 
 
+def test_cross_day_uat_actor_id_dedup():
+    """Cisco Talos aktör kodu UAT-#### çapraz-günde parmak izi olmalı.
+    Gerçek vaka (08-09.07.2026): UAT-7810 / LONGLEASH-ORB haberi iki gün üst
+    üste KRİTİK 3'e girmişti; kod adları TÜMÜ BÜYÜK HARF (LONGLEASH) olduğu için
+    CamelCase kod-adı sezgisine takılmıyor, tek ayırt edici imza UAT-7810."""
+    day1 = {'tr_title': "Çinli UAT-7810'un LONGLEASH Zararlısıyla ORB Ağını Genişletmesi",
+            'title': 'Chinese hackers develop LONGLEASH malware to expand ORB network',
+            'paragraph': 'UAT-7810 Ruckus yönlendiricilerini ele geçirerek ORB ağını büyütüyor.',
+            'full_text': ''}
+    day2 = {'tr_title': "Çin Bağlantılı UAT-7810'un Yönlendiricilere Yönelik Yeni Arka Kapıları",
+            'title': "China-Linked APT Expands Arsenal With New 'Leash' Backdoors",
+            'paragraph': 'UAT-7810 yeni arka kapılarla ORB yönlendirici ağını genişletiyor.',
+            'full_text': ''}
+    assert dedup.same_event(day2, day1, cross_day=True), \
+        'Ortak UAT-7810 aktör kodu + konu örtüşmesi aynı olay olarak görülmeli'
+
+
 def _views(mapping):
     return lambda i: mapping[i]
 

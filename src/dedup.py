@@ -60,6 +60,7 @@ def extract_codenames(text):
 _ACTOR_ID_RE = re.compile(
     r'\b(?:'
     r'UNC\d{3,5}'            # Mandiant uncategorized (UNC5792)
+    r'|UAT-?\d{3,5}'         # Cisco Talos untargeted/actor (UAT-7810, UAT-5918)
     r'|UAC-\d{3,4}'          # CERT-UA (UAC-0185)
     r'|APT[\s-]?\d{1,3}'     # APT29, APT 41
     r'|TA\d{3,4}'            # Proofpoint (TA505)
