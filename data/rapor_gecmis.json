@@ -1,58 +1,5 @@
 [
  {
-  "date": "2026-07-04",
-  "views": [
-   {
-    "tr_title": "FortiBleed Aktörlerinin Inc ve Lynx Fidye Yazılımı Gruplarıyla İş Birliği Yapması",
-    "paragraph": "FortiBleed olarak adlandırılan küresel kimlik bilgisi hasadı kampanyasının arkasındaki ilk erişim aracılarının (IAB), Inc Ransom ve Lynx fidye yazılımı gruplarıyla doğrudan iş birliği içinde olduğu ortaya çıkarılmıştır. Yapılan araştırmalar, Fortinet FortiGate güvenlik duvarlarından sızdırılan yönetici düzeyindeki erişim yetkilerinin, fidye yazılımı operatörlerine aktarıldığını ve bu durumun en az 12 farklı kuruluşta veri şifreleme saldırısıyla sonuçlandığını doğrulamıştır. Saldırganların yaklaş",
-    "title": "FortiBleed Actors Collaborating With Inc, Lynx Ransomware Gangs",
-    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\nFortiBleed Actors Collaborating With Inc, Lynx Ransomware Gangs\n\nAfter gaining a foothold in thousands of Fortinet firewalls, the attackers are starting to monetize that access, a"
-   },
-   {
-    "tr_title": "TeamPCP'nin Geliştirici Araçlarını Zehirleyerek Bulut Kimlik Bilgilerini Çalması",
-    "paragraph": "FBI tarafından yayımlanan uyarı raporuna göre, TeamPCP adlı siber suç grubu, yaygın olarak kullanılan yazılım geliştirme ve güvenlik tarama araçlarını hedef alan geniş kapsamlı tedarik zinciri saldırıları gerçekleştirmiştir. Saldırganlar, Trivy, KICS ve LiteLLM gibi popüler araçların kaynak kodlarına kötü amaçlı yazılımlar enjekte ederek, bu araçları kullanan kuruluşların bulut erişim anahtarlarını, Kubernetes sırlarını ve SSH anahtarlarını ele geçirmiştir. Özellikle OpenAI çalışanlarını da etki",
-    "title": "FBI: TeamPCP Compromised Dev Tools to Steal Cloud Credentials",
-    "full_text": "FBI: TeamPCP Compromised Dev Tools to Steal Cloud Credentials\n\nFBI says TeamPCP poisoned trusted developer tools to steal cloud credentials, spread malware through software updates, and extort victims.\n\nOn July 2, 2026, the FBI published a FLASH alert identifying the criminal group called TeamPCP and detailing how it compromised widely used developer and security tools to steal credentials from vi"
-   },
-   {
-    "tr_title": "Yeni CitrixBleed Güvenlik Açığının Kamuoyuna Açıklanmasının Ardından İstismar Edilmesi",
-    "paragraph": "NetScaler cihazlarını etkileyen ve CitrixBleed olarak adlandırılan yeni bir kritik güvenlik açığının, teknik detaylarının kamuoyuna duyurulmasının hemen ardından saldırganlar tarafından aktif olarak istismar edilmeye başlandığı tespit edilmiştir. Siber saldırganların, paylaşılan kavram kanıtlama (PoC) kodlarını kullanarak hedef sistemlerin bellek içeriklerine yetkisiz erişim sağladığı ve hassas verileri HTTP yanıtları üzerinden sızdırdığı belirlenmiştir. Bu durum, kritik ağ altyapısı bileşenleri",
-    "title": "New CitrixBleed Vulnerability Exploited Immediately After Public Disclosure",
-    "full_text": "New CitrixBleed Vulnerability Exploited Immediately After Public Disclosure\n\nHackers are targeting NetScaler appliances using public PoC code to retrieve arbitrary memory content in the HTTP response.\n\nFlipboard\n\n\n\n\n\nReddit\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nEmail\n\nRelated: Cisco Confirms In-the-Wild Exploitation of Unified CM Vulnerability\nRelated: CISA Warns of Actively Exploited Microsoft SharePo"
-   },
-   {
-    "tr_title": "Kuzey Kore Bağlantılı Aktörlerin Geliştirici Sırlarını Çalmak İçin npm Paketlerini Taklit Etmesi",
-    "paragraph": "Kuzey Kore bağlantılı olduğu değerlendirilen Lazarus grubuyla ilişkili tehdit aktörlerinin, popüler Rollup araçlarını taklit eden sahte npm paketleri aracılığıyla yazılım geliştiricileri hedef aldığı tespit edilmiştir. JFrog araştırmacıları tarafından ortaya çıkarılan bu operasyonda, saldırganların meşru paket isimlerine çok benzeyen isimler kullanarak geliştiricilerin iş istasyonlarına ve CI/CD hatlarına sızdığı belirlenmiştir. İki aşamalı bir saldırı mekanizması kullanan kötü amaçlı yazılım, i",
-    "title": "North Korea-Linked npm Packages Mimic Rollup Polyfills to Steal Developer Secrets",
-    "full_text": "Threat actors with ties to North Korea have been linked to a fresh set of malicious npm packages that masquerade as Rollup polyfill tooling to facilitate remote access and data theft.\n\nAccording to JFrog, the packages \"rollup-packages-polyfill-core\" and \"rollup-runtime-polyfill-core\" mimic the legitimate \"rollup-plugin-polyfill-node\" project, down to the description, repository metadata, and packa"
-   },
-   {
-    "tr_title": "Milyonlarca Gömülü Cihazda Kullanılan FatFs Dosya Sisteminde Yamalanmamış Açıkların Bulunması",
-    "paragraph": "Güvenlik firması runZero, USB sürücüler ve SD kartlarda yaygın olarak kullanılan FatFs adlı küçük dosya sistemi kütüphanesinde yedi adet kritik güvenlik açığı tespit edildiğini duyurmuştur. Bu açıklar, güvenlik kameraları, dronlar, endüstriyel kontrolörler ve donanım kripto cüzdanları gibi milyonlarca gömülü cihazı doğrudan etkilemektedir. Saldırganların, kötü amaçlı olarak yapılandırılmış bir depolama birimi veya yazılım güncelleme dosyası aracılığıyla cihazın belleğini bozabileceği ve yetkisiz",
-    "title": "Unpatched Flaws Disclosed in Filesystem Bundled Into Millions of Embedded Devices",
-    "full_text": "Security firm runZero has disclosed seven vulnerabilities in FatFs, a small filesystem library that lets a device read and write the FAT and exFAT formats used on USB drives and SD cards.\n\nThe flaws matter because FatFs is nearly everywhere. It ships inside the firmware that runs security cameras, drones, industrial controllers, hardware crypto wallets, and other devices built on real-time operati"
-   },
-   {
-    "tr_title": "Linux Çekirdeğindeki Bad Epoll Açığının Yetkisiz Erişime İzin Vermesi",
-    "paragraph": "Linux çekirdeğinde tespit edilen ve Bad Epoll olarak adlandırılan CVE-2026-46242 kodlu yeni bir güvenlik açığı, düşük yetkili kullanıcıların sistem üzerinde tam yönetici hakları elde etmesine olanak tanımaktadır. Araştırmacı Jaeyoung Chung tarafından keşfedilen bu zafiyet, Linux masaüstü sistemlerini, sunucuları ve Android işletim sistemini doğrudan etkilemektedir. Teknik olarak bir bellek hatası olan bu durum, çekirdeğin epoll özelliğindeki bir yarış koşulundan kaynaklanmaktadır ve saldırganlar",
-    "title": "New \"Bad Epoll\" Linux Kernel Flaw Lets Unprivileged Users Gain Root, Hits Android",
-    "full_text": "A newly disclosed Linux kernel flaw called Bad Epoll (CVE-2026-46242) lets an ordinary user with no special access take full control of a machine as root. It affects Linux desktops, servers, and Android, and a fix is out.\n\nBad Epoll sits in the same small stretch of kernel code where Anthropic's most powerful AI model, Mythos, recently found a different bug.\n\nThe AI caught one flaw and missed this"
-   },
-   {
-    "tr_title": "Microsoft 365 Kullanıcılarının Otomatik Parola Püskürtme Saldırısına Maruz Kalması",
-    "paragraph": "Microsoft 365 kullanıcıları, 12 Haziran ile 26 Haziran 2026 tarihleri arasında gerçekleşen ve geniş bir kitleyi hedef alan otomatik bir parola püskürtme saldırısına maruz kalmıştır. Güvenlik firması Huntress tarafından yapılan incelemeler, saldırganların bu süreçte firmanın müşterilerine ait hesaplara 81 milyon oturum açma girişimi gerçekleştirdiğini ve en az 78 vakada başarıya ulaştığını ortaya koymuştur. Saldırıların tamamı, internet servis sağlayıcısı LSHIY LLC tarafından kontrol edilen tek b",
-    "title": "Microsoft 365 users fall victim to one-in-a-million password spray attack",
-    "full_text": "The attack exploited previously exposed credentials and flaws in enterprises’ multi-factor authentication configurations.\n\nMicrosoft users have been hit by a massive, automated password spray attack.\n\nAmong those targeted by the attack were clients of security company Huntress. It reported that the attackers made 81 million attempts to log into its customers’ accounts between June 12 and 26 — and "
-   },
-   {
-    "tr_title": "Avalon Kötü Amaçlı Yazılım Çerçevesinin CrownX Fidye Yazılımı Yeteneklerini Barındırması",
-    "paragraph": "Siber güvenlik araştırmacıları, geleneksel güvenlik kontrollerini atlatabilen ve çok aşamalı kimlik avı zincirleri aracılığıyla dağıtılan Avalon adlı modüler bir kötü amaçlı yazılım çerçevesini tespit etmiştir. Blackpoint Cyber tarafından yapılan incelemeye göre bu yapı; kimlik bilgisi toplama, ağda yanal hareket, uzaktan erişim ve CrownX olarak adlandırılan fidye yazılımı bileşenini tek bir çatı altında birleştirmektedir. Saldırganlar, Proton Drive üzerinde barındırılan ve parola ile korunan ar",
-    "title": "New Avalon Malware Framework Packs CrownX Ransomware Capabilities",
-    "full_text": "Cybersecurity researchers have discovered a previously undocumented modular malware framework codenamed Avalon that's distributed by means of a multi-stage phishing chain capable of bypassing traditional security controls.\n\nAvalon combines credential collection, lateral movement, remote access, recovery disruption, and ransomware execution, bringing together diverse functions under one umbrella. T"
-   }
-  ]
- },
- {
   "date": "2026-07-05",
   "views": [
    {
@@ -726,6 +673,41 @@
     "paragraph": "Ledger Donjon güvenlik ekibi, Tangem kripto para cüzdan kartlarında bulunan ve yazılımsal olarak düzeltilmesi mümkün olmayan donanımsal bir güvenlik açığını rapor etmiştir. Araştırmacılar, yaklaşık 250.000 dolar maliyetli bir laboratuvar ortamında lazer darbesi enjeksiyonu yöntemini kullanarak, kartın içindeki Samsung S3D232A yongasının parola kontrol mekanizmasını devre dışı bırakmayı başarmıştır. Bu fiziksel saldırı sonucunda, saldırganın eski parolaya veya yedek karta ihtiyaç duymadan yeni bi",
     "title": "Laser Attack Resets Tangem Wallet Passwords on Cards That Can't Be Patched",
     "full_text": "Researchers at Ledger's Donjon security team have shown that a precisely timed laser pulse, aimed at the chip inside a Tangem crypto wallet card, can reset the card's password to anything the attacker picks.\n\nNo old password. No backup card. Once it is reset, whoever did it controls the wallet and can move the coins out.\n\nThis is not an emergency for most owners. The attack needs the physical card"
+   }
+  ]
+ },
+ {
+  "date": "2026-07-12",
+  "views": [
+   {
+    "tr_title": "Microsoft'un GigaWiper Zararlı Yazılımının Yıkıcı Kapasitesini Ortaya Çıkarması",
+    "paragraph": "Microsoft Tehdit İstihbaratı birimi, ilk olarak Ekim 2025 tarihindeki siber saldırılarda tespit edilen ve GigaWiper olarak adlandırılan yeni bir Golang tabanlı arka kapıyı detaylandıran teknik bir analiz yayımlamıştır. Siber tehdit aktörleri tarafından geliştirilen bu zararlı yazılım, casusluk faaliyetleri ile veri imha operasyonları arasındaki sınırı belirsizleştiren modüler bir yapıya sahip olmasıyla dikkat çekmektedir. GigaWiper, uzaktan yönetim yeteneklerini birden fazla disk silme mantığı v",
+    "title": "Microsoft uncovers GigaWiper, a backdoor designed for destruction on demand",
+    "full_text": "The modular Golang backdoor combines remote administration, multiple disk-wiping logics, and a Crucio-derived ransomware module that deliberately discards encryption keys, making recovery impossible.\n\nMicrosoft is warning defenders about a new backdoor that blurs the line between espionage malware and wipers.\n\nIn a technical analysis published on Thursday, Microsoft Threat Intelligence detailed Gi"
+   },
+   {
+    "tr_title": "Fidye Yazılımı Çetesi Hyadina'nın ABD'li Şirketleri Hedef Alması",
+    "paragraph": "Siber güvenlik kuruluşu Symantec, Hyadina olarak bilinen ve yaklaşık dört yıldır faaliyet gösteren fidye yazılımı çetesinin ABD merkezli kuruluşlara yönelik yeni bir saldırı dalgası başlattığını raporlamıştır. Söz konusu siber tehdit aktörü, GodDamn adını verdiği yeni nesil bir kilitleyici yazılım kullanarak sağlık, imalat ve eğitim gibi kritik sektörlerdeki Amerikan organizasyonlarını hedef almaktadır. Saldırganların operasyonlarında Microsoft tarafından onaylanmış meşru bir çekirdek sürücüsünü",
+    "title": "'GodDamn' Ransomware Uses BYOVD to Smite US Companies",
+    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\n'GodDamn' Ransomware Uses BYOVD to Smite US Companies\n\nMicrosoft signed a malicious kernel driver, and now it's being used to kill security software in ransomware attacks.\n\nA newly rebranded ransomware outf"
+   },
+   {
+    "tr_title": "Jscrambler Paketinin Ele Geçirilmesiyle Rust Tabanlı Bilgi Hırsızının Yayılması",
+    "paragraph": "Popüler bir yazılım geliştirme aracı olan jscrambler'ın npm paketinin 8.14.0 sürümü, kimliği belirsiz saldırganlar tarafından ele geçirilerek içine Rust tabanlı bir bilgi hırsızı yerleştirilmiştir. 11 Temmuz 2026 tarihinde yayınlanan bu kötü amaçlı sürüm, kurulum sırasında otomatik olarak çalışan bir kanca mekanizması aracılığıyla Windows, macOS ve Linux sistemlerine özgü zararlı dosyalar indirmektedir. Yapılan analizler, saldırganların meşru bir geliştirici hesabını veya yayın hattını ele geçir",
+    "title": "Compromised jscrambler 8.14.0 npm Release Drops Rust Infostealer During Install",
+    "full_text": "The jscrambler npm package was compromised, and simply installing its 8.14.0 release runs an infostealer on your machine. Published on July 11, 2026, the malicious version carries a preinstall hook that drops and executes a native binary, one build each for Windows, macOS, and Linux.\n\nSocket flagged the release six minutes after it was published. If you or one of your build systems pulled it in th"
+   },
+   {
+    "tr_title": "Fidye Çetesi ShinyHunters'ın Medtronic Şirketine Ait Verileri Sızdırması",
+    "paragraph": "Dünyanın en büyük tıbbi cihaz üreticilerinden biri olan Medtronic, ShinyHunters isimli fidye yazılımı ve şantaj grubunun düzenlediği siber saldırı sonucunda 3,8 milyondan fazla kişinin kişisel ve tıbbi verilerinin ifşa olduğunu doğrulamıştır. Nisan 2026 tarihinde gerçekleşen saldırıda, grubun şirketin kurumsal bilgi işlem sistemlerine sızarak yaklaşık 9 milyon kaydı ele geçirdiği iddia edilmiştir. Medtronic tarafından yapılan açıklamada, sızıntının hastaların isimlerini, iletişim bilgilerini, do",
+    "title": "Medtronic Notifies 3.8 Million After ShinyHunters Data Breach",
+    "full_text": "Medtronic Notifies 3.8 Million After ShinyHunters Data Breach\n\nMedtronic says a ShinyHunters attack exposed the personal and medical data of over 3.8 million people. Products and operations were unaffected.\n\nMedtronic is notifying 3,834,294 individuals after a cyberattack by the ShinyHunters extortion group exposed personal and medical information.\n\nIn April 2026, Medtronic confirmed a cyberattack"
+   },
+   {
+    "tr_title": "Avustralya Siber Güvenlik Merkezi'nin Küresel İçerik Yönetim Sistemi Saldırılarını Duyurması",
+    "paragraph": "Avustralya Siber Güvenlik Merkezi (ACSC), dünya genelinde içerik yönetim sistemlerini (CMS) ve bunlara bağlı eklentileri hedef alan geniş kapsamlı bir istismar kampanyası hakkında uyarı yayımlamıştır. Söz konusu siber tehdit aktörleri, WordPress, Joomla, Craft CMS ve MetInfo CMS gibi yaygın platformlardaki zayıflıkları kullanarak sistemlere webshell yerleştirmeyi amaçlamaktadır. Bu faaliyetler sonucunda saldırganların ağlarda kalıcılık sağladığı, kimlik bilgilerini ele geçirdiği ve hizmet kesint",
+    "title": "Australia warns of global campaign targeting vulnerable CMS platforms",
+    "full_text": "The Australian Cyber Security Centre (ACSC) issued an alert about a global exploitation campaign targeting vulnerable content management systems (CMS) and plugins.\n\nThe government agency says that many Australian businesses have already been affected by the malicious activity, with webshells being deployed on their sites.\n\nWebshells provide persistent access to the compromised sites and allow thre"
    }
   ]
  }

@@ -1,28 +1,5 @@
 [
  {
-  "date": "2026-07-04",
-  "views": [
-   {
-    "tr_title": "FortiBleed Aktörlerinin Inc ve Lynx Fidye Yazılımı Gruplarıyla İş Birliği Yapması",
-    "paragraph": "FortiBleed olarak adlandırılan küresel kimlik bilgisi hasadı kampanyasının arkasındaki ilk erişim aracılarının (IAB), Inc Ransom ve Lynx fidye yazılımı gruplarıyla doğrudan iş birliği içinde olduğu ortaya çıkarılmıştır. Yapılan araştırmalar, Fortinet FortiGate güvenlik duvarlarından sızdırılan yönetici düzeyindeki erişim yetkilerinin, fidye yazılımı operatörlerine aktarıldığını ve bu durumun en az 12 farklı kuruluşta veri şifreleme saldırısıyla sonuçlandığını doğrulamıştır. Saldırganların yaklaşık 430.000 cihazı hedef aldığı ve 12.000'den fazla sistemde aktif olarak kimlik bilgisi çalan yazılı",
-    "title": "FortiBleed Actors Collaborating With Inc, Lynx Ransomware Gangs",
-    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\nFortiBleed Actors Collaborating With Inc, Lynx Ransomware Gangs\n\nAfter gaining a foothold in thousands of Fortinet firewalls, the attackers are starting to monetize that access, and are also piling on a Nextcloud zero-day bug.\n\nThe initial access broker (IAB) operation behind the credential-harvesting FortiBleed campaign is working in concert with ransomware actors, indicating"
-   },
-   {
-    "tr_title": "TeamPCP'nin Geliştirici Araçlarını Zehirleyerek Bulut Kimlik Bilgilerini Çalması",
-    "paragraph": "FBI tarafından yayımlanan uyarı raporuna göre, TeamPCP adlı siber suç grubu, yaygın olarak kullanılan yazılım geliştirme ve güvenlik tarama araçlarını hedef alan geniş kapsamlı tedarik zinciri saldırıları gerçekleştirmiştir. Saldırganlar, Trivy, KICS ve LiteLLM gibi popüler araçların kaynak kodlarına kötü amaçlı yazılımlar enjekte ederek, bu araçları kullanan kuruluşların bulut erişim anahtarlarını, Kubernetes sırlarını ve SSH anahtarlarını ele geçirmiştir. Özellikle OpenAI çalışanlarını da etkileyen bu operasyonda, Mini Shai-Hulud ve Miasma gibi kendi kendine yayılan solucan yazılımların kull",
-    "title": "FBI: TeamPCP Compromised Dev Tools to Steal Cloud Credentials",
-    "full_text": "FBI: TeamPCP Compromised Dev Tools to Steal Cloud Credentials\n\nFBI says TeamPCP poisoned trusted developer tools to steal cloud credentials, spread malware through software updates, and extort victims.\n\nOn July 2, 2026, the FBI published a FLASH alert identifying the criminal group called TeamPCP and detailing how it compromised widely used developer and security tools to steal credentials from victim environments at scale. The targets weren’t end users. They were the tools developers trust every day inside their build pipelines.\n\nTeamPCP is behind multiple supply chain attacks, in the past, t"
-   },
-   {
-    "tr_title": "Yeni CitrixBleed Güvenlik Açığının Kamuoyuna Açıklanmasının Ardından İstismar Edilmesi",
-    "paragraph": "NetScaler cihazlarını etkileyen ve CitrixBleed olarak adlandırılan yeni bir kritik güvenlik açığının, teknik detaylarının kamuoyuna duyurulmasının hemen ardından saldırganlar tarafından aktif olarak istismar edilmeye başlandığı tespit edilmiştir. Siber saldırganların, paylaşılan kavram kanıtlama (PoC) kodlarını kullanarak hedef sistemlerin bellek içeriklerine yetkisiz erişim sağladığı ve hassas verileri HTTP yanıtları üzerinden sızdırdığı belirlenmiştir. Bu durum, kritik ağ altyapısı bileşenlerindeki açıkların yayımlanması ile saldırıların başlaması arasındaki sürenin (MTTI) neredeyse sıfıra i",
-    "title": "New CitrixBleed Vulnerability Exploited Immediately After Public Disclosure",
-    "full_text": "New CitrixBleed Vulnerability Exploited Immediately After Public Disclosure\n\nHackers are targeting NetScaler appliances using public PoC code to retrieve arbitrary memory content in the HTTP response.\n\nFlipboard\n\n\n\n\n\nReddit\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nEmail\n\nRelated: Cisco Confirms In-the-Wild Exploitation of Unified CM Vulnerability\nRelated: CISA Warns of Actively Exploited Microsoft SharePoint Vulnerability\nRelated: Adobe Patches Critical ColdFusion, Campaign Classic Vulnerabilities\nRelated: Exploitation of Recent Oracle E-Business Suite Vulnerability Begins\n\nRelated: CISA Warns of Acti"
-   }
-  ]
- },
- {
   "date": "2026-07-06",
   "views": [
    {
@@ -157,6 +134,29 @@
     "paragraph": "Çin menşeli olduğu değerlendirilen ve WP-SHELLSTORM olarak adlandırılan bir siber suç grubunun, 1,4 milyondan fazla web sitesini hedef alan geniş kapsamlı bir siber saldırı operasyonu yürüttüğü tespit edilmiştir. Tehdit aktörünün kendi sunucusunu 2026-07-11 tarihinden önceki üç hafta boyunca korumasız bırakması sonucunda, operasyonun iç işleyişine dair 800 MB boyutunda veri ve 434 dosya ifşa olmuştur. SOCRadar ve Ctrl-Alt-Intel araştırmacıları tarafından incelenen veriler, grubun özellikle güncel olmayan eklentilere sahip WordPress ve Joomla tabanlı siteleri hedeflediğini göstermektedir. Opera",
     "title": "Exposed Hacker Server Reveals WP-SHELLSTORM Backdooring Thousands of WordPress Sites",
     "full_text": "A cybercrime crew left one of its own servers wide open on the internet for three weeks, and it exposed the operation's inner workings: the hacking tools, the activity logs, and target lists naming more than 1.4 million websites.\n\nFar fewer were actually broken into, but the exposed files showed researchers how a mass site-hacking operation runs from the inside.\n\nThe operation, now tracked as WP-SHELLSTORM, is what SOCRadar calls a webshell access brokerage: a crew that breaks into sites at scale, plants a hidden backdoor (a \"webshell\") on each, and packages that access for resale.\n\nThe strong"
+   }
+  ]
+ },
+ {
+  "date": "2026-07-12",
+  "views": [
+   {
+    "tr_title": "Microsoft'un GigaWiper Zararlı Yazılımının Yıkıcı Kapasitesini Ortaya Çıkarması",
+    "paragraph": "Microsoft Tehdit İstihbaratı birimi, ilk olarak Ekim 2025 tarihindeki siber saldırılarda tespit edilen ve GigaWiper olarak adlandırılan yeni bir Golang tabanlı arka kapıyı detaylandıran teknik bir analiz yayımlamıştır. Siber tehdit aktörleri tarafından geliştirilen bu zararlı yazılım, casusluk faaliyetleri ile veri imha operasyonları arasındaki sınırı belirsizleştiren modüler bir yapıya sahip olmasıyla dikkat çekmektedir. GigaWiper, uzaktan yönetim yeteneklerini birden fazla disk silme mantığı ve geri dönüşü imkansız kılan Crucio tabanlı bir fidye yazılımı modülüyle birleştirmektedir. Microsof",
+    "title": "Microsoft uncovers GigaWiper, a backdoor designed for destruction on demand",
+    "full_text": "The modular Golang backdoor combines remote administration, multiple disk-wiping logics, and a Crucio-derived ransomware module that deliberately discards encryption keys, making recovery impossible.\n\nMicrosoft is warning defenders about a new backdoor that blurs the line between espionage malware and wipers.\n\nIn a technical analysis published on Thursday, Microsoft Threat Intelligence detailed GigaWiper, a Golang-based implant first observed in October 2025 intrusions that combines remote administration capabilities with multiple disk-wiping and ransomware routines.\n\nRather than building a ne"
+   },
+   {
+    "tr_title": "Fidye Yazılımı Çetesi Hyadina'nın ABD'li Şirketleri Hedef Alması",
+    "paragraph": "Siber güvenlik kuruluşu Symantec, Hyadina olarak bilinen ve yaklaşık dört yıldır faaliyet gösteren fidye yazılımı çetesinin ABD merkezli kuruluşlara yönelik yeni bir saldırı dalgası başlattığını raporlamıştır. Söz konusu siber tehdit aktörü, GodDamn adını verdiği yeni nesil bir kilitleyici yazılım kullanarak sağlık, imalat ve eğitim gibi kritik sektörlerdeki Amerikan organizasyonlarını hedef almaktadır. Saldırganların operasyonlarında Microsoft tarafından onaylanmış meşru bir çekirdek sürücüsünü istismar ederek güvenlik yazılımlarını devre dışı bıraktıkları tespit edilmiştir. PoisonX adı veril",
+    "title": "'GodDamn' Ransomware Uses BYOVD to Smite US Companies",
+    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\n'GodDamn' Ransomware Uses BYOVD to Smite US Companies\n\nMicrosoft signed a malicious kernel driver, and now it's being used to kill security software in ransomware attacks.\n\nA newly rebranded ransomware outfit is sneaking malware into American organizations using a malicious yet Microsoft-approved driver.\n\nResearchers at Symantec recently observed a cyberattack from a group known as \"Hyadina.\" Hyadina is"
+   },
+   {
+    "tr_title": "Jscrambler Paketinin Ele Geçirilmesiyle Rust Tabanlı Bilgi Hırsızının Yayılması",
+    "paragraph": "Popüler bir yazılım geliştirme aracı olan jscrambler'ın npm paketinin 8.14.0 sürümü, kimliği belirsiz saldırganlar tarafından ele geçirilerek içine Rust tabanlı bir bilgi hırsızı yerleştirilmiştir. 11 Temmuz 2026 tarihinde yayınlanan bu kötü amaçlı sürüm, kurulum sırasında otomatik olarak çalışan bir kanca mekanizması aracılığıyla Windows, macOS ve Linux sistemlerine özgü zararlı dosyalar indirmektedir. Yapılan analizler, saldırganların meşru bir geliştirici hesabını veya yayın hattını ele geçirerek bu sürümü doğrudan npm havuzuna yüklediğini göstermektedir. Zararlı yazılımın temel amacı, geli",
+    "title": "Compromised jscrambler 8.14.0 npm Release Drops Rust Infostealer During Install",
+    "full_text": "The jscrambler npm package was compromised, and simply installing its 8.14.0 release runs an infostealer on your machine. Published on July 11, 2026, the malicious version carries a preinstall hook that drops and executes a native binary, one build each for Windows, macOS, and Linux.\n\nSocket flagged the release six minutes after it was published. If you or one of your build systems pulled it in that window, the payload has already run with whatever access your install process had.\n\nNone of this is in the prior release, 8.13.0. The package diff shows two new files under dist/: setup.js, a small"
    }
   ]
  }
