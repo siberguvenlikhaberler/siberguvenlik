@@ -159,5 +159,28 @@
     "full_text": "The jscrambler npm package was compromised, and simply installing its 8.14.0 release runs an infostealer on your machine. Published on July 11, 2026, the malicious version carries a preinstall hook that drops and executes a native binary, one build each for Windows, macOS, and Linux.\n\nSocket flagged the release six minutes after it was published. If you or one of your build systems pulled it in that window, the payload has already run with whatever access your install process had.\n\nNone of this is in the prior release, 8.13.0. The package diff shows two new files under dist/: setup.js, a small"
    }
   ]
+ },
+ {
+  "date": "2026-07-13",
+  "views": [
+   {
+    "tr_title": "Rus İstihbaratının Kritik Altyapı Yönlendiricilerini Hedef Almasına Karşı Uyarı Yapılması",
+    "paragraph": "Birleşik Krallık Ulusal Siber Güvenlik Merkezi (NCSC) ve uluslararası ortakları, Rusya Federal Güvenlik Servisi (FSB) bünyesindeki Centre 16 adlı siber tehdit aktörünün küresel çapta kritik ulusal altyapıları hedef alan faaliyetlerine karşı bir bildiri yayımlamıştır. Rusya menşeli APT grubu Centre 16; Berserk Bear, Energetic Bear ve Dragonfly gibi isimlerle de bilinmekte olup, dünya genelinde iletişim, savunma, enerji, finans, hükümet ve sağlık sektörlerindeki ağ cihazlarını istismar etmektedir. Söz konusu aktörün, zayıf yapılandırılmış yönlendiricileri tespit etmek için internet genelinde tar",
+    "title": "UK and Allies urge critical sectors to improve defences against Russian intelligence targeting",
+    "full_text": "UK and Allies urge critical sectors to improve defences against Russian intelligence targeting\n\nNew advisory highlights Russian state cyber actors’ global exploitation of poorly configured routers\n\nThe UK and international allies strongly urge action to better defend against the threat from Russian state intelligence actors\n\nAdvice follows the opportunistic exploitation of inadequately configured routers and network devices by Centre 16 of Russia’s Federal Security Service (FSB)\n\nWarning comes as the UK sanctions Russian state and criminal networks for cyber and hybrid operations and calls out"
+   },
+   {
+    "tr_title": "Progress'in ShareFile Müşterilerine Sunucuları Kapatma Talimatı Vermesi",
+    "paragraph": "Progress Software, ShareFile Storage Zone Controller kullanıcılarına yönelik ciddi bir harici güvenlik tehdidi nedeniyle tüm internete açık sunucuların derhal kapatılması talimatını vermiştir. Şirket, 10 Temmuz akşamı gönderdiği acil uyarıda, Windows tabanlı sunucuların manuel olarak kapatılmasının veri güvenliği için kritik bir adım olduğunu belirtmiştir. Storage Zone Controller bileşenleri, kuruluşların dosyalarını kendi yerel altyapılarında saklamasına olanak tanırken kimlik doğrulama işlemleri için bulut sistemine bağlanmaktadır. Bu yapı gereği sunucuların internete açık olması, onları sib",
+    "title": "Progress Told ShareFile Customers to Pull the Plug on Their Servers. Here’s What We Know.",
+    "full_text": "Progress Told ShareFile Customers to Pull the Plug on Their Servers. Here’s What We Know.\n\nProgress urged ShareFile Storage Zone customers to shut down internet-facing servers immediately over a credible security threat under investigation.\n\nProgress Software sent an urgent email to ShareFile customers the evening of July 10 with a subject line that left no room for ambiguity: “Service Disruption. Immediate Action Required.” The company told customers running Storage Zone Controllers to shut down their Windows servers immediately, citing what it called a “credible external security threat.”\n\nT"
+   },
+   {
+    "tr_title": "Avustralya Sinyal Müdürlüğü'nün Küresel İçerik Yönetim Sistemi Saldırılarını Duyurması",
+    "paragraph": "Avustralya Sinyal Müdürlüğü, dünya genelinde ve Avustralya özelinde küçük ve orta ölçekli işletmeleri hedef alan geniş kapsamlı bir içerik yönetim sistemi (CMS) istismar kampanyası tespit edildiğini duyurmuştur. Siber tehdit aktörlerinin WordPress ve Joomla gibi yaygın platformlardaki bilinen güvenlik açıklarını tarayarak sistemlere sızdığı ve kalıcı erişim sağlamak amacıyla web kabukları (webshell) yerleştirdiği belirlenmiştir. Saldırganların ele geçirdikleri sunucuları kimlik bilgisi hırsızlığı, web sitesi tahrifatı ve kurumsal ağlara sızmak için bir basamak olarak kullandıkları bildirilmekt",
+    "title": "Australia Alerts Organizations to Ongoing CMS Exploitation Attacks",
+    "full_text": "Australia Alerts Organizations to Ongoing CMS Exploitation Attacks\n\nAustralia warns of a global campaign exploiting CMS flaws to deploy webshells on WordPress, Joomla, and other websites.\n\nAustralia’s Signals Directorate has issued an alert about a large-scale exploitation campaign actively targeting content management systems (CMS) worldwide, with many small and medium-sized Australian businesses already hit. Attackers are scanning websites for known vulnerabilities, deploying webshells to gain persistent remote access, and using compromised servers as a base for broader attacks.\n\n“A large-sc"
+   }
+  ]
  }
 ]
