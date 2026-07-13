@@ -75,8 +75,23 @@ KRITIK3_HISTORY_DAYS = 7
 # günde raporlanmış bir olayın FARKLI ID/URL/sözcüklerle tekrar rapora
 # girmesini engeller. (kritik3_gecmis.json yalnızca üst manşeti kapsıyordu.)
 REPORT_HISTORY_FILE = "data/rapor_gecmis.json"
-# Çapraz-gün rapor-geneli dedup penceresi (gün).
+# Çapraz-gün rapor-geneli DETERMİNİSTİK dedup penceresi (gün). Yüksek-özgüllük
+# (ortak CVE/kod-adı/aktör) gerektirdiği için 7 gün güvenlidir, yanlış-pozitif
+# üretmez.
 REPORT_HISTORY_DAYS = 7
+
+# ── LLM SEMANTİK ÇAPRAZ-GÜN DEDUP (opsiyonel, güçlendirilmiş) ──────────────────
+# 2026-07-09'da eklenen ilk sürüm (7 günlük pencere + gevşek prompt) YÜZEYSEL
+# benzeyen GERÇEKTEN YENİ haberleri "aynı gelişme" sanıp eledi (07-11→07-13
+# haber daralması: NCSC/UK Rus hedefleme 98p, RedHook, Fransa kuantum). Bu yüzden
+# 2026-07-13'te devre dışı bırakıldı. Güçlendirilmiş sürüm HAZIR ama VARSAYILAN
+# KAPALI — birkaç temiz rapor gözlemlendikten sonra True yapılıp açılabilir.
+#   • Pencere DETERMİNİSTİK pastan DAHA DAR: "aynı gelişme" gerçekten yakın
+#     günlerde olur; 7 gün gereksiz yanlış-pozitif üretiyordu.
+#   • Prompt SIKILAŞTIRILDI: yalnızca aynı mağdur+aynı olay / aynı CVE+aynı
+#     gelişme işaretlenir; konu/aktör/ülke benzerliği İŞARETLENMEZ.
+ENABLE_LLM_CROSS_DAY_DEDUP = False
+CROSS_DAY_DEDUP_WINDOW_DAYS = 2
 
 # Skorlama/critique kalibrasyon log'u (JSONL — her satır bir haber). Rubrik
 # ağırlıklarını gerçek raporlarla ayarlamak için: hangi haber hangi kategori/
@@ -151,6 +166,11 @@ EV_TARZI = """━━━━━━ EV TARZI (tüm yazılı çıktılarda AYNEN uyg
 • REGISTER: Resmî, nesnel, haber-analiz üslubu. Abartı, duygusal dil, reklam tonu ve
   öznel sıfatlar (çarpıcı, korkutucu, devasa) YOK. Ton rapor boyunca TUTARLI olmalı —
   bir paragraf resmî, diğeri laubali olamaz.
+• FİİL KİPİ (ZORUNLU): Geçmiş olaylar RESMİ "-mIştIr" kipiyle yazılır — olmuştur,
+  yapmıştır, etmiştir, gerçekleşmiştir, tespit edilmiştir, açıklamıştır. Süregelen
+  durum/değerlendirme "-mAktAdIr" ile — belirtilmektedir, sürmektedir. LAUBALİ
+  (konuşma dili) BASİT GEÇMİŞ "-DI" YASAKTIR: "oldu, yaptı, etti, gerçekleşti,
+  açıkladı, buldu, çaldı" gibi cümle-sonu fiilleri KULLANILMAZ.
 • DİL: Yalnızca Türkçe. Şirket/ürün/kişi adları, CVE kodları ve kampanya kod adları
   ORİJİNAL bırakılır (çevrilmez).
 • CÜMLE: Bir cümlede en fazla iki gelişme bağlanır ("ve/ayrıca/öte yandan"). Üç veya
@@ -172,7 +192,8 @@ def get_zaman_kurali(today):
         return ""
     return f"""━━━━━━ ZAMAN / TARİH FARKINDALIĞI (BUGÜN: {today}) ━━━━━━
 • Tüm olayları BUGÜNÜN tarihine ({today}) göre konumlandır ve Türkçe zaman kipini buna göre seç.
-• Bugünden ÖNCE gerçekleşmiş/başlamış bir olay → geçmiş ya da SÜREN kip (gerçekleşti, başladı, sürüyor, tamamlandı). Onu "yaklaşan / olacak / öncesinde" gibi GELECEĞE dönük anlatma.
+• RESMİ KİP ZORUNLU: geçmiş olaylar RESMİ "-mIştIr" ile yazılır (gerçekleşmiştir, başlamıştır, tamamlanmıştır); süregelen durum "-mAktAdIr" ile (sürmektedir, belirtilmektedir). LAUBALİ basit geçmiş "-DI" (gerçekleşti, başladı, oldu, yaptı, etti) KULLANMA.
+• Bugünden ÖNCE gerçekleşmiş/başlamış bir olay → geçmiş ("gerçekleşmiştir") ya da SÜREN kip ("sürmektedir", "tamamlanmıştır"). Onu "yaklaşan / olacak / öncesinde" gibi GELECEĞE dönük anlatma.
 • Bugünden önce BAŞLAYIP hâlâ süren bir etkinlik (turnuva, zirve, seçim, fuar) için "öncesinde / öncesi / hazırlığında / arifesinde" KULLANMA; bunun yerine "sürerken / döneminde / kapsamında / -e yönelik olarak" gibi ifadeler kullan.
 • "öncesinde", "yaklaşan" ve gelecek kip YALNIZCA başlangıç tarihi bugünden ({today}) SONRA olan olaylar için kullanılır.
 • Bir etkinliğin başlangıç/bitiş tarihi metinde geçiyorsa, o tarihi BUGÜN ({today}) ile KIYASLA ve kipini ona göre seç; başlamış bir etkinliği asla "yaklaşan/henüz başlamamış" gibi sunma."""
@@ -1312,6 +1333,49 @@ HABERLER:
 {items_content}"""
 
 
+def get_register_audit_prompt(items_content):
+    """Pass 5.5 — AUDITOR ajanı: ANLATIM / RESMİ-DİL DENETİMİ (üçüncü görev).
+
+    Rapor gövdesindeki paragraflarda laubali (konuşma dili) BASİT GEÇMİŞ ZAMAN
+    ("oldu, yaptı, etti, gerçekleşti, açıkladı") tespit edilenler bu adıma verilir;
+    LLM bunları RESMİ habercilik register'ına ("-mIştIr / -mAktAdIr": olmuştur,
+    yapmıştır, etmiştir, gerçekleşmiştir) YENİDEN YAZAR. Yalnızca kip/register
+    değişir; OLGULAR (sayı, tarih, kurum, isim, CVE) BİREBİR KORUNUR.
+
+    items_content: "=== HABER ID: N ===\\nParagraf: ...\n" formatı.
+    Döndürülen JSON: {"rewrites": [{"id": N, "paragraph": "..."}, ...]} — yalnızca
+    DEĞİŞTİRİLEN paragraflar; zaten resmi olan bir paragraf için kayıt döndürme."""
+    return f"""Sen bir siber güvenlik haber editörüsün. Görevin TEK: aşağıdaki
+rapor paragraflarını RESMİ Türkçe habercilik üslubuna uygun hale getirmek.
+
+KURAL — RESMİ GEÇMİŞ/ŞİMDİKİ KİP ZORUNLUDUR:
+- Geçmiş olaylar "-mIştIr" ile yazılır: oldu→OLMUŞTUR, yaptı→YAPMIŞTIR,
+  etti→ETMİŞTİR, gerçekleşti→GERÇEKLEŞMİŞTİR, açıkladı→AÇIKLAMIŞTIR,
+  buldu→BULMUŞTUR, çaldı→ÇALMIŞTIR, talep etti→TALEP ETMİŞTİR.
+- Süregelen durum/değerlendirme "-mAktAdIr" ile yazılır: geliyordu→GELMEKTEYDİ
+  veya GELMEKTEDİR, kullanılıyordu→KULLANILMAKTAYDI.
+- Copula (ek-eylem) laubali geçmişi de resmileştir: değildi→DEĞİLDİR,
+  sahipti→SAHİPTİR (bağlam gerektiriyorsa "sahip olmuştur").
+
+DEĞİŞMEYECEKLER (yalnızca kip/register değişir):
+- Hiçbir OLGU değişmez: sayı, tarih, para, yüzde, kurum/kişi/ülke adı, CVE
+  kodu, kod adı BİREBİR korunur. Bilgi EKLEME, ÇIKARMA, YENİDEN YORUMLAMA yok.
+- Paragrafın uzunluğu, cümle sırası ve anlamı büyük ölçüde korunur.
+- Zaten resmi olan cümlelere dokunma.
+
+Bir paragrafta değiştirilecek laubali kip YOKSA o paragrafı SONUÇTA VERME.
+
+SADECE JSON — başka hiçbir şey yazma. Değişiklik yoksa boş liste:
+{{
+  "rewrites": [
+    {{"id": 7, "paragraph": "Tam düzeltilmiş resmi paragraf ..."}}
+  ]
+}}
+
+PARAGRAFLAR:
+{items_content}"""
+
+
 def get_cross_day_dedup_prompt(today_items, recent_items):
     """Çapraz-GÜN semantik mükerrer denetimi (Auditor'ın çapraz-gün eşi).
 
@@ -1330,20 +1394,27 @@ def get_cross_day_dedup_prompt(today_items, recent_items):
 adaylarından, SON GÜNLERDE ZATEN RAPORLANMIŞ bir olayın AYNISINI (aynı gelişmeyi)
 anlatan — yani okuyucuya YENİ hiçbir şey katmayan MÜKERRER — olanları bulmak.
 
-AYNI OLAY (mükerrer → BUGÜNKÜ ID'yi işaretle): farklı kaynak/başlık/kelimelerle
-yazılmış olsa bile aynı temel olay/olgu:
-- Aynı mağdur/hedef + aynı saldırgan + aynı olay (aynı ihlal, aynı kampanya),
-- VEYA aynı zafiyet (aynı CVE/ürün) hakkında aynı gelişme,
-- VEYA aynı takedown/kovuşturma/operasyon hakkında aynı haber.
+İŞARETLEME EŞİĞİ ÇOK YÜKSEKTİR. Bir BUGÜNKÜ adayı YALNIZCA, son günlerdeki bir
+haberle AŞAĞIDAKİLERDEN BİRİ TAM SAĞLANIYORSA işaretle:
+- AYNI MAĞDUR/HEDEF **VE** AYNI OLAY (aynı ihlal/aynı kampanya/aynı saldırı) —
+  ikisi birden; yalnızca biri yeterli DEĞİL,
+- VEYA AYNI ZAFİYET (aynı CVE numarası veya aynı ürün+aynı açık) hakkında AYNI
+  gelişme,
+- VEYA AYNI operasyon/takedown/kovuşturma (aynı fail + aynı işlem) hakkında aynı
+  haber.
 
-FARKLI OLAY / YENİ GELİŞME (işaretleme! — mükerrer DEĞİL):
-- Aynı olayın YENİ bir gelişmesi (ör. dün 'açık keşfedildi', bugün 'yama çıktı' /
-  'aktif istismar başladı' / 'yeni kurban') → YENİ haber, işaretleme,
-- Aynı ürün/aktör ama FARKLI zafiyet/saldırı,
-- Aynı konu ama farklı vaka (iki ayrı kurumda iki ayrı olay).
+İŞARETLEME (mükerrer DEĞİL — bunlar YENİ/FARKLI haberdir):
+- ⛔ SADECE KONU/TEMA benzerliği (ikisi de "Rusya/APT", ikisi de "kuantum
+  şifreleme", ikisi de "Android zararlısı", ikisi de "fidye") → mağdur+olay aynı
+  DEĞİLSE mükerrer DEĞİLDİR. Konu örtüşmesi ASLA tek başına işaretleme sebebi olamaz.
+- ⛔ Aynı AKTÖR/GRUP/ülke ama FARKLI olay/kurban/kampanya → FARKLI haber.
+- ⛔ Benzer İSİMLER (ör. RedHook ↔ RedWing, iki farklı zararlı) → FARKLI haber.
+- ⛔ Aynı olayın YENİ gelişmesi (dün 'açık keşfedildi', bugün 'yama çıktı' /
+  'aktif istismar başladı' / 'yeni kurban' / 'yeni yaptırım') → YENİ haber.
+- ⛔ Aynı ürün/satıcı ama FARKLI zafiyet/CVE.
 
-Emin değilsen İŞARETLEME (yalnızca açıkça aynı gelişmeyi anlatanları işaretle —
-yeni bir haberi yanlışlıkla elemek, mükerreri kaçırmaktan daha kötüdür).
+EN ÖNEMLİ KURAL: Emin değilsen veya "biraz benziyor" diyorsan İŞARETLEME. Yeni bir
+haberi yanlışlıkla elemek, mükerrer bırakmaktan ÇOK DAHA KÖTÜDÜR. Şüphede boş liste döndür.
 
 SADECE JSON — başka hiçbir şey yazma. Mükerrer yoksa boş liste:
 {{

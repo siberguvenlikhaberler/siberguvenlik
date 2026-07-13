@@ -36,12 +36,13 @@ from src.config import (
     GEMINI_API_KEY, NEWS_SOURCES, HEADERS, CONTENT_SELECTORS,
     ARCHIVE_FILE, KRITIK3_HISTORY_FILE, KRITIK3_HISTORY_DAYS,
     REPORT_HISTORY_FILE, REPORT_HISTORY_DAYS,
+    ENABLE_LLM_CROSS_DAY_DEDUP, CROSS_DAY_DEDUP_WINDOW_DAYS,
     SCORING_LOG_FILE, SCORING_LOG_MAX_LINES,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_top3_verification_prompt,
     get_legacy_json_prompt, get_quality_review_prompt, get_dedup_review_prompt,
-    get_cross_day_dedup_prompt,
+    get_cross_day_dedup_prompt, get_register_audit_prompt,
     get_executive_summary_prompt, get_title_rescue_prompt,
     get_scoring_prompt, get_critique_prompt,
     SCORING_WEIGHTS, SCORING_CATEGORIES, ZAFIYET_KATEGORILERI,
@@ -55,6 +56,9 @@ from src import llm_client as _llm
 # Aynı-olay (same-event) dedup — KRİTİK 3 içinde ve rapor genelinde mükerrer
 # haberleri DETERMİNİSTİK (LLM'den bağımsız) olarak engeller. Bkz. src/dedup.py.
 from src import dedup as _dedup
+# Resmi-dil (register) denetimi — gövde paragraflarında laubali (-DI) basit geçmiş
+# zamanı DETERMİNİSTİK tespit eder; düzeltmeyi Auditor'ın LLM adımı yapar.
+from src import register as _register
 
 
 # ===== YARDIMCI FONKSİYONLAR =====
@@ -2854,6 +2858,69 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 print(f"   🗑️  ID {aid} kırpma sonrası <25 kelime → gövdeden düşürüldü.")
         return drop
 
+    def _audit_register(self, rendered_ids, content_by_id):
+        """AUDITOR — anlatım / resmi-dil denetimi (üçüncü görev).
+
+        rendered_ids'teki her paragrafta laubali (konuşma dili) CÜMLE SONU basit
+        geçmiş zaman ("oldu, yaptı, etti, gerçekleşti") DETERMİNİSTİK aranır
+        (src.register). Bulunanlar LLM'e verilip RESMİ register'a ("-mIştIr /
+        -mAktAdIr") yeniden yazdırılır; olgular birebir korunur. content_by_id
+        YERİNDE güncellenir. Laubali kip bulunmazsa/LLM başarısızsa paragraf
+        DEĞİŞMEZ (güvenli degrade). KRİTİK 3 dahil TÜM rapor haberlerine uygulanır
+        (yalnızca metin düzeltir, haber silmez)."""
+        flagged = []
+        for aid in rendered_ids:
+            para = (content_by_id.get(aid, {}) or {}).get('paragraph', '') or ''
+            hits = _register.find_casual_past_words(para)
+            if hits:
+                flagged.append((aid, hits))
+        if not flagged:
+            print("   ✅ Anlatım resmi (laubali geçmiş zaman yok).")
+            return
+        print(f"   ✍️  Laubali anlatım tespit edildi, resmileştiriliyor: "
+              f"{[(aid, h) for aid, h in flagged]}")
+
+        # Bir seferde tüm işaretli paragrafları LLM'e ver (genelde 0-3 adet).
+        lines = []
+        for aid, _ in flagged:
+            para = content_by_id.get(aid, {}).get('paragraph', '') or ''
+            lines.append(f"=== HABER ID: {aid} ===\nParagraf: {para}\n")
+        data = self._gemini_call_json(
+            get_register_audit_prompt('\n'.join(lines)),
+            max_output_tokens=4096, label='Auditor-Resmileştirme')
+        if not data or not isinstance(data, dict):
+            print("   ⚠️  Resmileştirme LLM yanıtı boş — paragraflar korunuyor.")
+            return
+
+        flagged_ids = {aid for aid, _ in flagged}
+        applied = []
+        for rw in (data.get('rewrites', []) or []):
+            if not isinstance(rw, dict):
+                continue
+            try:
+                aid = int(rw.get('id'))
+            except (TypeError, ValueError):
+                continue
+            new_para = (rw.get('paragraph', '') or '').strip()
+            if aid not in flagged_ids or not new_para:
+                continue
+            old_para = content_by_id.get(aid, {}).get('paragraph', '') or ''
+            # Güvenlik: yeniden yazım anlamlı uzunlukta olmalı ve laubali kipi
+            # gerçekten temizlemeli; aksi halde orijinali koru (fact-drift önlemi:
+            # yeni metin eskisinin ~%55'inden kısaysa bilgi kaybı riski → reddet).
+            if len(new_para.split()) < max(15, int(0.55 * len(old_para.split()))):
+                print(f"   ⚠️  ID {aid} resmileştirme fazla kısaldı — orijinal korunuyor.")
+                continue
+            if _register.has_casual_past(new_para):
+                print(f"   ⚠️  ID {aid} resmileştirme hâlâ laubali — orijinal korunuyor.")
+                continue
+            c = dict(content_by_id.get(aid, {}))
+            c['paragraph'] = new_para
+            content_by_id[aid] = c
+            applied.append(aid)
+        if applied:
+            print(f"   ✅ Resmileştirildi: {applied}")
+
     def _verify_top3(self, top3_ids, non_vuln_ids, content_by_id,
                      articles_by_id, label):
         """Pass 4.5 — seçili KRİTİK 3'ü LLM ile DENETLER/teyit eder.
@@ -3858,12 +3925,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         print(f"   ⚠️  ID={rid} Türkçeleştirilemedi (içerik filtresi olası).")
 
         # ── PASS 5.5 — AUDITOR (rapor bittikten sonra son bütünlük denetimi) ──
-        # İki görevi var: (1) MÜKERRER — deterministik same_event bag-of-words'tür;
+        # ÜÇ görevi var: (1) MÜKERRER — deterministik same_event bag-of-words'tür;
         # 'aynı olay, farklı sözcükler' durumunu (ortak kod adı/CVE/aktör yoksa)
         # kaçırabilir (03.07 Kouloglou vakası). LLM TÜM rapor haberlerini görüp
         # aynı-olay gruplarını bulur; KRİTİK 3 korunur, mükerrer gövde kaldırılır.
         # (2) KESİK PARAGRAF — cümle ortasında kesilmiş paragrafları bulur;
         # kaynağı varsa yeniden üretir, hâlâ kesikse son tam cümleye kırpar.
+        # (3) ANLATIM/RESMİ-DİL — laubali (-DI) basit geçmiş zaman ("oldu/yaptı/
+        # etti") içeren paragrafları resmi register'a ("-mIştIr") yeniden yazdırır.
         print("\n🔁 Pass 5.5 — Auditor: (a) mükerrer denetimi...")
         dup_remove = self._dedup_review_llm(
             list(top3_ids) + list(top10_ids) + list(remaining_ids),
@@ -3884,6 +3953,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if trunc_drop:
             top10_ids     = [i for i in top10_ids     if i not in trunc_drop]
             remaining_ids = [i for i in remaining_ids if i not in trunc_drop]
+
+        # (c) Anlatım / resmi-dil denetimi — laubali (-DI) basit geçmiş zaman
+        # ("oldu/yaptı/etti") içeren paragrafları resmi register'a ("-mIştIr")
+        # yeniden yazdırır. Rapordaki TÜM haberlere uygulanır; haber silmez.
+        print("   🔎 Auditor: (c) anlatım / resmi-dil denetimi...")
+        self._audit_register(
+            list(top3_ids) + list(top10_ids) + list(remaining_ids),
+            content_by_id)
 
         # ── RAPOR GENELİ AYNI-OLAY DEDUP (gövde ↔ KRİTİK 3 + gövde içi) ──
         # KRİTİK 3'e alınan bir olay, gövdede (Önemli Gelişmeler / paragraflar /
@@ -3915,23 +3992,19 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             view_fn_x = self._dedup_view_fn(content_by_id, articles_by_id)
             top10_ids     = self._dedup_body_cross_day(top10_ids,     view_fn_x, recent_report)
             remaining_ids = self._dedup_body_cross_day(remaining_ids, view_fn_x, recent_report)
-            # ── LLM SEMANTİK ÇAPRAZ-GÜN DEDUP DEVRE DIŞI (2026-07-13) ──────────
-            # Bu katman (0ad9a9c, 07-09) haber sayısında kalıcı YANLIŞ-POZİTİF
-            # daralmaya yol açtı: 7 günlük referans penceresine (100+ görünüm)
-            # YÜZEYSEL benzeyen GERÇEKTEN YENİ haberleri "aynı gelişme" sanıp
-            # eledi. Doğrulanan örnekler (07-13): NCSC/UK Rus istihbarat hedefleme
-            # (98p, günün en önemli haberi), RedHook Android (07-09'daki RedWing
-            # ile karıştı), Fransa kuantum-sertifikasyon politikası (ABD kuantum
-            # kararnamesiyle karıştı). Bu üçünü deterministik pas EŞLEŞTİRMİYOR;
-            # yalnızca LLM elemişti. Meşru çapraz-gün tekrarları zaten (a)
-            # skorlama-anı `mukerrer` sinyali ve (b) yukarıdaki deterministik
-            # same_event(cross_day=True) — CVE/kod-adı/aktör özgüllüğü — ile
-            # yakalanıyor (ör. 07-13 Adobe CVE-2026-48282 doğru elendi). Katman
-            # metodu (_dedup_body_cross_day_llm) korunuyor; yalnızca çağrılmıyor.
-            # Yeniden etkinleştirmeden önce prompt sıkılaştırma + pencere daraltma
-            # (7→2-3 gün) gerekir.
-            # top10_ids     = self._dedup_body_cross_day_llm(top10_ids,     content_by_id, articles_by_id, recent_report)
-            # remaining_ids = self._dedup_body_cross_day_llm(remaining_ids, content_by_id, articles_by_id, recent_report)
+            # ── LLM SEMANTİK ÇAPRAZ-GÜN DEDUP (opsiyonel, güçlendirilmiş) ──────
+            # İlk sürüm (0ad9a9c, 07-09; 7 gün + gevşek prompt) YÜZEYSEL benzeyen
+            # GERÇEKTEN YENİ haberleri eledi (07-11→07-13 daralması). 07-13'te
+            # devre dışı bırakıldı; güçlendirilmiş sürüm HAZIR ama VARSAYILAN
+            # KAPALI (config.ENABLE_LLM_CROSS_DAY_DEDUP). Açıkken bile artık DAHA
+            # DAR pencere (CROSS_DAY_DEDUP_WINDOW_DAYS) + SIKI prompt kullanır;
+            # meşru tekrarlar zaten deterministik pas + skorlama `mukerrer`
+            # sinyaliyle yakalanıyor.
+            if ENABLE_LLM_CROSS_DAY_DEDUP:
+                recent_narrow = self._load_recent_report_views(
+                    days=CROSS_DAY_DEDUP_WINDOW_DAYS) or recent_report
+                top10_ids     = self._dedup_body_cross_day_llm(top10_ids,     content_by_id, articles_by_id, recent_narrow)
+                remaining_ids = self._dedup_body_cross_day_llm(remaining_ids, content_by_id, articles_by_id, recent_narrow)
 
         # NOT: Eski "az-haber guard" KALDIRILDI. Önceden az haber günlerinde
         # top3 dışında gövde haberi kalmayınca KRİTİK 3 kutusu boşaltılıyordu;
@@ -4398,14 +4471,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 top10_ids     = [i for i in top10_ids     if i in kept_set]
                 remaining_ids = [i for i in remaining_ids if i in kept_set]
 
-        # Çapraz-gün rapor-geneli dedup (gövde ↔ son 7 gün raporu) — ana yolla aynı.
+        # Çapraz-gün rapor-geneli dedup (gövde ↔ son gün raporu) — ana yolla aynı.
         recent_report = self._load_recent_report_views()
         if recent_report:
             view_fn_x = self._dedup_view_fn(content_by_id, id_to_article)
             top10_ids     = self._dedup_body_cross_day(top10_ids,     view_fn_x, recent_report, label='legacy')
             remaining_ids = self._dedup_body_cross_day(remaining_ids, view_fn_x, recent_report, label='legacy')
-            top10_ids     = self._dedup_body_cross_day_llm(top10_ids,     content_by_id, id_to_article, recent_report, label='legacy')
-            remaining_ids = self._dedup_body_cross_day_llm(remaining_ids, content_by_id, id_to_article, recent_report, label='legacy')
+            # LLM semantik çapraz-gün dedup — VARSAYILAN KAPALI (ana yolla aynı;
+            # bkz. config.ENABLE_LLM_CROSS_DAY_DEDUP). Açıkken dar pencere kullanır.
+            if ENABLE_LLM_CROSS_DAY_DEDUP:
+                recent_narrow = self._load_recent_report_views(
+                    days=CROSS_DAY_DEDUP_WINDOW_DAYS) or recent_report
+                top10_ids     = self._dedup_body_cross_day_llm(top10_ids,     content_by_id, id_to_article, recent_narrow, label='legacy')
+                remaining_ids = self._dedup_body_cross_day_llm(remaining_ids, content_by_id, id_to_article, recent_narrow, label='legacy')
+
+        # Auditor (c) — anlatım / resmi-dil denetimi (ana yolla aynı).
+        self._audit_register(
+            list(top3_ids) + list(top10_ids) + list(remaining_ids), content_by_id)
 
         # HTML oluştur
         html = self._build_html(
