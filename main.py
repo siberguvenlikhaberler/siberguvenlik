@@ -3915,10 +3915,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             view_fn_x = self._dedup_view_fn(content_by_id, articles_by_id)
             top10_ids     = self._dedup_body_cross_day(top10_ids,     view_fn_x, recent_report)
             remaining_ids = self._dedup_body_cross_day(remaining_ids, view_fn_x, recent_report)
-            # Deterministik pasın kaçırdığı "aynı olay, farklı sözcükler" çapraz-gün
-            # kopyalarını SEMANTİK (LLM) yakala. KRİTİK 3 buraya gelmez.
-            top10_ids     = self._dedup_body_cross_day_llm(top10_ids,     content_by_id, articles_by_id, recent_report)
-            remaining_ids = self._dedup_body_cross_day_llm(remaining_ids, content_by_id, articles_by_id, recent_report)
+            # ── LLM SEMANTİK ÇAPRAZ-GÜN DEDUP DEVRE DIŞI (2026-07-13) ──────────
+            # Bu katman (0ad9a9c, 07-09) haber sayısında kalıcı YANLIŞ-POZİTİF
+            # daralmaya yol açtı: 7 günlük referans penceresine (100+ görünüm)
+            # YÜZEYSEL benzeyen GERÇEKTEN YENİ haberleri "aynı gelişme" sanıp
+            # eledi. Doğrulanan örnekler (07-13): NCSC/UK Rus istihbarat hedefleme
+            # (98p, günün en önemli haberi), RedHook Android (07-09'daki RedWing
+            # ile karıştı), Fransa kuantum-sertifikasyon politikası (ABD kuantum
+            # kararnamesiyle karıştı). Bu üçünü deterministik pas EŞLEŞTİRMİYOR;
+            # yalnızca LLM elemişti. Meşru çapraz-gün tekrarları zaten (a)
+            # skorlama-anı `mukerrer` sinyali ve (b) yukarıdaki deterministik
+            # same_event(cross_day=True) — CVE/kod-adı/aktör özgüllüğü — ile
+            # yakalanıyor (ör. 07-13 Adobe CVE-2026-48282 doğru elendi). Katman
+            # metodu (_dedup_body_cross_day_llm) korunuyor; yalnızca çağrılmıyor.
+            # Yeniden etkinleştirmeden önce prompt sıkılaştırma + pencere daraltma
+            # (7→2-3 gün) gerekir.
+            # top10_ids     = self._dedup_body_cross_day_llm(top10_ids,     content_by_id, articles_by_id, recent_report)
+            # remaining_ids = self._dedup_body_cross_day_llm(remaining_ids, content_by_id, articles_by_id, recent_report)
 
         # NOT: Eski "az-haber guard" KALDIRILDI. Önceden az haber günlerinde
         # top3 dışında gövde haberi kalmayınca KRİTİK 3 kutusu boşaltılıyordu;
