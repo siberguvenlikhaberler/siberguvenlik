@@ -145,7 +145,7 @@ KATEGORI_ONCELIK = {
     'casus_yazilim':               9,
     'nation_state_apt':            8,
     'stratejik_kurum_saldirisi':   7,
-    'politika_hukuk':              6,
+    'politika_hukuk':              7,
     'tedarik_zinciri':             5,
     'kolluk_operasyonu':           4,
     'veri_ihlali':                 3,
@@ -181,7 +181,11 @@ EV_TARZI = """━━━━━━ EV TARZI (tüm yazılı çıktılarda AYNEN uyg
 • YORUM YASAĞI: Kaynakta açıkça yazmayan "önem/anlam/sonuç" değerlendirmesi EKLEME.
   Metin somut bir olguyla biter, soyut bir yargıyla değil.
 • TERİM TUTARLILIĞI: Aynı aktör/kurum/kampanya için metin boyunca AYNI adlandırmayı
-  kullan (bir yerde tam ad, başka yerde farklı kısaltma olmaz)."""
+  kullan (bir yerde tam ad, başka yerde farklı kısaltma olmaz).
+• ATIF: Bilgiyi kaynağa atfederek ver — "belirtilmiştir, ifade edilmiştir,
+  açıklamıştır, bilgisi verilmiştir, dikkat çekilmiştir, kaydedilmiştir,
+  bildirilmiştir". Cümleleri bu kalıplarla bağla; kişisel/soyut/yorumcu
+  anlatıdan kaçın — olguyu kim söyledi/açıkladıysa ona dayandır."""
 
 
 def get_zaman_kurali(today):
@@ -796,15 +800,19 @@ def get_title_rescue_prompt(title, body):
 
 İKİ ŞEY ÜRET:
 1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
-   - 5-9 kelime, her kelimenin ilk harfi büyük
-   - ZORUNLU FORMAT: "[Özne]'nin [Nesne]'yi [eylem-ması/mesi]"
-   - Bitiş: -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
+   - 5-11 kelime, her kelimenin ilk harfi büyük
+   - Bitiş ZORUNLU isim-fiil: -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
+   - Olaya EN DOĞAL kalıbı seç (üçü de geçerli): (a) aktör-merkezli etken
+     "FBI'ın Kimlik Avı Ağını Çökertmesi"; (b) yer-öncelikli "ABD'de İki Şahsın
+     Kuzey Koreli Hackerlara Yardım Etmekten Suçlu Bulunması"; (c) fail belirsizse
+     edilgen adlaştırma "Küresel Siber Suç Platformu W3LL'nin Çökertilmesi".
+     "Bir" belirtme edatını doğal yerlerde kullan.
    - YASAK: -mıştır, -edilmiştir gibi eylem cümlesi yapıları
 
 2. PARAGRAF: Haberin resmi Türkçe özeti
    - MİNİMUM 110 kelime, tek paragraf
    - SADECE verilen metindeki bilgileri kullan; tahmin/yorum ekleme
-   - Resmi dil: yapılmıştır, belirtilmektedir, tespit edilmiştir
+   - Resmi dil ve kaynak atfı: belirtilmiştir, ifade edilmiştir, bilgisi verilmiştir
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{"tr_title": "...", "paragraph": "..."}}
@@ -831,19 +839,25 @@ def get_deep_analysis_prompt(articles_full, today=''):
 
 Her haber için iki şey üret:
 1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
-   - 5-9 kelime, her kelimenin ilk harfi büyük
-   - ZORUNLU FORMAT: "[Özne]'nin/[Özne]'ın [Nesne]'yi [eylem-ması/mesi]"
-   - Bitiş: -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
-   - Örnekler: "FBI'ın Outsider Enterprise Kimlik Avı Ağını Çökertmesi"
-               "Meta'nın NSO Group'u WhatsApp Kullanıcılarını Hedeflemekle Suçlaması"
-               "ShinyHunters'ın Avrupa Konseyi Verilerini Sızdırması"
-               "Microsoft Exchange'de CVE-2024-1234 Açığının Keşfedilmesi"
+   - 5-11 kelime, her kelimenin ilk harfi büyük
+   - Bitiş ZORUNLU isim-fiil (mastar): -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
+   - KALIP: Olaya EN DOĞAL olanı seç — üç kalıp da eşdeğer geçerlidir:
+     (a) Aktör-merkezli etken (fail netse):
+         "FBI'ın Kimlik Avı Ağını Çökertmesi"
+         "Meta'nın NSO Group'u WhatsApp Kullanıcılarını Hedeflemekle Suçlaması"
+     (b) Yer-öncelikli (olay bir ülke/bölge bağlamındaysa):
+         "ABD'de İki Şahsın Kuzey Koreli Hackerlara Yardım Etmekten Suçlu Bulunması"
+         "Almanya'da Bir Eyaletin Microsoft Yerine Yerli Yazılımları Kullanmaya Başlaması"
+     (c) Edilgen adlaştırma (fail belirsiz/dağınıksa):
+         "Küresel Siber Suç Platformu W3LL'nin Çökertilmesi"
+         "Rusya'daki Bazı Kurumlara Saldıran Yeni Bir Siber Tehdit Aktörünün Tespit Edilmesi"
+     "Bir" belirtme edatını doğal yerlerde kullan (zorlama yok).
    - YASAK: -mıştır, -edilmiştir, -tespit edilmiştir gibi eylem cümlesi yapıları
    - Somut detay: şirket/CVE/ülke adı dahil et
    - AKTÖR ADLANDIRMA (çıplak kod adı YASAK): Başlığın öznesi bir tehdit
      aktörü / APT grubu / zararlı-operasyon kod adıysa (ör. UAT-7810, O-UNC-066,
      Lurking Lizard, LONGLEASH), adı TEK BAŞINA kullanma; başına KISA bir
-     niteleyici koy. Okuyucu o ismi önceden bilmek zorunda değil. 5-9 kelime
+     niteleyici koy. Okuyucu o ismi önceden bilmek zorunda değil. Kelime
      sınırını korumak için anlatımı buna uydur.
        İyi:  "Çinli APT Grubu UAT-7810'un Yönlendiricilere Arka Kapı Yerleştirmesi"
              "İran Bağlantılı Grubun Telekom Operatörlerini Hedeflemesi"
@@ -865,23 +879,24 @@ Her haber için iki şey üret:
    - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
    ── ODAK KURALI (her haber için zorunlu) ───────────────────────────────────
-   Bu paragrafın amacı bir TEHDİT İSTİHBARATI değerlendirmesidir, teknik bir
-   rapor DEĞİLDİR. Okuyucu "bu neden stratejik/jeopolitik açıdan önemli?"
-   sorusunun cevabını almalı.
+   Paragrafın belkemiği SOMUT OLGUDUR: kim, ne yaptı, kime, kaç kişi/kurum/
+   dolar, hangi tarih, hangi yetkili/kurum ne açıkladı — hepsi kaynak metne
+   ATIFLA verilir ("belirtilmiştir, ifade edilmiştir, bilgisi verilmiştir,
+   dikkat çekilmiştir"). Amaç okunabilir, olgusal bir haber-analiz paragrafıdır;
+   teknik rapor DEĞİLDİR.
 
-   Yazmadan önce kaynak metinde şu soruları sor ve cevaplarını paragrafın
-   OMURGASI yap:
-     (A) SALDIRGAN KİM? Devlet bağlantısı, hangi ülke, istihbarat/askeri yapı,
-         özel müteahhit mi APT grubu mu, bilinen diğer isimleri/geçmişi.
-     (B) HEDEF KİM? Hangi ülkelerin hükümetleri/kritik kurumları (dış işleri,
-         savunma, telekom, enerji), kaç ülke, hangi sektör.
-     (C) AMAÇ NE? Casusluk, veri hırsızlığı, sabotaj, altyapıya önceden
-         konumlanma, etki operasyonu.
-     (D) JEOPOLİTİK ANLAM NE? Hangi ülkeler arası gerilim/rekabetle örtüşüyor,
-         neden şimdi, kime karşı avantaj sağlıyor.
+   Stratejik/jeopolitik bağlam (saldırgan kimliği/devlet bağlantısı, hedef
+   ülke-sektör, amaç, hangi gerilimle örtüştüğü) YALNIZCA kaynak metinde AÇIKÇA
+   varsa ve EN FAZLA BİR cümleyle eklenir. Kaynak söylemiyorsa EKLENMEZ —
+   çıkarım/yorum yapma (uydurma değerlendirme yasağı aşağıda; EN ÖNEMLİ KURAL).
+   Bağlamı ararken şu eksenlere bakabilirsin, ama YALNIZCA kaynakta cevabı varsa:
+     (A) SALDIRGAN KİM? Devlet bağlantısı, hangi ülke, grup, bilinen diğer adları.
+     (B) HEDEF KİM? Hangi ülke/kurum/sektör, kaç ülke.
+     (C) AMAÇ NE? Casusluk, veri hırsızlığı, sabotaj, etki operasyonu.
+     (D) HANGİ BAĞLAM? Ülkeler arası gerilim/rekabet — yalnızca kaynak söylüyorsa.
 
    TEKNİK DETAY POLİTİKASI:
-     • Paragraf neredeyse tamamen A/B/C/D eksenine yazılır.
+     • Paragraf somut olgu ekseninde, kaynak atıflarıyla yazılır.
      • Teknik ayrıntılar (CVE numarası, exploit/malware/driver dosya adları,
        DLL side-loading zinciri, C2 protokol tipi, kayıt defteri anahtarları,
        sürüm numaraları) KURAL OLARAK YAZILMAZ.
@@ -934,7 +949,8 @@ Her haber için iki şey üret:
    İkinci ve sonraki geçişlerde yalın ad kullanılabilir.
    ───────────────────────────────────────────────────────────────────────────
 
-   - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
+   - 5N1K'yı somut biçimde kapsa (kim, ne yaptı, kime, ne zaman, hangi sayı/kurum);
+     stratejik bağlamı yalnızca kaynakta açıkça varsa ekle
 
    ⛔⛔ UYDURMA DEĞERLENDİRME / YORUM CÜMLESİ — KESİN YASAK (EN ÖNEMLİ KURAL) ⛔⛔
    Paragrafın HİÇBİR yerine, ÖZELLİKLE SONUNA, kaynak metinde AÇIKÇA yazmayan
@@ -958,6 +974,18 @@ Her haber için iki şey üret:
    - Son cümle, kaynakta geçen SOMUT bir olgu olacak (kim ne yaptı, hangi sayı,
      hangi tarih, hangi kurum, hangi teknik önlem) — soyut "önemlidir/stratejiktir/
      kritiktir" yargısı DEĞİL.
+
+── ÖRNEK ÜSLUP (yalnızca üslup referansı; senin paragrafın MİN 120 kelime olacak) ──
+Başlık: "Proton'un İsviçre'den Gelen Kullanıcı Verisi Taleplerini Reddetmesi"
+Paragraf: "Proton VPN, 2026 yılının ilk yarısında İsviçreli yetkililerden kullanıcı
+bilgilerine ilişkin 47 talep aldığını açıklamıştır. Şirketin açıklamasına göre,
+istenen kullanıcıları tanımlayabilecek hiçbir veriye sahip olunmadığı için
+taleplerin tamamı reddedilmiştir. Proton, bağlantı kayıtlarını toplamadığı veya
+saklamadığı için hangi kullanıcının belirli bir anda bir sunucuya bağlı olduğunu
+belirleyemediğini belirtmiştir. Şirket yetkilileri, yalnızca yasal olarak zorunlu
+olunan durumlarda İsviçre makamlarından gelen taleplerle ilgilenildiğini
+vurgulamıştır." (Somut sayı/kurum/olgu + kaynak atfı; soyut yorum/kapanış YOK.)
+─────────────────────────────────────────────────────────────────────────────
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
@@ -991,19 +1019,25 @@ def get_summary_batch_prompt(articles_full, today=''):
 
 Her haber için:
 1. TR_BASLIK: Türkçe isim-fiil (mastar) başlığı
-   - 5-9 kelime, her kelimenin ilk harfi büyük
-   - ZORUNLU FORMAT: "[Özne]'nin/[Özne]'ın [Nesne]'yi [eylem-ması/mesi]"
-   - Bitiş: -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
-   - Örnekler: "FBI'ın Outsider Enterprise Kimlik Avı Ağını Çökertmesi"
-               "Meta'nın NSO Group'u WhatsApp Kullanıcılarını Hedeflemekle Suçlaması"
-               "ShinyHunters'ın Avrupa Konseyi Verilerini Sızdırması"
-               "Google Chrome'da Sıfır Gün Açığının Aktif Olarak İstismar Edilmesi"
+   - 5-11 kelime, her kelimenin ilk harfi büyük
+   - Bitiş ZORUNLU isim-fiil (mastar): -ması, -mesi, -ılması, -ilmesi, -ınması, -ünmesi
+   - KALIP: Olaya EN DOĞAL olanı seç — üç kalıp da eşdeğer geçerlidir:
+     (a) Aktör-merkezli etken (fail netse):
+         "FBI'ın Kimlik Avı Ağını Çökertmesi"
+         "Meta'nın NSO Group'u WhatsApp Kullanıcılarını Hedeflemekle Suçlaması"
+     (b) Yer-öncelikli (olay bir ülke/bölge bağlamındaysa):
+         "ABD'de İki Şahsın Kuzey Koreli Hackerlara Yardım Etmekten Suçlu Bulunması"
+         "Almanya'da Bir Eyaletin Microsoft Yerine Yerli Yazılımları Kullanmaya Başlaması"
+     (c) Edilgen adlaştırma (fail belirsiz/dağınıksa):
+         "Küresel Siber Suç Platformu W3LL'nin Çökertilmesi"
+         "Google Chrome'da Sıfır Gün Açığının Aktif Olarak İstismar Edilmesi"
+     "Bir" belirtme edatını doğal yerlerde kullan (zorlama yok).
    - YASAK: -mıştır, -edilmiştir, -tespit edilmiştir gibi eylem cümlesi yapıları
    - Somut detay: şirket/CVE/ülke adı dahil et
    - AKTÖR ADLANDIRMA (çıplak kod adı YASAK): Başlığın öznesi bir tehdit
      aktörü / APT grubu / zararlı-operasyon kod adıysa (ör. UAT-7810, O-UNC-066,
      Lurking Lizard, LONGLEASH), adı TEK BAŞINA kullanma; başına KISA bir
-     niteleyici koy. Okuyucu o ismi önceden bilmek zorunda değil. 5-9 kelime
+     niteleyici koy. Okuyucu o ismi önceden bilmek zorunda değil. Kelime
      sınırını korumak için anlatımı buna uydur.
        İyi:  "Çinli APT Grubu UAT-7810'un Yönlendiricilere Arka Kapı Yerleştirmesi"
              "İran Bağlantılı Grubun Telekom Operatörlerini Hedeflemesi"
@@ -1025,23 +1059,24 @@ Her haber için:
    - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
    ── ODAK KURALI (her haber için zorunlu) ───────────────────────────────────
-   Bu paragrafın amacı bir TEHDİT İSTİHBARATI değerlendirmesidir, teknik bir
-   rapor DEĞİLDİR. Okuyucu "bu neden stratejik/jeopolitik açıdan önemli?"
-   sorusunun cevabını almalı.
+   Paragrafın belkemiği SOMUT OLGUDUR: kim, ne yaptı, kime, kaç kişi/kurum/
+   dolar, hangi tarih, hangi yetkili/kurum ne açıkladı — hepsi kaynak metne
+   ATIFLA verilir ("belirtilmiştir, ifade edilmiştir, bilgisi verilmiştir,
+   dikkat çekilmiştir"). Amaç okunabilir, olgusal bir haber-analiz paragrafıdır;
+   teknik rapor DEĞİLDİR.
 
-   Yazmadan önce kaynak metinde şu soruları sor ve cevaplarını paragrafın
-   OMURGASI yap:
-     (A) SALDIRGAN KİM? Devlet bağlantısı, hangi ülke, istihbarat/askeri yapı,
-         özel müteahhit mi APT grubu mu, bilinen diğer isimleri/geçmişi.
-     (B) HEDEF KİM? Hangi ülkelerin hükümetleri/kritik kurumları (dış işleri,
-         savunma, telekom, enerji), kaç ülke, hangi sektör.
-     (C) AMAÇ NE? Casusluk, veri hırsızlığı, sabotaj, altyapıya önceden
-         konumlanma, etki operasyonu.
-     (D) JEOPOLİTİK ANLAM NE? Hangi ülkeler arası gerilim/rekabetle örtüşüyor,
-         neden şimdi, kime karşı avantaj sağlıyor.
+   Stratejik/jeopolitik bağlam (saldırgan kimliği/devlet bağlantısı, hedef
+   ülke-sektör, amaç, hangi gerilimle örtüştüğü) YALNIZCA kaynak metinde AÇIKÇA
+   varsa ve EN FAZLA BİR cümleyle eklenir. Kaynak söylemiyorsa EKLENMEZ —
+   çıkarım/yorum yapma (uydurma değerlendirme yasağı aşağıda; EN ÖNEMLİ KURAL).
+   Bağlamı ararken şu eksenlere bakabilirsin, ama YALNIZCA kaynakta cevabı varsa:
+     (A) SALDIRGAN KİM? Devlet bağlantısı, hangi ülke, grup, bilinen diğer adları.
+     (B) HEDEF KİM? Hangi ülke/kurum/sektör, kaç ülke.
+     (C) AMAÇ NE? Casusluk, veri hırsızlığı, sabotaj, etki operasyonu.
+     (D) HANGİ BAĞLAM? Ülkeler arası gerilim/rekabet — yalnızca kaynak söylüyorsa.
 
    TEKNİK DETAY POLİTİKASI:
-     • Paragraf neredeyse tamamen A/B/C/D eksenine yazılır.
+     • Paragraf somut olgu ekseninde, kaynak atıflarıyla yazılır.
      • Teknik ayrıntılar (CVE numarası, exploit/malware/driver dosya adları,
        DLL side-loading zinciri, C2 protokol tipi, kayıt defteri anahtarları,
        sürüm numaraları) KURAL OLARAK YAZILMAZ.
@@ -1074,7 +1109,8 @@ Her haber için:
    İkinci ve sonraki geçişlerde yalın ad kullanılabilir.
    ───────────────────────────────────────────────────────────────────────────
 
-   - 5N1K'yı stratejik çerçevede kapsa (kim, kime, ne amaçla, hangi bağlamda)
+   - 5N1K'yı somut biçimde kapsa (kim, ne yaptı, kime, ne zaman, hangi sayı/kurum);
+     stratejik bağlamı yalnızca kaynakta açıkça varsa ekle
 
    ⛔⛔ UYDURMA DEĞERLENDİRME / YORUM CÜMLESİ — KESİN YASAK (EN ÖNEMLİ KURAL) ⛔⛔
    Paragrafın HİÇBİR yerine, ÖZELLİKLE SONUNA, kaynak metinde AÇIKÇA yazmayan
@@ -1090,6 +1126,19 @@ Her haber için:
      çekmektedir.
    - Son cümle, kaynakta geçen SOMUT bir olgu olacak (kim ne yaptı, hangi sayı/
      tarih/kurum/teknik önlem) — soyut "önemlidir/stratejiktir" yargısı DEĞİL.
+
+── ÖRNEK ÜSLUP (yalnızca üslup referansı; senin paragrafın MİN 120 kelime olacak) ──
+Başlık: "Hollanda Polisinin Bir Yatırım Dolandırıcılığı Şebekesini Çökertmesi"
+Paragraf: "Hollanda Polisi, on binlerce mağduru olduğu tahmin edilen uluslararası
+bir yatırım dolandırıcılığı şebekesinin parçası olduklarından şüphelenilen çok
+sayıda kişinin tutuklandığını duyurmuştur. Şebekede, 700'den fazla şahsın finansal
+danışman gibi davrandığı 20 çağrı merkezi işlettiği ve suç örgütünün bir dönemde
+ayda 114 milyon dolardan fazla gelir elde ettiği belirtilmiştir. Şebekenin
+liderinin, Polonya'da tutuklanan 46 yaşındaki bir İsrail-Polonya vatandaşı olduğu
+ifade edilmiştir. Yetkililer, dolandırıcılık planıyla bağlantılı çok sayıda şahsın
+Kıbrıs, Yunanistan ve Belçika'da tutuklandığını belirtmiştir." (Somut
+sayı/kurum/olgu + kaynak atfı; soyut yorum/kapanış YOK.)
+─────────────────────────────────────────────────────────────────────────────
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
