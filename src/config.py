@@ -147,7 +147,7 @@ KATEGORI_ONCELIK = {
     'stratejik_kurum_saldirisi':   7,
     'politika_hukuk':              7,
     'tedarik_zinciri':             5,
-    'kolluk_operasyonu':           4,
+    'kolluk_operasyonu':           5,
     'veri_ihlali':                 3,
     'zafiyet_aktif_apt':           2,
     'zafiyet_rutin':               1,
