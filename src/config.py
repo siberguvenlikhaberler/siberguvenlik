@@ -825,7 +825,7 @@ METİN:
 
 def get_deep_analysis_prompt(articles_full, today=''):
     """
-    Pass 2: Top-10 haberin TAM metni → Türkçe başlık + 120+ kelime paragraf (JSON).
+    Pass 2: Top-10 haberin TAM metni → Türkçe başlık + 110-130 kelime paragraf (JSON).
     articles_full: "=== HABER ID: N ===\\nKaynak: ...\\nTAM METİN:\\n..." formatında string.
     today: 'YYYY-MM-DD' — doğru zaman kipi için bugünün tarihi.
     """
@@ -1009,7 +1009,7 @@ HABERLER:
 
 def get_summary_batch_prompt(articles_full, today=''):
     """
-    Pass 3: Bir batch haberin TAM METNİ → Türkçe başlık + 100+ kelime paragraf (JSON).
+    Pass 3: Bir batch haberin TAM METNİ → Türkçe başlık + 110-130 kelime paragraf (JSON).
     articles_full: "=== HABER ID: N ===\\nKaynak: ...\\nTAM METİN:\\n..." formatında string.
     today: 'YYYY-MM-DD' — doğru zaman kipi için bugünün tarihi.
     """
@@ -1521,7 +1521,7 @@ Kalan haberleri önem sırasına göre sırala. En önemli max 10 tanesi "top10"
 
 ADIM 3 — TÜRKÇE ÖZET YAZ (filtered hariç HER haber için):
 Her haber için:
-- "tr_title": Türkçe isim-fiil başlığı. ZORUNLU FORMAT: "[Özne]'nin [Nesne]'yi [eylem-ması/mesi]" — örnek: "FBI'ın Kimlik Avı Ağını Çökertmesi", "Meta'nın NSO Group'u Suçlaması". YASAK: "...gerçekleştirilmiştir", "...açığa çıkmıştır" gibi eylem cümlesi yapıları.
+- "tr_title": Türkçe isim-fiil (mastar) başlığı, 5-11 kelime, isim-fiil ekiyle biter (-ması/-mesi/-ılması/-ilmesi). Olaya EN DOĞAL kalıbı seç: (a) aktör-merkezli "FBI'ın Kimlik Avı Ağını Çökertmesi"; (b) yer-öncelikli "ABD'de İki Şahsın Suçlu Bulunması"; (c) fail belirsizse edilgen "Küresel Platform W3LL'nin Çökertilmesi". YASAK: "...gerçekleştirilmiştir", "...açığa çıkmıştır", "...edilmiştir" gibi eylem cümlesi yapıları.
 - "paragraph": 110-130 kelime Türkçe özet (yoğun, dolgusuz).
   - SADECE kaynak metindeki bilgiler — tahmin, yorum, çıkarım YASAK
   - Ne oldu, kim etkilendi, teknik boyutları aktar
