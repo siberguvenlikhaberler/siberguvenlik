@@ -810,7 +810,7 @@ def get_title_rescue_prompt(title, body):
    - YASAK: -mıştır, -edilmiştir gibi eylem cümlesi yapıları
 
 2. PARAGRAF: Haberin resmi Türkçe özeti
-   - MİNİMUM 110 kelime, tek paragraf
+   - 110-130 kelime, tek paragraf (yoğun ve dolgusuz)
    - SADECE verilen metindeki bilgileri kullan; tahmin/yorum ekleme
    - Resmi dil ve kaynak atfı: belirtilmiştir, ifade edilmiştir, bilgisi verilmiştir
 
@@ -874,7 +874,7 @@ Her haber için iki şey üret:
      ("APT Grubu ...", "Fidye Çetesi ...") kullan.
 
 2. PARAGRAF: Resmi Türkçe özet
-   - MİNİMUM 120 kelime (daha az yazarsan YANLIŞ sayılır — say ve kontrol et)
+   - 110-130 kelime — yoğun ve dolgusuz; 110'un altına düşme, 130'u belirgin aşma (say ve kontrol et)
    - SADECE kaynak metinde olan bilgileri yaz — tahmin, yorum, çıkarım YASAK
    - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
@@ -975,16 +975,20 @@ Her haber için iki şey üret:
      hangi tarih, hangi kurum, hangi teknik önlem) — soyut "önemlidir/stratejiktir/
      kritiktir" yargısı DEĞİL.
 
-── ÖRNEK ÜSLUP (yalnızca üslup referansı; senin paragrafın MİN 120 kelime olacak) ──
-Başlık: "Proton'un İsviçre'den Gelen Kullanıcı Verisi Taleplerini Reddetmesi"
-Paragraf: "Proton VPN, 2026 yılının ilk yarısında İsviçreli yetkililerden kullanıcı
-bilgilerine ilişkin 47 talep aldığını açıklamıştır. Şirketin açıklamasına göre,
-istenen kullanıcıları tanımlayabilecek hiçbir veriye sahip olunmadığı için
-taleplerin tamamı reddedilmiştir. Proton, bağlantı kayıtlarını toplamadığı veya
-saklamadığı için hangi kullanıcının belirli bir anda bir sunucuya bağlı olduğunu
-belirleyemediğini belirtmiştir. Şirket yetkilileri, yalnızca yasal olarak zorunlu
-olunan durumlarda İsviçre makamlarından gelen taleplerle ilgilenildiğini
-vurgulamıştır." (Somut sayı/kurum/olgu + kaynak atfı; soyut yorum/kapanış YOK.)
+── ÖRNEK ÜSLUP (yalnızca üslup referansı; senin paragrafın 110-130 kelime olacak) ──
+Başlık: "Rusya Devlet Destekli Hackerların Avrupa'daki Güvenlik Kameralarına Sızması"
+Paragraf: "Hollanda Genel İstihbarat ve Güvenlik Servisi (AIVD) ve Askeri İstihbarat
+ve Güvenlik Servisi (MIVD), Rus devlet destekli bilgisayar korsanlarının, NATO askeri
+lojistiği hakkında istihbarat toplamak ve Ukrayna birliklerini savaş alanında hedef
+almak için Avrupa ve Ukrayna genelinde internete bağlı güvenlik kameralarını
+sistematik olarak ele geçirdiği konusunda uyarmıştır. Yetkililer, faaliyetin amacının,
+Ukrayna'ya yönelik askeri nakliye yolları ve silah sevkiyatları gibi konularda
+istihbarat toplamak olduğunu açıklamıştır. AIVD ve MIVD ayrıca, Hollanda'daki askeri
+lojistik yolları boyunca konumlandırılmış ele geçirilmiş bazı kameraların olduğunu
+tespit ettiklerini de belirtmiştir. Yayınlanan uyarı metnine göre saldırganlar, internette
+açıkta kalan cihazları taramış, üretici bilgilerine dayanarak IP kameralarını
+tanımlamış ve varsayılan şifreler ile eski yazılımlar gibi zayıf güvenlik
+önlemlerinden yararlanmıştır." (Somut olgu + kaynak atfı; soyut yorum/kapanış YOK.)
 ─────────────────────────────────────────────────────────────────────────────
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
@@ -1054,7 +1058,7 @@ Her haber için:
      ("APT Grubu ...", "Fidye Çetesi ...") kullan.
 
 2. PARAGRAF: Resmi Türkçe özet
-   - MİNİMUM 120 kelime (daha az yazarsan YANLIŞ sayılır — say ve kontrol et)
+   - 110-130 kelime — yoğun ve dolgusuz; 110'un altına düşme, 130'u belirgin aşma (say ve kontrol et)
    - SADECE kaynak metinde olan bilgileri yaz — tahmin, yorum, çıkarım YASAK
    - Resmi dil: yapılmıştır, edilmiştir, belirtilmektedir, tespit edilmiştir
 
@@ -1127,17 +1131,19 @@ Her haber için:
    - Son cümle, kaynakta geçen SOMUT bir olgu olacak (kim ne yaptı, hangi sayı/
      tarih/kurum/teknik önlem) — soyut "önemlidir/stratejiktir" yargısı DEĞİL.
 
-── ÖRNEK ÜSLUP (yalnızca üslup referansı; senin paragrafın MİN 120 kelime olacak) ──
-Başlık: "Hollanda Polisinin Bir Yatırım Dolandırıcılığı Şebekesini Çökertmesi"
-Paragraf: "Hollanda Polisi, on binlerce mağduru olduğu tahmin edilen uluslararası
-bir yatırım dolandırıcılığı şebekesinin parçası olduklarından şüphelenilen çok
-sayıda kişinin tutuklandığını duyurmuştur. Şebekede, 700'den fazla şahsın finansal
-danışman gibi davrandığı 20 çağrı merkezi işlettiği ve suç örgütünün bir dönemde
-ayda 114 milyon dolardan fazla gelir elde ettiği belirtilmiştir. Şebekenin
-liderinin, Polonya'da tutuklanan 46 yaşındaki bir İsrail-Polonya vatandaşı olduğu
-ifade edilmiştir. Yetkililer, dolandırıcılık planıyla bağlantılı çok sayıda şahsın
-Kıbrıs, Yunanistan ve Belçika'da tutuklandığını belirtmiştir." (Somut
-sayı/kurum/olgu + kaynak atfı; soyut yorum/kapanış YOK.)
+── ÖRNEK ÜSLUP (yalnızca üslup referansı; senin paragrafın 110-130 kelime olacak) ──
+Başlık: "Interpol'ün 5.800'den Fazla Siber Suçluyu Tutuklaması ve Paralara El Koyması"
+Paragraf: "Interpol, 97 ülkede sosyal mühendislik dolandırıcılığı ve kara para aklama
+faaliyetlerini hedef alan küresel bir operasyonda, 5.800'den fazla siber suçluyu
+tutuklamış ve suçtan elde edilen 293 milyon dolara el koymuştur. Operation First
+Light olarak adlandırılan operasyonda, bireyler, işletmeler ve hükümetler de dahil
+olmak üzere 142.000'den fazla mağdurun tespit edildiği belirtilmiştir. Interpol'e
+göre, üç aydan fazla süren operasyon sırasında polis, 15.500'den fazla siber suç
+şüphelisini tespit etmiş ve 152.800'den fazla siber suç vakasını incelemiştir.
+Interpol ayrıca, operasyon sırasında yaklaşık 24.000 siber suç vakasının çözüldüğünü
+ve kötü amaçlı faaliyetlerle bağlantılı 31.000'den fazla banka hesabının bloke
+edildiğini belirtmiştir. Operasyonda, siber suçları kolaylaştırmak için kullanıldığı
+iddia edilen çok sayıda cihaz ve ekipmana da el konulmuştur." (Somut olgu + kaynak atfı; soyut yorum/kapanış YOK.)
 ─────────────────────────────────────────────────────────────────────────────
 
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
@@ -1516,7 +1522,7 @@ Kalan haberleri önem sırasına göre sırala. En önemli max 10 tanesi "top10"
 ADIM 3 — TÜRKÇE ÖZET YAZ (filtered hariç HER haber için):
 Her haber için:
 - "tr_title": Türkçe isim-fiil başlığı. ZORUNLU FORMAT: "[Özne]'nin [Nesne]'yi [eylem-ması/mesi]" — örnek: "FBI'ın Kimlik Avı Ağını Çökertmesi", "Meta'nın NSO Group'u Suçlaması". YASAK: "...gerçekleştirilmiştir", "...açığa çıkmıştır" gibi eylem cümlesi yapıları.
-- "paragraph": MİNİMUM 120 kelime Türkçe özet (daha az yazarsan YANLIŞ).
+- "paragraph": 110-130 kelime Türkçe özet (yoğun, dolgusuz).
   - SADECE kaynak metindeki bilgiler — tahmin, yorum, çıkarım YASAK
   - Ne oldu, kim etkilendi, teknik boyutları aktar
   - MUTLAK YASAK: "göstermektedir", "ortaya koymaktadır", "vurgulamaktadır", "taşımaktadır", "darbe vurmuştur", "önem arz etmektedir" ile biten cümleler
