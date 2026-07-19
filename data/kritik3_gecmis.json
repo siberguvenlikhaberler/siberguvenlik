@@ -1,28 +1,5 @@
 [
  {
-  "date": "2026-07-11",
-  "views": [
-   {
-    "tr_title": "CISA'nın Kimlik Bilgisi Sızıntısı Sonrası Güvenlik Protokollerini Güncellemesi",
-    "paragraph": "Amerika Birleşik Devletleri Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), 15 Mayıs 2026 tarihinde bir yüklenici tarafından Amazon AWS GovCloud anahtarlarının kamuya açık bir GitHub deposuna sızdırılmasının ardından kapsamlı bir adli rapor yayımladı. Kurum, sızıntının tespit edilmesinin ardından ilgili depoyu ve geliştirme ortamını çevrimdışı hale getirerek sorumlu kişinin erişim yetkilerini iptal etti. Yapılan log analizleri sonucunda sızdırılan kimlik bilgilerinin kurum dışı faaliyetlerde kullanılmadığı ve herhangi bir müşteri veya görev verisinin açığa çıkmadığı belirlendi. CISA, bu ola",
-    "title": "CISA looks to remedy ailments from big May credential leak",
-    "full_text": "CISA looks to remedy ailments from big May credential leak\n\nA major credential leak spurred the Cybersecurity and Infrastructure Security Agency to strengthen protections for its sensitive materials, improve how researchers can report agency vulnerabilities and develop plans for similar incidents, the agency said in a forensic report released Thursday.\n\nThe blog post outlines CISA’s response to the leak that the researcher who discovered it in May called one of the worst he had ever seen, which also drew congressional scrutiny.\n\n“Sharing experiences from incident response activities help other"
-   },
-   {
-    "tr_title": "Çin Bağlantılı Silver Fox Grubunun MODBEACON Zararlı Yazılımını Kullanması",
-    "paragraph": "Çin bağlantılı siber suç grubu Silver Fox, teknoloji, eğitim ve kamu iktisadi teşebbüslerini hedef alan Rust tabanlı yeni bir uzaktan erişim truva atı olan MODBEACON yazılımını kullanırken tespit edildi. Siber güvenlik kuruluşu QiAnXin tarafından yapılan analizlere göre, söz konusu grup arama motoru optimizasyonu zehirlemesi tekniklerini kullanarak sahte yazılım yükleyicileri üzerinden zararlı yazılım yaymaktadır. MODBEACON, bellek üzerinde çalışan ve ek modüller yükleyebilen profesyonel bir komuta kontrol çerçevesi olarak tanımlanmaktadır. Bu zararlı yazılımın en dikkat çekici özelliği, ileti",
-    "title": "New MODBEACON RAT Uses gRPC Streaming for Encrypted C2 Traffic",
-    "full_text": "The China-linked cybercrime group known as Silver Fox has been attributed to a new Rust-based remote access trojan (RAR) called MODBEACON.\n\nChinese cybersecurity company QiAnXin said that while the threat cluster may appear like a low-sophistication, high-activity operation that propagates malware via counterfeit installers using SEO poisoning techniques, it belies their true organizational structure, which compromises multiple distributors.\n\n\"These distributors conduct activities across Asia using counterfeit software installers distributed through SEO campaigns, leveraging variants of Gh0st "
-   },
-   {
-    "tr_title": "Çin Bağlantılı Siber Tehdit Aktörünün WordPress Sitelerine Arka Kapı Yerleştirmesi",
-    "paragraph": "Çin menşeli olduğu değerlendirilen ve WP-SHELLSTORM olarak adlandırılan bir siber suç grubunun, 1,4 milyondan fazla web sitesini hedef alan geniş kapsamlı bir siber saldırı operasyonu yürüttüğü tespit edilmiştir. Tehdit aktörünün kendi sunucusunu 2026-07-11 tarihinden önceki üç hafta boyunca korumasız bırakması sonucunda, operasyonun iç işleyişine dair 800 MB boyutunda veri ve 434 dosya ifşa olmuştur. SOCRadar ve Ctrl-Alt-Intel araştırmacıları tarafından incelenen veriler, grubun özellikle güncel olmayan eklentilere sahip WordPress ve Joomla tabanlı siteleri hedeflediğini göstermektedir. Opera",
-    "title": "Exposed Hacker Server Reveals WP-SHELLSTORM Backdooring Thousands of WordPress Sites",
-    "full_text": "A cybercrime crew left one of its own servers wide open on the internet for three weeks, and it exposed the operation's inner workings: the hacking tools, the activity logs, and target lists naming more than 1.4 million websites.\n\nFar fewer were actually broken into, but the exposed files showed researchers how a mass site-hacking operation runs from the inside.\n\nThe operation, now tracked as WP-SHELLSTORM, is what SOCRadar calls a webshell access brokerage: a crew that breaks into sites at scale, plants a hidden backdoor (a \"webshell\") on each, and packages that access for resale.\n\nThe strong"
-   }
-  ]
- },
- {
   "date": "2026-07-12",
   "views": [
    {
@@ -180,6 +157,29 @@
     "paragraph": "Siber güvenlik araştırmacıları, 2025 yılının sonlarından bu yana Güneydoğu Asya'daki hükümet ve diplomasi temsilciliklerini hedef alan GoSerpent adlı yeni bir zararlı yazılım tespit etmiştir. Kaspersky tarafından Şubat 2026'da ortaya çıkarılan bu casusluk faaliyetinin, hassas veri toplama ve kimlik bilgisi hırsızlığı amacıyla yürütüldüğü belirtilmiştir. Go tabanlı bu arka kapının, SOCKS5 proxy sunucuları kurabildiği ve ThumbcacheService gibi ek araçlar kullanarak ağ paylaşımları üzerinden veri sızdırdığı ifade edilmiştir. Tehdit aktörlerinin Mayıs 2026'da daha gelişmiş araçlarla geri dönerek T",
     "title": "New GoSerpent Malware Targets Southeast Asian Governments and Diplomats for Espionage",
     "full_text": "Cybersecurity researchers have discovered a previously undocumented malware called GoSerpent that has been put to use in cyber attacks targeting entities in Southeast Asia since late 2025 with a focus on long-term access and intelligence gathering.\n\nRussian cybersecurity company Kaspersky, which uncovered the activity in February 2026, said it was aimed at government and diplomatic entities in the region. GoSerpent is designed to contact an external server and deploy secondary payloads on sensitive data collection and credential dumping on the system.\n\n\"Monitoring the activities of this threat"
+   }
+  ]
+ },
+ {
+  "date": "2026-07-19",
+  "views": [
+   {
+    "tr_title": "Tayvanlı Bir Üreticinin Ağında Çin Bağlantılı Daxin Zararlı Yazılımının Tespit Edilmesi",
+    "paragraph": "Symantec araştırmacıları, Tayvan merkezli bir teknoloji üreticisinin ağında Çin bağlantılı siber tehdit aktörü Daxin'e ait bir kök dizin kitinin (rootkit) 13 yıldır aktif olduğunu tespit etmiştir. 2026 yılında yapılan incelemelerde, 2013 yılından bu yana fark edilmeyen Daxin zararlı yazılımının yanı sıra Stupig adlı yeni bir arka kapı yazılımına da rastlandığı belirtilmiştir. Daxin'in, internet bağlantısı olmayan güvenli ağlarda bile komuta kontrol trafiğini meşru TCP bağlantıları üzerinden gizleyerek sürdürdüğü ifade edilmiştir. Stupig yazılımının ise klavye düzeni sağlayıcısı kılığında Windo",
+    "title": "Daxin: 13-Year-Old China-Linked Malware Found Still Active on Manufacturer’s Network",
+    "full_text": "Daxin: 13-Year-Old China-Linked Malware Found Still Active on Manufacturer’s Network\n\nResearchers found China’s Daxin rootkit and a new Stupig backdoor on a Taiwan firm’s network, suggesting a stealthy intrusion dating back to 2013.\n\nSymantec’s Threat Hunter Team found Daxin running on a compromised host at a Taiwan-based subsidiary of a multinational high-tech manufacturer in 2026. Daxin is a Windows kernel-mode rootkit that Symantec first documented in March 2022, with evidence of use in targeted attacks against governments and critical infrastructure dating back to 2013.\n\n“Backdoor.Daxin, t"
+   },
+   {
+    "tr_title": "CISA'nın Fortinet ve Microsoft SharePoint Açıklarını İstismar Edilen Zafiyetler Kataloğuna Eklemesi",
+    "paragraph": "Amerika Birleşik Devletleri Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Fortinet FortiSandbox ve Microsoft SharePoint ürünlerinde tespit edilen kritik güvenlik açıklarını Bilinen İstismar Edilen Zafiyetler (KEV) kataloğuna eklemiştir. Microsoft SharePoint üzerinde bulunan CVE-2026-58644 kodlu zafiyetin, kimlik doğrulaması gerektirmeden uzaktan kod yürütülmesine olanak tanıdığı ve aktif olarak istismar edildiği bildirilmiştir. Fortinet FortiSandbox tarafında ise CVE-2026-25089 ve CVE-2026-39808 kodlu komut enjeksiyonu açıklarının, saldırganların yetkisiz kod çalıştırmasına imkan verdiği ",
+    "title": "U.S. CISA adds Fortinet FortiSandbox and Microsoft SharePoint flaws to its Known Exploited Vulnerabilities catalog",
+    "full_text": "U.S. CISA adds Fortinet FortiSandbox and Microsoft SharePoint flaws to its Known Exploited Vulnerabilities catalog\n\nU.S. Cybersecurity and Infrastructure Security Agency (CISA) adds Fortinet FortiSandbox and Microsoft SharePoint flaws to its Known Exploited Vulnerabilities catalog.\n\nThe U.S. Cybersecurity and Infrastructure Security Agency (CISA) added Fortinet FortiSandbox and Microsoft SharePoint flaws to its Known Exploited Vulnerabilities (KEV) catalog.\n\nCVE-2026-25089 (CVSS score of 9.8) Fortinet FortiSandbox OS Command Injection Vulnerability\n\nCVE-2026-39808 (CVSS score of 9.8) Fortinet "
+   },
+   {
+    "tr_title": "Microsoft'un Kurumsal Müşterileri Hedefleyen ACR Stealer Saldırılarına Karşı Uyarıda Bulunması",
+    "paragraph": "Microsoft, kurumsal müşterileri hedef alan ve tarayıcılarda kayıtlı parolalar ile kimlik doğrulama belirteçlerini çalan ACR Stealer zararlı yazılımındaki artışa dikkat çekmiştir. Nisan sonu ile Haziran ortası arasında gerçekleşen saldırılarda, siber tehdit aktörünün ClickFix sosyal mühendislik yöntemini ve WebDAV sunucularını kullandığı tespit edilmiştir. ACR Stealer zararlı yazılımının, Amatera Stealer yazılımının yeniden markalanmış bir sürümü olduğu ve hizmet olarak zararlı yazılım modeliyle işletildiği belirtilmektedir. Microsoft tarafından yapılan açıklamada, saldırganların meşru kaynakla",
+    "title": "Microsoft warns of surge in ACR Stealer attacks on customers",
+    "full_text": "Microsoft has observed a surge in attacks using the ACR Stealer malware to steal browser-stored passwords, authentication tokens, and sensitive documents from its enterprise customers.\n\nBetween late April and mid-June, the threat actor used the ClickFix social-engineering method, WebDAV servers, and the MSHTA (Microsoft HTML Application Host) utility to deliver the info-stealing payload.\n\nACR Stealer is a malware-as-a-service (MaaS) operation believed to be a rebranding of the Amatera Stealer malware.\n\nWhile there are multiple delivery methods for the malware, Microsoft highlights two intrusio"
    }
   ]
  }
