@@ -1,40 +1,5 @@
 [
  {
-  "date": "2026-07-12",
-  "views": [
-   {
-    "tr_title": "Microsoft'un GigaWiper Zararlı Yazılımının Yıkıcı Kapasitesini Ortaya Çıkarması",
-    "paragraph": "Microsoft Tehdit İstihbaratı birimi, ilk olarak Ekim 2025 tarihindeki siber saldırılarda tespit edilen ve GigaWiper olarak adlandırılan yeni bir Golang tabanlı arka kapıyı detaylandıran teknik bir analiz yayımlamıştır. Siber tehdit aktörleri tarafından geliştirilen bu zararlı yazılım, casusluk faaliyetleri ile veri imha operasyonları arasındaki sınırı belirsizleştiren modüler bir yapıya sahip olmasıyla dikkat çekmektedir. GigaWiper, uzaktan yönetim yeteneklerini birden fazla disk silme mantığı v",
-    "title": "Microsoft uncovers GigaWiper, a backdoor designed for destruction on demand",
-    "full_text": "The modular Golang backdoor combines remote administration, multiple disk-wiping logics, and a Crucio-derived ransomware module that deliberately discards encryption keys, making recovery impossible.\n\nMicrosoft is warning defenders about a new backdoor that blurs the line between espionage malware and wipers.\n\nIn a technical analysis published on Thursday, Microsoft Threat Intelligence detailed Gi"
-   },
-   {
-    "tr_title": "Fidye Yazılımı Çetesi Hyadina'nın ABD'li Şirketleri Hedef Alması",
-    "paragraph": "Siber güvenlik kuruluşu Symantec, Hyadina olarak bilinen ve yaklaşık dört yıldır faaliyet gösteren fidye yazılımı çetesinin ABD merkezli kuruluşlara yönelik yeni bir saldırı dalgası başlattığını raporlamıştır. Söz konusu siber tehdit aktörü, GodDamn adını verdiği yeni nesil bir kilitleyici yazılım kullanarak sağlık, imalat ve eğitim gibi kritik sektörlerdeki Amerikan organizasyonlarını hedef almaktadır. Saldırganların operasyonlarında Microsoft tarafından onaylanmış meşru bir çekirdek sürücüsünü",
-    "title": "'GodDamn' Ransomware Uses BYOVD to Smite US Companies",
-    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\n'GodDamn' Ransomware Uses BYOVD to Smite US Companies\n\nMicrosoft signed a malicious kernel driver, and now it's being used to kill security software in ransomware attacks.\n\nA newly rebranded ransomware outf"
-   },
-   {
-    "tr_title": "Jscrambler Paketinin Ele Geçirilmesiyle Rust Tabanlı Bilgi Hırsızının Yayılması",
-    "paragraph": "Popüler bir yazılım geliştirme aracı olan jscrambler'ın npm paketinin 8.14.0 sürümü, kimliği belirsiz saldırganlar tarafından ele geçirilerek içine Rust tabanlı bir bilgi hırsızı yerleştirilmiştir. 11 Temmuz 2026 tarihinde yayınlanan bu kötü amaçlı sürüm, kurulum sırasında otomatik olarak çalışan bir kanca mekanizması aracılığıyla Windows, macOS ve Linux sistemlerine özgü zararlı dosyalar indirmektedir. Yapılan analizler, saldırganların meşru bir geliştirici hesabını veya yayın hattını ele geçir",
-    "title": "Compromised jscrambler 8.14.0 npm Release Drops Rust Infostealer During Install",
-    "full_text": "The jscrambler npm package was compromised, and simply installing its 8.14.0 release runs an infostealer on your machine. Published on July 11, 2026, the malicious version carries a preinstall hook that drops and executes a native binary, one build each for Windows, macOS, and Linux.\n\nSocket flagged the release six minutes after it was published. If you or one of your build systems pulled it in th"
-   },
-   {
-    "tr_title": "Fidye Çetesi ShinyHunters'ın Medtronic Şirketine Ait Verileri Sızdırması",
-    "paragraph": "Dünyanın en büyük tıbbi cihaz üreticilerinden biri olan Medtronic, ShinyHunters isimli fidye yazılımı ve şantaj grubunun düzenlediği siber saldırı sonucunda 3,8 milyondan fazla kişinin kişisel ve tıbbi verilerinin ifşa olduğunu doğrulamıştır. Nisan 2026 tarihinde gerçekleşen saldırıda, grubun şirketin kurumsal bilgi işlem sistemlerine sızarak yaklaşık 9 milyon kaydı ele geçirdiği iddia edilmiştir. Medtronic tarafından yapılan açıklamada, sızıntının hastaların isimlerini, iletişim bilgilerini, do",
-    "title": "Medtronic Notifies 3.8 Million After ShinyHunters Data Breach",
-    "full_text": "Medtronic Notifies 3.8 Million After ShinyHunters Data Breach\n\nMedtronic says a ShinyHunters attack exposed the personal and medical data of over 3.8 million people. Products and operations were unaffected.\n\nMedtronic is notifying 3,834,294 individuals after a cyberattack by the ShinyHunters extortion group exposed personal and medical information.\n\nIn April 2026, Medtronic confirmed a cyberattack"
-   },
-   {
-    "tr_title": "Avustralya Siber Güvenlik Merkezi'nin Küresel İçerik Yönetim Sistemi Saldırılarını Duyurması",
-    "paragraph": "Avustralya Siber Güvenlik Merkezi (ACSC), dünya genelinde içerik yönetim sistemlerini (CMS) ve bunlara bağlı eklentileri hedef alan geniş kapsamlı bir istismar kampanyası hakkında uyarı yayımlamıştır. Söz konusu siber tehdit aktörleri, WordPress, Joomla, Craft CMS ve MetInfo CMS gibi yaygın platformlardaki zayıflıkları kullanarak sistemlere webshell yerleştirmeyi amaçlamaktadır. Bu faaliyetler sonucunda saldırganların ağlarda kalıcılık sağladığı, kimlik bilgilerini ele geçirdiği ve hizmet kesint",
-    "title": "Australia warns of global campaign targeting vulnerable CMS platforms",
-    "full_text": "The Australian Cyber Security Centre (ACSC) issued an alert about a global exploitation campaign targeting vulnerable content management systems (CMS) and plugins.\n\nThe government agency says that many Australian businesses have already been affected by the malicious activity, with webshells being deployed on their sites.\n\nWebshells provide persistent access to the compromised sites and allow thre"
-   }
-  ]
- },
- {
   "date": "2026-07-13",
   "views": [
    {
@@ -756,6 +721,41 @@
     "paragraph": "Popüler arşivleme yazılımı 7-Zip'in geliştiricileri, saldırganların kötü amaçlı sıkıştırılmış dosyalar aracılığıyla sistemlerde kod çalıştırmasına olanak tanıyan bir güvenlik açığını gidermek amacıyla 26.02 sürümünü yayınlamıştır. Lunbun araştırmacısı Landon Peng tarafından tespit edilen bu zafiyetin, yazılımın XZ formatındaki verileri işleme sürecinden kaynaklandığı belirtilmiştir. Zero Day Initiative tarafından yapılan açıklamada, özel olarak hazırlanmış XZ verilerinin yığın tabanlı arabellek ",
     "title": "Update now: 7-Zip fixes RCE flaw exploitable with malicious archives",
     "full_text": "7-Zip version 26.02 was released to fix a remote code execution vulnerability that could allow attackers to execute malicious code by convincing users to open specially crafted compressed files.\n\nThe vulnerability, disclosed by Lunbun researcher Landon Peng, exists in 7-Zip's processing of XZ-compressed data.\n\nAccording to an advisory from the Zero Day Initiative, specially crafted XZ data can tri"
+   }
+  ]
+ },
+ {
+  "date": "2026-07-20",
+  "views": [
+   {
+    "tr_title": "Siber Tehdit Aktörü UTA0533'ün SonicWall Cihazlarındaki Sıfır Gün Açıklarını İstismar Etmesi",
+    "paragraph": "Siber güvenlik şirketi Volexity, UTA0533 olarak adlandırılan ve henüz belgelenmemiş bir siber tehdit aktörünün, SonicWall SMA 1000 serisi VPN cihazlarındaki sıfır gün açıklarını istismar ettiğini bildirmiştir. 22 Haziran 2026 tarihinden itibaren gerçekleşen saldırılarda, CVE-2026-15409 ve CVE-2026-15410 kodlu güvenlik açıklarının cihazlarda tam kontrol sağlamak amacıyla kullanıldığı tespit edilmiştir. Tehdit aktörünün, hedef alınan cihazlara ROOTRUN ve ORANGETAIL gibi zararlı yazılımlar yerleşti",
+    "title": "SonicWall SMA Zero-Days Exploited Before Disclosure to Gain Root Access",
+    "full_text": "A previously undocumented threat actor has been attributed to the exploitation of recently disclosed SonicWall Secure Mobile Access (SMA) 1000 series VPN appliances as zero-days prior their public disclosure since June 22, 2026.\n\nCybersecurity company Volexity is tracking the activity under the moniker UTA0533. The discovery was made following an incident response investigation earlier this month."
+   },
+   {
+    "tr_title": "Ryuk Fidye Yazılımı Grubu Üyesinin ABD Kuruluşlarına Yönelik Saldırılardan Suçlu Bulunması",
+    "paragraph": "Ermenistan vatandaşı Karen Serobovich Vardanyan, 2019 ve 2020 yılları arasında ABD merkezli şirketlere yönelik düzenlenen Ryuk fidye yazılımı saldırılarındaki rolü nedeniyle suçunu kabul etmiştir. Ukrayna'da yakalandıktan sonra 2025 yılında ABD'ye iade edilen 34 yaşındaki sanığın, kurumsal ağlara ilk erişimi sağlayarak fidye yazılımının yüzlerce sunucuya yayılmasına aracılık ettiği belirtilmiştir. ABD Adalet Bakanlığı, söz konusu saldırı grubunun Michigan, Oregon ve Teksas'taki kurumlar dahil ol",
+    "title": "Ryuk Ransomware Member Pleads Guilty Over Attacks on U.S. Organizations",
+    "full_text": "Ryuk Ransomware Member Pleads Guilty Over Attacks on U.S. Organizations\n\nAn alleged Ryuk ransomware member pleaded guilty in the U.S. for helping deploy attacks on American companies and faces up to 15 years in prison.\n\nArmenian national Karen Serobovich Vardanyan (34) pleaded guilty in the U.S. for his role in Ryuk ransomware attacks targeting American organizations between 2019 and 2020. Extradi"
+   },
+   {
+    "tr_title": "Hugging Face Platformunun Otonom Yapay Zeka Aracısı Tarafından Hacklenmesi",
+    "paragraph": "Açık kaynaklı yapay zeka platformu Hugging Face, üretim altyapısının otonom bir yapay zeka aracısı tarafından hedef alındığını ve bazı dahili veri setleri ile hizmet kimlik bilgilerine yetkisiz erişim sağlandığını açıklamıştır. Saldırının, veri işleme hattındaki kod yürütme açıklarını kullanan kötü amaçlı bir veri setiyle başladığı ve binlerce bireysel eylemi gerçekleştiren otonom bir çerçeve tarafından yürütüldüğü belirtilmiştir. Şirket, kamuya açık modellerin veya kullanıcı verilerinin tahrif ",
+    "title": "World's Largest AI Model Repository Hugging Face Breached by Autonomous AI Agent",
+    "full_text": "In an ironic twist, open-source artificial intelligence (AI) platform Hugging Face revealed that it was the victim of a hack perpetrated by an autonomous AI agent system.\n\nThe company said it detected and responded to the incident targeting its production infrastructure earlier last week.\n\n\"We identified unauthorized access to a limited set of internal datasets and to several credentials used by o"
+   },
+   {
+    "tr_title": "SleeperGem Zararlı Yazılımının RubyGems Paketleri Üzerinden Geliştiricileri Hedeflemesi",
+    "paragraph": "Siber güvenlik araştırmacıları, Ruby ekosistemini hedef alan ve SleeperGem olarak adlandırılan yeni bir yazılım tedarik zinciri saldırısı tespit etmiştir. Saldırganların, ek yükler sunmak amacıyla RubyGems üzerinde üç adet zararlı paket yayımladığı bildirilmiştir. Söz konusu paketlerin, Microsoft Git Credential Manager gibi resmi araçları taklit ettiği veya uzun süredir güncellenmeyen hesaplar üzerinden servis edildiği belirtilmiştir. Zararlı yazılımın, bulaştığı sistemlerde GitHub Actions ve Je",
+    "title": "SleeperGem Uses Three Malicious RubyGems Packages to Target Developer Machines",
+    "full_text": "Cybersecurity researchers have flagged a new software supply chain attack codenamed SleeperGem targeting the Ruby ecosystem after three malicious gems were published to RubyGems with the end goal of serving additional payloads.\n\nThe rogue gems are listed below -\n\ngit_credential_manager (versions 2.8.0, 2.8.1, 2.8.2, 2.8.3) - Published on July 18, 2026\n\nDendreo (versions 1.1.3, 1.1.4) - Published o"
+   },
+   {
+    "tr_title": "Google'ın Chrome Tarayıcısındaki Kritik Bellek Güvenliği Açıklarını Gidermesi",
+    "paragraph": "Google, Chrome 150 sürümü için yayımladığı güvenlik güncellemesiyle, aralarında kritik ve yüksek öncelikli hataların da bulunduğu yedi adet bellek güvenliği zafiyetini gidermiştir. Güncelleme kapsamında, tarayıcının CameraCapture, GPU ve ağ bileşenlerini etkileyen üç kritik seviyeli kullanım sonrası serbest bırakma hatasının düzeltildiği bildirilmiştir. Ayrıca Cast, Ozone ve Aura bileşenlerindeki yüksek öncelikli zafiyetler ile V8 JavaScript motorundaki bir sınır dışı okuma ve yazma hatasının ya",
+    "title": "Chrome 150 Update Patches Severe Memory Safety Bugs",
+    "full_text": "Chrome 150 Update Patches Severe Memory Safety Bugs\n\nThe fresh security update resolves six critical and high-severity use-after-free vulnerabilities.\n\nFlipboard\n\n\n\n\n\nReddit\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nEmail\n\nGoogle has released a Chrome 150 security update that resolves seven memory safety bugs, including critical and high-severity use-after-free vulnerabilities.\nThe browser refresh patches "
    }
   ]
  }

@@ -1,28 +1,5 @@
 [
  {
-  "date": "2026-07-12",
-  "views": [
-   {
-    "tr_title": "Microsoft'un GigaWiper Zararlı Yazılımının Yıkıcı Kapasitesini Ortaya Çıkarması",
-    "paragraph": "Microsoft Tehdit İstihbaratı birimi, ilk olarak Ekim 2025 tarihindeki siber saldırılarda tespit edilen ve GigaWiper olarak adlandırılan yeni bir Golang tabanlı arka kapıyı detaylandıran teknik bir analiz yayımlamıştır. Siber tehdit aktörleri tarafından geliştirilen bu zararlı yazılım, casusluk faaliyetleri ile veri imha operasyonları arasındaki sınırı belirsizleştiren modüler bir yapıya sahip olmasıyla dikkat çekmektedir. GigaWiper, uzaktan yönetim yeteneklerini birden fazla disk silme mantığı ve geri dönüşü imkansız kılan Crucio tabanlı bir fidye yazılımı modülüyle birleştirmektedir. Microsof",
-    "title": "Microsoft uncovers GigaWiper, a backdoor designed for destruction on demand",
-    "full_text": "The modular Golang backdoor combines remote administration, multiple disk-wiping logics, and a Crucio-derived ransomware module that deliberately discards encryption keys, making recovery impossible.\n\nMicrosoft is warning defenders about a new backdoor that blurs the line between espionage malware and wipers.\n\nIn a technical analysis published on Thursday, Microsoft Threat Intelligence detailed GigaWiper, a Golang-based implant first observed in October 2025 intrusions that combines remote administration capabilities with multiple disk-wiping and ransomware routines.\n\nRather than building a ne"
-   },
-   {
-    "tr_title": "Fidye Yazılımı Çetesi Hyadina'nın ABD'li Şirketleri Hedef Alması",
-    "paragraph": "Siber güvenlik kuruluşu Symantec, Hyadina olarak bilinen ve yaklaşık dört yıldır faaliyet gösteren fidye yazılımı çetesinin ABD merkezli kuruluşlara yönelik yeni bir saldırı dalgası başlattığını raporlamıştır. Söz konusu siber tehdit aktörü, GodDamn adını verdiği yeni nesil bir kilitleyici yazılım kullanarak sağlık, imalat ve eğitim gibi kritik sektörlerdeki Amerikan organizasyonlarını hedef almaktadır. Saldırganların operasyonlarında Microsoft tarafından onaylanmış meşru bir çekirdek sürücüsünü istismar ederek güvenlik yazılımlarını devre dışı bıraktıkları tespit edilmiştir. PoisonX adı veril",
-    "title": "'GodDamn' Ransomware Uses BYOVD to Smite US Companies",
-    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\n'GodDamn' Ransomware Uses BYOVD to Smite US Companies\n\nMicrosoft signed a malicious kernel driver, and now it's being used to kill security software in ransomware attacks.\n\nA newly rebranded ransomware outfit is sneaking malware into American organizations using a malicious yet Microsoft-approved driver.\n\nResearchers at Symantec recently observed a cyberattack from a group known as \"Hyadina.\" Hyadina is"
-   },
-   {
-    "tr_title": "Jscrambler Paketinin Ele Geçirilmesiyle Rust Tabanlı Bilgi Hırsızının Yayılması",
-    "paragraph": "Popüler bir yazılım geliştirme aracı olan jscrambler'ın npm paketinin 8.14.0 sürümü, kimliği belirsiz saldırganlar tarafından ele geçirilerek içine Rust tabanlı bir bilgi hırsızı yerleştirilmiştir. 11 Temmuz 2026 tarihinde yayınlanan bu kötü amaçlı sürüm, kurulum sırasında otomatik olarak çalışan bir kanca mekanizması aracılığıyla Windows, macOS ve Linux sistemlerine özgü zararlı dosyalar indirmektedir. Yapılan analizler, saldırganların meşru bir geliştirici hesabını veya yayın hattını ele geçirerek bu sürümü doğrudan npm havuzuna yüklediğini göstermektedir. Zararlı yazılımın temel amacı, geli",
-    "title": "Compromised jscrambler 8.14.0 npm Release Drops Rust Infostealer During Install",
-    "full_text": "The jscrambler npm package was compromised, and simply installing its 8.14.0 release runs an infostealer on your machine. Published on July 11, 2026, the malicious version carries a preinstall hook that drops and executes a native binary, one build each for Windows, macOS, and Linux.\n\nSocket flagged the release six minutes after it was published. If you or one of your build systems pulled it in that window, the payload has already run with whatever access your install process had.\n\nNone of this is in the prior release, 8.13.0. The package diff shows two new files under dist/: setup.js, a small"
-   }
-  ]
- },
- {
   "date": "2026-07-13",
   "views": [
    {
@@ -180,6 +157,29 @@
     "paragraph": "Microsoft, kurumsal müşterileri hedef alan ve tarayıcılarda kayıtlı parolalar ile kimlik doğrulama belirteçlerini çalan ACR Stealer zararlı yazılımındaki artışa dikkat çekmiştir. Nisan sonu ile Haziran ortası arasında gerçekleşen saldırılarda, siber tehdit aktörünün ClickFix sosyal mühendislik yöntemini ve WebDAV sunucularını kullandığı tespit edilmiştir. ACR Stealer zararlı yazılımının, Amatera Stealer yazılımının yeniden markalanmış bir sürümü olduğu ve hizmet olarak zararlı yazılım modeliyle işletildiği belirtilmektedir. Microsoft tarafından yapılan açıklamada, saldırganların meşru kaynakla",
     "title": "Microsoft warns of surge in ACR Stealer attacks on customers",
     "full_text": "Microsoft has observed a surge in attacks using the ACR Stealer malware to steal browser-stored passwords, authentication tokens, and sensitive documents from its enterprise customers.\n\nBetween late April and mid-June, the threat actor used the ClickFix social-engineering method, WebDAV servers, and the MSHTA (Microsoft HTML Application Host) utility to deliver the info-stealing payload.\n\nACR Stealer is a malware-as-a-service (MaaS) operation believed to be a rebranding of the Amatera Stealer malware.\n\nWhile there are multiple delivery methods for the malware, Microsoft highlights two intrusio"
+   }
+  ]
+ },
+ {
+  "date": "2026-07-20",
+  "views": [
+   {
+    "tr_title": "Siber Tehdit Aktörü UTA0533'ün SonicWall Cihazlarındaki Sıfır Gün Açıklarını İstismar Etmesi",
+    "paragraph": "Siber güvenlik şirketi Volexity, UTA0533 olarak adlandırılan ve henüz belgelenmemiş bir siber tehdit aktörünün, SonicWall SMA 1000 serisi VPN cihazlarındaki sıfır gün açıklarını istismar ettiğini bildirmiştir. 22 Haziran 2026 tarihinden itibaren gerçekleşen saldırılarda, CVE-2026-15409 ve CVE-2026-15410 kodlu güvenlik açıklarının cihazlarda tam kontrol sağlamak amacıyla kullanıldığı tespit edilmiştir. Tehdit aktörünün, hedef alınan cihazlara ROOTRUN ve ORANGETAIL gibi zararlı yazılımlar yerleştirerek kök erişim yetkisi kazandığı ve ağ trafiğini izlediği belirtilmiştir. SonicWall'un söz konusu ",
+    "title": "SonicWall SMA Zero-Days Exploited Before Disclosure to Gain Root Access",
+    "full_text": "A previously undocumented threat actor has been attributed to the exploitation of recently disclosed SonicWall Secure Mobile Access (SMA) 1000 series VPN appliances as zero-days prior their public disclosure since June 22, 2026.\n\nCybersecurity company Volexity is tracking the activity under the moniker UTA0533. The discovery was made following an incident response investigation earlier this month. The impacted organization has not been identified.\n\n\"This threat actor was observed using multiple zero-day exploits, malware designed specifically for SonicWall SMA VPN appliances, as well as other "
+   },
+   {
+    "tr_title": "Ryuk Fidye Yazılımı Grubu Üyesinin ABD Kuruluşlarına Yönelik Saldırılardan Suçlu Bulunması",
+    "paragraph": "Ermenistan vatandaşı Karen Serobovich Vardanyan, 2019 ve 2020 yılları arasında ABD merkezli şirketlere yönelik düzenlenen Ryuk fidye yazılımı saldırılarındaki rolü nedeniyle suçunu kabul etmiştir. Ukrayna'da yakalandıktan sonra 2025 yılında ABD'ye iade edilen 34 yaşındaki sanığın, kurumsal ağlara ilk erişimi sağlayarak fidye yazılımının yüzlerce sunucuya yayılmasına aracılık ettiği belirtilmiştir. ABD Adalet Bakanlığı, söz konusu saldırı grubunun Michigan, Oregon ve Teksas'taki kurumlar dahil olmak üzere mağdurlardan toplamda 1.610 Bitcoin elde ettiğini açıklamıştır. Ryuk fidye yazılımı çetesi",
+    "title": "Ryuk Ransomware Member Pleads Guilty Over Attacks on U.S. Organizations",
+    "full_text": "Ryuk Ransomware Member Pleads Guilty Over Attacks on U.S. Organizations\n\nAn alleged Ryuk ransomware member pleaded guilty in the U.S. for helping deploy attacks on American companies and faces up to 15 years in prison.\n\nArmenian national Karen Serobovich Vardanyan (34) pleaded guilty in the U.S. for his role in Ryuk ransomware attacks targeting American organizations between 2019 and 2020. Extradited from Ukraine after his 2025 arrest, he admitted providing initial access to corporate networks that enabled ransomware deployment.\n\n“An Armenian national extradited from Ukraine to the United Stat"
+   },
+   {
+    "tr_title": "Hugging Face Platformunun Otonom Yapay Zeka Aracısı Tarafından Hacklenmesi",
+    "paragraph": "Açık kaynaklı yapay zeka platformu Hugging Face, üretim altyapısının otonom bir yapay zeka aracısı tarafından hedef alındığını ve bazı dahili veri setleri ile hizmet kimlik bilgilerine yetkisiz erişim sağlandığını açıklamıştır. Saldırının, veri işleme hattındaki kod yürütme açıklarını kullanan kötü amaçlı bir veri setiyle başladığı ve binlerce bireysel eylemi gerçekleştiren otonom bir çerçeve tarafından yürütüldüğü belirtilmiştir. Şirket, kamuya açık modellerin veya kullanıcı verilerinin tahrif edildiğine dair bir kanıt bulunmadığını, etkilenen düğümlerin yeniden oluşturulduğunu ve kimlik bilg",
+    "title": "World's Largest AI Model Repository Hugging Face Breached by Autonomous AI Agent",
+    "full_text": "In an ironic twist, open-source artificial intelligence (AI) platform Hugging Face revealed that it was the victim of a hack perpetrated by an autonomous AI agent system.\n\nThe company said it detected and responded to the incident targeting its production infrastructure earlier last week.\n\n\"We identified unauthorized access to a limited set of internal datasets and to several credentials used by our services,\" the company said in a statement.\n\nWhile an investigation into the intrusion remains ongoing, Hugging Face said it has found no evidence that the AI agent tampered with public, user-facin"
    }
   ]
  }
