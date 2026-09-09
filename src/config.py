@@ -194,15 +194,27 @@ ZAFIYET_KATEGORILERI = {'zafiyet_rutin', 'zafiyet_aktif_apt'}
 KRITIK3_HARIC_KATEGORILER = {'zafiyet_rutin', 'urun_icerik', 'siber_disi'}
 
 # Deterministik eşitlik-bozucu: aynı toplam puanda kategori önceliği (yüksek=önce).
+#
+# SIRALAMA İLKESİ — STRATEJİK/JEOPOLİTİK AĞIRLIK ÖNCE. Eşit puanda, ülkeleri ve
+# sektörleri bağlayan gelişme (devlet destekli operasyon, yaptırım/düzenleme,
+# tedarik zinciri) tekil bir kurumu/ürünü ilgilendiren teknik olayın önüne geçer.
+#
+# ÖLÇÜLDÜ (2026-09-09): manşet F5 BIG-IP rootkit (85, zafiyet_aktif_apt), CIA
+# yeniden yapılanması ve KAPANMIŞ bir kripto vurgunu dosyası (97,
+# kolluk_operasyonu) oldu; NSA/CISA/FBI'ın Çin'i ABD yapay zekâ modellerini
+# sistematik kopyalamakla suçlayan ortak bildirisi ve ABD yaptırımıyla kapanan
+# Autistici/Inventati (ikisi de 85, politika_hukuk) gövdede kaldı. politika_hukuk
+# 7'de kalıp kolluk_operasyonu 5 ile tedarik_zinciri'ne eşitti; jeopolitik
+# ağırlık eşitlik-bozucuya hiç yansımıyordu.
 KATEGORI_ONCELIK = {
-    'casus_yazilim':               9,
-    'nation_state_apt':            8,
+    'nation_state_apt':           10,
+    'politika_hukuk':              9,
+    'casus_yazilim':               8,
     'stratejik_kurum_saldirisi':   7,
-    'politika_hukuk':              7,
-    'tedarik_zinciri':             5,
-    'kolluk_operasyonu':           5,
-    'yapay_zeka_guvenligi':        4,
-    'veri_ihlali':                 3,
+    'tedarik_zinciri':             6,
+    'yapay_zeka_guvenligi':        5,
+    'veri_ihlali':                 4,
+    'kolluk_operasyonu':           3,
     'zafiyet_aktif_apt':           2,
     'zafiyet_rutin':               1,
     'phishing_sosyal_muhendislik': 1,
@@ -586,6 +598,14 @@ siber saldırı/atıf, siber operasyon; stratejik kuruma (devlet/ordu/kritik alt
 uluslararası kurum) saldırı; siber güvenlik boyutu olan büyük hukuk/yaptırım kararı;
 geniş etkili tedarik zinciri saldırısı; milli güvenliği etkileyen büyük veri ihlali;
 APT kampanyaları ve kritik altyapı/fidye olayları.
+
+STRATEJİK AĞIRLIK BİRİNCİ EKSENDİR. Aşağıdakiler bu listenin ALTINDA kalır ve
+havuzda stratejik/jeopolitik bir aday varsa EN ZAYIF SEÇİLİ sayılırlar:
+• tek bir ürün/satıcı ekosistemiyle sınırlı teknik olay (rootkit, web kabuğu,
+  RCE istismarı) — devlet aktörü veya sektör çapında sonuç yoksa;
+• KAPANMIŞ adli/kolluk dosyası (suç kabulü, iade, mahkûmiyet, el koyma) —
+  çalınan tutar ne olursa olsun;
+• kurum içi yeniden yapılanma, atama, konferans konuşması ve kurumsal duyuru.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 KURALLAR
@@ -1945,6 +1965,13 @@ def get_manset_secim_prompt(adaylar_metni, gecmis_metni):
         casusluk kampanyasının (94) yerine manşete çıkarıldı.
       • 2026-08-24 araştırmacıların NASA yazılımında bulduğu açık (91)
         manşete çıktı — saldırı, saldırgan, kurban yok.
+      • 2026-09-09 manşet F5 BIG-IP rootkit'i (tek satıcıyla sınırlı teknik
+        olay), CIA'in kurum içi yeniden yapılanmasını anlattığı konferans
+        konuşması ve KAPANMIŞ bir kripto vurgunu dosyası oldu; NSA/CISA/FBI'ın
+        Çin'i ABD yapay zekâ modellerini kopyalamakla suçlayan ortak bildirisi
+        ile ABD yaptırımıyla kapanan Autistici/Inventati gövdede kaldı.
+    Bu yüzden ölçütün BİRİNCİ EKSENİ artık stratejik/jeopolitik ağırlıktır;
+    "gerçekleşmiş ve süren olay" ölçütü ikinci sıraya alınmıştır.
     Sonradan itiraz etmek yerine seçimi baştan yaptırmak, aynı LLM
     maliyetiyle daha iyi bir karar üretir.
 
@@ -1956,13 +1983,35 @@ Bugünkü bültenin KRİTİK 3 manşetini seçiyorsun.
 
 Aşağıdaki ADAYLARDAN tam olarak ÜÇ tanesini seç ve ÖNEM SIRASINA diz.
 
-ÖNEM ÖLÇÜTÜ — okuyucu için doğurduğu sonuç:
-1. GERÇEKLEŞMİŞ ve SÜREN olay > potansiyel risk. Saldırı, ihlal, casusluk
-   kampanyası, kolluk operasyonu > "açık bulundu / yama çıktı".
-2. Geniş ve kritik etki > tekil ürün. Devlet ağı, kritik altyapı, çok sayıda
-   kurum/ülke/kullanıcı > tek bir yazılımın kullanıcıları.
-3. Devlet destekli/stratejik faaliyet > adi suç.
+ÖNEM ÖLÇÜTÜ — BİRİNCİ EKSEN STRATEJİK/JEOPOLİTİK AĞIRLIKTIR:
+1. Ülkeleri, sektörleri ve devlet politikalarını bağlayan gelişme her şeyin
+   önündedir: devlet destekli/APT operasyonları, devletler arası ihtilaf ve
+   suçlamalar, yaptırım/terör listesi/ihracat kısıtı/iddianame gibi devlet
+   eylemleri, kritik altyapı ve devlet ağlarının hedeflenmesi, teknoloji
+   egemenliği çatışmaları, AB/ABD düzenlemelerinin yürürlüğe girmesi, sektör
+   çapında sonuç doğuran tedarik zinciri olayları.
+2. Geniş ve kritik etki > tekil ürün/şirket. Çok sayıda kurum/ülke/kullanıcı
+   > tek bir yazılımın kullanıcıları.
+3. GERÇEKLEŞMİŞ ve SÜREN olay > potansiyel risk. Ancak bu ölçüt 1'in YERİNE
+   GEÇMEZ: jeopolitik ağırlığı olan bir gelişme, tekil bir kurumda gerçekleşmiş
+   teknik bir olayın ÖNÜNDEDİR.
 4. AKTİF İSTİSMAR edilen açık > yamalanmış açık.
+
+⚖️ EŞİT GÜÇTE İKİ ADAY VARSA STRATEJİK/JEOPOLİTİK OLANI SEÇ. Sıralamada da
+önce stratejik ağırlığı en yüksek haber gelir.
+
+⚠️ ZAYIF MANŞET — güçlü bir jeopolitik aday varken bunlar manşete ÇIKMAZ,
+gövdede kalır (yalnızca aday havuzunda daha güçlüsü yoksa manşet olabilirler):
+• TEK BİR ÜRÜN/SATICI ekosistemiyle sınırlı teknik olay — rootkit, web kabuğu,
+  RCE istismarı, tekil kurum ihlali. Devlet aktörü, jeopolitik bağlam ya da
+  sektör çapında sonuç yoksa bu bir gövde haberidir; "aktif istismar" tek
+  başına manşet hakkı vermez.
+• KAPANMIŞ adli/kolluk dosyaları — tutuklama sonrası suçun kabulü, iade,
+  mahkûmiyet, ele geçirilen para. Çalınan tutar ne olursa olsun sonucu
+  doğmuş bir dosyadır. (SÜREN, çok ülkeli bir operasyon bundan farklıdır.)
+• Kurum içi yeniden yapılanma, atama, konferans konuşması ve kurumsal duyuru —
+  konuşmacı ne kadar üst düzey olursa olsun somut bir operasyon/karar
+  bildirmiyorsa manşet değildir.
 
 ⛔ MANŞET OLMAYACAKLAR:
 • Satıcının KAPATTIĞI ve kullanıcı işlemi gerektirmeyen zafiyet — CVSS'i
