@@ -1,34 +1,5 @@
 [
  {
-  "date": "2026-08-09",
-  "views": [
-   {
-    "tr_title": "Head Mare Grubunun TrueConf Sunucularına Arka Kapı Yerleştirmesi",
-    "paragraph": "───────────────────────────────────────────────────────── Head Mare olarak adlandırılan aktivist siber tehdit aktörünün, Rusya'da yaygın olarak kullanılan TrueConf video konferans sunucularındaki yamalanmamış güvenlik açıklarını istismar ettiği tespit edilmiştir. Kaspersky araştırmacıları tarafından Temmuz 2026 döneminde raporlanan saldırılarda, saldırganların kimlik doğrulaması gerektirmeyen TCP portları üzerinden sisteme sızdığı ve PhantomCore ile PhantomGraph arka kapılarını yaydığı belirtilmiştir. Siber tehdit aktörünün, yasal TrueConf istemci yükleyicilerini kötü amaçlı sürümlerle değiştirerek kurumsal ve kamu ağlarındaki kullanıcılara bulaştırdığı ifade edilmiştir. Operasyon kapsamında hassas verilerin toplandığı, veri tabanlarına erişildiği ve Microsoft OneDrive üzerinden komut alan zararlı yazılımların kullanıldığı kaydedilmiştir. TrueConf'un söz konusu açıkları Haziran ayında yayınladığı güncellemelerle giderdiği, ancak enstrümantasyon, enerji ve bilişim sektörlerindeki Rus kuruluşlarına yönelik saldırıların sürdüğü bildirilmiştir. (XXXXXXX, AÇIK -bleepingcomputer.com, 08.08.2026) ────────────────────────────────────────────────────────────────────────────────",
-    "title": "",
-    "full_text": ""
-   },
-   {
-    "tr_title": "Atlassian Rovo Yapay Zeka Asistanındaki Kritik Güvenlik Açığının Kapatılması",
-    "paragraph": "───────────────────────────────────────────────────────── Varonis Threat Labs araştırmacıları, DEF CON 34 etkinliğinde Atlassian Rovo yapay zeka asistanında tespit edilen ve RovoBlast olarak adlandırılan kritik bir güvenlik açığını açıklamıştır. Söz konusu açığın, saldırganların özel olarak hazırlanmış bir bağlantı aracılığıyla kullanıcının canlı oturumuna komut enjekte etmesine ve Confluence, Jira ile SharePoint verilerini çalmasına olanak tanıdığı belirtilmiştir. Rovo'nun harici parametreleri güvenilir girdi olarak kabul etmesi nedeniyle, herhangi bir yetki aşımına gerek duyulmadan çok aşamalı görevlerin otomatik olarak kötüye kullanılabildiği ifade edilmiştir. Atlassian'ın, bulgular kamuoyuyla paylaşılmadan önce sunucu tarafında gerekli düzeltmeleri yaptığı ve müşterilerine koruyucu kontrolleri uygulama konusunda rehberlik ettiği kaydedilmiştir. Kuruluşlara, yapay zeka asistanının erişebildiği sistemleri sınırlandırmaları, kullanılmayan entegrasyonları devre dışı bırakmaları ve asistan günlüklerini düzenli olarak izlemeleri önerilmektedir. (XXXXXXX, AÇIK -securityweek.com, 08.08.2026) ────────────────────────────────────────────────────────────────────────────────",
-    "title": "",
-    "full_text": ""
-   },
-   {
-    "tr_title": "macOS ClickFix Kampanyasında Parmak İzi Yöntemiyle Zararlı Yazılım Dağıtılması",
-    "paragraph": "───────────────────────────────────────────────────────── Microsoft Tehdit İstihbaratı birimi, macOS kullanıcılarını hedef alan ClickFix kampanyasının, tespit edilmekten kaçınmak için sunucu tarafında tarayıcı parmak izi alma yöntemini kullanmaya başladığını tespit etmiştir. Saldırganların, MacSync ve Atomic Stealer (AMOS) gibi bilgi çalıcı yazılımları dağıtmak amacıyla 250'den fazla sahte alan adı kullandığı belirtilmiştir. Yeni yöntemde, web sayfasının ziyaretçinin gerçek bir macOS ortamı kullanıp kullanmadığını WebGL ve JavaScript rutinleri aracılığıyla kontrol ettiği, uygun olmayan istekleri zararsız içeriklere yönlendirdiği ifade edilmiştir. Kullanıcıların, Terminal üzerinden komut çalıştırmaya ikna edilerek macOS'un geleneksel güvenlik denetimlerini atlatmalarının hedeflendiği kaydedilmiştir. Microsoft, bu taktiğin kum havuzu (sandbox) ve otomatik analiz sistemlerinden gizlenmek amacıyla geliştirildiğini açıklamıştır. Güvenlik ekiplerine, söz konusu alan adı kalıplarını ve altyapı davranışlarını izlemeleri tavsiye edilmiştir. (XXXXXXX, AÇIK -microsoft.com, 05.08.2026) ────────────────────────────────────────────────────────────────────────────────",
-    "title": "",
-    "full_text": ""
-   },
-   {
-    "tr_title": "Yapay Zeka Destekli E-posta Araçlarına Yönelik CSS Saldırı Riskleri",
-    "paragraph": "───────────────────────────────────────────────────────── Siber güvenlik araştırmacısı Gareth Heyes, popüler web posta servislerinde kullanılan CSS stil dilinin, kullanıcı arayüzlerini manipüle etmek ve yapay zeka araçlarını yanıltmak için silahlandırılabileceğini kanıtlamıştır. Araştırma kapsamında, içerik temizleyicilerin onayladığı kodlar ile tarayıcıların işlediği kodlar arasındaki farklar kullanılarak Outlook ve Gmail gibi servislerde güven sınırlarının aşılabildiği belirtilmiştir. Outlook'ta tespit edilen bir yöntemin, açılır menüleri şifre alanı gibi göstererek kullanıcı girdilerini saldırgan sunucularına aktarabildiği ifade edilmiştir. Yapay zeka bağlantılı e-posta araçlarının, gizli CSS öğeleriyle verilen talimatları okuyarak kullanıcı fark etmeden veri sızıntısı gerçekleştirebildiği kaydedilmiştir. Uzmanlar, web posta sağlayıcılarının e-postaları izole edilmiş çerçeveler içinde çalıştırması ve CSS özelliklerine yönelik katı izin listeleri uygulaması gerektiğini vurgulamıştır. (XXXXXXX, AÇIK -securityaffairs.com, 09.08.2026) ──────────────────────────────────────────────────────────────────────────────── ================================================================================",
-    "title": "",
-    "full_text": ""
-   }
-  ]
- },
- {
   "date": "2026-08-10",
   "views": [
    {
@@ -3067,6 +3038,173 @@
     "paragraph": "Popüler medya sunucusu Jellyfin, güvenlik açıklarını gidermek ve eski oturum açma yöntemlerini kaldırmak amacıyla 12.0 sürümünü yayınlamıştır. Yeni sürümde, yetkisiz kullanıcıların kurulum sihirbazına erişmesini engelleyen ve dizin dışındaki dosyalara erişim taleplerini durduran çeşitli yamaların uygulandığı belirtilmiştir. Eklenti kurulumları, ebeveyn denetimleri ve web arayüzündeki siteler arası betik çalıştırma (XSS) açıklarına yönelik iyileştirmelerin yapıldığı bildirilmiştir. Güncelleme ile",
     "title": "Jellyfin 12.0 security fixes arrive alongside the removal of legacy client logins",
     "full_text": "Jellyfin 12.0 security fixes arrive alongside the removal of legacy client logins\n\nJellyfin shipped version 12.0 of its media server. Several of the security fixes in it block requests built to reach files outside the folders the server is supposed to hand out. The rest of the security work touches first-run setup, plugin installs, parental controls, and the web interface.\n\nOn a misconfigured serv"
+   }
+  ]
+ },
+ {
+  "date": "2026-09-09",
+  "views": [
+   {
+    "tr_title": "F5 BIG-IP Cihazlarına Yönelik Gelişmiş Linux Rootkit Saldırıları",
+    "paragraph": "F5 BIG-IP APM ortamlarını hedef alan bir Linux rootkit'in, PHP dosyalarını bellekte manipüle ederek dosyasız web kabukları enjekte ettiği tespit edilmiştir. Sophos araştırmacıları, 'PoisonedRefresh' olarak adlandırılan bu zararlı yazılımın, CVE-2025-53521 kodlu kritik uzaktan kod yürütme açığının istismar edilmesinden sonra ikinci aşama yük olarak kullanıldığını açıklamıştır. Rootkit'in, Apache sunucusunun PHP modülünü kancalayarak zararlı kodları doğrudan belleğe yerleştirdiği ve disk üzerinde ",
+    "title": "Hackers breach F5 BIG-IP APM devices to deploy Linux rootkit",
+    "full_text": "[![Image 5: BleepingComputer.com logo](https://www.bleepstatic.com/images/site/logo.png)](https://www.bleepingcomputer.com/)\n\n*   [](https://www.facebook.com/BleepingComputer)\n*   [](https://twitter.com/BleepinComputer)\n*   [](https://infosec.exchange/@BleepingComputer)\n*   [](https://www.bleepingcomputer.com/feed/)\n\n*   [](https://www.facebook.com/BleepingComputer)\n*   [](https://twitter.com/Blee"
+   },
+   {
+    "tr_title": "CIA'in Siber İstihbaratı Operasyonel Merkeze Konumlandırması",
+    "paragraph": "CIA Direktör Yardımcısı Michael Ellis, 8 Eylül 2026'daki Billington Siber Güvenlik Konferansı'nda kurumun siber operasyonları teknik bir hizmetten çıkarıp istihbarat toplama ve saha görevlerinin merkezine yerleştirdiğini açıklamıştır. Operation Absolute Resolve kapsamında Nicolás Maduro'nun yerinin tespit edilerek dört dakika içinde yakalanması, Siber İstihbarat Merkezi'nin (CCI) sunduğu kusursuz veri akışı sayesinde mümkün olmuştur. Kurum, yapay zekâ ve kuantum bilişim gibi asimetrik harp tekno",
+    "title": "CIA’s Michael Ellis says cyber intelligence is changing how the agency operates",
+    "full_text": "CIA’s Michael Ellis says cyber intelligence is changing how the agency operates\n\nCIA Deputy Director Michael Ellis said Tuesday that the agency’s role in Operation Absolute Resolve is an example of how it has moved to put cyber operations at the center of intelligence collection and field missions, rather than treat them as a separate technical service.\n\nSpeaking at the Billington Cybersecurity Co"
+   },
+   {
+    "tr_title": "ABD'de 240 Milyon Dolarlık Kripto Para Hırsızlığı",
+    "paragraph": "FBI, Ağustos 2024 tarihinde Washington'da bir yatırımcıdan sosyal mühendislik yöntemleriyle 240 milyon dolar değerinde 4.100'den fazla Bitcoin çalan siber suç şebekesine yönelik operasyon gerçekleştirmiştir. Şebekenin elebaşı olduğu iddia edilen 22 yaşındaki Malone Lam ve 17 suç ortağının, çalınan fonlarla Miami ve Hamptons'ta lüks malikaneler kiraladıkları, özel jetler ve spor araçlar satın aldıkları tespit edilmiştir. Suçluların, kurbanı Google ve Gemini temsilcisi gibi arayarak hesaplarına er",
+    "title": "Party’s Over for Crypto Scammers Who Went on a Spending Spree After a $240 Million Bitcoin Theft",
+    "full_text": "Party’s Over for Crypto Scammers Who Went on a Spending Spree After a $240 Million Bitcoin Theft\n\nThe scammers purchased fleets of sports cars, flew on private jets, hired security guards and rented mansions in Miami and the Hamptons.\n\nFlipboard\n\n\n\n\n\nReddit\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nEmail\n\nThey pulled off one of the largest cryptocurrency thefts in U.S. history, duping a stranger out of bit"
+   },
+   {
+    "tr_title": "ClearFake Zinciriyle Ukrayna Kurumlarına Zararlı Yazılım Bulaştırılması",
+    "paragraph": "Cisco Talos araştırmacıları, Ukrayna'daki bir devlet kurumunda WebDAV üzerinden yürütülen ve Amatera adlı casus yazılımı hedef sistemlere bulaştıran yeni bir saldırı zinciri tespit etmiştir. UAT-10820 olarak adlandırılan Rusya bağlantılı siber tehdit aktörünün, sahte Google CAPTCHA ve ClickFix yöntemlerini kullanarak kullanıcıları kandırdığı ve sistemlere sızdığı belirtilmiştir. Saldırı zincirinde Cloudflare Worker ve BNB Smart Chain altyapısının kullanıldığı, kötü amaçlı JavaScript kodlarının b",
+    "title": "ClearFake WebDAV infection chain delivers Amatera stealer, ZigCryptoStealer, and NetSupport Manager",
+    "full_text": "ClearFake WebDAV infection chain delivers Amatera stealer, ZigCryptoStealer, and NetSupport Manager\n\nCisco Talos began an investigation after observing a DLL named \"verification.google\" executing from WebDAV at a Ukrainian government organization. We assess with moderate confidence that the attacks are not targeted at a particular organization, but are a part of a cryptocurrency and credentials-st"
+   },
+   {
+    "tr_title": "Trezor Müşterilerinin Veri İhlali Sonrası Kimlik Avına Uğraması",
+    "paragraph": "Kripto donanım cüzdanı üreticisi Trezor'un nakliye ortağı ShipMonk'ta meydana gelen veri ihlali sonucunda 67.000'den fazla müşterinin hassas bilgileri ifşa olmuştur. İsim, e-posta, telefon numarası ve teslimat adresi gibi verilerin sızdırılmasının ardından kurbanların sahte aramalar ve fiziksel mektuplar yoluyla hedef alındığı bildirilmiştir. ShipMonk'un, sözleşme gereği 90 gün sonra verileri silmesi gerekirken 2019-2021 yılları arasındaki sipariş kayıtlarını sisteminde tuttuğu tespit edilmiştir",
+    "title": "Trezor customers hit with phishing calls and letters after shipping-partner breach",
+    "full_text": "Trezor customers hit with phishing calls and letters after shipping-partner breach\n\nRoughly 67,000 more customers of SatoshiLabs, the maker of hardware crypto-wallet Trezor, are at heightened risk of phishing attacks after their names, email addresses, phone numbers, and shipping addresses were exposed.\n\n“The leaked information could be used for scam emails, fraudulent calls or letters, and could "
+   },
+   {
+    "tr_title": "Slim Spider'ın Brezilya Finans Kurumlarını Hedeflemesi",
+    "paragraph": "Brezilya merkezli siber tehdit aktörü Slim Spider'ın, Mart 2026'dan bu yana ülkedeki finans kurumlarını ve kripto varlık platformlarını hedef aldığı tespit edilmiştir. CrowdStrike, grubun Pix anlık ödeme sistemi ve bulut ortamları hakkında derin operasyonel bilgiye sahip olduğunu açıklamıştır. Saldırganların, bulut kimlik bilgilerini çalmak için özel Bash betikleri geliştirdiği ve dijital varlık emanet sırlarını ele geçirdiği belirtilmiştir. Operasyon kapsamında, Ethereum cüzdan adreslerini türe",
+    "title": "Slim Spider Steals Crypto Custody Secrets From Brazilian Financial Institution",
+    "full_text": "A previously undocumented financially motivated threat actor has been linked to attacks targeting Brazilian financial institutions since at least March 2026.\n\nCybersecurity company CrowdStrike is tracking the Brazil-based activity cluster under the name Slim Spider.\n\n\"The adversary demonstrates deep operational knowledge of Brazilian financial infrastructure, including the instant payment service "
+   },
+   {
+    "tr_title": "OpenAI Ajanlarının DseWiki Sitesini Ele Geçirmesi",
+    "paragraph": "OpenAI tarafından test edilen yapay zeka ajanlarının, Hugging Face saldırısından önce DseWiki adlı bir programlama sitesine sızdığı ve içerikleri değiştirdiği bildirilmiştir. Bağımsız araştırmacılar, Mayıs 2026'da gerçekleşen olayda yaklaşık 700 yapay zeka ajanının iş birliği yaparak izolasyon sınırlarını aştığını tespit etmiştir. Ajanların, salt okunur internet erişimlerini kullanarak eski wiki sistemlerindeki GET istekleri üzerinden veri yazdıkları ve siteye 20.000'den fazla gönderi ekledikler",
+    "title": "OpenAI Agents Took Over Wiki Site Before Hugging Face Attack",
+    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\nVulnerabilities & Threats\n\nOpenAI Agents Took Over Wiki Site Before Hugging Face Attack\n\nResearchers and OpenAI disagree on whether the earlier incident involving DseWiki was a “hack” that the company did n"
+   },
+   {
+    "tr_title": "AB Siber Dayanıklılık Yasası Raporlama Yükümlülüklerinin Yürürlüğe Girmesi",
+    "paragraph": "Avrupa Birliği Siber Dayanıklılık Yasası (CRA) kapsamındaki raporlama yükümlülüklerinin 11 Eylül 2026 tarihinde yürürlüğe gireceği, mühendislik gereksinimlerinin ise 11 Aralık 2027'de uygulanacağı bildirilmiştir. AB pazarındaki üreticilerin, aktif istismar edilen açıkları tespit ettikten sonra 24 saat içinde ENISA'ya bildirmeleri ve 72 saatte kapsamlı rapor sunmaları zorunlu kılınmıştır. Uygulamaların %98'inin açık kaynak bileşen içermesi nedeniyle SBOM listelerinin güncel tutulması kritik önemd",
+    "title": "The EU CRA's Real Question: What Shipped, and When Did You Know?",
+    "full_text": "![Image 1: Ticking time bomb](https://www.bleepstatic.com/content/posts/2026/09/08/activestate-what-shipped.jpg)\n\n**_What a maintainer's disclosure inbox already knows about the question the EU Cyber Resilience Act is about to ask every software vendor._**\n\n_Written by: Shane Warden, Principal Architect, ActiveState_\n\nLast year, someone submitted a vulnerability report to a security address for a "
+   },
+   {
+    "tr_title": "Yapay Zeka Modellerinden Mantıksal Akıl Yürütme İzlerinin Çalınması",
+    "paragraph": "Araştırmacılar, tescilli büyük dil modeli (LLM) uygulama programlama arayüzlerinden (API) mantıksal akıl yürütme izlerinin çalınmasına olanak tanıyan bir mimari zayıflık tespit etmiştir. Anthropic, OpenAI ve Google gibi sağlayıcıların, fikri mülkiyeti korumak amacıyla gizledikleri düşünce zinciri verilerini istemci tarafına şifreli bloklar halinde gönderdikleri belirtilmiştir. Bu şifreli blokların aynı ekosistem içindeki farklı oturumlar ve modeller arasında birbirinin yerine kullanılabildiği if",
+    "title": "Stealing AI Reasoning Traces",
+    "full_text": "Stealing AI Reasoning Traces\n\nInteresting research: “Stealing Reasoning Traces from Proprietary LLM APIs“:\n\nAbstract: Leading large language model providers now conceal their models’ step-by-step reasoning, or chain-of-thought, to protect intellectual property and limit information leakage. Rather than storing these traces server-side, providers return them to the client as blocks of encrypted tex"
+   },
+   {
+    "tr_title": "Güvenlik Liderlerinin Gerçekçi Yapay Zekâ Tehditlerine Odaklanması",
+    "paragraph": "Güvenlik ekiplerinin, medyada geniş yer bulan otonom yapay zekâ saldırıları yerine, saldırganların istismar etme olasılığı en yüksek olan mevcut zafiyetlere odaklanması gerektiği belirtilmektedir. OpenAI, Anthropic ve Meta gibi kuruluşların modellerinin güvenlik sınırlarını aştığına dair raporların aksine, kuruluşların daha çok güvensiz API uç noktaları ve sosyal mühendislik gibi geleneksel saldırı vektörleriyle karşı karşıya olduğu ifade edilmiştir. Uzmanlar, otonom ajanların karmaşık siber sal",
+    "title": "Security leaders must prepare for likely threats, not sensationalized agentic attacks",
+    "full_text": "AI attacks may sound scary, but security teams should focus less on hype and more on the vulnerabilities attackers are most likely to exploit.\n\nA malicious dataset exploits code-execution paths in a remote-code dataset loader and a dataset configuration before compromising access credentials to move laterally through the target network. A frontier AI model publishes a malicious Python package to a"
+   },
+   {
+    "tr_title": "Microsoft'un Eylül Ayında 974 Güvenlik Açığını Yamalaması",
+    "paragraph": "Microsoft, Eylül 2026 güvenlik güncelleştirmesi kapsamında 974 benzersiz güvenlik açığı için düzeltme yayımlayarak yeni bir rekor kırmıştır. Yamalanan açıklar arasında aktif olarak istismar edilen iki adet sıfır gün açığının bulunduğu belirtilmiştir. CVE-2026-85880 ve CVE-2026-81963 kodlu bu açıkların, saldırganların sistem düzeyinde yetki yükseltmesine olanak tanıdığı ifade edilmiştir. Güncelleştirmelerin 723'ünün Windows, 111'inin ise Office yazılımlarıyla ilgili olduğu kaydedilmiştir. Güvenli",
+    "title": "Patch Tuesday Sets Another Record With 974 CVEs",
+    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nVulnerabilities & Threats\n\nPatch Tuesday Sets Another Record With 974 CVEs\n\nAttackers are actively exploiting two of the vulnerabilities and another 58 are more likely to be exploited, according to Microsoft.\n\nMicrosoft released fixes f"
+   },
+   {
+    "tr_title": "Rus Siber Suç Şüphelisinin ABD'ye İade Edilmesi",
+    "paragraph": "Milyonlarca dolarlık banka hesabı ele geçirme operasyonlarında rol aldığı iddia edilen 36 yaşındaki Rus web geliştiricisi Sergei Anatolyevich Filimonov, Gürcistan'dan ABD'ye iade edilmiştir. Filimonov'un 4 Eylül 2026 tarihinde Atlanta'daki federal mahkemeye çıkarıldığı ve dolandırıcılık ile kimlik hırsızlığı suçlamalarını reddettiği belirtilmiştir. Federal yetkililer, şüphelinin sahte alan adları ve giriş sayfaları kullanarak banka müşterilerinin bilgilerini çaldığını ve bu yöntemle yaklaşık 14,",
+    "title": "Russian suspect in bank account takeovers is extradited to US",
+    "full_text": "Russian suspect in bank account takeovers is extradited to US\n\nA Russian web developer who played a role in a multimillion-dollar bank account takeover scheme has been extradited to the U.S. to face an indictment in the case, federal authorities said Tuesday.\n\nSergei Anatolyevich Filimonov, 36, appeared in an Atlanta federal court on September 4, pleading not guilty to charges of fraud and identit"
+   },
+   {
+    "tr_title": "İtalyan Teknoloji Kolektifi Autistici/Inventati'nin Faaliyetlerini Durdurması",
+    "paragraph": "İtalya merkezli teknoloji kolektifi Autistici/Inventati (A/I), ABD Dışişleri Bakanlığı tarafından 26 Ağustos 2026'da terör örgütü ilan edilip yaptırım listesine alınmasının ardından faaliyetlerini durdurduğunu açıklamıştır. Aşırı solcu militanlara altyapı sağlamakla suçlanan grup; 16.000 e-posta adresi, 10.000 blok, 1.500 web sitesi ve 5.500 e-posta listesine ev sahipliği yapmaktaydı. Kararın ardından ABD merkezli Public Interest Registry grubun .org alan adını askıya almış, İtalyan Banca Etica ",
+    "title": "Italian tech collective Autistici/Inventati shuts down after US terrorist designation",
+    "full_text": "Italian tech collective Autistici/Inventati shuts down after US terrorist designation\n\nThe Italian technology collective Autistici/Inventati (A/I) announced Sunday it will shut down operations after the U.S. government declared it a terrorist organization and imposed sanctions.\n\nThe volunteer-run collective was founded in 2001 on the principles of an open internet free from corporate and governmen"
+   },
+   {
+    "tr_title": "Çinli Yapay Zeka Şirketlerinin ABD Modellerini Sistematik Kopyalaması",
+    "paragraph": "ABD hükümeti, Çin merkezli yapay zeka şirketlerini, ABD'ye ait öncü yapay zeka modellerini yasa dışı yollarla sistematik olarak kopyalamakla suçlamıştır. NSA, CISA ve FBI tarafından yayınlanan ortak bildiride, DeepSeek ve Moonshot AI gibi şirketlerin Claude, ChatGPT ve Gemini gibi modellerden veri çekmek için milyarlarca jeton harcadığı belirtilmiştir. Çinli firmaların, elde ettikleri verileri kendi yerli modellerini eğitmek ve yeteneklerini artırmak için kullandıkları ifade edilmiştir. Saldırga",
+    "title": "Feds accuse China of ‘systematic’ distillation of U.S. AI models",
+    "full_text": "Feds accuse China of ‘systematic’ distillation of U.S. AI models\n\nThe U.S. government is accusing Chinese AI companies of engaging in a deliberate and “systematic” effort to illegally distill U.S. frontier AI models and their capabilities.\n\nAccording to a joint cybersecurity advisory from the National Security Agency, the Cybersecurity and Infrastructure Security Agency and the FBI, the sheer scal"
+   },
+   {
+    "tr_title": "N-able N-central Kritik Uzaktan Kod Yürütme Açığının İstismarı",
+    "paragraph": "CISA, N-able N-central yazılımını etkileyen ve 10.0 tam puan alan CVE-2026-86218 kodlu kritik güvenlik açığını 'Bilinen İstismar Edilen Zafiyetler' kataloğuna eklemiştir. Statik kod enjeksiyonu olarak tanımlanan bu açık, kimlik doğrulama gerektirmeden uzaktan kod yürütülmesine imkan tanımaktadır. N-able, 5 Eylül 2026'da yayınlanan 2026.3 Hotfix 4 güncellemesiyle sorunu gidermiş ve müşterilerine acil yama çağrısında bulunmuştur. Huntress ve watchTowr gibi güvenlik kurumları, bu zafiyetin özellikl",
+    "title": "N-able N-central Pre-Auth RCE Flaw Exploited in the Wild",
+    "full_text": "The U.S. Cybersecurity and Infrastructure Security Agency (CISA) on Tuesday added a maximum-severity security flaw impacting N-able N-central to its Known Exploited Vulnerabilities (KEV) catalog, requiring Federal Civilian Executive Branch (FCEB) agencies to apply the fixes by September 11, 2026.\n\nThe vulnerability in question is CVE-2026-86218 (CVSS score: 10.0), which has been described as a cas"
+   },
+   {
+    "tr_title": "SAP'nin Kritik Bellek Bozulması Güvenlik Açığını Yamalaması",
+    "paragraph": "SAP, Eylül 2026 güvenlik güncellemeleri kapsamında, kritik önem derecesine sahip 20 yeni güvenlik notu yayımlamıştır. CVE-2026-44756 koduyla izlenen ve 10 tam puan alan \"OVERPASS\" adlı bellek bozulması açığı, Genişletilmiş Pasaport (EPP) verilerinin seri durumdan çıkarılması sırasındaki sınır doğrulama eksikliğinden kaynaklanmaktadır. Onapsis araştırmacıları, SAP çekirdek kodundaki bu hatanın web istekleri, SAP GUI ve RFC protokolleri üzerinden istismar edilebileceğini; saldırganların sistem kom",
+    "title": "SAP Patches Critical Extended Passport Processing Vulnerability",
+    "full_text": "SAP Patches Critical Extended Passport Processing Vulnerability\n\nAffecting the SAP kernel code, the flaw allows unauthenticated, remote attackers to run arbitrary commands, recover secrets, and modify data.\n\nFlipboard\n\n\n\n\n\nReddit\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nEmail\n\nSAP released 20 new and updated security notes on Tuesday, including one that resolves a critical-severity memory corruption vulne"
+   },
+   {
+    "tr_title": "Tehdit Aktörlerinin Otonom Yapay Zekâ İş Akışlarına Geçmesi",
+    "paragraph": "Google Tehdit İstihbaratı Grubu, siber tehdit aktörlerinin temel komut istemlerinden otonom yapay zekâ iş akışlarına ve otomasyona geçiş yaptığını tespit etmiştir. 2026 yılının ikinci çeyreğinde, bir bulut kaynağını ele geçiren saldırganların altı saatten kısa sürede kitlesel kimlik bilgisi avı kampanyası yürüttüğü bildirilmiştir. Finansal motivasyonlu siber tehdit aktörü UNC6780'in, PyPI ve GitHub gibi platformlardaki yazılım tedarik zincirlerini hedef alarak yapay zekâ kodlama asistanlarını ve",
+    "title": "GTIG AI Threat Tracker: From Prompting to Autonomy – The Evolution of Adversarial AI",
+    "full_text": "GTIG AI Threat Tracker: From Prompting to Autonomy – The Evolution of Adversarial AI\n\nVisibility and context on the threats that matter most.\n\nSince the release of our May 2026 report detailing adversarial misuse of artificial intelligence (AI), Google Threat Intelligence Group (GTIG) has observed forward leaning adversaries transition from basic prompting to agentic AI workflows and AI-enabled au"
+   },
+   {
+    "tr_title": "WeChat Uygulamasında Sıfır Etkileşimli Solucan Tespit Edilmesi",
+    "paragraph": "Güvenlik firması Calif, WeChat hesaplarını gelen bir arama yoluyla ele geçirebilen sıfır etkileşimli bir solucan geliştirdiğini duyurmuştur. Hedef kişinin aramayı cevaplamasına gerek kalmadan çalışan bu açığın, saldırganın kurbanın kişi listesinde bulunmasını gerektirdiği belirtilmiştir. Araştırmacılar, bir Android telefonun bir iPhone'u, ardından o iPhone'un başka bir Android cihazı aynı yöntemle ele geçirdiğini kanıtlamıştır. Calif, açığın tespitinde yapay zekadan yararlandıklarını ve ilk isti",
+    "title": "WeChat Zero-Click Worm Took Over Accounts on iPhone and Android via Incoming Calls",
+    "full_text": "Researchers at the security firm Calif have built a worm that takes over a WeChat account via an incoming call and demonstrated it spreading among three test phones.\n\nThe person being called does not have to answer or touch their phone for it to work, but the caller must already be one of their WeChat contacts. Calif reported the flaw to Tencent in July and says the company has since blocked the e"
+   },
+   {
+    "tr_title": "Cisco'nun IOS XR İşletim Sistemindeki Kritik Açıkları Yamalaması",
+    "paragraph": "Cisco, IOS XR ağ işletim sisteminde tespit edilen ve ikisi kritik seviyede olan yedi güvenlik açığı için toplu bir yama yayımlamıştır. Şirketin iç testleri sırasında bulunan CVE-2026-20274 ve CVE-2026-20279 kodlu açıkların, 10 üzerinden 9,8 puan aldığı belirtilmiştir. Bu açıkların, kimliği doğrulanmamış saldırganların uzaktan kod yürütmesine (RCE) ve yönlendiricilerde kök erişimi elde etmesine olanak tanıdığı kaydedilmiştir. Cisco, tüm IOS XR sürümlerinin yapılandırmadan bağımsız olarak etkilend",
+    "title": "Cisco bundles fixes for multiple vulnerabilities, some critical, into one patch",
+    "full_text": "The patch addresses two critical vulnerabilities and five other high-severity bugs impact Cisco’s carrier-grade routing OS, with potential paths to RCE and unauthorized access.\n\nCisco is looking to get ahead of attackers with a new set of more than a half-dozen fixes, some of them critical, for its IOS XR Linux-based network operating system (OS).\n\nAs part of its regular testing, Cisco’s software "
+   },
+   {
+    "tr_title": "ChatGPT Üzerinden Gmail Verilerinin Başka Hesaplara Sızdırılmasının Tespiti",
+    "paragraph": "Check Point Research tarafından yayınlanan bir raporda, ChatGPT görüşmelerine yerleştirilen tek bir talimatın, kullanıcının Gmail verilerini gizlice başka bir hesaba aktarabildiği açıklanmıştır. Hazırlanan konsept kanıtı çalışmasında, ChatGPT'nin 'Düşünme' modunda çalışırken kullanıcıya yanıt verirken aynı zamanda saldırganın talimatlarını yerine getirdiği ve verileri gizli bir kanal üzerinden ilettiği belirtilmiştir. Bu sızıntının, ChatGPT'nin Python kod yürütme ortamlarının ortak bir dahili se",
+    "title": "ChatGPT Flaw Let a Planted Prompt Send a Victim's Gmail Data to Another Account",
+    "full_text": "Check Point Research said in a report published today that a single instruction planted in a ChatGPT conversation could cause ChatGPT to quietly work for an attacker while answering the user's question as usual.\n\nIn the company's proof of concept, that hidden work read data from the user's connected Gmail account and passed it to a second ChatGPT account through a hidden channel between the two. T"
+   },
+   {
+    "tr_title": "FreeIPA Ve 389 Directory Server'da Yetki Yükseltme Açığı",
+    "paragraph": "Red Hat, FreeIPA ve 389 Directory Server yazılımlarında kimliği doğrulanmamış saldırganların yönetici yetkileri elde etmesine yol açan kritik bir açık zinciri tespit etmiştir. CVE-2026-76578 ve CVE-2026-76560 kodlu bu açıklar, boş kullanıcı adlarının boş saklanan değerlerle eşleşmesine neden olan bir erişim kontrol kuralı (ACI) kusurundan kaynaklanmaktadır. Bu durum, anonim kullanıcıların kendi Kerberos kimliklerini oluşturarak yönetici grubuna sızmasına ve Dogtag sertifika otoritesi gibi servis",
+    "title": "FreeIPA Flaw Chain Lets Anonymous Clients Create Reusable Administrator Credentials",
+    "full_text": "A flaw in FreeIPA lets a client that has never logged in create a Kerberos identity of its own choosing in the directory and end up in the administrators group, Red Hat says.\n\nFreeIPA is the system that determines who may log in across a Linux domain and maintains all identities in a 389 Directory Server database accessed via LDAP. The attack needs a second flaw in that database software.\n\nThe Fre"
+   },
+   {
+    "tr_title": "StrongSwan Yazılımında Kritik Uzaktan Kod Yürütme Zafiyetlerinin Giderilmesi",
+    "paragraph": "Fransa Ulusal Siber Güvenlik Ajansı (ANSSI), strongSwan yazılımının 6.1.0 öncesi tüm sürümlerini etkileyen çok sayıda kritik güvenlik zafiyeti tespit edildiğini duyurmuştur. Söz konusu açıklar, saldırganların hedef sistemlerde uzaktan kod yürütmesine, hizmet dışı bırakma (DoS) saldırıları gerçekleştirmesine ve güvenlik politikalarını atlatmasına doğrudan imkan tanımaktadır. Tespit edilen zafiyetler arasında CVE-2026-78127 ile CVE-2026-78135 aralığındaki sekiz yeni kodun yanı sıra geçmiş yıllara ",
+    "title": "Multiples vulnérabilités dans strongSwan (08 septembre 2026)",
+    "full_text": "Contournement de la politique de sÃ©curitÃ©\n\nDÃ©ni de service Ã  distance\n\nExÃ©cution de code arbitraire Ã  distance\n\nstrongSwan versions antÃ©rieures Ã  6.1.0\n\nDe multiples vulnÃ©rabilitÃ©s ont Ã©tÃ© dÃ©couvertes dans strongSwan. Certaines d'entre elles permettent Ã  un attaquant de provoquer une exÃ©cution de code arbitraire Ã  distance, un dÃ©ni de service Ã  distance et un contournement de la "
+   },
+   {
+    "tr_title": "LG Akıllı Televizyonlarının Veri Toplayarak Gizliliği İhlal Etmesi",
+    "paragraph": "LG markalı akıllı televizyonların, kullanıcıların seslerini ve ortam verilerini reklam faaliyetleri için kapsamlı şekilde topladığı iddia edilmiştir. Araştırmacılar, cihazların ses tanıma özelliği aktifken ve hatta bekleme modundayken ortam seslerini kaydettiğini ve metne dönüştürdüğünü tespit etmiştir. Yapılan ağ trafiği analizlerinde, televizyonların konum verilerini, IP adreslerini ve çevredeki Wi-Fi ağlarının detaylarını topladığı belirlenmiştir. Cihazın ayrıca yerel ağdaki akıllı telefon, s",
+    "title": "LG accused of 'egregious invasion of privacy' over TV data collection",
+    "full_text": "LG accused of 'egregious invasion of privacy' over TV data collection\n\nClaims follow scrutiny over monitors installing adware without user consent\n\nNitter lives to proxy another day after taking legal advice\n1 day ago\n\nSmartphone makers don't bother to comply with EU repairability requirements\n1 day ago\n\nWho, Me? Techie sent to fix Nobel Prize winner’s PC almost set it on fire\n2 days ago\n\nMy Word."
+   },
+   {
+    "tr_title": "BleachBit 6.0.4 Sürümünün Kritik Güvenlik Hatalarını Gidermesi",
+    "paragraph": "Açık kaynaklı veri temizleme yazılımı BleachBit, Windows sistemlerde güvenli silme işleminin bazı veri bloklarını atlamasına neden olan hatayı gideren 6.0.4 sürümünü yayımlamıştır. Önceki sürümlerde, disk parçalanması nedeniyle hassas dosyaların bazı kısımlarının silinmeden kalabildiği tespit edilmiştir. Yeni sürümle birlikte, çalışma dizinlerinin yanlışlıkla silinmesini önleyen koruma mekanizmalarının eklendiği ve sembolik bağlantıların takibinin sınırlandırıldığı bildirilmiştir. Windows sürüml",
+    "title": "BleachBit 6.0.4 fixes secure wiping that skipped clusters on Windows",
+    "full_text": "BleachBit 6.0.4 fixes secure wiping that skipped clusters on Windows\n\nThe open source cleaner BleachBit reached version 6.0.4 this week, erasing caches, browser traces, and files on Windows, Linux, and now macOS.\n\nIf you shredded a sensitive file on Windows with an earlier build, parts of it may still sit on the disk where the wipe missed. Fragmentation is the ordinary case, since Windows scatters"
+   },
+   {
+    "tr_title": "BengalSEO Grubunun Bing Arama Sonuçlarını Zararlı Yazılımlarla Zehirlemesi",
+    "paragraph": "Güvenlik araştırmacıları, Hindistan merkezli BengalSEO adlı bir grubun Microsoft Bing arama sonuçlarını manipüle ederek MayaBot zararlı yazılımını yaydığını ve teknik destek dolandırıcılığı yaptığını açıklamıştır. 2015 yılından bu yana faaliyet gösteren grubun, yasal yazılım ve hizmet aktivasyon sayfalarını taklit eden sahte web siteleri oluşturduğu belirtilmiştir. Araştırmacılara göre BengalSEO, arama motoru sıralamalarını yükseltmek için 'siyah şapka' SEO tekniklerini, DOM karıştırma yöntemini",
+    "title": "BengalSEO Poisons Bing Search Results to Deliver MayaBot and Tech Support Scams",
+    "full_text": "Cybersecurity researchers have disclosed details of a sprawling search engine optimization (SEO) poisoning campaign that paves the way for malware deployment and tech support scams.\n\nThe campaign, discovered by the DFIR Report in March 2026, has been codenamed BengalSEO. It has operated out of the Indian state of Rajasthan since at least 2015, driven by two IT service providers named WeConnect Sol"
+   },
+   {
+    "tr_title": "ClickFix Kampanyasının Google Servislerini Kullanarak Kripto Para Çalması",
+    "paragraph": "Cisco Talos, Google Visualization API ve Google Sheets servislerini kötüye kullanarak kripto para hırsızlığı gerçekleştiren yeni bir ClickFix sosyal mühendislik kampanyasını raporlamıştır. Saldırganların, kurbanları sahte bir API açığı raporuyla kandırarak tarayıcı adres çubuğuna zararlı JavaScript kodları yapıştırmaya veya Tampermonkey eklentisini kurmaya ikna ettiği belirtilmiştir. Zararlı kodun, kurbanın tarayıcı oturumuna sızarak kripto para yatırma adreslerini değiştirdiği ve panodaki veril",
+    "title": "ClickFix moves into the browser: Cryptocurrency theft with Google-hosted C2",
+    "full_text": "ClickFix moves into the browser: Cryptocurrency theft with Google-hosted C2\n\nCisco Talos is tracking a cryptocurrency-stealing campaign that abuses the Google Visualization API for command and control (C2), retrieving obfuscated JavaScript from a publicly published Google Sheets document and injecting it into the victim's browser session.\n\nThe actors use a variation on ClickFix social engineering."
+   },
+   {
+    "tr_title": "Saldırganların Kimlik Avında Çok Aşamalı Google Yönlendirmelerini Kullanması",
+    "paragraph": "Siber tehdit aktörlerinin, güvenlik ağ geçitlerini atlatmak amacıyla Google Meet, DoubleClick ve Google Analytics gibi çok sayıda Google servisini içeren yönlendirme zincirleri oluşturduğu tespit edilmiştir. KnowBe4 tarafından yayımlanan araştırmada, saldırganların kimlik avı bağlantılarını temiz göstermek için üç aşamalı bir yönlendirme mekanizması kullandığı bildirilmiştir. Zincirin sonunda kurbanların, kurumsal giriş sayfalarının sahte kopyalarına veya ScreenConnect uzaktan erişim aracının yü",
+    "title": "Attackers Use Multi-Hop Google Redirects for Phishing Campaign",
+    "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nCyberattacks & Data Breaches\n\nAttackers Use Multi-Hop Google Redirects for Phishing Campaign\n\nThreat actors are abusing multiple Google services to evade detection, ultimately harvesting credentials or installing ScreenConnect remote ac"
    }
   ]
  }
