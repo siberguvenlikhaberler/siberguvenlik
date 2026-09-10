@@ -69,6 +69,7 @@ from src.config import (
     ENABLE_LLM_CROSS_DAY_DEDUP, CROSS_DAY_DEDUP_WINDOW_DAYS,
     SCORING_LOG_FILE, SCORING_LOG_MAX_LINES,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS, FEED_SUMMARY_MIN_WORDS, ARTICLE_PROXY,
+    FEED_BASLIK_GURULTU_ONEKLERI,
     ARTICLE_PROXY_MAX_CALLS, ARTICLE_PROXY_BUDGET_SEC, REPORT_FLOOR,
     REPORT_FLOOR_RATIO, REPORT_FLOOR_MIN,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
@@ -1980,6 +1981,30 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if not art.get('domain'):
                 art['domain'] = urlparse(art.get('link', '')).netloc.replace('www.', '')
 
+    _MD_LINK_RE = re.compile(r'!?\[[^\]]*\]\([^)]*\)')
+    _MD_MARKER_RE = re.compile(r'^\s*[\*\-\+#>|]+', re.M)
+
+    @classmethod
+    def _duz_metin_sayisi(cls, text):
+        """Markdown bağlantı/görsel, liste-madde işareti ve çıplak URL'leri
+        çıkardıktan sonra kalan DÜZ METİN kelime sayısı.
+
+        NEDEN: proxy okuyucu (Jina) bir sayfayı kazıyamadığında makale yerine
+        SİTE İSKELETİNİ döndürebiliyor — navigasyon, "Sign In", logo görselleri.
+        Bunlar kelime olarak sayıldığı için ham kelime eşiği (FEED_SUMMARY_MIN_
+        WORDS) geçiliyor ve içerik "tam metin çıktı" sayılıyordu.
+
+        ÖLÇÜLDÜ (2026-09-10 ham veri): SANS ISC Stormcast kaydı 209 kelime
+        döndü ama düz metni yalnızca 56 kelimeydi. Aynı ölçüde gerçek makaleler
+        rahatça geçiyor: CRPx0 fidye yazılımı 732→706, Check Point bülteni
+        374→356, ANSSI CERTFR bülteni 463→217 (navigasyonu ağır ama gövdesi
+        gerçek). Yani eşik, iskeleti eler, bülteni elemez.
+        """
+        t = cls._MD_LINK_RE.sub(' ', text or '')
+        t = cls._MD_MARKER_RE.sub(' ', t)
+        t = re.sub(r'https?://\S+', ' ', t)
+        return len(t.split())
+
     def _article_proxy_fallback(self, art, source_name):
         """Son çare: makale gövdesi doğrudan kazınamadı VE feed-özeti de yetersizse,
         makaleyi temiz-IP okuyucu servisinden (ARTICLE_PROXY, ör. Jina Reader) çek.
@@ -2013,6 +2038,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 text = text.split('Markdown Content:', 1)[1]
             text = text.replace('\t', ' ').replace('\r', '').strip()
             wc = len(text.split())
+            # HAM kelime sayısı YETMEZ: iskelet de kelime sayar. Düz metin payı
+            # da eşiği geçmeli (bkz. _duz_metin_sayisi).
+            duz = self._duz_metin_sayisi(text)
+            if wc >= FEED_SUMMARY_MIN_WORDS and duz < FEED_SUMMARY_MIN_WORDS:
+                print(f"      ⚠️  {source_name}: proxy okuyucu {wc} kelime "
+                      f"döndürdü ama düz metni {duz} — sayfa iskeleti, "
+                      f"tam metin sayılmadı.")
+                return
             if wc >= FEED_SUMMARY_MIN_WORDS:
                 art.update({'full_text': text[:20000], 'word_count': min(wc, 3000),
                             'success': True, 'from_article_proxy': True})
@@ -2151,6 +2184,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         except Exception:
             return None
 
+    @staticmethod
+    def _feed_baslik_gurultusu(baslik):
+        """Haber değil, yayın takvimi olan feed kaydı mı? (bkz.
+        FEED_BASLIK_GURULTU_ONEKLERI). Eşleşme başlığın BAŞINDA aranır."""
+        b = (baslik or '').strip().lower()
+        return any(b.startswith(o) for o in FEED_BASLIK_GURULTU_ONEKLERI)
+
     def fetch_rss(self, url, source_name):
         """RSS çeker — max 15 saniye timeout korumalı"""
         import threading
@@ -2226,7 +2266,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                                      (s.text if s is not None else '')) or ''
                         # Boş <title></title> → t.text=None; sonraki title.lower()
                         # çağrıları AttributeError ile tüm koşuyu düşürür — atla.
-                        if t is not None and (t.text or '').strip():
+                        if t is not None and (t.text or '').strip() \
+                                and not self._feed_baslik_gurultusu(t.text):
                             result_holder['articles'].append({
                                 'title': t.text.strip(),
                                 'link': (l.get('href') or '') if l is not None else '',
@@ -2248,7 +2289,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         feed_html = (enc.text if enc is not None and enc.text else
                                      (d.text if d is not None else '')) or ''
                         # Aynı boş-başlık koruması (RSS dalı).
-                        if t is not None and (t.text or '').strip():
+                        if t is not None and (t.text or '').strip() \
+                                and not self._feed_baslik_gurultusu(t.text):
                             result_holder['articles'].append({
                                 'title': t.text.strip(),
                                 'link': (l.text or '') if l is not None else '',

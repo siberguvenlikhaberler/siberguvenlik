@@ -1569,6 +1569,22 @@ HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 # tutarlı — ince özetler yine elenir, rapor metinleri 100 kelime altına düşmez.
 FEED_SUMMARY_MIN_WORDS = 100
 
+# ── FEED BAŞLIK GÜRÜLTÜSÜ ────────────────────────────────────────────────────
+# Haber DEĞİL, yayın takvimi olan kayıtlar. Feed seviyesinde elenir: çıkarım,
+# skorlama ve dedup bütçesini boşuna harcamasınlar.
+#
+# ÖLÇÜLDÜ (2026-09-10): SANS ISC'nin günlük "ISC Stormcast" podcast bölümü
+# haber olarak yutuldu; makale gövdesi çıkmadığı için proxy okuyucuya düştü ve
+# dönen 209 kelimenin yalnızca 56'sı düz metindi (gerisi navigasyon, "Sign In",
+# "Handler on Duty", tehdit seviyesi kutusu). Sistem bunu "tam metin çıktı"
+# sayıp skorlamaya taşıdı.
+#
+# Küçük ve AÇIK tutulur: eşleşme başlığın BAŞINDA aranır, böylece bir podcast
+# bölümünden bahseden gerçek bir haber yanlışlıkla elenmez.
+FEED_BASLIK_GURULTU_ONEKLERI = (
+    'isc stormcast',
+)
+
 # Makale-gövdesi proxy fallback: doğrudan kazıma VE feed-özeti başarısız olunca,
 # makaleyi temiz-IP okuyucu servisinden çeker. {url} = makale linki (olduğu gibi).
 # Jina Reader sayfayı temiz metne çevirir (proxy_probe 2026-07-27: DFIR makalesi
