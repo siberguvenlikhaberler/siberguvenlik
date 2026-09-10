@@ -17,9 +17,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import main as main_mod
 
+# NOT: <item> KAPATILMALI. Kapatılmadığında ayrıştırıcı "mismatched tag"
+# verip 0 madde döndürüyor ve fixture, sınanmak istenen "dolu feed" yerine
+# sessizce ikinci bir BOZUK feed'e dönüşüyordu.
 DOLU = (b'<?xml version="1.0"?><rss><channel>'
         b'<item><title>Gercek Haber</title><link>https://x/1</link>'
-        b'<description>govde</description></channel></rss>')
+        b'<description>govde</description></item>'
+        b'</channel></rss>')
 BOS = b'<?xml version="1.0"?><rss><channel></channel></rss>'
 XML_DEGIL = b'<html><body>Just a moment... checking your browser</body></html>'
 
