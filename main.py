@@ -3429,8 +3429,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"zafiyet_aktif_apt → zafiyet_rutin (kritik3 dışı)")
 
         # ── casus_yazilim DOĞRULAMASI ─────────────────────────────────────
-        # casus_yazilim, KATEGORI_ONCELIK'te 9 ile EN YÜKSEK öncelik — yani
-        # bu etiket tek başına bir haberi manşete taşıyabilir. Buna rağmen
+        # casus_yazilim, KATEGORI_ONCELIK'in en üst sırasındaki üç etiketten
+        # biri — yani bu etiket tek başına bir haberi manşete taşıyabilir. Buna rağmen
         # kardeş kategoriler (zafiyet_aktif_apt, nation_state_apt) denetlenirken
         # bu denetlenmiyordu; kodun kendi ifadesiyle "en çok zarar verebilecek
         # etiket, en az korunan"dı.
@@ -3460,9 +3460,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"(kritik3 dışı)")
 
         # ── nation_state_apt DOĞRULAMASI ──────────────────────────────────
-        # nation_state_apt, KATEGORI_ONCELIK'te 8 ile casus_yazilim'dan sonraki
-        # EN YÜKSEK öncelik. Yani aynı puanda bu etiket beraberliği tek başına
-        # bozuyor. Buna rağmen kardeş kategori zafiyet_aktif_apt denetlenirken
+        # nation_state_apt, KATEGORI_ONCELIK'teki EN YÜKSEK öncelik. Yani aynı
+        # puanda bu etiket beraberliği tek başına bozuyor; artık manşetin İÇ
+        # SIRASINI da belirliyor (bkz. _kritik3_sirala). Buna rağmen kardeş kategori zafiyet_aktif_apt denetlenirken
         # bu denetlenmiyordu — en çok zarar verebilecek etiket, en az korunan
         # etiketti. 2026-07-30'da olan tam buydu: OpenAI'nin KENDİ modelinin
         # test sırasında korumalı alandan kaçması haberi nation_state_apt
@@ -5866,6 +5866,36 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         'manset_llm_secim', 0, aid,
                         gerekce.get(aid, 'LLM seçimi'))
         return uygun
+
+    def _kritik3_sirala(self, top3_ids, records):
+        """KRİTİK 3'ün İÇ SIRASINI stratejik ağırlığa göre dizer.
+
+        NEDEN VAR: manşetin SEÇİMİ üzerine çok katman var ama SIRASI hiçbir
+        yerde belirlenmiyordu. Sıra, seçimden sonra çalışan katmanların
+        (LLM seçimi, puan tersineliği, mükerrer kapıları, yayın yönetmeni,
+        _senkron onarımları) listeye dokunma sırasından ARTAKALAN bir yan
+        üründü — ne puana ne de editoryal önceliğe bağlıydı.
+
+        ÖLÇÜLDÜ (2026-09-10): manşetin ilk sırasında Brezilya hükümet
+        sunucularının kimlik avı barındırması (90, stratejik_kurum_saldirisi)
+        vardı; günün en stratejik haberi olan dört Çin devlet grubunun ortak
+        sıfır gün istismar kiti (97, nation_state_apt) ÜÇÜNCÜ sıradaydı.
+        2026-09-09'da da manşet sırası puanla ters düşmüştü (85, 93, 97).
+
+        ÖLÇÜT: önce KATEGORI_ONCELIK (stratejik/jeopolitik ağırlık), eşitlikte
+        toplam puan. Seçimi DEĞİŞTİRMEZ — yalnızca aynı üç haberi dizer, bu
+        yüzden hiçbir mükerrer/kategori güvencesini etkilemez.
+        """
+        def _anahtar(aid):
+            rec = records.get(aid) or {}
+            return (KATEGORI_ONCELIK.get(rec.get('kat'), 0),
+                    rec.get('toplam', 0))
+
+        sirali = sorted(top3_ids, key=_anahtar, reverse=True)
+        if sirali != list(top3_ids):
+            print(f"   🔢 Manşet sırası stratejik ağırlığa göre dizildi: "
+                  f"{list(top3_ids)} → {sirali}")
+        return sirali
 
     def _derive_top3_by_score(self, ranked_ids, records, content_by_id,
                               articles_by_id):
@@ -8285,6 +8315,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"denetim kaydına yazıldı.")
         else:
             print("   ✅ Değişmez denetimi: tüm katmanlar rapor kurallarına uydu.")
+
+        # MANŞET SIRASI — seçim bitti, sıra burada BİR KEZ belirlenir.
+        # Log ve kalite denetimi de yayımlanan sırayı görsün diye ikisinden
+        # de ÖNCE çalışır.
+        top3_ids = self._kritik3_sirala(top3_ids, score_records)
 
         self._write_scoring_log(articles, score_records, top10_ids,
                                 remaining_ids, top3_ids, critique_changed,
