@@ -12,6 +12,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from main import HaberSistemi, _calculate_content_hash
+from src.config import KATEGORI_ONCELIK
 
 
 class TestFileOperations:
@@ -527,7 +528,10 @@ class TestAptEvidence:
                     'title': 'Russia-linked actors hit ministry'}}
         s._enforce_apt_attribution(recs, arts)
         assert not recs[1].get('apt_dogrulanmadi')
-        assert s._kat_oncelik(recs[1]) == 8
+        # Tabloya sabit sayıyla bağlanma: sınanan şey ÖNCELİĞİN DÜŞMEMESİ,
+        # nation_state_apt'nin o günkü sayısal değeri değil.
+        assert (s._kat_oncelik(recs[1])
+                == KATEGORI_ONCELIK['nation_state_apt'])
 
 
 # ── KRİTİK3 paragraf uzunluğu: 110 kelime hedefinin deterministik denetimi ──

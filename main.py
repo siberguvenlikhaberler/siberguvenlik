@@ -3969,6 +3969,37 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                       f"son günlerle bağı olmayan haber(ler) öne alındı {degisen}")
         return yeni_sira
 
+    def _mukerrer_capa_kaydet(self, dusen_id, capa_id):
+        """Bir katman "ID x, ID y'nin mükerreri" dediğinde bunu KAYDEDER.
+
+        NEDEN: mükerrer ilişkisini kuran katmanlar (Auditor grupları, rapor içi
+        kapının deterministik eşleşmesi ve LLM hakemi) kararı verip ATIYORDU.
+        Sonraki katmanlar aynı ilişkiyi tek bir `ayni_olay` çağrısıyla SIFIRDAN
+        türetmek zorunda kalıyor; o çağrı kaçırırsa daha önce kesinleşmiş bilgi
+        kayboluyor.
+
+        ÖLÇÜLDÜ (2026-09-10): BlueMoon sıfır-gün kiti olayında ID 37'nin ID 84'e
+        mükerrer olduğu ZATEN belirlenmişti; grup geri alma bunu göremeyip 37'yi
+        rapora geri koydu ve olay hem KRİTİK 3'te hem gövdede yayımlandı.
+        """
+        if dusen_id == capa_id:
+            return
+        if not hasattr(self, '_mukerrer_capa'):
+            self._mukerrer_capa = {}
+        self._mukerrer_capa[dusen_id] = capa_id
+
+    def _mukerrer_capa_zinciri(self, aid, sinir=8):
+        """aid'in çapa zinciri: x → çapası → onun çapası ... (döngüye karşı
+        korumalı). Zincirin herhangi bir üyesi raporda duruyorsa olay temsil
+        ediliyor demektir."""
+        capalar, gorulen = [], {aid}
+        cur = (getattr(self, '_mukerrer_capa', None) or {}).get(aid)
+        while cur is not None and cur not in gorulen and len(capalar) < sinir:
+            capalar.append(cur)
+            gorulen.add(cur)
+            cur = (getattr(self, '_mukerrer_capa', None) or {}).get(cur)
+        return capalar
+
     def _restore_orphaned_groups(self, candidates_before, kept_ids, top3_ids,
                                  view_fn, score_records):
         """AYNI-OLAY GRUBU BOŞALMA KORUMASI — bir olayın TÜM kopyaları elenmişse
@@ -4015,7 +4046,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             # fiilen iptal ediyordu: 01.08.2026 raporunda kopyası olmayan 6 adet
             # düşük puanlı (52-73) politika/analiz haberi böyle geri geldi ve
             # gövde 12'den 17'ye şişti.
-            grup_uyesi = any(
+            # KAYITLI ÇAPA da grup üyeliğinin kanıtıdır: aid bir başka habere
+            # mükerrer sayıldıysa ya da bir başka haber aid'e mükerrer
+            # sayıldıysa, tek başına düşmüş bir haber DEĞİLDİR.
+            _zincir = set(self._mukerrer_capa_zinciri(aid))
+            _capalar = getattr(self, '_mukerrer_capa', None) or {}
+            grup_uyesi = bool(_zincir) or any(
+                _capalar.get(other) == aid for other in dropped_set
+            ) or any(
                 other != aid and _olay.ayni_olay(view, view_fn(other),
                                                  sozluk=_grup_sozluk,
                                                  ayni_gun=True)
@@ -4027,10 +4065,18 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             # ediliyor demektir — geri alma.
             # Sahte pozitif burada HABER KAYBIDIR: olay "zaten temsil
             # ediliyor" sanılıp geri alma yapılmaz.
+            raporda = list(kept_set) + list(top3_ids) + restored
+            # (a) KESİN BİLGİ: bu haber daha önce açıkça bir başka habere
+            # mükerrer sayıldıysa ve o çapa (ya da çapasının çapası) hâlâ
+            # rapordaysa olay temsil ediliyordur. Metin karşılaştırmasından
+            # önce gelir çünkü türetilmiş değil, KAYDEDİLMİŞ karardır.
+            if set(self._mukerrer_capa_zinciri(aid)) & set(raporda):
+                continue
+            # (b) Kayıt yoksa metinden türet.
             represented = any(
                 _olay.ayni_olay(view, view_fn(other), sozluk=_grup_sozluk,
                                 ayni_gun=True)
-                for other in list(kept_set) + list(top3_ids) + restored
+                for other in raporda
             )
             if not represented:
                 restored.append(aid)
@@ -4559,6 +4605,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             for i in g:
                 if i != anchor and i not in prot:
                     remove.add(i)
+                    # ÇAPA KAYDI — bkz. _mukerrer_capa_kaydet: hangi haberin
+                    # hangi habere mükerrer sayıldığı, sonraki katmanların
+                    # (özellikle grup geri alma) yeniden türetmesi gereken bir
+                    # bilgi olmaktan çıkar.
+                    self._mukerrer_capa_kaydet(i, anchor)
         return remove
 
     # ── KESİK PARAGRAF DENETİMİ (Auditor'ın ikinci görevi) ────────────────
@@ -7075,6 +7126,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 tutulan.append(aid)
             else:
                 dusen[aid] = f'kapi_rapor_ici (ID {esles} ile aynı olay)'
+                self._mukerrer_capa_kaydet(aid, esles)
         if ici_ciftler:
             print(f"   🤖 Mükerrer hakemi (rapor içi): {len(ici_ciftler)} "
                   f"kararsız çift soruluyor...")
@@ -7089,6 +7141,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     continue
                 dusen[dus_aid] = (f'kapi_rapor_ici_llm '
                                   f'(ID {kalan_aid} ile aynı olay: {olay})')
+                self._mukerrer_capa_kaydet(dus_aid, kalan_aid)
                 print(f"   🤖 Hakem (rapor içi): ID {dus_aid} ↔ ID "
                       f"{kalan_aid} AYNI OLAY — {olay}")
 
@@ -8040,6 +8093,44 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 for _rid in restored_ids:
                     eleme_nedeni[_rid] = 'grup_geri_alindi'
                 top3_ids, top10_ids, remaining_ids = _senkron('grup_geri_alma')
+
+                # ── GERİ ALINANI YENİDEN TEKİLLEŞTİR (mükerrer kaçağı kapısı) ──
+                # Gövde aynı-olay dedup'ı bu bloktan ÖNCE çalışır; geri alınan
+                # haberi bir daha HİÇBİR katman KRİTİK 3'e karşı denetlemiyordu.
+                # `_restore_orphaned_groups` kendi içinde "temsil ediliyor mu"
+                # diye bakar ama tek bir `ayni_olay` çağrısına dayanır; o çağrı
+                # kaçırırsa kopya doğrudan yayına gider.
+                #
+                # ÖLÇÜLDÜ (2026-09-10): Proofpoint'in BlueMoon sıfır-gün kiti
+                # olayının altı kopyası vardı (ID 4/10/24/37/44/84/93). Çapa ID
+                # 84 (99 puan) gövdede DURURKEN ID 37 geri alındı ve rapor aynı
+                # olayı hem KRİTİK 3'te hem gövdede yayımladı — üstelik iki
+                # metin kampanya başlangıcını farklı veriyordu (Ağustos 2026 /
+                # Ağustos 2024).
+                #
+                # Meşru geri almalar için no-op'tur: olayı gerçekten temsil
+                # edilmeyen haber KRİTİK 3'le eşleşmez, elenmez.
+                if restored_ids and top3_ids:
+                    view_fn_rr = self._dedup_view_fn(content_by_id,
+                                                     articles_by_id)
+                    kept_rr = _dedup.drop_duplicates_against(
+                        list(top10_ids) + list(remaining_ids),
+                        list(top3_ids), view_fn_rr)
+                    kept_rr_set = set(kept_rr) | set(top3_ids)
+                    kacak = [aid for aid in restored_ids
+                             if aid not in kept_rr_set]
+                    if kacak:
+                        print(f"   🔁 Geri alma sonrası mükerrer kaçağı elendi "
+                              f"{kacak} — olay KRİTİK 3'te zaten temsil ediliyor.")
+                        for _rid in kacak:
+                            eleme_nedeni[_rid] = 'geri_alma_mukerrer'
+                        _kacak_set = set(kacak)
+                        top10_ids     = [i for i in top10_ids
+                                         if i not in _kacak_set]
+                        remaining_ids = [i for i in remaining_ids
+                                         if i not in _kacak_set]
+                        top3_ids, top10_ids, remaining_ids = _senkron(
+                            'geri_alma_mukerrer')
 
         # ── ÇAPRAZ-GÜN RAPOR-GENELİ DEDUP (gövde ↔ son 7 gün raporu) ──────
         # Yukarıdaki blok yalnızca AYNI RUN içinde (gövde ↔ bugünkü KRİTİK 3 +
