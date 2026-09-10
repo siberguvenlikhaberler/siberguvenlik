@@ -83,7 +83,7 @@ from src.config import (
     get_executive_summary_prompt, get_title_rescue_prompt,
     get_kritik3_length_fix_prompt,
     get_baslik_kisaltma_prompt,
-    get_govde_uzunluk_prompt,
+    get_govde_uzunluk_batch_prompt,
     get_scoring_prompt, get_critique_prompt,
     SCORING_WEIGHTS, SCORING_CATEGORIES, ZAFIYET_KATEGORILERI,
     KRITIK3_HARIC_KATEGORILER, KATEGORI_ONCELIK,
@@ -6143,6 +6143,19 @@ document.addEventListener('DOMContentLoaded', initDragFile);
     # düzeltmek koşuyu şişirir. En kötü ihlalden başlanır.
     METIN_ONARIM_BUTCESI = 12
 
+    # Gövde uzunluk onarımı TOPLU çalışır (bkz. get_govde_uzunluk_batch_prompt):
+    # maliyet kalem sayısına değil PARTİ sayısına bağlıdır. Bu yüzden bütçe,
+    # kalem başına çağrı yapan başlık onarımının bütçesinden AYRIDIR ve
+    # ihlallerin tamamını kapsayacak kadar geniştir.
+    #
+    # ÖLÇÜLDÜ (2026-09-10): 33 gövde paragrafının 12'si hedefin altındaydı ve
+    # bu sayı METIN_ONARIM_BUTCESI ile TAM eşitti — bütçe ihlal kadar, onarım
+    # payı sıfırdı. Parti boyutu o günü TEK çağrıya sığdıracak şekilde 12;
+    # 30 kalemlik bütçe en kötü ihtimalle 3 çağrı eder. (Pass 3 aynı biçimde
+    # 20 haberi tam metinleriyle tek çağrıda özetliyor — emsal orada.)
+    GOVDE_ONARIM_BUTCESI = 30
+    GOVDE_ONARIM_PARTI = 12
+
     def _enforce_baslik_uzunlugu(self, ids, content_by_id, articles_by_id):
         """Sınırı aşan başlıkları hedefli olarak YENİDEN YAZDIRIR.
 
@@ -6213,36 +6226,67 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if not adaylar:
             return
         adaylar.sort()                       # en kısadan başla (en kötü ihlal)
-        for n, aid in adaylar[:self.METIN_ONARIM_BUTCESI]:
-            c = content_by_id.get(aid) or {}
+
+        # Kaynak metni kısa olan kalem DENENMEZ: uzatmanın tek meşru yolu tam
+        # metinden somut ayrıntı taşımaktır, yoksa uydurma olur.
+        islenecek = []
+        for n, aid in adaylar[:self.GOVDE_ONARIM_BUTCESI]:
             full_text = (articles_by_id.get(aid, {}) or {}).get('full_text', '') or ''
             if len(full_text.split()) < 60:
                 print(f"   📏 ID {aid}: gövde paragrafı {n} kelime "
                       f"(<{self.GOVDE_PARA_MIN_WORDS}) ama kaynak metin kısa — "
                       f"uzatma denenmedi.")
                 continue
-            print(f"   📏 ID {aid}: gövde paragrafı {n} kelime "
-                  f"(<{self.GOVDE_PARA_MIN_WORDS}) — hedefli yeniden deneme...")
+            islenecek.append((n, aid, full_text))
+        if not islenecek:
+            return
+        atlanan = len(adaylar) - len(adaylar[:self.GOVDE_ONARIM_BUTCESI])
+        if atlanan > 0:
+            print(f"   📏 Gövde uzunluk onarımı: {atlanan} kalem bütçe dışı "
+                  f"kaldı (bütçe {self.GOVDE_ONARIM_BUTCESI}).")
+
+        # TOPLU ONARIM — maliyet kalem sayısına değil parti sayısına bağlı.
+        for i in range(0, len(islenecek), self.GOVDE_ONARIM_PARTI):
+            parti = islenecek[i:i + self.GOVDE_ONARIM_PARTI]
+            kalemler = []
+            for n, aid, full_text in parti:
+                c = content_by_id.get(aid) or {}
+                print(f"   📏 ID {aid}: gövde paragrafı {n} kelime "
+                      f"(<{self.GOVDE_PARA_MIN_WORDS}) — toplu onarıma alındı.")
+                kalemler.append(
+                    f"=== HABER ID: {aid} ===\n"
+                    f"Başlık: {c.get('tr_title', '')}\n"
+                    f"MEVCUT ÖZET ({n} kelime):\n"
+                    f"{(c.get('paragraph') or '').strip()}\n"
+                    f"TAM METİN:\n{_cap_fulltext(full_text)}\n")
             fixed = self._gemini_call_json(
-                get_govde_uzunluk_prompt(
-                    tr_title=c.get('tr_title', ''),
-                    paragraph=(c.get('paragraph') or '').strip(),
-                    full_text=_cap_fulltext(full_text), current_wc=n,
-                    hedef=self.GOVDE_PARA_MIN_WORDS),
-                max_output_tokens=2048, label=f'Gövde-Uzunluk-{aid}')
+                get_govde_uzunluk_batch_prompt(
+                    '\n'.join(kalemler), hedef=self.GOVDE_PARA_MIN_WORDS),
+                max_output_tokens=8192,
+                label=f'Gövde-Uzunluk-Parti-{i // self.GOVDE_ONARIM_PARTI + 1}')
             if not isinstance(fixed, dict):
                 continue
-            yeni = (fixed.get('paragraph') or '').strip()
-            yn = len(yeni.split())
-            if yn <= n:
-                print(f"      ⚠️  yeniden deneme kısaldı/eşitti ({yn} kelime) "
-                      f"— orijinal korunuyor.")
-                continue
-            c['paragraph'] = yeni
-            content_by_id[aid] = c
-            ok = yn >= self.GOVDE_PARA_MIN_WORDS
-            print(f"      → {yn} kelime" +
-                  (" ✅" if ok else " (hâlâ hedefin altında, en iyi deneme)"))
+            yeni_by_id = {}
+            for kayit in (fixed.get('paragraphs') or []):
+                try:
+                    yeni_by_id[int(kayit.get('id'))] = str(
+                        kayit.get('paragraph') or '').strip()
+                except (TypeError, ValueError):
+                    continue
+            # HER KALEM AYRI DOĞRULANIR — parti güvenlik kuralını gevşetmez.
+            for n, aid, _ft in parti:
+                yeni = yeni_by_id.get(aid, '')
+                yn = len(yeni.split())
+                if not yeni or yn <= n:
+                    print(f"      ⚠️  ID {aid}: yeniden deneme kısaldı/eşitti "
+                          f"({yn} kelime) — orijinal korunuyor.")
+                    continue
+                c = content_by_id.get(aid) or {}
+                c['paragraph'] = yeni
+                content_by_id[aid] = c
+                ok = yn >= self.GOVDE_PARA_MIN_WORDS
+                print(f"      → ID {aid}: {yn} kelime" +
+                      (" ✅" if ok else " (hâlâ hedefin altında, en iyi deneme)"))
 
     def _enforce_kritik3_paragraph_length(self, top3_ids, content_by_id, articles_by_id):
         """KRİTİK3 paragraflarını 110 kelime hedefine göre deterministik denetler.

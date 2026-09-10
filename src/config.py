@@ -1256,34 +1256,42 @@ YALNIZCA şu JSON'u döndür (başka metin ekleme):
 {{"tr_title": "..."}}"""
 
 
-def get_govde_uzunluk_prompt(tr_title, paragraph, full_text, current_wc, hedef):
-    """Gövde paragrafı alt sınırın altında kalınca hedefli yeniden yazım.
+def get_govde_uzunluk_batch_prompt(kalemler_metni, hedef):
+    """Gövde uzunluk onarımının TOPLU sürümü — kalem başına bir çağrı yerine
+    tek çağrıda birden çok paragraf.
 
-    KRİTİK 3 paragrafları için bu denetim vardı (`get_kritik3_length_fix_prompt`)
-    ama GÖVDE için hiç yoktu; oysa prompt ikisinden de 110-130 kelime istiyor.
-    ÖLÇÜLDÜ (2026-09-08): gövdedeki 18 paragrafın biri 83 kelimeydi, ikisi 105.
+    NEDEN: onarım kalem başına bir LLM çağrısıydı ve bu yüzden sıkı bir
+    bütçeyle (METIN_ONARIM_BUTCESI) sınırlanmak zorundaydı. Bütçe dolunca
+    kalan kısa paragraflar HİÇ denenmiyordu.
+
+    ÖLÇÜLDÜ (2026-09-10): raporun 33 gövde paragrafının 12'si 110 kelimenin
+    altındaydı (en kötüsü 86) ve bu sayı bütçeyle tam olarak eşitti — yani
+    ihlaller bütçe kadar, onarım payı sıfırdı.
+
+    Toplu çağrı maliyeti kalem sayısına değil PARTİ sayısına bağlar; böylece
+    bütçe, ihlallerin tamamını kapsayacak kadar açılabilir.
     """
-    return f"""Sen siber güvenlik analistisin. Aşağıdaki Türkçe özet {current_wc} kelime —
+    return f"""Sen siber güvenlik analistisin. Aşağıdaki Türkçe özetlerin HEPSİ
 hedef olan {hedef}-130 kelime aralığının ALTINDA kaldı.
 
-BAŞLIK: {tr_title}
+{EV_TARZI}
 
-MEVCUT ÖZET ({current_wc} kelime):
-{paragraph}
-
-TAM METİN (genişletmek için ek somut ayrıntı buradan alınır):
-{full_text}
-
-GÖREV: Aynı olayı anlatan, {hedef}-130 KELİME arası TEK paragraf yeniden yaz.
+GÖREV: HER BİR haber için aynı olayı anlatan, {hedef}-130 KELİME arası TEK
+paragraf yeniden yaz.
 - Mevcut özetteki bilgileri KORU; TAM METİNDEN ek somut ayrıntı (tarih, sayı,
   kurum/ürün adı, teknik detay, etkilenen kapsam) ekleyerek genişlet.
-- ⛔ UYDURMA YOK: yalnızca TAM METİNDE geçen bilgileri kullan. Yetecek somut
-  ayrıntı yoksa varolan cümleleri daha açıklayıcı biçimde yeniden ifade et.
+- ⛔ UYDURMA YOK: yalnızca o haberin TAM METNİNDE geçen bilgileri kullan.
+  Yetecek somut ayrıntı yoksa varolan cümleleri daha açıklayıcı biçimde
+  yeniden ifade et. Haberler arasında bilgi TAŞIMA.
 - Dolgu cümle/tekrar ekleme; her cümle yeni bilgi taşısın.
 - Resmî ve akıcı Türkçe üslup, tek paragraf (madde işareti/alt başlık yok).
 
+HABERLER:
+{kalemler_metni}
+
 YALNIZCA şu JSON'u döndür (başka metin ekleme):
-{{"paragraph": "..."}}"""
+{{"paragraphs": [{{"id": <id>, "paragraph": "..."}}]}}
+Her haber için TAM BİR kayıt döndür; verilmeyen id yazma."""
 
 
 def get_summary_batch_prompt(articles_full, today=''):

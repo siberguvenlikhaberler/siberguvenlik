@@ -73,8 +73,9 @@ def test_llm_sessizse_baslik_korunur():
 def test_kisa_govde_paragrafi_uzatilir():
     cnt = _icerik(KISA, 'kisa ozet ' * 30)          # 60 kelime
     uzun = 'genisletilmis ozet ' * 60               # 120 kelime
-    _sistem({'paragraph': uzun})._enforce_govde_paragraf_uzunlugu(
-        [1], cnt, _art())
+    # Onarım TOPLU çalışır: yanıt {"paragraphs": [{"id", "paragraph"}]}.
+    _sistem({'paragraphs': [{'id': 1, 'paragraph': uzun}]}) \
+        ._enforce_govde_paragraf_uzunlugu([1], cnt, _art())
     assert len(cnt[1]['paragraph'].split()) >= main.HaberSistemi.GOVDE_PARA_MIN_WORDS
 
 
@@ -91,8 +92,8 @@ def test_kaynak_kisaysa_denenmez():
 def test_kisalan_yanit_reddedilir():
     kisa = 'kisa ozet ' * 30
     cnt = _icerik(KISA, kisa)
-    _sistem({'paragraph': 'daha da kisa'})._enforce_govde_paragraf_uzunlugu(
-        [1], cnt, _art())
+    _sistem({'paragraphs': [{'id': 1, 'paragraph': 'daha da kisa'}]}) \
+        ._enforce_govde_paragraf_uzunlugu([1], cnt, _art())
     assert cnt[1]['paragraph'] == kisa
 
 
@@ -123,3 +124,86 @@ def test_butce_siniri_var():
     s._gemini_call_json = lambda *a, **k: cagri.append(1) or {'tr_title': KISA}
     s._enforce_baslik_uzunlugu(list(cnt), cnt, art)
     assert len(cagri) == main.HaberSistemi.METIN_ONARIM_BUTCESI
+
+
+# ── Gövde uzunluk onarımı: bütçe ve partileme ─────────────────────────────
+# ÖLÇÜLDÜ (2026-09-10): 33 gövde paragrafının 12'si 110 kelimenin altındaydı
+# (en kötüsü 86) ve bu sayı o günkü bütçeyle (METIN_ONARIM_BUTCESI = 12) TAM
+# eşitti — bütçe ihlal kadar, onarım payı sıfırdı. Onarım artık toplu çalışır:
+# maliyet kalem sayısına değil PARTİ sayısına bağlıdır.
+
+def _toplu_sistem():
+    """Her partiyi 120 kelimeye uzatan sahte LLM; çağrıları kaydeder."""
+    s = main.HaberSistemi.__new__(main.HaberSistemi)
+    cagrilar = []
+
+    def _yanit(prompt, **k):
+        ids = [int(x) for x in __import__('re').findall(r'HABER ID: (\d+)', prompt)]
+        cagrilar.append(ids)
+        return {'paragraphs': [{'id': i, 'paragraph': 'genisletilmis ozet ' * 60}
+                               for i in ids]}
+
+    s._gemini_call_json = _yanit
+    return s, cagrilar
+
+
+def _cok_kalem(adet):
+    cnt = {i: {'tr_title': KISA, 'paragraph': 'kisa ozet ' * 30}
+           for i in range(1, adet + 1)}
+    art = {i: {'id': i, 'title': '', 'full_text': 'kaynak metin ' * 200}
+           for i in range(1, adet + 1)}
+    return cnt, art
+
+
+def test_12_ihlal_tek_partide_onarilir():
+    """2026-09-10 senaryosu: 12 kısa paragraf, tek çağrıda onarılır."""
+    s, cagrilar = _toplu_sistem()
+    cnt, art = _cok_kalem(12)
+    s._enforce_govde_paragraf_uzunlugu(list(cnt), cnt, art)
+
+    assert len(cagrilar) == 1, f"kalem başına çağrı yapıldı: {len(cagrilar)}"
+    kisa_kalan = [i for i, c in cnt.items()
+                  if len(c['paragraph'].split())
+                  < main.HaberSistemi.GOVDE_PARA_MIN_WORDS]
+    assert not kisa_kalan, f"onarılmadan kalan kalem: {kisa_kalan}"
+
+
+def test_parti_boyutu_asilinca_bolunur():
+    s, cagrilar = _toplu_sistem()
+    cnt, art = _cok_kalem(25)
+    s._enforce_govde_paragraf_uzunlugu(list(cnt), cnt, art)
+
+    parti = main.HaberSistemi.GOVDE_ONARIM_PARTI
+    assert len(cagrilar) == 3, f"beklenen 3 parti, gelen {len(cagrilar)}"
+    assert all(len(c) <= parti for c in cagrilar)
+    assert sorted(sum(cagrilar, [])) == sorted(cnt)
+
+
+def test_butce_asilirsa_en_kotu_ihlaller_once_onarilir():
+    s, cagrilar = _toplu_sistem()
+    adet = main.HaberSistemi.GOVDE_ONARIM_BUTCESI + 3
+    cnt, art = _cok_kalem(adet)
+    # ID 1 en kısa (en kötü ihlal), ID adet en uzun.
+    for i in range(1, adet + 1):
+        cnt[i]['paragraph'] = 'kelime ' * (50 + i)
+
+    s._enforce_govde_paragraf_uzunlugu(list(cnt), cnt, art)
+
+    islenen = sum(cagrilar, [])
+    assert len(islenen) == main.HaberSistemi.GOVDE_ONARIM_BUTCESI
+    assert 1 in islenen, 'en kötü ihlal bütçe dışı kaldı'
+    assert adet not in islenen, 'en hafif ihlal bütçeyi tüketti'
+
+
+def test_partideki_diger_kalem_bozuk_yanittan_etkilenmez():
+    """Bir kalem için eksik/kısa yanıt gelse bile diğerleri onarılır."""
+    s = main.HaberSistemi.__new__(main.HaberSistemi)
+    s._gemini_call_json = lambda *a, **k: {
+        'paragraphs': [{'id': 1, 'paragraph': 'cok kisa'},
+                       {'id': 2, 'paragraph': 'genisletilmis ozet ' * 60}]}
+    cnt, art = _cok_kalem(2)
+    s._enforce_govde_paragraf_uzunlugu([1, 2], cnt, art)
+
+    assert cnt[1]['paragraph'].startswith('kisa ozet'), 'kısalan yanıt kabul edildi'
+    assert (len(cnt[2]['paragraph'].split())
+            >= main.HaberSistemi.GOVDE_PARA_MIN_WORDS)
