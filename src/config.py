@@ -2078,6 +2078,16 @@ def get_mukerrer_hakem_prompt(ciftler_metni):
     Deepfake sertifika dolandırıcısı (ortak anahtar BİLE yok).
 
     Kesin olanları kod eler; buraya yalnızca KARARSIZ çiftler gelir.
+
+    ÖLÇÜLDÜ (2026-09-11): Bitdefender'ın Google Play Erken Erişim incelemesi
+    gövdede İKİ KEZ yayımlandı — The Hacker News (ID 6) ve CSO Online (ID 37),
+    ikisi de 47 puan, aynı bulgu ve aynı TikTok/Facebook ayrıntısı. Deterministik
+    katman haklı olarak eşleştiremedi (paylaşılan kod adı/CVE/kurban YOK;
+    'bitdefender' bilerek denylist'te) ve çift hakeme BİRİNCİ SIRADA geldi
+    (5.57, ikincisi 2.98) — yani ağ kaçırmadı, hakem "farklı" dedi.
+    Nedeni tanımdaydı: AYNI OLAY listesi saldırı/kampanya/ihlal/ifşa/operasyon/
+    dava sayıyordu, ARAŞTIRMA BULGUSU saymıyordu; "paylaşılan somut olayı
+    adlandır" kuralı da adlandırılacak bir vaka bulamıyordu.
     """
     return f"""Sen bir siber güvenlik bülteninin MÜKERRER DENETÇİSİSİN.
 
@@ -2085,11 +2095,17 @@ Aşağıda haber ÇİFTLERİ var. Her çift için tek soru: **AYNI OLAYI mı
 anlatıyorlar?**
 
 AYNI OLAY demek: aynı somut vaka — aynı saldırı, aynı kampanya, aynı ihlal,
-aynı zafiyet ifşası, aynı operasyon, aynı dava.
+aynı zafiyet ifşası, aynı operasyon, aynı dava YA DA AYNI ARAŞTIRMA BULGUSU
+(aynı firmanın/ekibin aynı incelemesi, aynı raporu).
 
 ⚠️ ŞUNLAR AYNI OLAYI FARKLI YAPMAZ:
 • Dil farkı (biri İngilizce özgün, diğeri Türkçe yeniden yazım).
 • Farklı kaynak, farklı başlık kalıbı, farklı vurgu.
+• AYNI ARAŞTIRMANIN İKİ HABER SİTESİNDE ÇIKMASI. Bir güvenlik firmasının tek
+  bir incelemesi çoğu gün birkaç yayında birden haber olur; ikisi de aynı
+  bulguyu, aynı örnekleri ve aynı rakamları taşır. Biri bulgunun BİR YÖNÜNÜ
+  öne çıkarsa (ör. biri "program şu kör noktayı yaratıyor", diğeri "şu
+  uygulamalar bu yolla dağıtıldı") bu VURGU farkıdır, ayrı olay değildir.
 • Aktörün BAŞKA ADLA anılması — HoneyMyte / Mustang Panda / TA416 /
   Twill Typhoon aynı gruptur; Cl0p / Clop aynıdır.
 • Yeni ayrıntı eklenmesi: yeni kurban sayısı, yeni ülke, "artık aktif
@@ -2103,12 +2119,17 @@ aynı zafiyet ifşası, aynı operasyon, aynı dava.
   bülteni; GitLab açığı ile Citrix açığı).
 • Aynı kurum, FARKLI duyuru (CISA'nın Ray uyarısı ile CISA'nın katalog
   güncellemesi).
+• Aynı firmanın FARKLI iki araştırması (Bitdefender'ın Android uygulama
+  incelemesi ile Bitdefender'ın fidye yazılımı raporu). Ortak olan yalnızca
+  ARAŞTIRMACI ise bu aynı bulgu değildir.
 • Aynı tür saldırı, farklı kurban (iki ayrı fidye yazılımı vakası).
 • Yalnızca konu/tema benzerliği (iki ayrı API anahtarı ifşası vakası).
 
 KARAR KURALI: "AYNI" diyebilmen için PAYLAŞILAN SOMUT OLAYI adlandırabilmen
 gerekir (ör. "Threema'ya yönelik DDoS kesintisi", "CoolClient'a çekirdek
-rootkit eklenmesi"). Adlandıramıyorsan cevabın FARKLI'dır.
+rootkit eklenmesi"). Araştırma bulgularında somut olay RAPORUN KENDİSİDİR ve
+onu da adlandırabilirsin (ör. "Bitdefender'ın Google Play Erken Erişim
+incelemesi"). Adlandıramıyorsan cevabın FARKLI'dır.
 
 ÇİFTLER:
 {ciftler_metni}
