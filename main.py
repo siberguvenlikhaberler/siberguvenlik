@@ -6175,6 +6175,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
     # tek seferlik hedefli bir yeniden deneme tetikler (bkz. altındaki metod).
     KRITIK3_PARA_MIN_WORDS = 110
 
+    # Manşet paragrafı için koşu başına haber başına en fazla uzatma çağrısı.
+    # Manşet en fazla 3 haberdir; ikinci deneme günde en fazla 3 ek çağrı eder.
+    #
+    # ÖLÇÜLDÜ (2026-09-11): manşetin ikinci haberi 103 kelime yayımlandı. Tek
+    # deneme hakkı vardı ve hedefi tutturamayınca "en iyi deneme" olarak
+    # bırakıldı; ikinci bir hak olsaydı düzelme şansı vardı.
+    KRITIK3_UZUNLUK_DENEME = 2
+
     # Gövde paragrafı alt sınırı. KRİTİK 3'ünkiyle (KRITIK3_PARA_MIN_WORDS)
     # AYNI hedeften gelir; prompt ikisinden de 110-130 kelime ister. Ayrı
     # sabit, iki tarafın sessizce ayrışmasına izin verirdi.
@@ -6349,6 +6357,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             (en uzun) deneme sonucu bırakılır ve durum loglanır. Kısa ama
             doğru bir paragraf, uzun ama halüsinasyonlu bir paragraftan iyidir.
         """
+        # DENEME SAYACI — koşu boyunca haber başına en fazla
+        # KRITIK3_UZUNLUK_DENEME çağrı. Manşet en fazla 3 haberdir, bu yüzden
+        # ikinci deneme ucuzdur; ama bu metot boru hattında birçok kez
+        # çağrıldığı için (her manşet takasından sonra + yayından önce)
+        # sayaç olmadan aynı haber defalarca denenebilirdi.
+        if not hasattr(self, '_k3_uzunluk_deneme'):
+            self._k3_uzunluk_deneme = {}
+
         for aid in top3_ids:
             c = content_by_id.get(aid) or {}
             paragraph = (c.get('paragraph') or '').strip()
@@ -6362,8 +6378,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                       f"(<{self.KRITIK3_PARA_MIN_WORDS}) ama kaynak metin kısa — "
                       f"uzatma denenmedi.")
                 continue
+            if self._k3_uzunluk_deneme.get(aid, 0) >= self.KRITIK3_UZUNLUK_DENEME:
+                print(f"   📏 ID {aid}: kritik3 paragrafı {wc} kelime — "
+                      f"{self.KRITIK3_UZUNLUK_DENEME} deneme hakkı doldu, "
+                      f"en iyi sonuç korunuyor.")
+                continue
+            self._k3_uzunluk_deneme[aid] = self._k3_uzunluk_deneme.get(aid, 0) + 1
             print(f"   📏 ID {aid}: kritik3 paragrafı {wc} kelime "
-                  f"(<{self.KRITIK3_PARA_MIN_WORDS}) — hedefli yeniden deneme...")
+                  f"(<{self.KRITIK3_PARA_MIN_WORDS}) — hedefli yeniden deneme "
+                  f"({self._k3_uzunluk_deneme[aid]}/"
+                  f"{self.KRITIK3_UZUNLUK_DENEME})...")
             fixed = self._gemini_call_json(
                 get_kritik3_length_fix_prompt(
                     tr_title=c.get('tr_title', ''), paragraph=paragraph,
@@ -8406,6 +8430,18 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # Log ve kalite denetimi de yayımlanan sırayı görsün diye ikisinden
         # de ÖNCE çalışır.
         top3_ids = self._kritik3_sirala(top3_ids, score_records)
+
+        # MANŞET UZUNLUĞU — SON SÖZ. Bu metot manşeti değiştiren katmanların
+        # ardından tek tek çağrılıyordu; manşete SONRADAN giren bir haberi
+        # kaçıran her yol sessizce kısa paragraf yayımlıyordu.
+        #
+        # ÖLÇÜLDÜ (2026-09-11): manşetin ikinci haberi 103 kelime yayımlandı
+        # (alt sınır 110). Burada, yayından hemen önce, manşetin NİHAİ hâli
+        # denetlenir — hangi katman en son dokunmuş olursa olsun. İhlal yoksa
+        # hiç LLM çağrısı yapılmaz; deneme sayacı (KRITIK3_UZUNLUK_DENEME)
+        # tekrar tekrar denemeyi engeller.
+        self._enforce_kritik3_paragraph_length(
+            top3_ids, content_by_id, articles_by_id)
 
         self._write_scoring_log(articles, score_records, top10_ids,
                                 remaining_ids, top3_ids, critique_changed,
