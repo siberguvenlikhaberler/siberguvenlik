@@ -1641,9 +1641,32 @@ REPORT_FLOOR = 10
 # 08-02/08-03 gibi kıtlık günleri iniyor. 08-02'nin KALMASI doğrudur: 2
 # haberlik sayfa rapor değildir, o gün yeniden denemek gerekir.
 REPORT_FLOOR_RATIO = 0.45
-# Mutlak alt sınır: arz ne kadar küçük olursa olsun 4 haberin altındaki bir
-# sayfa rapor sayılmaz (fallback'ten ayırt edilemez hale gelir).
-REPORT_FLOOR_MIN = 4
+# Mutlak alt sınır: KRİTİK 3 dolu bir rapor yayımlanabilir bir rapordur.
+# 3 haber = kritik3 tam, gövde boş. Boru hattı rapor ≥3 haber içerdiği sürece
+# manşeti HER ZAMAN 3'e tamamladığından (bkz. _derive_top3_by_score), toplam
+# 3 haber tam olarak "manşet dolu, gövde boş" demektir.
+#
+# ÖLÇÜLDÜ (2026-09-14): taze havuz 9 → taban 4; ilk koşu 3 haber üretti,
+# başarısız sayıldı ve ikinci slot yeniden koştu. Kazanç bir gövde haberi,
+# bedeli tam bir LLM koşusu (~50 cent) VE üçüncü manşetin 91 puanlık NSA
+# haberinden 86 puanlık viki haberine düşmesi oldu — yeniden deneme raporu
+# iyileştirmedi, zayıflattı.
+REPORT_FLOOR_MIN = 3
+
+# KITLIK EŞİĞİ — bu büyüklüğe kadar taze havuzda tabanı 3'e sabitler.
+#
+# NEDEN AYRI BİR KURAL: 14 Eylül'de 4'ü dayatan MIN değil ORAN'dı
+# (round(0.45 × 9) = 4). MIN'i indirmek o günü değiştirmezdi. Oranı topyekûn
+# düşürmek ise kıtlık dışındaki günleri de gevşetirdi (havuz 20 → taban 9
+# yerine 7). Kural bu yüzden yalnızca arzın gerçekten kuruduğu aralığa
+# uygulanır ve oranın kendisine dokunmaz.
+#
+# Belgelenmiş vakaların hepsi korunur:
+#   08-02  taze  3 → taban 3, rapor 2 → KALIR (2 haberlik sayfa rapor değildir)
+#   08-03  taze  9 → taban 3, rapor 7 → geçer
+#   09-14  taze  9 → taban 3, rapor 3 → geçer (ikinci koşu hiç olmaz)
+#   07-27  taze 12 → eşik dışı, taban 5, rapor 12 → geçer
+REPORT_KITLIK_HAVUZ = 10
 CONTENT_SELECTORS = {
     # ── Ölçülerek eklendi (Actions "Selector Keşfi", run 30460228760) ─────
     # Microsoft Security: genel fallback zinciri (article→main→content-div) bu

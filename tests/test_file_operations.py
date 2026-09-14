@@ -363,16 +363,30 @@ class TestGoreliTaban:
             assert _hesapla_taban(taze) == REPORT_FLOOR
 
     def test_ince_gunde_taban_iner(self):
-        """Gerçek ölçüm: 08-03 taze 9 → 4, 07-27 taze 12 → 5."""
+        """Gerçek ölçüm: 07-27 taze 12 → 5 (kıtlık eşiğinin üstü)."""
         from main import _hesapla_taban
-        assert _hesapla_taban(9) == 4
         assert _hesapla_taban(12) == 5
 
+    def test_kitlik_gununde_kritik3_yeterli(self):
+        """Taze havuz kıtlık eşiğinin altındaysa taban 3'e sabitlenir:
+        KRİTİK 3 dolu bir rapor yayımlanabilir bir rapordur.
+
+        ÖLÇÜLDÜ (2026-09-14): taze 9 → taban 4 olduğu için 3 haberlik rapor
+        başarısız sayıldı; ikinci koşu bir gövde haberi kazandırdı ama tam bir
+        LLM koşusu harcadı ve üçüncü manşeti 91 puandan 86'ya düşürdü."""
+        from main import _hesapla_taban, REPORT_FLOOR_MIN, REPORT_KITLIK_HAVUZ
+        assert _hesapla_taban(9) == 3            # 08-03 ve 09-14
+        assert _hesapla_taban(REPORT_KITLIK_HAVUZ) == REPORT_FLOOR_MIN
+        # Eşiğin hemen üstünde oran yeniden devrede
+        assert _hesapla_taban(REPORT_KITLIK_HAVUZ + 1) == 5
+
     def test_mutlak_alt_sinir(self):
-        """Arz ne kadar küçük olursa olsun taban FLOOR_MIN'in altına inmez."""
+        """Arz ne kadar küçük olursa olsun taban FLOOR_MIN'in altına inmez;
+        2 haberlik sayfa hâlâ rapor sayılmaz (08-02 vakası korunur)."""
         from main import _hesapla_taban, REPORT_FLOOR_MIN
         assert _hesapla_taban(1) == REPORT_FLOOR_MIN
         assert _hesapla_taban(3) == REPORT_FLOOR_MIN   # 08-02: taze 3
+        assert REPORT_FLOOR_MIN == 3
 
     def test_havuz_bilinmiyorsa_eski_davranis(self):
         """İşaretsiz (eski) rapor sabit REPORT_FLOOR ile değerlendirilir."""
@@ -401,7 +415,11 @@ class TestGoreliTaban:
         kilitlenmeye devam ederdi."""
         from main import _hesapla_taban
         assert _hesapla_taban(21) == 9      # ham havuz → ulaşılamaz eşik
-        assert _hesapla_taban(9) == 4       # taze havuz → gerçekçi eşik
+        # Taze havuz → gerçekçi eşik. Kıtlık kuralı (2026-09-14) bu değeri
+        # 4'ten 3'e indirdi; testin çiviledigi şey sayı değil, ham havuzun
+        # ulaşılamaz eşik üretmesi.
+        assert _hesapla_taban(9) == 3
+        assert _hesapla_taban(9) < _hesapla_taban(21)
 
 
 # ── GERİLEME KORUMASI ──────────────────────────────────────────────────────

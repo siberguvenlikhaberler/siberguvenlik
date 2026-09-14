@@ -71,7 +71,7 @@ from src.config import (
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS, FEED_SUMMARY_MIN_WORDS, ARTICLE_PROXY,
     FEED_BASLIK_GURULTU_ONEKLERI,
     ARTICLE_PROXY_MAX_CALLS, ARTICLE_PROXY_BUDGET_SEC, REPORT_FLOOR,
-    REPORT_FLOOR_RATIO, REPORT_FLOOR_MIN,
+    REPORT_FLOOR_RATIO, REPORT_FLOOR_MIN, REPORT_KITLIK_HAVUZ,
     get_ranking_prompt, get_deep_analysis_prompt, get_summary_batch_prompt,
     get_top3_selection_prompt, get_top3_verification_prompt,
     get_legacy_json_prompt, get_quality_review_prompt, get_dedup_review_prompt,
@@ -9654,8 +9654,14 @@ def _hesapla_taban(siber_havuz: int) -> int:
     yetmediği günlerde iner."""
     if siber_havuz <= 0:
         return REPORT_FLOOR
-    return max(REPORT_FLOOR_MIN, min(REPORT_FLOOR,
-                                     round(REPORT_FLOOR_RATIO * siber_havuz)))
+    taban = max(REPORT_FLOOR_MIN, min(REPORT_FLOOR,
+                                      round(REPORT_FLOOR_RATIO * siber_havuz)))
+    # KITLIK: arz gerçekten kuruduğunda KRİTİK 3 dolu bir rapor yeterlidir;
+    # 4. haberi kovalamak için tam bir koşu daha harcamak raporu iyileştirmiyor
+    # (bkz. REPORT_KITLIK_HAVUZ).
+    if siber_havuz <= REPORT_KITLIK_HAVUZ:
+        taban = min(taban, REPORT_FLOOR_MIN)
+    return taban
 
 
 def _rapor_havuzu(content: str) -> int:
