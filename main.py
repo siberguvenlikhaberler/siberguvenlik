@@ -5951,8 +5951,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if len(top3_ids) < 3:
             return list(top3_ids), list(top10_ids), list(remaining_ids)
 
-        oncelik = lambda aid: KATEGORI_ONCELIK.get(  # noqa: E731
-            (records.get(aid) or {}).get('kat'), 0)
+        # ETKİN öncelik (_kat_oncelik): doğrulanmamış nation_state_apt
+        # iddiasının öncelik avantajı geri alınır. Ham KATEGORI_ONCELIK
+        # kullanmak, atıf kontrolünün kararını GÖRMEZDEN gelirdi — kanıtsız
+        # bir "devlet destekli" etiketi 10 önceliğiyle manşet takas ettirirdi.
+        oncelik = lambda aid: self._kat_oncelik(records.get(aid) or {})  # noqa: E731
         puan = lambda aid: (records.get(aid) or {}).get('toplam', 0)  # noqa: E731
         view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
         yasak = getattr(self, '_manset_yasak', None) or set()
@@ -6033,9 +6036,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         yüzden hiçbir mükerrer/kategori güvencesini etkilemez.
         """
         def _anahtar(aid):
+            # ETKİN öncelik: doğrulanmamış nation_state_apt iddiası manşet
+            # sırasını da kazanmamalı (bkz. _kat_oncelik).
             rec = records.get(aid) or {}
-            return (KATEGORI_ONCELIK.get(rec.get('kat'), 0),
-                    rec.get('toplam', 0))
+            return (self._kat_oncelik(rec), rec.get('toplam', 0))
 
         sirali = sorted(top3_ids, key=_anahtar, reverse=True)
         if sirali != list(top3_ids):

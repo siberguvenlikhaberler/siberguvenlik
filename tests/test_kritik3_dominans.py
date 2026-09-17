@@ -167,3 +167,36 @@ def test_mansette_temsil_edilen_olay_ikinci_kez_manset_olamaz():
                4: {'kat': 'nation_state_apt', 'toplam': 99}}
     t3, _, _ = _calistir(s, [1, 2, 3], [4], records, icerik)
     assert 4 not in t3, 'manşetteki olayın kopyası manşete taşındı'
+
+
+def test_dogrulanmamis_apt_oncelik_avantaji_kazandirmaz():
+    """Atıf kontrolü (apt_dogrulanmadi) nation_state_apt'nin öncelik
+    avantajını geri alır; dominans kuralı bu kararı GÖRMEK zorundadır.
+
+    ÖLÇÜLDÜ (2026-09-08..09-17): raporda kalan 13 nation_state_apt etiketinin
+    5'i şüpheli — KREMLIN adlı Brezilya bankacılık truva atı, finansal
+    motivasyonlu Slim Spider, devlet atfı taşımayan BambooToken gibi. Kural
+    ham KATEGORI_ONCELIK okusaydı bunlar 10 önceliğiyle manşet takas
+    ettirirdi."""
+    s = _sistem()
+    # Manşetlerin etkin önceliği 4 ve üstü; doğrulanmamış APT 4'e kapandığı
+    # için hiçbirini "kesinlikle daha yüksek öncelik" ölçütüyle geçemez.
+    records = {1: {'kat': 'veri_ihlali', 'toplam': 90},            # öncelik 4
+               2: {'kat': 'yapay_zeka_guvenligi', 'toplam': 88},   # öncelik 5
+               3: {'kat': 'tedarik_zinciri', 'toplam': 85},        # öncelik 6
+               4: {'kat': 'nation_state_apt', 'toplam': 95,
+                   'apt_dogrulanmadi': True}}                      # 10 → 4
+    t3, _, _ = _calistir(s, [1, 2, 3], [4], records)
+    assert 4 not in t3, 'doğrulanmamış APT iddiası manşet takas ettirdi'
+    assert t3 == [1, 2, 3]
+
+
+def test_dogrulanmis_apt_takas_edebilir():
+    """Karşı örnek: atıfı doğrulanmış nation_state_apt tam önceliğini korur."""
+    s = _sistem()
+    records = {1: {'kat': 'veri_ihlali', 'toplam': 90},
+               2: {'kat': 'yapay_zeka_guvenligi', 'toplam': 88},
+               3: {'kat': 'tedarik_zinciri', 'toplam': 85},
+               4: {'kat': 'nation_state_apt', 'toplam': 95}}       # öncelik 10
+    t3, _, _ = _calistir(s, [1, 2, 3], [4], records)
+    assert 4 in t3
