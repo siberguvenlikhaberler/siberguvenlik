@@ -3589,6 +3589,30 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                    if ad in ('pegasus', 'nso group', 'intellexa', 'predator',
                              'candiru', 'cytrox', 'quadream', 'finfisher'))
 
+    # eCrime ADLANDIRMASI — tek başına DEVLET atfı kanıtı DEĞİLDİR.
+    #
+    # Yaygın aktör taksonomisinde hayvan son eki aktörün TÜRÜNÜ belirtir:
+    # *Bear (Rusya), *Panda (Çin), *Kitten (İran), *Chollima (K. Kore) devlet
+    # bağlantılıdır; *Spider finansal motivasyonlu suç gruplarını, *Jackal ise
+    # hacktivist/suç operasyonlarını gösterir. Yapısal aktör kimliği yolu bu
+    # ayrımı yapmadığı için bir eCrime adı "devlet destekli" iddiasını
+    # doğruluyor sayılıyordu.
+    #
+    # ÖLÇÜLDÜ (2026-09-09): "Slim Spider Steals Crypto Custody Secrets From
+    # Brazilian Financial Institutions" — finansal motivasyonlu bir grup —
+    # metinde HİÇBİR atıf ifadesi olmadan yalnızca 'slimspider' aktör kimliği
+    # sayesinde nation_state_apt önceliğini (10) korudu.
+    #
+    # KAPSAM DAR: son 30 günün 554 yayımlanmış haberinde atıf ifadesi olmadan
+    # yalnızca aktör kimliğinden geçen 16 kayıt var; bunların YALNIZCA 2'si bu
+    # kalıpta (Slim Spider, Operation Jackal). Kalan 14'ü UNC/Storm/UAT/Cl0p
+    # gibi meşru kimlikler ve etkilenmez.
+    #
+    # Etiket DEĞİŞMEZ: yalnızca doğrulanmamış iddianın öncelik avantajı geri
+    # alınır (bkz. _kat_oncelik). Metinde gerçek bir atıf ifadesi varsa bu
+    # kural devreye girmez — orada (a) yolu zaten geçer.
+    _ECRIME_AKTOR_RE = re.compile(r'(?:spider|jackal)$')
+
     def _has_apt_evidence(self, *texts):
         """Devlet/APT iddiasını destekleyen KANITI iki yoldan arar.
 
@@ -3625,7 +3649,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # Yapısal aktör kimliği (APT29, UNC5792, Storm-2077, "Laundry Bear",
         # Sandworm...) tek başına yeterlidir — bunlar tanımı gereği aktör adıdır.
         aktorler = {x for x in _dedup.extract_actors(blob)
-                    if not x.startswith(('cve', 'ghsa'))}
+                    if not x.startswith(('cve', 'ghsa'))
+                    and not self._ECRIME_AKTOR_RE.search(x)}
         return bool(aktorler)
 
     def _cyber_text_for(self, art_id, content_by_id, articles_by_id):
@@ -7843,6 +7868,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     'critique': 1 if aid in critique_changed else 0,
                     # 1 = deterministik atıf kontrolü zafiyet_aktif_apt'ı indirdi
                     'attr_guard': 1 if aid in attr_downgraded else 0,
+                    # Kategori DEĞİŞMEDEN yalnızca öncelik avantajı geri
+                    # alınan nation_state_apt kayıtları. attr_guard bunları
+                    # görmüyordu (o yalnızca zafiyet_rutin'e indirilenleri
+                    # sayar) ve karar skorlama logunda GÖRÜNMÜYORDU — ölçüm
+                    # sırasında (2026-09-18) "hiçbir katman sorgulamamış"
+                    # sanılmasına yol açtı.
+                    'apt_dogrulanmadi': 1 if (rec or {}).get(
+                        'apt_dogrulanmadi') else 0,
                     'critique_neden': (critique_changed.get(aid, '')
                                        if isinstance(critique_changed, dict) else ''),
                     'yerlesim': yerlesim,
