@@ -5909,6 +5909,110 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         gerekce.get(aid, 'LLM seçimi'))
         return uygun
 
+    def _kritik3_dominans_takasi(self, top3_ids, top10_ids, remaining_ids,
+                                 records, content_by_id, articles_by_id):
+        """DOMINE EDİLEN MANŞETİ TAKAS EDER — deterministik, LLM'den bağımsız.
+
+        KURAL: bir haber manşette KALAMAZ, eğer havuzda kategori önceliği
+        KESİNLİKLE daha yüksek VE puanı ondan düşük olmayan uygun bir aday
+        varsa. Böyle bir aday o manşeti her iki eksende de geçiyor demektir;
+        onu gövdede bırakıp zayıfını manşete koymanın editoryal gerekçesi yoktur.
+
+        NEDEN DETERMİNİSTİK: manşet ölçütü bugüne dek yalnızca PROMPT'ta
+        yazılıydı ("tek ürün/satıcı teknik olayı zayıf manşettir"). Prompt
+        tavsiyedir; model her gün yeniden karar verir ve arada yanlış karar
+        verir. Puan bandı (MANSET_PUAN_TOLERANSI = 25) da yalnızca uçurumu
+        engelliyor, "daha güçlü kategoride daha yüksek puanlı aday dururken
+        zayıfını seçme" demiyordu.
+
+        ÖLÇÜLDÜ — aynı sınıf üç kez tekrarladı:
+          2026-09-09  F5 BIG-IP rootkit (85, zafiyet_aktif_apt) manşet oldu;
+                      Slim Spider (85, nation_state_apt) gövdedeydi.
+          2026-09-16  PhantomRaven (77, zafiyet_aktif_apt) manşet oldu;
+                      BambooToken (86, nation_state_apt) gövdedeydi.
+          2026-09-17  Pixel modem sıfır-günü (89, zafiyet_aktif_apt) manşet
+                      oldu; Chosen Brick İran casus yazılımı (94,
+                      nation_state_apt) gövdedeydi ve geçmişte hiç
+                      raporlanmamıştı, yani men de edilmemişti.
+
+        TAKAS, VETO DEĞİL: domine eden aday manşete girer, düşen haber gövdenin
+        BAŞINA döner. Uygun aday yoksa manşet DEĞİŞMEZ — üç manşet garantisi
+        yapısal olarak korunur.
+
+        MUAFİYETLER (aday havuzundan çıkarılır): manşete uygun olmayan
+        kategoriler, mükerrer işaretliler, manşet yasaklıları (devam haberi) ve
+        mevcut manşetlerden biriyle AYNI OLAY olanlar. Sonuncusu kritiktir:
+        aksi hâlde kural, manşette zaten temsil edilen bir olayın ikinci
+        kopyasını manşete taşırdı.
+
+        Ölçüm (2026-09-08..09-17, gerçek skorlama logu): 10 günde 7 takas;
+        11/13/14/15 Eylül'de kural hiç ateşlenmedi.
+        """
+        if len(top3_ids) < 3:
+            return list(top3_ids), list(top10_ids), list(remaining_ids)
+
+        oncelik = lambda aid: KATEGORI_ONCELIK.get(  # noqa: E731
+            (records.get(aid) or {}).get('kat'), 0)
+        puan = lambda aid: (records.get(aid) or {}).get('toplam', 0)  # noqa: E731
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+        yasak = getattr(self, '_manset_yasak', None) or set()
+
+        yeni_top3 = list(top3_ids)
+        yeni_top10 = list(top10_ids)
+        yeni_kalan = list(remaining_ids)
+        takas_edilen = []
+
+        # Her manşet için en fazla bir takas; döngü sınırı manşet sayısıdır.
+        for _ in range(len(yeni_top3)):
+            havuz = [a for a in (yeni_top10 + yeni_kalan)
+                     if a not in yeni_top3
+                     and (records.get(a) or {}).get('kat')
+                     not in KRITIK3_HARIC_KATEGORILER
+                     and not (records.get(a) or {}).get('mukerrer')
+                     and a not in yasak]
+            if not havuz:
+                break
+            # En zayıf manşetten başla: takas edilecekse önce o edilmeli.
+            ihlal = None
+            for x in sorted(yeni_top3, key=lambda a: (oncelik(a), puan(a))):
+                adaylar = [y for y in havuz
+                           if oncelik(y) > oncelik(x) and puan(y) >= puan(x)]
+                # Manşette ZATEN temsil edilen olay ikinci kez manşet olamaz.
+                adaylar = [y for y in adaylar
+                           if not any(_olay.ayni_olay(view_fn(y), view_fn(h),
+                                                      sozluk=self._olay_sozlugu,
+                                                      ayni_gun=True)
+                                      for h in yeni_top3)]
+                if adaylar:
+                    y = max(adaylar, key=lambda a: (oncelik(a), puan(a)))
+                    ihlal = (x, y)
+                    break
+            if ihlal is None:
+                break
+            x, y = ihlal
+            yeni_top3[yeni_top3.index(x)] = y
+            yeni_top10 = [i for i in yeni_top10 if i != y]
+            yeni_kalan = [i for i in yeni_kalan if i != y]
+            # Düşen haber gövdenin BAŞINA: puanca gövdenin en güçlülerinden.
+            if x not in yeni_top10:
+                yeni_top10.insert(0, x)
+            takas_edilen.append((x, y))
+            print(f"   ⚖️  Dominans takası: manşetteki ID {x} "
+                  f"({puan(x)}, {(records.get(x) or {}).get('kat')}) → ID {y} "
+                  f"({puan(y)}, {(records.get(y) or {}).get('kat')}) — aday her "
+                  f"iki eksende de üstün.")
+            self._manset_karar_kaydet(
+                'kritik3_dominans', x, y,
+                f'{puan(y)}/{(records.get(y) or {}).get("kat")} adayı '
+                f'{puan(x)}/{(records.get(x) or {}).get("kat")} manşetini '
+                f'her iki eksende geçiyordu')
+
+        if takas_edilen:
+            # Manşete YENİ giren haberin paragrafı manşet ölçütüne çekilir.
+            self._enforce_kritik3_paragraph_length(
+                [y for _, y in takas_edilen], content_by_id, articles_by_id)
+        return yeni_top3, yeni_top10, yeni_kalan
+
     def _kritik3_sirala(self, top3_ids, records):
         """KRİTİK 3'ün İÇ SIRASINI stratejik ağırlığa göre dizer.
 
@@ -8425,6 +8529,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"denetim kaydına yazıldı.")
         else:
             print("   ✅ Değişmez denetimi: tüm katmanlar rapor kurallarına uydu.")
+
+        # MANŞET DOMİNANS KAPISI — seçimin son sözü KODDA.
+        # Prompt'a yazılmış "zayıf manşet" ölçütü bağlayıcı değildi ve aynı
+        # hata üç kez tekrarladı (bkz. _kritik3_dominans_takasi). Sıralamadan
+        # ÖNCE çalışır ki dizilen liste nihai manşet olsun.
+        top3_ids, top10_ids, remaining_ids = self._kritik3_dominans_takasi(
+            top3_ids, top10_ids, remaining_ids, score_records,
+            content_by_id, articles_by_id)
+        top3_ids, top10_ids, remaining_ids = _senkron('kritik3_dominans')
 
         # MANŞET SIRASI — seçim bitti, sıra burada BİR KEZ belirlenir.
         # Log ve kalite denetimi de yayımlanan sırayı görsün diye ikisinden
