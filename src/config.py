@@ -1706,7 +1706,26 @@ CONTENT_SELECTORS = {
 
 
 def get_quality_review_prompt(articles_content):
-    """
+    """PASS 5 — KALİTE KONTROL.
+
+    ÖLÇÜLDÜ (2026-09-11..18): üretime giren 333 haberin %19'u bu kapıda düştü
+    ama kategori dağılımı çok dengesizdi: politika_hukuk %57 (54 haberin 31'i),
+    nation_state_apt ve tedarik_zinciri %0. Elenen 31 politika haberinin ~19'u
+    GERÇEK haberdi — FBI siber stratejisi (94), CISA/NSA ortak rehberi (89),
+    AB CRA yürürlüğü (87), FERC NERC CIP-014-4 onayı (82), İngiltere'nin 23
+    milyon kullanıcıda parolayı kaldırması (81), Ukrayna'nın siber koordinasyon
+    ataması (83). Günde ~2,4 politika haberi kaybı.
+
+    KÖK NEDEN: Kontrol 3'teki "genel tavsiye" maddesi bir devlet rehberini,
+    düzenlemesini ya da atamasını kapsıyordu, çünkü bunlar "saldırı"
+    anlatmıyor. Manşet denetim promptu ise tam tersini söylüyordu ("ölçüt bir
+    saldırı anlatılıyor mu DEĞİL..."). İki denetim ayrışmıştı; doğru kural
+    zaten sistemde vardı, Pass 5 onu görmüyordu.
+
+    NOT — maliyet: bu kapı üretimden SONRA çalışır, dolayısıyla düzeltme
+    üretim maliyetini DÜŞÜRMEZ. Zaten yazılmış paragrafların atılmasını
+    engeller: aynı harcamanın karşılığı çöpe gitmek yerine yayımlanır.
+    
     Pass 5: Üretilmiş Türkçe içerikleri kalite kontrol eder.
     articles_content: "=== HABER ID: N ===\\nTR Başlık: ...\\nParagraf: ...\\nKaynak Var: evet/hayır\n" formatında string.
     Döndürülen JSON:
@@ -1738,6 +1757,20 @@ Paragraf okunduğunda açıkça şunlardan biri olduğu anlaşılıyorsa → "re
 - Ürün lansmanı / pazar araştırması / beta duyurusu
 - Podcast, webinar, konferans veya etkinlik tanıtımı
 - Genel tavsiye / eğitim / röportaj (somut olay/saldırı/ihlal yok)
+  ⚠️ KALDIRMA — DEVLET/KURUM EYLEMLERİ "genel tavsiye" DEĞİLDİR:
+  somut bir karar, rehber, düzenleme, yaptırım, iddianame, atama ya da
+  yürürlüğe giriş bildiren resmî kurum haberleri HABERDİR ve kalır.
+  Ölçüt "bir saldırı anlatılıyor mu" DEĞİL, "siber tehdit ekosistemine dair
+  somut bir gelişme mi" olmalıdır — bu, manşet denetimindeki ölçütün AYNISIDIR
+  (bkz. get_kritik3_selection_audit_prompt); iki denetim ayrışmamalıdır.
+  Örnek KALIR: "FBI siber stratejisini açıkladı", "CISA/NSA ortak tespit
+  rehberi yayımladı", "AB CRA raporlama yükümlülüğü yürürlüğe girdi",
+  "FERC NERC CIP-014-4'ü onayladı", "Ukrayna siber koordinasyon başkanı
+  atadı", "NIST çerçeveyi sonlandırdı".
+  Örnek ÇIKAR: köşe yazısı/görüş ("25 Years of Mass Surveillance Is Enough"),
+  röportaj, satıcı duyurusu ("Entrust ... security action"), şirketin kendi
+  öz değerlendirmesi ("Stratom completes CMMC Level 2"), şema/doküman ilanı
+  ("scheme documents now available").
 - SPEKÜLASYON: metin doğrulanmış bir olay bildirmiyor, bir ihtimali TARTIŞIYOR.
   İşareti içeriktedir, başlığın soru biçiminde olması TEK BAŞINA yeterli değildir.
   Ara: doğrulanmış kurban/fail/tarih YOK ve metin "olabilir", "acaba",
