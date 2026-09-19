@@ -6041,6 +6041,95 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 [y for _, y in takas_edilen], content_by_id, articles_by_id)
         return yeni_top3, yeni_top10, yeni_kalan
 
+    def _rapor_ici_mukerrer_kapisi(self, top3_ids, top10_ids, remaining_ids,
+                                   records, content_by_id, articles_by_id,
+                                   eleme_nedeni=None):
+        """RAPOR İÇİ MÜKERRER KAPISI — denetimin gördüğünü artık ENGELLER.
+
+        `_kalite_denetimi_yaz` her koşuda raporun iki haberinin aynı olayı
+        anlatıp anlatmadığını ölçüyor ve `rapor_ici_kacak` olarak yazıyordu —
+        ama yalnızca YAZIYORDU. Tespit vardı, yaptırım yoktu.
+
+        ÖLÇÜLDÜ (2026-09-19): Hacktron araştırmacılarının Claude ile libheif
+        açığını istismar edip OpenAI çalışan hesaplarını ele geçirmesi gövdede
+        İKİ KEZ yayımlandı (ID 27 ve 41). Denetim kaydında "entity:discours"
+        gerekçesiyle kayıtlıydı; rapor yine de o hâliyle çıktı.
+
+        ⚠️ HAM SİNYAL TEK BAŞINA KAPI OLAMAZ — ölçüldü (53 denetim günü,
+        8 günde 9 çift). Çiftlerin ancak yarısı gerçek mükerrerdi:
+          GERÇEK  isolated-vm zafiyeti (08-21, iki çift), Çin Chrome sıfır-günü
+                  (09-10), OpenAI/Hacktron (09-19)
+          SAHTE   "Jewelbug casusluğu" ↔ "JWR kimlik avı çerçevesi" (ortak
+                  sözcükler: asya, doğu), "Berlin'de iki bakanlık" ↔ "Teksas
+                  Üniversitesi saldırısı" (ortak: cuma/friday), "Medusa fidye
+                  yazılımı" ↔ "Windows IKE açığı" (ortak: altyapı, güvenlik)
+        Sahte çiftte silme yapmak GERÇEK HABER KAYBIDIR; bu yüzden karar
+        doğrudan verilmez, zaten var olan MÜKERRER HAKEMİNE onaylatılır
+        (tam metni görür, önbelleklidir). Hakem onaylamazsa haber KALIR.
+
+        MALİYET: 53 günün 8'inde çift çıktı, yani ~7 günde bir tek ek çağrı.
+
+        Düşen haber: puanı düşük olan. KRİTİK 3 haberi ASLA düşmez — manşette
+        temsil edilen olayın gövdedeki kopyası elenir, tersi değil.
+        """
+        rapor = list(dict.fromkeys(
+            list(top3_ids) + list(top10_ids) + list(remaining_ids)))
+        if len(rapor) < 2:
+            return list(top3_ids), list(top10_ids), list(remaining_ids)
+
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+        sozluk = getattr(self, '_olay_sozlugu', None)
+        puan = lambda a: (records.get(a) or {}).get('toplam', 0)  # noqa: E731
+        k3 = set(top3_ids)
+
+        ciftler, esleme = [], {}
+        for i, a in enumerate(rapor):
+            for b in rapor[i + 1:]:
+                if a in k3 and b in k3:
+                    continue          # manşet içi zaten tekilleştirildi
+                karar, neden = _olay.mukerrer_karari(
+                    view_fn(a), view_fn(b), ayni_gun=True,
+                    explain=True, sozluk=sozluk)
+                if karar != _olay.TAM_MUKERRER:
+                    continue
+                no = 20000 + len(ciftler) + 1
+                ciftler.append((no, view_fn(a), view_fn(b), neden[:40]))
+                esleme[no] = (a, b)
+        if not ciftler:
+            return list(top3_ids), list(top10_ids), list(remaining_ids)
+
+        print(f"   🔁 Rapor içi mükerrer kapısı: {len(ciftler)} çift hakeme "
+              f"soruluyor (deterministik sinyal TEK BAŞINA silmez).")
+        dusen = {}
+        for no, (ayni, olay) in self._mukerrer_llm_hakem(ciftler).items():
+            a, b = esleme.get(no, (None, None))
+            if not ayni or a is None:
+                continue
+            # KRİTİK 3 korunur; eşit puanda da manşet kazanır.
+            if a in k3:
+                dus, kalan = b, a
+            elif b in k3:
+                dus, kalan = a, b
+            else:
+                dus, kalan = (a, b) if puan(a) <= puan(b) else (b, a)
+            if dus in dusen or dus in k3:
+                continue
+            dusen[dus] = kalan
+            print(f"   🔁 Rapor içi mükerrer: ID {dus} ({puan(dus)}) elendi — "
+                  f"ID {kalan} ({puan(kalan)}) ile aynı olay: {olay}")
+
+        if not dusen:
+            print("   ✅ Rapor içi mükerrer kapısı: hakem çiftleri doğrulamadı, "
+                  "rapor değişmedi.")
+            return list(top3_ids), list(top10_ids), list(remaining_ids)
+
+        if eleme_nedeni is not None:
+            for d in dusen:
+                eleme_nedeni[d] = 'rapor_ici_mukerrer'
+        return (list(top3_ids),
+                [i for i in top10_ids if i not in dusen],
+                [i for i in remaining_ids if i not in dusen])
+
     def _kritik3_sirala(self, top3_ids, records):
         """KRİTİK 3'ün İÇ SIRASINI stratejik ağırlığa göre dizer.
 
@@ -8592,6 +8681,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # tekrar tekrar denemeyi engeller.
         self._enforce_kritik3_paragraph_length(
             top3_ids, content_by_id, articles_by_id)
+
+        # RAPOR İÇİ MÜKERRER KAPISI — denetimin gördüğünü artık engeller.
+        # Sıralama ve uzunluktan SONRA, yayından hemen önce: burada rapor
+        # nihai hâlindedir, dolayısıyla hiçbir katman kapıdan sonra yeni bir
+        # mükerrer ekleyemez.
+        top3_ids, top10_ids, remaining_ids = self._rapor_ici_mukerrer_kapisi(
+            top3_ids, top10_ids, remaining_ids, score_records,
+            content_by_id, articles_by_id, eleme_nedeni=eleme_nedeni)
+        top3_ids, top10_ids, remaining_ids = _senkron('rapor_ici_mukerrer')
 
         self._write_scoring_log(articles, score_records, top10_ids,
                                 remaining_ids, top3_ids, critique_changed,
