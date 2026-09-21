@@ -35406,3 +35406,43 @@ SolarWinds, Access Rights Manager (ARM) yazılımında bulunan ve kimlik doğrul
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 21 SEPTEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] İngiltere Polis Verilerinin Microsoft Bulut Güvenliği Riskleri
+─────────────────────────────────────────────────────────
+İngiltere'de ortaya çıkan 2017 tarihli bir resmi belge, polis verilerinin Microsoft Azure platformuna taşınmasının yabancı hükümetlerin erişimi dahil olmak üzere ciddi riskler barındırdığını göstermektedir. Guardian tarafından incelenen belgelerde, 40'tan fazla polis gücüne ait sabıka kayıtları ve tanık ifadeleri gibi hassas bilgilerin ABD hükümeti içerisindeki kişilerce görülebileceği uyarısının yapıldığı belirtilmiştir. Uzmanlar, sekiz yıl önce tanımlanan bu risklerin günümüzde de devam ettiğini ve İngiliz polis teşkilatlarının neredeyse tamamının bu altyapıyı kullandığını ifade etmiştir. ABD bulut yasaları uyarınca, Amerikan makamlarının veriler başka ülkelerde olsa bile erişim talep edebileceği kaydedilmiştir. Microsoft ve polis yetkililerinin veri egemenliği konusundaki açıklamalarının birbiriyle çeliştiği ve mevcut denetim mekanizmalarının olası bir veri ihlalini tespit etmekte yetersiz kalabileceği bildirilmiştir. İngiliz hükümetinin Microsoft yazılımları için yılda 1,9 milyar sterlin harcadığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 21.09.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Zararlı npm Paketlerinin Kurulum Denetimlerini Devre Dışı Bırakması
+─────────────────────────────────────────────────────────
+Checkmarx araştırmacıları, 'indexed-btree' adlı zararlı npm paketinin GitHub’ın Haziran 2026'da devreye aldığı tedarik zinciri savunmalarını çalışma zamanı yöntemleriyle aştığını tespit etmiştir. Haftalık 2 milyon indirme sayısına ulaşan bu paket, 'sorted-btree' kütüphanesini taklit ederek kötü amaçlı kodunu kurulum betikleri yerine 'BTree.prototype.set()' metoduna gizlemektedir. Bu teknik, npm v12 sürümündeki onay mekanizmalarını ve statik tarayıcıları atlatarak sistem bilgilerini toplamakta, verileri Slack ve Telegram üzerinden dışarı aktarmaktadır. Saldırganların komuta kontrol bilgilerini Sepolia test ağındaki Ethereum akıllı sözleşmeleri ve X25519 anahtar değişimiyle yönettiği, ilişkili cüzdanda 109 ETH bulunduğu belirlenmiştir. Operasyon kapsamında 'btree-core' ve 'ordered-kv-index' dahil toplam on adet yüksek indirmeli paket tespit edilerek ekosistemden temizlenmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 20.09.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] OpenAI Codex Sandbox Mekanizmasındaki Açıkların Kapatılması
+─────────────────────────────────────────────────────────
+Güvenlik araştırmacıları, OpenAI'ın kodlama asistanı Codex'in korumalı alan (sandbox) mekanizmasını aşarak ana sistemde komut çalıştırmaya olanak tanıyan iki kritik açık tespit etmiştir. Heapjack ve Overpatch olarak adlandırılan bu zafiyetlerin, saldırganların kullanıcı bilgisayarlarında onay almadan uzaktan kod yürütmesine imkan verdiği bildirilmiştir. Heapjack tekniğinin, Node.js süreçleri arasındaki bellek paylaşımındaki bir hatayı kullanarak yetkilendirme belirteçlerini ele geçirdiği kaydedilmiştir. Overpatch açığının ise dosya yazma izinlerini manipüle ederek sistem yapılandırma dosyalarına zararlı satırlar eklenmesine yol açtığı ifade edilmiştir. Araştırmacılar, her iki hatanın da güvenlik denetim mekanizmalarının denetlenen alanın içinde bulunmasından kaynaklandığını belirtmiştir. OpenAI, 12 Ağustos 2026 tarihinde rapor edilen bu açıkları sekiz gün içinde yayınladığı güncellemelerle giderdiğini açıklamıştır. Kullanıcıların, Codex Desktop ve CLI araçlarını en güncel sürümlere yükseltmeleri gerektiği tavsiye edilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 20.09.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Siber Tehdit Aktörlerinin ClickFix Yöntemiyle ChainScript Yayması
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin, ClickFix benzeri tuzaklar kullanarak ChainScript adlı yeni bir uzaktan erişim truva atını yaydığı tespit edilmiştir. Blackpoint Adversary Pursuit Group araştırmacıları; yazılımın Spotify, Zoom ve Microsoft Teams kılığına girdiğini ve Polygon akıllı sözleşmeleri aracılığıyla komuta kontrol altyapısını gizlediğini bildirmiştir. ChainScript yazılımının ekran görüntüsü alma, kripto cüzdanlarını tarama ve PowerShell üzerinden uzaktan komut çalıştırma yetkilerine sahip olduğu belirtilmiştir. Ayrıca HBO Max'in resmi Reddit hesabının ele geçirilerek Windows ve macOS kullanıcılarını hedef alan 108 sahte reklamın yayınlandığı kaydedilmiştir. Microsoft, bu kampanyada tespit edilmeyi zorlaştırmak amacıyla 250'den fazla benzer alan adı ve tarayıcı parmak izi yöntemlerinin kullanıldığını açıklamıştır. MacSync ve Atomic Stealer gibi zararlıların da dağıtıldığı bu geniş kapsamlı operasyonun, merkeziyetsiz altyapılar kullanarak güvenlik önlemlerini aşmayı hedeflediği ifade edilmektedir.
+(XXXXXXX, AÇIK -thehackernews.com, 21.09.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Boustead Singapore Şirketinin Siber Saldırıya Uğraması
+─────────────────────────────────────────────────────────
+Boustead Singapore Limited, bir denizaşırı iş biriminin siber güvenlik olayından etkilendiğini Singapur Borsası'na yaptığı bildirimle duyurmuştur. 18 Eylül 2026 tarihli açıklamada, siber saldırının grubun diğer bölümlerine yayılmadan tek bir birimle sınırlı kaldığı ve operasyonlarda maddi bir aksamaya yol açmadığı ifade edilmiştir. Şirket, olayın fark edilmesinin ardından iş sürekliliği prosedürlerinin devreye alındığını, sistemlerin izole edildiğini ve dış uzmanlar ile hukuk danışmanlarının sürece dahil edildiğini belirtmiştir. Kritik sistemlerin ve verilerin yedeklerden tamamen geri yüklendiği kaydedilirken, Singapur Kişisel Verileri Koruma Komisyonu'na ve ilgili diğer otoritelere bilgi verildiği aktarılmıştır. Şirket Sekreteri Tay Chee Wah tarafından imzalanan bildirimde, siber dayanıklılığı artırmak amacıyla bağımsız bir siber güvenlik incelemesi başlatılacağı ve sürecin yakından takip edildiği bildirilmiştir.
+(XXXXXXX, AÇIK -thecyberexpress.com, 21.09.2026)
+
+────────────────────────────────────────────────────────────────────────────────
+
