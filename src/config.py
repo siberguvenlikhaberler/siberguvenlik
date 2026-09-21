@@ -651,7 +651,9 @@ Her haber için şunları belirle:
    • zafiyet_rutin              → CVE/yama/PoC/güvenlik açığı tespiti (aktif APT istismarı YOKSA buraya)
    • phishing_sosyal_muhendislik → kimlik avı/sosyal mühendislik/oltalama kampanyası — nation-state atfı YOKSA (varsa `nation_state_apt`)
    • yapay_zeka_guvenligi       → YZ ajanı/modeli/aracının KENDİSİNDEN kaynaklanan somut güvenlik olayı: ajanın güvenli alandan (sandbox) kaçması, prompt injection ile ele geçirilmesi, ajanın zararlı paket/kod önermesi, YZ üretimi saldırı aracı. Bir CVE/yama haberi DEĞİLDİR.
-   • urun_icerik                → ürün lansmanı, beta, webinar, konferans, röportaj, inceleme, genel tavsiye, pazar araştırması
+   • urun_icerik                → ürün lansmanı, beta, webinar, konferans, röportaj, inceleme, genel tavsiye, pazar araştırması,
+                                  ŞİRKET/FİNANS DUYURUSU: yatırım turu, fon toplama, satın alma, birleşme, ortaklık,
+                                  şirketin gizlilikten çıkması, sertifika/öz değerlendirme duyurusu, atama (şirket içi)
    • siber_disi                 → doğrudan siber boyutu OLMAYAN haber (saf diplomatik/askeri/ekonomik/siyasi)
 
    ⚠️ KATEGORİ AYRIMI — SIK YAPILAN HATALAR (dikkat):
@@ -683,6 +685,13 @@ Her haber için şunları belirle:
      Siemens PLC'lere saldırı" → `stratejik_kurum_saldirisi`.)
    - SOMUT OLAY ŞARTI bu etiket için de geçerlidir: "YZ güvenliği nasıl sağlanır",
      "ajan riskleri üzerine düşünceler" gibi görüş/analiz yazıları `urun_icerik`tir.
+   - 💰 YATIRIM/FONLAMA DUYURUSU HABER DEĞİLDİR: "X şirketi 3 milyon dolar
+     yatırım aldı", "gizlilikten çıktı", "Y'yi satın aldı", "ortaklık kurdu"
+     → `urun_icerik`. Şirketin siber güvenlik şirketi olması bunu siber
+     güvenlik OLAYI yapmaz; ortada saldırı, ihlal, zafiyet ya da devlet
+     kararı yoktur. ÖLÇÜLDÜ (2026-09-20): "TigerByte Cyber Emerges From
+     Stealth With $3 Million in funding" `politika_hukuk` etiketlenip 57
+     puan aldı ve arzın kurudugu o gün RAPORUN BİRİNCİ MANŞETİ oldu.
    - ⛔ SOMUT OLAY ZORUNLULUĞU: `nation_state_apt`, `stratejik_kurum_saldirisi`,
      `casus_yazilim`, `tedarik_zinciri` etiketleri YALNIZCA gerçekleşmiş/süren
      SOMUT BİR OLAY (saldırı, kampanya, keşif, operasyon) anlatan haberlere verilir.
@@ -1755,6 +1764,10 @@ KONTROL 3 — KRİTER DIŞI:
 Paragraf okunduğunda açıkça şunlardan biri olduğu anlaşılıyorsa → "remove" listesine ekle
 (kaynak olsa bile içerik değişmeyeceğinden regenerate anlamsız):
 - Ürün lansmanı / pazar araştırması / beta duyurusu
+- ŞİRKET/FİNANS DUYURUSU: yatırım turu, fon toplama, satın alma, birleşme,
+  ortaklık, gizlilikten çıkma, sertifika/öz değerlendirme duyurusu. Şirketin
+  siber güvenlik şirketi olması bunu haber YAPMAZ — ortada saldırı, ihlal,
+  zafiyet ya da devlet kararı yoktur.
 - Podcast, webinar, konferans veya etkinlik tanıtımı
 - Genel tavsiye / eğitim / röportaj (somut olay/saldırı/ihlal yok)
   ⚠️ KALDIRMA — DEVLET/KURUM EYLEMLERİ "genel tavsiye" DEĞİLDİR:
