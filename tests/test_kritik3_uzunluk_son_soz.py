@@ -79,3 +79,47 @@ def test_kisalan_yanit_reddedilir():
     cnt, art = _veri()
     s._enforce_kritik3_paragraph_length([1], cnt, art)
     assert cnt[1]['paragraph'] == KISA
+
+
+# ── Onarım izi ────────────────────────────────────────────────────────────
+# Manşet paragrafı üç kez sınırın altında yayımlandı (2026-09-11: 103,
+# 09-19: 106, 09-22: 105) ve hiçbirinde neden belirlenemedi: onarımın
+# denenip denenmediği yalnızca koşu stdout'una yazılıyordu. Artık koşu
+# kaydına (kalite_denetim.jsonl → metin_onarim) yazılıyor.
+
+def _izler(s):
+    return getattr(s, '_metin_onarim_izi', [])
+
+
+def test_hedef_altinda_kalan_deneme_kaydedilir():
+    s, _ = _sistem([{'paragraph': 'kelime ' * 105}])
+    cnt, art = _veri()
+    s._enforce_kritik3_paragraph_length([1], cnt, art)
+    iz = _izler(s)
+    assert iz and iz[-1]['sonuc'] == 'hedef_altinda'
+    assert iz[-1]['once'] == 103 and iz[-1]['sonra'] == 105
+
+
+def test_kaynak_kisaysa_nedeni_kaydedilir():
+    s, _ = _sistem([{'paragraph': HEDEF}])
+    cnt = {1: {'tr_title': 'Test', 'paragraph': KISA}}
+    art = {1: {'full_text': 'kisa ' * 10}}
+    s._enforce_kritik3_paragraph_length([1], cnt, art)
+    iz = _izler(s)
+    assert iz and iz[-1]['sonuc'] == 'kaynak_kisa'
+    assert iz[-1]['kaynak_kelime'] == 10
+
+
+def test_hedefe_ulasan_deneme_de_kaydedilir():
+    s, _ = _sistem([{'paragraph': HEDEF}])
+    cnt, art = _veri()
+    s._enforce_kritik3_paragraph_length([1], cnt, art)
+    assert _izler(s)[-1]['sonuc'] == 'hedef'
+
+
+def test_hak_dolunca_kaydedilir():
+    s, _ = _sistem([{'paragraph': 'kelime ' * 104}])
+    cnt, art = _veri()
+    for _ in range(4):
+        s._enforce_kritik3_paragraph_length([1], cnt, art)
+    assert any(x['sonuc'] == 'hak_doldu' for x in _izler(s))

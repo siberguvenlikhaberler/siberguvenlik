@@ -6041,6 +6041,26 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 [y for _, y in takas_edilen], content_by_id, articles_by_id)
         return yeni_top3, yeni_top10, yeni_kalan
 
+    def _onarim_izi(self, tur, aid, once, sonra, sonuc, kaynak=0):
+        """Paragraf uzunluk onarımının SONUCUNU koşu kaydına yazar.
+
+        NEDEN VAR: manşet paragrafı üç kez sınırın altında yayımlandı
+        (2026-09-11: 103, 09-19: 106, 09-22: 105) ve HİÇBİRİNDE nedenini
+        belirleyemedim — onarımın denenip denenmediği, denendiyse ne
+        döndürdüğü yalnızca koşu stdout'una yazılıyordu ve o log GitHub
+        Actions'ta kalıyor. Boru hattındaki diğer her karar (apt_dogrulanmadi,
+        manşet karar izi, eleme nedeni) kayıtlıyken bu değildi.
+
+        sonuc: kaynak_kisa | yanit_yok | kisaldi | hedef_altinda | hedef |
+               hak_doldu
+        """
+        if not hasattr(self, '_metin_onarim_izi'):
+            self._metin_onarim_izi = []
+        self._metin_onarim_izi.append({
+            'tur': tur, 'id': aid, 'once': once, 'sonra': sonra,
+            'sonuc': sonuc, 'kaynak_kelime': kaynak,
+        })
+
     def _rapor_ici_mukerrer_kapisi(self, top3_ids, top10_ids, remaining_ids,
                                    records, content_by_id, articles_by_id,
                                    eleme_nedeni=None):
@@ -6599,11 +6619,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 print(f"   📏 ID {aid}: kritik3 paragrafı {wc} kelime "
                       f"(<{self.KRITIK3_PARA_MIN_WORDS}) ama kaynak metin kısa — "
                       f"uzatma denenmedi.")
+                self._onarim_izi('kritik3', aid, wc, wc, 'kaynak_kisa',
+                                 kaynak=len(full_text.split()))
                 continue
+            if not hasattr(self, '_metin_onarim_izi'):
+                self._metin_onarim_izi = []
             if self._k3_uzunluk_deneme.get(aid, 0) >= self.KRITIK3_UZUNLUK_DENEME:
                 print(f"   📏 ID {aid}: kritik3 paragrafı {wc} kelime — "
                       f"{self.KRITIK3_UZUNLUK_DENEME} deneme hakkı doldu, "
                       f"en iyi sonuç korunuyor.")
+                self._onarim_izi('kritik3', aid, wc, wc, 'hak_doldu')
                 continue
             self._k3_uzunluk_deneme[aid] = self._k3_uzunluk_deneme.get(aid, 0) + 1
             print(f"   📏 ID {aid}: kritik3 paragrafı {wc} kelime "
@@ -6619,16 +6644,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 label=f'Kritik3-Uzunluk-{aid}',
             )
             if not isinstance(fixed, dict):
+                self._onarim_izi('kritik3', aid, wc, wc, 'yanit_yok',
+                                 kaynak=len(full_text.split()))
                 continue
             new_para = (fixed.get('paragraph') or '').strip()
             new_wc = len(new_para.split())
             if new_wc <= wc:
                 print(f"      ⚠️  yeniden deneme kısaldı/eşitti ({new_wc} kelime) "
                       f"— orijinal korunuyor.")
+                self._onarim_izi('kritik3', aid, wc, new_wc, 'kisaldi',
+                                 kaynak=len(full_text.split()))
                 continue
             c['paragraph'] = new_para
             content_by_id[aid] = c
             ok = new_wc >= self.KRITIK3_PARA_MIN_WORDS
+            self._onarim_izi('kritik3', aid, wc, new_wc,
+                             'hedef' if ok else 'hedef_altinda',
+                             kaynak=len(full_text.split()))
             print(f"      → {new_wc} kelime" +
                   (" ✅" if ok else " (hâlâ hedefin altında, en iyi deneme kullanıldı)"))
 
@@ -7867,6 +7899,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 'yayin_yonetmeni': getattr(self, '_yy_eylemler', []),
                 # Kaynakta olmayan yıl (bkz. _tarih_denetimi)
                 'tarih_denetimi': getattr(self, '_tarih_izi', {}),
+                # Paragraf uzunluk onarımının sonucu (bkz. _onarim_izi).
+                # Sınırın altında yayımlanan bir paragrafın NEDENİ buradan
+                # okunur; önceden yalnızca koşu stdout'unda kalıyordu.
+                'metin_onarim': getattr(self, '_metin_onarim_izi', []),
                 # Değişmez bekçisinin bu koşuda yakaladıkları (bkz.
                 # src/rapor_durumu). Boş olmalı; dolu ise bir katman
                 # rapor kurallarından birini çiğnemiş ve ONARILMIŞTIR.
