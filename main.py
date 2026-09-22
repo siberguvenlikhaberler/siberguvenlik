@@ -5213,6 +5213,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 archive_entry += f"{content}\n"
                 if source:
                     archive_entry += f"{source}\n"
+                # TAM KAYNAK URL — arşivde YALNIZCA alan adı vardı
+                # ("... AÇIK - csoonline.com, 21.09.2026"), tam adres yoktu.
+                # Tam URL yalnızca HTML raporda ve 7 günlük
+                # haberler_linkler.txt'de duruyordu; rapor 30 günde
+                # silindiği için (_cleanup_old_reports) bir habere geri
+                # dönüp kaynağı açmak 30 gün sonra İMKÂNSIZ hale geliyordu.
+                # Arşiv budanmadığı için doğru yer burası.
+                link_elem = title_elem.find('a', href=True) or item.find('a', href=True)
+                if link_elem:
+                    archive_entry += f"» url={link_elem['href']}\n"
                 # ÜSTVERİ SATIRI — '»' ile başlar, okuyucular bu öneke göre atlar.
                 # Biçim BİLEREK küçük harf ve alt çizgili: _load_recent_events'in
                 # entity tarayıcısı CamelCase/ALL-CAPS arıyor, bu satır ona

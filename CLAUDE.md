@@ -76,8 +76,11 @@ isteyecek: yaşanan siber vaka türleri ve sayıları, çeşitli kriterlere gör
 - `docs/raporlar/*.html` — **30 günde siliniyor** (`_cleanup_old_reports`).
 
 ### Arşiv üstverisi (2026-09-22'den İTİBAREN biriker, geçmişe dönük YOK)
-Her arşiv kaydının altına `save_summary_to_archive` şu satırı yazar:
+Her arşiv kaydının altına `save_summary_to_archive` şu iki satırı yazar:
+`» url=<tam kaynak adresi>`
 `» manset=evet|hayir | kategori=<kat> | puan=<n>`
+Tam URL eklendi çünkü arşivde yalnızca alan adı vardı; tam adres HTML raporda
+ve 7 günlük `haberler_linkler.txt`'deydi, rapor ise 30 günde siliniyor.
 Biçim bilerek küçük harf + alt çizgilidir: `_load_recent_events`'in CamelCase/
 ALL-CAPS entity tarayıcısına gürültü üretmez ve `[N]` başlık kalıbına uymaz.
 `»` ile başlayan satır PARAGRAF DEĞİLDİR — arşivi okuyan her kod onu atlamalıdır
