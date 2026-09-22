@@ -5127,7 +5127,35 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"⚠️  Recent events yüklenemedi: {e}")
             return ''
 
-    def save_summary_to_archive(self, html_content):
+    @staticmethod
+    def _arsiv_meta_kur(top3_ids, content_by_id, records):
+        """Arşiv üstverisi: TR başlık → (manşet mi, kategori, puan).
+
+        NEDEN VAR: arşiv 7 aylık ve budanmıyor (13 Şubat'tan beri 4.809 haber),
+        ama YALNIZCA başlık + paragraf + kaynak + tarih taşıyordu. Kategori,
+        puan ve hangi haberin manşet olduğu yalnızca skorlama_log (67 gün),
+        rapor_gecmis ve kritik3_gecmis (31 gün) dosyalarındaydı; günlük
+        raporlar da 30 günde siliniyor (_cleanup_old_reports). Yıl sonu
+        çalışmalarında "kategoriye göre dağılım" ya da "yılın manşetleri"
+        gibi sorular bu yüzden CEVAPLANAMAZDI.
+
+        Geçmişe dönük çalışmaz — bugünden itibaren biriktirir.
+        """
+        k3 = set(top3_ids or [])
+        meta = {}
+        for aid, c in (content_by_id or {}).items():
+            baslik = (c or {}).get('tr_title') or ''
+            if not baslik.strip():
+                continue
+            rec = (records or {}).get(aid) or {}
+            meta[baslik.strip()] = {
+                'manset': aid in k3,
+                'kat': rec.get('kat', ''),
+                'puan': rec.get('toplam', 0),
+            }
+        return meta
+
+    def save_summary_to_archive(self, html_content, meta_by_title=None):
         """Gemini'nin seçtiği EN ÖNEMLİ 43 HABERİ TXT arşivine EKLE (sürekli birikim)"""
         print("📚 En önemli 43 haber arşive ekleniyor...")
         now = _now_tr()
@@ -5185,6 +5213,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 archive_entry += f"{content}\n"
                 if source:
                     archive_entry += f"{source}\n"
+                # ÜSTVERİ SATIRI — '»' ile başlar, okuyucular bu öneke göre atlar.
+                # Biçim BİLEREK küçük harf ve alt çizgili: _load_recent_events'in
+                # entity tarayıcısı CamelCase/ALL-CAPS arıyor, bu satır ona
+                # gürültü ÜRETMEZ. Başlık satırı kalıbına (\[\s*\d+\]) de uymaz.
+                m = (meta_by_title or {}).get(title.strip())
+                if m:
+                    archive_entry += (
+                        f"» manset={'evet' if m.get('manset') else 'hayir'}"
+                        f" | kategori={m.get('kat') or 'bilinmiyor'}"
+                        f" | puan={m.get('puan', 0)}\n")
                 archive_entry += "\n" + "─" * 80 + "\n\n"
                 yazilan += 1
 
@@ -8948,7 +8986,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         self._save_report_history(
             list(top3_ids) + list(top10_ids) + list(remaining_ids),
             content_by_id, articles_by_id)
-        self.save_summary_to_archive(html)
+        self.save_summary_to_archive(
+            html, self._arsiv_meta_kur(top3_ids, content_by_id, score_records))
         self._cleanup_old_reports()
         return html
 
@@ -9324,7 +9363,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         self._save_report_history(
             list(top3_ids) + list(top10_ids) + list(remaining_ids),
             content_by_id, id_to_article)
-        self.save_summary_to_archive(html)
+        # Legacy yolda puan kaydı yok; manşet + kategori yine de yazılır.
+        self.save_summary_to_archive(
+            html, self._arsiv_meta_kur(top3_ids, content_by_id,
+                                       getattr(self, '_son_score_records', None)))
         self._cleanup_old_reports()
         return html
 

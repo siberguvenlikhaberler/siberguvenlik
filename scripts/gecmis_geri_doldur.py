@@ -57,6 +57,10 @@ def arsivi_ayristir(yol=ARSIV):
                 _yaz()
                 baslik, para = m.group(1).strip(), []
                 continue
+            # ÜSTVERİ SATIRI paragrafın parçası DEĞİLDİR (bkz.
+            # save_summary_to_archive: '» manset=... | kategori=... | puan=...').
+            if satir.lstrip().startswith('»'):
+                continue
             if baslik and satir.strip():
                 para.append(satir.strip())
     _yaz()
