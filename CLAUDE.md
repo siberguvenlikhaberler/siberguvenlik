@@ -65,11 +65,15 @@ isteyecek: yaşanan siber vaka türleri ve sayıları, çeşitli kriterlere gör
 çalışmanın veri temelini ve sınırlarını sabitler.
 
 ### Kaynak dosyalar ve derinlikleri (2026-09-22 ölçümü)
-- `data/haberler_arsiv.txt` — **OMURGA. BUDANMAZ.** 13 Şubat'tan beri 211 gün,
-  4.809 haber, 7,7 MB. 17 Şubat'tan itibaren yapılı biçim: `[N] başlık`,
-  paragraf, `(XXXXXXX, AÇIK - kaynak, gg.aa.yyyy)`. Kaynak+tarih 4.359 kayıtta
-  (%91) ayrışıyor; 43 farklı kaynak. İlk 4 gün (13-16 Şubat) eski
-  "GEMİNİ ÖZET RAPORU" biçiminde — yapılı ayrıştırma orada ÇALIŞMAZ.
+- `data/haberler_arsiv.txt` — **OMURGA. BUDANMAZ.** 244 gün, 4.923 haber.
+  17 Şubat'tan itibaren yapılı biçim: `[N] başlık`, paragraf,
+  `(XXXXXXX, AÇIK - kaynak, gg.aa.yyyy)`. Kaynak+tarih 4.359 kayıtta (%91)
+  ayrışıyor; 43 farklı kaynak. 13-16 Şubat eski "GEMİNİ ÖZET RAPORU"
+  biçiminde — yapılı ayrıştırma orada ÇALIŞMAZ.
+  **1 Ocak – 8 Şubat 2026 arası 38 gün / 114 haber SONRADAN eklendi**
+  (2026-09-22, dış kaynaktan; günde yalnızca 3 haber). Bu dönemde `27 Ocak`
+  kaydı YOK, `9-12 Şubat` arası YOK. Her kaydın altında
+  `» sonradan | kategori=... | onem=... | rubrik=v1` satırı vardır.
 - `data/skorlama_log.jsonl` — kategori, puan, yerleşim, eleme nedeni. 18 Temmuz'dan beri.
 - `data/kalite_denetim.jsonl` — koşu denetimi, manşet karar izi, `metin_onarim`.
 - `data/rapor_gecmis.json`, `data/kritik3_gecmis.json` — **yalnızca 30-31 gün.**
@@ -86,11 +90,24 @@ ALL-CAPS entity tarayıcısına gürültü üretmez ve `[N]` başlık kalıbına
 `»` ile başlayan satır PARAGRAF DEĞİLDİR — arşivi okuyan her kod onu atlamalıdır
 (bkz. `scripts/gecmis_geri_doldur.py`).
 
+### Geriye dönük etiket (`» sonradan`) — bkz. `RETRO_RUBRIK.md`
+Sistemin kendi yazdığı `» manset/kategori/puan` satırı olmayan kayıtlar için
+LLM yargısıyla, tek bir yazılı rubriğe göre üretilen AYRI alandır:
+`» sonradan | kategori=<kat> | onem=<0-100> | rubrik=v1`.
+- Sistem alanlarının ÜZERİNE YAZILMAZ; ikisi ayrı satır, ayrı alandır.
+- `onem` ile `puan` **aynı ölçek değildir** (biri mutlak, diğeri gün havuzuna
+  göre kalibre) — toplanmaz, ortalaması alınmaz, aynı sıralamaya sokulmaz.
+- Şu an yalnızca 1 Ocak – 8 Şubat 2026 aralığında vardır. 13 Şubat –
+  22 Ağustos aralığı HENÜZ etiketlenmedi.
+
 ### Analiz yapılırken UYULACAK kurallar
-- Kapsam "2026 yılının tamamı" DEĞİL, **"13 Şubat 2026 sonrası"**dır; 1 Ocak –
-  12 Şubat arası veri YOKTUR. Rapor bunu açıkça yazmalı.
-- Kategori/puan/manşet bilgisi arşivde ancak **2026-09-22 sonrası** vardır.
-  Daha eski günler için bu kırılımlar YAPILAMAZ — uydurma, "veri yok" de.
+- Kapsam **1 Ocak 2026 sonrası**dır, ama iki dönem aynı yoğunlukta DEĞİLDİR:
+  1 Ocak – 8 Şubat günde 3 haber, 13 Şubat sonrası günde 40+ haber. **Ham
+  sayımlar bu iki dönem arasında kıyaslanamaz**; kıyas oran/dağılım üzerinden.
+  27 Ocak ve 9-12 Şubat kayıtları YOKTUR. Rapor bunu açıkça yazmalı.
+- Sistem kaynaklı kategori/puan/manşet arşivde ancak **23 Ağustos sonrası**
+  vardır. 13 Şubat – 22 Ağustos arası için bu kırılımlar YAPILAMAZ —
+  uydurma, "veri yok" de ya da önce rubrikle etiketle.
 - Ayrışmayan ~450 kayıt (kaynak/tarih satırı okunamayan) ayrı ele alınmalı,
   sessizce toplama katılmamalıdır.
 - Sayılar arşivden ÖLÇÜLEREK verilir; bellekten ya da tahminle değil.
