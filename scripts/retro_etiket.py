@@ -44,14 +44,24 @@ TAVAN = 39
 
 
 def arsivi_tara(yol=ARSIV):
-    """[{anahtar, gun, sira, baslik, para, satir_no, meta, sistem_ustveri}]"""
+    """[{anahtar, gun, sira, baslik, para, satir_no, meta, sistem_ustveri}]
+
+    ANAHTAR = `<YYYY-MM-DD>|<blok içi sıra>`. Arşivde AYNI GÜNE ait birden çok
+    blok olabilir (aynı gün yeniden üretilmiş koşular; ölçüldü: 10 gün, 784
+    kayıt). İkinci ve sonraki bloklar `<gün>#2`, `<gün>#3` ile ayrılır —
+    yoksa aynı anahtar birden çok kayda denk gelir ve tek etiket hepsine
+    yazılırdı.
+    """
     kayitlar, gun, cur = [], None, None
+    blok_sayaci = {}
     with open(yol, encoding='utf-8') as f:
         for no, satir in enumerate(f):
             m = _GUN_RE.match(satir)
             if m:
-                gun = datetime.date(int(m.group(3)), _AY[m.group(2)],
-                                    int(m.group(1))).isoformat()
+                tarih = datetime.date(int(m.group(3)), _AY[m.group(2)],
+                                      int(m.group(1))).isoformat()
+                n = blok_sayaci[tarih] = blok_sayaci.get(tarih, 0) + 1
+                gun = tarih if n == 1 else f'{tarih}#{n}'
                 cur = None
                 continue
             m = _BAS_RE.match(satir)
@@ -75,7 +85,8 @@ def arsivi_tara(yol=ARSIV):
 
 
 def hedefler(kayitlar):
-    return [k for k in kayitlar if BASLANGIC <= k['gun'] <= BITIS]
+    return [k for k in kayitlar
+            if BASLANGIC <= k['gun'].split('#')[0] <= BITIS]
 
 
 def depo_yukle():
