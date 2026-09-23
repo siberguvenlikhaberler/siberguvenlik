@@ -17,14 +17,14 @@ def test_meta_kur_manset_ve_kategori_tasir():
         {1: {'kat': 'nation_state_apt', 'toplam': 95},
          2: {'kat': 'veri_ihlali', 'toplam': 70}})
     assert meta['A haberi'] == {'manset': True, 'kat': 'nation_state_apt',
-                                'puan': 95, 'eksen': None, 'onem': None}
+                                'puan': 95, 'eksen': None, 'onem': None, 'kurban': None}
     assert meta['B haberi']['manset'] is False
 
 
 def test_meta_kur_kayit_yoksa_cokmez():
     meta = main.HaberSistemi._arsiv_meta_kur([1], {1: {'tr_title': 'A'}}, None)
     assert meta['A'] == {'manset': True, 'kat': '', 'puan': 0,
-                         'eksen': None, 'onem': None}
+                         'eksen': None, 'onem': None, 'kurban': None}
 
 
 def test_bassiz_kayit_atlanir():

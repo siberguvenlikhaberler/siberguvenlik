@@ -203,6 +203,28 @@ Nicel etki. `onem` bir YARGIDIR, bu alan ÖLÇÜMDÜR; ikisi karıştırılmaz.
   toplamıdır (51 kayıt). "Yılın en pahalı saldırısı" sorgusu bunları
   DIŞARIDA bırakmalıdır.
 
+### Kurban alanı — `» kurban` (`scripts/kurban_etiket.py`) — TEK LLM ALANI
+`» kurban | ad=Odido | kaynak=llm`
+- **Kurallı çıkarım DENENDİ ve ÇALIŞMADI.** Arşiv başlıkları Başlık
+  Düzenindedir; her kelime büyük harfle başladığı için büyük harf özel ad
+  sinyali taşımaz. Ölçüldü: başlıktan %2 kapsam ve "Veri", "Lüks Markalara
+  Veri" gibi yanlış parçalar; gövdeden %1 kapsam ve raporlayan tarafın
+  (Resecurity, Mandiant) kurban sanılması. Alan bu yüzden YARGIYA bağlandı
+  ve satır kaynağını AÇIKÇA yazar (`kaynak=llm`) — `varlik`/`teknik`/`olcek`
+  deterministiktir, bu alan değildir.
+- **Hedef küme kategoriyle daraltıldı**: 2.859 kayıt (veri_ihlali,
+  nation_state_apt, tedarik_zinciri, kolluk_operasyonu, casus_yazilim,
+  stratejik_kurum_saldirisi, zafiyet_aktif_apt, phishing). Bir Chrome
+  yamasının ya da yasa tasarısının kurbanı yoktur.
+- Sonuç: 2.859 kaydın tamamı etiketlendi, **1.036'sında adlandırılmış
+  kurban** (518 tekil kurum), 1.823'ü kurbansız işaretlendi. En sık:
+  Fortinet 19, Cisco 16, Odido 15, LiteLLM/Microsoft/JetBrains/iRhythm 13.
+- KURAL: kurban = SALDIRIYA UĞRAYAN taraf. Raporlayan firma, yamalayan
+  satıcı ve failin kendisi kurban DEĞİLDİR. Tedarik zincirinde hem
+  sağlayıcı hem etkilenen müşteri yazılabilir.
+- Üretim hattı aynı alanı skorlama çağrısında istiyor (`kurban`, ek maliyet
+  yok); `-` yanıtı alan yazdırmaz.
+
 ### Olay kaydı — `data/olaylar.json` (`scripts/olay_kaydi.py`)
 Arşiv **haber kaydı** tutar, rapor **olay** sayar. Aynı olay ardışık günlerde
 yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçüldü:

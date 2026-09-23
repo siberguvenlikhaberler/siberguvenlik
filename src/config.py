@@ -831,8 +831,17 @@ SON GÜNLERDE RAPORLANAN OLAYLAR:
       0 kapanmış dosya, geri alınmış karar, tekil ürün yaması
    ⚠️ Metinde ölçü verilmemişse eksen YUKARI YUVARLANMAZ; daha düşük çapa seçilir.
 
+6) KURBAN — `kurban`: SALDIRIYA UĞRAYAN tarafın ADI.
+   Haberi veren firma (CISA, Mandiant, Microsoft Tehdit İstihbaratı), açığı
+   yamalayan satıcı ve failin kendisi kurban DEĞİLDİR. Tedarik zinciri
+   olaylarında hem sağlayıcı hem etkilenen müşteri yazılabilir (virgülle).
+   Adlandırılmış kurban yoksa "-" yaz — TAHMİN YÜRÜTME.
+   Bu alan kurallarla çıkarılamadı: arşiv başlıkları Başlık Düzenindedir,
+   büyük harf özel ad sinyali taşımaz (kurallı denemede kapsam %2, isabet
+   düşük). Bu yüzden yargı olarak senden isteniyor.
+
 SADECE JSON DÖNDÜR — başka hiçbir şey yazma. "skorlar" altında her haber için tam bir nesne:
-{{"skorlar": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "mukerrer": 0, "s": 30, "e": 12, "a": 10, "k": 12, "oe": 17, "ok": 8, "oa": 17, "os": 25}}]}}
+{{"skorlar": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "mukerrer": 0, "s": 30, "e": 12, "a": 10, "k": 12, "oe": 17, "ok": 8, "oa": 17, "os": 25, "kurban": "Odido"}}]}}
 
 HABERLER:
 {articles_brief}"""

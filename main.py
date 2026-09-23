@@ -5154,6 +5154,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 'puan': rec.get('toplam', 0),
                 'eksen': rec.get('eksen'),
                 'onem': rec.get('onem'),
+                'kurban': rec.get('kurban'),
             }
         return meta
 
@@ -5267,6 +5268,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 o_satir = self._olcek_satiri(title, content)
                 if o_satir:
                     archive_entry += o_satir
+                # KURBAN SATIRI — kural tabanlı çıkarımın başarısız olduğu
+                # tek alan (arşiv başlıkları Başlık Düzenindedir, büyük harf
+                # özel ad sinyali taşımaz). LLM yargısıdır, kaynağı satırda
+                # AÇIKÇA yazar; geçmiş 2.859 kayıt tek seferlik geçişle
+                # etiketlendi (scripts/kurban_etiket.py).
+                if m and m.get('kurban'):
+                    archive_entry += f"» kurban | ad={m['kurban']} | kaynak=llm\n"
                 archive_entry += "\n" + "─" * 80 + "\n\n"
                 yazilan += 1
 
@@ -5421,7 +5429,25 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         if eksen:
             rec['eksen'] = eksen
             rec['onem'] = self._onem_topla(kat, eksen)
+        kurban = HaberSistemi._kurban_temizle(raw.get('kurban'))
+        if kurban:
+            rec['kurban'] = kurban
         return rec
+
+    @staticmethod
+    def _kurban_temizle(ham):
+        """'-', boş ya da kalıp yanıt → None; virgüllü liste normalize edilir.
+
+        Alan LLM YARGISIDIR (kural tabanlı çıkarım ölçüldü ve %2 kapsamla
+        yanlış parçalar üretti); bu yüzden satıra `kaynak=llm` yazılır.
+        """
+        if not isinstance(ham, str):
+            return None
+        t = ham.strip().strip('.').strip()
+        if not t or t.lower() in ('-', 'yok', 'none', 'bilinmiyor', 'n/a'):
+            return None
+        parca = [p.strip() for p in t.split(',') if p.strip()]
+        return ','.join(parca[:4]) or None
 
     # RETRO_RUBRIK.md v2 — dört önem ekseninin alabileceği ÇAPA değerleri.
     ONEM_CAPA = (0, 8, 17, 25)
