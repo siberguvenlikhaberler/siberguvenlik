@@ -18,6 +18,7 @@ Kullanım:
   python3 scripts/retro_etiket.py durum
   python3 scripts/retro_etiket.py parti [adet] [--karakter N]   # etiketlenecek sıradaki kayıtlar
   python3 scripts/retro_etiket.py uygula [--kuru]               # depoyu arşive yaz
+  python3 scripts/retro_etiket.py topla                         # arşivdeki etiketleri depoya geri oku
   ... | python3 scripts/retro_etiket.py yaz   # stdin: anahtar<TAB>kat<TAB>onem
 """
 import datetime
@@ -28,7 +29,7 @@ import sys
 
 ARSIV = 'data/haberler_arsiv.txt'
 DEPO = 'data/retro_etiket.json'
-BASLANGIC, BITIS = '2026-02-13', '2026-08-22'
+# Eski sabit aralık; artık hedef ölçütü tarih DEĞİL (bkz. hedefler()).
 _AY = {'JANUARY': 1, 'FEBRUARY': 2, 'MARCH': 3, 'APRIL': 4, 'MAY': 5,
        'JUNE': 6, 'JULY': 7, 'AUGUST': 8, 'SEPTEMBER': 9, 'OCTOBER': 10,
        'NOVEMBER': 11, 'DECEMBER': 12}
@@ -85,8 +86,16 @@ def arsivi_tara(yol=ARSIV):
 
 
 def hedefler(kayitlar):
-    return [k for k in kayitlar
-            if BASLANGIC <= k['gun'].split('#')[0] <= BITIS]
+    """Sistemin KENDİ üstverisi olmayan HER kayıt hedeftir.
+
+    Önceden hedef sabit bir tarih aralığıydı (13 Şubat – 22 Ağustos). Bu,
+    aralığın dışında kalan ama sistem üstverisi de olmayan kayıtları sessizce
+    dışarıda bırakıyordu: ölçüldü (2026-09-23), 31 Ağustos ve 14 Eylül'ün
+    üçer kaydı hem `» manset` hem `» sonradan` satırından yoksundu ve hiçbir
+    sayımda görünmüyordu. Ölçüt artık tarih değil, üstveri YOKLUĞUDUR —
+    kapsam kendiliğinden güncel kalır.
+    """
+    return [k for k in kayitlar if not k['sistem_ustveri']]
 
 
 def depo_yukle():
@@ -117,7 +126,9 @@ def durum():
     d = depo_yukle()
     var = sum(1 for k in h if k['anahtar'] in d)
     yazili = sum(1 for k in h if any(_SONRADAN_RE.match(m) for m in k['meta']))
-    print(f'hedef kayıt : {len(h)}  ({BASLANGIC} – {BITIS})')
+    g = sorted({k['gun'].split('#')[0] for k in h})
+    print(f'hedef kayıt : {len(h)}  (sistem üstverisiz; '
+          f'{g[0] if g else "-"} – {g[-1] if g else "-"})')
     print(f'depoda      : {var}  (%{100*var//max(len(h),1)})')
     print(f'arşive yazılı: {yazili}')
     eksik = [k for k in h if k['anahtar'] not in d]
@@ -237,8 +248,52 @@ def uygula(kuru=False):
     return 0
 
 
+_SONRADAN_AYRIS = re.compile(
+    r'^»\s*sonradan\s*\|\s*kategori=(\S+)\s*\|\s*onem=(\d+)')
+
+
+def topla():
+    """Arşivdeki `» sonradan` satırlarını depoya GERİ okur.
+
+    Bazı etiketler arşive depo üzerinden değil, doğrudan yazıldı: 1 Ocak –
+    8 Şubat kayıtları arşive eklenirken, 13-16 Şubat ise yapılandırılırken.
+    Depo ile arşiv bu yüzden ayrışmıştı (ölçüldü 2026-09-23: arşivde 4.494,
+    depoda 4.289). Depo, etiketin TEK kaynağı olmalı ki sonraki bir `uygula`
+    sessizce eksik yazmasın.
+
+    Depoda ZATEN olan anahtara dokunulmaz — arşiv, deponun üzerine yazamaz.
+    """
+    d = depo_yukle()
+    once, eklenen, catisma = len(d), 0, []
+    for k in hedefler(arsivi_tara()):
+        m = next((_SONRADAN_AYRIS.match(x) for x in k['meta']
+                  if _SONRADAN_AYRIS.match(x)), None)
+        if not m:
+            continue
+        kat, onem = m.group(1), int(m.group(2))
+        mevcut = d.get(k['anahtar'])
+        if mevcut:
+            if (mevcut['kat'], mevcut['onem']) != (kat, onem):
+                catisma.append(k['anahtar'])
+            continue
+        msg = dogrula(kat, onem)
+        if msg:
+            print(f'HATA {k["anahtar"]}: {msg}')
+            return 1
+        d[k['anahtar']] = {'kat': kat, 'onem': onem}
+        eklenen += 1
+    if catisma:
+        print(f'⚠️  {len(catisma)} anahtarda depo ile arşiv ayrışıyor '
+              f'(depo korundu): {catisma[:5]}')
+    depo_yaz(d)
+    print(f'{eklenen} etiket arşivden toplandı | depo {once} → {len(d)}')
+    return 0
+
+
 if __name__ == '__main__':
     komut = sys.argv[1] if len(sys.argv) > 1 else 'durum'
+    if komut == 'topla':
+        sys.exit(topla())
     if komut == 'durum':
         sys.exit(durum())
     if komut == 'parti':

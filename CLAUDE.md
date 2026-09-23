@@ -64,16 +64,23 @@ isteyecek: yaşanan siber vaka türleri ve sayıları, çeşitli kriterlere gör
 önemli olay ve gelişmelerin özetleri, alanın gelişim yönü ve yorumu. Bu bölüm o
 çalışmanın veri temelini ve sınırlarını sabitler.
 
-### Kaynak dosyalar ve derinlikleri (2026-09-22 ölçümü)
-- `data/haberler_arsiv.txt` — **OMURGA. BUDANMAZ.** 244 gün, 4.923 haber.
-  17 Şubat'tan itibaren yapılı biçim: `[N] başlık`, paragraf,
-  `(XXXXXXX, AÇIK - kaynak, gg.aa.yyyy)`. Kaynak+tarih 4.359 kayıtta (%91)
-  ayrışıyor; 43 farklı kaynak. 13-16 Şubat eski "GEMİNİ ÖZET RAPORU"
-  biçiminde — yapılı ayrıştırma orada ÇALIŞMAZ.
+### Kaynak dosyalar ve derinlikleri (2026-09-23 ölçümü)
+- `data/haberler_arsiv.txt` — **OMURGA. BUDANMAZ.** 250 gün, 5.043 kayıt;
+  tamamı yapılı biçimde: `[N] başlık`, paragraf, kaynak satırı, üstveri.
+  Kaynak+tarih 5.034 kayıtta ayrışıyor, 9'u bozuk (%0,2).
+  **13-16 Şubat 2026 (91 kayıt) 2026-09-23'te yapılandırıldı** — o dört gün
+  eski "GEMİNİ ÖZET RAPORU" biçiminde, `[N]` başlığı olmadan duruyordu ve
+  yapılı ayrıştırmada SIFIR haber görünüyordu. Başlıkları kaydın KENDİ
+  paragrafından türetilmiştir (özgün manşetler arşivde yok); gün başlığı
+  bilerek değiştirilmedi. Betik: `scripts/arsiv_subat_yapilastir.py`.
   **1 Ocak – 8 Şubat 2026 arası 38 gün / 114 haber SONRADAN eklendi**
-  (2026-09-22, dış kaynaktan; günde yalnızca 3 haber). Bu dönemde `27 Ocak`
-  kaydı YOK, `9-12 Şubat` arası YOK. Her kaydın altında
-  `» sonradan | kategori=... | onem=... | rubrik=v1` satırı vardır.
+  (2026-09-22, dış kaynaktan; günde yalnızca 3 haber).
+  `GÜNLÜK ÖZET:` paragrafı KAYIT DEĞİLDİR — ardından kaynak satırı gelmez,
+  `[N]` almaz, sayımlara girmez.
+- `data/arsiv_kapsam.json` — **sayımın PAYDASI.** Günlük/aylık kayıt sayısı,
+  eksik günler, boş gün, çok bloklu günler, kaynak dağılımı, ayrışmayan
+  kayıtlar. `scripts/arsiv_kapsam.py --yaz` ile yeniden üretilir; yıl sonu
+  raporu sayım yapmadan ÖNCE bunu okumalıdır.
 - `data/skorlama_log.jsonl` — kategori, puan, yerleşim, eleme nedeni. 18 Temmuz'dan beri.
 - `data/kalite_denetim.jsonl` — koşu denetimi, manşet karar izi, `metin_onarim`.
 - `data/rapor_gecmis.json`, `data/kritik3_gecmis.json` — **yalnızca 30-31 gün.**
@@ -97,22 +104,34 @@ LLM yargısıyla, tek bir yazılı rubriğe göre üretilen AYRI alandır:
 - Sistem alanlarının ÜZERİNE YAZILMAZ; ikisi ayrı satır, ayrı alandır.
 - `onem` ile `puan` **aynı ölçek değildir** (biri mutlak, diğeri gün havuzuna
   göre kalibre) — toplanmaz, ortalaması alınmaz, aynı sıralamaya sokulmaz.
-- 1 Ocak – 8 Şubat 2026 (114 kayıt) ve 13 Şubat – 22 Ağustos 2026 (4.289 kayıt)
-  aralıkları etiketlenmiştir; toplam 4.403 `» sonradan` satırı. 23 Ağustos
-  sonrası kayıtlarda sistemin kendi `» manset/kategori/puan` satırı zaten
-  vardır, oraya retro etiket yazılmaz.
-- Araç: `scripts/retro_etiket.py` (`durum` / `parti` / `yaz` / `uygula`).
-  Depo `data/retro_etiket.json`; `uygula` fikir-değişmez (idempotent), aynı
-  gün birden çok blok taşıyorsa anahtarlar `<tarih>#2` biçiminde ayrışır.
+- **Arşivdeki HER kaydın tam olarak bir etiketi vardır** (2026-09-23):
+  4.500 kayıtta `» sonradan`, 543 kayıtta sistemin kendi
+  `» manset/kategori/puan` satırı — toplam 5.043, etiketsiz kayıt YOK.
+- Hedef ölçütü TARİH DEĞİL, sistem üstverisinin YOKLUĞUDUR. Sabit aralık
+  kullanılırken 31 Ağustos ve 14 Eylül'ün üçer kaydı iki listeye de
+  girmiyordu; ölçüt değişince kapsam kendiliğinden güncel kalıyor.
+- Araç: `scripts/retro_etiket.py` (`durum` / `parti` / `yaz` / `uygula` /
+  `topla`). Depo `data/retro_etiket.json` etiketin TEK kaynağıdır; arşive
+  doğrudan yazılmış etiketler `topla` ile depoya geri okunur (depo korunur,
+  arşiv onun üzerine yazamaz). `uygula` fikir-değişmezdir; aynı gün birden
+  çok blok taşıyorsa anahtarlar `<tarih>#2` biçiminde ayrışır.
 
 ### Analiz yapılırken UYULACAK kurallar
-- Kapsam **1 Ocak 2026 sonrası**dır, ama iki dönem aynı yoğunlukta DEĞİLDİR:
-  1 Ocak – 8 Şubat günde 3 haber, 13 Şubat sonrası günde 40+ haber. **Ham
-  sayımlar bu iki dönem arasında kıyaslanamaz**; kıyas oran/dağılım üzerinden.
-  27 Ocak ve 9-12 Şubat kayıtları YOKTUR. Rapor bunu açıkça yazmalı.
+- Kapsam **1 Ocak 2026 sonrası**dır, ama derinlik gün gün DEĞİŞİR:
+  1 Ocak – 8 Şubat günde 3 kayıt, 13 Şubat sonrası ortalama 23. Aylık
+  ortalamalar da düz değil: Haziran 31,6 kayıt/gün iken Temmuz 12,9.
+  **Ham aylık toplam "olay sayısı" DEĞİL, "o ay kaç haber çekilebildiği"dir**
+  — her sayım `arsiv_kapsam.json`daki gün sayısına normalize edilmelidir.
+- **16 gün arşivde hiç YOK**, 1 gün (21 Haziran) boş: 27 Ocak, 9-12 Şubat,
+  8 Mart, 13/16/17/20/23 Nisan, 5 ve 20 Mayıs, 5/11/16/21 Haziran. Rapor bu
+  listeyi açıkça yazmalı; eksik gün "olay olmadı" demek DEĞİLDİR.
+- **10 günde aynı güne ait birden çok blok** vardır (aynı gün yeniden
+  üretilmiş koşular, 784 kayıt). Bu günlerde aynı olay birden çok kez
+  sayılabilir; `cok_bloklu_gun` listesi kontrol edilmeden trend kurulmamalı.
 - Sistem kaynaklı kategori/puan/manşet arşivde ancak **23 Ağustos sonrası**
-  vardır. 13 Şubat – 22 Ağustos arası için bu kırılımlar YAPILAMAZ —
-  uydurma, "veri yok" de ya da önce rubrikle etiketle.
-- Ayrışmayan ~450 kayıt (kaynak/tarih satırı okunamayan) ayrı ele alınmalı,
-  sessizce toplama katılmamalıdır.
+  vardır (543 kayıt). Daha eskisi için `» sonradan` kullanılır; ikisi AYRI
+  ölçektir, birlikte toplanmaz (bkz. yukarıdaki bölüm).
+- Kaynak/tarih satırı ayrışmayan 9 kayıt ayrı ele alınmalı, sessizce
+  toplama katılmamalıdır. Erişim etiketi 5.014 kayıtta `AÇIK`, 20 kayıtta
+  `ÖZET`.
 - Sayılar arşivden ÖLÇÜLEREK verilir; bellekten ya da tahminle değil.
