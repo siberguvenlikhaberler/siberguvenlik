@@ -175,6 +175,18 @@ yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçü
   için 6 karaktere gövdeleme, 10 günlük pencere, Jaccard 0,5). Anlamsal
   eşleştirme DEĞİLDİR; şüpheli birleşmeler `--ornek N` ile denetlenir.
 
+### ANALİZ ÖNCESİ TEK KOMUT — `scripts/yilsonu_hazirla.py --yaz`
+Dört adımı doğru SIRADA koşturur. Sıra önemlidir: varlık ve önem alanları
+ARŞİVE yazılır, kapsam künyesi ile olay kaydı arşivden TÜRETİLİR; türetilenler
+önce koşarsa eski arşivi ölçer ve rapor sessizce eski sayılarla kurulur.
+1. `retro_etiket durum` — önem etiketi eksiği var mı (yazmaz)
+2. `retro_etiket denetim` — kafes dışı etiket = ölçek kayması (çıkış 1)
+3. `varlik_cikar --yaz` — `» varlik` satırlarını arşive yazar
+4. `arsiv_kapsam --yaz` → `data/arsiv_kapsam.json`
+5. `olay_kaydi --yaz` → `data/olaylar.json`
+`--yaz` verilmezse hiçbir dosyaya dokunulmaz. Hepsi fikir-değişmezdir; ne
+zaman koşulduğu önemli değil, analizden hemen önce bir kez yeter.
+
 ### Analiz yapılırken UYULACAK kurallar
 - Kapsam **1 Ocak 2026 sonrası**dır, ama derinlik gün gün DEĞİŞİR:
   1 Ocak – 8 Şubat günde 3 kayıt, 13 Şubat sonrası ortalama 23. Aylık
