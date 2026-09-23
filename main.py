@@ -5152,6 +5152,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 'manset': aid in k3,
                 'kat': rec.get('kat', ''),
                 'puan': rec.get('toplam', 0),
+                'eksen': rec.get('eksen'),
+                'onem': rec.get('onem'),
             }
         return meta
 
@@ -5233,6 +5235,20 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         f"» manset={'evet' if m.get('manset') else 'hayir'}"
                         f" | kategori={m.get('kat') or 'bilinmiyor'}"
                         f" | puan={m.get('puan', 0)}\n")
+                    # ÖNEM SATIRI — `puan`dan AYRI bir alandır ve ayrı ölçektir:
+                    # `puan` o günün havuzundan seçim yapmak için kalibre,
+                    # `onem` gün bağımsız mutlak ağırlık (RETRO_RUBRIK.md v2).
+                    # Yıl sonu analizinde tüm yılı tek ölçekte karşılaştıran
+                    # alan budur; 23 Eylül'e kadarki 5.043 kayıt geriye dönük
+                    # etiketlenerek bu ölçeğe taşındı. Üretim hattı yazmasaydı
+                    # yılın son çeyreği (~2.300 kayıt, havuzun üçte biri) ölçek
+                    # dışında kalır ve kapatılan sorun geri gelirdi.
+                    if m.get('eksen') and m.get('onem') is not None:
+                        archive_entry += (
+                            f"» sonradan | kategori={m.get('kat') or 'bilinmiyor'}"
+                            f" | onem={m['onem']}"
+                            f" | eksen={'/'.join(str(x) for x in m['eksen'])}"
+                            f" | rubrik=v2\n")
                 archive_entry += "\n" + "─" * 80 + "\n\n"
                 yazilan += 1
 
@@ -5301,7 +5317,48 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             'k': self._clamp_score(raw.get('k'), SCORING_WEIGHTS['kaynak_guven']),
         }
         rec['toplam'] = self._record_total(rec)
+        eksen = self._onem_eksenleri(raw)
+        if eksen:
+            rec['eksen'] = eksen
+            rec['onem'] = self._onem_topla(kat, eksen)
         return rec
+
+    # RETRO_RUBRIK.md v2 — dört önem ekseninin alabileceği ÇAPA değerleri.
+    ONEM_CAPA = (0, 8, 17, 25)
+    ONEM_TAVAN_KATEGORI = ('urun_icerik', 'siber_disi')
+    ONEM_TAVAN = 39
+
+    @classmethod
+    def _onem_eksenleri(cls, raw):
+        """LLM'in verdiği dört önem eksenini çapalara OTURTUR.
+
+        NEDEN ÇAPAYA OTURTULUR: rubrik ara değer tanımaz; toplam, dört çapanın
+        toplayabileceği 25 değerlik bir kafes üzerinde olmalıdır. ÖLÇÜLDÜ
+        (2026-09-23): geriye dönük etiketlenen 5.043 kaydın 1.116'sında
+        eksenler hesaplanmadan doğrudan sayı atanmıştı ve bu, oturumlar arası
+        sistematik kaymaya yol açıyordu (p90 bir dönemde 76, diğerinde 68).
+        Serbest sayıya izin vermek aynı kaymayı üretim hattına taşırdı.
+
+        Dördü de yoksa None döner — uydurma değer yazmaktansa alan BOŞ kalır;
+        `scripts/retro_etiket.py durum` eksik kaydı zaten raporlar.
+        """
+        deger = []
+        for anahtar in ('oe', 'ok', 'oa', 'os'):
+            ham = raw.get(anahtar)
+            if ham is None or str(ham).strip() == '':
+                return None
+            try:
+                v = float(ham)
+            except (TypeError, ValueError):
+                return None
+            deger.append(min(cls.ONEM_CAPA, key=lambda c: abs(c - v)))
+        return deger
+
+    @classmethod
+    def _onem_topla(cls, kat, eksen):
+        """Eksen toplamı; tavan kategorilerinde 39'a kırpılır."""
+        t = sum(eksen)
+        return min(t, cls.ONEM_TAVAN) if kat in cls.ONEM_TAVAN_KATEGORI else t
 
     @staticmethod
     def _record_total(rec):

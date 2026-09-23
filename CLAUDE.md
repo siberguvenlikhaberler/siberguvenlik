@@ -125,6 +125,19 @@ ayrımı YOKTUR; "şu tarihten önce/sonra" diye bir kural analizde kullanılmaz
   yazılmış etiketler `topla` ile geri okunur. `uygula` fikir-değişmezdir;
   aynı gün birden çok blok taşıyorsa anahtarlar `<tarih>#2` ile ayrışır.
 
+#### Üretim hattı da artık bu alanı yazıyor (2026-09-23)
+Skorlama ajanı aynı çağrıda dört önem eksenini de döndürüyor (`oe/ok/oa/os`);
+`_normalize_record` bunları çapalara oturtuyor, `save_summary_to_archive`
+`» sonradan | ... | rubrik=v2` satırını yazıyor. **Ek LLM maliyeti yok.**
+- Neden şart: yıl sonuna 99 gün vardı ve bu tempoyla ~2.300 yeni kayıt
+  gelecekti — havuzun üçte biri. Hat yazmasaydı "iki ayrı ölçek" sorunu
+  yılın son çeyreğini kapsayarak geri gelirdi.
+- `oe/ok/oa/os` ile `s/e/a/k` AYRI rubriklerdir: ikincisi o günün havuzundan
+  SEÇİM yapar (`puan`), birincisi gün bağımsız MUTLAK ağırlıktır (`onem`).
+- LLM eksenlerden birini vermezse satır HİÇ yazılmaz (uydurma değer yerine
+  boşluk); eksik kayıtları `scripts/retro_etiket.py durum` raporlar ve
+  `parti`/`yaz` ile geriye doldurulur.
+
 ### Olay kaydı — `data/olaylar.json` (`scripts/olay_kaydi.py`)
 Arşiv **haber kaydı** tutar, rapor **olay** sayar. Aynı olay ardışık günlerde
 yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçüldü:

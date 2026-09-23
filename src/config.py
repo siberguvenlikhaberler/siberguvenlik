@@ -802,8 +802,37 @@ Her haber için şunları belirle:
 SON GÜNLERDE RAPORLANAN OLAYLAR:
 {recent_events if recent_events else "(Geçmiş kayıt yok)"}
 
+5) ÖNEM EKSENLERİ (oe, ok, oa, os) — GÜNDEN BAĞIMSIZ, MUTLAK ölçek.
+   Yukarıdaki s/e/a/k rubriği O GÜNÜN havuzundan seçim yapmak içindir; bu dört
+   eksen ise haberin KENDİ BAŞINA ağırlığıdır ve yıl sonu analizinde tüm yılın
+   tek karşılaştırma ölçeğidir (bkz. RETRO_RUBRIK.md). Karıştırma: bir haber
+   sakin bir günde seçilmiş olabilir ama mutlak önemi düşük olabilir.
+   Her eksen YALNIZCA 0, 8, 17 ya da 25 değerini alır. Ara değer YOK.
+
+   oe = ETKİ GENİŞLİĞİ — kaç kişi/kurum/ülke doğrudan etkilendi?
+     25 ülke çapını aşan (çok uluslu, milyonlarca kişi, ekosistem geneli)
+     17 bir ülke çapında ya da bir sektörün tamamı
+      8 tek kurum/şirket, sınırlı kullanıcı kitlesi
+      0 birkaç kişi, tekil olay, ölçü verilmemiş
+   ok = KRİTİKLİK — etkilenen varlık ne kadar yerine konulamaz?
+     25 can/kamu güvenliği, kritik altyapı işleyişi, devlet iletişiminin dinlenmesi
+     17 devlet kurumu, ordu, finans altyapısı, sağlık, kimlik/biyometrik veri
+      8 ticari veri, müşteri kişisel verisi, tek ürünün güvenliği
+      0 somut varlık kaybı yok
+   oa = AKTÖR DÜZEYİ — arkasındaki taraf kim?
+     25 devlet/devlet destekli APT, devletin resmi kararı (yaptırım, yasa)
+     17 ticari casus yazılım üreticisi, organize suç örgütü, kolluk koalisyonu
+      8 tekil suçlu, küçük grup, iç tehdit, kazara/teknik arıza
+      0 aktör belirsiz ya da haberin konusu değil
+   os = KALICILIK/SONUÇ — kapandı mı, kalıcı değişiklik mi bıraktı?
+     25 kalıcı yapısal değişiklik (yürürlüğe giren yasa, yasaklama, süregiden erişim)
+     17 sürmekte olan kampanya, kapanmamış zafiyet, dava/iade süreci
+      8 kontrol altına alındı ama etkisi kalıcı (çalınan veri, para)
+      0 kapanmış dosya, geri alınmış karar, tekil ürün yaması
+   ⚠️ Metinde ölçü verilmemişse eksen YUKARI YUVARLANMAZ; daha düşük çapa seçilir.
+
 SADECE JSON DÖNDÜR — başka hiçbir şey yazma. "skorlar" altında her haber için tam bir nesne:
-{{"skorlar": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "mukerrer": 0, "s": 30, "e": 12, "a": 10, "k": 12}}]}}
+{{"skorlar": [{{"id": 42, "kat": "kolluk_operasyonu", "siber": 1, "mukerrer": 0, "s": 30, "e": 12, "a": 10, "k": 12, "oe": 17, "ok": 8, "oa": 17, "os": 25}}]}}
 
 HABERLER:
 {articles_brief}"""
