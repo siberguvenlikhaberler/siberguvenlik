@@ -19,6 +19,8 @@ Kullanım:
   python3 scripts/retro_etiket.py parti [adet] [--karakter N]   # etiketlenecek sıradaki kayıtlar
   python3 scripts/retro_etiket.py uygula [--kuru]               # depoyu arşive yaz
   python3 scripts/retro_etiket.py topla                         # arşivdeki etiketleri depoya geri oku
+  python3 scripts/retro_etiket.py denetim                       # ölçek kayması denetimi (CI kapısı)
+  python3 scripts/retro_etiket.py parti 300 --kafesdisi         # eksenleri hesaplanmamış etiketler
   ... | python3 scripts/retro_etiket.py yaz   # stdin: anahtar<TAB>kat<TAB>onem
 """
 import datetime
@@ -42,6 +44,15 @@ from src.config import SCORING_CATEGORIES  # noqa: E402
 
 TAVAN_KATEGORI = {'urun_icerik', 'siber_disi'}
 TAVAN = 39
+
+# Rubriğin dört ekseni yalnızca bu çapa değerlerini alır (RETRO_RUBRIK.md).
+CAPA = (0, 8, 17, 25)
+# Dört çapanın toplayabileceği DEĞERLER. `onem` bu kafesin dışındaysa eksenler
+# hiç hesaplanmamış, sayı doğrudan atanmış demektir — ölçüldü (2026-09-23):
+# 5.043 kaydın 1.116'sı kafes dışındaydı ve bu kayıtlar üst kuyruğu
+# sistematik olarak bastırıyordu (p90: kafes içi dönemde 76, dışında 68).
+KAFES = sorted({a + b + c + d
+                for a in CAPA for b in CAPA for c in CAPA for d in CAPA})
 
 
 def arsivi_tara(yol=ARSIV):
@@ -121,14 +132,39 @@ def depo_yaz(d):
         json.dump(d, f, ensure_ascii=False, indent=0, sort_keys=True)
 
 
-def dogrula(kat, onem):
+def onem_hesapla(kat, eksen):
+    """Dört eksenin toplamı, tavan kuralı uygulanmış hâli."""
+    t = sum(eksen)
+    return min(t, TAVAN) if kat in TAVAN_KATEGORI else t
+
+
+def dogrula(kat, onem, eksen=None):
+    """Etiketi rubriğe göre denetler.
+
+    `eksen` verilmişse (v2) her eksen çapa değeri olmalı ve `onem` toplamla
+    birebir tutmalıdır. Verilmemişse (v1, eski kayıtlar) en azından toplamın
+    KAFES üzerinde olması aranır: kafes dışı bir sayı, eksenlerin hiç
+    hesaplanmadığının kanıtıdır.
+    """
     if kat not in SCORING_CATEGORIES:
         return f'geçersiz kategori: {kat}'
     if not isinstance(onem, int) or not 0 <= onem <= 100:
         return f'geçersiz onem: {onem}'
-    if kat in TAVAN_KATEGORI and onem > TAVAN:
-        return f'{kat} için onem tavanı {TAVAN} (bkz. RETRO_RUBRIK.md)'
+    if eksen is not None:
+        if len(eksen) != 4 or any(x not in CAPA for x in eksen):
+            return f'eksenler {CAPA} dışında: {eksen}'
+        bek = onem_hesapla(kat, eksen)
+        if onem != bek:
+            return f'onem {onem}, eksen toplamı {bek} (tavan sonrası)'
+        return ''
+    if kat in TAVAN_KATEGORI:
+        if onem > TAVAN:
+            return f'{kat} için onem tavanı {TAVAN} (bkz. RETRO_RUBRIK.md)'
+        return ''
+    if onem not in KAFES:
+        return f'onem={onem} rubrik kafesinde yok (eksenler hesaplanmamış)'
     return ''
+
 
 
 def durum():
@@ -147,10 +183,23 @@ def durum():
     return 0
 
 
-def parti(adet=150, karakter=170):
+def parti(adet=150, karakter=170, kafesdisi=False):
+    """Etiketlenecek sıradaki kayıtları TSV olarak döker.
+
+    `--kafesdisi`: depoda OLAN ama `onem`i rubrik kafesinde olmayan kayıtları
+    döker. Bunlar eksenleri hiç hesaplanmamış etiketlerdir; v2'ye geçerken
+    yeniden puanlanmaları gerekir.
+    """
     h = hedefler(arsivi_tara())
     d = depo_yukle()
-    eksik = [k for k in h if k['anahtar'] not in d][:adet]
+    if kafesdisi:
+        eksik = [k for k in h
+                 if k['anahtar'] in d
+                 and 'eksen' not in d[k['anahtar']]
+                 and dogrula(d[k['anahtar']]['kat'],
+                             d[k['anahtar']]['onem'])][:adet]
+    else:
+        eksik = [k for k in h if k['anahtar'] not in d][:adet]
     for k in eksik:
         para = ' '.join(k['para'])[:karakter]
         print(f'{k["anahtar"]}\t{k["baslik"]}\t{para}')
@@ -170,22 +219,31 @@ def yaz():
         satir = satir.strip()
         if not satir or satir.startswith('#'):
             continue
-        p = satir.split('\t')
-        if len(p) != 3:
-            hata.append(f'{no}: 3 alan bekleniyor → {satir[:60]}')
+        p = [x.strip() for x in satir.split('\t')]
+        if len(p) not in (3, 6):
+            hata.append(f'{no}: 3 (v1) ya da 6 (v2) alan bekleniyor '
+                        f'→ {satir[:60]}')
             continue
-        anahtar, kat, onem = p[0].strip(), p[1].strip(), p[2].strip()
+        anahtar, kat = p[0], p[1]
         if anahtar not in gecerli:
             hata.append(f'{no}: arşivde yok → {anahtar}')
             continue
-        if not onem.isdigit():
-            hata.append(f'{no}: onem sayı değil → {onem}')
+        if not all(x.isdigit() for x in p[2:]):
+            hata.append(f'{no}: sayı olmayan alan → {p[2:]}')
             continue
-        msg = dogrula(kat, int(onem))
+        if len(p) == 6:
+            eksen = [int(x) for x in p[2:]]
+            onem = onem_hesapla(kat, eksen)
+            msg = dogrula(kat, onem, eksen)
+            kayit = {'kat': kat, 'onem': onem, 'eksen': eksen}
+        else:
+            eksen, onem = None, int(p[2])
+            msg = dogrula(kat, onem)
+            kayit = {'kat': kat, 'onem': onem}
         if msg:
             hata.append(f'{no}: {msg}')
             continue
-        yeni[anahtar] = {'kat': kat, 'onem': int(onem)}
+        yeni[anahtar] = kayit
     if hata:
         for h in hata[:20]:
             print('HATA ' + h)
@@ -202,8 +260,9 @@ def yaz():
 def uygula(kuru=False):
     kayitlar = arsivi_tara()
     d = depo_yukle()
-    hatali = [(a, dogrula(v.get('kat'), v.get('onem')))
-              for a, v in d.items() if dogrula(v.get('kat'), v.get('onem'))]
+    hatali = [(a, dogrula(v.get('kat'), v.get('onem'), v.get('eksen')))
+              for a, v in d.items()
+              if dogrula(v.get('kat'), v.get('onem'), v.get('eksen'))]
     if hatali:
         for a, msg in hatali[:20]:
             print(f'HATA {a}: {msg}')
@@ -219,8 +278,13 @@ def uygula(kuru=False):
         v = d.get(k['anahtar'])
         if not v:
             continue
-        yeni = (f'» sonradan | kategori={v["kat"]} | onem={v["onem"]} '
-                f'| rubrik=v1\n')
+        if v.get('eksen'):
+            yeni = (f'» sonradan | kategori={v["kat"]} | onem={v["onem"]} '
+                    f'| eksen={"/".join(str(x) for x in v["eksen"])} '
+                    f'| rubrik=v2\n')
+        else:
+            yeni = (f'» sonradan | kategori={v["kat"]} | onem={v["onem"]} '
+                    f'| rubrik=v1\n')
         # kaydın üstveri bloğu: kaynak satırından sonraki » satırları
         # Kayıt gövdesi: başlık → 57'lik ─ cetveli → paragraf → kaynak satırı →
         # (varsa) » üstveri satırları → boş satır → 80'lik ─ ayracı.
@@ -259,7 +323,8 @@ def uygula(kuru=False):
 
 
 _SONRADAN_AYRIS = re.compile(
-    r'^»\s*sonradan\s*\|\s*kategori=(\S+)\s*\|\s*onem=(\d+)')
+    r'^»\s*sonradan\s*\|\s*kategori=(\S+)\s*\|\s*onem=(\d+)'
+    r'(?:\s*\|\s*eksen=(\d+)/(\d+)/(\d+)/(\d+))?')
 
 
 def topla():
@@ -281,16 +346,18 @@ def topla():
         if not m:
             continue
         kat, onem = m.group(1), int(m.group(2))
+        eksen = ([int(x) for x in m.groups()[2:]] if m.group(3) else None)
         mevcut = d.get(k['anahtar'])
         if mevcut:
             if (mevcut['kat'], mevcut['onem']) != (kat, onem):
                 catisma.append(k['anahtar'])
             continue
-        msg = dogrula(kat, onem)
+        msg = dogrula(kat, onem, eksen)
         if msg:
             print(f'HATA {k["anahtar"]}: {msg}')
             return 1
-        d[k['anahtar']] = {'kat': kat, 'onem': onem}
+        d[k['anahtar']] = ({'kat': kat, 'onem': onem, 'eksen': eksen}
+                           if eksen else {'kat': kat, 'onem': onem})
         eklenen += 1
     if catisma:
         print(f'⚠️  {len(catisma)} anahtarda depo ile arşiv ayrışıyor '
@@ -300,10 +367,58 @@ def topla():
     return 0
 
 
+def denetim():
+    """ÖLÇEK KAYMASI DENETİMİ — yıl boyunca tek ölçek mi, ölçer.
+
+    NEDEN VAR: `onem` LLM yargısıdır ve yargı oturumlar arasında kayar.
+    ÖLÇÜLDÜ (2026-09-23): medyan tüm aylarda 50-58 arasında sabitken üst
+    kuyruk kaymıştı — p90 Şubat-Haziran'da 76, Temmuz-Eylül'de 68; tavan
+    100'e karşı 80. Kayma dönemsel görünüyordu ama gerçek nedeni, 1.116
+    kaydın eksenleri hesaplanmadan doğrudan sayı atanmış olmasıydı.
+
+    Bu yüzden denetim ÖNCE kafes uyumuna bakar: kafes dışı kayıt, kaymanın
+    nedenidir, belirtisi değil. Kafes tuttuğunda aylık p90/tavan dağılımı
+    zaten kendiliğinden hizalanır.
+
+    Çıkış kodu 1: kafes dışı kayıt var (CI kapısı olarak kullanılabilir).
+    """
+    import statistics
+    kayitlar = hedefler(arsivi_tara())
+    d = depo_yukle()
+    ay = {}
+    kafes_disi = []
+    eksenli = 0
+    for k in kayitlar:
+        v = d.get(k['anahtar'])
+        if not v:
+            continue
+        a = k['gun'].split('#')[0][:7]
+        ay.setdefault(a, []).append(v['onem'])
+        if v.get('eksen'):
+            eksenli += 1
+        elif dogrula(v['kat'], v['onem']):
+            kafes_disi.append((k['anahtar'], v['onem']))
+    print(f'etiketli kayıt : {sum(len(x) for x in ay.values())} '
+          f'| eksenli (v2): {eksenli}')
+    print(f'kafes dışı     : {len(kafes_disi)}')
+    print('ay       n   medyan  p90  tavan')
+    for a in sorted(ay):
+        v = sorted(ay[a])
+        print(f'{a}  {len(v):4d}  {statistics.median(v):6.0f}  '
+              f'{v[int(len(v) * 0.9)]:3d}  {v[-1]:4d}')
+    if kafes_disi:
+        print(f'\n⚠️  {len(kafes_disi)} etikette eksenler hesaplanmamış; '
+              f'ilk 5: {kafes_disi[:5]}')
+        return 1
+    return 0
+
+
 if __name__ == '__main__':
     komut = sys.argv[1] if len(sys.argv) > 1 else 'durum'
     if komut == 'topla':
         sys.exit(topla())
+    if komut == 'denetim':
+        sys.exit(denetim())
     if komut == 'durum':
         sys.exit(durum())
     if komut == 'parti':
@@ -311,7 +426,7 @@ if __name__ == '__main__':
         kar = 170
         if '--karakter' in sys.argv:
             kar = int(sys.argv[sys.argv.index('--karakter') + 1])
-        sys.exit(parti(say, kar))
+        sys.exit(parti(say, kar, '--kafesdisi' in sys.argv))
     if komut == 'yaz':
         sys.exit(yaz())
     if komut == 'uygula':

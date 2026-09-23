@@ -97,24 +97,46 @@ ALL-CAPS entity tarayıcısına gürültü üretmez ve `[N]` başlık kalıbına
 `»` ile başlayan satır PARAGRAF DEĞİLDİR — arşivi okuyan her kod onu atlamalıdır
 (bkz. `scripts/gecmis_geri_doldur.py`).
 
-### Geriye dönük etiket (`» sonradan`) — bkz. `RETRO_RUBRIK.md`
-Sistemin kendi yazdığı `» manset/kategori/puan` satırı olmayan kayıtlar için
-LLM yargısıyla, tek bir yazılı rubriğe göre üretilen AYRI alandır:
-`» sonradan | kategori=<kat> | onem=<0-100> | rubrik=v1`.
-- Sistem alanlarının ÜZERİNE YAZILMAZ; ikisi ayrı satır, ayrı alandır.
-- `onem` ile `puan` **aynı ölçek değildir** (biri mutlak, diğeri gün havuzuna
-  göre kalibre) — toplanmaz, ortalaması alınmaz, aynı sıralamaya sokulmaz.
-- **Arşivdeki HER kaydın tam olarak bir etiketi vardır** (2026-09-23):
-  4.500 kayıtta `» sonradan`, 543 kayıtta sistemin kendi
-  `» manset/kategori/puan` satırı — toplam 5.043, etiketsiz kayıt YOK.
-- Hedef ölçütü TARİH DEĞİL, sistem üstverisinin YOKLUĞUDUR. Sabit aralık
-  kullanılırken 31 Ağustos ve 14 Eylül'ün üçer kaydı iki listeye de
-  girmiyordu; ölçüt değişince kapsam kendiliğinden güncel kalıyor.
-- Araç: `scripts/retro_etiket.py` (`durum` / `parti` / `yaz` / `uygula` /
-  `topla`). Depo `data/retro_etiket.json` etiketin TEK kaynağıdır; arşive
-  doğrudan yazılmış etiketler `topla` ile depoya geri okunur (depo korunur,
-  arşiv onun üzerine yazamaz). `uygula` fikir-değişmezdir; aynı gün birden
-  çok blok taşıyorsa anahtarlar `<tarih>#2` biçiminde ayrışır.
+### TEK ÖLÇEK: `» sonradan` — bkz. `RETRO_RUBRIK.md` (v2)
+**Arşivdeki 5.043 kaydın TAMAMINDA aynı ölçekte bir `onem` vardır.** Dönem
+ayrımı YOKTUR; "şu tarihten önce/sonra" diye bir kural analizde kullanılmaz.
+
+`» sonradan | kategori=<kat> | onem=<0-100> | eksen=<e>/<k>/<a>/<s> | rubrik=v2`
+
+- `onem`, rubriğin dört ekseninin (etki/kritiklik/aktör/kalıcılık) toplamıdır
+  ve her eksen yalnızca 0, 8, 17 ya da 25 olabilir. Toplam bu yüzden 25
+  değerlik bir KAFES üzerindedir; kafes dışı bir sayı, eksenlerin hiç
+  hesaplanmadığının kanıtıdır ve doğrulama tarafından REDDEDİLİR.
+- **Neden böyle:** ölçüldü (2026-09-23), 1.116 etiket kafes dışındaydı ve bu
+  oturumlar arası sistematik kaymaya yol açıyordu — medyan her ayda 50-58'de
+  sabitken p90 Şubat-Haziran'da 76, Temmuz-Eylül'de 68, tavan 100'e karşı
+  80'di. "Yılın en ağır 20 olayı" sorgusu bu yüzden dönemsel olarak çarpıktı.
+  Hepsi eksenleriyle yeniden puanlandı; şimdi p90 68-76, tavan 92-100.
+- Sistemin kendi `» manset/kategori/puan` satırı OLDUĞU GİBİ KALIR. `puan`
+  gün havuzuna göre kalibredir, `onem` mutlaktır: **toplanmaz, ortalaması
+  alınmaz, aynı sıralamaya sokulmaz.** Sıralama her zaman `onem` iledir.
+  İkisinin aynı kayıtta bulunması kategori uyumunu ölçülebilir kılar
+  (543 çiftte %71 uyum).
+- Araç: `scripts/retro_etiket.py` (`durum` / `parti [--kafesdisi]` / `yaz` /
+  `uygula` / `topla` / `denetim`). `yaz` 6 alanlı TSV alır:
+  `anahtar<TAB>kategori<TAB>e<TAB>k<TAB>a<TAB>s`. `denetim` kafes dışı etiket
+  sayar ve varsa 1 döner — kayma alarmı olarak kullanılır.
+- Depo `data/retro_etiket.json` etiketin TEK kaynağıdır; arşive doğrudan
+  yazılmış etiketler `topla` ile geri okunur. `uygula` fikir-değişmezdir;
+  aynı gün birden çok blok taşıyorsa anahtarlar `<tarih>#2` ile ayrışır.
+
+### Olay kaydı — `data/olaylar.json` (`scripts/olay_kaydi.py`)
+Arşiv **haber kaydı** tutar, rapor **olay** sayar. Aynı olay ardışık günlerde
+yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçüldü:
+5.043 kayıt → **4.399 olay** (644 tekilleştirme), 247 olay birden çok günde.
+- Kaç ayrı GÜNDE raporlandığı (`gun_sayisi`) LLM yargısı içermeyen tek önem
+  sinyalidir; sıralamada `onem`den sonraki eşitlik bozucudur.
+- SIRALAMA ANAHTARI: `onem` → `gun_sayisi` → kritiklik ekseni → etki ekseni →
+  tarih. Yalnızca `onem` ile sıralamak YETMEZ: 84+ bandında ~300 olay berabere
+  kalır ve eşitlik tarihe düşerse liste tek bir aya yığılır.
+- Kümeleme bir sezgiseldir (başlıktan özel ad + CVE belirteçleri, Türkçe ekler
+  için 6 karaktere gövdeleme, 10 günlük pencere, Jaccard 0,5). Anlamsal
+  eşleştirme DEĞİLDİR; şüpheli birleşmeler `--ornek N` ile denetlenir.
 
 ### Analiz yapılırken UYULACAK kurallar
 - Kapsam **1 Ocak 2026 sonrası**dır, ama derinlik gün gün DEĞİŞİR:
@@ -128,9 +150,11 @@ LLM yargısıyla, tek bir yazılı rubriğe göre üretilen AYRI alandır:
 - **10 günde aynı güne ait birden çok blok** vardır (aynı gün yeniden
   üretilmiş koşular, 784 kayıt). Bu günlerde aynı olay birden çok kez
   sayılabilir; `cok_bloklu_gun` listesi kontrol edilmeden trend kurulmamalı.
-- Sistem kaynaklı kategori/puan/manşet arşivde ancak **23 Ağustos sonrası**
-  vardır (543 kayıt). Daha eskisi için `» sonradan` kullanılır; ikisi AYRI
-  ölçektir, birlikte toplanmaz (bkz. yukarıdaki bölüm).
+- Önem/kategori kırılımı **tüm yıl için tek ölçekte** yapılabilir: her
+  kayıtta `» sonradan | onem` vardır. Sistemin `puan` alanı yalnızca
+  23 Ağustos sonrasındadır ve AYRI ölçektir — sıralamaya sokulmaz.
+- Sayım **olay** bazında isteniyorsa `data/olaylar.json` kullanılır; ham
+  kayıt sayımı aynı olayın tekrarlarını olay sanar.
 - Kaynak/tarih satırı ayrışmayan 9 kayıt ayrı ele alınmalı, sessizce
   toplama katılmamalıdır. Erişim etiketi 5.014 kayıtta `AÇIK`, 20 kayıtta
   `ÖZET`.

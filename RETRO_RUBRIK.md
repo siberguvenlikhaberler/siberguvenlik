@@ -1,4 +1,4 @@
-# Geriye Dönük Etiketleme Rubriği — v1
+# Geriye Dönük Etiketleme Rubriği — v2
 
 ## Neden var
 
@@ -27,8 +27,30 @@ kayıtları birbiriyle karşılaştırılabilir olmalı.
 Sistem alanlarından **ayrı** bir satıra yazılır, kaynak satırının hemen altına:
 
 ```
-» sonradan | kategori=<kategori> | onem=<0-100> | rubrik=v1
+» sonradan | kategori=<kategori> | onem=<0-100> | eksen=<e>/<k>/<a>/<s> | rubrik=v2
 ```
+
+`eksen` sırası: **etki genişliği / kritiklik / aktör düzeyi / kalıcılık**.
+
+### v2'de eksenlerin KAYDEDİLMESİ neden zorunlu
+
+v1'de yalnızca toplam yazılıyordu. Toplamın nasıl oluştuğu kayıp olduğu için
+etiket denetlenemiyor, kayma da düzeltilemiyordu.
+
+ÖLÇÜLDÜ (2026-09-23): 5.043 kaydın **1.116'sının `onem` değeri, dört eksenin
+toplayabileceği değerler kümesinin (KAFES) dışındaydı** — yani o kayıtlarda
+eksenler hiç hesaplanmamış, sayı doğrudan atanmıştı. Sonuç, oturumlar arası
+sistematik bir kayma: medyan tüm aylarda 50-58'de sabitken üst kuyruk
+ayrışıyordu (p90 Şubat-Haziran'da 76, Temmuz-Eylül'de 68; tavan 100'e karşı
+80). Bu yüzden "yılın en ağır 20 olayı" sorgusu dönemsel olarak çarpıktı.
+
+Eksenler kaydedilince kayma **yapısal olarak imkansız** hale gelir:
+`scripts/retro_etiket.py` her etiketi kafese göre doğrular ve `denetim`
+komutu kafes dışı kalan etiketi sayar (CI kapısı olarak kullanılabilir).
+
+**KAFES** (dört çapa değerinin toplamları):
+`0 8 16 17 24 25 32 33 34 41 42 49 50 51 58 59 66 67 68 75 76 83 84 92 100`.
+Tavan kuralı uygulanan kategorilerde `39` da geçerlidir.
 
 Kurallar:
 
@@ -39,8 +61,9 @@ Kurallar:
   bir önem ölçütüdür. Yıl sonu analizinde ikisi **toplanmaz, ortalaması
   alınmaz, aynı sıralamaya sokulmaz** — hangi alanın kullanıldığı raporda
   açıkça belirtilir.
-- `rubrik=v1` sürüm damgasıdır. Rubrik değişirse `v2` ile yeniden etiketlenir;
-  eski satır silinmez, sürüm ayrımı analizde kullanılır.
+- `rubrik=v2` sürüm damgasıdır. v1 satırları eksen taşımaz ama `onem`leri
+  kafes üzerindedir; ikisi aynı ölçektedir ve birlikte sayılabilir. Analizde
+  dönem ayrımı YAPILMAZ — sürüm yalnızca denetlenebilirlik farkıdır.
 - Manşet işareti geriye dönük **üretilmez**. O günün gerçek manşet seçimi
   bilinmiyorsa uydurulmaz.
 
@@ -109,7 +132,10 @@ Olay kapandı mı, yoksa kalıcı bir değişiklik mi bıraktı?
 
 ### Toplam ve bantlar
 
-`onem = e1 + e2 + e3 + e4` (0-100).
+`onem = e1 + e2 + e3 + e4` (0-100). Ara değer verilmez: eksen puanı yalnızca
+0, 8, 17 ya da 25 olabilir; toplam da bu yüzden KAFES üzerindedir. "Bu haber
+bana 62 gibi geliyor" diye doğrudan sayı atamak v1'deki kaymanın kaynağıydı
+ve artık doğrulama tarafından reddedilir.
 
 **Tavan kuralı:** `urun_icerik` ve `siber_disi` kategorilerinde `onem` en çok
 **39**'dur. Gerekçe: erişim ekseni (etki genişliği) tek başına bir ürün
