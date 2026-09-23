@@ -5249,6 +5249,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                             f" | onem={m['onem']}"
                             f" | eksen={'/'.join(str(x) for x in m['eksen'])}"
                             f" | rubrik=v2\n")
+                # VARLIK SATIRI — sektör / ülke rolü / aktör. Yargı DEĞİL
+                # çıkarım olduğu için LLM'e sorulmaz, kurallarla türetilir;
+                # bu yüzden hattın içinde koşması ek maliyet getirmez ve
+                # sonucu koşu zamanından bağımsızdır. Hat yazmasaydı alan
+                # yalnızca analiz öncesi elle koşulan betikle dolardı ve o
+                # betik unutulduğunda yılın son kayıtları sektörsüz kalırdı.
+                v_satir = self._varlik_satiri(title, content)
+                if v_satir:
+                    archive_entry += v_satir
                 archive_entry += "\n" + "─" * 80 + "\n\n"
                 yazilan += 1
 
@@ -5260,6 +5269,36 @@ document.addEventListener('DOMContentLoaded', initDragFile);
               f"{len(top3_cards)} KRİTİK 3 + {len(news_items)} gövde)")
 
         self._check_archive_size()
+
+    _VARLIK_MODUL = None
+
+    @classmethod
+    def _varlik_modulu(cls):
+        """`scripts/varlik_cikar.py` TEK kaynaktır — kurallar kopyalanmaz.
+
+        Kopyalansaydı hat ile geriye dönük betik zamanla ayrışır ve aynı
+        arşivde iki farklı sektör sözlüğü olurdu.
+        """
+        if cls._VARLIK_MODUL is None:
+            import importlib.util
+            yol = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               'scripts', 'varlik_cikar.py')
+            spec = importlib.util.spec_from_file_location('varlik_cikar', yol)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            cls._VARLIK_MODUL = mod
+        return cls._VARLIK_MODUL
+
+    @classmethod
+    def _varlik_satiri(cls, baslik, govde):
+        """Eşleşme yoksa None döner — boş alan YAZILMAZ."""
+        try:
+            mod = cls._varlik_modulu()
+            return mod.satir_kur(mod.cikar({'baslik': baslik,
+                                            'para': [govde]}))
+        except Exception as e:
+            print(f"⚠️ Varlık çıkarımı atlandı: {e}")
+            return None
 
     def _check_archive_size(self):
         """Arşiv boyutunu kontrol et ve 100 MB'ı geçince uyar (SİLMEZ)"""

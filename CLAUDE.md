@@ -143,9 +143,11 @@ Sektör, ülke ROLÜ ve aktör kırılımı. Satır biçimi (boş alan yazılmaz
 `» varlik | sektor=finans,kamu | hedef=ABD | aktor_ulke=Rusya | aktor=APT28`
 - **Yargı değil ÇIKARIM** olduğu için LLM'e değil KURALLARA bağlıdır: aynı
   arşiv her koşuda aynı sonucu verir, kayma üretmez, `--ornek` ile
-  denetlenebilir. Bu yüzden üretim hattına gömülmedi — **deterministik
-  olduğu için analizden önce bir kez `--yaz` ile koşmak yeter**, yeni
-  kayıtları da kapsar ve fikir-değişmezdir (ikinci koşuda ekleme 0).
+  denetlenebilir. **Üretim hattı da artık bu satırı yazıyor** (2026-09-23,
+  `_varlik_satiri`): kurallar kopyalanmaz, hat `scripts/varlik_cikar.py`
+  modülünü çağırır — tek sözlük. Geriye dönük koşu (`--yaz`) yine gerekli
+  ve fikir-değişmezdir (ikinci koşuda ekleme 0); hat yalnızca yeni
+  kayıtların betik unutulduğunda sektörsüz kalmasını önler.
 - **Sektör ÇOK ETİKETLİDİR.** Tek etiket seçmek seçimi sözlük sırasına
   bırakıyordu: ilk prototipte finans 961 / enerji 45 çıkmıştı — dağılım
   değil, sıralama yanlılığı. Kapsam %58; eşleşmeyenlerin çoğu (681

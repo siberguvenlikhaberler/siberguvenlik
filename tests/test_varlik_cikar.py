@@ -75,3 +75,30 @@ def test_gercek_arsivde_fail_ulkeler_beklenen_dortlu():
     assert ilk4 == {'Çin', 'Rusya', 'İran', 'Kuzey Kore'}, c.most_common(6)
     # ABD arşivde en çok geçen ülke ama fail listesinde başı çekmemeli.
     assert c['ABD'] < c['Çin']
+
+
+def test_uretim_hatti_varlik_satirini_yazar():
+    """Hat yazmazsa alan yalnızca elle koşulan betikle dolar; unutulursa
+    yılın son kayıtları sektörsüz kalır ve kırılım dönemsel olarak eksilir."""
+    import main
+    S = main.HaberSistemi
+    satir = S._varlik_satiri(
+        'Çin Bağlantılı Grubun ABD\'deki Hastane Sistemlerini Hedeflemesi', '')
+    assert satir.startswith('» varlik | ')
+    assert 'sektor=saglik' in satir
+    assert 'aktor_ulke=Çin' in satir and 'hedef=ABD' in satir
+    assert satir.endswith('\n')
+
+
+def test_uretim_hatti_esleme_yoksa_satir_yazmaz():
+    import main
+    assert main.HaberSistemi._varlik_satiri('Sıradan bir başlık', '') is None
+
+
+def test_hat_kurallari_kopyalamaz():
+    """Kurallar kopyalansaydı iki sözlük zamanla ayrışırdı."""
+    import main
+    assert main.HaberSistemi._varlik_modulu().__file__.endswith(
+        'scripts/varlik_cikar.py')
+    src = open('main.py', encoding='utf-8').read()
+    assert '_varlik_satiri(title, content)' in src
