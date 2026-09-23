@@ -177,6 +177,23 @@ yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçü
   için 6 karaktere gövdeleme, 10 günlük pencere, Jaccard 0,5). Anlamsal
   eşleştirme DEĞİLDİR; şüpheli birleşmeler `--ornek N` ile denetlenir.
 
+### Tematik sorgu — `scripts/arsiv_ara.py` (BAŞLIK YETMEZ)
+Kategori/varlık alanları bir TEMAYI karşılamaz: "İran-İsrail savaşında
+siberin kullanımı" birden çok kategoriye yayılır. Araç başlık VE GÖVDE
+tarar; `»` satırları paragraf sayılmaz.
+- **Ölçüldü (2026-09-23):** İran/İsrail örüntüsü başlıkta 184, gövdeyle
+  birlikte 755 kayıt. Aradaki 571 kaydın manşeti başka bir şeydir ama olay
+  gövdede anlatılır — başlık taraması onları SESSİZCE düşürür.
+- Kalıplar VE ile bağlanır (`--kalip` birden çok kez); tek kalıp içindeki
+  `|` VEYA'dır. `--tema` hazır kalıp kümeleri: `iran_israil`, `kinetik`,
+  `rusya_ukrayna`, `yasal_duzenleme`.
+- Çıktı bir SAYI değil, her eşleşme için KANIT CÜMLESİDİR (`--kanit`).
+  Gövde taraması gürültü de getirir (ilk ölçümde Epstein ve Notepad++
+  haberleri düşmüştü); süzme gözle yapılır, "N olay bulundu" denip
+  geçilmez. `·` işareti tema yalnızca gövdede geçiyor demektir.
+- Sonuç `olay_kaydi.kumele` ile olaya indirgenir ve `onem` ile sıralanır;
+  aylık dağılım `arsiv_kapsam.json` gün sayısına normalize EDİLMELİDİR.
+
 ### ANALİZ ÖNCESİ TEK KOMUT — `scripts/yilsonu_hazirla.py --yaz`
 Dört adımı doğru SIRADA koşturur. Sıra önemlidir: varlık ve önem alanları
 ARŞİVE yazılır, kapsam künyesi ile olay kaydı arşivden TÜRETİLİR; türetilenler
