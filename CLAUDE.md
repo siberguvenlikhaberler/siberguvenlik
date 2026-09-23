@@ -191,6 +191,15 @@ yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçü
 - SIRALAMA ANAHTARI: `onem` → `gun_sayisi` → kritiklik ekseni → etki ekseni →
   tarih. Yalnızca `onem` ile sıralamak YETMEZ: 84+ bandında ~300 olay berabere
   kalır ve eşitlik tarihe düşerse liste tek bir aya yığılır.
+- **KALICI KİMLİK — `data/olay_kimlik.json`.** `olaylar.json` her koşuda
+  yeniden TÜRETİLİR; rapor bir olaya sırasıyla ya da başlığıyla atıf
+  yaparsa eşik değiştiğinde ya da yeni kayıt geldiğinde atıf sessizce
+  başka olaya kayar. Her olay artık `id` taşır (`O-<gün>-<başlık özeti>`)
+  ve yeni küme, üyelerinin önceki koşudaki kimliğini DEVRALIR; birden çok
+  kimlik varsa çoğunluğu getiren kazanır, kaybeden `takma` olarak saklanır
+  ki eski atıflar çözülebilsin. ÖLÇÜLDÜ: eşik 0,5 → 0,4 yapılınca 261 olay
+  birleşti, kimliklerin TAMAMI devralındı, yeniden üretilen kimlik 0.
+  Raporda olaya atıf `id` ile yapılmalıdır, sıra ya da başlıkla değil.
 - Kümeleme bir sezgiseldir (başlıktan özel ad + CVE belirteçleri, Türkçe ekler
   için 6 karaktere gövdeleme, 10 günlük pencere, Jaccard 0,5). Anlamsal
   eşleştirme DEĞİLDİR; şüpheli birleşmeler `--ornek N` ile denetlenir.

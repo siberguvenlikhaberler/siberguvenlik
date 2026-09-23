@@ -29,6 +29,7 @@ birleştirme riski, eşiği yüksek ve pencereyi dar tutarak sınırlandırılm�
 Kullanım: python3 scripts/olay_kaydi.py [--yaz] [--ornek N]
 """
 import collections
+import hashlib
 import datetime
 import json
 import re
@@ -145,11 +146,70 @@ def kumele(kayitlar):
     return kume, birlesme
 
 
+KIMLIK = 'data/olay_kimlik.json'
+
+
+def kayit_kimligi(k):
+    """Kaydın KALICI kimliği: gün + başlık özeti.
+
+    Sıra numarası KULLANILMAZ — aynı gün yeniden üretilirse `[N]` kayar
+    ama başlık kalır. Başlık düzeltilirse kimlik değişir; bu kabul edilen
+    maliyettir, alternatifi sıra numarasıyla her yeniden üretimde TÜM
+    kimlikleri kaydırmaktı.
+    """
+    h = hashlib.sha1(k['baslik'].strip().encode('utf-8')).hexdigest()[:8]
+    return f"{k['gun']}-{h}"
+
+
+def kimlik_ata(kumeler, kayitlar, onceki):
+    """Kümelere KALICI olay kimliği verir; eşik değişse bile kimlik kaymaz.
+
+    NEDEN: `olaylar.json` her koşuda yeniden TÜRETİLİR. Rapor bir olaya
+    sırasıyla ya da başlığıyla atıf yaparsa, kümeleme eşiği değiştiğinde
+    ya da yeni kayıt geldiğinde atıf sessizce başka bir olaya kayar.
+
+    Kural: yeni küme, üyelerinin ÖNCEKİ koşuda taşıdığı kimliği devralır;
+    birden çok kimlik varsa en çok üyeyi getiren kazanır, kaybedenler
+    `takma` olarak saklanır ki eski atıflar çözülebilsin. Hiç eşleşme
+    yoksa en erken üyenin kayıt kimliğinden yeni kimlik üretilir.
+    """
+    yeni_esleme, takma, sonuc = {}, {}, {}
+    for kok, uyeler in kumeler.items():
+        uye_k = [kayitlar[i] for i in uyeler]
+        kimlikler = [kayit_kimligi(k) for k in uye_k]
+        aday = collections.Counter(
+            onceki[kk] for kk in kimlikler if kk in onceki)
+        if aday:
+            en_cok = max(aday.values())
+            olay_id = min(k for k, v in aday.items() if v == en_cok)
+            for k in aday:
+                if k != olay_id:
+                    takma[k] = olay_id
+        else:
+            olay_id = 'O-' + min(kimlikler)
+        sonuc[kok] = olay_id
+        for kk in kimlikler:
+            yeni_esleme[kk] = olay_id
+    return sonuc, yeni_esleme, takma
+
+
+def kimlik_yukle(yol=KIMLIK):
+    try:
+        with open(yol, encoding='utf-8') as f:
+            d = json.load(f)
+    except (FileNotFoundError, ValueError):
+        return {}, {}
+    return d.get('kayit_olay', {}), d.get('takma', {})
+
+
 def main():
     kayitlar = arsivi_tara()
     kume, birlesme = kumele(kayitlar)
+    onceki, eski_takma = kimlik_yukle()
+    kimlik, yeni_esleme, takma = kimlik_ata(kume, kayitlar, onceki)
+    takma = {**eski_takma, **takma}
     olaylar = []
-    for uyeler in kume.values():
+    for kok, uyeler in kume.items():
         k = [kayitlar[i] for i in uyeler]
         gunler = sorted({x['gun'] for x in k})
         onemler = [x['onem'] for x in k if x['onem'] is not None]
@@ -158,6 +218,7 @@ def main():
         tems = max(k, key=lambda x: ((x['onem'] or 0), x['gun'] == gunler[0]))
         eks = next((x['eksen'] for x in k if x.get('eksen')), None)
         olaylar.append({
+            'id': kimlik[kok],
             'baslik': tems['baslik'],
             'eksen': eks,
             'ilk_gun': gunler[0], 'son_gun': gunler[-1],
@@ -195,7 +256,17 @@ def main():
         for o in olaylar[:ust]:
             print(f'{o["onem"]:3d} {o["gun_sayisi"]}g {o["ilk_gun"]} '
                   f'{(o["kategori"] or "-")[:22]:22s} {o["baslik"][:62]}')
+    eski_id = set(onceki.values())
+    tum = set(kimlik.values())
+    yeni_id = {v for v in tum if v not in eski_id}
+    print(f'kalıcı kimlik: {len(tum)} olay | yeni {len(yeni_id)} '
+          f'| devralınan {len(tum) - len(yeni_id)} | takma {len(takma)}')
     if '--yaz' in sys.argv:
+        with open(KIMLIK, 'w', encoding='utf-8') as f:
+            json.dump({'olcum_tarihi': datetime.date.today().isoformat(),
+                       'kayit_olay': yeni_esleme, 'takma': takma},
+                      f, ensure_ascii=False, indent=1)
+        print(f'✅ {KIMLIK}')
         with open(CIKTI, 'w', encoding='utf-8') as f:
             json.dump({'olcum_tarihi': datetime.date.today().isoformat(),
                        'pencere_gun': PENCERE, 'esik': ESIK,

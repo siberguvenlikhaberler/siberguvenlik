@@ -81,3 +81,55 @@ def test_gercek_arsivde_tekillestirme_calisiyor():
     # aşırı birleştirme kümeleme eşiğinin bozulduğunu gösterir.
     assert len(kume) < len(k), 'hiç tekilleştirme olmadı'
     assert len(kume) > len(k) * 0.8, 'aşırı birleştirme — eşik bozulmuş'
+
+
+def test_kayit_kimligi_sira_numarasindan_bagimsiz():
+    """Aynı gün yeniden üretilirse `[N]` kayar, başlık kalır."""
+    a = olay.kayit_kimligi({'gun': '2026-02-13', 'baslik': 'Odido İhlali',
+                            'sira': 3})
+    b = olay.kayit_kimligi({'gun': '2026-02-13', 'baslik': 'Odido İhlali',
+                            'sira': 17})
+    assert a == b and a.startswith('2026-02-13-')
+
+
+def test_kimlik_onceki_kosudan_devralinir():
+    k = [{'gun': '2026-02-13', 'baslik': 'Odido İhlali'},
+         {'gun': '2026-02-15', 'baslik': 'Odido İhlali Devamı'}]
+    onceki = {olay.kayit_kimligi(k[0]): 'O-ESKI'}
+    kimlik, esleme, takma = olay.kimlik_ata({0: [0, 1]}, k, onceki)
+    assert kimlik[0] == 'O-ESKI', 'kimlik yeniden üretildi'
+    assert esleme[olay.kayit_kimligi(k[1])] == 'O-ESKI'
+
+
+def test_birlesmede_kaybeden_kimlik_takma_olarak_saklanir():
+    """Eski atıflar çözülebilsin diye kaybeden kimlik kaydedilir."""
+    k = [{'gun': '2026-02-13', 'baslik': 'A olayı'},
+         {'gun': '2026-02-14', 'baslik': 'B olayı'},
+         {'gun': '2026-02-15', 'baslik': 'C olayı'}]
+    onceki = {olay.kayit_kimligi(k[0]): 'O-BIR',
+              olay.kayit_kimligi(k[1]): 'O-BIR',
+              olay.kayit_kimligi(k[2]): 'O-IKI'}
+    kimlik, _, takma = olay.kimlik_ata({0: [0, 1, 2]}, k, onceki)
+    assert kimlik[0] == 'O-BIR', 'çoğunluk kimliği kazanmalı'
+    assert takma == {'O-IKI': 'O-BIR'}
+
+
+def test_esik_degisince_kimlikler_kaymaz():
+    """ÖLÇÜLDÜ: eşik 0,5 → 0,4 yapılınca 261 olay birleşti ama kimliklerin
+    TAMAMI devralındı; yeniden üretilen kimlik sayısı 0."""
+    import json
+    k = olay.arsivi_tara()
+    onceki, _ = olay.kimlik_yukle()
+    if not onceki:
+        import pytest
+        pytest.skip('data/olay_kimlik.json henüz üretilmemiş')
+    eski_esik = olay.ESIK
+    try:
+        olay.ESIK = 0.4
+        kume, _ = olay.kumele(k)
+        kimlik, _, takma = olay.kimlik_ata(kume, k, onceki)
+    finally:
+        olay.ESIK = eski_esik
+    yeni = set(kimlik.values()) - set(onceki.values())
+    assert not yeni, f'{len(yeni)} kimlik yeniden üretildi'
+    assert takma, 'birleşen olayların takma adı kaydedilmemiş'
