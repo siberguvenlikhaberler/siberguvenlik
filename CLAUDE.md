@@ -182,6 +182,27 @@ CVE, etkilenen ürün ve aktif istismar. Satır biçimi (boş alan yazılmaz):
 - Varlık gibi: hem geriye dönük (`--yaz`) hem üretim hattında
   (`_teknik_satiri`, sözlük kopyalanmaz — modül çağrılır).
 
+### Ölçek alanı — `» olcek` (`scripts/olcek_cikar.py`)
+Nicel etki. `onem` bir YARGIDIR, bu alan ÖLÇÜMDÜR; ikisi karıştırılmaz.
+`» olcek | etkilenen=478188 | zarar=1180000USD | ceza=42000000EUR | kumulatif=zarar`
+- Kapsam %6 (346 kayıt) — düşük ve öyle kalacak; raporda yazılmalıdır.
+  Alan olmayan kayıt "etkisi yoktu" demek DEĞİLDİR.
+- **Tür ipucu ŞARTTIR.** Aynı kalıp üç ayrı anlam taşıyor: "34 kişinin
+  tutuklandığı" kurban değil, "283 milyon dolarlık bütçe" zarar değildir.
+  `tutuklama` ve `butce` bilerek AYRI tutulur ve ölçek satırına YAZILMAZ.
+- Her sayı, birimine uyan ipuçlarından kendisine EN YAKIN olanına bağlanır;
+  cümleye tek tür atamak "42 milyon Euro ceza ... 10 milyon kişi etkilendi"
+  cümlesinde ikinci sayıyı düşürüyordu.
+- Tür başına METİNDE İLK geçen değer alınır. En büyüğü almak gövdedeki
+  ilgisiz sayıyı seçiyordu (23andMe: manşet 47 milyon uzlaşma, gövdede
+  48 milyar şirket değeri).
+- **Ayırıcı yorumu çarpana bağlıdır:** "4.62 milyon" ondalık, "478.188"
+  binliktir. Tek kural 4,62 milyonu 462 milyona şişiriyordu. Cümle ayırıcı
+  da rakam arasındaki noktada BÖLMEZ.
+- `kumulatif=` işaretli değer tekil olay değil, yıllık rapor/sektör
+  toplamıdır (51 kayıt). "Yılın en pahalı saldırısı" sorgusu bunları
+  DIŞARIDA bırakmalıdır.
+
 ### Olay kaydı — `data/olaylar.json` (`scripts/olay_kaydi.py`)
 Arşiv **haber kaydı** tutar, rapor **olay** sayar. Aynı olay ardışık günlerde
 yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçüldü:
@@ -229,8 +250,9 @@ ARŞİVE yazılır, kapsam künyesi ile olay kaydı arşivden TÜRETİLİR; tür
 2. `retro_etiket denetim` — kafes dışı etiket = ölçek kayması (çıkış 1)
 3. `varlik_cikar --yaz` — `» varlik` satırlarını arşive yazar
 4. `teknik_cikar --yaz` — `» teknik` satırlarını arşive yazar
-5. `arsiv_kapsam --yaz` → `data/arsiv_kapsam.json`
-6. `olay_kaydi --yaz` → `data/olaylar.json`
+5. `olcek_cikar --yaz` — `» olcek` satırlarını arşive yazar
+6. `arsiv_kapsam --yaz` → `data/arsiv_kapsam.json`
+7. `olay_kaydi --yaz` → `data/olaylar.json` + `data/olay_kimlik.json`
 `--yaz` verilmezse hiçbir dosyaya dokunulmaz. Hepsi fikir-değişmezdir; ne
 zaman koşulduğu önemli değil, analizden hemen önce bir kez yeter.
 

@@ -5263,6 +5263,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 t_satir = self._teknik_satiri(title, content)
                 if t_satir:
                     archive_entry += t_satir
+                # ÖLÇEK SATIRI — nicel etki (etkilenen/fidye/zarar/ceza).
+                o_satir = self._olcek_satiri(title, content)
+                if o_satir:
+                    archive_entry += o_satir
                 archive_entry += "\n" + "─" * 80 + "\n\n"
                 yazilan += 1
 
@@ -5293,6 +5297,32 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             spec.loader.exec_module(mod)
             cls._VARLIK_MODUL = mod
         return cls._VARLIK_MODUL
+
+    _OLCEK_MODUL = None
+
+    @classmethod
+    def _olcek_modulu(cls):
+        """`scripts/olcek_cikar.py` TEK kaynaktır — kalıplar kopyalanmaz."""
+        if cls._OLCEK_MODUL is None:
+            import importlib.util
+            yol = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               'scripts', 'olcek_cikar.py')
+            spec = importlib.util.spec_from_file_location('olcek_cikar', yol)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            cls._OLCEK_MODUL = mod
+        return cls._OLCEK_MODUL
+
+    @classmethod
+    def _olcek_satiri(cls, baslik, govde):
+        """Nicel etki; tür ipucu yoksa None."""
+        try:
+            mod = cls._olcek_modulu()
+            return mod.satir_kur(mod.cikar({'baslik': baslik,
+                                            'para': [govde]}))
+        except Exception as e:
+            print(f"⚠️ Ölçek çıkarımı atlandı: {e}")
+            return None
 
     _TEKNIK_MODUL = None
 
