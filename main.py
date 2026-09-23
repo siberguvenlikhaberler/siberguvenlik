@@ -5258,6 +5258,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 v_satir = self._varlik_satiri(title, content)
                 if v_satir:
                     archive_entry += v_satir
+                # TEKNİK SATIRI — CVE / etkilenen ürün / aktif istismar.
+                # Varlıkla aynı gerekçe: kurallı çıkarım, ek maliyet yok.
+                t_satir = self._teknik_satiri(title, content)
+                if t_satir:
+                    archive_entry += t_satir
                 archive_entry += "\n" + "─" * 80 + "\n\n"
                 yazilan += 1
 
@@ -5288,6 +5293,32 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             spec.loader.exec_module(mod)
             cls._VARLIK_MODUL = mod
         return cls._VARLIK_MODUL
+
+    _TEKNIK_MODUL = None
+
+    @classmethod
+    def _teknik_modulu(cls):
+        """`scripts/teknik_cikar.py` TEK kaynaktır — sözlük kopyalanmaz."""
+        if cls._TEKNIK_MODUL is None:
+            import importlib.util
+            yol = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               'scripts', 'teknik_cikar.py')
+            spec = importlib.util.spec_from_file_location('teknik_cikar', yol)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            cls._TEKNIK_MODUL = mod
+        return cls._TEKNIK_MODUL
+
+    @classmethod
+    def _teknik_satiri(cls, baslik, govde):
+        """CVE / ürün / aktif istismar; eşleşme yoksa None."""
+        try:
+            mod = cls._teknik_modulu()
+            return mod.satir_kur(mod.cikar({'baslik': baslik,
+                                            'para': [govde]}))
+        except Exception as e:
+            print(f"⚠️ Teknik çıkarım atlandı: {e}")
+            return None
 
     @classmethod
     def _varlik_satiri(cls, baslik, govde):

@@ -20,17 +20,20 @@ YAZ = '--yaz' in sys.argv
 
 # (başlık, komut, yalnızca-okuma-mı)
 ADIMLAR = [
-    ('1/5  Önem etiketi kapsamı (yazmaz — eksik varsa raporlar)',
+    ('1/6  Önem etiketi kapsamı (yazmaz — eksik varsa raporlar)',
      ['python3', 'scripts/retro_etiket.py', 'durum'], True),
-    ('2/5  Ölçek kayması denetimi (kafes dışı etiket = kayma)',
+    ('2/6  Ölçek kayması denetimi (kafes dışı etiket = kayma)',
      ['python3', 'scripts/retro_etiket.py', 'denetim'], True),
-    ('3/5  Varlık alanı → arşive yazılır',
+    ('3/6  Varlık alanı → arşive yazılır',
      ['python3', 'scripts/varlik_cikar.py'] + (['--yaz'] if YAZ else []),
      False),
-    ('4/5  Kapsam künyesi → data/arsiv_kapsam.json (arşivden TÜRETİLİR)',
+    ('4/6  Teknik alan → arşive yazılır (CVE / ürün / aktif istismar)',
+     ['python3', 'scripts/teknik_cikar.py'] + (['--yaz'] if YAZ else []),
+     False),
+    ('5/6  Kapsam künyesi → data/arsiv_kapsam.json (arşivden TÜRETİLİR)',
      ['python3', 'scripts/arsiv_kapsam.py'] + (['--yaz'] if YAZ else []),
      False),
-    ('5/5  Olay kaydı → data/olaylar.json (arşivden TÜRETİLİR)',
+    ('6/6  Olay kaydı → data/olaylar.json (arşivden TÜRETİLİR)',
      ['python3', 'scripts/olay_kaydi.py'] + (['--yaz'] if YAZ else []),
      False),
 ]

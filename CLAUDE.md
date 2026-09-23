@@ -164,6 +164,24 @@ Sektör, ülke ROLÜ ve aktör kırılımı. Satır biçimi (boş alan yazılmaz
   **Bu oranlar raporda açıkça yazılmalıdır**; eşleşmeyen kayıt "o sektör/ülke
   yok" demek DEĞİLDİR.
 
+### Teknik alan — `» teknik` (`scripts/teknik_cikar.py`)
+CVE, etkilenen ürün ve aktif istismar. Satır biçimi (boş alan yazılmaz):
+`» teknik | cve=CVE-2026-1731,CVE-2026-2441 | urun=Cisco | istismar=aktif`
+- Kapsam (2026-09-23): CVE %18 (956 kayıt, **874 tekil açık**, 352 kayıt
+  birden çok CVE taşıyor), ürün %23, aktif istismar %12. Oranlar raporda
+  açıkça yazılmalıdır.
+- **Ürün yalnızca teknik ipucuyla AYNI CÜMLEDE geçerse yazılır.** Satıcı
+  çoğu kez RAPORLAYAN taraftır: "RedVDS'nin çökertilmesi — Microsoft ...
+  açıklamıştır" kaydı `urun=Microsoft` alıyordu. Ülke rolündeki fail/hedef
+  ayrımının teknik karşılığıdır.
+- İki ölçülmüş tuzak koda gömülü: düz alt dizi araması `sap`ı "hesap"
+  içinde buluyordu (SAP 240 → 37); `açı[ğk]` ipucu "açıklamıştır" ve "dava
+  açmıştır" ile eşleşip kolluk haberlerine teknik bağlam uyduruyordu.
+- `istismar=aktif` yalnızca AÇIK ipucuyla ("aktif olarak istismar", "vahşi
+  doğada", KEV). "İstismar edilebilir" (potansiyel) BİLEREK sayılmaz.
+- Varlık gibi: hem geriye dönük (`--yaz`) hem üretim hattında
+  (`_teknik_satiri`, sözlük kopyalanmaz — modül çağrılır).
+
 ### Olay kaydı — `data/olaylar.json` (`scripts/olay_kaydi.py`)
 Arşiv **haber kaydı** tutar, rapor **olay** sayar. Aynı olay ardışık günlerde
 yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçüldü:
@@ -201,8 +219,9 @@ ARŞİVE yazılır, kapsam künyesi ile olay kaydı arşivden TÜRETİLİR; tür
 1. `retro_etiket durum` — önem etiketi eksiği var mı (yazmaz)
 2. `retro_etiket denetim` — kafes dışı etiket = ölçek kayması (çıkış 1)
 3. `varlik_cikar --yaz` — `» varlik` satırlarını arşive yazar
-4. `arsiv_kapsam --yaz` → `data/arsiv_kapsam.json`
-5. `olay_kaydi --yaz` → `data/olaylar.json`
+4. `teknik_cikar --yaz` — `» teknik` satırlarını arşive yazar
+5. `arsiv_kapsam --yaz` → `data/arsiv_kapsam.json`
+6. `olay_kaydi --yaz` → `data/olaylar.json`
 `--yaz` verilmezse hiçbir dosyaya dokunulmaz. Hepsi fikir-değişmezdir; ne
 zaman koşulduğu önemli değil, analizden hemen önce bir kez yeter.
 
