@@ -6099,8 +6099,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         Actions'ta kalıyor. Boru hattındaki diğer her karar (apt_dogrulanmadi,
         manşet karar izi, eleme nedeni) kayıtlıyken bu değildi.
 
+        tur: kritik3 | govde. GÖVDE 2026-09-23'te eklendi: o günün raporunda
+        üç gövde paragrafı 110'un altında yayımlandı (105/106/109) ama
+        `metin_onarim` yalnızca kritik3'ü kaydettiği için hiçbirinin nedeni
+        (kaynak kısa mı, yanıt mı gelmedi, hedef mi tutturulamadı)
+        belirlenemedi — manşette kapatılan boşluğun aynısı gövdede açıktı.
+
         sonuc: kaynak_kisa | yanit_yok | kisaldi | hedef_altinda | hedef |
-               hak_doldu
+               hak_doldu ("hak_doldu" gövdede bütçe dışı kalmak demektir)
         """
         if not hasattr(self, '_metin_onarim_izi'):
             self._metin_onarim_izi = []
@@ -6576,14 +6582,21 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 print(f"   📏 ID {aid}: gövde paragrafı {n} kelime "
                       f"(<{self.GOVDE_PARA_MIN_WORDS}) ama kaynak metin kısa — "
                       f"uzatma denenmedi.")
+                self._onarim_izi('govde', aid, n, n, 'kaynak_kisa',
+                                 kaynak=len(full_text.split()))
                 continue
             islenecek.append((n, aid, full_text))
-        if not islenecek:
-            return
+        # Bütçe dışı kalan ihlaller de KAYDA GEÇER: aksi hâlde yayımlanmış
+        # kısa bir gövde paragrafının hiç denenmediği koşu kaydından
+        # anlaşılamaz — kritik3'te `hak_doldu` aynı boşluğu kapatıyor.
+        for n, aid in adaylar[self.GOVDE_ONARIM_BUTCESI:]:
+            self._onarim_izi('govde', aid, n, n, 'hak_doldu')
         atlanan = len(adaylar) - len(adaylar[:self.GOVDE_ONARIM_BUTCESI])
         if atlanan > 0:
             print(f"   📏 Gövde uzunluk onarımı: {atlanan} kalem bütçe dışı "
                   f"kaldı (bütçe {self.GOVDE_ONARIM_BUTCESI}).")
+        if not islenecek:
+            return
 
         # TOPLU ONARIM — maliyet kalem sayısına değil parti sayısına bağlı.
         for i in range(0, len(islenecek), self.GOVDE_ONARIM_PARTI):
@@ -6605,6 +6618,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 max_output_tokens=8192,
                 label=f'Gövde-Uzunluk-Parti-{i // self.GOVDE_ONARIM_PARTI + 1}')
             if not isinstance(fixed, dict):
+                for n, aid, ft in parti:
+                    self._onarim_izi('govde', aid, n, n, 'yanit_yok',
+                                     kaynak=len(ft.split()))
                 continue
             yeni_by_id = {}
             for kayit in (fixed.get('paragraphs') or []):
@@ -6615,16 +6631,28 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     continue
             # HER KALEM AYRI DOĞRULANIR — parti güvenlik kuralını gevşetmez.
             for n, aid, _ft in parti:
+                kaynak_wc = len(_ft.split())
                 yeni = yeni_by_id.get(aid, '')
                 yn = len(yeni.split())
-                if not yeni or yn <= n:
+                if not yeni:
+                    print(f"      ⚠️  ID {aid}: partide yanıt yok — "
+                          f"orijinal korunuyor.")
+                    self._onarim_izi('govde', aid, n, n, 'yanit_yok',
+                                     kaynak=kaynak_wc)
+                    continue
+                if yn <= n:
                     print(f"      ⚠️  ID {aid}: yeniden deneme kısaldı/eşitti "
                           f"({yn} kelime) — orijinal korunuyor.")
+                    self._onarim_izi('govde', aid, n, yn, 'kisaldi',
+                                     kaynak=kaynak_wc)
                     continue
                 c = content_by_id.get(aid) or {}
                 c['paragraph'] = yeni
                 content_by_id[aid] = c
                 ok = yn >= self.GOVDE_PARA_MIN_WORDS
+                self._onarim_izi('govde', aid, n, yn,
+                                 'hedef' if ok else 'hedef_altinda',
+                                 kaynak=kaynak_wc)
                 print(f"      → ID {aid}: {yn} kelime" +
                       (" ✅" if ok else " (hâlâ hedefin altında, en iyi deneme)"))
 
