@@ -86,16 +86,26 @@ def arsivi_tara(yol=ARSIV):
 
 
 def hedefler(kayitlar):
-    """Sistemin KENDİ üstverisi olmayan HER kayıt hedeftir.
+    """ARŞİVDEKİ HER KAYIT hedeftir — sistem üstverisi olanlar DAHİL.
 
-    Önceden hedef sabit bir tarih aralığıydı (13 Şubat – 22 Ağustos). Bu,
-    aralığın dışında kalan ama sistem üstverisi de olmayan kayıtları sessizce
-    dışarıda bırakıyordu: ölçüldü (2026-09-23), 31 Ağustos ve 14 Eylül'ün
-    üçer kaydı hem `» manset` hem `» sonradan` satırından yoksundu ve hiçbir
-    sayımda görünmüyordu. Ölçüt artık tarih değil, üstveri YOKLUĞUDUR —
-    kapsam kendiliğinden güncel kalır.
+    Ölçüt iki kez daraldı, ikisi de sayımı bozuyordu:
+
+    1. Önce sabit tarih aralığıydı (13 Şubat – 22 Ağustos); 31 Ağustos ve
+       14 Eylül'ün üçer kaydı hiçbir listeye girmiyordu.
+    2. Sonra "sistem üstverisi yok" oldu. Bu, 23 Ağustos sonrasındaki 543
+       kaydı retro ölçeğin DIŞINDA bırakıyordu ve iki ölçek karşılaştırılamaz
+       olduğu için yıl çapında tek bir sıralama kurulamıyordu. ÖLÇÜLDÜ
+       (2026-09-23): 80+ bandındaki 485 kaydın 216'sı sistem `puan`ından
+       geliyordu, oysa sistem etiketli kayıt arşivin yalnızca %10,8'i —
+       "yılın en ağır olayları" listesi baştan sona son dört haftaya
+       düşüyordu.
+
+    Artık HER kayıt `» sonradan` alır; `onem` yıl boyunca tek ölçektir.
+    Sistemin `» manset/kategori/puan` satırı OLDUĞU GİBİ KALIR — ayrı satır,
+    ayrı alan, farklı ölçek. İkisinin aynı kayıtta bulunması bilinçlidir:
+    kategori uyumu ölçülebilir hale gelir.
     """
-    return [k for k in kayitlar if not k['sistem_ustveri']]
+    return list(kayitlar)
 
 
 def depo_yukle():
@@ -127,7 +137,7 @@ def durum():
     var = sum(1 for k in h if k['anahtar'] in d)
     yazili = sum(1 for k in h if any(_SONRADAN_RE.match(m) for m in k['meta']))
     g = sorted({k['gun'].split('#')[0] for k in h})
-    print(f'hedef kayıt : {len(h)}  (sistem üstverisiz; '
+    print(f'hedef kayıt : {len(h)}  (tüm arşiv; '
           f'{g[0] if g else "-"} – {g[-1] if g else "-"})')
     print(f'depoda      : {var}  (%{100*var//max(len(h),1)})')
     print(f'arşive yazılı: {yazili}')
