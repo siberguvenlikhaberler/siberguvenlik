@@ -97,8 +97,13 @@ LLM yargısıyla, tek bir yazılı rubriğe göre üretilen AYRI alandır:
 - Sistem alanlarının ÜZERİNE YAZILMAZ; ikisi ayrı satır, ayrı alandır.
 - `onem` ile `puan` **aynı ölçek değildir** (biri mutlak, diğeri gün havuzuna
   göre kalibre) — toplanmaz, ortalaması alınmaz, aynı sıralamaya sokulmaz.
-- Şu an yalnızca 1 Ocak – 8 Şubat 2026 aralığında vardır. 13 Şubat –
-  22 Ağustos aralığı HENÜZ etiketlenmedi.
+- 1 Ocak – 8 Şubat 2026 (114 kayıt) ve 13 Şubat – 22 Ağustos 2026 (4.289 kayıt)
+  aralıkları etiketlenmiştir; toplam 4.403 `» sonradan` satırı. 23 Ağustos
+  sonrası kayıtlarda sistemin kendi `» manset/kategori/puan` satırı zaten
+  vardır, oraya retro etiket yazılmaz.
+- Araç: `scripts/retro_etiket.py` (`durum` / `parti` / `yaz` / `uygula`).
+  Depo `data/retro_etiket.json`; `uygula` fikir-değişmez (idempotent), aynı
+  gün birden çok blok taşıyorsa anahtarlar `<tarih>#2` biçiminde ayrışır.
 
 ### Analiz yapılırken UYULACAK kurallar
 - Kapsam **1 Ocak 2026 sonrası**dır, ama iki dönem aynı yoğunlukta DEĞİLDİR:
