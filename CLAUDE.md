@@ -138,6 +138,30 @@ Skorlama ajanı aynı çağrıda dört önem eksenini de döndürüyor (`oe/ok/o
   boşluk); eksik kayıtları `scripts/retro_etiket.py durum` raporlar ve
   `parti`/`yaz` ile geriye doldurulur.
 
+### Varlık alanı — `» varlik` (`scripts/varlik_cikar.py`)
+Sektör, ülke ROLÜ ve aktör kırılımı. Satır biçimi (boş alan yazılmaz):
+`» varlik | sektor=finans,kamu | hedef=ABD | aktor_ulke=Rusya | aktor=APT28`
+- **Yargı değil ÇIKARIM** olduğu için LLM'e değil KURALLARA bağlıdır: aynı
+  arşiv her koşuda aynı sonucu verir, kayma üretmez, `--ornek` ile
+  denetlenebilir. Bu yüzden üretim hattına gömülmedi — **deterministik
+  olduğu için analizden önce bir kez `--yaz` ile koşmak yeter**, yeni
+  kayıtları da kapsar ve fikir-değişmezdir (ikinci koşuda ekleme 0).
+- **Sektör ÇOK ETİKETLİDİR.** Tek etiket seçmek seçimi sözlük sırasına
+  bırakıyordu: ilk prototipte finans 961 / enerji 45 çıkmıştı — dağılım
+  değil, sıralama yanlılığı. Kapsam %58; eşleşmeyenlerin çoğu (681
+  `zafiyet_rutin`, 150 `urun_icerik`) gerçekten sektörsüzdür (bir Chrome
+  yamasının kurban sektörü yoktur), boşluk doğru davranıştır.
+- **Ülke iki rolde ayrılır.** "Çin bağlantılı grup ABD'yi hedefledi"de iki
+  ülke de geçer; tek alanda toplamak "ABD en çok saldıran ülke" üretirdi.
+  Rol Türkçe ipucu kalıplarıyla belirlenir (`bağlantılı/menşeli/destekli`
+  → fail; `-deki/-e yönelik/hükümeti` → hedef); ipucu yoksa HEDEF sayılır,
+  çünkü arşiv ağırlıklı olarak kurban perspektifinden yazılmıştır.
+  Ölçüldü: fail ülkeler Çin 196, Rusya 160, İran 127, Kuzey Kore 79;
+  hedefte ABD 1.081 ile başta.
+- Kapsam: sektör %58, hedef ülke %43, fail ülke %11, adlandırılmış aktör %16.
+  **Bu oranlar raporda açıkça yazılmalıdır**; eşleşmeyen kayıt "o sektör/ülke
+  yok" demek DEĞİLDİR.
+
 ### Olay kaydı — `data/olaylar.json` (`scripts/olay_kaydi.py`)
 Arşiv **haber kaydı** tutar, rapor **olay** sayar. Aynı olay ardışık günlerde
 yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçüldü:
