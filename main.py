@@ -5286,6 +5286,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
               f"{len(top3_cards)} KRİTİK 3 + {len(news_items)} gövde)")
 
         self._check_archive_size()
+        self._olay_tablosu_tazele()
 
     _VARLIK_MODUL = None
 
@@ -5368,6 +5369,41 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         except Exception as e:
             print(f"⚠️ Varlık çıkarımı atlandı: {e}")
             return None
+
+    @staticmethod
+    def _olay_tablosu_tazele():
+        """Birleşik olay tablosunu her arşiv yazımından sonra yeniden üretir.
+
+        NEDEN HATTA BAĞLI: tablo arşivden TÜRETİLİR ve yıl sonu analizinin
+        tek sorgulanabilir yüzeyidir. Yalnızca elle koşulan bir adım olsaydı
+        arşiv ile tablo sessizce ayrışır, analiz eski sayılarla kurulurdu.
+        Ölçüldü: 5.043 kayıt için ~1,7 saniye — günlük koşuda ihmal
+        edilebilir. Başarısızlık raporu DÜŞÜRMEZ; tablo türetilmiş veridir
+        ve `scripts/yilsonu_hazirla.py` ile her zaman yeniden üretilebilir.
+        """
+        try:
+            import importlib.util
+            yol = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               'scripts', 'olay_tablosu.py')
+            spec = importlib.util.spec_from_file_location('olay_tablosu', yol)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            kayitlar = mod.arsivi_tara()
+            satirlar, _, _ = mod.tablo_kur(kayitlar)
+            with open(mod.CIKTI_JSON, 'w', encoding='utf-8') as f:
+                json.dump({'olcum_tarihi': datetime.now().strftime('%Y-%m-%d'),
+                           'kayit': len(kayitlar), 'olay': len(satirlar),
+                           'olaylar': satirlar}, f,
+                          ensure_ascii=False, indent=1)
+            import csv as _csv
+            with open(mod.CIKTI_CSV, 'w', encoding='utf-8', newline='') as f:
+                w = _csv.DictWriter(f, fieldnames=mod.CSV_ALAN)
+                w.writeheader()
+                for o in satirlar:
+                    w.writerow(mod._csv_satir(o))
+            print(f"📊 Olay tablosu tazelendi: {len(satirlar)} olay")
+        except Exception as e:
+            print(f"⚠️ Olay tablosu tazelenemedi: {e}")
 
     def _check_archive_size(self):
         """Arşiv boyutunu kontrol et ve 100 MB'ı geçince uyar (SİLMEZ)"""

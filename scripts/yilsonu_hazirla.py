@@ -20,24 +20,27 @@ YAZ = '--yaz' in sys.argv
 
 # (başlık, komut, yalnızca-okuma-mı)
 ADIMLAR = [
-    ('1/7  Önem etiketi kapsamı (yazmaz — eksik varsa raporlar)',
+    ('1/8  Önem etiketi kapsamı (yazmaz — eksik varsa raporlar)',
      ['python3', 'scripts/retro_etiket.py', 'durum'], True),
-    ('2/7  Ölçek kayması denetimi (kafes dışı etiket = kayma)',
+    ('2/8  Ölçek kayması denetimi (kafes dışı etiket = kayma)',
      ['python3', 'scripts/retro_etiket.py', 'denetim'], True),
-    ('3/7  Varlık alanı → arşive yazılır',
+    ('3/8  Varlık alanı → arşive yazılır',
      ['python3', 'scripts/varlik_cikar.py'] + (['--yaz'] if YAZ else []),
      False),
-    ('4/7  Teknik alan → arşive yazılır (CVE / ürün / aktif istismar)',
+    ('4/8  Teknik alan → arşive yazılır (CVE / ürün / aktif istismar)',
      ['python3', 'scripts/teknik_cikar.py'] + (['--yaz'] if YAZ else []),
      False),
-    ('5/7  Ölçek alanı → arşive yazılır (etkilenen / fidye / zarar / ceza)',
+    ('5/8  Ölçek alanı → arşive yazılır (etkilenen / fidye / zarar / ceza)',
      ['python3', 'scripts/olcek_cikar.py'] + (['--yaz'] if YAZ else []),
      False),
-    ('6/7  Kapsam künyesi → data/arsiv_kapsam.json (arşivden TÜRETİLİR)',
+    ('6/8  Kapsam künyesi → data/arsiv_kapsam.json (arşivden TÜRETİLİR)',
      ['python3', 'scripts/arsiv_kapsam.py'] + (['--yaz'] if YAZ else []),
      False),
-    ('7/7  Olay kaydı → data/olaylar.json (arşivden TÜRETİLİR)',
+    ('7/8  Olay kaydı → data/olaylar.json (arşivden TÜRETİLİR)',
      ['python3', 'scripts/olay_kaydi.py'] + (['--yaz'] if YAZ else []),
+     False),
+    ('8/8  Birleşik olay tablosu → data/olay_tablosu.json + .csv',
+     ['python3', 'scripts/olay_tablosu.py'] + (['--yaz'] if YAZ else []),
      False),
 ]
 
@@ -64,7 +67,8 @@ def main():
             print(f'   • {u}')
         print('   (bkz. RETRO_RUBRIK.md — kafes dışı etiket ölçek kaymasıdır)')
         return 1
-    print('✅ Hazırlık tamam. Rapor ÖNCE data/arsiv_kapsam.json okumalı: '
+    print('✅ Hazırlık tamam. Çapraz sorgular data/olay_tablosu.json '
+          'üzerinden yapılır; rapor ÖNCE data/arsiv_kapsam.json okumalı: '
           'ham aylık toplam "olay sayısı" değil, "o ay kaç haber '
           'çekilebildiği"dir.')
     return 0

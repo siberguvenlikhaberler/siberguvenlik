@@ -247,6 +247,30 @@ yeniden raporlanır; 10 günde aynı güne ait birden çok blok vardır. Ölçü
   için 6 karaktere gövdeleme, 10 günlük pencere, Jaccard 0,5). Anlamsal
   eşleştirme DEĞİLDİR; şüpheli birleşmeler `--ornek N` ile denetlenir.
 
+### BİRLEŞİK OLAY TABLOSU — `data/olay_tablosu.json` / `.csv` (ANALİZİN YÜZEYİ)
+**Çapraz sorgu buradan yapılır.** Alanlar yapılandırılmıştı ama
+BİRLEŞTİRİLMEMİŞTİ: hepsi arşiv metninde `»` satırıydı, `olaylar.json` ise
+yalnızca başlık/kategori/önem/gün taşıyordu. "Çin bağlantılı aktörün finans
+sektöründe kaç kişiyi etkileyen olayı" sorusu her seferinde arşivi yeniden
+ayrıştırmayı gerektiriyordu.
+- Olay başına TEK satır: `id`, başlık, kategori, `anlati` (urun_icerik/
+  siber_disi ise `false`), `onem` + eksen, ilk/son gün, gün ve kayıt sayısı,
+  `sektor[]`, `hedef_ulke[]`, `aktor_ulke[]`, `aktor[]`, `kurban[]`,
+  `cve[]`, `urun[]`, `istismar`, `olcek{}`, `kaynaklar[]`, `kayitlar[]`.
+- **Kimlik `olaylar.json` ile AYNIDIR** (`olay_kimlik.json` üzerinden
+  devralınır); iki dosya aynı olaya aynı `id` ile atıf yapar.
+- Olay düzeyi kapsam (4.399 olay): sektör %59, hedef ülke %44, ürün %22,
+  kurban %20, CVE %18, fail ülke %11, ölçek %7. 274 olay anlatı dışıdır.
+- Çok değerli alanlar olay boyunca BİRLEŞTİRİLİR, sıra korunur (ilk görülen
+  önce) — sözlük sırası yanlılığı olmasın. Ölçekte tür başına en büyük
+  TEKİL değer alınır; kümülatif değer `*_kumulatif` olarak ayrı yazılır,
+  "yılın en pahalı saldırısı" sorgusuna girmez.
+- `.csv` düz tablodur (çok değerli alanlar `;` ile) — elektronik tabloda
+  açılabilir.
+- **Üretim hattı her arşiv yazımından sonra tazeler** (`_olay_tablosu_tazele`,
+  ~1,7 saniye). Yalnızca elle koşulan bir adım olsaydı arşiv ile tablo
+  sessizce ayrışırdı. Başarısızlık raporu DÜŞÜRMEZ; tablo türetilmiş veridir.
+
 ### Tematik sorgu — `scripts/arsiv_ara.py` (BAŞLIK YETMEZ)
 Kategori/varlık alanları bir TEMAYI karşılamaz: "İran-İsrail savaşında
 siberin kullanımı" birden çok kategoriye yayılır. Araç başlık VE GÖVDE
@@ -275,6 +299,7 @@ ARŞİVE yazılır, kapsam künyesi ile olay kaydı arşivden TÜRETİLİR; tür
 5. `olcek_cikar --yaz` — `» olcek` satırlarını arşive yazar
 6. `arsiv_kapsam --yaz` → `data/arsiv_kapsam.json`
 7. `olay_kaydi --yaz` → `data/olaylar.json` + `data/olay_kimlik.json`
+8. `olay_tablosu --yaz` → `data/olay_tablosu.json` + `.csv` (ÇAPRAZ SORGU)
 `--yaz` verilmezse hiçbir dosyaya dokunulmaz. Hepsi fikir-değişmezdir; ne
 zaman koşulduğu önemli değil, analizden hemen önce bir kez yeter.
 
@@ -293,8 +318,9 @@ zaman koşulduğu önemli değil, analizden hemen önce bir kez yeter.
 - Önem/kategori kırılımı **tüm yıl için tek ölçekte** yapılabilir: her
   kayıtta `» sonradan | onem` vardır. Sistemin `puan` alanı yalnızca
   23 Ağustos sonrasındadır ve AYRI ölçektir — sıralamaya sokulmaz.
-- Sayım **olay** bazında isteniyorsa `data/olaylar.json` kullanılır; ham
-  kayıt sayımı aynı olayın tekrarlarını olay sanar.
+- Sayım **olay** bazında isteniyorsa `data/olay_tablosu.json` kullanılır
+  (tüm alanlar bağlı); ham kayıt sayımı aynı olayın tekrarlarını olay sanar.
+  `olaylar.json` aynı kimlikleri taşır ama yalnızca çekirdek alanları içerir.
 - Kaynak/tarih satırı ayrışmayan 9 kayıt ayrı ele alınmalı, sessizce
   toplama katılmamalıdır. Erişim etiketi 5.014 kayıtta `AÇIK`, 20 kayıtta
   `ÖZET`.
