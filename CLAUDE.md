@@ -223,7 +223,18 @@ Nicel etki. `onem` bir YARGIDIR, bu alan ÖLÇÜMDÜR; ikisi karıştırılmaz.
   satıcı ve failin kendisi kurban DEĞİLDİR. Tedarik zincirinde hem
   sağlayıcı hem etkilenen müşteri yazılabilir.
 - Üretim hattı aynı alanı skorlama çağrısında istiyor (`kurban`, ek maliyet
-  yok); `-` yanıtı alan yazdırmaz.
+  yok); `-` yanıtı alan yazdırmaz. Hat `temizle()`yi modülden çağırır —
+  kural KOPYALANMAZ, yoksa aynı kurum iki ayrı kurban sayılır.
+- **NORMALİZASYON (2026-09-24, hattın ilk gününde ölçüldü):** LLM adları
+  İngilizce döndürdü ("Ukraine", "UAE", "European Union") oysa geriye dönük
+  1.036 etiketin tamamı Türkçedir → `ESANLAM` eşlemesi Türkçeleştirir.
+  Ayrıca 7 kayıtta kurum yerine KİTLE TANIMI yazılmıştı ("Developers",
+  "Windows users", "Online retailers", "US Federal Agencies") → `JENERIK_SON`
+  bunları düşürür. Kural HER sözcüğe bakar ("Android users in Europe and
+  Canada"); `systems`/`servers` BİLEREK listede yok, gerçek şirket
+  adlarında geçiyor ("Unlimited Technology Systems").
+- `topla` komutu hattın arşive yazdığı etiketleri depoya geri okur; depoda
+  olan anahtara DOKUNMAZ (arşiv, deponun üzerine yazamaz).
 
 ### Olay kaydı — `data/olaylar.json` (`scripts/olay_kaydi.py`)
 Arşiv **haber kaydı** tutar, rapor **olay** sayar. Aynı olay ardışık günlerde
@@ -267,9 +278,13 @@ ayrıştırmayı gerektiriyordu.
   "yılın en pahalı saldırısı" sorgusuna girmez.
 - `.csv` düz tablodur (çok değerli alanlar `;` ile) — elektronik tabloda
   açılabilir.
-- **Üretim hattı her arşiv yazımından sonra tazeler** (`_olay_tablosu_tazele`,
-  ~1,7 saniye). Yalnızca elle koşulan bir adım olsaydı arşiv ile tablo
-  sessizce ayrışırdı. Başarısızlık raporu DÜŞÜRMEZ; tablo türetilmiş veridir.
+- **Üretim hattı her arşiv yazımından sonra türetilmiş veriyi DOĞRU SIRADA
+  tazeler** (`_turetilmis_veriyi_tazele`): kurban etiketi `topla` → olay
+  kaydı (`olaylar.json` + `olay_kimlik.json`) → tablo. SIRA ŞART: olay
+  kaydı kalıcı kimlikleri üretir, tablo onları DEVRALIR. Ölçüldü
+  (24 Eylül): yalnızca tablo tazelenince tablo 4.429 olaya çıkarken
+  `olaylar.json` 4.399'da kalmış, yeni 30 olay kalıcı kimlik alamamıştı.
+  Başarısızlık raporu DÜŞÜRMEZ; hepsi türetilmiş veridir.
 
 ### Tematik sorgu — `scripts/arsiv_ara.py` (BAŞLIK YETMEZ)
 Kategori/varlık alanları bir TEMAYI karşılamaz: "İran-İsrail savaşında

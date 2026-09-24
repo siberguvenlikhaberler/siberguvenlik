@@ -5286,7 +5286,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
               f"{len(top3_cards)} KRİTİK 3 + {len(news_items)} gövde)")
 
         self._check_archive_size()
-        self._olay_tablosu_tazele()
+        self._turetilmis_veriyi_tazele()
 
     _VARLIK_MODUL = None
 
@@ -5369,6 +5369,47 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         except Exception as e:
             print(f"⚠️ Varlık çıkarımı atlandı: {e}")
             return None
+
+    @classmethod
+    def _turetilmis_veriyi_tazele(cls):
+        """Arşivden türetilen dosyaları DOĞRU SIRADA tazeler.
+
+        SIRA ŞART: olay kaydı kalıcı kimlikleri (`olay_kimlik.json`) üretir,
+        tablo o kimlikleri DEVRALIR. Yalnızca tablo tazelenirse yeni olaylar
+        her koşuda yeni kimlik alır ve rapor atıfları tutmaz — ölçüldü,
+        24 Eylül koşusunda tablo 4.429 olaya çıkarken olaylar.json 4.399'da
+        kalmıştı. Kurban etiketleri de depoya geri okunur ki geriye dönük
+        depo ile arşiv ayrışmasın.
+        """
+        for ad, islev in (('kurban etiketi', cls._kurban_topla),
+                          ('olay kaydı', cls._olay_kaydi_tazele),
+                          ('olay tablosu', cls._olay_tablosu_tazele)):
+            try:
+                islev()
+            except Exception as e:
+                print(f"⚠️ {ad} tazelenemedi: {e}")
+
+    @classmethod
+    def _kurban_topla(cls):
+        n = cls._kurban_modulu().topla()
+        return n
+
+    @staticmethod
+    def _olay_kaydi_tazele():
+        """`data/olaylar.json` + `data/olay_kimlik.json`."""
+        import importlib.util
+        import sys as _sys
+        yol = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           'scripts', 'olay_kaydi.py')
+        spec = importlib.util.spec_from_file_location('olay_kaydi', yol)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        eski_argv = _sys.argv
+        _sys.argv = ['olay_kaydi.py', '--yaz']
+        try:
+            mod.main()
+        finally:
+            _sys.argv = eski_argv
 
     @staticmethod
     def _olay_tablosu_tazele():
@@ -5470,20 +5511,44 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             rec['kurban'] = kurban
         return rec
 
-    @staticmethod
-    def _kurban_temizle(ham):
-        """'-', boş ya da kalıp yanıt → None; virgüllü liste normalize edilir.
+    _KURBAN_MODUL = None
 
-        Alan LLM YARGISIDIR (kural tabanlı çıkarım ölçüldü ve %2 kapsamla
-        yanlış parçalar üretti); bu yüzden satıra `kaynak=llm` yazılır.
+    @classmethod
+    def _kurban_modulu(cls):
+        """`scripts/kurban_etiket.py` TEK kaynaktır — kurallar kopyalanmaz.
+
+        Geriye dönük 2.859 etiket ile üretim hattı aynı normalizasyonu
+        kullanmalı; ayrı kopya tutmak aynı kurumu iki ayrı kurban olarak
+        saydırırdı.
+        """
+        if cls._KURBAN_MODUL is None:
+            import importlib.util
+            yol = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               'scripts', 'kurban_etiket.py')
+            spec = importlib.util.spec_from_file_location('kurban_etiket', yol)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            cls._KURBAN_MODUL = mod
+        return cls._KURBAN_MODUL
+
+    @classmethod
+    def _kurban_temizle(cls, ham):
+        """'-', jenerik kitle tanımı ve İngilizce ülke adı normalize edilir.
+
+        ÖLÇÜLDÜ (2026-09-24, hattın ilk günü): LLM adları İngilizce
+        döndürdü ("Ukraine", "UAE", "European Union") ve 7 kayıtta kurum
+        yerine kitle tanımı yazdı ("Developers", "Windows users",
+        "Online retailers"). İkisi de sayımı bozar; kural modülde tek
+        yerde durur.
         """
         if not isinstance(ham, str):
             return None
-        t = ham.strip().strip('.').strip()
-        if not t or t.lower() in ('-', 'yok', 'none', 'bilinmiyor', 'n/a'):
+        try:
+            t = cls._kurban_modulu().temizle(ham)
+        except Exception as e:
+            print(f"⚠️ Kurban normalizasyonu atlandı: {e}")
             return None
-        parca = [p.strip() for p in t.split(',') if p.strip()]
-        return ','.join(parca[:4]) or None
+        return ','.join(t.split(',')[:4]) if t else None
 
     # RETRO_RUBRIK.md v2 — dört önem ekseninin alabileceği ÇAPA değerleri.
     ONEM_CAPA = (0, 8, 17, 25)

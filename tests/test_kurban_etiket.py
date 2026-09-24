@@ -91,3 +91,56 @@ def test_meta_kurbani_tasir():
         [1], {1: {'tr_title': 'A'}},
         {1: {'kat': 'veri_ihlali', 'toplam': 50, 'kurban': 'Odido'}})
     assert m['A']['kurban'] == 'Odido'
+
+
+def test_ingilizce_ulke_adi_turkcelesir():
+    """ÖLÇÜLDÜ (2026-09-24, hattın ilk günü): LLM "Ukraine", "UAE",
+    "European Union" döndürdü; geriye dönük 1.036 etiketin tamamı Türkçe.
+    Eşlemesiz bırakmak aynı kurumu iki kurban olarak saydırırdı."""
+    assert kur.temizle('Ukraine') == 'Ukrayna'
+    assert kur.temizle('UAE') == 'BAE'
+    assert kur.temizle('European Union') == 'Avrupa Birliği'
+    assert kur.temizle('Saudi Arabia') == 'Suudi Arabistan'
+    # Özgün kurum adı DEĞİŞMEZ.
+    assert kur.temizle('Odido') == 'Odido'
+    assert kur.temizle('SUSE Linux') == 'SUSE Linux'
+
+
+def test_kitle_tanimi_kurban_sayilmaz():
+    for jenerik in ('Developers', 'Windows users', 'Online retailers',
+                    'US Federal Agencies', 'Government contractor',
+                    'Chilean retail and financial institutions',
+                    'Android users in Europe and Canada'):
+        assert kur.temizle(jenerik) is None, jenerik
+
+
+def test_sirket_adindaki_sistem_kelimesi_dusurulmez():
+    """'systems'/'servers' jenerik listeye alınamaz: gerçek şirket
+    adlarında geçiyor ve kuralı geçmişe uygulamak kaydı düşürüyordu."""
+    assert kur.temizle('Unlimited Technology Systems') == (
+        'Unlimited Technology Systems')
+
+
+def test_normalizasyon_gecmis_etiketleri_bozmaz():
+    d = kur.depo_yukle()
+    bozulan = [v['ad'] for v in d.values()
+               if v.get('ad') and kur.temizle(v['ad']) != v['ad']]
+    assert not bozulan, bozulan[:5]
+
+
+def test_hat_kurallari_kopyalamaz():
+    import main
+    assert main.HaberSistemi._kurban_modulu().__file__.endswith(
+        'scripts/kurban_etiket.py')
+    ham = {'kat': 'veri_ihlali', 'siber': 1, 'mukerrer': 0,
+           's': 20, 'e': 10, 'a': 8, 'k': 10}
+    S = main.HaberSistemi
+    assert S._normalize_record(S, {**ham, 'kurban': 'Ukraine'})['kurban'] == 'Ukrayna'
+    assert 'kurban' not in S._normalize_record(S, {**ham, 'kurban': 'Windows users'})
+
+
+def test_prompt_turkce_ad_ve_kitle_kuralini_soyluyor():
+    from src.config import get_scoring_prompt
+    p = get_scoring_prompt('=== HABER ID: 1 ===\nBaşlık: x\n')
+    assert 'ADI TÜRKÇE YAZ' in p
+    assert 'KİTLE TANIMI KURBAN DEĞİLDİR' in p

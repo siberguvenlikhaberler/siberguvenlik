@@ -82,12 +82,73 @@ def depo_yaz(d):
         json.dump(d, f, ensure_ascii=False, indent=1, sort_keys=True)
 
 
-def temizle(ad):
-    """Boş/`-`/`yok` → None. Fazla boşluk ve sondaki nokta atılır."""
-    ad = (ad or '').strip().strip('.').strip()
-    if not ad or ad.lower() in ('-', 'yok', 'none', 'bilinmiyor'):
+# İNGİLİZCE AD → TÜRKÇE. ÖLÇÜLDÜ (2026-09-24): hattın ilk gününde LLM
+# adları İngilizce döndürdü ("Ukraine", "UAE", "European Union") oysa
+# geriye dönük 1.036 etiketin tamamı Türkçedir. Eşlemesiz bırakmak aynı
+# kurumu iki ayrı kurban olarak saydırırdı.
+ESANLAM = {
+    'ukraine': 'Ukrayna', 'russia': 'Rusya', 'china': 'Çin', 'iran': 'İran',
+    'israel': 'İsrail', 'united states': 'ABD', 'usa': 'ABD', 'us': 'ABD',
+    'uae': 'BAE', 'united arab emirates': 'BAE',
+    'saudi arabia': 'Suudi Arabistan', 'european union': 'Avrupa Birliği',
+    'eu': 'Avrupa Birliği', 'united kingdom': 'Birleşik Krallık',
+    'uk': 'Birleşik Krallık', 'germany': 'Almanya', 'france': 'Fransa',
+    'netherlands': 'Hollanda', 'japan': 'Japonya', 'india': 'Hindistan',
+    'south korea': 'Güney Kore', 'north korea': 'Kuzey Kore',
+    'türkiye': 'Türkiye', 'turkey': 'Türkiye', 'poland': 'Polonya',
+    'spain': 'İspanya', 'italy': 'İtalya', 'canada': 'Kanada',
+    'australia': 'Avustralya', 'brazil': 'Brezilya', 'taiwan': 'Tayvan',
+}
+
+# JENERİK BAŞ AD — kurum adı DEĞİL, bir kitle tanımı. Kural gereği `-`
+# yazılmalıydı; hattın ilk gününde "Developers", "Windows users",
+# "Online retailers", "US Federal Agencies", "Government contractor" gibi
+# 7 kayıtta kurban alanına girmişti. Son sözcüğe bakılır: mevcut 1.036
+# etiketin HİÇBİRİ bu sözcüklerle bitmiyor (ölçüldü), yani kural geçmişi
+# bozmaz. "ABD Sosyal Güvenlik İdaresi" gibi adlar korunur.
+JENERIK_SON = {
+    'users', 'user', 'developers', 'developer', 'customers', 'customer',
+    'retailers', 'retailer', 'agencies', 'agency', 'institutions',
+    'institution', 'contractor', 'contractors', 'employees', 'employee',
+    'citizens', 'organizations', 'organisations', 'companies', 'firms',
+    'banks', 'hospitals', 'schools', 'victims', 'clients', 'residents',
+    'subscribers',
+    # 'systems'/'servers'/'accounts' BİLEREK YOK: gerçek şirket adlarında
+    # geçiyor ("Unlimited Technology Systems") ve kuralı geçmişe uygulamak
+    # o kaydı düşürüyordu.
+    'kullanıcıları', 'kullanıcılar', 'müşterileri', 'müşteriler',
+    'geliştiricileri', 'geliştiriciler', 'kurumları', 'şirketleri',
+    'vatandaşları', 'çalışanları', 'kuruluşları', 'işletmeleri',
+}
+
+
+def _tek_ad(ad):
+    """Tek bir kurban adını normalize eder; jenerik tanım → None."""
+    ad = ad.strip().strip('.').strip()
+    if not ad:
         return None
-    parca = [p.strip() for p in ad.split(',') if p.strip()]
+    if ad.lower() in ESANLAM:
+        return ESANLAM[ad.lower()]
+    # Jenerik baş ad sonda DEĞİL de ortada olabilir ("Android users in
+    # Europe and Canada" → kurban Android kullanıcılarıdır, adlandırılmış
+    # bir kurum yoktur). Bu yüzden HER sözcüğe bakılır; mevcut 1.036
+    # etiketin hiçbirinde bu sözcükler geçmiyor (ölçüldü).
+    if {w.lower().strip(',.') for w in ad.split()} & JENERIK_SON:
+        return None
+    return ad
+
+
+def temizle(ad):
+    """Boş/`-`/`yok`/jenerik → None. İngilizce ülke adı Türkçeleşir."""
+    ad = (ad or '').strip().strip('.').strip()
+    if not ad or ad.lower() in ('-', 'yok', 'none', 'bilinmiyor', 'n/a'):
+        return None
+    parca, gorulen = [], set()
+    for p in ad.split(','):
+        t = _tek_ad(p)
+        if t and t not in gorulen:
+            gorulen.add(t)
+            parca.append(t)
     return ','.join(parca) or None
 
 
@@ -191,6 +252,28 @@ def uygula(kuru=False):
     return 0
 
 
+def topla():
+    """Arşive ÜRETİM HATTI tarafından yazılmış `» kurban` satırlarını depoya
+    geri okur. Depoda ZATEN olan anahtara dokunulmaz — arşiv, deponun
+    üzerine yazamaz; tek seferlik geçişin kararları korunur.
+    """
+    d = depo_yukle()
+    once, eklenen = len(d), 0
+    for k in hedefler(arsivi_tara()):
+        if k['anahtar'] in d:
+            continue
+        ad = None
+        for m in k['meta']:
+            g = re.match(r'^»\s*kurban \| ad=([^|]+)', m)
+            if g:
+                ad = temizle(g.group(1))
+        d[k['anahtar']] = {'ad': ad}
+        eklenen += 1
+    depo_yaz(d)
+    print(f'{eklenen} kayıt depoya alındı | depo {once} → {len(d)}')
+    return 0
+
+
 def main():
     komut = sys.argv[1] if len(sys.argv) > 1 else 'durum'
     n = next((int(a) for a in sys.argv[2:] if a.isdigit()), None)
@@ -200,6 +283,8 @@ def main():
         return parti(n or 60)
     if komut == 'yaz':
         return yaz()
+    if komut == 'topla':
+        return topla()
     if komut == 'uygula':
         return uygula('--kuru' in sys.argv)
     print(__doc__)

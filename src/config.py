@@ -836,6 +836,11 @@ SON GÜNLERDE RAPORLANAN OLAYLAR:
    yamalayan satıcı ve failin kendisi kurban DEĞİLDİR. Tedarik zinciri
    olaylarında hem sağlayıcı hem etkilenen müşteri yazılabilir (virgülle).
    Adlandırılmış kurban yoksa "-" yaz — TAHMİN YÜRÜTME.
+   ADI TÜRKÇE YAZ: "Ukrayna" (Ukraine değil), "BAE", "Avrupa Birliği",
+   "ABD". Kurum adı özgün dilindeyse olduğu gibi bırak ("Odido", "Cisco").
+   KİTLE TANIMI KURBAN DEĞİLDİR: "Developers", "Windows kullanıcıları",
+   "çevrimiçi perakendeciler", "ABD federal kurumları" gibi ifadeler
+   adlandırılmış kurum değildir — bunlarda "-" yaz.
    Bu alan kurallarla çıkarılamadı: arşiv başlıkları Başlık Düzenindedir,
    büyük harf özel ad sinyali taşımaz (kurallı denemede kapsam %2, isabet
    düşük). Bu yüzden yargı olarak senden isteniyor.

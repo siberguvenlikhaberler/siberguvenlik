@@ -115,8 +115,23 @@ def test_csv_coklu_alanlari_noktali_virgulle_yazar():
     assert s['hedef_ulke'] == '' and s['istismar'] == ''
 
 
-def test_uretim_hatti_tabloyu_tazeler():
+def test_uretim_hatti_turetilmis_veriyi_dogru_sirada_tazeler():
+    """SIRA ŞART: olay kaydı kalıcı kimlikleri üretir, tablo onları
+    DEVRALIR. Yalnızca tablo tazelenirse yeni olaylar her koşuda yeni
+    kimlik alır — ölçüldü, 24 Eylül koşusunda tablo 4.429 olaya çıkarken
+    olaylar.json 4.399'da kalmıştı."""
     import main
     src = open('main.py', encoding='utf-8').read()
-    assert 'self._olay_tablosu_tazele()' in src
-    assert hasattr(main.HaberSistemi, '_olay_tablosu_tazele')
+    assert 'self._turetilmis_veriyi_tazele()' in src
+    for ad in ('_kurban_topla', '_olay_kaydi_tazele', '_olay_tablosu_tazele'):
+        assert hasattr(main.HaberSistemi, ad), ad
+    govde = src.split('def _turetilmis_veriyi_tazele')[1].split('def ')[0]
+    assert (govde.index('_olay_kaydi_tazele')
+            < govde.index('_olay_tablosu_tazele')), 'sıra bozuk'
+
+
+def test_olaylar_ve_tablo_ayni_kayit_sayisini_gorur():
+    import json
+    o = json.load(open('data/olaylar.json', encoding='utf-8'))
+    t = json.load(open('data/olay_tablosu.json', encoding='utf-8'))
+    assert o['kayit'] == t['kayit'] and o['olay'] == t['olay']
