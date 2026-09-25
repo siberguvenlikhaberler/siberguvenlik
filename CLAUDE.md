@@ -279,8 +279,11 @@ ayrıştırmayı gerektiriyordu.
 - `.csv` düz tablodur (çok değerli alanlar `;` ile) — elektronik tabloda
   açılabilir.
 - **Üretim hattı her arşiv yazımından sonra türetilmiş veriyi DOĞRU SIRADA
-  tazeler** (`_turetilmis_veriyi_tazele`): kurban etiketi `topla` → olay
-  kaydı (`olaylar.json` + `olay_kimlik.json`) → tablo. SIRA ŞART: olay
+  tazeler** (`_turetilmis_veriyi_tazele`): kurban `topla` → önem `topla` →
+  kapsam künyesi → olay kaydı (`olaylar.json` + `olay_kimlik.json`) → tablo.
+  Künye ve etiket depoları da buradadır; ölçüldü (25 Eylül) künye 23 Eylül'de
+  kalmış 5.043 kayıt gösteriyordu (arşivde 5.109) ve önem deposu 5.043'teydi
+  (arşivde 5.106) — bayat payda aylık normalizasyonu sessizce bozar. SIRA ŞART: olay
   kaydı kalıcı kimlikleri üretir, tablo onları DEVRALIR. Ölçüldü
   (24 Eylül): yalnızca tablo tazelenince tablo 4.429 olaya çıkarken
   `olaylar.json` 4.399'da kalmış, yeni 30 olay kalıcı kimlik alamamıştı.

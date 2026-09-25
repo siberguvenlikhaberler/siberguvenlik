@@ -135,3 +135,26 @@ def test_olaylar_ve_tablo_ayni_kayit_sayisini_gorur():
     o = json.load(open('data/olaylar.json', encoding='utf-8'))
     t = json.load(open('data/olay_tablosu.json', encoding='utf-8'))
     assert o['kayit'] == t['kayit'] and o['olay'] == t['olay']
+
+
+def test_hat_paydayi_ve_etiket_deposunu_da_tazeler():
+    """ÖLÇÜLDÜ (25 Eylül): `arsiv_kapsam.json` 23 Eylül'de kalmış, 5.043
+    kayıt gösteriyordu; arşivde 5.109 vardı. Bayat payda aylık
+    normalizasyonu sessizce yanlış yapar. Önem deposu da toplanmazsa her
+    yeni gün "etiketsiz" görünür (arşivde 5.106, depoda 5.043'tü)."""
+    import main
+    src = open('main.py', encoding='utf-8').read()
+    govde = src.split('def _turetilmis_veriyi_tazele')[1].split('\n    @')[0]
+    for ad in ('_kurban_topla', '_retro_topla', '_arsiv_kapsam_tazele',
+               '_olay_kaydi_tazele', '_olay_tablosu_tazele'):
+        assert ad in govde, ad
+        assert hasattr(main.HaberSistemi, ad), ad
+    assert (govde.index('_arsiv_kapsam_tazele')
+            < govde.index('_olay_kaydi_tazele')), 'payda olaydan sonra'
+
+
+def test_kapsam_kunyesi_arsivle_ayni_kayiti_gorur():
+    import json
+    k = json.load(open('data/arsiv_kapsam.json', encoding='utf-8'))
+    t = json.load(open('data/olay_tablosu.json', encoding='utf-8'))
+    assert k['kayit'] == t['kayit'], (k['kayit'], t['kayit'])

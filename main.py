@@ -5382,6 +5382,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         depo ile arşiv ayrışmasın.
         """
         for ad, islev in (('kurban etiketi', cls._kurban_topla),
+                          ('önem etiketi', cls._retro_topla),
+                          ('kapsam künyesi', cls._arsiv_kapsam_tazele),
                           ('olay kaydı', cls._olay_kaydi_tazele),
                           ('olay tablosu', cls._olay_tablosu_tazele)):
             try:
@@ -5393,6 +5395,53 @@ document.addEventListener('DOMContentLoaded', initDragFile);
     def _kurban_topla(cls):
         n = cls._kurban_modulu().topla()
         return n
+
+    @staticmethod
+    def _betik_kos(dosya, argv):
+        """`scripts/<dosya>` betiğini modül olarak yükleyip main()'ini koşar."""
+        import importlib.util
+        import sys as _sys
+        yol = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           'scripts', dosya)
+        ad = dosya[:-3]
+        spec = importlib.util.spec_from_file_location(ad, yol)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        eski_argv = _sys.argv
+        _sys.argv = [dosya] + list(argv)
+        try:
+            return mod.main()
+        finally:
+            _sys.argv = eski_argv
+
+    @classmethod
+    def _retro_topla(cls):
+        """Hattın yazdığı `» sonradan` satırlarını depoya geri okur.
+
+        Depo `retro_etiket durum`un paydasıdır; toplanmazsa her yeni gün
+        "etiketsiz" görünür ve eksik ETİKET ile eksik TOPLAMA birbirine
+        karışır. Ölçüldü (25 Eylül): arşivde 5.106 etiket varken depo
+        5.043'te kalmıştı.
+        """
+        # retro_etiket.py'nin main() işlevi YOKTUR (komutlar __main__
+        # bloğunda dallanır); doğrudan `topla()` çağrılır.
+        import importlib.util
+        yol = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           'scripts', 'retro_etiket.py')
+        spec = importlib.util.spec_from_file_location('retro_etiket', yol)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod.topla()
+
+    @classmethod
+    def _arsiv_kapsam_tazele(cls):
+        """`data/arsiv_kapsam.json` — SAYIMIN PAYDASI.
+
+        Ölçüldü (25 Eylül): künye 23 Eylül'de kalmış, 5.043 kayıt
+        gösteriyordu; arşivde 5.109 vardı. Bayat payda, aylık normalizasyonu
+        sessizce yanlış yapar.
+        """
+        return cls._betik_kos('arsiv_kapsam.py', ['--yaz'])
 
     @staticmethod
     def _olay_kaydi_tazele():
