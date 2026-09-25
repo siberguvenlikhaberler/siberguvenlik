@@ -59,7 +59,9 @@ SEKTOR = {
     'kamu': ('bakanlı', 'hükümet', 'belediye', 'kamu kurum', 'kamu hizmet',
              'devlet kurum', 'federal kurum', 'eyalet yönetim', 'valilik',
              'kamu ağ', 'resmi kurum', 'seçim', 'mahkeme', 'savcılık',
-             'vergi dair', 'nüfus kay'),
+             'vergi dair', 'nüfus kay',
+             # Sözcük BAŞI kuralı bileşikleri düşürür; ikisi de kamudur.
+             'başsavcılık', 'başbakanlık'),
     'savunma': ('savunma sanayi', 'savunma bakan', 'savunma sektör', 'ordu',
                 'askeri', 'donanma', 'nato', 'pentagon', 'silah',
                 'savunma yüklenici', 'savunma tedarikçi', 'istihbarat servis'),
@@ -83,7 +85,9 @@ SEKTOR = {
     'teknoloji': ('yazılım şirket', 'yazılım firma', 'teknoloji şirket',
                   'teknoloji devi', 'bulut sağlayıc', 'bulut hizmet',
                   'geliştirici', 'yazılım geliştirme platform',
-                  'paket yöneticisi', 'açık kaynak proje'),
+                  'paket yöneticisi', 'açık kaynak proje',
+                  'veri merkezi', 'barındırma sağlayıc',
+                  'sosyal medya platform'),
     'perakende': ('perakende', 'süpermarket', 'e-ticaret', 'market zincir',
                   'mağaza zincir', 'restoran zincir', 'otel zincir',
                   'konaklama sektör'),
@@ -159,7 +163,7 @@ HEDEF_IPUCU = ("'deki", "'daki", "'teki", "'taki", "'de", "'da", "'te", "'ta",
 # biçimseldir; adlandırılmış gruplar elle onaylanmış bir listeden gelir.
 _KOD_RE = re.compile(
     r'\b(APT\d{1,3}|UNC\d{3,5}|TA\d{3,4}|UAT-\d{3,5}|Storm-\d{3,5}'
-    r'|CL-[A-Z]{3}-\d{3,5}|REF\d{3,5}|TAG-\d{2,4})\b')
+    r'|CL-[A-Z]{3}-\d{3,5}|REF\d{3,5}|TAG-\d{2,4}|Larva-\d{3,6})\b')
 ADLI_AKTOR = (
     'ShinyHunters', 'Scattered Spider', 'The Gentlemen', 'Lazarus',
     'DragonForce', 'TeamPCP', 'Qilin', 'Handala', 'Conti', 'Interlock',
@@ -172,16 +176,44 @@ ADLI_AKTOR = (
     'JADEPUFFER', 'Slim Spider', 'Breeze Comet', 'ExfilSquad', 'Aurora',
     'Black Axe', 'Ransom Cartel', 'Jewelbug', 'Red Heron', 'NightEagle',
     'Silver Fox', 'Sapphire Sleet', 'SapphireSleet', 'Hacking Cat',
+    # 2026-09-25 taraması: arşivde "grubu/çetesi/tehdit aktörü/olarak
+    # bilinen" bağlamında geçtiği DOĞRULANAN, sözlükte OLMAYAN adlar.
+    # Aynı taramada eşit sıklıkta çıkan ama aktör OLMAYAN adlar bilerek
+    # DIŞARIDA bırakıldı: Rokarolla/RESURGE/GRIDTIDE/FIRESTARTER (zararlı
+    # yazılım), DarkSword/Coruna/BlueMoon (istismar kiti), EvilTokens
+    # (PhaaS platformu), Nexcorium (Mirai varyantı), Asocks/Doppelganger
+    # (hizmet), Nightmare Eclipse (ARAŞTIRMACI), Gold Eagle (ABD federal
+    # merkezi), Mythos (yapay zekâ modeli), Play (Google Play).
+    'MuddyWater', 'Kimsuky', 'Lotus Blossom', 'Famous Chollima',
+    'CyberAv3ngers', 'Dust Specter', 'FishMonger', 'Earth Lusca',
+    'Space Pirates', 'Erudite Mogwai', 'Fox Tempest', 'Rapid Brigantine',
+    'Vice Society', 'Hunters International', 'World Leaks', 'WorldLeaks',
+    'Kamacite', 'Karakurt', 'Trigona', 'Yanluowang', 'Termite', 'Nitrogen',
+    'Icarus', 'FulcrumSec', 'The Com', 'REvil', 'Sodinokibi', 'INC',
+    'Pay2Key', 'Anubis', 'C77L', 'Payouts King', 'KongTuke',
 )
 # Aynı aktörün yazım varyantları tek ada indirgenir.
 ESANLAM = {'Cl0p': 'Clop', 'SapphireSleet': 'Sapphire Sleet',
-           'Gentlemen': 'The Gentlemen'}
+           'Gentlemen': 'The Gentlemen', 'WorldLeaks': 'World Leaks',
+           'Sodinokibi': 'REvil', 'Vice Society': 'Rapid Brigantine',
+           'Earth Lusca': 'FishMonger', 'Space Pirates': 'Webworm',
+           'Erudite Mogwai': 'Webworm'}
+
+
+# Anahtar SÖZCÜK BAŞINDA aranır (sonu serbesttir — Türkçe ek alır).
+# ÖLÇÜLDÜ (2026-09-25): düz alt dizi araması 6 sektöre sahte kayıt
+# yazıyordu — "senatosu"nda `nato` (57), "havalimanı"nda `liman` (32),
+# "kullanıyordu"nda `ordu` (28), "çabasının"da `basın` (20),
+# "çokuluslu"da `okul` (7), "web sunucusu altyapısı"nda `su altyapı`.
+# Aynı sınıf hata ülke alanında da düzeltilmişti.
+_SEK_RE = {k: tuple(re.compile(r'(?<![0-9a-zçğıöşü])' + re.escape(i))
+                    for i in ip) for k, ip in SEKTOR.items()}
 
 
 def sektorler(metin):
     kucuk = metin.lower()
-    return sorted(k for k, ipuclari in SEKTOR.items()
-                  if any(i in kucuk for i in ipuclari))
+    return sorted(k for k, kaliplar in _SEK_RE.items()
+                  if any(r.search(kucuk) for r in kaliplar))
 
 
 # İpucu penceresi ÖĞE SINIRINDA kesilir. 40 karakterlik ham kuyruk

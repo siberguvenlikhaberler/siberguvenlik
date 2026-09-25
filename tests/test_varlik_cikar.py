@@ -203,3 +203,36 @@ def test_kalipler_kelime_icinde_eslesmiyor():
     # başlık var (kaynak metin hatası), kural hatası değil.
     kotu = [x for x in kotu if 'NATORusya' not in x[2]]
     assert not kotu, kotu[:5]
+
+
+def test_sektor_anahtari_kelime_icinde_eslesmez():
+    """Ölçülmüş sahte eşleşmeler: senatosu/havalimanı/kullanıyordu/çabası."""
+    assert 'savunma' not in varlik.sektorler('ABD Senatosu konuyu görüştü')
+    assert 'savunma' not in varlik.sektorler('Zararlı yazılım veri sızdırıyordu')
+    assert 'ulastirma' not in varlik.sektorler('Müdahale süresini indirgemiştir')
+    assert 'medya' not in varlik.sektorler('Kolluk kuvveti çabasının parçası')
+    assert 'egitim' not in varlik.sektorler('Çokuluslu şirketin ağı')
+    assert 'su' not in varlik.sektorler('Web sunucusu altyapıları hedeflendi')
+
+
+def test_sektor_anahtari_turkce_ek_alabilir():
+    assert 'ulastirma' in varlik.sektorler('Havalimanının sistemleri çöktü')
+    assert 'savunma' in varlik.sektorler('NATO ağlarına sızıldı')
+    assert 'kamu' in varlik.sektorler('Başsavcılık soruşturma başlattı')
+
+
+def test_yeni_aktorler_taninir():
+    assert 'MuddyWater' in varlik.aktorler('İranlı casusluk grubu MuddyWater')
+    assert 'Larva-26002' in varlik.aktorler('Larva-26002 tehdit aktörü')
+    assert varlik.aktorler('WorldLeaks fidye yazılımı grubu') == ['World Leaks']
+    assert varlik.aktorler('Sodinokibi olarak da bilinen') == ['REvil']
+
+
+def test_aktor_olmayan_adlar_aktor_sayilmaz():
+    """Taramada aynı bağlamda çıkan ama grup OLMAYAN adlar."""
+    for metin in ('Rokarolla isimli yeni bir bankacılık truva atı',
+                  'Google Play Store üzerinden dağıtıldı',
+                  'Claude Mythos Preview modeli',
+                  'Nightmare Eclipse adlı araştırmacı açığı bildirdi',
+                  'Coruna adlı bir exploit kiti'):
+        assert varlik.aktorler(metin) == [], metin

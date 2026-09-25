@@ -194,7 +194,26 @@ Sektör, ülke ROLÜ ve aktör kırılımı. Satır biçimi (boş alan yazılmaz
   yutar. Hedef ülke kapsamı %43 → %46.
   Ölçüldü (tüm düzeltmeler sonrası, kayıt düzeyi): fail Çin 180, Rusya 140,
   İran 112, Kuzey Kore 69; hedefte ABD 1.119, Rusya 324, Çin 265.
-- Kapsam: sektör %58, hedef ülke %46, fail ülke %10, adlandırılmış aktör %16.
+  **SEKTÖR ANAHTARI SÖZCÜK BAŞINDA ARANIR** (2026-09-25): düz alt dizi
+  araması altı sektöre sahte kayıt yazıyordu — "senatosu"nda `nato` (57),
+  "havalimanı"nda `liman` (32), "kullanıyordu"nda `ordu` (28),
+  "çabasının"da `basın` (20), "çokuluslu"da `okul` (7), "web sunucusu
+  altyapısı"nda `su altyapı`. Ülke alanındaki `hesap`/`sap` hatasının aynısı.
+  Savunma 442 → 388, medya 141 → 122 kayda indi; bileşik oldukları için
+  düşen `başsavcılık`/`başbakanlık` açık anahtar olarak eklendi.
+  **AKTÖR SÖZLÜĞÜ 53 → 85** (2026-09-25): "grubu/çetesi/tehdit aktörü/
+  olarak bilinen" bağlamı taranıp doğrulandı; MuddyWater 32, Kimsuky,
+  Lotus Blossom, Famous Chollima, CyberAv3ngers, FishMonger, Fox Tempest,
+  Karakurt, Trigona, REvil, INC, The Com, World Leaks ve diğerleri
+  eksikti. `Larva-\d+` kod kalıbı eklendi; `WorldLeaks→World Leaks`,
+  `Sodinokibi→REvil`, `Vice Society→Rapid Brigantine`, `Earth Lusca→
+  FishMonger`, `Space Pirates/Erudite Mogwai→Webworm` eşanlamları bağlandı.
+  Aynı bağlamda çıkan ama AKTÖR OLMAYAN adlar bilerek dışarıda: Rokarolla/
+  RESURGE/GRIDTIDE/FIRESTARTER (zararlı yazılım), DarkSword/Coruna/BlueMoon
+  (istismar kiti), EvilTokens (PhaaS), Nexcorium (Mirai varyantı),
+  Nightmare Eclipse (ARAŞTIRMACI), Gold Eagle (ABD federal merkezi),
+  Mythos (yapay zekâ modeli), Play (Google Play).
+- Kapsam: sektör %58, hedef ülke %46, fail ülke %10, adlandırılmış aktör %19.
   **Bu oranlar raporda açıkça yazılmalıdır**; eşleşmeyen kayıt "o sektör/ülke
   yok" demek DEĞİLDİR.
 
