@@ -28,6 +28,14 @@ import re
 import sys
 
 ARSIV = 'data/haberler_arsiv.txt'
+
+# Arşiv yazımı KOPYALANMAZ — tek kapı: atomik yazım + kayıt sayısı
+# kapısı (bkz. scripts/arsiv_yaz.py).
+_yaz_spec = importlib.util.spec_from_file_location(
+    'arsiv_yaz', pathlib.Path(__file__).resolve().parent / 'arsiv_yaz.py')
+_arsiv_yaz = importlib.util.module_from_spec(_yaz_spec)
+_yaz_spec.loader.exec_module(_arsiv_yaz)
+
 _OLCEK_RE = re.compile(r'^»\s*olcek\b')
 
 _spec = importlib.util.spec_from_file_location(
@@ -248,7 +256,7 @@ def main():
     if '--kuru' in sys.argv:
         print('(kuru koşu)')
         return 0
-    open(ARSIV, 'w', encoding='utf-8').writelines(satirlar)
+    _arsiv_yaz.guvenli_yaz(ARSIV, satirlar)
     print(f'✅ {ARSIV} güncellendi')
     return 0
 

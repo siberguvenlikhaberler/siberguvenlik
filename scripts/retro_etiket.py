@@ -26,10 +26,20 @@ Kullanım:
 import datetime
 import json
 import os
+import importlib.util
+import pathlib
 import re
 import sys
 
 ARSIV = 'data/haberler_arsiv.txt'
+
+# Arşiv yazımı KOPYALANMAZ — tek kapı: atomik yazım + kayıt sayısı
+# kapısı (bkz. scripts/arsiv_yaz.py).
+_yaz_spec = importlib.util.spec_from_file_location(
+    'arsiv_yaz', pathlib.Path(__file__).resolve().parent / 'arsiv_yaz.py')
+_arsiv_yaz = importlib.util.module_from_spec(_yaz_spec)
+_yaz_spec.loader.exec_module(_arsiv_yaz)
+
 DEPO = 'data/retro_etiket.json'
 # Eski sabit aralık; artık hedef ölçütü tarih DEĞİL (bkz. hedefler()).
 _AY = {'JANUARY': 1, 'FEBRUARY': 2, 'MARCH': 3, 'APRIL': 4, 'MAY': 5,
@@ -316,8 +326,7 @@ def uygula(kuru=False):
     if kuru:
         print('(kuru koşu — yazmak için --kuru olmadan çalıştır)')
         return 0
-    with open(ARSIV, 'w', encoding='utf-8') as f:
-        f.writelines(satirlar)
+    _arsiv_yaz.guvenli_yaz(ARSIV, satirlar)
     print(f'✅ {ARSIV} güncellendi')
     return 0
 

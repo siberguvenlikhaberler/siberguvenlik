@@ -65,7 +65,21 @@ isteyecek: yaşanan siber vaka türleri ve sayıları, çeşitli kriterlere gör
 çalışmanın veri temelini ve sınırlarını sabitler.
 
 ### Kaynak dosyalar ve derinlikleri (2026-09-23 ölçümü)
-- `data/haberler_arsiv.txt` — **OMURGA. BUDANMAZ.** 250 gün, 5.043 kayıt;
+- `data/haberler_arsiv.txt` — **OMURGA. BUDANMAZ. KENDİNİ SİLMEZ.**
+  Hiçbir kod bu dosyadan gün düşürmez; süre sınırı olan dosyalar HTML
+  raporlar (30 gün), `rapor_gecmis`/`kritik3_gecmis` (30 gün),
+  `haberler_linkler.txt` (7 gün) ve `skorlama_log.jsonl`'dir (tarih değil
+  5.000 SATIR tavanı — günde ~78 satırla fiilen 64 gün; 2026-09-25'te en
+  eski kayıt 24 Temmuz'du). Büyüme günde ~41 KB: GitHub'ın 50 MiB uyarı
+  eşiğine ~2,6 yıl, 100 MiB sert sınırına ~5,8 yıl var (değerler
+  github/docs deposundan doğrulandı), depo `git gc` sonrası 15 MB —
+  ekleme tabanlı dosyada delta sıkıştırma ucuzdur. **BOYUT SORUN DEĞİL,
+  YAZIM SORUNDU:** beş betik dosyanın TAMAMINI yeniden yazıyor ve bunu
+  düz `open(...,'w')` ile yapıyordu; 2026-09-25'te hepsi
+  `scripts/arsiv_yaz.guvenli_yaz` üzerinden atomik yazıma alındı ve
+  "kayıt sayısı düşüyorsa yazma" kapısı eklendi (kural KOPYALANMAZ, tek
+  modül). Yazımı bölmek gerekirse doğru zaman yıl sonu analizinden
+  SONRADIR (`haberler_arsiv_2026.txt`). 250 gün, 5.043 kayıt;
   tamamı yapılı biçimde: `[N] başlık`, paragraf, kaynak satırı, üstveri.
   Kaynak+tarih 5.034 kayıtta ayrışıyor, 9'u bozuk (%0,2).
   **13-16 Şubat 2026 (91 kayıt) 2026-09-23'te yapılandırıldı** — o dört gün
