@@ -162,17 +162,30 @@ Sektör, ülke ROLÜ ve aktör kırılımı. Satır biçimi (boş alan yazılmaz
   görünmez. Ölçülmüştü: 5.109 kaydın 108'inde ülke her iki listedeydi ve
   hedef ipucu neredeyse hep yanlıştı ("Tayvan'ın Çin Menşeli Saldırılara
   Maruz Kalması"nda Çin yalnızca faildir). İpucusuz varsayılan (hedef)
-  ZAYIF kestirimdir, açık fail ipucu ona üstün gelir. Kabul edilen kayıp:
-  gerçekten iki rollü kayıtlar ("İran Destekli Hackerların İranlıları
-  Hedeflemesi") kurban rolünü yitirir. Kural OLAY düzeyinde de uygulanır
+  ZAYIF kestirimdir, açık fail ipucu ona üstün gelir. Kural OLAY düzeyinde
+  de uygulanır
   (`olay_tablosu`), yoksa aynı olayın iki kaydı ülkeyi farklı rolde görüp
   birleşimde çift rol üretiyordu — 22 olayda sürmüştü.
   **İPUCU PENCERESİ ÖĞE SINIRINDA KESİLİR** (2026-09-25): 40 karakterlik
   ham kuyruk komşu öğeye taşıyordu; "Japonya hükümeti, Çin menşeli
   saldırılara maruz kaldı" cümlesinde Japonya "menşeli" ipucunu yakalayıp
   FAİL sayılıyordu. Virgül/nokta ve `ve/ile/ancak/fakat` sınırdır.
-  Ölçüldü (düzeltme sonrası, kayıt düzeyi): fail Çin 184, Rusya 145,
-  İran 115, Kuzey Kore 70; hedefte ABD 1.096 ile başta.
+  **EN YAKIN İPUCU KAZANIR** (2026-09-25): önce fail ipuçlarına bakmak
+  yanlıştı; "Birleşik Krallık'taki yetkililerin Rus menşeli saldırıya maruz
+  kalması" kuyruğunda bitişik `'taki` (hedef) varken ilerideki `menşeli`
+  (fail) kazanıyor ve KURBAN ülke fail sayılıyordu. Konum, ipucu türünden
+  güvenilir bir sinyaldir.
+  **SERT ÜNSÜZ EKİ** (2026-09-25): "Birleşik Krallık'taki" gibi geçişlerde
+  bulunma eki sertleşir; yalnızca `'daki/'deki` aranınca 32 geçiş hedef
+  ipucunu kaçırıyordu. `'taki/'teki/'ta/'te` eklendi.
+  **ÜLKE ALANI DEVLETİ GÖSTERİR** (kullanıcı kararı, 2026-09-25):
+  yurtdışındaki muhalif, diaspora ya da sürgün gruplar o devleti TEMSİL
+  ETMEZ. "İran Devlet Destekli Hackerların İranlıları Hedeflemesi"nde İran
+  yalnızca FAİLDİR — hedef alınan muhalifler İran devleti değildir. Bu
+  yüzden fail/hedef ayrımında istisna YOKTUR; bir ülkenin iki rolde
+  görünmesi her zaman hatadır.
+  Ölçüldü (düzeltme sonrası, kayıt düzeyi): fail Çin 180, Rusya 140,
+  İran 112, Kuzey Kore 69; hedefte ABD 1.101 ile başta.
 - Kapsam: sektör %58, hedef ülke %43, fail ülke %11, adlandırılmış aktör %16.
   **Bu oranlar raporda açıkça yazılmalıdır**; eşleşmeyen kayıt "o sektör/ülke
   yok" demek DEĞİLDİR.
@@ -285,7 +298,8 @@ ayrıştırmayı gerektiriyordu.
   devralınır); iki dosya aynı olaya aynı `id` ile atıf yapar.
 - Olay düzeyi kapsam (4.461 olay, 2026-09-25): sektör %59, hedef ülke %44,
   ürün %22, kurban %20, CVE %18, fail ülke %11, ölçek %7. Olay düzeyinde
-  fail Çin 157, Rusya 129, İran 105, Kuzey Kore 63; hedefte ABD 968.
+  fail Çin 155, Rusya 124, İran 102, Kuzey Kore 62; hedefte ABD 973.
+  İran olay düzeyinde hedefte 122, failde 102.
 - Çok değerli alanlar olay boyunca BİRLEŞTİRİLİR, sıra korunur (ilk görülen
   önce) — sözlük sırası yanlılığı olmasın. Ölçekte tür başına en büyük
   TEKİL değer alınır; kümülatif değer `*_kumulatif` olarak ayrı yazılır,

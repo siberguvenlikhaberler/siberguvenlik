@@ -138,3 +138,31 @@ def test_ipucu_penceresi_komsu_ogeye_tasmaz():
         'kaldığını açıklamıştır')
     assert fail == ['Çin'] and hedef == ['Japonya']
     assert varlik._kuyruk('Japonya hükümeti, Çin menşeli', 7) == ' hükümeti'
+
+
+def test_en_yakin_ipucu_kazanir():
+    """Önce fail ipuçlarına bakmak yanlıştı: "Birleşik Krallık'taki
+    yetkililerin Rus menşeli saldırıya maruz kalması" kuyruğunda bitişik
+    `'taki` (hedef) varken ilerideki `menşeli` (fail) kazanıyor ve KURBAN
+    ülke fail sayılıyordu."""
+    fail, hedef = varlik.ulkeler(
+        "Birleşik Krallık'taki yetkililerin Rus menşeli siber saldırıya "
+        'maruz kalması')
+    assert fail == ['Rusya'] and hedef == ['Birleşik Krallık']
+
+
+def test_sert_unsuz_sonrasi_bulunma_eki_taninir():
+    """Sert ünsüzle biten ülke adında ek sertleşir: "Birleşik Krallık'taki".
+    Yalnızca `'daki/'deki` aranınca 32 geçiş hedef ipucunu kaçırıyordu."""
+    for ek in ("'taki", "'ta", "'teki", "'te"):
+        assert ek in varlik.HEDEF_IPUCU, ek
+
+
+def test_ulke_alani_DEVLETI_gosterir():
+    """Yurtdışındaki muhalif/diaspora o devleti TEMSİL ETMEZ. "İran Devlet
+    Destekli Hackerların İranlıları Hedeflemesi" kaydında İran yalnızca
+    FAİLDİR; hedef alınan muhalifler İran devleti değildir."""
+    fail, hedef = varlik.ulkeler(
+        'İran devlet destekli hackerların yurtdışındaki İranlı muhalifleri '
+        'hedef aldığı tespit edilmiştir')
+    assert 'İran' in fail and 'İran' not in hedef

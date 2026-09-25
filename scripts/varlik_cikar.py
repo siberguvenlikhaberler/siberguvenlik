@@ -119,9 +119,13 @@ AKTOR_IPUCU = ('bağlantılı', 'menşeli', 'merkezli siber', 'destekli',
                'devlet destekli', 'kaynaklı siber', 'hükümetiyle bağlantılı',
                'istihbarat', 'bağlantısı')
 # ÜLKEYİ HEDEF yapan ipuçları.
-HEDEF_IPUCU = ("'deki", "'daki", "'de", "'da", "'ye yönelik", "'ya yönelik",
-               "'yi hedef", "'yı hedef", "'nin", "'nın", 'hükümeti',
-               "'e yönelik", "'a yönelik", 'kurumları', 'şirketleri')
+# Sert ünsüzle biten ülke adlarında bulunma eki SERTLEŞİR: "Birleşik
+# Krallık'taki". Yalnızca `'daki/'deki` aranınca bu kayıtlar hedef ipucunu
+# kaçırıyordu; ölçüldü (2026-09-25) 32 geçiş, hepsi Birleşik Krallık.
+HEDEF_IPUCU = ("'deki", "'daki", "'teki", "'taki", "'de", "'da", "'te", "'ta",
+               "'ye yönelik", "'ya yönelik", "'yi hedef", "'yı hedef",
+               "'nin", "'nın", 'hükümeti', "'e yönelik", "'a yönelik",
+               'kurumları', 'şirketleri')
 
 # ── AKTÖR ─────────────────────────────────────────────────────────────────
 # Arşivden frekansla çıkarılan kalıplar. Kod adları (APT28, UNC2814…) zaten
@@ -171,9 +175,18 @@ def _rol(metin, kalip):
     aktor = hedef = False
     for m in re.finditer(re.escape(kalip), metin):
         kuyruk = _kuyruk(metin, m.end())
-        if any(i in kuyruk for i in AKTOR_IPUCU):
+        # EN YAKIN İPUCU KAZANIR. Önce fail ipuçlarına bakmak yanlıştı:
+        # "Birleşik Krallık'taki yetkililerin Rus menşeli saldırıya maruz
+        # kalması" kuyruğunda hemen bitişikteki `'taki` (hedef) varken
+        # ilerideki `menşeli` (fail) kazanıyor ve kurban ülke FAİL
+        # sayılıyordu. Konum, ipucu türünden daha güvenilir bir sinyaldir.
+        ay = min((kuyruk.find(i) for i in AKTOR_IPUCU if i in kuyruk),
+                 default=None)
+        hy = min((kuyruk.find(i) for i in HEDEF_IPUCU if i in kuyruk),
+                 default=None)
+        if ay is not None and (hy is None or ay < hy):
             aktor = True
-        elif any(i in kuyruk for i in HEDEF_IPUCU):
+        elif hy is not None:
             hedef = True
         else:
             hedef = hedef or None  # ipucu yok: kararsız
