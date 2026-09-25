@@ -184,9 +184,17 @@ Sektör, ülke ROLÜ ve aktör kırılımı. Satır biçimi (boş alan yazılmaz
   yalnızca FAİLDİR — hedef alınan muhalifler İran devleti değildir. Bu
   yüzden fail/hedef ayrımında istisna YOKTUR; bir ülkenin iki rolde
   görünmesi her zaman hatadır.
-  Ölçüldü (düzeltme sonrası, kayıt düzeyi): fail Çin 180, Rusya 140,
-  İran 112, Kuzey Kore 69; hedefte ABD 1.101 ile başta.
-- Kapsam: sektör %58, hedef ülke %43, fail ülke %11, adlandırılmış aktör %16.
+  **SÖZLÜK TARAMASI** (2026-09-25): 24 ülkelik sözlükte 30 ülke EKSİKTİ
+  (arşivde 15+ geçiş). Tayvan 78 geçişle en büyük boşluktu — Çin-Tayvan
+  ekseni ülke kırılımında tamamen görünmüyordu; Belarus 51, Meksika 61,
+  Kamboçya 39, BAE 54, Suudi Arabistan 22 da yoktu. Sözlük 53 ülkeye
+  çıkarıldı. Mevcut ülkelerde eksik sıfat biçimleri de eklendi (Amerikan
+  58 + Amerikalı 60, Ukraynalı 40, İsrailli 30, Hollandalı 29, Kanadalı
+  21). `Koreli` TEK BAŞINA EKLENMEZ: "Kuzey Koreli" geçişlerini (150)
+  yutar. Hedef ülke kapsamı %43 → %46.
+  Ölçüldü (tüm düzeltmeler sonrası, kayıt düzeyi): fail Çin 180, Rusya 140,
+  İran 112, Kuzey Kore 69; hedefte ABD 1.119, Rusya 324, Çin 265.
+- Kapsam: sektör %58, hedef ülke %46, fail ülke %10, adlandırılmış aktör %16.
   **Bu oranlar raporda açıkça yazılmalıdır**; eşleşmeyen kayıt "o sektör/ülke
   yok" demek DEĞİLDİR.
 

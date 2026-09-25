@@ -97,22 +97,49 @@ SEKTOR = {
 # Değer: eşleşme kalıpları (büyük/küçük harf DUYARLI aranır; "Rus " gibi
 # kısa biçimler yalnızca sonda boşlukla, "Ruslar"a takılmasın diye).
 ULKE = {
-    'ABD': ('ABD', 'Amerika Birleşik Devletleri', 'Birleşik Devletler'),
+    # 'Amerikan'/'Amerikalı' 2026-09-25'te eklendi (58+60 geçiş kaçıyordu).
+    'ABD': ('ABD', 'Amerika Birleşik Devletleri', 'Birleşik Devletler',
+            'Amerikan', 'Amerikalı'),
     'Çin': ('Çin', 'Çinli', 'Çince'),
     'Rusya': ('Rusya', 'Rus ', 'Rusça'),
     'İran': ('İran', 'İranlı'),
     'Kuzey Kore': ('Kuzey Kore', 'Kuzey Koreli'),
-    'Ukrayna': ('Ukrayna',), 'İsrail': ('İsrail',),
+    'Ukrayna': ('Ukrayna', 'Ukraynalı'), 'İsrail': ('İsrail', 'İsrailli'),
     'Almanya': ('Almanya', 'Alman '), 'Fransa': ('Fransa', 'Fransız'),
     'Birleşik Krallık': ('Birleşik Krallık', 'İngiltere', 'İngiliz'),
-    'Hollanda': ('Hollanda',), 'İspanya': ('İspanya', 'İspanyol'),
+    'Hollanda': ('Hollanda', 'Hollandalı'),
+    'İspanya': ('İspanya', 'İspanyol'),
     'İtalya': ('İtalya', 'İtalyan'), 'Polonya': ('Polonya', 'Polonyalı'),
-    'Japonya': ('Japonya', 'Japon '), 'Güney Kore': ('Güney Kore',),
+    'Japonya': ('Japonya', 'Japon '),
+    # 'Koreli' TEK BAŞINA EKLENMEZ: "Kuzey Koreli" geçişlerini (150) yutar.
+    'Güney Kore': ('Güney Kore', 'Güney Koreli'),
     'Hindistan': ('Hindistan', 'Hintli'), 'Pakistan': ('Pakistan',),
-    'Brezilya': ('Brezilya',), 'Kanada': ('Kanada',),
+    'Brezilya': ('Brezilya', 'Brezilyalı'),
+    'Kanada': ('Kanada', 'Kanadalı'),
     'Avustralya': ('Avustralya',), 'Türkiye': ('Türkiye',),
     'Kuzey Makedonya': ('Kuzey Makedonya',),
     'AB': ('Avrupa Birliği', 'Avrupa Komisyonu', 'Avrupa Parlamentosu'),
+    # 2026-09-25 taramasında eklendi: sözlükte YOKTU ama arşivde 15+ kez
+    # geçiyorlardı. Tayvan 78 geçişle en büyük boşluktu — Çin-Tayvan
+    # ekseni ülke kırılımında tamamen görünmezdi.
+    'Tayvan': ('Tayvan',), 'Meksika': ('Meksika', 'Meksikalı'),
+    'Belarus': ('Belarus', 'Beyaz Rusya', 'Belaruslu'),
+    'Kamboçya': ('Kamboçya', 'Kamboçyalı'), 'Romanya': ('Romanya', 'Rumen'),
+    'Vietnam': ('Vietnam',), 'Nijerya': ('Nijerya', 'Nijeryalı'),
+    'Tayland': ('Tayland',), 'Venezuela': ('Venezuela', 'Venezüella'),
+    'BAE': ('Birleşik Arap Emirlikleri', 'BAE'),
+    'Belçika': ('Belçika', 'Belçikalı'), 'Portekiz': ('Portekiz',),
+    'İsviçre': ('İsviçre', 'İsviçreli'), 'Singapur': ('Singapur',),
+    'Litvanya': ('Litvanya', 'Litvanyalı'),
+    'Suudi Arabistan': ('Suudi Arabistan', 'Suudi '),
+    'Endonezya': ('Endonezya',), 'İrlanda': ('İrlanda',),
+    'Malezya': ('Malezya',), 'İsveç': ('İsveç', 'İsveçli'),
+    'Filipinler': ('Filipinler', 'Filipin '),
+    'Afganistan': ('Afganistan', 'Afgan '),
+    'Yeni Zelanda': ('Yeni Zelanda',), 'Kenya': ('Kenya', 'Kenyalı'),
+    'Finlandiya': ('Finlandiya', 'Finlandiyalı'),
+    'Ürdün': ('Ürdün', 'Ürdünlü'), 'Irak': ('Irak', 'Iraklı'),
+    'Mısır': ('Mısır', 'Mısırlı'), 'Danimarka': ('Danimarka', 'Danimarkalı'),
 }
 # ÜLKEYİ FAİL yapan ipuçları (ülke adının HEMEN ARDINDAN aranır).
 AKTOR_IPUCU = ('bağlantılı', 'menşeli', 'merkezli siber', 'destekli',

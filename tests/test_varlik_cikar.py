@@ -166,3 +166,40 @@ def test_ulke_alani_DEVLETI_gosterir():
         'İran devlet destekli hackerların yurtdışındaki İranlı muhalifleri '
         'hedef aldığı tespit edilmiştir')
     assert 'İran' in fail and 'İran' not in hedef
+
+
+def test_sozlukte_sik_gecen_ulkeler_var():
+    """2026-09-25 taraması: 30 ülke sözlükte YOKTU ama arşivde 15+ kez
+    geçiyordu. Tayvan 78 geçişle en büyük boşluktu — Çin-Tayvan ekseni
+    ülke kırılımında tamamen görünmezdi."""
+    for ad in ('Tayvan', 'Belarus', 'BAE', 'Suudi Arabistan', 'Meksika',
+               'Vietnam', 'Kamboçya', 'İsviçre', 'Litvanya', 'Afganistan'):
+        assert ad in varlik.ULKE, ad
+
+
+def test_eksik_sifat_bicimleri_eklendi():
+    assert 'Amerikan' in varlik.ULKE['ABD']
+    assert 'Ukraynalı' in varlik.ULKE['Ukrayna']
+    assert 'İsrailli' in varlik.ULKE['İsrail']
+    # 'Koreli' TEK BAŞINA olmamalı: "Kuzey Koreli" geçişlerini yutar.
+    assert 'Koreli' not in varlik.ULKE['Güney Kore']
+    assert varlik.ulkeler('Kuzey Koreli hackerlar') == ([], ['Kuzey Kore'])
+
+
+def test_kalipler_kelime_icinde_eslesmiyor():
+    """Kısa kalıp gerçek sözcük içinde yakalanırsa ülke uydurulur."""
+    import re
+    kayitlar = varlik.arsivi_tara()
+    metin = ' '.join(k['baslik'] + ' ' + ' '.join(k['para'])
+                     for k in kayitlar)
+    kotu = []
+    for ad, kaliplar in varlik.ULKE.items():
+        for kalip in kaliplar:
+            for m in re.finditer(re.escape(kalip), metin):
+                onceki = metin[m.start() - 1] if m.start() else ' '
+                if onceki.isalpha():
+                    kotu.append((ad, kalip, metin[m.start() - 25:m.end()]))
+    # Bilinen tek istisna: arşivde "NATORusya" diye bitişik yazılmış bir
+    # başlık var (kaynak metin hatası), kural hatası değil.
+    kotu = [x for x in kotu if 'NATORusya' not in x[2]]
+    assert not kotu, kotu[:5]
