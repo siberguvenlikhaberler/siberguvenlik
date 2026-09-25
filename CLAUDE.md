@@ -425,6 +425,20 @@ zaman koşulduğu önemli değil, analizden hemen önce bir kez yeter.
   (tüm alanlar bağlı); ham kayıt sayımı aynı olayın tekrarlarını olay sanar.
   `olaylar.json` aynı kimlikleri taşır ama yalnızca çekirdek alanları içerir.
 - Kaynak/tarih satırı ayrışmayan 9 kayıt ayrı ele alınmalı, sessizce
-  toplama katılmamalıdır. Erişim etiketi 5.014 kayıtta `AÇIK`, 20 kayıtta
-  `ÖZET`.
+  toplama katılmamalıdır. Erişim etiketi 5.080 kayıtta `AÇIK`, 20 kayıtta
+  `ÖZET` (2026-09-25 künyesi).
+- **DOĞRULANDI (2026-09-25)** — künye ile tablo arşivle birebir: künye
+  5.109 kayıt / 252 gün (251 kayıtlı + 21 Haziran boş), aylık toplam
+  5.109, eksik gün listesi ölçümle aynı; tablo 4.461 olay, kimlikler
+  `olaylar.json` ile bire bir, kayıt toplamı 5.109, çift rollü ülke 0,
+  tekrarlı kimlik 0, ilk gün > son gün 0. Rastgele 6 olayda birleştirilmiş
+  sektör/ülke/aktör alanları arşivden yeniden hesaplananla AYNI.
+- Tabloda `onem` değeri olayın kayıtlarının EN BÜYÜĞÜDÜR (ortalama
+  ALINMAZ). Kafes dışı görünen 136 olayın tamamı `urun_icerik`/
+  `siber_disi` tavanından (39) gelir — kayma değil, kural; hepsi
+  `anlati=false` taşır.
+- Tablodaki ölçek değerleri **para birimi ekli METİNDİR** ("825000000EUR").
+  USD ile EUR doğrudan karşılaştırılamaz; "en pahalı" sorgusu birim
+  ayrıştırmalı ve `*_kumulatif` alanlarını dışarıda bırakmalıdır.
+  8 olayda kaynak listesi boştur.
 - Sayılar arşivden ÖLÇÜLEREK verilir; bellekten ya da tahminle değil.
