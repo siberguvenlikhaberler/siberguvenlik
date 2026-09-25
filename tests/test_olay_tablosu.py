@@ -158,3 +158,14 @@ def test_kapsam_kunyesi_arsivle_ayni_kayiti_gorur():
     k = json.load(open('data/arsiv_kapsam.json', encoding='utf-8'))
     t = json.load(open('data/olay_tablosu.json', encoding='utf-8'))
     assert k['kayit'] == t['kayit'], (k['kayit'], t['kayit'])
+
+
+def test_olay_duzeyinde_de_fail_rolu_hedefi_ezer():
+    """Aynı olayın iki kaydı ülkeyi farklı rolde görebilir (biri "Rus
+    menşeli", öteki "Rusya'daki"); birleşim ikisini de yazınca ülke yine
+    çift rolde çıkıyordu — ölçüldü, kayıt düzeyi düzeltildikten SONRA
+    bile 22 olayda sürüyordu."""
+    import json
+    t = json.load(open('data/olay_tablosu.json', encoding='utf-8'))['olaylar']
+    cift = [o['id'] for o in t if set(o['aktor_ulke']) & set(o['hedef_ulke'])]
+    assert not cift, f'{len(cift)} olayda çift rol: {cift[:5]}'

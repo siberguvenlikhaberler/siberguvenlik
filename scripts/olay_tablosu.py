@@ -204,7 +204,13 @@ def tablo_kur(kayitlar):
             'ilk_gun': gunler[0], 'son_gun': gunler[-1],
             'gun_sayisi': len(gunler), 'kayit_sayisi': len(u),
             'sektor': _tekil(u, 'sektor'),
-            'hedef_ulke': _tekil(u, 'hedef'),
+            # FAİL ROLÜ HEDEFİ EZER — kayıt düzeyinde olduğu gibi OLAY
+            # düzeyinde de. Aynı olayın iki kaydı ülkeyi farklı rolde
+            # görebilir (biri "Rus menşeli", öteki "Rusya'daki"); birleşim
+            # ikisini de yazınca ülke yine çift rolde çıkıyordu — ölçüldü,
+            # kayıt düzeyi düzeltildikten SONRA bile 22 olayda sürüyordu.
+            'hedef_ulke': [x for x in _tekil(u, 'hedef')
+                           if x not in set(_tekil(u, 'aktor_ulke'))],
             'aktor_ulke': _tekil(u, 'aktor_ulke'),
             'aktor': _tekil(u, 'aktor'),
             'kurban': _tekil(u, 'kurban'),

@@ -158,8 +158,21 @@ Sektör, ülke ROLÜ ve aktör kırılımı. Satır biçimi (boş alan yazılmaz
   Rol Türkçe ipucu kalıplarıyla belirlenir (`bağlantılı/menşeli/destekli`
   → fail; `-deki/-e yönelik/hükümeti` → hedef); ipucu yoksa HEDEF sayılır,
   çünkü arşiv ağırlıklı olarak kurban perspektifinden yazılmıştır.
-  Ölçüldü: fail ülkeler Çin 196, Rusya 160, İran 127, Kuzey Kore 79;
-  hedefte ABD 1.081 ile başta.
+  **FAİL ROLÜ HEDEFİ EZER** (2026-09-25): bir ülke aynı kayıtta iki rolde
+  görünmez. Ölçülmüştü: 5.109 kaydın 108'inde ülke her iki listedeydi ve
+  hedef ipucu neredeyse hep yanlıştı ("Tayvan'ın Çin Menşeli Saldırılara
+  Maruz Kalması"nda Çin yalnızca faildir). İpucusuz varsayılan (hedef)
+  ZAYIF kestirimdir, açık fail ipucu ona üstün gelir. Kabul edilen kayıp:
+  gerçekten iki rollü kayıtlar ("İran Destekli Hackerların İranlıları
+  Hedeflemesi") kurban rolünü yitirir. Kural OLAY düzeyinde de uygulanır
+  (`olay_tablosu`), yoksa aynı olayın iki kaydı ülkeyi farklı rolde görüp
+  birleşimde çift rol üretiyordu — 22 olayda sürmüştü.
+  **İPUCU PENCERESİ ÖĞE SINIRINDA KESİLİR** (2026-09-25): 40 karakterlik
+  ham kuyruk komşu öğeye taşıyordu; "Japonya hükümeti, Çin menşeli
+  saldırılara maruz kaldı" cümlesinde Japonya "menşeli" ipucunu yakalayıp
+  FAİL sayılıyordu. Virgül/nokta ve `ve/ile/ancak/fakat` sınırdır.
+  Ölçüldü (düzeltme sonrası, kayıt düzeyi): fail Çin 184, Rusya 145,
+  İran 115, Kuzey Kore 70; hedefte ABD 1.096 ile başta.
 - Kapsam: sektör %58, hedef ülke %43, fail ülke %11, adlandırılmış aktör %16.
   **Bu oranlar raporda açıkça yazılmalıdır**; eşleşmeyen kayıt "o sektör/ülke
   yok" demek DEĞİLDİR.
@@ -270,8 +283,9 @@ ayrıştırmayı gerektiriyordu.
   `cve[]`, `urun[]`, `istismar`, `olcek{}`, `kaynaklar[]`, `kayitlar[]`.
 - **Kimlik `olaylar.json` ile AYNIDIR** (`olay_kimlik.json` üzerinden
   devralınır); iki dosya aynı olaya aynı `id` ile atıf yapar.
-- Olay düzeyi kapsam (4.399 olay): sektör %59, hedef ülke %44, ürün %22,
-  kurban %20, CVE %18, fail ülke %11, ölçek %7. 274 olay anlatı dışıdır.
+- Olay düzeyi kapsam (4.461 olay, 2026-09-25): sektör %59, hedef ülke %44,
+  ürün %22, kurban %20, CVE %18, fail ülke %11, ölçek %7. Olay düzeyinde
+  fail Çin 157, Rusya 129, İran 105, Kuzey Kore 63; hedefte ABD 968.
 - Çok değerli alanlar olay boyunca BİRLEŞTİRİLİR, sıra korunur (ilk görülen
   önce) — sözlük sırası yanlılığı olmasın. Ölçekte tür başına en büyük
   TEKİL değer alınır; kümülatif değer `*_kumulatif` olarak ayrı yazılır,

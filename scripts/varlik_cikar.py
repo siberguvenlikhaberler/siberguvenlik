@@ -153,11 +153,24 @@ def sektorler(metin):
                   if any(i in kucuk for i in ipuclari))
 
 
+# İpucu penceresi ÖĞE SINIRINDA kesilir. 40 karakterlik ham kuyruk
+# komşu öğeye taşıyordu: "Japonya hükümeti, Çin menşeli saldırılara maruz
+# kaldı" cümlesinde Japonya'nın kuyruğu "menşeli" ipucunu yakalayıp
+# Japonya'yı FAİL sayıyordu. Virgül/nokta ve " ve " bağlacı sınırdır.
+_SINIR_RE = re.compile(r'[,.;:!?]| ve | ile | ancak | fakat ')
+
+
+def _kuyruk(metin, son):
+    ham = metin[son:son + 40]
+    kesme = _SINIR_RE.search(ham)
+    return (ham[:kesme.start()] if kesme else ham).lower()
+
+
 def _rol(metin, kalip):
-    """Ülke adından sonraki ~40 karaktere bakıp rolü belirler."""
+    """Ülke adından sonraki öğe sınırına kadar bakıp rolü belirler."""
     aktor = hedef = False
     for m in re.finditer(re.escape(kalip), metin):
-        kuyruk = metin[m.end():m.end() + 40].lower()
+        kuyruk = _kuyruk(metin, m.end())
         if any(i in kuyruk for i in AKTOR_IPUCU):
             aktor = True
         elif any(i in kuyruk for i in HEDEF_IPUCU):
@@ -183,8 +196,20 @@ def ulkeler(metin):
         if not gecti:
             continue
         if a:
+            # FAİL ROLÜ HEDEFİ EZER — bir ülke aynı kayıtta iki rolde
+            # görünmez. ÖLÇÜLDÜ (2026-09-25): 5.109 kaydın 108'inde
+            # (%2) ülke her iki listeye de giriyordu ve örnekler
+            # bakıldığında hedef ipucu neredeyse hep yanlıştı:
+            # "Tayvan'ın Çin Menşeli Saldırılara Maruz Kalması" kaydında
+            # Çin yalnızca faildir, "Birleşik Krallık'taki Yetkililerin
+            # Rus Menşeli Saldırısı"nda Rusya yalnızca faildir. İpucusuz
+            # varsayılan (hedef) ZAYIF bir kestirimdir; açık fail ipucu
+            # ona üstün gelir.
+            # KABUL EDİLEN KAYIP: gerçekten iki rollü kayıtlar ("İran
+            # Destekli Hackerların İranlıları Hedeflemesi") kurban
+            # rolünü yitirir — 108 kaydın küçük bir azınlığı.
             fail.add(ad)
-        if h or not a:
+        else:
             # İpucu hiç yoksa ülke HEDEF sayılır: arşiv ağırlıklı olarak
             # kurban perspektifinden yazılmış ("X şirketi saldırıya uğradı").
             hedef.add(ad)

@@ -102,3 +102,39 @@ def test_hat_kurallari_kopyalamaz():
         'scripts/varlik_cikar.py')
     src = open('main.py', encoding='utf-8').read()
     assert '_varlik_satiri(title, content)' in src
+
+
+def test_fail_rolu_hedefi_ezer():
+    """Bir ülke aynı kayıtta iki rolde görünemez.
+
+    ÖLÇÜLDÜ (2026-09-25): 5.109 kaydın 108'inde ülke her iki listeye de
+    giriyordu; örneklerde hedef ipucu neredeyse hep yanlıştı ("Tayvan'ın
+    Çin Menşeli Saldırılara Maruz Kalması"nda Çin yalnızca faildir).
+    """
+    fail, hedef = varlik.ulkeler(
+        'Japonya hükümeti, Çin menşeli yoğun siber saldırılara maruz '
+        "kaldığını ve Çin'in bu saldırıları sürdürdüğünü açıklamıştır")
+    assert 'Çin' in fail and 'Çin' not in hedef
+    assert 'Japonya' in hedef and 'Japonya' not in fail
+
+
+def test_gercek_arsivde_hicbir_ulke_cift_rolde_degil():
+    kayitlar = varlik.arsivi_tara()
+    cift = []
+    for k in kayitlar:
+        metin = k['baslik'] + ' ' + ' '.join(k['para'])
+        f, h = varlik.ulkeler(metin)
+        if set(f) & set(h):
+            cift.append((k['gun'], sorted(set(f) & set(h))))
+    assert not cift, f'{len(cift)} kayıtta çift rol: {cift[:5]}'
+
+
+def test_ipucu_penceresi_komsu_ogeye_tasmaz():
+    """40 karakterlik ham kuyruk komşu öğeye taşıyordu: "Japonya
+    hükümeti, Çin menşeli saldırılara maruz kaldı" cümlesinde Japonya'nın
+    kuyruğu "menşeli" ipucunu yakalayıp Japonya'yı FAİL sayıyordu."""
+    fail, hedef = varlik.ulkeler(
+        'Japonya hükümeti, Çin menşeli yoğun siber saldırılara maruz '
+        'kaldığını açıklamıştır')
+    assert fail == ['Çin'] and hedef == ['Japonya']
+    assert varlik._kuyruk('Japonya hükümeti, Çin menşeli', 7) == ' hükümeti'
