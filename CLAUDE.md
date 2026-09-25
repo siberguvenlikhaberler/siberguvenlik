@@ -57,6 +57,32 @@ push edilmezse reset workflow'a yansımaz). Yedek: silmeden önce dosyaları
 scratchpad'e kopyala. Manuel tetik `workflow_dispatch` Kontrol 1'i zaten atlar
 ama Kontrol 2 (ham) + linkler her tetik türünde geçerlidir.
 
+## 📌 BEKLEYEN İŞ — YILLIK ARŞİV BÖLME (kullanıcı kararı, 2026-09-25)
+
+**ZAMANI: yıl sonu analizi BİTTİKTEN sonra. Önce yapılmaz.** Analiz tek
+dosya üzerinden yürüsün diye bilerek ertelendi.
+
+HATIRLATMA GÖREVİ CLAUDE'DADIR: Aralık sonu / Ocak başı bir oturumda,
+kullanıcı sormasa bile bu maddeyi hatırlat. Tetik: yıl sonu raporu teslim
+edildiğinde ya da tarih 2027'ye geçtiğinde.
+
+NE YAPILACAK: `data/haberler_arsiv.txt` yıllara bölünür
+(`data/haberler_arsiv_2026.txt` + yeni yıl için taze dosya). Gerekçe:
+dosya 2026 sonunda ~15 MB'a ulaşacak, tam çıkarım koşusu şimdiden 21
+saniye sürüyor ve her betik dosyanın TAMAMINI belleğe alıp yeniden
+yazıyor. GitHub sınırı sorun DEĞİL (100 MiB'e ~6 yıl var) — bölme
+performans ve hasar yüzeyi içindir.
+
+BÖLERKEN DİKKAT: arşivi okuyan HER yer tek dosya varsayıyor —
+`varlik/teknik/olcek/kurban/retro` betikleri (`ARSIV` sabiti),
+`arsiv_kapsam`, `olay_kaydi`, `olay_tablosu`, `arsiv_ara`,
+`gecmis_geri_doldur`, `main.py` (`ARCHIVE_FILE`, `save_summary_to_archive`,
+`_load_recent_events`) ve reset prosedürü. Doğru yol: tek bir
+`arsiv_dosyalari()` yardımcısı (yıl dosyalarını sıralı döndürür) ve
+yazımın YALNIZCA içinde bulunulan yıl dosyasına yapılması; tarayıcılar
+dosyaları birleştirip okur. Kayıt anahtarları (`<gün>|<sıra>`, `<gün>#2`)
+DEĞİŞMEMELİ — olay kimlikleri ve etiket depoları onlara bağlı.
+
 ## YIL SONU ANALİZ ÇALIŞMASI — VERİ SÖZLEŞMESİ (2026-09-22'de kayda geçti)
 
 Kullanıcı yıl sonunda **yalnızca bu sistemin arşiv kayıtlarına dayanan** analizler
