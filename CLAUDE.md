@@ -220,9 +220,23 @@ Sektör, ülke ROLÜ ve aktör kırılımı. Satır biçimi (boş alan yazılmaz
 ### Teknik alan — `» teknik` (`scripts/teknik_cikar.py`)
 CVE, etkilenen ürün ve aktif istismar. Satır biçimi (boş alan yazılmaz):
 `» teknik | cve=CVE-2026-1731,CVE-2026-2441 | urun=Cisco | istismar=aktif`
-- Kapsam (2026-09-23): CVE %18 (956 kayıt, **874 tekil açık**, 352 kayıt
-  birden çok CVE taşıyor), ürün %23, aktif istismar %12. Oranlar raporda
-  açıkça yazılmalıdır.
+- Kapsam (2026-09-25): CVE %18 (968 kayıt, **899 tekil açık**), ürün %27
+  (1.415), aktif istismar %11. Oranlar raporda açıkça yazılmalıdır.
+- **SON SINIR DA ARANIR** (2026-09-25): yalnızca baş sınır aranınca `sap`
+  "saptanmıştır" içinde 161, `opera` "operasyon" içinde 698 kez
+  eşleşiyordu — `hesap`/`sap` hatasının sondan tekrarı. Devam eden harf
+  KÜÇÜKSE eşleşme düşer; büyük harf, rakam ve alt çizgi devamı serbesttir
+  (AppleScript, CitrixBleed, AzureHound gerçek ürün sinyalidir). Sınır
+  BÜYÜK/küçük harfe duyarlı yazılmalıdır: `re.I` altında `[a-z]` büyük
+  harfi de yakalar ve CitrixBleed'i düşürür (`(?-i:...)`).
+- **SÖZLÜK 34 → 80 SATICI** (2026-09-25): teknik bağlamlı kayıtlarda 6+
+  kez geçtiği ölçülen satıcılar eksikti — AWS 72, Cloudflare 48,
+  Kaspersky 44, ESET, CrowdStrike, Akamai, Okta, Sophos, SolarWinds,
+  Telegram, Mozilla/Firefox, Check Point, WhatsApp, Signal, Nginx,
+  PostgreSQL, Redis, Siemens, Dell, TP-Link ve yapay zekâ kümesi
+  (Anthropic/Claude 70 kayıt, OpenAI 37, LiteLLM, Hugging Face, Ollama).
+  `intel` TEK BAŞINA ALINMAZ: geçişlerin çoğu tehdit istihbaratı firması
+  "Intel 471"dir, çip satıcısı değil.
 - **Ürün yalnızca teknik ipucuyla AYNI CÜMLEDE geçerse yazılır.** Satıcı
   çoğu kez RAPORLAYAN taraftır: "RedVDS'nin çökertilmesi — Microsoft ...
   açıklamıştır" kaydı `urun=Microsoft` alıyordu. Ülke rolündeki fail/hedef
@@ -238,7 +252,16 @@ CVE, etkilenen ürün ve aktif istismar. Satır biçimi (boş alan yazılmaz):
 ### Ölçek alanı — `» olcek` (`scripts/olcek_cikar.py`)
 Nicel etki. `onem` bir YARGIDIR, bu alan ÖLÇÜMDÜR; ikisi karıştırılmaz.
 `» olcek | etkilenen=478188 | zarar=1180000USD | ceza=42000000EUR | kumulatif=zarar`
-- Kapsam %6 (346 kayıt) — düşük ve öyle kalacak; raporda yazılmalıdır.
+- Kapsam %6 (400 kayıt) — düşük ve öyle kalacak; raporda yazılmalıdır.
+- **SÜRÜM NUMARASI SAYI DEĞİLDİR** (2026-09-25): "iOS 16 Kullanıcılarını
+  Etkilemiştir" kaydı `etkilenen=16` yazıyordu; ürün adının hemen
+  ardındaki rakam sürümdür (6 geçiş, hepsi saçma küçük değer).
+- **KÜMÜLATİF İPUCU GENİŞLETİLDİ** (2026-09-25): 5 milyar üzeri 18 zarar
+  değerinin 13'ü işaretsizdi ("Amerikalıların geçen yıl 21 milyar dolar
+  kaybetmesi", "Alman şirketlerine yıllık 240 milyar dolar"). İşaretli
+  kayıt 51 → 68. Çıplak `<yıl> yılında` ipucu ALINMAZ: "2018 yılında
+  uğradığı saldırıda 2,5 milyon müşteri" TEKİL olaydır, tarih kümülatif
+  kanıtı değildir — ilk denemede 17 kaydı yanlış işaretlemişti.
   Alan olmayan kayıt "etkisi yoktu" demek DEĞİLDİR.
 - **Tür ipucu ŞARTTIR.** Aynı kalıp üç ayrı anlam taşıyor: "34 kişinin
   tutuklandığı" kurban değil, "283 milyon dolarlık bütçe" zarar değildir.
@@ -288,6 +311,11 @@ Nicel etki. `onem` bir YARGIDIR, bu alan ÖLÇÜMDÜR; ikisi karıştırılmaz.
   adlarında geçiyor ("Unlimited Technology Systems").
 - `topla` komutu hattın arşive yazdığı etiketleri depoya geri okur; depoda
   olan anahtara DOKUNMAZ (arşiv, deponun üzerine yazamaz).
+- **DENETLENDİ (2026-09-25): alanda sistematik hata YOK.** 2.887 anahtarın
+  1.050'sinde ad var (534 tekil); `temizle()` yeniden koşturulduğunda
+  değişen kayıt 0, kitle tanımı kaçağı 0. Satıcı adı taşıyan etiketler
+  (Fortinet 19, Cisco 16, Microsoft 13) örneklendi — hepsi gerçekten
+  saldırıya uğrayan taraftı, raporlayan/yamalayan satıcı değil.
 
 ### Olay kaydı — `data/olaylar.json` (`scripts/olay_kaydi.py`)
 Arşiv **haber kaydı** tutar, rapor **olay** sayar. Aynı olay ardışık günlerde
@@ -323,8 +351,9 @@ ayrıştırmayı gerektiriyordu.
   `cve[]`, `urun[]`, `istismar`, `olcek{}`, `kaynaklar[]`, `kayitlar[]`.
 - **Kimlik `olaylar.json` ile AYNIDIR** (`olay_kimlik.json` üzerinden
   devralınır); iki dosya aynı olaya aynı `id` ile atıf yapar.
-- Olay düzeyi kapsam (4.461 olay, 2026-09-25): sektör %59, hedef ülke %44,
-  ürün %22, kurban %20, CVE %18, fail ülke %11, ölçek %7. Olay düzeyinde
+- Olay düzeyi kapsam (4.461 olay, 2026-09-25, sözlük taramaları sonrası):
+  sektör %59, hedef ülke %47, ürün %28, kurban %21, CVE %19, aktör %18,
+  fail ülke %11, ölçek %7. Olay düzeyinde
   fail Çin 155, Rusya 124, İran 102, Kuzey Kore 62; hedefte ABD 973.
   İran olay düzeyinde hedefte 122, failde 102.
 - Çok değerli alanlar olay boyunca BİRLEŞTİRİLİR, sıra korunur (ilk görülen
@@ -389,7 +418,8 @@ zaman koşulduğu önemli değil, analizden hemen önce bir kez yeter.
   üretilmiş koşular, 784 kayıt). Bu günlerde aynı olay birden çok kez
   sayılabilir; `cok_bloklu_gun` listesi kontrol edilmeden trend kurulmamalı.
 - Önem/kategori kırılımı **tüm yıl için tek ölçekte** yapılabilir: her
-  kayıtta `» sonradan | onem` vardır. Sistemin `puan` alanı yalnızca
+  kayıtta `» sonradan | onem` vardır. Denetlendi (2026-09-25): 5.109
+  kaydın tamamı etiketli, kafes dışı 0, medyan tüm aylarda 50-59. Sistemin `puan` alanı yalnızca
   23 Ağustos sonrasındadır ve AYRI ölçektir — sıralamaya sokulmaz.
 - Sayım **olay** bazında isteniyorsa `data/olay_tablosu.json` kullanılır
   (tüm alanlar bağlı); ham kayıt sayımı aynı olayın tekrarlarını olay sanar.

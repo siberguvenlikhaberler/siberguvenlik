@@ -100,3 +100,23 @@ def test_hat_sozlugu_kopyalamaz():
     import main
     assert main.HaberSistemi._teknik_modulu().__file__.endswith(
         'scripts/teknik_cikar.py')
+
+
+def test_urun_anahtari_kelime_icinde_eslesmez():
+    """`sap` "saptanmıştır"da, `opera` "operasyon"da eşleşiyordu."""
+    m = 'Güvenlik açığı saptanmıştır ve yama yayımlanmıştır.'
+    assert 'SAP' not in tek.urunler(m)
+    m2 = 'Kolluk operasyonu kapsamında zafiyet istismar edilmiştir.'
+    assert 'Opera' not in tek.urunler(m2)
+    assert 'SAP' in tek.urunler('SAP NetWeaver açığı istismar edilmiştir.')
+
+
+def test_buyuk_harf_devami_urun_sinyalidir():
+    """AppleScript/CitrixBleed gerçek ürün bağlamıdır, ek değildir."""
+    assert 'Citrix' in tek.urunler('CitrixBleed açığı istismar edilmiştir.')
+    assert 'Apple' in tek.urunler('AppleScript ile arka kapı kurulmuştur.')
+
+
+def test_yeni_saticilar_taninir():
+    assert 'Anthropic' in tek.urunler('Claude Code yazılımında RCE açığı.')
+    assert 'Cloudflare' in tek.urunler('Cloudflare panelinde zafiyet var.')

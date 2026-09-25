@@ -89,10 +89,30 @@ TUR = (
 # Ölçüldü: en büyük üç `zarar` değeri (442 milyar, 240 milyar, 31 milyar)
 # tekil olay değil, yıllık rapor toplamlarıdır. Silmek yerine İŞARETLENİR;
 # "yılın en pahalı saldırısı" sorgusu bunları dışarıda bırakabilsin diye.
+# 2026-09-25 taraması: 5 milyar üzeri 18 `zarar` değerinin 13'ü kümülatif
+# İŞARETSİZDİ ("Amerikalıların geçen yıl 21 milyar dolar kaybetmesi",
+# "Alman şirketlerine yıllık 240 milyar dolar zarar") — hepsi yıllık ya da
+# ülke geneli toplam. "Yılın en pahalı saldırısı" sorgusu bunları tekil
+# olay sanıyordu; yıl/ülke geneli kalıpları ipucu listesine eklendi.
 _KUMULATIF_RE = re.compile(
     r'küresel|dünya genelinde|toplam(?:da|ı|ında)?\b|yıllık rapor|'
     r'sektör genelinde|rapora göre|ortalama|yıl boyunca|'
-    r'\d{4} yılında (?:kurbanlara|şirketlere|toplam)', re.I)
+    r'\d{4} yılında (?:kurbanlara|şirketlere|toplam)|'
+    r'yıllık|her yıl|geçen yıl|yılda toplam|ülke genelinde|'
+    r'ulusal düzeyde|sektöre? maliyeti|'
+    # Çıplak "\d{4} yılında" ALINMAZ: "2018 yılında uğradığı saldırıda 2,5
+    # milyon müşteri" TEKİL bir olaydır, tarih kümülatif kanıtı değildir.
+    r'\d{4} yılında (?:yasadışı|siber|dolandırıcıl|kripto para akış)|'
+    r'(?:şirketler|kurumlar|kullanıcılar|vatandaşlar)[ıa]? (?:toplam|yıllık)',
+    re.I)
+
+# SÜRÜM NUMARASI SAYI DEĞİLDİR. "iOS 16 Kullanıcılarını Etkilemiştir"
+# kaydı `etkilenen=16` yazıyordu: ürün adının hemen ardındaki rakam bir
+# sürümdür, kurban sayısı değil. Ölçüldü (2026-09-25): 6 geçiş, hepsi
+# saçma küçük değer üretiyordu.
+_SURUM_RE = re.compile(
+    r'(?:windows|ios|ipados|macos|android|chrome|firefox|php|java|\.net|'
+    r'exchange|esxi|vsphere|ubuntu|debian|office|sql server|http)\s*$', re.I)
 
 # Kişi birimleri YALNIZCA şu türlere, para birimleri yalnızca şu türlere
 # yazılabilir. Karışırsa "42 milyon Euro etkilendi" gibi alan üretilirdi.
@@ -147,6 +167,8 @@ def cikar(kayit):
             continue
         kumulatif = bool(_KUMULATIF_RE.search(cumle))
         for m in _SAYI_RE.finditer(cumle):
+            if _SURUM_RE.search(cumle[:m.start()]):
+                continue
             birim = m.group(3).lower().strip()
             para = PARA.get(birim)
             uygun = PARA_TURU if para else KISI_TURU

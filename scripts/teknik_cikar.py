@@ -108,6 +108,37 @@ URUN = {
     'PyPI': ('pypi', 'python paket dep'),
     'Jenkins': ('jenkins',),
     'Apache': ('apache struts', 'apache tomcat', 'apache http', 'log4j'),
+    # 2026-09-25 taraması: teknik bağlamlı kayıtlarda 6+ kez geçtiği
+    # ÖLÇÜLEN ama sözlükte olmayan satıcılar. Yapay zekâ ürünleri bu
+    # arşivde ayrı bir küme oluşturuyor; satıcı adı olarak eklendiler.
+    'Anthropic': ('anthropic', 'claude code', 'claude '),
+    'OpenAI': ('openai', 'chatgpt'), 'Telegram': ('telegram',),
+    'Mozilla': ('mozilla', 'firefox'), 'Check Point': ('check point',),
+    # 'intel' TEK BAŞINA ALINMAZ: arşivdeki geçişlerin çoğu tehdit
+    # istihbaratı firması "Intel 471" ve "watchTowr Intel"dir, çip
+    # satıcısı değil.
+    'Intel': ('intel işlemci', 'intel cpu', 'intel sunucu', 'intel çip'),
+    'WhatsApp': ('whatsapp',), 'Signal': ('signal',),
+    'Nginx': ('nginx',), 'Trend Micro': ('trend micro', 'apex one'),
+    'LiteLLM': ('litellm',), 'Broadcom': ('broadcom',),
+    'NVIDIA': ('nvidia',), 'PostgreSQL': ('postgresql', 'postgres'),
+    'Redis': ('redis',), 'Magento': ('magento',), 'Siemens': ('siemens',),
+    'Dell': ('dell',), 'TP-Link': ('tp-link',),
+    'SolarWinds': ('solarwinds',), 'Joomla': ('joomla',),
+    'Zoom': ('zoom',),
+    'Qualcomm': ('qualcomm',), 'AWS': ('aws', 'amazon web'),
+    'Cloudflare': ('cloudflare',), 'Kaspersky': ('kaspersky',),
+    'ESET': ('eset',), 'CrowdStrike': ('crowdstrike',),
+    'Akamai': ('akamai',), 'Okta': ('okta',),
+    'SentinelOne': ('sentinelone',), 'Sophos': ('sophos',),
+    'Hugging Face': ('hugging face', 'huggingface'),
+    'Roundcube': ('roundcube',), 'Huawei': ('huawei',),
+    'Elastic': ('elasticsearch', 'elastic stack'),
+    'Notepad++': ('notepad++',), 'JetBrains': ('jetbrains', 'teamcity'),
+    'Snowflake': ('snowflake',), 'WinRAR': ('winrar',),
+    'D-Link': ('d-link',), 'Netgear': ('netgear',),
+    'MikroTik': ('mikrotik',), 'Ubiquiti': ('ubiquiti', 'unifi'),
+    'Ollama': ('ollama',), 'Opera': ('opera tarayıc', 'opera browser'),
 }
 
 
@@ -131,10 +162,19 @@ def cveler(metin):
 # yanlış eşleşti: `sap` anahtarı "hesap" içinde geçtiği için SAP 240 kayıtta
 # çıkmıştı. Sondaki sınır ARANMAZ — Türkçe ekler bitişik yazılır
 # ("Windows'ta", "Cisco'nun").
+# SON SINIR da aranır, ama KÜÇÜK harfle devam ediyorsa. ÖLÇÜLDÜ
+# (2026-09-25): yalnızca baş sınır aranınca `sap` "saptanmıştır" içinde
+# 161 kez, `opera` "operasyon" içinde 698 kez eşleşiyordu — `hesap`
+# hatasının sondan tekrarı. Büyük harf, rakam ve alt çizgi devamı SERBEST
+# bırakılır: AppleScript, CitrixBleed, AzureHound, github_token gerçek
+# ürün sinyalidir. Türkçe ek apostrofla yazıldığı için ("Windows'ta")
+# zaten sınır sayılır; ölçümde apostrofsuz ek alan tek bir ürün adı yok.
+# Son sınır BÜYÜK/küçük harfe DUYARLI olmalıdır — `re.I` altında
+# [a-z] büyük harfi de yakalar ve CitrixBleed'i düşürürdü; `(?-i:...)`.
 _URUN_RE = {ad: re.compile(
     r'(?<![\w\u00c0-\u024f])(?:' +
     '|'.join(re.escape(a) for a in sorted(anahtarlar, key=len, reverse=True))
-    + r')', re.I)
+    + r')(?-i:(?![a-zçğıöşü]))', re.I)
     for ad, anahtarlar in URUN.items()}
 
 

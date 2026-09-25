@@ -98,3 +98,24 @@ def test_uretim_hatti_olcek_satirini_yazar():
         '478.188 kişiyi etkileyen bir ihlal yaşanmıştır.')
     assert s == '» olcek | etkilenen=478188\n'
     assert main.HaberSistemi._olcek_satiri('Başlık', 'Hiçbir şey.') is None
+
+
+def test_surum_numarasi_etkilenen_sayilmaz():
+    """"iOS 16 Kullanıcılarını Etkilemiştir" → etkilenen=16 yazıyordu."""
+    k = {'baslik': 'Sıfır Tıklamalı Saldırı iOS 16 Kullanıcılarını Etkilemiştir',
+         'para': []}
+    assert 'etkilenen' not in olc.cikar(k)
+
+
+def test_yillik_toplam_kumulatif_isaretlenir():
+    k = {'baslik': 'Siber Suç Raporu',
+         'para': ['Amerikalılar geçen yıl siber suçlar nedeniyle '
+                  '21 milyar dolar zarara uğramıştır.']}
+    assert olc.cikar(k)['zarar'][2] is True
+
+
+def test_tekil_olayin_tarihi_kumulatif_yapmaz():
+    k = {'baslik': 'Veri İhlali Davası',
+         'para': ['Şirketin 2018 yılında uğradığı saldırıda 2,5 milyon '
+                  'müşterinin verisi sızdırılmıştır.']}
+    assert olc.cikar(k)['etkilenen'][2] is False
