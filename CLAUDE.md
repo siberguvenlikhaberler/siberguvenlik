@@ -112,6 +112,18 @@ KURALLAR:
   bırakma yalnızca hiç temiz aday yoksa devreye girer.
 - Regresyon: `tests/test_dedup.py` içinde FBI↔Florida (ayrı olay),
   LockBit↔aynı kurban (aynı olay) ve yapısal kod ayrımı sabitlendi.
+- **ZAFİYET HABERİ KRİTİK 3'E HİÇ GİREMEZ** (kullanıcı kararı,
+  2026-09-28). `zafiyet_aktif_apt` artık `KRITIK3_HARIC_KATEGORILER`
+  içindedir; "aktif istismar + APT atfı varsa girebilir" istisnası
+  kaldırıldı. O istisna 27 Eylül'de Oracle PeopleSoft açığının istismarını
+  (92) manşete çıkarmış, atıfsız ama YAMASIZ ve vahşi doğada istismar
+  edilen iki Citrix NetScaler sıfır-günü (88, `zafiyet_rutin`) gövdede
+  kalmıştı. Kural üç yerde birden geçerli: kategori kapısı, yayın
+  yönetmeni ve MEKANİK yedek doldurma (eskiden yalnızca yönetmene
+  uygulanıyordu). Seçim promptunda zafiyet haberleri istisnasız SEÇİLMEZ
+  listesindedir; Kategori 3 fallback'inden "aktif istismar altındaki
+  kritik açık" ve "protokol zafiyeti keşfi" maddeleri çıkarıldı.
+  Zafiyetin raporda kendi bölümü var: Güvenlik Açıkları.
 
 ## YIL SONU ANALİZ ÇALIŞMASI — VERİ SÖZLEŞMESİ (2026-09-22'de kayda geçti)
 
