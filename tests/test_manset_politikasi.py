@@ -309,17 +309,17 @@ def test_denetim_kapsami_etki_operasyonlarini_dislamaz():
         'ölçüt "saldırı var mı" olmaktan çıkarılmamış'
 
 
-def test_zafiyet_kisiti_yalnizca_yonetmene_ozeldir():
-    """"Zafiyet haberi manşete taşınmaz" kuralı EDİTORYAL bir kısıttır.
+def test_zafiyet_haberi_manset_olamaz():
+    """ZAFİYET HABERİ KRİTİK 3'E GİRMEZ — İSTİSNASIZ (kullanıcı kararı,
+    2026-09-28).
 
-    Amacı, havuz doluyken editoryal tercihle bir zafiyet haberini gerçek bir
-    olayın önüne geçirmeyi engellemek. Mekanik yedek doldurmada aynı kuralı
-    uygulamak başka şeydir: orada bir manşet zaten boşalmıştır ve soru "en iyi
-    kim doldurur"dur.
-
-    ÖLÇÜLDÜ (2026-08-28): son kapı bir manşeti boşalttı; 89 puanlı, aktif
-    istismar edilen PaperCut sıfır-gün haberi bu kural yüzünden yedek
-    havuzundan çıkarıldı ve manşete 75 puanlık bir CISA KILAVUZU girdi.
+    Eski kural `zafiyet_aktif_apt`ı serbest bırakıyordu ("aktif istismar +
+    APT atfı varsa manşet olabilir"). ÖLÇÜLEN SONUÇ (2026-09-27): Oracle
+    PeopleSoft açığının istismarı (92) KRİTİK 3'e girdi — üstelik LLM
+    mükerrer hakemi onu mükerrer saymışken — ve atıfsız ama YAMASIZ, vahşi
+    doğada istismar edilen iki Citrix NetScaler sıfır-günü (88) gövdede
+    kaldı. Kısıt artık hem editoryal hem MEKANİK doldurmada geçerlidir;
+    kategori `KRITIK3_HARIC_KATEGORILER` içindedir.
     """
     import main
     s = main.HaberSistemi.__new__(main.HaberSistemi)
@@ -329,10 +329,16 @@ def test_zafiyet_kisiti_yalnizca_yonetmene_ozeldir():
              2: {'kat': 'politika_hukuk', 'toplam': 75}}
     vf = lambda aid: {'tr_title': f'H{aid}', 'title': '',
                       'paragraph': '', 'full_text': ''}
-    assert 1 in s._manset_disi_ids([1, 2], kayit, vf, yonetmen=True), \
-        'yönetmen için zafiyet kısıtı kalkmış'
-    assert 1 not in s._manset_disi_ids([1, 2], kayit, vf, yonetmen=False), \
-        'mekanik doldurmada zafiyet kısıtı hâlâ uygulanıyor'
+    for yonetmen in (True, False):
+        assert 1 in s._manset_disi_ids([1, 2], kayit, vf, yonetmen=yonetmen), \
+            f'zafiyet haberi manşet havuzunda (yonetmen={yonetmen})'
+        assert 2 not in s._manset_disi_ids([1, 2], kayit, vf,
+                                           yonetmen=yonetmen)
+
+
+def test_zafiyet_kategorileri_kritik3_disidir():
+    from src.config import KRITIK3_HARIC_KATEGORILER, ZAFIYET_KATEGORILERI
+    assert ZAFIYET_KATEGORILERI <= KRITIK3_HARIC_KATEGORILER
 
 
 def test_son_kapi_mekanik_kisit_kullanir():

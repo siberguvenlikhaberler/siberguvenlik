@@ -7231,34 +7231,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if kat in KRITIK3_HARIC_KATEGORILER:
                 disi[aid] = 'kategori manşete uygun değil'
                 continue
-            # ZAFİYET HABERİ YÖNETMEN ELİYLE MANŞETE ÇIKMAZ.
+            # ZAFİYET HABERİ MANŞETE HİÇ ÇIKMAZ (kullanıcı kararı,
+            # 2026-09-28). Kategori kapısı artık `zafiyet_aktif_apt`ı da
+            # içerdiği için yukarıdaki KRITIK3_HARIC_KATEGORILER kontrolü
+            # ikisini de eler; buradaki kural yalnızca YEDEKTİR (kategori
+            # etiketi eksik/boş gelen kayıtlar için).
             #
-            # `zafiyet_aktif_apt` KRITIK3_HARIC listesinde DEĞİLDİR ve bu
-            # bilinçlidir: az-haber günlerinde deterministik seçici (kademe 3)
-            # bu haberleri manşete alabilmelidir, yoksa KRİTİK 3 dolmaz. Ama
-            # havuz doluyken editoryal tercihle bir zafiyet haberini gerçek bir
-            # olayın önüne geçirmek başka şeydir — zafiyetin raporda kendi
-            # bölümü var (Güvenlik Açıkları).
-            #
-            # ÖLÇÜLDÜ (2026-08-21): yönetmen Rus OAuth istismarını (94,
-            # nation_state_apt) manşetten indirip CISA'nın TrueConf yama
-            # talimatını (91, zafiyet_aktif_apt) manşete çıkardı. Haber zayıf
-            # değildi ama yeri Güvenlik Açıkları bölümüydü.
-            # BU KURAL YALNIZCA YÖNETMEN İÇİNDİR (yonetmen=True).
-            #
-            # Amaç, havuz doluyken editoryal TERCİHLE bir zafiyet haberini
-            # gerçek bir olayın önüne geçirmeyi engellemek. Mekanik yedek
-            # doldurmada aynı kuralı uygulamak başka bir şeydir: orada zaten
-            # bir manşet boşalmıştır ve soru "en iyi kim doldurur"dur.
-            #
-            # ÖLÇÜLDÜ (2026-08-28): son kapı çapraz-gün mükerreri yüzünden bir
-            # manşeti boşalttı; 89 puanlı, aktif istismar edilen PaperCut
-            # sıfır-gün haberi bu kural yüzünden yedek havuzundan çıkarıldı ve
-            # manşete 75 puanlık bir CISA KILAVUZU girdi. Denetim bunu
-            # "manşetten yüksek puanlı gövde haberi" diye bildirdi.
-            if yonetmen and kat in ZAFIYET_KATEGORILERI:
-                disi[aid] = ('zafiyet haberi — yeri Güvenlik Açıkları bölümü, '
-                             'manşete yönetmen eliyle taşınmaz')
+            # ESKİ İSTİSNA VE ÜRETTİĞİ HATA: kural yalnızca yönetmene
+            # uygulanıyor, mekanik yedek doldurmada zafiyet haberi manşete
+            # girebiliyordu. ÖLÇÜLDÜ (2026-09-27): Oracle PeopleSoft açığının
+            # istismarı (92, zafiyet_aktif_apt) KRİTİK 3'e girdi — LLM
+            # mükerrer hakemi onu mükerrer saymışken — ve YAMASIZ, vahşi
+            # doğada istismar edilen iki Citrix NetScaler sıfır-günü (88,
+            # zafiyet_rutin) gövdede kaldı. Zafiyetin raporda kendi bölümü
+            # var: Güvenlik Açıkları.
+            if kat in ZAFIYET_KATEGORILERI:
+                disi[aid] = ('zafiyet haberi — yeri Güvenlik Açıkları '
+                             'bölümü, manşet olmaz')
                 continue
             if defter is not None:
                 try:

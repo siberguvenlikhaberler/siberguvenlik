@@ -186,12 +186,23 @@ SCORING_CATEGORIES = (
 # Zafiyet sayılan kategoriler → HTML'de "Güvenlik Açıkları" bölümüne yönlendirilir.
 ZAFIYET_KATEGORILERI = {'zafiyet_rutin', 'zafiyet_aktif_apt'}
 
-# Kritik 3'e ASLA giremeyen kategoriler. Not: 'zafiyet_aktif_apt' listede YOK —
-# aktif istismar + APT atfı olan zafiyet, puanı yeterse Kritik 3'e girebilir.
-# 'phishing_sosyal_muhendislik' de listede YOK — varsayılan puanı düşük tutulduğu
+# Kritik 3'e ASLA giremeyen kategoriler.
+#
+# ZAFİYET HABERİ MANŞET OLMAZ (kullanıcı kararı, 2026-09-28). `zafiyet_aktif_apt`
+# eskiden listede DEĞİLDİ; "aktif istismar + APT atfı varsa girebilir" istisnası
+# 27 Eylül'de somut sonucunu verdi: Oracle PeopleSoft açığının istismarı (92)
+# KRİTİK 3'e girdi, üstelik LLM hakemi onu mükerrer saymışken. KRİTİK 3
+# STRATEJİK/JEOPOLİTİK/İSTİHBARİ haber içindir; zafiyet ne kadar kritik olursa
+# olsun gövdede "Güvenlik Açıkları" bölümüne aittir. Atıf etiketi olan sıradan
+# bir açığın manşete çıkıp atıfsız ama yamasız/aktif istismar edilen bir
+# sıfır-günün (27 Eylül, Citrix NetScaler, 88) gövdede kalması bu istisnanın
+# ürettiği çarpıklıktı.
+#
+# 'phishing_sosyal_muhendislik' listede YOK — varsayılan puanı düşük tutulduğu
 # için normalde zaten girmez, ama gerçekten stratejik/devlet-hedefli/ekosistem
 # çapında bir vaka varsa (bkz. skorlama promptundaki istisna) Kritik 3'e girebilmeli.
-KRITIK3_HARIC_KATEGORILER = {'zafiyet_rutin', 'urun_icerik', 'siber_disi'}
+KRITIK3_HARIC_KATEGORILER = {'zafiyet_rutin', 'zafiyet_aktif_apt',
+                             'urun_icerik', 'siber_disi'}
 
 # Deterministik eşitlik-bozucu: aynı toplam puanda kategori önceliği (yüksek=önce).
 #
@@ -469,13 +480,10 @@ KATEGORİ 3 — FALLBACK (sakin günler için, son seçenek)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Kategori 1 ve 2'den toplam 3 haber çıkmıyorsa kalan yerleri buradan tamamla.
 Günün haberleri arasından en yüksek pratik etkiye sahip olanları seç:
-   • Yaygın kullanılan tüketici yazılımını (tarayıcı, işletim sistemi, ofis paketi,
-     VPN, antivirüs) etkileyen aktif istismar altındaki kritik güvenlik açığı
    • Çok sayıda kurumu veya sektörü etkileyen büyük fidye yazılımı dalgası
    • Milyonlarca kullanıcıyı etkileyen ve şifre/finansal veri içeren büyük platform ihlali
      (Meta, Google, X, LinkedIn, büyük banka gibi küresel ölçekli platformlar)
    • Dünya genelinde haber değeri taşıyan büyük siber suç/dolandırıcılık operasyonu
-   • Önemli güvenlik araştırması: yeni saldırı tekniği, kritik protokol zafiyeti keşfi
 
 Kategori 3'ten seçim yaparken haberin okuyucuya pratik uyarı değeri taşıdığından emin ol.
 "Seçilmez" listesindeki haber bu kategoride de alınmaz.
@@ -494,9 +502,14 @@ Aşağıdaki haber türleri ne kadar büyük görünürse görünsün top 3'e AL
    — Adware, browser hijacker, crimeware, finansal dolandırıcılık kötü yazılımı
    — Bilgi çalan (infostealer) zararlı yazılımların rutin keşfi (kampanya yoksa)
 
-✗ Saf teknik/ürün haberleri
-   — CVE/yama/güvenlik açığı tespiti (aktif devlet/APT istismarı yoksa)
+✗ ZAFİYET HABERLERİ — İSTİSNASIZ
+   — CVE/yama/güvenlik açığı tespiti, sıfır-gün ifşası, PoC yayımı
+   — Aktif istismar VE devlet/APT atfı olsa BİLE top 3'e GİRMEZ; zafiyet
+     haberi gövdedeki "Güvenlik Açıkları" bölümüne aittir
    — Ürün lansmanı, beta sürüm, güvenlik aracı duyurusu
+   → Bir zafiyetin istismarı ancak SALDIRININ KENDİSİ anlatılıyorsa
+     (belirli bir kurumun ele geçirilmesi, devlet destekli kampanya)
+     değerlendirilir; o zaman haber zaten zafiyet haberi değildir.
 
 ✗ İçerik haberleri
    — Genel tavsiye makalesi, röportaj, konferans duyurusu, pazar araştırması
