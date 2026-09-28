@@ -856,3 +856,44 @@ def test_her_iki_secici_de_ayni_yardimciyi_kullanir():
     for ad in ('_derive_top3_by_score', '_select_top3'):
         kaynak = inspect.getsource(getattr(main.HaberSistemi, ad))
         assert '_hikaye_zinciri_filtrele' in kaynak, f"{ad} zincir filtresini çağırmıyor"
+
+
+def test_marka_aktor_tek_basina_ayni_olay_degildir():
+    """ÖLÇÜLEN VAKA (2026-09-27): ShinyHunters'ın FBI'ı hacklemesi (günün en
+    yüksek puanlı haberi, 92) Florida Motorlu Araçlar ihlaliyle 'aynı olay'
+    sayılıp rapordan silindi. Tek ortak sinyal aktör markasıydı."""
+    fbi = {'tr_title': 'ShinyHunters Grubunun FBI Veri Tabanına Sızması',
+           'title': "ShinyHunters tells The Reg: We hacked the FBI",
+           'paragraph': "ShinyHunters grubu, FBI'a ait bir veri tabanını "
+                        "ihlal ettiğini iddia etmiştir.", 'full_text': ''}
+    florida = {'tr_title': 'Florida Motorlu Araçlar Veri Tabanının Siber '
+                           'Saldırıya Uğraması',
+               'title': 'Hackers publish drivers data after breaching Florida '
+                        'motor vehicle database',
+               'paragraph': 'ShinyHunters ile ilişkilendirilen saldırganlar '
+                            'Florida Motorlu Araçlar Dairesi veri tabanını '
+                            'ihlal etmiştir.', 'full_text': ''}
+    assert not dedup.same_event(fbi, florida, cross_day=True)
+    assert not dedup.same_event(fbi, florida)
+
+
+def test_marka_aktor_ayni_kurbanla_hala_ayni_olaydir():
+    """Marka adı DESTEKLEYİCİ sinyal olarak çalışmaya devam eder."""
+    a = {'tr_title': 'LockBit Fidye Yazılımının Acme Lojistik Ağını Şifrelemesi',
+         'title': 'LockBit encrypts Acme Logistics network',
+         'paragraph': 'LockBit, Acme Lojistik ağını şifreledi.', 'full_text': ''}
+    b = {'tr_title': 'LockBit Fidye Yazılımının Acme Lojistik Saldırısında '
+                     'Fidye Talebi',
+         'title': 'LockBit demands ransom from Acme Logistics after encryption',
+         'paragraph': 'LockBit, Acme Lojistik ağını şifreledikten sonra fidye '
+                      'talep etti.', 'full_text': ''}
+    assert dedup.same_event(a, b, cross_day=True)
+
+
+def test_yapisal_kume_kimligi_marka_degildir():
+    """UNC/UAT/Storm kodları tek bir izinsiz-giriş kümesini adlandırır;
+    eski davranış korunur (bkz. test_cross_day_uat_actor_id_dedup)."""
+    assert dedup._aktor_markasi('ShinyHunters')
+    assert dedup._aktor_markasi('shinyhun')      # gövdelenmiş biçim
+    assert not dedup._aktor_markasi('UAT-7810')
+    assert not dedup._aktor_markasi('Ruckus')

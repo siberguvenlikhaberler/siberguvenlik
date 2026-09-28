@@ -359,6 +359,26 @@ _NAMED_ACTORS = (
 )
 
 
+
+def _aktor_markasi(token):
+    """Bu belirteç bir TEHDİT AKTÖRÜ MARKASI mı (ShinyHunters, LockBit…)?
+
+    Marka adları CamelCase yazıldıkları için kod adı sezgisine, özel ad
+    oldukları için de varlık sezgisine takılıyorlar; ikisi de onları OLAY
+    KİMLİĞİ sanıyor. Oysa aktör olayın faili, kimliği değildir
+    (bkz. olay_iliski.olay_kimlikleri, aynı ayrımı orada yapar)."""
+    t = re.sub(r'[\s\-_]', '', (token or '')).lower()
+    if t in _MARKA_KOKLERI:
+        return True
+    # Varlık çıkarımı Türkçe ekler için GÖVDELER ('shinyhunters' → 'shinyhun');
+    # gövdelenmiş biçim de markadır. 6 karakter alt sınırı, kısa jenerik
+    # köklerin ('clop' → 'clo...') yanlışlıkla marka sayılmasını önler.
+    return len(t) >= 6 and any(k.startswith(t) for k in _MARKA_KOKLERI)
+
+
+_MARKA_KOKLERI = {re.sub(r'[\s\-_]', '', a) for a in _NAMED_ACTORS}
+
+
 def extract_actors(text):
     """Metindeki tüm yapısal + adlandırılmış tehdit-aktörü/zafiyet kimliklerini
     normalize edilmiş bir kümeye çıkarır (boşluk/tire silinir, küçük harf)."""
@@ -715,7 +735,11 @@ def same_event(view_a, view_b, explain=False, cross_day=False):
     # 1) Ortak ayırt edici kod adı (başlık + TR başlık)
     ca = extract_codenames(ha + ' ' + ea)
     cb = extract_codenames(hb + ' ' + eb)
-    shared_cn = ca & cb
+    # MARKA ADI KOD ADI DEĞİLDİR. 'ShinyHunters' CamelCase olduğu için kod
+    # adı sezgisine takılıyor ve bu kural KONU BAKMADAN aynı olay diyordu:
+    # 27 Eylül'de FBI ihlali, McKesson ve Clop haberleriyle bu yoldan
+    # eşleşti. Aktör eşleşmesi Kural 2'de, kendi şartlarıyla değerlendirilir.
+    shared_cn = {c for c in (ca & cb) if not _aktor_markasi(c)}
     if shared_cn:
         return _ret(True, 'codename:' + ','.join(sorted(shared_cn)))
 
@@ -730,12 +754,58 @@ def same_event(view_a, view_b, explain=False, cross_day=False):
                  event_keywords(pb, limit=_TOPIC_LEAD_TOKENS)),
     )
 
-    # 2) Ortak yapısal/adlandırılmış aktör veya CVE + konu örtüşmesi
+    # 2) Ortak yapısal kimlik (CVE) veya AKTÖR + konu örtüşmesi
+    #
+    # AKTÖR ADI TEK BAŞINA OLAY KİMLİĞİ DEĞİLDİR (kullanıcı kararı,
+    # 2026-09-28). Aynı fail farklı olaylar yapar: ShinyHunters'ın FBI'ı
+    # hacklemesi (27 Eylül, günün en yüksek puanlı haberi, 92) Florida
+    # Motorlu Araçlar Dairesi ihlaliyle (12/17 Eylül) "aynı olay" sayılıp
+    # RAPORDAN SİLİNDİ — ortak sinyal yalnızca 'shinyhunters' adıydı ve
+    # çapraz-gün konu eşiği 0,14 gibi bir tesadüfle aşılıyordu. `olay_iliski`
+    # aktörü olay kimliğinden tam bu yüzden ÇIKARIYOR; bu kural oradaki
+    # ayrımın `same_event` karşılığıdır.
+    #
+    # CVE AYRIDIR: bir CVE zafiyetin KENDİSİDİR, faili değil — ortak CVE
+    # eski davranışını korur.
     actors_a, actors_b = extract_actors(blob_a), extract_actors(blob_b)
     shared_actors = actors_a & actors_b
     actor_topic_min = _TOPIC_WITH_ACTOR_XDAY if cross_day else _TOPIC_WITH_ACTOR
-    if shared_actors and topic >= actor_topic_min:
-        return _ret(True, f'actor:{",".join(sorted(shared_actors))}+topic={topic:.2f}')
+    shared_cve = {a for a in shared_actors if a.startswith('cve')}
+    shared_grup = shared_actors - shared_cve
+    if shared_cve and topic >= actor_topic_min:
+        return _ret(True, f'cve:{",".join(sorted(shared_cve))}+topic={topic:.2f}')
+    # YAPISAL KÜME KİMLİĞİ ile MARKA ADI ayrılır. UNC5792 / UAT-7810 /
+    # Storm-2077 gibi kodlar satıcıların TEK bir izinsiz-giriş kümesine
+    # verdiği etiketlerdir ve arşivde tek kampanyayla birlikte geçerler;
+    # ShinyHunters / LockBit / Clop gibi MARKA adları ise birbiriyle
+    # ilgisiz onlarca kurbana saldırır. Ölçülen vaka (2026-09-27): FBI
+    # ihlali ile Florida Motorlu Araçlar ihlali yalnızca 'shinyhunters'
+    # ortaklığıyla aynı olay sayıldı; ortak kurban, ortak kod adı, ortak
+    # CVE yoktu, konu örtüşmesi 0,28'di.
+    _marka = {a.replace(' ', '') for a in _NAMED_ACTORS}
+    shared_yapisal = shared_grup - _marka
+    shared_marka = shared_grup & _marka
+    if shared_yapisal and topic >= actor_topic_min:
+        return _ret(True, f'actor:{",".join(sorted(shared_yapisal))}'
+                          f'+topic={topic:.2f}')
+    if shared_marka:
+        # Marka adı yalnızca DESTEKLEYİCİ sinyaldir: ya olayın kendi kimliği
+        # de ortak olmalı (kurban/ürün özel adı, kod adı, paket), ya da konu
+        # örtüşmesi aktörden bağımsız olarak tek başına yetmeli.
+        _ent = {e for e in shared_entities(view_a, view_b)
+                if not _aktor_markasi(e)}
+        _kod = {c for c in (extract_codenames(blob_a) & extract_codenames(blob_b))
+                if not _aktor_markasi(c)}
+        _pkg = {p for p in (extract_package_names(blob_a)
+                            & extract_package_names(blob_b))
+                if not _aktor_markasi(p)}
+        if (_ent or _kod or _pkg) and topic >= actor_topic_min:
+            _dest = sorted(_ent | _kod | _pkg)
+            return _ret(True, f'actor:{",".join(sorted(shared_marka))}'
+                              f'+kimlik:{",".join(_dest)}+topic={topic:.2f}')
+        if topic >= _TOPIC_ALONE:
+            return _ret(True, f'actor:{",".join(sorted(shared_marka))}'
+                              f'+topic={topic:.2f}')
 
     # 2c) GÖVDEDE ortak kod adı (başlıkta olmasa da) + konu örtüşmesi. Aynı
     #     zararlı/operasyon adı (LONGLEASH, DcRAT...) iki haberin metninde geçip
@@ -743,7 +813,9 @@ def same_event(view_a, view_b, explain=False, cross_day=False):
     #     kuralıyla aynı felsefe) yanlış-birleştirme riski düşük; başlıkta ortak
     #     kod adı zaten Kural 1'de topic'siz yakalanır — bu, başlıkları farklı
     #     sözcüklerle yazılmış aynı-zararlı haberleri kurtarır.
-    shared_cn_body = extract_codenames(blob_a) & extract_codenames(blob_b)
+    shared_cn_body = {c for c in (extract_codenames(blob_a)
+                                  & extract_codenames(blob_b))
+                      if not _aktor_markasi(c)}
     if shared_cn_body and topic >= actor_topic_min:
         return _ret(True, f'codename-body:{",".join(sorted(shared_cn_body))}+topic={topic:.2f}')
 
@@ -761,7 +833,8 @@ def same_event(view_a, view_b, explain=False, cross_day=False):
     #     kapatır. Kural 2b'den ÖNCE gelmek ZORUNDA — 2b, ortak yapısal kimlik
     #     yoksa erken False döndüğü için sonrasına konursa bu kural hiç çalışmaz.
     #     (bkz. _TOPIC_WITH_ENTITY yorumundaki ölçüm)
-    shared_ent = shared_entities(view_a, view_b)
+    shared_ent = {e for e in shared_entities(view_a, view_b)
+                  if not _aktor_markasi(e)}
     if shared_ent and topic >= _TOPIC_WITH_ENTITY:
         return _ret(True, f'entity:{",".join(sorted(shared_ent))}+topic={topic:.2f}')
 

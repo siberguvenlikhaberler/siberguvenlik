@@ -4191,7 +4191,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         return False
 
     def _kritik3_yedek_bul(self, aday_ids, sonuc, records, view_fn,
-                           recent_views, haric=(), aday_puanlari=None):
+                           recent_views, haric=(), aday_puanlari=None,
+                           bant=True):
         """Manşete uygun ilk yedek adayı bulur (yoksa None).
 
         Ölçütler: manşete uygun kategori, 'mükerrer' işaretsiz, mevcut
@@ -4267,7 +4268,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             # üzerinden yayılması" haberi manşet oldu; aynı raporda 96 puanlı
             # İran yaptırımı manşetteydi. Yedek bulucu havuzu puan sırasında
             # taramadığı ve bant uygulamadığı için ilk uygun adayı alıyordu.
-            if aday_puanlari:
+            # bant=False: çağıran, mükerrer bir manşeti tutmaktansa bant
+            # altındaki TEMİZ haberi çıkarmayı yeğlediğini söylüyor
+            # (son mükerrer kapısının ikinci denemesi).
+            if bant and aday_puanlari:
                 tavan = max(aday_puanlari.values(), default=0)
                 if aday_puanlari.get(cand, 0) < tavan - self.MANSET_PUAN_TOLERANSI:
                     continue
@@ -7983,8 +7987,25 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 haric=set(manset_disi) | set(dusen) | set(manset_cikar),
                 aday_puanlari=_bant_puan)
             if yedek is None:
+                # PUAN BANDINI GEVŞET — mükerrer manşeti tutmaktansa bantın
+                # altındaki TEMİZ haberi çıkarmak yeğdir. ÖLÇÜLDÜ
+                # (2026-09-27, pazar): bant tavanı 88 puanlı Citrix haberiydi
+                # (kategorisi manşete kapalı), yedek havuzundaki temiz
+                # adaylar bandın altında kaldı ve mükerrer bayraklı İKİ
+                # manşet (PeopleSoft, OpenAI ajanları) yerinde bırakıldı.
+                # KRİTİK 3 HİÇBİR ZAMAN 2'YE DÜŞMEZ (kullanıcı kararı):
+                # yerinde bırakma yalnızca hiç temiz aday yoksa kalır.
+                yedek = self._kritik3_yedek_bul(
+                    yedek_havuz, [o for o in yeni_top3 if o != aid], records,
+                    view_fn, gecmis,
+                    haric=set(manset_disi) | set(dusen) | set(manset_cikar),
+                    aday_puanlari=_bant_puan, bant=False)
+                if yedek is not None:
+                    print(f"   🔁 Son mükerrer kapısı: ID {aid} mükerrer → "
+                          f"bant gevşetildi, ID {yedek} ile DEĞİŞTİRİLDİ.")
+            if yedek is None:
                 print(f"   ⚠️  Son mükerrer kapısı: ID {aid} manşette MÜKERRER "
-                      f"ama uygun yedek yok — YERİNDE BIRAKILDI "
+                      f"ama hiç temiz aday yok — YERİNDE BIRAKILDI "
                       f"(KRİTİK 3 eksilmez).")
                 dusen.pop(aid, None)
                 manset_cikar.pop(aid, None)

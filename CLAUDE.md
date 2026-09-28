@@ -83,6 +83,36 @@ yazımın YALNIZCA içinde bulunulan yıl dosyasına yapılması; tarayıcılar
 dosyaları birleştirip okur. Kayıt anahtarları (`<gün>|<sıra>`, `<gün>#2`)
 DEĞİŞMEMELİ — olay kimlikleri ve etiket depoları onlara bağlı.
 
+## AKTÖR ADI OLAY KİMLİĞİ DEĞİLDİR (kullanıcı kararı, 2026-09-28)
+
+27 Eylül (pazar) raporu: günün en yüksek puanlı haberi — ShinyHunters'ın
+FBI veri tabanını hacklemesi (92, nation_state_apt) — RAPORA HİÇ GİRMEDİ.
+Tek sebep, 12/17 Eylül'deki Florida Motorlu Araçlar ihlaliyle ortak olan
+`shinyhunters` adıydı: ortak kurban yok, ortak CVE yok, ortak kod adı yok,
+konu örtüşmesi 0,28. Aynı adın ürettiği zincir yüzünden olay defteri de
+"bu olay 30 günde 2 kez manşet oldu" dedi ve haber manşet havuzundan da
+düştü. Boşalan yerlere, sistemin KENDİ mükerrer bayrağını taşıyan iki
+haber (Oracle PeopleSoft zafiyeti ve OpenAI ajanları) "uygun yedek yok"
+denerek zorla manşette bırakıldı.
+
+KURALLAR:
+- `dedup.same_event` artık MARKA aktör adını (ShinyHunters, LockBit, Clop,
+  Lazarus…) tek başına aynı-olay kanıtı SAYMAZ. Marka ortaklığı yalnızca
+  destekleyicidir: ortak kurban/ürün özel adı, kod adı ya da paket adı da
+  gerekir; yoksa konu örtüşmesi tek başına yetecek kadar yüksek olmalıdır
+  (`_TOPIC_ALONE`). Marka adı ayrıca KOD ADI ve ÖZEL AD sinyallerinden de
+  düşürülür (`_aktor_markasi`) — CamelCase yazıldığı için ikisine de
+  takılıyor ve konuya bakmadan eşleşme üretiyordu.
+- YAPISAL küme kimlikleri AYRIDIR: UNC5792 / UAT-7810 / Storm-2077 / CVE
+  satıcının TEK bir izinsiz-giriş kümesine ya da zafiyete verdiği
+  etikettir, eski davranışını korur.
+- **KRİTİK 3 HİÇBİR ZAMAN 2'YE DÜŞMEZ.** Mükerrer çıkan bir manşet için
+  yedek aranırken puan bandı ikinci denemede GEVŞETİLİR; mükerrer bir
+  manşeti tutmaktansa bandın altındaki TEMİZ haber çıkarılır. Yerinde
+  bırakma yalnızca hiç temiz aday yoksa devreye girer.
+- Regresyon: `tests/test_dedup.py` içinde FBI↔Florida (ayrı olay),
+  LockBit↔aynı kurban (aynı olay) ve yapısal kod ayrımı sabitlendi.
+
 ## YIL SONU ANALİZ ÇALIŞMASI — VERİ SÖZLEŞMESİ (2026-09-22'de kayda geçti)
 
 Kullanıcı yıl sonunda **yalnızca bu sistemin arşiv kayıtlarına dayanan** analizler
