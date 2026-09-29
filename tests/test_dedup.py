@@ -700,7 +700,8 @@ def test_zincire_baglanan_aday_mansetten_iner():
                 ('2026-08-02', [SU_02]))
     m = dedup.matching_story_chain(SU_03, z)
     assert m is not None
-    assert 'rockwell' in m['shared']
+    # Kimlikler artık türüyle önekli ('ad:'/'cve:'/'kod:'/'pkg:').
+    assert 'ad:rockwell' in m['shared']
     # same_event'in DEĞİŞMEDİĞİNİ de çivile: bu iki haber aynı olay DEĞİL.
     assert dedup.same_event(SU_03, SU_02, cross_day=True) is False
 
@@ -897,3 +898,52 @@ def test_yapisal_kume_kimligi_marka_degildir():
     assert dedup._aktor_markasi('shinyhun')      # gövdelenmiş biçim
     assert not dedup._aktor_markasi('UAT-7810')
     assert not dedup._aktor_markasi('Ruckus')
+
+
+def test_zincir_derlemde_sik_gecen_koke_baglanmaz():
+    """ÖLÇÜLEN VAKA (2026-09-29): zincirler `governme`, `protecti`,
+    `personal`, `bitcoin`, `saldırın` gibi köklerle kuruluyordu ve 31 günde
+    rapor haberlerini 109 kez manşet havuzundan düşürüyordu."""
+    derlem = [_v(f'Haber {i}', f'Devlet kurumlarında personal veri {i}.',
+                 f'Government personal data story {i}.') for i in range(40)]
+    a = _v('Bir Devlet Kurumunda Veri Sızıntısı',
+           'Devlet kurumunda personal veri sızdırıldı.',
+           'Government agency leaked personal data.')
+    b = _v('Başka Bir Kurumda Sızıntı',
+           'Başka bir kurumda personal veri sızdırıldı.',
+           'Another agency leaked personal data.')
+    z = dedup.build_story_chains(
+        [('2026-09-01', [a]), ('2026-09-02', [b]), ('2026-09-03', [a])],
+        corpus=derlem)
+    assert z == [], 'derlemde sık geçen kök zincir kurmamalı'
+
+
+def test_zincir_kimligi_turkce_tarafta_da_gecmeli():
+    """İngilizce kaynak sayfasının menüsünden gelen kök kimlik sayılmaz."""
+    v = _v('Rhysida Fidye Yazılımının Berlin Yönetimini Hedeflemesi',
+           'Rhysida çetesi Berlin eyalet yönetimini hedef almıştır.',
+           'Careers Analytics Newsletter — Rhysida hit Berlin state offices.')
+    # Derlem: 'Newsletter/Analytics' her haberin menüsünde, 'Berlin' yalnız
+    # bu haberde — gerçek veride ölçülen durum budur.
+    derlem = [_v(f'Haber {i}', f'İlgisiz bir olay {i}.',
+                 f'Careers Analytics Newsletter — unrelated story {i}.')
+              for i in range(40)] + [v]
+    df, n = dedup.story_df(derlem)
+    kimlik = dedup.story_kimlik(v, df, n)
+    assert any(k.endswith('berlin') for k in kimlik)
+    assert not any('newslett' in k or 'analytic' in k for k in kimlik)
+
+
+def test_zincir_gecisli_birlesmiyor():
+    """A~B ve B~C bağları tek bloğa toplanmamalı (temsilci tabanlı kümeleme)."""
+    ortak = _v('Ortak Köprü Haberi',
+               'Acme Lojistik ve Beta Enerji birlikte anılmıştır.',
+               'Acme Logistics and Beta Energy mentioned together.')
+    a = _v('Acme Lojistik Saldırısı', 'Acme Lojistik ağı şifrelendi.',
+           'Acme Logistics network encrypted.')
+    c = _v('Beta Enerji Saldırısı', 'Beta Enerji şebekesi hedef alındı.',
+           'Beta Energy grid targeted.')
+    z = dedup.build_story_chains([('2026-09-01', [a]), ('2026-09-02', [ortak]),
+                                  ('2026-09-03', [c])])
+    assert all(not ({'ad:acme', 'ad:beta'} <= x['entities']) for x in z), \
+        'geçişli birleştirme geri gelmiş'

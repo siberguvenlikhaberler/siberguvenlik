@@ -20,6 +20,7 @@ Bu modül, LLM üretimi ZENGİN Türkçe içerik (tr_title + paragraf) + ham met
 
 Hiçbiri ham veriye/LLM'e güvenmez; saf string işidir, kolayca test edilir.
 """
+import collections
 import re
 from difflib import SequenceMatcher
 
@@ -1039,6 +1040,7 @@ STORY_CHAIN_LINK_SHARED = 2   # zincir KURARKEN iki manşeti bağlayan ortak ad
 STORY_CHAIN_MIN_SHARED = 1    # KURULMUŞ zincire adayı bağlayan ortak ad
 _STORY_ENTITY_MIN_LEN = 5     # kısa kökler ('this','more') ayırt edici değil
 _STORY_FULLTEXT_CHARS = 1500
+_STORY_DF_TAVAN = 0.005   # derlemin bu oranından fazlasında geçen kök jeneriktir
 
 # Hikâye zinciri özel adları PARAGRAF + TAM METİN üzerinden çıkarılır (same_event
 # yalnız paragrafa bakar). Gerekçe ölçüldü: 08-03 manşetinin Türkçe paragrafı
@@ -1118,50 +1120,105 @@ def story_entities(view):
             if t not in _STORY_STEM_DENYLIST and len(t) >= _STORY_ENTITY_MIN_LEN}
 
 
-def build_story_chains(k3_by_day, min_days=STORY_CHAIN_MIN_DAYS):
+# ── ZİNCİR KİMLİĞİ (2026-09-29 ölçümü sonrası) ────────────────────────────
+# `story_entities` tam metnin ilk 1500 karakterinden Başlık-Düzeni İngilizce
+# sözcükleri özel ad sanıyor: ölçüldü (31 gün, 90 manşet) en sık "özel ad"lar
+# governme, protecti, united, court, district, personal, nearly, attacker,
+# hackers, yazılımı, saldırıl. Bu köklerle kurulan zincirler 31 günün 27'sini
+# kapsıyordu ve rapor haberlerini 157 kez manşet havuzundan düşürüyordu
+# (29 Eylül: 21 haberin 10'u; gerekçeler 'bürosu', 'bölge', 'güvenli',
+# 'krallık', 'agent', 'oauth').
+#
+# İKİ SÜZGEÇ birlikte uygulanır:
+#   1. DERLEM FREKANSI — kök, son raporların %0,5'inden fazlasında geçiyorsa
+#      ayırt edici değildir. Elle denylist YENİ çöp sözcüğü asla bilmez;
+#      DF kendi kendine kalibre olur (olay_iliski.OlaySozlugu ile aynı ilke,
+#      ama eşik çok daha sıkı: orada %3, burada %0,5 — zincir kurmak manşet
+#      düşürdüğü için yanlış-pozitifin maliyeti yüksektir).
+#   2. TÜRKÇE TARAFTA DA GEÇME — kök, haberin Türkçe başlığında ya da
+#      paragrafında da görünmelidir. İngilizce kaynak sayfasının menüsünden
+#      gelen sözcükler böylece düşer; olayın gerçek öznesi Türkçe metinde
+#      zaten geçer.
+# Yapısal kimlikler (CVE, kod adı, paket, aktör kodu) bu süzgeçlere GİRMEZ —
+# onlar zaten tek-anlamlıdır.
+def story_df(views):
+    """Zincir kimliği için derlem frekansı: {kök: kaç haberde}, haber sayısı."""
+    df = collections.Counter()
+    n = 0
+    for v in views or ():
+        n += 1
+        for t in story_entities(v):
+            df[t] += 1
+    return df, n
+
+
+def story_kimlik(view, df=None, n=0):
+    """Zincir kimliği: yapısal kimlikler + derlemde NADİR ve Türkçe tarafta
+    da geçen özel adlar. `df` verilmezse eski davranışa düşer (süzgeçsiz)."""
+    if not isinstance(view, dict):
+        return set()
+    blob = ' '.join(_bundle(view))
+    kimlik = {('cve:' + a) if a.startswith('cve') else ('kod:' + a)
+              for a in extract_actors(blob)}
+    kimlik |= {'kod:' + c for c in extract_codenames(blob)}
+    kimlik |= {'pkg:' + p for p in extract_package_names(blob)}
+    adlar = story_entities(view)
+    if df and n:
+        tr = ((view.get('tr_title') or '') + ' ' +
+              (view.get('paragraph') or '')).lower()
+        # TABAN 2 HABER: küçük derlemde oran yanıltıcıdır — 41 haberlik bir
+        # derlemde TEK geçiş %2,4 eder ve gerçek özel ad (Berlin) elenirdi.
+        # Üretim derlemi 587 haber olduğu için taban orada bağlayıcı değildir
+        # (max(2, 2.9) = 2.9), yalnızca küçük derlemi korur.
+        tavan = max(2, n * _STORY_DF_TAVAN)
+        adlar = {t for t in adlar
+                 if df.get(t, 0) <= tavan and t[:6] in tr}
+    return kimlik | {'ad:' + a for a in adlar}
+
+
+def build_story_chains(k3_by_day, min_days=STORY_CHAIN_MIN_DAYS,
+                       corpus=None):
     """Son günlerin KRİTİK 3 manşetlerinden SÜREGELEN hikâyeleri çıkarır.
 
     k3_by_day: [(tarih, [görünüm, ...]), ...] — bugün HARİÇ, eskiden yeniye.
+    corpus: son günlerin RAPOR görünümleri; kimlik süzgecinin derlemi
+        (bkz. story_kimlik). Verilmezse süzgeç uygulanmaz.
     Dönüş: [{'days': [tarih...], 'entities': {kök...}, 'title': ilk manşet}]
     yalnızca en az `min_days` AYRI günde manşet olmuş zincirler."""
-    dugumler = [(gun, v, story_entities(v))
-                for gun, views in (k3_by_day or []) for v in views]
-    zincirler = []                      # [[(gun, view, entities), ...], ...]
-    for dugum in dugumler:
-        _, _, e = dugum
-        eslesen = [z for z in zincirler
-                   if any(len(e & e2) >= STORY_CHAIN_LINK_SHARED for _, _, e2 in z)]
-        if not eslesen:
-            zincirler.append([dugum])
-            continue
-        # Birden fazla zincire bağlanıyorsa onları BİRLEŞTİR: aynı hikâyenin
-        # farklı günlerdeki anlatımları ayrı kümelerde kalırsa zincir hiçbir
-        # zaman min_days'e ulaşmaz.
-        hedef = eslesen[0]
-        hedef.append(dugum)
-        for z in eslesen[1:]:
-            hedef.extend(z)
-            zincirler.remove(z)
-    out = []
-    for z in zincirler:
-        gunler = sorted({g for g, _, _ in z})
-        if len(gunler) >= min_days:
-            birlesik = set()
-            for _, _, e in z:
-                birlesik |= e
-            out.append({'days': gunler, 'entities': birlesik,
-                        'title': z[0][1].get('tr_title', '')})
-    return out
+    df, n = story_df(corpus) if corpus else ({}, 0)
+    # TEMSİLCİ TABANLI KÜMELEME — geçişli birleştirme YOK. Eski kod eşleşen
+    # zincirleri birleştiriyordu ve tek bir yanlış bağ bağımsız hikâyeleri tek
+    # bloğa topluyordu: ölçüldü (2026-09-29), bir zincir 31 günün 15'ini
+    # kapsıyordu. Aynı ders olay_kaydi.kumele'de de ölçülmüştü.
+    zincirler = []
+    for gun, views in (k3_by_day or []):
+        for v in views:
+            e = story_kimlik(v, df, n)
+            if not e:
+                continue
+            hedef = next((z for z in zincirler
+                          if len(e & z['temsilci']) >= STORY_CHAIN_LINK_SHARED),
+                         None)
+            if hedef is None:
+                zincirler.append({'temsilci': set(e), 'entities': set(e),
+                                  'days': {gun}, 'df': df, 'n': n,
+                                  'title': v.get('tr_title', '')})
+            else:
+                hedef['days'].add(gun)
+                hedef['entities'] |= e
+    return [{'days': sorted(z['days']), 'entities': z['entities'],
+             'df': z['df'], 'n': z['n'], 'title': z['title']}
+            for z in zincirler if len(z['days']) >= min_days]
 
 
 def matching_story_chain(view, chains):
     """Aday süregelen bir hikâyeye mi bağlanıyor? Bağlanıyorsa zinciri döner.
 
     Dönen sözlüğe 'shared' anahtarı eklenir (loglanabilsin diye)."""
-    e = story_entities(view)
-    if not e:
-        return None
     for z in (chains or []):
+        e = story_kimlik(view, z.get('df'), z.get('n'))
+        if not e:
+            return None
         ortak = e & z['entities']
         if len(ortak) >= STORY_CHAIN_MIN_SHARED:
             return dict(z, shared=sorted(ortak))

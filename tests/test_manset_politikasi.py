@@ -375,3 +375,64 @@ def test_tersinelik_esigi_kodda_uygulaniyor():
     kaynak = inspect.getsource(main.HaberSistemi._kalite_denetimi_yaz)
     assert 'MANSET_TERSINELIK_MIN' in kaynak, \
         'tersinelik alarmı eşiği kullanmıyor'
+
+
+def _cv(tr, para, tam=''):
+    return {'tr_title': tr, 'paragraph': para, 'title': '', 'full_text': tam}
+
+
+def _sistem(kayit, views):
+    import main
+    s = main.HaberSistemi.__new__(main.HaberSistemi)
+    s._olay_defteri = None
+    s._olay_sozlugu = None
+    s._manset_yasak = set()
+    s._manset_karar = []
+    s._dedup_view_fn = lambda *a, **k: (lambda aid: views[aid])
+    s._enforce_kritik3_paragraph_length = lambda *a, **k: None
+    s._manset_karar_kaydet = lambda *a, **k: s._manset_karar.append(a)
+    return s
+
+
+def test_ayni_hattin_iki_haberi_manset_olmaz():
+    """ÖLÇÜLEN VAKA (2026-09-29): FBI ihlali (93, stratejik_kurum_saldirisi)
+    ile Hollanda'daki ShinyHunters yakalaması (94, kolluk_operasyonu) aynı
+    gün manşetti. Kategori ağırlığı düşük olan iner — saf puan KÖK OLAYI
+    düşürürdü."""
+    views = {
+        1: _cv('FBI Personel Verilerinin Ele Geçirilmesi',
+               "ShinyHunters grubu FBI'a ait veri tabanını ihlal etmiştir."),
+        2: _cv("Hollanda'da ShinyHunters Bağlantılı Yakalama",
+               'Hollanda polisi ShinyHunters soruşturmasında bir şüpheliyi '
+               'yakalamıştır.'),
+        3: _cv('Renfe Demiryolu Ağına Siber Saldırı',
+               'İspanya ulusal demiryolu işletmesi Renfe saldırıya uğradı.'),
+        4: _cv('Çin Bağlantılı Grubun NeedyMantis Kampanyası',
+               'NeedyMantis zararlısıyla uzun süreli erişim sağlanmıştır.'),
+    }
+    kayit = {1: {'kat': 'stratejik_kurum_saldirisi', 'toplam': 93},
+             2: {'kat': 'kolluk_operasyonu', 'toplam': 94},
+             3: {'kat': 'stratejik_kurum_saldirisi', 'toplam': 90},
+             4: {'kat': 'tedarik_zinciri', 'toplam': 93}}
+    s = _sistem(kayit, views)
+    top3, top10, kalan = s._kritik3_cesitlilik(
+        [1, 2, 3], [4], [], kayit, {}, {}, [])
+    assert 2 not in top3, 'aynı hattın ikinci haberi manşette kaldı'
+    assert 1 in top3, 'kök olay (kategori ağırlığı yüksek) inmiş'
+    assert 4 in top3, 'temiz aday manşete çıkmadı'
+    assert len(top3) == 3, 'KRİTİK 3 eksildi'
+    assert 2 in top10, 'inen haber gövdeye alınmadı'
+
+
+def test_temiz_aday_yoksa_manset_eksilmez():
+    views = {
+        1: _cv('LockBit Acme Saldırısı', 'LockBit Acme ağını şifreledi.'),
+        2: _cv('LockBit Beta Saldırısı', 'LockBit Beta ağını şifreledi.'),
+        3: _cv('Bağımsız Haber', 'İlgisiz bir olay yaşanmıştır.'),
+    }
+    kayit = {1: {'kat': 'veri_ihlali', 'toplam': 80},
+             2: {'kat': 'veri_ihlali', 'toplam': 75},
+             3: {'kat': 'politika_hukuk', 'toplam': 70}}
+    s = _sistem(kayit, views)
+    top3, _, _ = s._kritik3_cesitlilik([1, 2, 3], [], [], kayit, {}, {}, [])
+    assert len(top3) == 3 and set(top3) == {1, 2, 3}

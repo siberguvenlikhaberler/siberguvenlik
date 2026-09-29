@@ -125,6 +125,39 @@ KURALLAR:
   kritik açık" ve "protokol zafiyeti keşfi" maddeleri çıkarıldı.
   Zafiyetin raporda kendi bölümü var: Güvenlik Açıkları.
 
+## SÜREGELEN HİKÂYE ZİNCİRİ + MANŞET ÇEŞİTLİLİĞİ (2026-09-29)
+
+Ölçüm aracı: `scripts/zincir_olc.py` (yalnızca OKUR). Son 31 günü eski ve
+yeni kuralla yan yana koyar; değişiklik yapılmadan önce ve sonra koşulur.
+
+**ZİNCİR KİMLİĞİ ARTIK ÇÖP KÖKE BAĞLANMAZ.** `story_entities` tam metnin
+ilk 1500 karakterinden Başlık-Düzeni İngilizce sözcükleri özel ad sanıyordu;
+31 günün en sık "özel ad"ları `governme`, `protecti`, `united`, `court`,
+`personal`, `nearly`, `attacker`, `yazılımı`, `saldırıl` idi. Bu köklerle
+kurulan zincirler rapor haberlerini 31 günde **109 kez** manşet havuzundan
+düşürüyordu (17 Eylül 30 haberin 16'sı, 25 Eylül 34'ün 17'si, 29 Eylül
+21'in 10'u — gerekçeler `bürosu`, `bölge`, `güvenli`, `krallık`, `agent`,
+`oauth`). İki süzgeç eklendi (`dedup.story_kimlik`): kök derlemde
+`max(2, %0,5)` haberden fazlasında geçiyorsa ELENİR, ve kök haberin TÜRKÇE
+başlık/paragrafında da geçmelidir — İngilizce menü metni böylece düşer.
+Yapısal kimlikler (CVE, kod adı, paket, aktör kodu) süzgece girmez.
+Kümeleme TEMSİLCİ tabanlı yapıldı, geçişli birleştirme kaldırıldı (bir
+zincir 31 günün 15'ini tek bloğa toplamıştı). SONUÇ: düşürme 109 → **8**,
+zincir 6 → **2** ve kalan ikisi gerçek (Rhysida/Berlin, Coder/Terraform).
+`build_story_chains` artık `corpus=` ister; verilmezse süzgeç ÇALIŞMAZ —
+`main._hikaye_zinciri_filtrele` son 30 günün rapor görünümlerini geçirir.
+
+**AYNI HATTIN İKİ HABERİ AYNI GÜN MANŞET OLMAZ**
+(`main._kritik3_cesitlilik`). Ölçüt MARKA aktör + CVE; kod adı BİLEREK
+dışarıda (23 Eylül'de `kod:spycloud` iki manşeti aynı hat saymıştı, oysa
+SpyCloud raporlayan firmaydı). Kalan hangisi: `_kritik3_sirala` ile aynı
+ölçüt — önce KATEGORI_ONCELIK, eşitlikte puan. Saf puan yanlış olurdu:
+29 Eylül'de FBI ihlali (93, stratejik_kurum_saldirisi) ile Hollanda'daki
+ShinyHunters yakalaması (94, kolluk_operasyonu) aynı hattaydı ve saf puan
+KÖK OLAYI düşürüp türev haberi manşette bırakırdı. Takas, eleme DEĞİL;
+yedek de aynı hattan olamaz ve **KRİTİK 3 ASLA 2'YE DÜŞMEZ** — temiz aday
+yoksa manşet yerinde kalır. Ölçüldü: 31 günde 1 vaka.
+
 ## YIL SONU ANALİZ ÇALIŞMASI — VERİ SÖZLEŞMESİ (2026-09-22'de kayda geçti)
 
 Kullanıcı yıl sonunda **yalnızca bu sistemin arşiv kayıtlarına dayanan** analizler

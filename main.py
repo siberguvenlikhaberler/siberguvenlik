@@ -6188,7 +6188,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         Dönüş: (filtrelenmiş_id_listesi, {düşen_id: zincir}). Zincir yoksa
         liste değişmeden döner."""
-        zincirler = _dedup.build_story_chains(self._load_recent_kritik3_by_day())
+        # DERLEM ŞART: zincir kimliği, derlemde sık geçen kökleri eler
+        # (bkz. dedup.story_kimlik). Derlem verilmezse süzgeç çalışmaz ve
+        # zincirler yeniden çöp köklerle kurulur.
+        zincirler = _dedup.build_story_chains(
+            self._load_recent_kritik3_by_day(),
+            corpus=self._load_recent_report_views())
         if not zincirler:
             return list(aday_ids), {}
         dusen, kalan = {}, []
@@ -6318,6 +6323,95 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                         'manset_llm_secim', 0, aid,
                         gerekce.get(aid, 'LLM seçimi'))
         return uygun
+
+
+    def _kritik3_cesitlilik(self, top3_ids, top10_ids, remaining_ids,
+                            records, content_by_id, articles_by_id, gecmis):
+        """AYNI HATTIN İKİ HABERİ AYNI GÜN MANŞET OLMAZ — takas, eleme DEĞİL.
+
+        ÖLÇÜT: iki manşet aynı MARKA aktörü (ShinyHunters, LockBit…) ya da
+        aynı CVE'yi paylaşıyorsa aynı hattın iki parçasıdır. KOD ADI ölçüte
+        BİLEREK girmez: ölçüldü (2026-09-23), `kod:spycloud` iki manşeti aynı
+        hat saymıştı — SpyCloud olayın tarafı değil, RAPORLAYAN firmaydı.
+
+        KALAN hangisi: `_kritik3_sirala` ile aynı ölçüt — önce KATEGORI_ONCELIK
+        (stratejik/jeopolitik ağırlık), eşitlikte puan. Saf puan yanlış olurdu:
+        2026-09-29'da FBI personel verilerinin ele geçirilmesi (93,
+        stratejik_kurum_saldirisi) ile Hollanda'daki ShinyHunters yakalaması
+        (94, kolluk_operasyonu) aynı hattaydı; saf puan KÖK OLAYI düşürüp
+        türev haberi manşette bırakırdı.
+
+        ÖLÇÜLDÜ (31 gün, scripts/zincir_olc.py): kural 1 kez tetikleniyor —
+        nadir ama gerçek. KRİTİK 3 ASLA 2'YE DÜŞMEZ: temiz aday yoksa manşet
+        yerinde kalır.
+        """
+        if len(top3_ids) < 2:
+            return list(top3_ids), list(top10_ids), list(remaining_ids)
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+
+        def _hat(aid):
+            v = view_fn(aid)
+            blob = ' '.join(_dedup._bundle(v))
+            aktorler = _dedup.extract_actors(blob)
+            return ({'aktor:' + a for a in aktorler if _dedup._aktor_markasi(a)}
+                    | {'cve:' + a for a in aktorler if a.startswith('cve')})
+
+        def _agirlik(aid):
+            rec = records.get(aid) or {}
+            return (self._kat_oncelik(rec), rec.get('toplam', 0))
+
+        yeni_top3 = list(top3_ids)
+        yeni_top10, yeni_kalan = list(top10_ids), list(remaining_ids)
+        for _ in range(len(yeni_top3)):
+            cift = None
+            for i in range(len(yeni_top3)):
+                for j in range(i + 1, len(yeni_top3)):
+                    ortak = _hat(yeni_top3[i]) & _hat(yeni_top3[j])
+                    if ortak:
+                        cift = (yeni_top3[i], yeni_top3[j], sorted(ortak))
+                        break
+                if cift:
+                    break
+            if not cift:
+                break
+            a, b, ortak = cift
+            cikan = a if _agirlik(a) <= _agirlik(b) else b
+            kalanlar = [x for x in yeni_top3 if x != cikan]
+            havuz = [x for x in (yeni_top10 + yeni_kalan) if x not in yeni_top3]
+            havuz.sort(key=lambda x: -(records.get(x) or {}).get('toplam', 0))
+            manset_disi = self._manset_disi_ids(havuz, records, view_fn,
+                                                yonetmen=False)
+            bant_puan = {x: (records.get(x) or {}).get('toplam', 0)
+                         for x in havuz}
+            yedek = None
+            for bant in (True, False):
+                aday = self._kritik3_yedek_bul(
+                    havuz, kalanlar, records, view_fn, gecmis,
+                    haric=set(manset_disi), aday_puanlari=bant_puan, bant=bant)
+                # Yedek de aynı hattan olmamalı — yoksa sorun yer değiştirir.
+                if aday is not None and not any(_hat(aday) & _hat(k)
+                                                for k in kalanlar):
+                    yedek = aday
+                    break
+            if yedek is None:
+                print(f"   ⚠️  Manşet çeşitliliği: ID {a} ile ID {b} aynı hat "
+                      f"({','.join(ortak)}) ama temiz aday yok — "
+                      f"YERİNDE BIRAKILDI (KRİTİK 3 eksilmez).")
+                break
+            yeni_top3[yeni_top3.index(cikan)] = yedek
+            yeni_top10 = [x for x in yeni_top10 if x != yedek]
+            yeni_kalan = [x for x in yeni_kalan if x != yedek]
+            if cikan not in yeni_top10:
+                yeni_top10.insert(0, cikan)
+            print(f"   🎭 Manşet çeşitliliği: ID {a} ile ID {b} aynı hat "
+                  f"({','.join(ortak)}) → ID {cikan} gövdeye indi, "
+                  f"ID {yedek} manşete çıktı.")
+            self._manset_karar_kaydet(
+                'kritik3_cesitlilik', cikan, yedek,
+                f'aynı hat ({",".join(ortak)}); kategori ağırlığı düşük olan indi')
+            self._enforce_kritik3_paragraph_length(
+                [yedek], content_by_id, articles_by_id)
+        return yeni_top3, yeni_top10, yeni_kalan
 
     def _kritik3_dominans_takasi(self, top3_ids, top10_ids, remaining_ids,
                                  records, content_by_id, articles_by_id):
@@ -9115,6 +9209,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # Prompt'a yazılmış "zayıf manşet" ölçütü bağlayıcı değildi ve aynı
         # hata üç kez tekrarladı (bkz. _kritik3_dominans_takasi). Sıralamadan
         # ÖNCE çalışır ki dizilen liste nihai manşet olsun.
+        # MANŞET ÇEŞİTLİLİĞİ — aynı hattın iki haberi aynı gün manşet olmaz.
+        # Dominanstan ÖNCE çalışır ki takasla gelen haber de dominans ve
+        # sıralama kapılarından geçsin.
+        top3_ids, top10_ids, remaining_ids = self._kritik3_cesitlilik(
+            top3_ids, top10_ids, remaining_ids, score_records,
+            content_by_id, articles_by_id, recent_report_views)
+        top3_ids, top10_ids, remaining_ids = _senkron('kritik3_cesitlilik')
+
         top3_ids, top10_ids, remaining_ids = self._kritik3_dominans_takasi(
             top3_ids, top10_ids, remaining_ids, score_records,
             content_by_id, articles_by_id)

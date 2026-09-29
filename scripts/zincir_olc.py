@@ -14,8 +14,8 @@ bugüne kadarki arıza deseniydi (bkz. scripts/sokum_hazirlik.py).
   2. AYNI HATTIN İKİ HABERİ AYNI GÜN MANŞET OLABİLİYOR (29 Eylül: FBI ihlali
      + Hollanda'daki ShinyHunters yakalaması).
 
-ÖNERİLEN KURAL (bu betikte PROTOTİP olarak durur; onaylanırsa src/dedup.py'ye
-taşınır ve betik oradan import eder — kural KOPYALANMAZ):
+UYGULANAN KURAL (2026-09-29'da src/dedup.py'ye taşındı; betik ORADAN çağırır,
+kural KOPYALANMAZ — prototip sürümü `--eski-prototip` ile karşılaştırılırdı):
   • Zincir kimliği = yapısal kimlikler (CVE / kod adı / paket / aktör kodu)
     + derlemde NADİR (DF ≤ %0,5) VE Türkçe başlık-paragrafta da geçen özel
     adlar. İngilizce boilerplate böylece düşer.
@@ -66,38 +66,13 @@ def _df(views):
 
 
 def yeni_kimlik(view, df, n):
-    """PROTOTİP — zincir kimliği: yapısal + derlemde nadir + Türkçe tarafta."""
-    blob = ' '.join(dedup._bundle(view))
-    kimlik = {('cve:' + a) if a.startswith('cve') else ('kod:' + a)
-              for a in dedup.extract_actors(blob)}
-    kimlik |= {'kod:' + c for c in dedup.extract_codenames(blob)}
-    kimlik |= {'pkg:' + p for p in dedup.extract_package_names(blob)}
-    tr = ((view.get('tr_title') or '') + ' ' +
-          (view.get('paragraph') or '')).lower()
-    kimlik |= {'ad:' + t for t in dedup.story_entities(view)
-               if df.get(t, 0) / n <= DF_TAVAN and t[:6] in tr}
-    return kimlik
+    """Zincir kimliği — TEK KAYNAK: dedup.story_kimlik."""
+    return dedup.story_kimlik(view, df, n)
 
 
-def yeni_zincirler(gunler, kimlik_fn, min_gun=ZINCIR_MIN_GUN,
-                   esik=ZINCIR_ESIK):
-    """PROTOTİP — TEMSİLCİ tabanlı zincir: geçişli birleştirme YOK."""
-    zin = []
-    for gun, views in gunler:
-        for v in views:
-            e = kimlik_fn(v)
-            if not e:
-                continue
-            hedef = next((z for z in zin if len(e & z['temsilci']) >= esik),
-                         None)
-            if hedef is None:
-                zin.append({'temsilci': set(e), 'entities': set(e),
-                            'days': {gun}, 'title': v.get('tr_title', '')})
-            else:
-                hedef['days'].add(gun)
-                hedef['entities'] |= e
-    return [{'days': sorted(z['days']), 'entities': z['entities'],
-             'title': z['title']} for z in zin if len(z['days']) >= min_gun]
+def yeni_zincirler(gunler, corpus, min_gun=ZINCIR_MIN_GUN):
+    """Zincir kurulumu — TEK KAYNAK: dedup.build_story_chains (derlemli)."""
+    return dedup.build_story_chains(gunler, min_days=min_gun, corpus=corpus)
 
 
 def _marka_aktorler(view):
@@ -125,12 +100,13 @@ def olc(gun_sayisi=None, ayrinti=False):
 
     # ── 1) ZİNCİR: ESKİ vs YENİ ─────────────────────────────────────────
     gunler = [(r['date'], r['views']) for r in k3]
-    eski = dedup.build_story_chains(gunler)
-    yeni = yeni_zincirler(gunler, lambda v: yeni_kimlik(v, df, n))
-    print(f'\n── ZİNCİR ── eski {len(eski)} zincir '
+    eski = dedup.build_story_chains(gunler)   # derlemsiz = eski davranış
+    yeni = yeni_zincirler(gunler, derlem)
+    print(f'\n── ZİNCİR (süzgeçsiz = derlem verilmemiş hâli) ── '
+          f'süzgeçsiz {len(eski)} zincir '
           f'({sum(len(z["days"]) for z in eski)} gün) | '
           f'yeni {len(yeni)} zincir ({sum(len(z["days"]) for z in yeni)} gün)')
-    for ad, kume in (('ESKİ', eski), ('YENİ', yeni)):
+    for ad, kume in (('SÜZGEÇSİZ', eski), ('SÜZGEÇLİ', yeni)):
         for z in sorted(kume, key=lambda z: -len(z['days'])):
             print(f'   {ad} {len(z["days"])} gün {z["days"][0]}→{z["days"][-1]}'
                   f' | {sorted(z["entities"])[:6]}')
@@ -143,8 +119,8 @@ def olc(gun_sayisi=None, ayrinti=False):
         gecmis = [(x['date'], x['views']) for x in k3 if x['date'] < r['date']]
         if not gecmis:
             continue
-        ze = dedup.build_story_chains(gecmis)
-        zy = yeni_zincirler(gecmis, lambda v: yeni_kimlik(v, df, n))
+        ze = dedup.build_story_chains(gecmis)  # derlemsiz = eski davranış
+        zy = yeni_zincirler(gecmis, derlem)
         de, dy = [], []
         for v in r['views']:
             if dedup.matching_story_chain(v, ze):
@@ -155,14 +131,14 @@ def olc(gun_sayisi=None, ayrinti=False):
         top_e += len(de)
         top_y += len(dy)
         if de or dy:
-            print(f'   {r["date"]}: eski {len(de)}/{len(r["views"])} düşerdi, '
-                  f'yeni {len(dy)}/{len(r["views"])}')
+            print(f'   {r["date"]}: süzgeçsiz {len(de)}/{len(r["views"])} '
+                  f'düşerdi, süzgeçli {len(dy)}/{len(r["views"])}')
             if ayrinti:
                 for v in de:
                     z = dedup.matching_story_chain(v, ze)
-                    print(f'        eski→ {v["tr_title"][:52]} '
+                    print(f'        süzgeçsiz→ {v["tr_title"][:52]} '
                           f'ortak={z["shared"][:4]}')
-    print(f'   TOPLAM: eski {top_e} düşürme, yeni {top_y} düşürme')
+    print(f'   TOPLAM: süzgeçsiz {top_e} düşürme, süzgeçli {top_y} düşürme')
 
     # ── 3) MANŞET ÇEŞİTLİLİĞİ ───────────────────────────────────────────
     print('\n── MANŞET ÇEŞİTLİLİĞİ (aynı gün aynı hat) ──')
