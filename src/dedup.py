@@ -1142,12 +1142,19 @@ def story_entities(view):
 # Yapısal kimlikler (CVE, kod adı, paket, aktör kodu) bu süzgeçlere GİRMEZ —
 # onlar zaten tek-anlamlıdır.
 def story_df(views):
-    """Zincir kimliği için derlem frekansı: {kök: kaç haberde}, haber sayısı."""
+    """Zincir kimliği için derlem frekansı: {kök: kaç haberde}, haber sayısı.
+
+    SEZGİSEL çıkarılan her belirteç sayılır — özel ad, kod adı ve PAKET adı.
+    Yalnızca özel adları saymak süzgeci yarım bırakıyordu: paket çıkarımı
+    `then`, `first`, `public`, `requests` gibi sözcükleri paket sanıyor ve
+    zincir bunlardan bağ kuruyordu (2026-09-30 koşusunda ölçüldü)."""
     df = collections.Counter()
     n = 0
     for v in views or ():
         n += 1
-        for t in story_entities(v):
+        blob = ' '.join(_bundle(v))
+        for t in (story_entities(v) | extract_codenames(blob)
+                  | extract_package_names(blob)):
             df[t] += 1
     return df, n
 
@@ -1158,11 +1165,23 @@ def story_kimlik(view, df=None, n=0):
     if not isinstance(view, dict):
         return set()
     blob = ' '.join(_bundle(view))
+    # CVE ve satıcı küme kodları (UNC5792, UAT-7810…) REGEXLE tanımlıdır;
+    # süzgece girmezler. Kod adı ve PAKET ADI ise düzyazıdan SEZGİSEL
+    # çıkarılır ve jenerik sözcük sızdırır: ölçüldü (2026-09-30 koşusu),
+    # zincir `pkg:then`, `pkg:first`, `pkg:public`, `pkg:requests`,
+    # `pkg:agents` köklerinden bağ kurmuştu. Bu yüzden onlar da derlem
+    # frekansı süzgecinden geçer — "yapısal" etiketi taşımaları tek başına
+    # güven vermez.
     kimlik = {('cve:' + a) if a.startswith('cve') else ('kod:' + a)
               for a in extract_actors(blob)}
-    kimlik |= {'kod:' + c for c in extract_codenames(blob)}
-    kimlik |= {'pkg:' + p for p in extract_package_names(blob)}
+    sezgisel = ({'kod:' + c for c in extract_codenames(blob)}
+                | {'pkg:' + p for p in extract_package_names(blob)})
     adlar = story_entities(view)
+    if df and n:
+        _tav = max(2, n * _STORY_DF_TAVAN)
+        sezgisel = {k for k in sezgisel
+                    if df.get(k.split(':', 1)[1], 0) <= _tav}
+    kimlik |= sezgisel
     if df and n:
         tr = ((view.get('tr_title') or '') + ' ' +
               (view.get('paragraph') or '')).lower()

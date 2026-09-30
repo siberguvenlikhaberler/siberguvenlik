@@ -947,3 +947,23 @@ def test_zincir_gecisli_birlesmiyor():
                                   ('2026-09-03', [c])])
     assert all(not ({'ad:acme', 'ad:beta'} <= x['entities']) for x in z), \
         'geçişli birleştirme geri gelmiş'
+
+
+def test_paket_adi_da_derlem_suzgecinden_gecer():
+    """ÖLÇÜLEN VAKA (2026-09-30 koşusu): zincir `pkg:then`, `pkg:first`,
+    `pkg:public`, `pkg:requests` köklerinden bağ kurmuştu. Paket ve kod adı
+    düzyazıdan SEZGİSEL çıkarılır; 'yapısal' sayılıp süzgeçten muaf
+    tutulamaz. CVE ve satıcı küme kodu regexle tanımlıdır, muaftır."""
+    derlem = [_v(f'Haber {i}', f'requests paketi güncellendi {i}.',
+                 f'The requests package was updated {i}.') for i in range(40)]
+    v = _v('Zararlı requests Paketi', 'requests paketi zararlı çıktı.',
+           'The requests package was malicious.')
+    df, n = dedup.story_df(derlem + [v])
+    assert 'pkg:requests' not in dedup.story_kimlik(v, df, n)
+
+    cve = _v('CVE-2026-12345 Açığı İstismar Edildi',
+             'CVE-2026-12345 açığı aktif istismar altındadır.',
+             'CVE-2026-12345 exploited in the wild.')
+    df2, n2 = dedup.story_df([cve] * 40)
+    assert any(k.startswith('cve:') for k in dedup.story_kimlik(cve, df2, n2)), \
+        'CVE derlem süzgecine takılmamalı'

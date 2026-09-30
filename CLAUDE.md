@@ -146,6 +146,12 @@ zincir 31 günün 15'ini tek bloğa toplamıştı). SONUÇ: düşürme 109 → *
 zincir 6 → **2** ve kalan ikisi gerçek (Rhysida/Berlin, Coder/Terraform).
 `build_story_chains` artık `corpus=` ister; verilmezse süzgeç ÇALIŞMAZ —
 `main._hikaye_zinciri_filtrele` son 30 günün rapor görünümlerini geçirir.
+**PAKET VE KOD ADI DA SÜZGEÇTEN GEÇER** (30 Eylül koşusunda ölçüldü): ilk
+sürüm bunları "yapısal kimlik" sayıp muaf tutuyordu ve zincir `pkg:then`,
+`pkg:first`, `pkg:public`, `pkg:requests`, `pkg:agents` köklerinden bağ
+kurdu. İkisi de düzyazıdan SEZGİSEL çıkarılır; yalnızca CVE ve satıcı küme
+kodu (UNC/UAT/Storm) regexle tanımlı olduğu için muaftır. `story_df` artık
+özel ad + kod adı + paket adını birlikte sayar. Düşürme 8 → 3, zincir 2 → 1.
 
 **AYNI HATTIN İKİ HABERİ AYNI GÜN MANŞET OLMAZ**
 (`main._kritik3_cesitlilik`). Ölçüt MARKA aktör + CVE; kod adı BİLEREK
