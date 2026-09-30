@@ -164,6 +164,31 @@ KÖK OLAYI düşürüp türev haberi manşette bırakırdı. Takas, eleme DEĞİ
 yedek de aynı hattan olamaz ve **KRİTİK 3 ASLA 2'YE DÜŞMEZ** — temiz aday
 yoksa manşet yerinde kalır. Ölçüldü: 31 günde 1 vaka.
 
+## KÜÇÜK MODEL DENENDİ VE REDDEDİLDİ (ölçüm, 2026-09-30)
+
+Soru: skorlamayı (kategori + puan) LLM yerine kendi etiketlerimizle
+eğitilmiş küçük bir modele yaptırıp maliyeti düşürebilir miyiz? Araç:
+`scripts/kucuk_model_olc.py` (yalnızca OKUR). Eğitim verisi
+`data/skorlama_log.jsonl` (5.000 satır, 64 gün); değerlendirme ZAMANA
+SAYGILI — geçmişle eğit, sonraki günü tahmin et (rastgele bölme sızıntı
+yaratır: aynı olay ardışık günlerde döner).
+
+ÖLÇÜLDÜ (21 test günü): kategori isabeti %63,1 · KRİTİK 3 kapısı
+(zafiyet/ürün/siber-dışı ayrımı) %79,2 · puan MAE 20,6 · **manşet
+örtüşmesi ortalama 0,58/3 ve 19 günün HİÇBİRİNDE 3/3 tutmadı** (8 günde
+sıfır örtüşme). Kapının %21 yanılması tek başına yeterli gerekçedir:
+yanlış kapı, zafiyet haberinin manşete sızması demektir.
+
+SEBEP YAPISALDIR: `skorlama_log` GÖVDE METNİNİ saklamıyor, öznitelik
+olarak yalnızca İngilizce başlık + kaynak var; mevcut hat ise tam metni
+okuyup puanlıyor. Bu yoldan gidilecekse önce gövdenin loglanması, sonra
+aylarca yeni veri birikmesi gerekir.
+
+KARAR (kullanıcı, 2026-09-30): **kalite bozulacaksa değişiklik yok.**
+Skorlama LLM'de kalır, günlük ~35 sentlik maliyet kabul edilir. Betik
+depoda durur; veri büyüyünce aynı komutla yeniden ölçülür ve manşet
+örtüşmesi 3/3 olmadıkça üretime DOKUNULMAZ.
+
 ## YIL SONU ANALİZ ÇALIŞMASI — VERİ SÖZLEŞMESİ (2026-09-22'de kayda geçti)
 
 Kullanıcı yıl sonunda **yalnızca bu sistemin arşiv kayıtlarına dayanan** analizler
