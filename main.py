@@ -9205,18 +9205,18 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         else:
             print("   ✅ Değişmez denetimi: tüm katmanlar rapor kurallarına uydu.")
 
-        # MANŞET DOMİNANS KAPISI — seçimin son sözü KODDA.
-        # Prompt'a yazılmış "zayıf manşet" ölçütü bağlayıcı değildi ve aynı
-        # hata üç kez tekrarladı (bkz. _kritik3_dominans_takasi). Sıralamadan
-        # ÖNCE çalışır ki dizilen liste nihai manşet olsun.
         # MANŞET ÇEŞİTLİLİĞİ — aynı hattın iki haberi aynı gün manşet olmaz.
         # Dominanstan ÖNCE çalışır ki takasla gelen haber de dominans ve
         # sıralama kapılarından geçsin.
         top3_ids, top10_ids, remaining_ids = self._kritik3_cesitlilik(
             top3_ids, top10_ids, remaining_ids, score_records,
-            content_by_id, articles_by_id, recent_report_views)
+            content_by_id, articles_by_id, recent_report)
         top3_ids, top10_ids, remaining_ids = _senkron('kritik3_cesitlilik')
 
+        # MANŞET DOMİNANS KAPISI — seçimin son sözü KODDA.
+        # Prompt'a yazılmış "zayıf manşet" ölçütü bağlayıcı değildi ve aynı
+        # hata üç kez tekrarladı (bkz. _kritik3_dominans_takasi). Sıralamadan
+        # ÖNCE çalışır ki dizilen liste nihai manşet olsun.
         top3_ids, top10_ids, remaining_ids = self._kritik3_dominans_takasi(
             top3_ids, top10_ids, remaining_ids, score_records,
             content_by_id, articles_by_id)
