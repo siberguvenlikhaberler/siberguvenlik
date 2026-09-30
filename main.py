@@ -9208,10 +9208,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # MANŞET ÇEŞİTLİLİĞİ — aynı hattın iki haberi aynı gün manşet olmaz.
         # Dominanstan ÖNCE çalışır ki takasla gelen haber de dominans ve
         # sıralama kapılarından geçsin.
-        top3_ids, top10_ids, remaining_ids = self._kritik3_cesitlilik(
-            top3_ids, top10_ids, remaining_ids, score_records,
-            content_by_id, articles_by_id, recent_report)
-        top3_ids, top10_ids, remaining_ids = _senkron('kritik3_cesitlilik')
+        # KATMAN ÇÖKERSE GÜN KAYBOLMAZ. ÖLÇÜLEN VAKA (2026-09-30): manşet
+        # çeşitliliği kancasındaki tanımsız ad, 15 dakikalık LLM işinin
+        # SONUNDA koşuyu düşürdü ve o günün raporu hiç üretilemedi. Bu
+        # katman raporun VARLIĞI için zorunlu değildir — seçim zaten
+        # yapılmıştır, o yalnızca iyileştirir. Hata yutulmaz: günlüğe ve
+        # değişmez bekçisine yazılır, rapor mevcut manşetle devam eder.
+        try:
+            top3_ids, top10_ids, remaining_ids = self._kritik3_cesitlilik(
+                top3_ids, top10_ids, remaining_ids, score_records,
+                content_by_id, articles_by_id, recent_report)
+            top3_ids, top10_ids, remaining_ids = _senkron('kritik3_cesitlilik')
+        except Exception as e:
+            print(f"   ⚠️  Manşet çeşitliliği katmanı çöktü "
+                  f"({e.__class__.__name__}: {e}) — manşet olduğu gibi "
+                  f"bırakıldı, rapor sürüyor.")
+            self._manset_karar_kaydet('kritik3_cesitlilik_coktu', 0, 0,
+                                      f'{e.__class__.__name__}: {e}')
 
         # MANŞET DOMİNANS KAPISI — seçimin son sözü KODDA.
         # Prompt'a yazılmış "zayıf manşet" ölçütü bağlayıcı değildi ve aynı

@@ -1,0 +1,36 @@
+name: Testler
+
+# NEDEN VAR — ÖLÇÜLEN VAKA (2026-09-30): depoda 684 test vardı ama hiçbir
+# otomatik kapı yoktu; testler yalnızca elle koşuyordu. 29 Eylül akşamı
+# push edilen bir değişiklik `create_html` içinde tanımsız ada yol açtı ve
+# ertesi sabahki üretim koşusu 15 dakikalık LLM işinin SONUNDA çöktü —
+# o günün raporu üretilemedi. Bu kapı aynı hatayı push anında yakalar.
+#
+# LLM ÇAĞIRMAZ, HİÇBİR ŞEY COMMIT ETMEZ. Süre ~90 saniye.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: testler-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Bağımlılıklar
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+      - name: Tanımsız ad taraması (üretimi çökerten sınıf)
+        run: python -m pytest tests/test_tanimsiz_ad.py -q
+      - name: Tüm testler
+        run: python -m pytest -q

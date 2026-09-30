@@ -48,6 +48,7 @@ jobs:
     timeout-minutes: 25
     permissions:
       contents: write
+      issues: write
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -105,3 +106,26 @@ jobs:
           done
           echo "❌ Push 3 denemede de başarısız."
           exit 1
+
+      # SESSİZ ÇÖKME OLMAZ — ÖLÇÜLEN VAKA (2026-09-30): koşu NameError ile
+      # düştü, üç cron slotu da aynı hatayla düşecekti ve durumu ancak
+      # kullanıcı "sayfada hâlâ dünkü rapor var" diyerek fark etti. Artık
+      # çöken koşu kendini bir issue ile bildirir (aynı gün ikinci kez
+      # çökerse yeni issue açılmaz, mevcut olana yorum düşer).
+      - name: Koşu çöktüyse issue aç
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KOSU: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          BASLIK="🚨 Günlük rapor koşusu çöktü ($(TZ='Europe/Istanbul' date +'%Y-%m-%d'))"
+          GOVDE="Günlük rapor koşusu başarısız oldu; o günün raporu ÜRETİLMEDİ.
+
+          Koşu günlüğü: $KOSU"
+          VAR=$(gh issue list --state open --search "$BASLIK in:title" \
+                  --json number --jq '.[0].number' 2>/dev/null || true)
+          if [ -n "$VAR" ]; then
+            gh issue comment "$VAR" --body "Yeni başarısız koşu: $KOSU"
+          else
+            gh issue create --title "$BASLIK" --body "$GOVDE"
+          fi
