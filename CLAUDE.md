@@ -588,3 +588,46 @@ zaman koşulduğu önemli değil, analizden hemen önce bir kez yeter.
   ayrıştırmalı ve `*_kumulatif` alanlarını dışarıda bırakmalıdır.
   8 olayda kaynak listesi boştur.
 - Sayılar arşivden ÖLÇÜLEREK verilir; bellekten ya da tahminle değil.
+
+## SİBER POLİTİKA HABERİ MANŞET OLABİLİR (kullanıcı kararı, 2026-10-01)
+
+1 Ekim raporunda "ABD'de Yapay Zeka Güvenliği İçin Gönüllü Mutabakat
+İmzalanması" (93 puan, `politika_hukuk`) KRİTİK 3'teyken Pass 5 kalite
+kapısında silindi ve rapora hiç girmedi; gerekçesi hiçbir yerde kayıtlı
+değildi. Yapısal engel yoktu — `politika_hukuk` `KATEGORI_ONCELIK`'te 9 ile
+ikinci sıradadır, `KRITIK3_HARIC_KATEGORILER`'de değildir ve manşet seçim
+promptu "devlet politikalarını bağlayan gelişme her şeyin önünde" der.
+Tıkanma tek yerdeydi: Pass 5.
+
+ÖLÇÜLDÜ (son 30 gün, `data/skorlama_log.jsonl`): Pass 5 politika haberlerinin
+**%43'ünü** siliyordu (174/407); sonraki kategori %20. Mükerrer bayrağı
+OLMAYAN 122 haber düştü; 80 puan ve üstündeki 35'i tek tek okundu ve 27'si
+gerçek haberdi — FBI siber stratejisi (94), Trump–teknoloji mutabakatı (93),
+G7 post-kuantum çağrısı (92), CISA/NSA 17 aktif tehdit rehberi (89), Birleşik
+Krallık Yüksek Mahkemesi'nin casus yazılım kararı (86), FERC CIP-014-4 onayı
+(82), Zelensky ve Birleşik Krallık siber atamaları (83). Yalnızca 4'ü çöptü
+(SANS'ın Almanya eğitim anlaşması, "AI Kill Switch Act" köşe yazısı, iki
+satıcı/analiz yazısı). 75-80 bandında oran bozulur, 70 altı ise promptun KENDİ
+"ÇIKAR" örnekleriyle doludur (Stratom CMMC öz değerlendirmesi, Entrust
+duyurusu, CyAS şema ilanı) — eşik bu yüzden **80**'dir.
+
+KURALLAR:
+- **Pass 5'in işi METİN kalitesidir**, "bu haber yeterince haber mi" yargısı
+  DEĞİL; o yargı skorlamada verilmiştir. 93 puan verip sonra "kriter dışı"
+  demek kendi kendisiyle çelişkidir. `main.p5_editoryal_sinir`: KONTROL 3
+  ("kriter dışı") ve SPEKÜLASYON gerekçeli kaldırma, puanı
+  `KALITE_EDITORYAL_ESIK` (80) ve üstünde olan kayıtlar için deterministik
+  olarak REDDEDİLİR. Beklenen etki: günde ~0,9 gerçek haber kurtulur, ~0,13
+  çöp geri gelir (7:1) ve geri gelen çöp puan sıralaması değişmediği için
+  manşete değil gövdeye düşer.
+- **KONTROL 1/2 (bozuk/İngilizce metin) ve KONTROL 4 (kopya) MUAFTIR** — her
+  puanda kaldırabilirler. Onlar metin hatası ve mükerrerdir, editoryal yargı
+  değil; mükerrerin kaldırılmasını engellemek aynı olayı iki kez yayımlardı.
+- **Pass 5 artık her kaldırma için gerekçe döndürür** (`neden` alanı:
+  `kontrol1/kontrol2/kontrol3/spekulasyon/kontrol4`) ve gerekçe
+  `kalite_denetim.jsonl`'daki `manset_karar_izi`'ne `p5_kalite` /
+  `p5_editoryal_sinir` katmanı olarak yazılır. Gerekçe bildirilmezse sınır
+  devreye GİRMEZ (eski davranış korunur), yalnızca iz kaydedilir.
+- Kural `create_html` içinde değil AYRI fonksiyondadır, çünkü `create_html`
+  testlerde hiç koşmaz (30 Eylül'de bir `NameError` üretime öyle sızmıştı).
+  Regresyon: `tests/test_p5_editoryal_sinir.py`.

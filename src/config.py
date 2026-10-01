@@ -204,6 +204,14 @@ ZAFIYET_KATEGORILERI = {'zafiyet_rutin', 'zafiyet_aktif_apt'}
 KRITIK3_HARIC_KATEGORILER = {'zafiyet_rutin', 'zafiyet_aktif_apt',
                              'urun_icerik', 'siber_disi'}
 
+
+# Pass 5 kalite kapısının EDİTORYAL yargı sınırı: bu puan ve üstündeki bir haber
+# "kriter dışı" ya da "spekülasyon" gerekçesiyle KALDIRILAMAZ. Ölçüm ve gerekçe
+# get_quality_review_prompt docstring'inde. Metin hatası (KONTROL 1/2) ve kopya
+# (KONTROL 4) bu sınırdan muaftır.
+KALITE_EDITORYAL_ESIK = 80
+KALITE_EDITORYAL_NEDENLER = {'kontrol3', 'spekulasyon'}
+
 # Deterministik eşitlik-bozucu: aynı toplam puanda kategori önceliği (yüksek=önce).
 #
 # SIRALAMA İLKESİ — STRATEJİK/JEOPOLİTİK AĞIRLIK ÖNCE. Eşit puanda, ülkeleri ve
@@ -1791,6 +1799,25 @@ def get_quality_review_prompt(articles_content):
     üretim maliyetini DÜŞÜRMEZ. Zaten yazılmış paragrafların atılmasını
     engeller: aynı harcamanın karşılığı çöpe gitmek yerine yayımlanır.
     
+    EDİTORYAL YARGI SINIRI (ölçüm, 2026-10-01): kök neden düzeltmesine rağmen
+    politika haberleri bu kapıda halen %43 oranında düşüyordu (174/407) — sonraki
+    kategori %20. Son 30 günde mükerrer bayrağı OLMAYAN 122 haber silindi; 80 puan
+    ve üstündeki 35'i tek tek okundu ve 27'si gerçek haberdi (FBI siber stratejisi
+    94, Trump–teknoloji mutabakatı 93, G7 post-kuantum çağrısı 92, CISA/NSA 17
+    aktif tehdit rehberi 89, Birleşik Krallık Yüksek Mahkemesi'nin casus yazılım
+    kararı 86, FERC CIP-014-4 82, Zelensky/Birleşik Krallık siber atamaları 83).
+    Yalnızca 4'ü gerçekten çöptü. 75-80 bandında oran bozulur, 70 altı ise bu
+    promptun kendi "ÇIKAR" örnekleriyle doludur.
+
+    KURAL: Pass 5'in işi METİN kalitesidir, "bu haber yeterince haber mi"
+    yargısı DEĞİL — o yargı skorlamada verilmiştir. 93 puan verip sonra
+    "kriter dışı" demek kendi kendisiyle çelişkidir. Bu yüzden KONTROL 3 ve
+    SPEKÜLASYON gerekçeli kaldırma, puanı KALITE_EDITORYAL_ESIK ve üstünde olan
+    kayıtlar için main.py'de deterministik olarak REDDEDİLİR. KONTROL 1/2
+    (bozuk/İngilizce metin) ve KONTROL 4 (kopya) her puanda geçerlidir —
+    onlar metin hatası ve mükerrer, editoryal yargı değil. Bu yüzden "neden"
+    alanı ZORUNLUDUR: gerekçesiz kaldırma ayırt edilemez.
+
     Pass 5: Üretilmiş Türkçe içerikleri kalite kontrol eder.
     articles_content: "=== HABER ID: N ===\\nTR Başlık: ...\\nParagraf: ...\\nKaynak Var: evet/hayır\n" formatında string.
     Döndürülen JSON:
@@ -1868,10 +1895,20 @@ DEĞİL; asıl hedef okuyucunun bilemeyeceği kriptik kod adları/kümelerdir.
 
 Sorun tespit etmediğin haberleri listeye EKLEME — yalnızca sorunluları bildir.
 
+"remove" listesine koyduğun HER ID için, hangi kontrolden düştüğünü "neden"
+alanında BİLDİRMEK ZORUNLUDUR. Geçerli değerler yalnızca şunlardır:
+  "kontrol1"    → kısa/bozuk/placeholder paragraf
+  "kontrol2"    → içerik İngilizce kalmış
+  "kontrol3"    → kriter dışı (ürün/finans duyurusu, etkinlik, köşe yazısı, röportaj)
+  "spekulasyon" → doğrulanmış olay yok, bir ihtimal tartışılıyor
+  "kontrol4"    → başka bir ID ile aynı olayın kopyası
+Neden yazılmayan kaldırma isteği GEÇERSİZDİR ve dikkate alınmaz.
+
 SADECE JSON FORMATINDA YANIT VER — başka hiçbir şey yazma:
 {{
   "remove":     [17, 23],
-  "regenerate": [8]
+  "regenerate": [8],
+  "neden":      {{"17": "kontrol3", "23": "kontrol1"}}
 }}
 
 HABERLER:

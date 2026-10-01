@@ -88,9 +88,47 @@ from src.config import (
     get_scoring_prompt, get_critique_prompt,
     SCORING_WEIGHTS, SCORING_CATEGORIES, ZAFIYET_KATEGORILERI,
     KRITIK3_HARIC_KATEGORILER, KATEGORI_ONCELIK,
+    KALITE_EDITORYAL_ESIK, KALITE_EDITORYAL_NEDENLER,
     is_openrouter_active, GEMINI_MODELS, GEMINI_FALLBACK_MODELS,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
+
+
+def p5_editoryal_sinir(raw_remove, nedenler, records,
+                       esik=KALITE_EDITORYAL_ESIK,
+                       editoryal=KALITE_EDITORYAL_NEDENLER):
+    """Pass 5'in EDİTORYAL yargı sınırı. (kalan_kaldirma, korunanlar) döndürür.
+
+    Pass 5 METİN kalitesi kapısıdır. "Kriter dışı" (KONTROL 3) ve "spekülasyon"
+    editoryal yargıdır ve skorlama o yargıyı çoktan vermiştir: bir habere 93 puan
+    verip ardından "bu haber değil" demek kendi kendisiyle çelişkidir.
+
+    ÖLÇÜLDÜ (2026-10-01, son 30 gün): mükerrer bayrağı OLMAYAN 122 haber bu
+    kapıda silindi; 80 puan ve üstündeki 35'i tek tek okundu, 27'si gerçek
+    haberdi (FBI siber stratejisi 94, Trump–teknoloji mutabakatı 93, G7
+    post-kuantum çağrısı 92, CISA/NSA 17 aktif tehdit rehberi 89, Birleşik
+    Krallık Yüksek Mahkemesi'nin casus yazılım kararı 86, FERC CIP-014-4 82),
+    yalnızca 4'ü çöptü. Politika haberleri bu kapıda %43 düşüyordu; sonraki
+    kategori %20. 75-80 bandında oran bozulur, 70 altı promptun kendi "ÇIKAR"
+    örnekleriyle doludur — eşik bu yüzden 80'dir.
+
+    KONTROL 1/2 (bozuk/İngilizce metin) ve KONTROL 4 (kopya) MUAFTIR: onlar
+    metin hatası ve mükerrerdir, editoryal yargı değil. Gerekçe bildirilmemiş
+    kaldırma da muaftır — eski davranış korunur, yalnızca izi kaydedilir.
+
+    Ayrı fonksiyondur ÇÜNKÜ create_html testlerde hiç koşmaz (30 Eylül'de bir
+    NameError üretime öyle sızmıştı); kural burada doğrudan test edilebilir.
+    """
+    kalan   = set(raw_remove)
+    korunan = []
+    for rid in sorted(kalan):
+        if (nedenler or {}).get(rid) not in editoryal:
+            continue
+        puan = ((records or {}).get(rid) or {}).get('toplam', 0) or 0
+        if puan >= esik:
+            korunan.append((rid, puan, nedenler.get(rid)))
+    kalan -= {r for r, _, _ in korunan}
+    return kalan, korunan
 # OpenRouter (Gemini 3 Flash) — PASİF altyapı. Yalnızca is_openrouter_active()
 # True iken devreye girer; aksi halde tüm LLM çağrıları Gemini üzerinden gider.
 from src import llm_client as _llm
@@ -8771,11 +8809,26 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         p5_remove     = set()
         p5_regenerate = []
+        p5_nedenler   = {}
         if qr_data:
             raw_remove = {int(i) for i in qr_data.get('remove', [])
                           if str(i).strip().lstrip('-').isdigit()}
             p5_regenerate = [int(i) for i in qr_data.get('regenerate', [])
                              if str(i).strip().lstrip('-').isdigit()]
+            for _k, _v in (qr_data.get('neden') or {}).items():
+                if str(_k).strip().lstrip('-').isdigit():
+                    p5_nedenler[int(_k)] = str(_v).strip().lower()
+
+            raw_remove, _korunan = p5_editoryal_sinir(
+                raw_remove, p5_nedenler, score_records)
+            if _korunan:
+                for _rid, _puan, _neden in _korunan:
+                    print(f"   🛡️  Editoryal sınır: {_rid} ({_puan} puan, "
+                          f"{_neden}) kaldırılmadı")
+                    self._manset_karar_kaydet(
+                        'p5_editoryal_sinir', _rid, _rid,
+                        f'{_puan} puan ≥ {KALITE_EDITORYAL_ESIK}, '
+                        f'gerekçe "{_neden}" editoryal yargıdır')
             # LLM "remove" demiş ama kaynak metni yeterince zenginse yeniden üret
             regen_set = set(p5_regenerate)
             for rid in raw_remove:
@@ -8798,6 +8851,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"   🗑️  Kaldırılan: {sorted(p5_remove)}")
             for _rid in p5_remove:
                 eleme_nedeni[_rid] = 'p5_kalite'
+                # Gerekçe izi: 1 Ekim'de 93 puanlık bir manşet adayı bu kapıda
+                # silinmişti ve nedeni hiçbir yerde kayıtlı değildi.
+                self._manset_karar_kaydet(
+                    'p5_kalite', _rid, 0,
+                    p5_nedenler.get(_rid) or 'gerekçe bildirilmedi')
             top10_ids     = [i for i in top10_ids     if i not in p5_remove]
             remaining_ids = [i for i in remaining_ids if i not in p5_remove]
             top3_ids      = [i for i in top3_ids      if i not in p5_remove]
