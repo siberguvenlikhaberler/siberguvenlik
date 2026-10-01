@@ -1,32 +1,31 @@
-# KAYNAK SAĞLIK RAPORU — 2026-09-30 12:25
-# aktif=36  üretiyor=21  boş(200/0)=0  hata/timeout=0
-# çıkarım : 194/195 haberin tam metni çıktı (%99)
-# dedup   : 83/194 haber filtreleri geçti (%43)
-# 🚨 DEDUP SIFIR (4) [metin var, filtreler eliyor]: Mandiant (Google Cloud), NCSC UK, CERT-EU, Krebs on Security
+# KAYNAK SAĞLIK RAPORU — 2026-10-01 12:04
+# aktif=36  üretiyor=18  boş(200/0)=0  hata/timeout=1
+# çıkarım : 210/211 haberin tam metni çıktı (%100)
+# dedup   : 72/210 haber filtreleri geçti (%34)
+# 🚨 DEDUP SIFIR (6) [metin var, filtreler eliyor]: Industrial Cyber, SANS ISC, Unit 42, NCSC UK, CERT-EU, Krebs on Security
 # KAYNAK                      HAM  KALAN  METİN  HAVUZ  DURUM
-BleepingComputer             15     15     15     11  OK
+The Hacker News              40     34     34     13  OK
+BleepingComputer             15     15     15     10  OK
 Help Net Security            10     10     10      9  OK
-SecurityWeek                 10     10     10      8  OK
-Industrial Cyber              9      9      9      8  OK
-The Register                 40     14     14      7  OK
-The Hacker News              40     25     25      6  OK
-Dark Reading                 40     12     12      6  OK
-TechCrunch Security          20      6      6      4  OK
-The Record                    5      5      5      4  OK
+SecurityWeek                 10     10     10      6  OK
+The Record                    5      5      5      5  OK
+ANSSI (CERT-FR)              40     18     18      4  OK
+Dark Reading                 40     16     16      4  OK
+The Register                 40     17     17      3  OK
+Cyberscoop                   10     10     10      3  OK
 Security Affairs             10     10     10      3  OK
-CSO Online                   20      8      8      3  OK
-Cyberscoop                   10      8      8      3  OK
-Microsoft Security           10      8      8      3  OK
-ANSSI (CERT-FR)              40     19     19      1  OK
-The Cyber Express            10      9      9      1  OK
+Microsoft Security           10      9      9      3  OK
+CSO Online                   20     10     10      2  OK
+TechCrunch Security          20      8      8      2  OK
 Recorded Future              40      4      4      1  OK
-Unit 42                      15      3      3      1  OK
-CrowdStrike                  10      3      3      1  OK
-SANS ISC                      5      3      2      1  OK
-Talos Intelligence           15      2      2      1  OK
-Schneier on Security         10      2      2      1  OK
-Mandiant (Google Cloud)      20      3      3      0  🚨 DEDUP SIFIR (OK)
-Graham Cluley                20      2      2      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+Mandiant (Google Cloud)      20      4      4      1  OK
+Talos Intelligence           15      3      3      1  OK
+Schneier on Security         10      3      3      1  OK
+Graham Cluley                20      2      2      1  OK
+Industrial Cyber              9      9      9      0  🚨 DEDUP SIFIR (OK)
+SANS ISC                      5      4      3      0  🚨 DEDUP SIFIR (OK)
+Unit 42                      15      3      3      0  🚨 DEDUP SIFIR (OK)
+CrowdStrike                  10      2      2      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 NIST                         40      1      1      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 NCSC UK                      20      1      1      0  🚨 DEDUP SIFIR (OK)
 CERT-EU                      10      1      1      0  🚨 DEDUP SIFIR (OK)
@@ -40,3 +39,4 @@ Citizen Lab                  10      0      -      0  OK
 Proofpoint Threat Insight    10      0      -      0  OK
 SentinelOne Labs             10      0      -      0  OK
 The DFIR Report              10      0      -      0  OK
+The Cyber Express             0      0      -      0  HATA: HTTP 403
