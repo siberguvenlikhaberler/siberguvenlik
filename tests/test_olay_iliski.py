@@ -262,3 +262,79 @@ def test_affected_paket_adi_sayilmaz():
     from src import dedup as _d
     assert 'affected' not in _d.extract_package_names(
         'The npm package registry listed the affected versions today.')
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GÖVDE DÜZEYİ KOD ADI + AYNI BELİRTEÇ İKİ KEZ SAYILMAZ (2026-10-03 ölçümü)
+# ─────────────────────────────────────────────────────────────────────────────
+# 3 Ekim gölge kümelemesi: FBI'ın ShinyHunters'a teslim çağrısı ile OpenAI
+# modellerinin yüzden fazla kuruma sızması haberi
+# `ortak=ad:killsec,kod:killsec topic=0.13` ile AYNI_GELISME sayıldı. "killsec"
+# iki haberin de ÖN PLANINDA değil, The Register'ın kenar çubuğundaki
+# "Teen suspected of running KillSec..." bağlantısında geçiyordu; ortak olan
+# tek şey sayfa şablonuydu. İki ayrı kusur birlikte çalışıyordu:
+#   (a) gövdede geçen `kod:` tek başına YÜKSEK DERECE sayılıyor ve 0.10 konu
+#       desteğiyle yetiyordu (ayni_olay'ın gövde kod adı kapısı buraya hiç
+#       taşınmamıştı),
+#   (b) tek sözcük hem 'ad:' hem 'kod:' ürettiği için MIN_ORTAK_AD=2 kapısı
+#       da TEK belirteçle açılıyordu.
+# Ölçüldü (31 günün 8.997 ortak-anahtarlı çifti): düzeltme SADECE bu çiftin
+# kararını değiştiriyor (AYNI_GELISME → ILISKISIZ).
+
+def test_ayni_belirtec_iki_kez_sayilmaz():
+    assert oi._ayirt_edici_sayisi({'ad:killsec', 'kod:killsec'}) == 1
+    # İki DÜŞÜK dereceli sınıf da aynı sözcükten gelebilir (ad + paket).
+    assert oi._kimlik_yeterli({'ad:killsec', 'pkg:killsec'}) is False
+    # 3 Ekim'in gerçek kümesi: kod adı gövde düzeyinde olduğu için zayıf.
+    assert oi._kimlik_yeterli({'ad:killsec', 'kod:killsec'},
+                              zayif={'kod:killsec'}) is False
+    assert oi._kimlik_yeterli({'ad:odido', 'ad:tilaa'}) is True
+
+
+def test_govde_kod_adi_tek_basina_yuksek_derece_degil():
+    assert oi._kimlik_yeterli({'kod:killsec'}) is True
+    assert oi._kimlik_yeterli({'kod:killsec'}, zayif={'kod:killsec'}) is False
+    # CVE gövdede de geçse yüksek derecedir (regexle tanımlı, sezgisel değil).
+    assert oi._kimlik_yeterli({'cve:cve-2026-1731'},
+                              zayif={'kod:killsec'}) is True
+
+
+def _ek3_cift():
+    """3 Ekim vakası: kod adı yalnızca sayfa şablonunda (full_text) geçiyor."""
+    kenar = ('Teen suspected of running KillSec ransomware group as cops '
+             'seize servers, arrest three 20 hours ago ')
+    a = {'tr_title': "FBI'ın Siber Suç Grubu ShinyHunters Üyelerine Teslim "
+                     "Çağrısı",
+         'paragraph': 'FBI, ShinyHunters üyelerine kendiliğinden teslim olma '
+                      'çağrısı yapmıştır.',
+         'title': "FBI to ShinyHunters: 'We know how to find you'",
+         'full_text': kenar + 'Federal cops have a very particular set of '
+                              'skills, the FBI said of the extortion crew.'}
+    b = {'tr_title': 'OpenAI Modellerinin Yüzden Fazla Kurumun Sistemlerine '
+                     'Yetkisiz Erişmesi',
+         'paragraph': "OpenAI, hizalanmamış modellerinin yüzden fazla kurumun "
+                      "sistemine izinsiz erişmeye çalıştığını bildirmiştir.",
+         'title': "OpenAI alerts 100+ orgs that its 'misaligned models' "
+                  "attempted to break in",
+         'full_text': kenar + 'OpenAI said its misaligned models attempted '
+                              'unauthorized access to more than 100 orgs.'}
+    return a, b
+
+
+def test_sayfa_sablonundaki_kod_adi_olay_bagi_kurmaz():
+    a, b = _ek3_cift()
+    iliski, neden = oi.iliski_belirle(a, b, ayni_gun=True, explain=True)
+    assert iliski == oi.ILISKISIZ, neden
+
+
+def test_on_plandaki_kod_adi_hala_olay_bagi_kurar():
+    """Düzeltme yalnızca GÖVDEYİ daraltır; başlıktaki kod adı eskisi gibi."""
+    a, b = _ek3_cift()
+    a['tr_title'] = 'KillSec Fidye Yazılımı Çetesinin Çökertilmesi'
+    a['paragraph'] = ('Uluslararası operasyonla KillSec fidye yazılımı '
+                      'çetesinin sunucuları ele geçirilmiştir.')
+    b['tr_title'] = 'KillSec Çetesine Yönelik Operasyonda Üç Gözaltı'
+    b['paragraph'] = ('KillSec fidye yazılımı çetesine yönelik operasyonda '
+                      'üç kişi gözaltına alınmıştır.')
+    assert oi.iliski_belirle(a, b, ayni_gun=True) in (oi.AYNI_GELISME,
+                                                      oi.YENI_GELISME)

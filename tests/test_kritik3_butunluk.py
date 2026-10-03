@@ -197,3 +197,50 @@ def test_prompt_tur_alanini_istiyor():
     p = get_kritik3_selection_audit_prompt('m', 'g')
     assert '"tur"' in p and 'icerik' in p and 'secim' in p, \
         'prompt tür alanını istemiyor'
+
+
+# ── Madde 3: GÖRELİ GEREKÇE (2026-10-03 vakası) ────────────────────────────
+# Ölçüm ve kural: main.auditor_goreli_sinir + tests/test_auditor_goreli_sinir.py.
+# Burada yalnızca KABLOLAMA sınanır: sınır denetimin içinde gerçekten koşuyor
+# mu, iz yazılıyor mu ve madde 3 kalıcı yasak üretmiyor mu.
+
+def _puanli(puanlar):
+    return {aid: dict(KAYITLAR[aid], toplam=puanlar.get(aid, 0))
+            for aid in KAYITLAR}
+
+
+def test_madde3_puanla_celisiyorsa_manset_degismez():
+    """3 Ekim: işaretli manşet 93, gövdenin yalnızca biri daha yüksek."""
+    kayitlar = _puanli({1: 93, 2: 87, 3: 83, 4: 94, 5: 60})
+    s = _sistem({'hatali': [{'id': 1, 'tur': 'secim', 'madde': 3,
+                             'neden': 'gövdenin gerisinde kalıyor'}]})
+    out = s._audit_kritik3_selection([1, 2, 3], [4, 5], kayitlar, ICERIK, {},
+                                     [], govde_ids=[4, 5])
+    assert out == [1, 2, 3], 'göreli gerekçe manşeti değiştirdi'
+    assert 1 not in getattr(s, '_manset_yasak', set())
+    izler = [i for i in getattr(s, '_manset_izi', [])
+             if i['katman'] == 'auditor_goreli_sinir']
+    assert len(izler) == 1 and izler[0]['dusen'] == 1
+
+
+def test_madde3_gercekten_gecerliyse_degistirir_ama_yasak_yazmaz():
+    """Gövdenin çoğunluğu daha yüksekse takas olur; yasak KALICI OLMAZ —
+    yerine giren aday sonraki katmanlarda ölürse haber geri dönebilmeli."""
+    kayitlar = _puanli({1: 90, 2: 88, 3: 40, 4: 92, 5: 91})
+    s = _sistem({'hatali': [{'id': 3, 'tur': 'secim', 'madde': 3,
+                             'neden': 'gövdenin çoğu daha önemli'}]})
+    out = s._audit_kritik3_selection([1, 2, 3], [4, 5], kayitlar, ICERIK, {},
+                                     [], govde_ids=[4, 5])
+    assert 3 not in out
+    assert 3 not in getattr(s, '_manset_yasak', set()), \
+        'göreli gerekçe kalıcı manşet yasağı yazdı'
+
+
+def test_nitelik_maddesi_yasak_yazmaya_devam_eder():
+    kayitlar = _puanli({1: 93, 2: 87, 3: 83, 4: 94, 5: 60})
+    s = _sistem({'hatali': [{'id': 3, 'tur': 'secim', 'madde': 2,
+                             'neden': 'ürün duyurusu, olay yok'}]})
+    out = s._audit_kritik3_selection([1, 2, 3], [4, 5], kayitlar, ICERIK, {},
+                                     [], govde_ids=[4, 5])
+    assert 3 not in out
+    assert 3 in s._manset_yasak

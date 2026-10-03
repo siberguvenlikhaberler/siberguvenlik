@@ -212,6 +212,23 @@ KRITIK3_HARIC_KATEGORILER = {'zafiyet_rutin', 'zafiyet_aktif_apt',
 KALITE_EDITORYAL_ESIK = 80
 KALITE_EDITORYAL_NEDENLER = {'kontrol3', 'spekulasyon'}
 
+# ── AUDITOR'IN GÖRELİ GEREKÇESİ (manşet seçim denetimi, madde 3) ─────────────
+# Denetimin 3. maddesi ("RUTİN/ÖNEMSİZ ... gövdedeki haberlerin ÇOĞU bundan daha
+# önemliyse") GÖRELİ bir yargıdır ve ölçütünü KENDİ metninde yazar: ÇOĞU. Bu
+# ölçüt puanla sınanabilir, dolayısıyla LLM'in sözüne bırakılmaz.
+#
+# ÖLÇÜLDÜ (2026-10-03): 93 puanlı Mississippi fidye yazılımı haberi (günün
+# ortak en yükseği, mukerrer=0) "gövdedeki uluslararası operasyon ve kritik
+# finansal zafiyet haberlerinin gerisinde kalıyor" gerekçesiyle manşetten
+# çıkarıldı — oysa denetime gösterilen 12 gövde haberinin yalnızca BİRİ (94)
+# ondan yüksekti, yani maddenin kendi "çoğu" ölçütü sağlanmıyordu.
+#
+# Madde 3 bu yüzden puanla doğrulanır: gösterilen gövde haberlerinin ÇOĞUNLUĞU
+# işaretli manşetten yüksek puanlı değilse işaret REDDEDİLİR.
+AUDITOR_GORELI_MADDE = 3
+# Denetime gösterilen (ve çoğunluk ölçütünün sayıldığı) gövde haberi sayısı.
+AUDITOR_GOVDE_PENCERE = 12
+
 # Deterministik eşitlik-bozucu: aynı toplam puanda kategori önceliği (yüksek=önce).
 #
 # SIRALAMA İLKESİ — STRATEJİK/JEOPOLİTİK AĞIRLIK ÖNCE. Eşit puanda, ülkeleri ve
@@ -2474,6 +2491,10 @@ def get_kritik3_selection_audit_prompt(manset_items, govde_items):
     Denetim MUHAFAZAKÂRDIR: yalnızca AÇIK hatalar işaretlenir. Sıralama tercihi
     ("bence 2. haber daha önemliydi") hata DEĞİLDİR — deterministik puanlama
     zaten karar vermiştir ve bu denetim onu ikinci kez tartışmaz.
+
+    `madde` alanı bunun TEK GÖRELİ maddesini (3) ayırt edilebilir kılar;
+    `main.auditor_goreli_sinir` o işaretleri puanla sınar (bkz.
+    AUDITOR_GORELI_MADDE). Madde gelmezse eski davranış korunur.
     """
     return f"""Sen kıdemli bir siber güvenlik haber editörüsün. Aşağıda bugünkü raporun
 MANŞET (KRİTİK 3) haberleri ve karşılaştırma için GÖVDE haberleri var.
@@ -2502,10 +2523,14 @@ Bir manşeti YALNIZCA şu durumlarda işaretle:
    çelişiyor. (Yalnızca paragrafın YANLIŞ OLAYI anlatması. Tarih/zaman kipi,
    üslup, eksik ayrıntı gibi YAZIM kusurları bu madde DEĞİLDİR.)
 
-Her işaret için TÜR de ver:
+Her işaret için TÜR ve hangi MADDEden işaretlendiğini ver:
 - "secim"  → 1, 2 veya 3: haber manşetlik değil. Yerine başka haber geçer.
 - "icerik" → 4: haber manşetlik ama METNİ kusurlu. Bu bir YAZIM sorunudur;
   haberin manşet hakkını düşürmez ve o haber manşete kapatılmaz.
+MADDE 3 PUANLA SINANIR: "gövdenin altında kalıyor" dediğinde, gösterilen gövde
+haberlerinin ÇOĞUNLUĞU o manşetten yüksek puanlı olmalıdır; değilse işaretin
+reddedilir. Madde 3'ü yalnızca gövdenin tamamına bakıp gerçekten öyleyse kullan;
+"daha önemli bir haber var" demek için değildir.
 
 ASLA işaretleme:
 - Yalnızca "başka bir haber daha önemliydi" diye düşündüğün için.
@@ -2520,5 +2545,5 @@ GÖVDE HABERLERİ (yalnızca önem karşılaştırması için):
 {govde_items}
 
 YALNIZCA şu JSON'u döndür (gerekçe kısa ve somut olsun):
-{{"hatali": [{{"id": <manşet id>, "tur": "secim"|"icerik", "neden": "<en fazla 15 kelime>"}}]}}
+{{"hatali": [{{"id": <manşet id>, "tur": "secim"|"icerik", "madde": 1|2|3|4, "neden": "<en fazla 15 kelime>"}}]}}
 Hata yoksa: {{"hatali": []}}"""

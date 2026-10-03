@@ -631,3 +631,70 @@ KURALLAR:
 - Kural `create_html` içinde değil AYRI fonksiyondadır, çünkü `create_html`
   testlerde hiç koşmaz (30 Eylül'de bir `NameError` üretime öyle sızmıştı).
   Regresyon: `tests/test_p5_editoryal_sinir.py`.
+
+## AUDITOR'IN GÖRELİ GEREKÇESİ PUANLA SINANIR (ölçüm, 2026-10-03)
+
+3 Ekim raporunda günün ortak en yüksek puanlı iki TEMİZ haberi manşete hiç
+girmedi; manşet 87 / 83 / **78** ile kapandı (78'lik haber Apple'ın macOS
+Full Disk Access duyurusuydu). Zincir tek bir yerden başlıyordu: manşet seçim
+denetimi (`_audit_kritik3_selection`) 93 puanlı Mississippi fidye yazılımı
+haberini (`stratejik_kurum_saldirisi`, mukerrer=0) madde 3 ile — "gövdedeki
+uluslararası operasyon ve kritik finansal zafiyet haberlerinin gerisinde
+kalıyor" — manşetten çıkardı. Oysa maddenin ÖLÇÜTÜ promptun kendi metninde
+yazılıdır: "gövdedeki haberlerin ÇOĞU bundan daha önemliyse". Denetime
+gösterilen 12 gövde haberinin yalnızca BİRİ (94) ondan yüksekti.
+
+Yerine giren 93 puanlı haber (İranlı devlet hackerının iadesi) bir sonraki
+katmanda çapraz-gün mükerreri çıktı — o eleme DOĞRUYDU. Ama çıkarılan haber
+`_manset_yasak`'a KALICI yazıldığı için yedek havuzunda bir daha hiç
+değerlendirilemedi; boşluk 60 puanlı habere düştü, `manset_puan_tersinelik`
+onu 78'e çekebildi. İki 93 gövdede kaldı.
+
+KURALLAR:
+- **Madde 3 GÖRELİDİR ve puanla sınanır** (`main.auditor_goreli_sinir`,
+  `AUDITOR_GORELI_MADDE`): gösterilen gövde haberlerinin ÇOĞUNLUĞU işaretli
+  manşetten yüksek puanlı değilse işaret deterministik olarak REDDEDİLİR ve
+  gerekçe `manset_karar_izi`'ne `auditor_goreli_sinir` katmanı olarak yazılır.
+  Pass 5'in editoryal sınırının (`p5_editoryal_sinir`) aynı ilkesi: bir habere
+  93 puan verip ardından "gövdenin altında kalıyor" demek kendi kendisiyle
+  çelişkidir. Çoğunluk, LLM'e GÖSTERİLEN pencereden sayılır
+  (`AUDITOR_GOVDE_PENCERE`, 12) — prompt ile sayım aynı kümeye bakar.
+- **KALICI YASAK YALNIZCA NİTELİK YARGISINA AİTTİR.** Madde 1/2 ("siber değil",
+  "olay yok") haberin KENDİSİ hakkındadır, kalıcı kalır. Madde 3 günün
+  havuzuna görelidir: artık yalnızca o anki takasta dışarıda tutulur, yasak
+  kümesine GİRMEZ — yerine giren aday ölürse haber geri dönebilir.
+- Prompt artık `madde` alanı döndürür; madde bildirilmezse eski davranış
+  korunur (seçim hatası sayılır, yasak yazılır).
+- Regresyon: `tests/test_auditor_goreli_sinir.py` (kural) +
+  `tests/test_kritik3_butunluk.py` (kablolama).
+
+## SAYFA ŞABLONUNDAKİ KOD ADI OLAY BAĞI KURMAZ (ölçüm, 2026-10-03)
+
+Aynı günün gölge kümelemesinde FBI'ın ShinyHunters'a teslim çağrısı ile
+OpenAI modellerinin yüzden fazla kuruma sızması haberi
+`ortak=ad:killsec,kod:killsec topic=0.13` ile AYNI_GELISME sayıldı. "killsec"
+iki haberin de ÖN PLANINDA (başlık/paragraf) değil, The Register'ın kenar
+çubuğundaki "Teen suspected of running KillSec..." bağlantısında geçiyordu:
+iki haberin ortak yanı SAYFA ŞABLONUYDU. Aynı sahte eşleşme çapraz-günde de
+kuruluyordu (2 Ekim KillSec operasyonu ↔ 3 Ekim FBI çağrısı) ve 91 puanlı FBI
+haberine `mukerrer` bayrağı taktırıyordu — yani manşet yedeği olmasını da
+engelliyordu.
+
+İki kusur birlikte çalışıyordu, ikisi de düzeltildi (`src/olay_iliski.py`):
+- **Gövde düzeyi `kod:` tek başına YÜKSEK DERECE değildir.** Kod adı çıkarımı
+  SEZGİSELDİR ve tam metni tarar (kenar çubuğu, "Related:" listesi, yayıncı
+  menüsü). Ortak kod adı iki tarafın da ön planında geçmiyorsa artık
+  `GOVDE_KOD_ADI_KONU_MIN` (0,35) konu desteği ister, 0,10 değil. Bu ders
+  `ayni_olay` filtre (1)'de ölçülmüştü ama `iliski_belirle` o kapıyı hiç
+  taşımıyordu — iki tanım aynı çift için ayrı yanıt veriyordu. CVE muaftır
+  (regexle tanımlı, sezgisel değil).
+- **AYNI BELİRTEÇ İKİ KEZ SAYILMAZ** (`_ayirt_edici_sayisi`). CamelCase bir ad
+  hem özel ad hem kod adı sezgisine takılıyor, küme `{ad:killsec,kod:killsec}`
+  oluyor ve küme UZUNLUĞUNA bakan `MIN_ORTAK_AD=2` kapısı TEK sözcükle
+  açılıyordu. Sayım artık sınıf değil BELİRTEÇ sayar.
+
+ÖLÇÜLDÜ: `data/dedup_golden.json` ölçümü değişmedi (18/23 etiket, 20/23
+politika — düzeltme öncesi/sonrası birebir aynı). Son 31 günün ortak-anahtarlı
+8.997 çifti yeniden karara bağlandı: **yalnızca 1 çiftin kararı değişti**
+(KillSec↔ShinyHunters, AYNI_GELISME → ILISKISIZ). Yani gerçek mükerrer
+kaybedilmiyor. Regresyon: `tests/test_olay_iliski.py`.

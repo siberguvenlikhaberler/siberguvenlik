@@ -89,9 +89,56 @@ from src.config import (
     SCORING_WEIGHTS, SCORING_CATEGORIES, ZAFIYET_KATEGORILERI,
     KRITIK3_HARIC_KATEGORILER, KATEGORI_ONCELIK,
     KALITE_EDITORYAL_ESIK, KALITE_EDITORYAL_NEDENLER,
+    AUDITOR_GORELI_MADDE, AUDITOR_GOVDE_PENCERE,
     is_openrouter_active, GEMINI_MODELS, GEMINI_FALLBACK_MODELS,
 )
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
+
+
+def auditor_goreli_sinir(maddeler, records, govde_ids,
+                         goreli_madde=AUDITOR_GORELI_MADDE,
+                         pencere=AUDITOR_GOVDE_PENCERE):
+    """Auditor'ın GÖRELİ gerekçesini (madde 3) puanla sınar.
+
+    Döndürür: (reddedilen_idler, ayrinti) — `ayrinti` [(aid, puan, ustte,
+    gosterilen)] biçiminde, iz kaydı için.
+
+    Madde 3'ün ölçütü promptun KENDİ metninde yazılıdır: "gövdedeki haberlerin
+    ÇOĞU bundan daha önemliyse manşet yanlıştır". Çoğunluk puanla sayılabilir,
+    dolayısıyla bu yargı LLM'e bırakılmaz — p5_editoryal_sinir'in aynı ilkesi:
+    bir habere 93 puan verip ardından "gövdenin altında kalıyor" demek kendi
+    kendisiyle çelişkidir.
+
+    ÖLÇÜLDÜ (2026-10-03): 93 puanlı Mississippi fidye yazılımı haberi
+    (mukerrer=0, günün ortak en yükseği) madde 3 ile manşetten çıkarıldı;
+    gösterilen 12 gövde haberinin yalnızca biri (94) ondan yüksekti. Yerine
+    giren 93 puanlı haber bir sonraki katmanda çapraz-gün mükerreri çıktı ve
+    manşet önce 60, sonra 78 puanlı habere düştü — gövdede iki 93 beklerken.
+
+    Madde 1/2 (siber değil / olay yok) ve 4 (içerik) SINANMAZ: onlar NİTELİK
+    yargısıdır, puanla çelişmezler. Madde bildirilmemişse işaret eski
+    davranışla geçer.
+
+    Ayrı fonksiyondur ki kural LLM çağrısı olmadan doğrudan test edilebilsin
+    (bkz. tests/test_auditor_goreli_sinir.py).
+    """
+    def _puan(aid):
+        return ((records or {}).get(aid) or {}).get('toplam', 0) or 0
+
+    govde = list(govde_ids or [])[:pencere]
+    reddedilen, ayrinti = [], []
+    for aid, madde in sorted((maddeler or {}).items()):
+        if madde != goreli_madde:
+            continue
+        puan = _puan(aid)
+        ustte = sum(1 for g in govde if _puan(g) > puan)
+        # ÇOĞUNLUK: gösterilen gövdenin yarısından fazlası daha yüksek puanlı
+        # olmalı. Gövde boşsa karşılaştırma yapılamaz — işaret reddedilir.
+        if ustte * 2 > len(govde):
+            continue
+        reddedilen.append(aid)
+        ayrinti.append((aid, puan, ustte, len(govde)))
+    return reddedilen, ayrinti
 
 
 def p5_editoryal_sinir(raw_remove, nedenler, records,
@@ -4390,7 +4437,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     f"Başlık: {tr_title}\nÖzet: {snippet}\n")
 
         manset = '\n'.join(_satir(aid) for aid in top3_ids)
-        govde = '\n'.join(_satir(aid) for aid in list(govde_ids)[:12])
+        govde = '\n'.join(_satir(aid)
+                          for aid in list(govde_ids)[:AUDITOR_GOVDE_PENCERE])
         data = self._gemini_call_json(
             get_kritik3_selection_audit_prompt(manset, govde),
             # 2048: 512 bütçe 08-10/08-11'de aşıldı, 1024'e çıkarıldı; 1024 da
@@ -4418,7 +4466,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # gövdeye indi — üstelik kusurlu metniyle birlikte.
         #
         # `tur` gelmezse eski davranış korunur (seçim hatası sayılır).
-        hatali, icerik_kusuru = {}, {}
+        hatali, icerik_kusuru, maddeler = {}, {}, {}
         for item in (data.get('hatali', []) or []):
             try:
                 hid = int(item.get('id'))
@@ -4427,6 +4475,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if hid not in top3_ids:
                 continue
             neden = str(item.get('neden', '')).strip()[:80]
+            try:
+                maddeler[hid] = int(item.get('madde'))
+            except (TypeError, ValueError):
+                pass
             if str(item.get('tur', '')).strip().lower() == 'icerik':
                 icerik_kusuru[hid] = neden
             else:
@@ -4434,6 +4486,22 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         for aid, neden in icerik_kusuru.items():
             print(f"   ✍️  Manşet içeriği kusurlu: ID {aid} ({neden}) — manşet "
                   f"hakkı DÜŞMEZ, metin onarım katmanlarına bırakıldı.")
+
+        # GÖRELİ GEREKÇE PUANLA SINANIR — bkz. auditor_goreli_sinir.
+        goreli_red, goreli_ayrinti = auditor_goreli_sinir(
+            {a: m for a, m in maddeler.items() if a in hatali},
+            records, govde_ids)
+        for aid, puan, ustte, gosterilen in goreli_ayrinti:
+            print(f"   🛡️  Manşet seçimi: ID {aid} ({puan} puan) madde "
+                  f"{AUDITOR_GORELI_MADDE} ile işaretlendi ama gösterilen "
+                  f"{gosterilen} gövde haberinin yalnızca {ustte}'i daha "
+                  f"yüksek puanlı — GÖRELİ GEREKÇE REDDEDİLDİ.")
+            self._manset_karar_kaydet(
+                'auditor_goreli_sinir', aid, 0,
+                f'madde {AUDITOR_GORELI_MADDE} reddedildi: '
+                f'{ustte}/{gosterilen} gövde haberi daha yüksek')
+            hatali.pop(aid, None)
+
         if not hatali:
             print("   ✅ Manşet seçimi: denetim tamam, hatalı seçim yok.")
             return list(top3_ids)
@@ -4447,9 +4515,22 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # gerekçesiyle manşetten çıkardı; birkaç katman sonra SON KAPI aynı
         # haberi yedek olarak manşete GERİ getirdi ve 63 puanla manşette
         # kaldı. Karar yalnızca o an uygulanıyor, hiçbir yere yazılmıyordu.
+        #
+        # AMA KALICILIK YALNIZCA NİTELİK YARGISINA AİTTİR.
+        #
+        # Madde 3 ("gövdenin altında kalıyor") GÜNÜN HAVUZUNA görelidir; haberin
+        # kendisi hakkında "manşetlik değil" demez. Kalıcı yasak ona
+        # uygulanınca haber, yerine giren adayın SONRAKİ katmanlarda ölmesi
+        # hâlinde yedek havuzunda bir daha hiç değerlendirilemiyor.
+        # ÖLÇÜLDÜ (2026-10-03): madde 3 ile çıkarılan 93 puanlı haberin yerine
+        # giren 93 puanlı aday çapraz-gün mükerreri çıktı; yasaklı haber geri
+        # alınamadığı için manşet 60, sonra 78 puanlı habere düştü. Madde 3
+        # artık yalnızca O ANKİ takasta dışarıda tutulur (`haric`), yasak
+        # kümesine girmez.
         if not hasattr(self, '_manset_yasak'):
             self._manset_yasak = set()
-        self._manset_yasak |= set(hatali)
+        self._manset_yasak |= {a for a in hatali
+                               if maddeler.get(a, 0) != AUDITOR_GORELI_MADDE}
         for aid, neden in hatali.items():
             yedek = self._kritik3_yedek_bul(
                 yedek_ids, [o for o in sonuc if o != aid], records, view_fn,

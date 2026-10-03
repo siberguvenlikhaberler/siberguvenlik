@@ -382,6 +382,18 @@ def _olay_kimlikleri_ham(view, sozluk):
     return kimlikler
 
 
+def _on_plan_kod(view):
+    """Görünümün ÖN PLANINDAKİ (başlık + TR başlık + paragraf) kod adları.
+
+    `olay_kimlikleri` kod adını TAM METİN üzerinden çıkarır; tam metin haber
+    sayfasının kenar çubuğunu, "Related:" bağlantılarını ve yayıncı menüsünü de
+    taşır. Ön plan, adın haberin ÖZNESİ olduğunu gösteren tek yerdir.
+    """
+    return _onbellekli('on_plan_kod', view, lambda: dedup.extract_codenames(
+        ' '.join(((view.get('tr_title') or ''), (view.get('title') or ''),
+                  (view.get('paragraph') or '')))))
+
+
 def aktor_kimlikleri(view):
     """Bir haberin AKTÖR kimliği (CVE hariç — o zafiyet kimliğidir)."""
     return _onbellekli('aktor', view, lambda: {
@@ -478,11 +490,31 @@ def _yuksek_derece_var(kimlikler):
     return any(k.startswith(_YUKSEK_DERECE) for k in kimlikler)
 
 
-def _kimlik_yeterli(ortak):
-    """Ortak kimlik kümesi 'aynı olay' demeye yeter mi?"""
-    if _yuksek_derece_var(ortak):
+def _ayirt_edici_sayisi(ortak):
+    """Ortak kimlik kümesindeki AYRI BELİRTEÇ sayısı (sınıf değil, belirteç).
+
+    AYNI BELİRTEÇ İKİ KEZ SAYILMAZ. `olay_kimlikleri` aynı sözcüğü birden çok
+    sınıfta üretebilir: CamelCase yazılmış bir ad hem özel ad hem kod adı
+    sezgisine takılır ve küme {'ad:killsec', 'kod:killsec'} olur. Küme
+    uzunluğuna bakmak bunu "iki bağımsız ortak kimlik" sayıyor ve
+    MIN_ORTAK_AD=2 kapısını TEK sözcükle açıyordu.
+
+    ÖLÇÜLDÜ (2026-10-03): FBI'ın ShinyHunters çağrısı ile OpenAI modellerinin
+    kurumlara sızması haberi `ortak=ad:killsec,kod:killsec topic=0.13` ile
+    aynı olay sayıldı; ortak olan tek şey "killsec" sözcüğüydü.
+    """
+    return len({k.split(':', 1)[-1] for k in ortak})
+
+
+def _kimlik_yeterli(ortak, zayif=()):
+    """Ortak kimlik kümesi 'aynı olay' demeye yeter mi?
+
+    `zayif`: yüksek derece SAYILMAYACAK kimlikler (bkz. iliski_belirle'deki
+    gövde düzeyi kod adı ölçümü). Düşük dereceli sayımda yine hesaba katılır.
+    """
+    if _yuksek_derece_var(set(ortak) - set(zayif)):
         return True
-    return len(ortak) >= MIN_ORTAK_AD
+    return _ayirt_edici_sayisi(ortak) >= MIN_ORTAK_AD
 
 
 # Ortak OLAY KİMLİĞİ varken aranan asgari konu örtüşmesi. same_event'in aktör
@@ -592,7 +624,34 @@ def iliski_belirle(view_a, view_b, ayni_gun=False, explain=False, sozluk=None):
 
     topic = _konu_ortusmesi(view_a, view_b)
 
-    if _kimlik_yeterli(ortak_kimlik) and topic >= KIMLIK_ILE_KONU_MIN:
+    # GÖVDE DÜZEYİ KOD ADI TEK BAŞINA YÜKSEK DERECELİ DEĞİLDİR.
+    #
+    # `kod:` kimliği _YUKSEK_DERECE içindedir, yani TEK BAŞINA ve yalnızca
+    # KIMLIK_ILE_KONU_MIN (0.10) konu desteğiyle "aynı olay" demeye yetiyordu.
+    # Ama kod adı çıkarımı SEZGİSELDİR ve tam metni tarar: haber sayfasının
+    # kenar çubuğu, "Related:" bağlantıları ve yayıncı menüsü de taramaya
+    # girer. ÖLÇÜLDÜ (2026-10-03 gölge kümelemesi): FBI'ın ShinyHunters
+    # çağrısı ile OpenAI modellerinin kurumlara sızması haberi
+    # `ortak=ad:killsec,kod:killsec topic=0.13` ile AYNI_GELISME sayıldı —
+    # "killsec" iki haberin de ÖN PLANINDA değil, The Register'ın kenar
+    # çubuğundaki "Teen suspected of running KillSec..." bağlantısında
+    # geçiyordu; iki haberin ortak yanı SAYFA ŞABLONUYDU.
+    #
+    # Aynı ders `ayni_olay` filtre (1)'de ölçülüp kayda geçmişti (gövde kod
+    # adı → GOVDE_KOD_ADI_KONU_MIN); `iliski_belirle` o kapıyı taşımıyordu ve
+    # bu yüzden iki tanım aynı çift için ayrı yanıt veriyordu. CVE muaftır:
+    # regexle tanımlıdır, sezgisel değildir.
+    on_plan = _on_plan_kod(view_a) & _on_plan_kod(view_b)
+    govde_kod = {k for k in ortak_kimlik
+                 if k.startswith('kod:') and k.split(':', 1)[1] not in on_plan}
+
+    yeterli = _kimlik_yeterli(ortak_kimlik, zayif=govde_kod)
+    esik = KIMLIK_ILE_KONU_MIN
+    if not yeterli and govde_kod and _kimlik_yeterli(ortak_kimlik):
+        # Yeterliliği YALNIZCA gövde düzeyi kod adı sağlıyor → güçlü konu şartı.
+        yeterli, esik = True, GOVDE_KOD_ADI_KONU_MIN
+
+    if yeterli and topic >= esik:
         yeni_var, yeni = _yeni_gelisme_mi(view_a, view_b, sozluk)
         etiket = ','.join(sorted(ortak_kimlik)[:4])
         if yeni_var:
