@@ -827,3 +827,46 @@ doğurur (defter tam bu yüzden kalıcı dosya DEĞİL), (c) şema kapısı olma
 için enjeksiyona açıktır. Kalan yapısal iş: manşete dokunan yedi katmanın
 `top3`'ü doğrudan değiştirmek yerine karar DÖNDÜRMESİ ve tek aracının
 yazması.
+
+## MANŞET ARACISI — KARARIN TEK YAZARI (2026-10-05)
+
+KRİTİK 3'ü yedi katman değiştirebiliyor ve her biri kararını KENDİ elleriyle
+yazıyordu: `hasattr` kontrolü + `_manset_yasak.add` + `_manset_karar_kaydet`
+üçlüsü dört ayrı yerde kopyalanmıştı. Kopyalanan idiomu yeni katman yazarı
+ATLAR; aynı arıza ÜÇ KEZ ölçüldü — auditor kararı (2026-08-25), olay defteri
+(2026-08-21, Siemens PLC), çapraz-gün (2026-10-04, OpenAI/Avustralya).
+
+- `_manset_yasagi_koy` **`_manset_yasak`ın TEK YAZARIDIR**; fikir değişmezdir
+  ve yasağı ize de yazar (`yasak:<katman>`) — "karar vardı, izi yoktu" durumu
+  bir daha adli inceleme gerektirmesin. Koşu başı `set()` sıfırlaması tek
+  istisnadır ve yorumla işaretlidir.
+- `_manset_takas` takası ize yazar ve KALICILIĞA TABLODAN karar verir:
+  `MANSET_KALICI_KATMAN` (haberin KENDİSİ hakkındaki yargılar) ve
+  `MANSET_GORELI_KATMAN` (günün havuzuna göreli olanlar). Çağıran yer
+  kalıcılık kararı VERMEZ; tabloda olmayan katman güvenli tarafta kalır
+  (yasak yazılmaz, iz yazılır).
+- **SON KAPININ İKİ KARARI AYRI SINIFTADIR**: `kapi_rapor_ici*` gerekçesi
+  "bugünün raporunda aynı olay iki kez var" demektir ve GÖRELİDİR (yarın o
+  haber tek başına manşet olabilir); `kapi_capraz_gun*` ise "son 30 günde
+  raporlanmıştı" demektir ve KALICIDIR. Katman adı gerekçeye göre ayrışır
+  (`son_mukerrer_kapisi_ici` / `_capraz`) — tek ad ikisini aynı kefeye
+  koyuyordu.
+- **MALİYET DEĞİŞMEZ** (kullanıcı sorusu, 2026-10-05): aracı LLM çağrısı
+  yapmaz, eklemez, birleştirmez; katmanlar bugünkü promptlarıyla aynı
+  çağrıları yapar. Aracıya "çelişen kararları LLM'e sor" eklenmedi ve
+  eklenmemelidir — çelişki deterministik öncelikle çözülür. Regresyon
+  `tests/test_manset_araci.py` bu nötrlüğü de sabitler.
+
+DAVRANIŞ FARKI TEK YERDE: son kapının ÇAPRAZ-GÜN takasında düşen haber artık
+yasak alıyor (eskiden yalnızca iz yazılıyordu), yani sonraki üç katman
+(tersinelik / çeşitlilik / dominans) onu manşete geri getiremiyor — 4 Ekim
+kuralının aynısı. Aynı-gün (`_ici`) takası ESKİSİ GİBİ yasak yazmaz.
+Kapılar değişmedi: `dedup_golden` 15/21 · 18/23 · 20/23 ve `zincir_olc`
+(süzgeçli 0 düşürme, çeşitlilik 1 vaka) öncesi/sonrası birebir; 723 test
+geçiyor. "KRİTİK 3 asla 2'ye düşmez" korunur — her katman temiz yedek yoksa
+manşeti yerinde bırakır.
+
+FAZ 2 YAPILMADI: katmanlar hâlâ `top3`'ü kendileri değiştiriyor (aracı
+yalnızca kararı yazıyor). Listeyi de aracıya devretmek yedi çağrı yerinin
+imzasını değiştirir ve `create_html` gibi testlerde hiç koşmayan yollara
+dokunur; kazancı küçük, riski ölçülemez — ayrı bir iş olarak bekliyor.

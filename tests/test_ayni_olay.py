@@ -212,7 +212,9 @@ def test_gelisme_manset_olamaz_kodda():
                   main.HaberSistemi._son_mukerrer_kapisi):
         kaynak = inspect.getsource(metot)
         assert '_olay.GELISME' in kaynak, f'{metot.__name__}: GELISME ayrımı yok'
-        assert '_manset_yasak' in kaynak, \
+        # Yasağı ARACI yazar (bkz. tests/test_manset_araci.py).
+        assert ('_manset_yasagi_koy' in kaynak
+                or '_manset_takas' in kaynak), \
             f'{metot.__name__}: GELISME manşet yasağı almıyor'
 
 

@@ -271,8 +271,11 @@ def test_auditorun_manset_reddi_kalicidir():
     import inspect
     import main
     kaynak = inspect.getsource(main.HaberSistemi._audit_kritik3_selection)
-    assert '_manset_yasak' in kaynak, \
+    # Yazım artık ARACIDAN geçer (bkz. tests/test_manset_araci.py): katman
+    # kalıcı tabloda olmalı ve yasağı aracı koymalı.
+    assert '_manset_yasagi_koy' in kaynak, \
         'Auditor manşet reddi hiçbir yere yazılmıyor — yedek olarak geri gelir'
+    assert 'auditor_manset_secimi' in main.HaberSistemi.MANSET_KALICI_KATMAN
 
 
 def test_yedek_bulucu_puan_bandi_uygular():

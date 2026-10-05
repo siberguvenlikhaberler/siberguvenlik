@@ -4270,9 +4270,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 # kez" kuralı tek başına günün en yüksek puanlı SEKİZ haberini
                 # birden eledi, rapor 10 habere düştü ve manşet ATM
                 # dolandırıcılığı + Uber para cezasından seçilmek zorunda kaldı.
-                if not hasattr(self, '_manset_yasak'):
-                    self._manset_yasak = set()
-                self._manset_yasak.add(aid)
+                self._manset_yasagi_koy(aid, 'olay_iliskisi',
+                                        'gelişme — manşet tekrarı')
         return False
 
     def _kritik3_yedek_bul(self, aday_ids, sonuc, records, view_fn,
@@ -4527,10 +4526,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # alınamadığı için manşet 60, sonra 78 puanlı habere düştü. Madde 3
         # artık yalnızca O ANKİ takasta dışarıda tutulur (`haric`), yasak
         # kümesine girmez.
-        if not hasattr(self, '_manset_yasak'):
-            self._manset_yasak = set()
-        self._manset_yasak |= {a for a in hatali
-                               if maddeler.get(a, 0) != AUDITOR_GORELI_MADDE}
+        for aid, neden in hatali.items():
+            if maddeler.get(aid, 0) != AUDITOR_GORELI_MADDE:
+                self._manset_yasagi_koy(aid, 'auditor_manset_secimi', neden)
         for aid, neden in hatali.items():
             yedek = self._kritik3_yedek_bul(
                 yedek_ids, [o for o in sonuc if o != aid], records, view_fn,
@@ -4540,7 +4538,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                       f"({neden}) ama yedek aday yok — YERİNDE BIRAKILDI.")
                 continue
             sonuc[sonuc.index(aid)] = yedek
-            self._manset_karar_kaydet('auditor_manset_secimi', aid, yedek, neden)
+            # Yasak YUKARIDA konur (madde 1/2); burada yalnızca iz yazılır —
+            # auditor kararı yedek bulunamasa da kalıcıdır (2026-08-25 ölçümü).
+            self._manset_karar_kaydet(
+                'auditor_manset_secimi'
+                if maddeler.get(aid, 0) != AUDITOR_GORELI_MADDE
+                else 'auditor_manset_secimi_goreli', aid, yedek, neden)
             print(f"   🔁 Manşet seçimi: ID {aid} manşetlik değil ({neden}) → "
                   f"ID {yedek} ile DEĞİŞTİRİLDİ (eski haber gövdede kalır).")
         return sonuc
@@ -4704,10 +4707,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             # üçüncü katman kapsanmamıştı.
             #
             # Yerinde bırakılan haber (yedek yok) YASAKLANMAZ: o hâlâ manşettir.
-            if not hasattr(self, '_manset_yasak'):
-                self._manset_yasak = set()
-            self._manset_yasak.add(aid)
-            self._manset_karar_kaydet(
+            self._manset_takas(
                 'manset_capraz_gun_llm', aid, yedek,
                 f'son {REPORT_HISTORY_DAYS} günde raporlanmış olayın tekrarı')
             print(f"   🔁 Manşet çapraz-gün: ID {aid} son {REPORT_HISTORY_DAYS} günde "
@@ -6148,6 +6148,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # MANŞET YASAĞI — 'mukerrer' bayrağının yerini alan ölçülmüş küme.
         # Yalnızca AYNI_GELISME (gerçek mükerrer) buraya girer; YENİ gelişme
         # ve aynı-aktör-farklı-olay manşete çıkabilir (bkz. _derive_top3_by_score).
+        #
+        # BU SATIR KOŞU BAŞI SIFIRLAMADIR, karar yazımı DEĞİL: kümeye ekleme
+        # yapan tek yer `_manset_yasagi_koy` aracısıdır (bkz. MANŞET ARACISI).
+        # tests/test_manset_araci.py bunu kaynak taramasıyla sabitler.
         self._manset_yasak = set()
         self._iliski_izi = {}
 
@@ -6193,7 +6197,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     aid, articles_by_id, recent_report_views)
                 self._iliski_izi[aid] = (iliski, gerekce)
                 if iliski == _olay.AYNI_GELISME:
-                    self._manset_yasak.add(aid)
+                    self._manset_yasagi_koy(aid, 'olay_iliskisi',
+                                            f'AYNI_GELISME — {gerekce[:60]}')
                 else:
                     is_muk = False
                     mukerrer_korunan.append(aid)
@@ -7396,6 +7401,89 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 == sorted(m.group(0).strip().lower()
                           for m in self._OLGU_RE.finditer(yeni or '')))
 
+    # ─────────────────────────────────────────────────────────────────────
+    # MANŞET ARACISI — `_manset_yasak`ın ve kararın TEK YAZARI
+    # ─────────────────────────────────────────────────────────────────────
+    # NEDEN VAR: KRİTİK 3'ü YEDİ katman değiştirebiliyor
+    # (_derive_top3_by_score, _dedup_kritik3_ici, _dedup_kritik3_cross_day_llm,
+    # _audit_kritik3_selection, _yayin_yonetmeni, _son_mukerrer_kapisi,
+    # _manset_puan_tersinelik / _kritik3_cesitlilik / _kritik3_dominans_takasi)
+    # ve her biri kararını KENDİ elleriyle yazıyordu: `hasattr` kontrolü +
+    # `_manset_yasak.add` + `_manset_karar_kaydet` üçlüsü dört ayrı yerde
+    # kopyalanmıştı. Kopyalanan bir idiomu yeni bir katman yazarı ATLAR.
+    #
+    # ÖLÇÜLDÜ, ÜÇ KEZ AYNI ARIZA: auditor kararı yazılmıyordu (2026-08-25,
+    # "yaşlıları dolandıran şebeke" son kapıdan manşete geri döndü), olay
+    # defteri kararı yazılmıyordu (2026-08-21, Siemens PLC iki gün üst üste
+    # manşet oldu) ve çapraz-gün kararı yazılmıyordu (2026-10-04, dört günlük
+    # OpenAI/Avustralya tekrarı yayın yönetmeniyle BİRİNCİ manşet oldu). Üçü
+    # de aynı sınıf: karar doğru verildi, kaydedilmedi.
+    #
+    # ARACI LLM ÇAĞRISI YAPMAZ, EKLEMEZ, BİRLEŞTİRMEZ. Katmanlar bugünkü
+    # promptlarıyla kendi çağrılarını yapmaya devam eder; buradaki iş saf
+    # muhasebedir — maliyet değişmez (kullanıcı sorusu, 2026-10-05).
+    #
+    # KALICILIK TEK TABLODAN OKUNUR (`MANSET_KALICI_KATMAN`): karar haberin
+    # KENDİSİ hakkındaysa (gerçek mükerrer, çapraz-gün tekrarı, "manşetlik
+    # değil") kalıcıdır; GÜNÜN HAVUZUNA göreliyse (aynı gün iki manşet aynı
+    # olay, sıralama düzeltmesi) kalıcı DEĞİLDİR. Bkz. CLAUDE.md
+    # "AUDITOR'IN GÖRELİ GEREKÇESİ" ve "ÇAPRAZ-GÜN MANŞET KARARI KALICIDIR".
+
+    # Kararı KALICI olan katmanlar — aracı bu tabloya bakar, çağıran yere
+    # bakmaz. Yeni bir katman eklenince tablo da güncellenmelidir;
+    # tests/test_manset_araci.py tabloyu katman adlarıyla karşılaştırır.
+    MANSET_KALICI_KATMAN = frozenset({
+        'olay_iliskisi',            # AYNI_GELISME / GELISME — gerçek mükerrer
+        'manset_capraz_gun_llm',    # son 30 günde raporlanmış olayın tekrarı
+        'son_mukerrer_kapisi_capraz',   # çapraz-gün tekrarı (bkz. 2026-10-04)
+        'auditor_manset_secimi',    # "bu haber manşetlik değil" (madde 1/2)
+    })
+    # Kararı GÜNÜN HAVUZUNA göreli olan katmanlar — yasak YAZILMAZ.
+    MANSET_GORELI_KATMAN = frozenset({
+        'manset_ici_ayni_olay',     # aynı gün iki manşet aynı olay
+        'yayin_yonetmeni_takas',    # sıralama düzeltmesi
+        'manset_puan_tersinelik',   # gövdede daha yüksek puanlı haber vardı
+        'kritik3_dominans',         # iki eksende geçen aday
+        'kritik3_cesitlilik',       # aynı hattın iki haberi
+        'auditor_goreli_sinir',     # göreli gerekçe REDDEDİLDİ (yalnızca iz)
+        'p5_editoryal_sinir',
+        'p5_kalite',
+        'manset_llm_secim',
+        'auditor_manset_secimi_goreli',   # madde 3 ile çıkarma
+        'kritik3_cesitlilik_coktu',
+        # SON KAPININ İKİ KARARI AYRI SINIFTADIR: "bugünün raporunda aynı olay
+        # iki kez var" GÜNÜN HAVUZUNA görelidir (yarın tek başına manşet
+        # olabilir), "son 30 günde raporlanmıştı" haberin KENDİSİ hakkındadır.
+        # Katman adı bu yüzden gerekçeye göre ayrışır; tek bir
+        # 'son_mukerrer_kapisi' adı ikisini aynı kefeye koyuyordu.
+        'son_mukerrer_kapisi_ici',
+    })
+
+    def _manset_yasagi_koy(self, aid, katman, neden=''):
+        """Haberi manşete KALICI olarak kapatır. `_manset_yasak`ın TEK yazarı.
+
+        Yasak yalnızca manşet hakkını düşürür; haber gövdede kalır. Fikir
+        değişmezdir — aynı id ikinci kez yazılırsa iz tekrarlanmaz.
+        """
+        if not hasattr(self, '_manset_yasak'):
+            self._manset_yasak = set()
+        if aid in self._manset_yasak:
+            return
+        self._manset_yasak.add(aid)
+        # İz: takas olmadan konan yasak da görünür olmalı (4 Ekim arızası
+        # tam da "karar vardı, izi yoktu" diye adli incelemeyle bulundu).
+        self._manset_karar_kaydet(f'yasak:{katman}', aid, 0, neden)
+
+    def _manset_takas(self, katman, dusen, giren, neden):
+        """Manşet takasını ize yazar; katman KALICIYSA yasağı da koyar.
+
+        Çağıran yer kalıcılığı KARAR VERMEZ — tabloya bakılır. Bilinmeyen
+        katman adı güvenli tarafta kalır (yasak yazılmaz) ama yine izlenir.
+        """
+        self._manset_karar_kaydet(katman, dusen, giren, neden)
+        if katman in self.MANSET_KALICI_KATMAN:
+            self._manset_yasagi_koy(dusen, katman, neden)
+
     def _manset_karar_kaydet(self, katman, aid, yedek, neden):
         """Manşet DEĞİŞTİRME kararlarını kalıcı ize yazar.
 
@@ -8033,9 +8121,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     # girişleri engelliyordu; zaten manşette olan bir devam
                     # haberi orada kalıyordu — oysa kullanıcının şikâyet
                     # ettiği şey tam olarak MANŞET TEKRARIDIR.
-                    if not hasattr(self, '_manset_yasak'):
-                        self._manset_yasak = set()
-                    self._manset_yasak.add(aid)
+                    self._manset_yasagi_koy(aid,
+                                            'son_mukerrer_kapisi_capraz',
+                                            f'gelişme — {neden[:60]}')
                     manset_cikar[aid] = f'gelişme, manşet tekrarı — {neden}'
                     no = len(gelisme_ciftleri) + 1
                     gelisme_ciftleri.append((no, v, ev, neden[:40]))
@@ -8236,9 +8324,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 eleme_nedeni.pop(aid, None)
                 continue
             yeni_top3[yeni_top3.index(aid)] = yedek
-            self._manset_karar_kaydet(
-                'son_mukerrer_kapisi', aid, yedek,
-                (dusen.get(aid) or manset_cikar.get(aid, ''))[:80])
+            _neden = (dusen.get(aid) or manset_cikar.get(aid, ''))[:80]
+            # Gerekçe hangi sınıfa ait: `kapi_capraz_gun*` çapraz-gündür
+            # (kalıcı), `kapi_rapor_ici*` bugünün havuzuna görelidir.
+            _katman = ('son_mukerrer_kapisi_capraz'
+                       if _neden.startswith('kapi_capraz_gun')
+                       else 'son_mukerrer_kapisi_ici')
+            self._manset_takas(_katman, aid, yedek, _neden)
             print(f"   🔁 Son mükerrer kapısı: manşetteki ID {aid} mükerrer → "
                   f"ID {yedek} ile DEĞİŞTİRİLDİ.")
 
