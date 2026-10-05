@@ -175,3 +175,30 @@ def test_yedek_bulucu_TAM_gecmisi_gorur():
         'yedek bulucuya daraltılmış küme veriliyor'
     assert 'recent_views, haric' not in cagri, \
         'yedek bulucu hâlâ daraltılmış kümeyi alıyor'
+
+
+# ── ÇAPRAZ-GÜN KARARI KALICIDIR (2026-10-04 ölçümü) ────────────────────────
+# 4 Ekim raporu "OpenAI Modellerinin Avustralya Hükümet Sistemlerine Yetkisiz
+# Erişimi" (95) ile açıldı; kaynak tarihi 30.09 ve aynı olay 24/29 Eylül ile
+# 3 Ekim raporlarındaydı. Bu katman onu tekrar olarak işaretleyip manşetten
+# çıkarmıştı — sonra `yayin_yonetmeni_takas` BİRİNCİ manşet yaptı. Sebep:
+# karar hiçbir yere yazılmıyordu, `_manset_disi_ids` ise yalnızca
+# `_manset_yasak`a, kategoriye ve olay defterinin MANŞET tekrar sayısına bakar.
+
+def test_capraz_gun_karari_manset_yasagina_yazilir():
+    s = _sistem([3])
+    out = _cagir(s, [1, 2, 3], [1, 2, 3, 4, 5])
+    assert 3 not in out
+    assert 3 in s._manset_yasak, 'çapraz-gün kararı kalıcı yazılmadı'
+    # Yasak, yönetmenin gördüğü kapı kümesine de düşmeli.
+    disi = s._manset_disi_ids([3, 4, 5], KAYITLAR,
+                              s._dedup_view_fn(ICERIK, {}))
+    assert 3 in disi
+
+
+def test_yerinde_birakilan_haber_yasaklanmaz():
+    """Yedek yoksa haber manşette KALIR; kendi yasağı onu düşüremez."""
+    s = _sistem([3])
+    out = _cagir(s, [1, 2, 3], [1, 2, 3])
+    assert out == [1, 2, 3]
+    assert 3 not in getattr(s, '_manset_yasak', set())

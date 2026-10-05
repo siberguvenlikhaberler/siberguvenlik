@@ -698,3 +698,39 @@ politika — düzeltme öncesi/sonrası birebir aynı). Son 31 günün ortak-ana
 8.997 çifti yeniden karara bağlandı: **yalnızca 1 çiftin kararı değişti**
 (KillSec↔ShinyHunters, AYNI_GELISME → ILISKISIZ). Yani gerçek mükerrer
 kaybedilmiyor. Regresyon: `tests/test_olay_iliski.py`.
+
+## ÇAPRAZ-GÜN MANŞET KARARI KALICIDIR (ölçüm, 2026-10-04)
+
+4 Ekim raporu "OpenAI Modellerinin Avustralya Hükümet Sistemlerine Yetkisiz
+Erişimi" (95) ile açıldı; **kaynak tarihi 30.09'du** ve aynı olay zaten
+24 Eylül (Medicare portalı), 29 Eylül (Avustralya hükümet siteleri + canlı
+internet erişiminin durdurulması) ve 3 Ekim (yüzden fazla kurum)
+raporlarındaydı — yani dört günlük bir tekrar manşetin birincisi oldu.
+
+Boru hattı bunu DOĞRU yakalamıştı: `_dedup_kritik3_cross_day_llm` haberi
+"son 30 günde raporlanmış olayın tekrarı" diye manşetten çıkardı. Üç katman
+sonra `yayin_yonetmeni_takas` onu gövdede görüp geri manşete çıkardı.
+Sebep: bu katman kararını HİÇBİR YERE yazmıyordu. `_manset_disi_ids`
+yalnızca `_manset_yasak`a, kategoriye ve olay defterinin **MANŞET** tekrar
+sayısına bakar; "bu olay son 30 günde GÖVDEDE raporlandı" bilgisi
+hiçbirinde yoktu.
+
+KURAL: başarılı bir takas sonrası çıkarılan haber `_manset_yasak`a yazılır —
+çapraz-gün kararı haberin KENDİSİ hakkındadır (günün havuzuna göreli
+değildir), dolayısıyla kalıcıdır. Yedek bulunamayıp YERİNDE BIRAKILAN haber
+yasaklanmaz: o hâlâ manşettir. Aynı ders auditor kararı (2026-08-25,
+"ABD'de yaşlıları dolandıran şebeke") ve olay defteri (2026-08-21, Siemens
+PLC) için ölçülüp kayda geçmişti; manşete dokunan bu ÜÇÜNCÜ katman
+kapsanmamıştı. Regresyon: `tests/test_kritik3_capraz_gun.py`.
+
+### Pazar/pazartesi arz çöküşü YAPISALDIR (ölçüm, 2026-10-05)
+Rapor 4 Ekim'de 6, 5 Ekim'de 3 habere düştü. Bu bir regresyon DEĞİL, haftalık
+desen: 20-21 Eylül 4 ve 5 haber, 27-28 Eylül 8 ve 5, 4-5 Ekim 6 ve 3 (aday
+sayısı hafta içi 54-91 iken pazar/pazartesi 18-28). Sebep arzın kendisi —
+kaynaklar hafta sonu yayın yapmıyor, 96 saatlik pencere ve 7 günlük link
+dedup kalanı eliyor (`rss_errors.txt`: Dark Reading 13 haberin 12'si "daha
+önce raporlanmış"). 3 haberlik rapor `REPORT_KITLIK_HAVUZ`/`REPORT_FLOOR_MIN`
+kuralına UYGUNDUR (taze havuz 9 → taban 3) ve 2026-09-14'te ölçülmüştür:
+yeniden deneme raporu iyileştirmiyor, zayıflatıyor. Bu günlerde KRİTİK 3'ün
+puan bandı zorunlu olarak düşer (5 Ekim: 97/85/**76**) — kural ihlali değil,
+havuzun tamamı o kadardır.

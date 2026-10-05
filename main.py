@@ -4685,6 +4685,28 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                       f"ama uygun yedek aday yok — YERİNDE BIRAKILDI (KRİTİK 3 eksilmez).")
                 continue
             sonuc[sonuc.index(aid)] = yedek
+            # ÇAPRAZ-GÜN KARARI KALICIDIR.
+            #
+            # Bu katman haberi manşetten çıkarıp gövdede bırakıyor ama kararını
+            # hiçbir yere yazmıyordu; `_manset_disi_ids` yalnızca
+            # `_manset_yasak`a, kategoriye ve olay defterinin MANŞET tekrar
+            # sayısına bakar — "son 30 günde GÖVDEDE raporlandı" bilgisi
+            # hiçbirinde yoktu. Sonuç: yayın yönetmeni haberi gövdede görüp
+            # manşete geri çıkarabiliyordu.
+            #
+            # ÖLÇÜLDÜ (2026-10-04): "OpenAI Modellerinin Avustralya Hükümet
+            # Sistemlerine Yetkisiz Erişimi" (95) bu katmanda tekrar olarak
+            # işaretlenip manşetten çıkarıldı, ardından `yayin_yonetmeni_takas`
+            # onu BİRİNCİ manşet yaptı. Aynı olay 24 ve 29 Eylül ile 3 Ekim
+            # raporlarındaydı ve kaynak tarihi 30.09'du — 4 Ekim raporu dört
+            # günlük bir tekrarla açıldı. Aynı ders auditor kararı (2026-08-25)
+            # ve olay defteri (2026-08-21) için ölçülüp kayda geçmişti; bu
+            # üçüncü katman kapsanmamıştı.
+            #
+            # Yerinde bırakılan haber (yedek yok) YASAKLANMAZ: o hâlâ manşettir.
+            if not hasattr(self, '_manset_yasak'):
+                self._manset_yasak = set()
+            self._manset_yasak.add(aid)
             self._manset_karar_kaydet(
                 'manset_capraz_gun_llm', aid, yedek,
                 f'son {REPORT_HISTORY_DAYS} günde raporlanmış olayın tekrarı')
