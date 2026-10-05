@@ -734,3 +734,73 @@ kuralına UYGUNDUR (taze havuz 9 → taban 3) ve 2026-09-14'te ölçülmüştür
 yeniden deneme raporu iyileştirmiyor, zayıflatıyor. Bu günlerde KRİTİK 3'ün
 puan bandı zorunlu olarak düşer (5 Ekim: 97/85/**76**) — kural ihlali değil,
 havuzun tamamı o kadardır.
+
+## HAFTA SONU PENCERESİNİ UZATMAK KAZANÇ GETİRMEZ (ölçüm, 2026-10-05)
+
+Araç: `scripts/pencere_olc.py` (yalnızca OKUR). Doğrudan ölçüm — feed'i çekip
+96-168 saat bandındaki maddeleri saymak — BU ORTAMDAN YAPILAMAZ: egress tüm
+dış siteleri 403 ile kesiyor (`scripts/feed_test.py` ile aynı kısıt, canlı
+probe ile doğrulandı). Vekil ölçüm arşivin kendisidir: her kaydın kaynak
+satırında yayın tarihi, blok başlığında rapor tarihi yazılı.
+
+ÖLÇÜLDÜ (son 60 gün, 1.051 kayıt): gecikmelerin **%94,2'si 0-1 gün**; 2 gün
+%2,6, 3 gün %1,0, 4+ gün %1,2. Pazar medyanı 1 gün (ortalama 1,09, maks 4),
+pazartesi medyanı 0. Yani pencere BAĞLAYICI DEĞİL — sınırda birikme yok.
+4 gün ve üstü gelen 23 kaydın 16'sı CERT-FR, kalanı da `LOW_CADENCE_SOURCES`
+ya da arıza sonrası telafi penceresinde (168s) OLAN kaynaklar; düz 96s
+kaynaklarda bu band fiilen boş.
+
+İkinci ölçüm (`data/rss_errors.txt`, günlük ortalama): ince günlerin kaybı
+pencere değil DEDUP'tır — 4 Ekim pazar 38 madde "daha önce raporlanmış" + 24
+benzerlik, pencere 0; 5 Ekim pazartesi tek pencere kaybı IranWire'ın bayat
+aynasıydı ve `_recently_failed_sources` onu sonraki koşuda zaten 168s'e
+alıyor. Pencereyi uzatmak bu kayıpların hiçbirini geri getirmez; getirdiği
+şey ÖNCEKİ GÜNLERDE YAYIMLANMIŞ haberlerin yeniden havuza girmesi, yani
+4 Ekim'de düzeltilen çapraz-gün tekrar baskısının artmasıdır.
+
+KARAR: pencere 96s/168s olarak KALIR. `main.NEWS_WINDOW_HOURS` yorumundaki
+"pencereyi büyütmek havuzu büyütmez" gerekçesi 60 günlük veriyle doğrulandı.
+
+## OLAY DEFTERİ KİRLİ — "MANŞET OLDU" KAYDI YANLIŞ OLABİLİR (ölçüm, 2026-10-05)
+
+Soru şuydu: katmanlar arası kararlar bir HAFIZA dosyasına yazılsa, bir
+katmanın "bu mükerrer" kararını diğeri bilir miydi? Ölçüm, hafızanın
+EKSİK değil KİRLİ olduğunu gösterdi. Araç: `scripts/defter_olc.py`
+(yalnızca OKUR).
+
+- Defter (rapor_gecmis + kritik3_gecmis'ten türetilir) son 31 günde 385 olay
+  kuruyor: 304'ü tek gün, 51'i iki gün… ve sonra **18, 13 ve 10 günlük üç dev
+  küme**. Dağılımdaki bu boşluk kümelerin artefakt olduğunun işaretidir.
+- Temsilcileri okununca doğrulandı: olay 17 (18 gün, **8 manşet günü**)
+  SConnect finans açığı + Çin/SharePoint casusluğu + Linux posta implantını
+  tek olay sayıyor; olay 26 FortiMail + MikroTik + Citrix sıfır-günlerini;
+  olay 20 Apache + Nessus + Mozilla bültenlerini.
+- BU ÜRETİMİ ETKİLİYOR: `_manset_disi_ids`, `manset_gunu_sayisi` ≥
+  `MANSET_TEKRAR_SINIRI` (1) olan adayı manşete kapatıyor. 8 manşet günü
+  taşıyan kirli bir kümeye GEVŞEK eşleşen her haber böylece manşete
+  çıkamıyor. 3 Ekim'de iki yönetmen takası "olay son 30 günde 1/2 kez manşet
+  oldu" ile reddedilmişti — gerekçenin dayanağı bu kayıttır.
+- Kirlenme kaynağı muhtemelen `_manset_kaydi`'nin BİLEREK gevşetilmiş
+  yedek yolu (tek ortak kimlik + zayıf konu, ya da çapraz-gün `same_event`)
+  ve temsilci tazeleme (`views.insert(0, ...)`): küme her yeni üyeyle
+  kayıyor, böylece ilk üyesiyle ilgisi olmayan haberler zincire eklenebiliyor.
+  `kumele` geçişli birleştirmeyi 2026-09-29'da tam bu yüzden bırakmıştı;
+  defter o dersi almadı.
+- **"Olay daha önce gövdede raporlandıysa manşet olamaz" kuralı ÖLÇÜLDÜ ve
+  REDDEDİLDİ**: son 31 günün 93 gerçek manşetinin **38'i (%41)** bu kurala
+  takılırdı — aralarında Bitget borsa soygunu, Pentagon personel ihlali,
+  Güney Afrika hava trafiği, Tren de Aragua yaptırımları gibi ilk kez manşet
+  olan haberler var. Kayıt bu kadar kirliyken kuralı sıkılaştırmak raporu
+  boşaltır; önce defterin kimliği temizlenmelidir.
+
+SONUÇ (tasarım kararı): serbest metinli bir "ajan hafızası" dosyası bu
+sorunu ÇÖZMEZ. Karar taşıyıcıları hattın kendi veri yapılarıdır
+(`_manset_yasak`, `_manset_izi`, `eleme_nedeni`, defter) ve bilgi zaten
+orada — 4 Ekim arızası bir katmanın o kümeye YAZMAMASIYDI, dosya olsa aynı
+katman dosyaya da yazmazdı. Prozaik bir hafıza dosyası ayrıca (a) LLM
+tarafından yeniden YORUMLANIR — projenin ölçümle kaldırdığı kayma geri
+gelir, (b) yeni bir durum dosyası ve reset prosedürü doğurur (defter tam bu
+yüzden kalıcı dosya DEĞİL), (c) şema kapısı olmadığı için enjeksiyona açıktır.
+Doğru iş: defterin kimliğini temizlemek ve manşete dokunan yedi katmanın
+kararını TEK ARACIYA yazdırmak (katmanlar `top3`'ü doğrudan değiştirmek
+yerine karar döndürür).
