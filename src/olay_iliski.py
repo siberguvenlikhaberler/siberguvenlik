@@ -367,7 +367,27 @@ def _olay_kimlikleri_ham(view, sozluk):
     kimlikler |= {'cve:' + c for c in dedup.extract_actors(blob)
                   if c.startswith('cve')}
     kimlikler |= {'pkg:' + p for p in dedup.extract_package_names(blob)}
-    kimlikler |= {'kod:' + k for k in dedup.extract_codenames(blob)}
+    # MARKA AKTÖR ADI KOD ADI OLARAK DA OLAY KİMLİĞİ SAYILMAZ.
+    #
+    # Kullanıcı kararı (2026-09-28) `dedup.same_event` içinde uygulanmıştı
+    # (`_aktor_markasi`) ama buraya hiç taşınmadı: 'ShinyHunters' CamelCase
+    # olduğu için kod adı sezgisine takılıyor, `kod:` ise YÜKSEK DERECE
+    # olduğundan tek başına ve 0.10 konu desteğiyle olay bağı kuruyordu.
+    # Aktör adları `ad:` tarafından zaten çıkarılıyor (aşağıdaki
+    # `_aktor_kokleri`); `kod:` tarafı atlanmıştı.
+    #
+    # ÖLÇÜLDÜ (2026-10-05, son 31 günün olay defteri): FBI personel ihlali,
+    # Florida Motorlu Araçlar ihlali, ShinyHunters↔Clop çatışması ve Oracle
+    # PeopleSoft istismarı `ortak=ad:shinyhun,kod:shinyhunters topic=0.10-0.16`
+    # ile TEK olaya bağlanmıştı (6 gün, 4 manşet günü) — ortak kurban, ortak
+    # CVE, ortak kod adı YOK. O tek kayıt yüzünden sonraki her ShinyHunters
+    # haberi "olay zaten 4 kez manşet oldu" diye manşete kapanıyordu; 27 Eylül
+    # arızasının defter tarafı budur.
+    #
+    # Yapısal küme kodları (UNC/UAT/Storm) etkilenmez: `_aktor_markasi`
+    # yalnızca `_NAMED_ACTORS` marka listesini işaretler.
+    kimlikler |= {'kod:' + k for k in dedup.extract_codenames(blob)
+                  if not dedup._aktor_markasi(k)}
     kesin, _ = ozel_adlar(view)
     # AKTÖR ADLARI OLAY KİMLİĞİNDEN ÇIKARILIR — modülün varlık sebebi olan
     # ayrımın uygulandığı yer burasıdır. Aktör adı aynı zamanda bir özel addır
@@ -592,6 +612,32 @@ def _yeni_gelisme_mi(view_a, view_b, sozluk):
     return (len(yeni) >= MIN_YENI_AD, sorted(yeni)[:4])
 
 
+def _celisen_yapisal_kimlik(view_a, view_b, sozluk=None):
+    """İki haberin YAPISAL kimlikleri var ve AYRIK mı?
+
+    `topic >= KONU_TEK_BASINA` yolu "ortak kimlik bulunamadı ama metinler
+    neredeyse aynı" demek içindir. Satıcı güvenlik bültenleri bu varsayımı
+    bozar: kalıp metin oldukları için konu örtüşmesi birbirini hiç tutmayan
+    bültenlerde de 0,42'yi aşar.
+
+    ÖLÇÜLDÜ (2026-10-05, son 31 günün olay defteri): Elastic Kibana, Microsoft,
+    Apple, Squid, Oracle VirtualBox, Apache Zookeeper, HPE Aruba, Synology,
+    PHP, Mozilla, Nessus ve Apache HTTP bültenleri salt konu örtüşmesiyle
+    (0,42-0,54) TEK olaya bağlanmıştı — 10 gün, 12 ayrı satıcı. Birleşme
+    gerekçeleri ayrık CVE listelerini zaten yazıyordu
+    (`yeni=['cve:...','kod:strongswan']`): kanıt oradaydı, kural yoktu.
+
+    İki taraf da yapısal kimlik (CVE / kod adı / paket) taşıyor ve kesişim
+    BOŞSA, konu örtüşmesi ne olursa olsun bu iki haber aynı olay değildir.
+    Taraflardan biri kimliksizse kural ÇALIŞMAZ (kanıt yok, eski davranış).
+    """
+    ya = {k for k in olay_kimlikleri(view_a, sozluk)
+          if k.startswith(('cve:', 'kod:', 'pkg:'))}
+    yb = {k for k in olay_kimlikleri(view_b, sozluk)
+          if k.startswith(('cve:', 'kod:', 'pkg:'))}
+    return bool(ya) and bool(yb) and not (ya & yb)
+
+
 def iliski_belirle(view_a, view_b, ayni_gun=False, explain=False, sozluk=None):
     """İki haber arasındaki ilişkiyi dört değerden biri olarak döndürür.
 
@@ -619,8 +665,13 @@ def iliski_belirle(view_a, view_b, ayni_gun=False, explain=False, sozluk=None):
     # _MANSIZ_AD burada da uygulanır: bu ikinci yol 'aday' (cümle başı)
     # adlarını ekler ve olay_kimlikleri'ndeki filtreyi ATLIYORDU —
     # 'ad:cvss' ve 'ad:tuesday' sahte eşleşmeleri buradan geliyordu.
+    # AKTÖR KÖKLERİ BU YOLDAN DA DÜŞER. `olay_kimlikleri` aktör adlarını
+    # çıkarıyor (bkz. oradaki Sandworm ölçümü) ama bu ikinci yol `_MANSIZ_AD`
+    # dışında hiçbir filtre uygulamıyordu: 'ad:shinyhun' ortak kimliği tam
+    # buradan geliyordu (2026-10-05 ölçümü).
+    _aktor_kok = _aktor_kokleri(view_a) | _aktor_kokleri(view_b)
     ortak_kimlik |= {'ad:' + a for a in _ortak_adlar(view_a, view_b, sozluk)
-                     if a not in _MANSIZ_AD}
+                     if a not in _MANSIZ_AD and a not in _aktor_kok}
 
     topic = _konu_ortusmesi(view_a, view_b)
 
@@ -665,7 +716,8 @@ def iliski_belirle(view_a, view_b, ayni_gun=False, explain=False, sozluk=None):
     # (ör. Microsoft/Redmond satıcı adı olarak elenir) yalnızca aktörü
     # paylaşıyor görünür ve AYNI_AKTOR_FARKLI_OLAY sayılır — oysa topic=0.46
     # gibi bir örtüşme tesadüf değildir.
-    if topic >= KONU_TEK_BASINA:
+    if topic >= KONU_TEK_BASINA and not _celisen_yapisal_kimlik(view_a, view_b,
+                                                                sozluk):
         yeni_var, yeni = _yeni_gelisme_mi(view_a, view_b, sozluk)
         if yeni_var:
             return _ret(YENI_GELISME, f'topic={topic:.2f} yeni={yeni}')
@@ -708,6 +760,22 @@ class OlayDefteri:
     # birkaç gün sonra artık eşleşmez.
     TEMSILCI = 3
 
+    # ── ÇAPA: KÜME KİMLİĞİ KAYMAZ ───────────────────────────────────────────
+    # `views` yalnızca EN YENİ üçü tutar, yani olayın KÖK görünümü üçüncü
+    # eklemeden sonra kayboluyordu. Sonuç geçişli zincirlenmedir: D yalnızca
+    # C ile eşleşerek kümeye giriyor, C yalnızca B ile girmişti, A'yla hiç
+    # karşılaştırılmıyordu. `kumele` geçişli birleştirmeyi 2026-09-29'da tam
+    # bu yüzden bıraktı (31 günün 15'i tek bloğa düşmüştü); defter o dersi
+    # almamıştı.
+    #
+    # ÖLÇÜLDÜ (2026-10-05, son 31 gün, üretim sözlüğüyle): çapa yoksa 5 günü
+    # aşan 8 küme ve 11 günlük bir küme oluşuyor; çapa ile 2 kümeye iner.
+    # YENI_GELISME (devam haberi) bağı yalnızca ÇAPAYA karşı kurulur; dönen
+    # temsilciler yalnızca AYNI_GELISME ile bağ kurabilir. Böylece gerçek
+    # devam haberi sözcükleri değişse bile kümede kalır (manşet tekrar sayısı
+    # korunur) ama "yeni gelişme" zinciri kümeyi sürükleyemez.
+    CAPA_ALANI = 'capa'
+
     def __init__(self, sozluk=None):
         self.sozluk = sozluk or BOS_SOZLUK
         self.kayitlar = []
@@ -718,6 +786,8 @@ class OlayDefteri:
             'gunler': [gun],
             'manset_gunleri': [gun] if manset else [],
             'views': [view],
+            # Kümenin KÖK görünümü — hiç döndürülmez (bkz. CAPA_ALANI).
+            self.CAPA_ALANI: view,
         }
         self.kayitlar.append(kayit)
         return kayit
@@ -730,12 +800,18 @@ class OlayDefteri:
         eşleşmeler olay bağı KURMAZ (farklı olaydırlar)."""
         en_iyi, en_iyi_iliski, en_iyi_neden = None, ILISKISIZ, ''
         for kayit in self.kayitlar:
-            for gecmis_view in kayit['views']:
+            capa = kayit.get(self.CAPA_ALANI)
+            adaylar = ([capa] if capa is not None else [])
+            adaylar += [v for v in kayit['views'] if v is not capa]
+            for gecmis_view in adaylar:
                 iliski, neden = iliski_belirle(
                     view, gecmis_view, explain=True, sozluk=self.sozluk)
                 if iliski == AYNI_GELISME:
                     return (kayit, iliski, neden) if explain else (kayit, iliski)
-                if iliski == YENI_GELISME and en_iyi is None:
+                # YENI_GELISME bağı YALNIZCA ÇAPAYA karşı kurulur — bkz.
+                # CAPA_ALANI yorumundaki geçişli zincirlenme ölçümü.
+                if (iliski == YENI_GELISME and en_iyi is None
+                        and gecmis_view is capa):
                     en_iyi, en_iyi_iliski, en_iyi_neden = kayit, iliski, neden
         if explain:
             return en_iyi, en_iyi_iliski, en_iyi_neden

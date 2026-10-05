@@ -24,6 +24,16 @@ from src import olay_iliski as oi                     # noqa: E402
 VERI = Path(__file__).resolve().parent.parent / 'data'
 
 
+def _sozluk(rapor):
+    """ÜRETİMDEKİ sözlük: defterin jeneriklik filtresi derlemden öğrenilir.
+
+    Bu olmadan ölçüm yanıltır — sözlüksüz koşuda 'analytic/careers/threats'
+    gibi İngilizce menü sözcükleri özel ad sayılıp sahte kümeler kurar.
+    main.py sözlüğü son 30 günün görünümleri + bugünün adaylarıyla kurar.
+    """
+    return oi.OlaySozlugu([v for g in rapor for v in rapor[g]])
+
+
 def _gunler():
     rapor = {d['date']: d.get('views', [])
              for d in json.loads((VERI / 'rapor_gecmis.json').read_text('utf-8'))}
@@ -40,7 +50,7 @@ def _manset_views(views, manset_views):
 
 def kural_olc():
     rapor, k3 = _gunler()
-    defter = oi.OlayDefteri()
+    defter = oi.OlayDefteri(sozluk=_sozluk(rapor))
     takilan, temiz = [], 0
     for g in sorted(set(rapor) | set(k3)):
         for v in k3.get(g, []):                        # GÜN İŞLENMEDEN sorgula
@@ -61,9 +71,33 @@ def kural_olc():
         print(f"  {g}  {t}\n       önceki rapor: {len(o)} gün  önceki manşet: {m}")
 
 
+def yasak_olc():
+    """ÜRETİMDEKİ kural: `manset_gunu_sayisi >= MANSET_TEKRAR_SINIRI` (1).
+
+    Gerçek manşetlerin kaçı, YAYIMLANDIĞI GÜN defterde "bu olay zaten manşet
+    oldu" görünüyordu? Yüksek sayı = defter kirli, çünkü bu haberler gerçekte
+    o gün ilk kez manşet oldu.
+    """
+    rapor, k3 = _gunler()
+    defter = oi.OlayDefteri(sozluk=_sozluk(rapor))
+    yasak, toplam = [], 0
+    for g in sorted(set(rapor) | set(k3)):
+        for v in k3.get(g, []):
+            toplam += 1
+            n = defter.manset_gunu_sayisi(v)
+            if n >= 1:
+                yasak.append((g, (v.get('tr_title') or '')[:58], n))
+        views = rapor.get(g, []) or []
+        defter.gunleri_isle([(g, views, _manset_views(views, k3.get(g)))])
+    print(f"gerçek manşet: {toplam}  ·  defter 'zaten manşet oldu' diyor: "
+          f"{len(yasak)}")
+    for g, t, n in yasak:
+        print(f"  {g}  {t}  (sayı={n})")
+
+
 def kume_olc(ornek):
     rapor, k3 = _gunler()
-    defter = oi.OlayDefteri()
+    defter = oi.OlayDefteri(sozluk=_sozluk(rapor))
     for g in sorted(rapor):
         views = rapor.get(g, []) or []
         defter.gunleri_isle([(g, views, _manset_views(views, k3.get(g)))])
@@ -83,12 +117,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--kural', action='store_true')
     ap.add_argument('--kume', action='store_true')
+    ap.add_argument('--yasak', action='store_true')
     ap.add_argument('--ornek', type=int, default=3)
     a = ap.parse_args()
-    if not (a.kural or a.kume):
-        a.kural = a.kume = True
+    if not (a.kural or a.kume or a.yasak):
+        a.kural = a.kume = a.yasak = True
     if a.kural:
         kural_olc()
+    if a.yasak:
+        print()
+        yasak_olc()
     if a.kume:
         print()
         kume_olc(a.ornek)

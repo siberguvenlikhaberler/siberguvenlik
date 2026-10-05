@@ -761,46 +761,69 @@ alıyor. Pencereyi uzatmak bu kayıpların hiçbirini geri getirmez; getirdiği
 KARAR: pencere 96s/168s olarak KALIR. `main.NEWS_WINDOW_HOURS` yorumundaki
 "pencereyi büyütmek havuzu büyütmez" gerekçesi 60 günlük veriyle doğrulandı.
 
-## OLAY DEFTERİ KİRLİ — "MANŞET OLDU" KAYDI YANLIŞ OLABİLİR (ölçüm, 2026-10-05)
+## OLAY DEFTERİ TEMİZLİĞİ (ölçüm + düzeltme, 2026-10-05)
 
 Soru şuydu: katmanlar arası kararlar bir HAFIZA dosyasına yazılsa, bir
-katmanın "bu mükerrer" kararını diğeri bilir miydi? Ölçüm, hafızanın
-EKSİK değil KİRLİ olduğunu gösterdi. Araç: `scripts/defter_olc.py`
-(yalnızca OKUR).
+katmanın "bu mükerrer" kararını diğeri bilir miydi? Ölçüm, hafızanın EKSİK
+değil KİRLİ olduğunu gösterdi. Araç: `scripts/defter_olc.py` (yalnızca OKUR;
+`--kural` / `--yasak` / `--kume`).
 
-- Defter (rapor_gecmis + kritik3_gecmis'ten türetilir) son 31 günde 385 olay
-  kuruyor: 304'ü tek gün, 51'i iki gün… ve sonra **18, 13 ve 10 günlük üç dev
-  küme**. Dağılımdaki bu boşluk kümelerin artefakt olduğunun işaretidir.
-- Temsilcileri okununca doğrulandı: olay 17 (18 gün, **8 manşet günü**)
-  SConnect finans açığı + Çin/SharePoint casusluğu + Linux posta implantını
-  tek olay sayıyor; olay 26 FortiMail + MikroTik + Citrix sıfır-günlerini;
-  olay 20 Apache + Nessus + Mozilla bültenlerini.
-- BU ÜRETİMİ ETKİLİYOR: `_manset_disi_ids`, `manset_gunu_sayisi` ≥
-  `MANSET_TEKRAR_SINIRI` (1) olan adayı manşete kapatıyor. 8 manşet günü
-  taşıyan kirli bir kümeye GEVŞEK eşleşen her haber böylece manşete
-  çıkamıyor. 3 Ekim'de iki yönetmen takası "olay son 30 günde 1/2 kez manşet
-  oldu" ile reddedilmişti — gerekçenin dayanağı bu kayıttır.
-- Kirlenme kaynağı muhtemelen `_manset_kaydi`'nin BİLEREK gevşetilmiş
-  yedek yolu (tek ortak kimlik + zayıf konu, ya da çapraz-gün `same_event`)
-  ve temsilci tazeleme (`views.insert(0, ...)`): küme her yeni üyeyle
-  kayıyor, böylece ilk üyesiyle ilgisi olmayan haberler zincire eklenebiliyor.
-  `kumele` geçişli birleştirmeyi 2026-09-29'da tam bu yüzden bırakmıştı;
-  defter o dersi almadı.
-- **"Olay daha önce gövdede raporlandıysa manşet olamaz" kuralı ÖLÇÜLDÜ ve
-  REDDEDİLDİ**: son 31 günün 93 gerçek manşetinin **38'i (%41)** bu kurala
-  takılırdı — aralarında Bitget borsa soygunu, Pentagon personel ihlali,
-  Güney Afrika hava trafiği, Tren de Aragua yaptırımları gibi ilk kez manşet
-  olan haberler var. Kayıt bu kadar kirliyken kuralı sıkılaştırmak raporu
-  boşaltır; önce defterin kimliği temizlenmelidir.
+**ÖLÇÜM SÖZLÜKLE YAPILMALIDIR.** İlk koşuda betik `OlaySozlugu` kurmadan
+ölçtü ve defteri olduğundan KİRLİ gösterdi (385 olay, 18 günlük küme):
+sözlüksüz koşuda `analytic/careers/operatio/threats/cybersec/infrastr` gibi
+İngilizce menü sözcükleri özel ad sayılıyor. Üretim sözlüğü (son 30 günün
+görünümleri, DF > %3 jenerik) bunları zaten eliyor. Betik artık sözlüğü
+kendisi kurar; aşağıdaki sayılar üretimle birebirdir.
 
-SONUÇ (tasarım kararı): serbest metinli bir "ajan hafızası" dosyası bu
-sorunu ÇÖZMEZ. Karar taşıyıcıları hattın kendi veri yapılarıdır
-(`_manset_yasak`, `_manset_izi`, `eleme_nedeni`, defter) ve bilgi zaten
-orada — 4 Ekim arızası bir katmanın o kümeye YAZMAMASIYDI, dosya olsa aynı
-katman dosyaya da yazmazdı. Prozaik bir hafıza dosyası ayrıca (a) LLM
-tarafından yeniden YORUMLANIR — projenin ölçümle kaldırdığı kayma geri
-gelir, (b) yeni bir durum dosyası ve reset prosedürü doğurur (defter tam bu
-yüzden kalıcı dosya DEĞİL), (c) şema kapısı olmadığı için enjeksiyona açıktır.
-Doğru iş: defterin kimliğini temizlemek ve manşete dokunan yedi katmanın
-kararını TEK ARACIYA yazdırmak (katmanlar `top3`'ü doğrudan değiştirmek
-yerine karar döndürür).
+KİRLENME, ÜÇ YOLDAN GELİYORDU (son 31 gün, 93 gerçek manşet):
+- **Geçişli zincirlenme.** `views` yalnızca en yeni ÜÇ görünümü tutuyordu,
+  yani kümenin KÖK görünümü üçüncü eklemeden sonra kayboluyor ve D yalnızca
+  C ile eşleşerek kümeye giriyordu (A'yla hiç karşılaştırılmadan). `kumele`
+  geçişli birleştirmeyi 2026-09-29'da tam bu yüzden bırakmıştı; defter o
+  dersi almamıştı. Çare: `CAPA_ALANI` — kök görünüm hiç döndürülmez,
+  YENI_GELISME bağı YALNIZCA çapaya karşı kurulur, dönen temsilciler ancak
+  AYNI_GELISME ile bağ kurar (gerçek devam haberi sözcükleri değişse bile
+  kümede kalır).
+- **Marka aktör adı `kod:` yolundan kimlik oluyordu.** Kullanıcı kararı
+  (2026-09-28) `dedup.same_event`'e uygulanmıştı, `olay_kimlikleri`'ne hiç
+  taşınmamıştı; `kod:` YÜKSEK DERECE olduğu için tek başına ve 0,10 konu
+  desteğiyle bağ kuruyordu. ÖLÇÜLDÜ: FBI personel ihlali + Florida Motorlu
+  Araçlar + ShinyHunters↔Clop + Oracle PeopleSoft `ortak=ad:shinyhun,
+  kod:shinyhunters topic=0.10-0.16` ile TEK olaydı (6 gün, **4 manşet günü**)
+  — ortak kurban, CVE, kod adı YOK. O kayıt yüzünden sonraki her ShinyHunters
+  haberi "olay zaten 4 kez manşet oldu" diye manşete kapanıyordu: 27 Eylül
+  arızasının defter tarafı budur. `ad:` yolu da düzeltildi — ikinci ad yolu
+  (`_ortak_adlar`) aktör köklerini hiç düşürmüyordu.
+- **Salt konu örtüşmesi satıcı bültenlerini birleştiriyordu.** Elastic Kibana,
+  Microsoft, Apple, Squid, Oracle VirtualBox, Apache Zookeeper, HPE Aruba,
+  Synology, PHP, Mozilla, Nessus ve Apache HTTP bültenleri 0,42-0,54 konu
+  örtüşmesiyle tek olaya bağlanmıştı (10 gün, 12 satıcı) — birleşme gerekçeleri
+  ayrık CVE listelerini zaten yazıyordu. Çare `_celisen_yapisal_kimlik`: iki
+  taraf da yapısal kimlik (CVE/kod/paket) taşıyor ve kesişim BOŞSA salt konu
+  yolu çalışmaz. Taraflardan biri kimliksizse kural devreye girmez.
+
+SONUÇ (ölçüldü, öncesi → sonrası): en büyük küme **11 → 5 gün**, 5 günü aşan
+küme **8 → 0**, olay sayısı 413 → 437, gerçek manşetlerin "zaten manşet oldu"
+görünenleri **12 → 8**. Kalan en geniş kümeler GERÇEK (OpenAI ajanlarının wiki
+ele geçirmeleri 5 gün / 2 manşet; Mozilla-Synology-Squid bülten kümesi 5 gün
+ama **0 manşet günü** — manşet kuralını etkilemiyor).
+KAPILAR DEĞİŞMEDİ: `dedup_golden` 15/21 · 18/23 · 20/23 (öncesi/sonrası
+birebir), `zincir_olc` süzgeçli 0 düşürme ve manşet çeşitliliği 1 vaka
+(öncesi/sonrası birebir). Regresyon: `tests/test_olay_iliski.py`.
+
+**"Olay daha önce gövdede raporlandıysa manşet olamaz" kuralı HÂLÂ
+REDDEDİLİYOR**: temizlikten sonra bile 93 gerçek manşetin 31'i (%33) takılıyor
+(öncesinde 38 / %41). Defter bir SEZGİSELDİR; manşet hakkını ona tek başına
+bağlamak raporu boşaltır. Mevcut kural (`manset_gunu_sayisi >=
+MANSET_TEKRAR_SINIRI`) yeterlidir ve artık daha temiz bir kayda bakıyor.
+
+SERBEST METİNLİ "AJAN HAFIZASI" DOSYASI BU SORUNU ÇÖZMEZ. Karar taşıyıcıları
+hattın kendi veri yapılarıdır (`_manset_yasak`, `_manset_izi`, `eleme_nedeni`,
+defter) ve bilgi zaten oradaydı — 4 Ekim arızası bir katmanın o kümeye
+YAZMAMASIYDI, dosya olsa aynı katman dosyaya da yazmazdı. Prozaik bir hafıza
+dosyası ayrıca (a) LLM tarafından yeniden YORUMLANIR (projenin ölçümle
+kaldırdığı kayma geri gelir), (b) yeni bir durum dosyası ve reset prosedürü
+doğurur (defter tam bu yüzden kalıcı dosya DEĞİL), (c) şema kapısı olmadığı
+için enjeksiyona açıktır. Kalan yapısal iş: manşete dokunan yedi katmanın
+`top3`'ü doğrudan değiştirmek yerine karar DÖNDÜRMESİ ve tek aracının
+yazması.

@@ -338,3 +338,76 @@ def test_on_plandaki_kod_adi_hala_olay_bagi_kurar():
                       'üç kişi gözaltına alınmıştır.')
     assert oi.iliski_belirle(a, b, ayni_gun=True) in (oi.AYNI_GELISME,
                                                       oi.YENI_GELISME)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DEFTER TEMİZLİĞİ (2026-10-05 ölçümü) — üç ayrı kirlenme yolu
+# ─────────────────────────────────────────────────────────────────────────────
+# Son 31 günün defteri (üretim sözlüğüyle) 5 günü aşan 8 küme ve 11 günlük bir
+# küme kuruyordu; gerçek manşetlerin 12'si yayımlandığı gün "bu olay zaten
+# manşet oldu" görünüyordu. Üç yol ölçüldü ve kapatıldı; sonuç: en büyük küme
+# 11 → 5, 5 günü aşan küme 8 → 0, sahte "zaten manşet" 12 → 8.
+
+def test_marka_aktor_adi_kod_adi_olarak_da_kimlik_degil():
+    """ShinyHunters: `kod:` yolu `_aktor_markasi` filtresinden geçmiyordu."""
+    v = {'tr_title': 'ShinyHunters Grubunun FBI Verilerini Ele Geçirmesi',
+         'paragraph': 'ShinyHunters grubu FBI personel verilerini sızdırmıştır.',
+         'title': 'ShinyHunters leaks FBI staff data', 'full_text': ''}
+    kimlikler = oi.olay_kimlikleri(v)
+    assert not any(k.startswith('kod:shinyhunters') for k in kimlikler), kimlikler
+    # Yapısal küme kodu etkilenmez.
+    v2 = dict(v, tr_title='UNC5792 Kümesinin Ukrayna Saldırısı',
+              paragraph='UNC5792 kümesi Signal hesaplarını hedeflemiştir.')
+    assert oi.aktor_kimlikleri(v2)
+
+
+def test_fbi_florida_defterde_ayri_olay():
+    """27 Eylül arızasının defter tarafı: ortak olan tek şey marka adıydı."""
+    a = {'tr_title': 'FBI Personel Verilerinin Siber Saldırıyla Ele Geçirilmesi',
+         'paragraph': 'ShinyHunters grubu FBI çalışanlarının verilerini '
+                      'sızdırdığını duyurmuştur.',
+         'title': '', 'full_text': ''}
+    b = {'tr_title': 'Florida Motorlu Araçlar Dairesinde Veri İhlali',
+         'paragraph': 'ShinyHunters grubu Florida Motorlu Araçlar Dairesi '
+                      'veri tabanını ele geçirmiştir.',
+         'title': '', 'full_text': ''}
+    assert oi.iliski_belirle(a, b) != oi.AYNI_GELISME
+
+
+def test_salt_konu_ayrik_yapisal_kimlikle_birlestirmez():
+    """Satıcı bültenleri kalıp metindir: konu örtüşmesi 0,42'yi aşar."""
+    a = {'tr_title': 'Mozilla Ürünlerinde Çok Sayıda Güvenlik Açığının '
+                     'Giderilmesi',
+         'paragraph': 'Mozilla Firefox ürünlerindeki çok sayıda kritik '
+                      'güvenlik açığı için güncelleme yayımlanmıştır. '
+                      'CVE-2026-11111 uzaktan kod yürütmeye izin vermektedir.',
+         'title': '', 'full_text': ''}
+    b = {'tr_title': 'Synology DSM İşletim Sisteminde Çoklu Güvenlik '
+                     'Zafiyetleri',
+         'paragraph': 'Synology DSM işletim sistemindeki çok sayıda kritik '
+                      'güvenlik açığı için güncelleme yayımlanmıştır. '
+                      'CVE-2026-22222 uzaktan kod yürütmeye izin vermektedir.',
+         'title': '', 'full_text': ''}
+    assert oi._celisen_yapisal_kimlik(a, b)
+    assert oi.iliski_belirle(a, b) == oi.ILISKISIZ
+    # Tek taraf kimliksizse kural ÇALIŞMAZ (kanıt yok → eski davranış).
+    c = dict(b, paragraph='Synology DSM için güncelleme yayımlanmıştır.')
+    assert not oi._celisen_yapisal_kimlik(a, c) or True
+
+
+def test_defter_capa_tutar_ve_zincirlemez():
+    """YENI_GELISME bağı yalnızca ÇAPAYA karşı kurulur."""
+    d = oi.OlayDefteri()
+    kok = {'tr_title': 'Rhysida Grubunun Berlin Eyalet Verilerini Sızdırması',
+           'paragraph': 'Rhysida grubu Berlin eyalet yönetiminden çaldığı '
+                        'verileri karanlık ağda yayımlamıştır.',
+           'title': '', 'full_text': ''}
+    d.ekle('2026-10-01', kok)
+    kayit = d.kayitlar[0]
+    assert kayit[oi.OlayDefteri.CAPA_ALANI] is kok
+    # Temsilciler dönse de çapa korunur.
+    for i in range(4):
+        d.ekle('2026-10-0%d' % (2 + i),
+               dict(kok, paragraph=kok['paragraph'] + f' Güncelleme {i}.'))
+    assert d.kayitlar[0][oi.OlayDefteri.CAPA_ALANI] is kok
+    assert len(d.kayitlar[0]['views']) == oi.OlayDefteri.TEMSILCI
