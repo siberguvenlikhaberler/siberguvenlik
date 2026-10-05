@@ -96,3 +96,81 @@ def test_araci_llm_cagrisi_yapmaz():
         kod = '\n'.join(kod)
         for cagri in ('_gemini_call', '_llm.', 'genai'):
             assert cagri not in kod, (fn.__name__, cagri)
+
+
+# ── FAZ 2: LİSTEYİ DE ARACI DEĞİŞTİRİR ─────────────────────────────────────
+# Takas mekaniği (`yeni_top3[index]=y` + giren haberi gövdeden çıkar + düşeni
+# gövdenin başına koy) yedi yerde kopyalanmıştı ve hiçbir koruma taşımıyordu.
+# Aracı artık değişmezi kendisi denetliyor: ihlalde takas UYGULANMAZ.
+
+def test_takas_listeyi_ve_govdeyi_birlikte_gunceller():
+    s = _sistem()
+    t3, t10, kalan = s._manset_takasi_uygula(
+        'kritik3_dominans', [1, 2, 3], [4, 5], [6, 7], 2, 5, 'daha güçlü aday')
+    assert t3 == [1, 5, 3], 'manşette yer değiştirmedi'
+    assert t10 == [2, 4], 'düşen haber gövdenin başına gelmedi / giren çıkmadı'
+    assert kalan == [6, 7]
+
+
+def test_dusen_govdeye_inmeyebilir():
+    """Son mükerrer kapısı: düşen haber mükerrerdir, gövdeye İNMEZ."""
+    s = _sistem()
+    t3, t10, _ = s._manset_takasi_uygula(
+        'son_mukerrer_kapisi_capraz', [1, 2, 3], [4, 5], (), 2, 5, 'mükerrer',
+        inen_govdeye=False)
+    assert t3 == [1, 5, 3]
+    assert t10 == [4], 'mükerrer haber gövdeye indirildi'
+
+
+def test_kritik3_sayisi_korunur_ve_mukerrer_manset_olmaz():
+    s = _sistem()
+    for dusen, giren in ((2, 3), (9, 4), (2, 2)):
+        t3, t10, kalan = s._manset_takasi_uygula(
+            'kritik3_dominans', [1, 2, 3], [4, 5], [6], dusen, giren, 'x')
+        assert t3 == [1, 2, 3], (dusen, giren)      # takas UYGULANMADI
+        assert t10 == [4, 5] and kalan == [6]
+        assert len(t3) == 3
+
+
+def test_gecersiz_takas_karar_yazmaz():
+    """Olmayan bir takasın izi yanıltıcıdır; yasak da yazılmaz."""
+    s = _sistem()
+    s._manset_takasi_uygula('manset_capraz_gun_llm', [1, 2, 3], (), (),
+                            9, 4, 'manşette olmayan id')
+    assert not getattr(s, '_manset_izi', [])
+    assert not getattr(s, '_manset_yasak', set())
+
+
+def test_takas_her_zaman_yeni_liste_dondurur():
+    s = _sistem()
+    t3_girdi = [1, 2, 3]
+    t3, _, _ = s._manset_takasi_uygula('kritik3_dominans', t3_girdi, [4], (),
+                                       2, 4, 'x')
+    assert t3_girdi == [1, 2, 3], 'çağıranın listesi yerinde değişti'
+    assert t3 is not t3_girdi
+
+
+def test_katmanlar_takasi_elle_yapmaz():
+    """YAPI testi: manşet listesinde elle yer değiştirme KALMADI.
+
+    Tek istisna yayın yönetmeninin İKİ YÖNLÜ takasıdır (manşet↔gövde yer
+    değiştirir); o da `_manset_takas_gecerli` denetiminden ve aracının karar
+    yazımından geçer.
+    """
+    kaynak = inspect.getsource(main).splitlines()
+    ihlal = []
+    for i, satir in enumerate(kaynak, 1):
+        if satir.lstrip().startswith('#'):
+            continue                      # yorumda geçen kalıp ihlal değil
+        if re.search(r'(yeni_top3|sonuc)\[[^\]]*\.index\([^\)]*\)\]\s*=',
+                     satir):
+            onceki = '\n'.join(kaynak[max(0, i - 14):i])
+            if 'İKİ YÖNLÜDÜR' not in onceki:
+                ihlal.append((i, satir.strip()))
+    assert not ihlal, f'aracı dışında elle manşet takası: {ihlal}'
+
+
+def test_yonetmen_takasi_araciyi_kullanir():
+    kaynak = inspect.getsource(main.HaberSistemi._yayin_yonetmeni)
+    assert '_manset_takas_gecerli' in kaynak
+    assert '_manset_takas(' in kaynak

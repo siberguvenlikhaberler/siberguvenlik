@@ -4396,8 +4396,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             else:
                 print(f"   🔁 Manşet içi mükerrer: ID {aid} → ID {yedek} ile "
                       f"DEĞİŞTİRİLDİ.")
-                self._manset_karar_kaydet('manset_ici_ayni_olay', aid, yedek,
-                                          'başka bir manşetle aynı olay')
+                # Bu katman listeyi DEĞİŞTİRMEZ, kurar (append) — aracının
+                # liste mekaniği uymaz; kararı yine aracı yazar ki kalıcılık
+                # tek tablodan okunsun (burada GÖRELİ: aynı gün iki manşet).
+                self._manset_takas('manset_ici_ayni_olay', aid, yedek,
+                                   'başka bir manşetle aynı olay')
                 sonuc.append(yedek)
         return sonuc
 
@@ -4537,13 +4540,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 print(f"   ⚠️  Manşet seçimi: ID {aid} hatalı işaretlendi "
                       f"({neden}) ama yedek aday yok — YERİNDE BIRAKILDI.")
                 continue
-            sonuc[sonuc.index(aid)] = yedek
-            # Yasak YUKARIDA konur (madde 1/2); burada yalnızca iz yazılır —
-            # auditor kararı yedek bulunamasa da kalıcıdır (2026-08-25 ölçümü).
-            self._manset_karar_kaydet(
+            # Yasak YUKARIDA konur (madde 1/2) — auditor kararı yedek
+            # bulunamasa da kalıcıdır (2026-08-25 ölçümü), yani yasak takasa
+            # bağlı değildir. Aracı burada listeyi değiştirip izi yazar;
+            # `inen_govdeye=False` çünkü bu katmanda gövde listesi yok, düşen
+            # haberin gövdeye inmesini çağıran yer yapar.
+            sonuc, _, _ = self._manset_takasi_uygula(
                 'auditor_manset_secimi'
                 if maddeler.get(aid, 0) != AUDITOR_GORELI_MADDE
-                else 'auditor_manset_secimi_goreli', aid, yedek, neden)
+                else 'auditor_manset_secimi_goreli',
+                sonuc, (), (), aid, yedek, neden, inen_govdeye=False)
             print(f"   🔁 Manşet seçimi: ID {aid} manşetlik değil ({neden}) → "
                   f"ID {yedek} ile DEĞİŞTİRİLDİ (eski haber gövdede kalır).")
         return sonuc
@@ -4687,7 +4693,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 print(f"   ⚠️  Manşet çapraz-gün: ID {aid} tekrar olarak işaretlendi "
                       f"ama uygun yedek aday yok — YERİNDE BIRAKILDI (KRİTİK 3 eksilmez).")
                 continue
-            sonuc[sonuc.index(aid)] = yedek
             # ÇAPRAZ-GÜN KARARI KALICIDIR.
             #
             # Bu katman haberi manşetten çıkarıp gövdede bırakıyor ama kararını
@@ -4707,9 +4712,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             # üçüncü katman kapsanmamıştı.
             #
             # Yerinde bırakılan haber (yedek yok) YASAKLANMAZ: o hâlâ manşettir.
-            self._manset_takas(
-                'manset_capraz_gun_llm', aid, yedek,
-                f'son {REPORT_HISTORY_DAYS} günde raporlanmış olayın tekrarı')
+            sonuc, _, _ = self._manset_takasi_uygula(
+                'manset_capraz_gun_llm', sonuc, (), (), aid, yedek,
+                f'son {REPORT_HISTORY_DAYS} günde raporlanmış olayın tekrarı',
+                inen_govdeye=False)
             print(f"   🔁 Manşet çapraz-gün: ID {aid} son {REPORT_HISTORY_DAYS} günde "
                   f"raporlanmış olayın tekrarı → ID {yedek} ile DEĞİŞTİRİLDİ "
                   f"(eski haber gövdede kalır).")
@@ -6544,17 +6550,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                       f"({','.join(ortak)}) ama temiz aday yok — "
                       f"YERİNDE BIRAKILDI (KRİTİK 3 eksilmez).")
                 break
-            yeni_top3[yeni_top3.index(cikan)] = yedek
-            yeni_top10 = [x for x in yeni_top10 if x != yedek]
-            yeni_kalan = [x for x in yeni_kalan if x != yedek]
-            if cikan not in yeni_top10:
-                yeni_top10.insert(0, cikan)
+            yeni_top3, yeni_top10, yeni_kalan = self._manset_takasi_uygula(
+                'kritik3_cesitlilik', yeni_top3, yeni_top10, yeni_kalan,
+                cikan, yedek,
+                f'aynı hat ({",".join(ortak)}); kategori ağırlığı düşük olan indi')
             print(f"   🎭 Manşet çeşitliliği: ID {a} ile ID {b} aynı hat "
                   f"({','.join(ortak)}) → ID {cikan} gövdeye indi, "
                   f"ID {yedek} manşete çıktı.")
-            self._manset_karar_kaydet(
-                'kritik3_cesitlilik', cikan, yedek,
-                f'aynı hat ({",".join(ortak)}); kategori ağırlığı düşük olan indi')
             self._enforce_kritik3_paragraph_length(
                 [yedek], content_by_id, articles_by_id)
         return yeni_top3, yeni_top10, yeni_kalan
@@ -6643,22 +6645,16 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if ihlal is None:
                 break
             x, y = ihlal
-            yeni_top3[yeni_top3.index(x)] = y
-            yeni_top10 = [i for i in yeni_top10 if i != y]
-            yeni_kalan = [i for i in yeni_kalan if i != y]
-            # Düşen haber gövdenin BAŞINA: puanca gövdenin en güçlülerinden.
-            if x not in yeni_top10:
-                yeni_top10.insert(0, x)
+            yeni_top3, yeni_top10, yeni_kalan = self._manset_takasi_uygula(
+                'kritik3_dominans', yeni_top3, yeni_top10, yeni_kalan, x, y,
+                f'{puan(y)}/{(records.get(y) or {}).get("kat")} adayı '
+                f'{puan(x)}/{(records.get(x) or {}).get("kat")} manşetini '
+                f'her iki eksende geçiyordu')
             takas_edilen.append((x, y))
             print(f"   ⚖️  Dominans takası: manşetteki ID {x} "
                   f"({puan(x)}, {(records.get(x) or {}).get('kat')}) → ID {y} "
                   f"({puan(y)}, {(records.get(y) or {}).get('kat')}) — aday her "
                   f"iki eksende de üstün.")
-            self._manset_karar_kaydet(
-                'kritik3_dominans', x, y,
-                f'{puan(y)}/{(records.get(y) or {}).get("kat")} adayı '
-                f'{puan(x)}/{(records.get(x) or {}).get("kat")} manşetini '
-                f'her iki eksende geçiyordu')
 
         if takas_edilen:
             # Manşete YENİ giren haberin paragrafı manşet ölçütüne çekilir.
@@ -7459,6 +7455,59 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         'son_mukerrer_kapisi_ici',
     })
 
+    # FAZ 2 — LİSTEYİ DE ARACI DEĞİŞTİRİR.
+    #
+    # Faz 1'de aracı yalnızca KARARI yazıyordu; takas mekaniği yedi yerde
+    # kopyalanmıştı: `yeni_top3[yeni_top3.index(x)] = y`, ardından giren
+    # haberi gövde listelerinden çıkar, düşeni gövdenin BAŞINA koy. Üç satır,
+    # yedi kopya, hepsi elle. Kopya mekanik hiçbir KORUMA taşımıyordu: aynı id
+    # iki kez manşete girse, liste üç yerine ikiye düşse ya da manşette
+    # olmayan bir id takas edilmeye çalışılsa hiçbir yerde fark edilmezdi —
+    # oysa "KRİTİK 3 ASLA 2'YE DÜŞMEZ" bu projenin en çok tekrarlanan
+    # kuralıdır (kullanıcı kararı, 2026-09-28).
+    #
+    # Aracı artık değişmezi KENDİSİ denetler ve ihlalde takası UYGULAMAZ:
+    # liste olduğu gibi döner, uyarı basılır. Güvenli düşüş, istisna değil —
+    # manşet mekaniği raporu düşürmemeli.
+
+    def _manset_takas_gecerli(self, top3, dusen, giren):
+        """Takas değişmezleri: (uygun_mu, gerekçe)."""
+        if dusen == giren:
+            return False, 'düşen ve giren aynı id'
+        if dusen not in top3:
+            return False, f'ID {dusen} manşette değil'
+        if giren in top3:
+            return False, f'ID {giren} zaten manşette (mükerrer manşet)'
+        return True, ''
+
+    def _manset_takasi_uygula(self, katman, top3, top10, kalan, dusen, giren,
+                              neden, inen_govdeye=True):
+        """Manşet takasını UYGULAR; listeyi ve muhasebeyi tek yerde tutar.
+
+        Dönüş: (top3, top10, kalan) — HER ZAMAN yeni listeler.
+
+        `inen_govdeye=False`: düşen haber gövdeye İNMEZ. Son mükerrer kapısı
+        böyle çalışır — orada düşen haber rapordan tamamen çıkar (mükerrer),
+        gövdeye indirmek onu ikinci kez yayımlamak olurdu.
+
+        Kararı `_manset_takas` yazar, yani kalıcılık yine TEK TABLODAN okunur
+        (bkz. MANŞET ARACISI). Takas geçersizse karar da YAZILMAZ: olmayan bir
+        takasın izi yanıltıcıdır.
+        """
+        uygun, gerekce = self._manset_takas_gecerli(top3, dusen, giren)
+        if not uygun:
+            print(f"   ⛔ Manşet takası UYGULANMADI [{katman}]: {gerekce} "
+                  f"(ID {dusen} → ID {giren}).")
+            return list(top3), list(top10), list(kalan)
+        y3 = list(top3)
+        y10 = [i for i in top10 if i != giren]
+        yk = [i for i in kalan if i != giren]
+        y3[y3.index(dusen)] = giren
+        if inen_govdeye and dusen not in y10:
+            y10.insert(0, dusen)
+        self._manset_takas(katman, dusen, giren, neden)
+        return y3, y10, yk
+
     def _manset_yasagi_koy(self, aid, katman, neden=''):
         """Haberi manşete KALICI olarak kapatır. `_manset_yasak`ın TEK yazarı.
 
@@ -7749,10 +7798,21 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                                           'neden': 'başka manşetle aynı olay'})
                 continue
             neden = str(t.get('neden', ''))[:80]
+            # YÖNETMEN TAKASI İKİ YÖNLÜDÜR: inen haber gövdede ÇIKANIN yerini
+            # alır (gövde sırası korunur), bu yüzden aracının tek yönlü liste
+            # mekaniği kullanılmaz — ama DEĞİŞMEZ DENETİMİ ve KARAR YAZIMI
+            # aracıdan geçer.
+            uygun, gerekce = self._manset_takas_gecerli(yeni_top3, inen, cikan)
+            if not uygun:
+                print(f"   ⛔ Yayın yönetmeni takası UYGULANMADI: {gerekce}.")
+                self._yy_eylemler.append({'tur': 'takas', 'id': cikan,
+                                          'karar': 'reddedildi',
+                                          'neden': gerekce})
+                continue
             yeni_top3[yeni_top3.index(inen)] = cikan
             yeni_govde[yeni_govde.index(cikan)] = inen
             takas += 1
-            self._manset_karar_kaydet('yayin_yonetmeni_takas', inen, cikan, neden)
+            self._manset_takas('yayin_yonetmeni_takas', inen, cikan, neden)
             print(f"   📰 Yayın yönetmeni TAKAS: ID {inen} gövdeye indi, "
                   f"ID {cikan} manşete çıktı — {neden}")
 
@@ -7982,17 +8042,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 break
             if _puan(aday) - _puan(en_zayif) < self.MANSET_TERSINELIK_MIN:
                 break
-            yeni_top3[yeni_top3.index(en_zayif)] = aday
-            havuz = [a for a in havuz if a != aday]
-            puanlar.pop(aday, None)
-            # İnen haber gövdenin başına döner; çıkan gövdeden düşer.
-            if en_zayif not in yeni_top10:
-                yeni_top10 = [en_zayif] + yeni_top10
-            yeni_top10 = [i for i in yeni_top10 if i != aday]
-            self._manset_karar_kaydet(
-                'manset_puan_tersinelik', en_zayif, aday,
+            yeni_top3, yeni_top10, _ = self._manset_takasi_uygula(
+                'manset_puan_tersinelik', yeni_top3, yeni_top10, (),
+                en_zayif, aday,
                 f'gövdede {_puan(aday)} puanlı uygun haber vardı '
                 f'(manşet {_puan(en_zayif)})')
+            havuz = [a for a in havuz if a != aday]
+            puanlar.pop(aday, None)
             print(f"   📈 Puan tersinelik: manşetteki ID {en_zayif} "
                   f"({_puan(en_zayif)}) → ID {aday} ({_puan(aday)}) ile "
                   f"değiştirildi; fark eşiği {self.MANSET_TERSINELIK_MIN}.")
@@ -8323,14 +8379,17 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 manset_cikar.pop(aid, None)
                 eleme_nedeni.pop(aid, None)
                 continue
-            yeni_top3[yeni_top3.index(aid)] = yedek
             _neden = (dusen.get(aid) or manset_cikar.get(aid, ''))[:80]
             # Gerekçe hangi sınıfa ait: `kapi_capraz_gun*` çapraz-gündür
             # (kalıcı), `kapi_rapor_ici*` bugünün havuzuna görelidir.
             _katman = ('son_mukerrer_kapisi_capraz'
                        if _neden.startswith('kapi_capraz_gun')
                        else 'son_mukerrer_kapisi_ici')
-            self._manset_takas(_katman, aid, yedek, _neden)
+            # Düşen haber MÜKERRERDİR: gövdeye inmez; rapordan çıkarılması
+            # aşağıda `dusen`/`manset_cikar` üzerinden yapılır.
+            yeni_top3, _, _ = self._manset_takasi_uygula(
+                _katman, yeni_top3, (), (), aid, yedek, _neden,
+                inen_govdeye=False)
             print(f"   🔁 Son mükerrer kapısı: manşetteki ID {aid} mükerrer → "
                   f"ID {yedek} ile DEĞİŞTİRİLDİ.")
 

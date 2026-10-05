@@ -866,7 +866,37 @@ Kapılar değişmedi: `dedup_golden` 15/21 · 18/23 · 20/23 ve `zincir_olc`
 geçiyor. "KRİTİK 3 asla 2'ye düşmez" korunur — her katman temiz yedek yoksa
 manşeti yerinde bırakır.
 
-FAZ 2 YAPILMADI: katmanlar hâlâ `top3`'ü kendileri değiştiriyor (aracı
-yalnızca kararı yazıyor). Listeyi de aracıya devretmek yedi çağrı yerinin
-imzasını değiştirir ve `create_html` gibi testlerde hiç koşmayan yollara
-dokunur; kazancı küçük, riski ölçülemez — ayrı bir iş olarak bekliyor.
+### FAZ 2 — LİSTEYİ DE ARACI DEĞİŞTİRİR (2026-10-05)
+
+Takas mekaniği yedi yerde kopyalanmıştı: `yeni_top3[yeni_top3.index(x)] = y`,
+ardından giren haberi gövde listelerinden çıkar, düşeni gövdenin BAŞINA koy.
+Kopya mekanik hiçbir KORUMA taşımıyordu — aynı id iki kez manşete girse,
+liste üçten ikiye düşse ya da manşette olmayan bir id takas edilmeye
+çalışılsa hiçbir yerde fark edilmezdi; oysa "KRİTİK 3 ASLA 2'YE DÜŞMEZ" bu
+projenin en çok tekrarlanan kuralıdır.
+
+- `_manset_takasi_uygula(katman, top3, top10, kalan, dusen, giren, neden,
+  inen_govdeye=True)` takası uygular, gövde muhasebesini yapar ve kararı
+  `_manset_takas` üzerinden yazar (kalıcılık yine TEK TABLODAN). HER ZAMAN
+  yeni liste döndürür — çağıranın listesi yerinde değişmez.
+- `_manset_takas_gecerli` değişmezleri denetler (düşen manşette olmalı, giren
+  manşette OLMAMALI, ikisi aynı olmamalı). İhlalde takas UYGULANMAZ, liste
+  olduğu gibi döner ve **karar da yazılmaz** — olmayan bir takasın izi
+  yanıltıcıdır. Güvenli düşüş, istisna DEĞİL: manşet mekaniği raporu
+  düşürmemeli.
+- `inen_govdeye=False` son mükerrer kapısı ve auditor/çapraz-gün içindir:
+  orada düşen haber ya mükerrerdir (gövdeye inmesi onu ikinci kez yayımlamak
+  olur) ya da gövde listesi o katmanda hiç yoktur.
+- TEK İSTİSNA yayın yönetmeninin İKİ YÖNLÜ takasıdır (inen haber gövdede
+  ÇIKANIN yerini alır, sıra korunur): liste mekaniği kendisinde kalır ama
+  artık `_manset_takas_gecerli` denetiminden ve aracının karar yazımından
+  geçer. Yapı testi (`test_katmanlar_takasi_elle_yapmaz`) bu istisnayı
+  yorum işaretiyle tanır, başka elle takasa izin vermez.
+- `_dedup_kritik3_ici` listeyi DEĞİŞTİRMEZ, `append` ile KURAR; liste
+  mekaniği uymadığı için orada yalnızca karar yazımı aracıdan geçer.
+
+Kazanç ölçülebilir: yönetmen aynı `cikan`ı iki takasta önerirse eskiden
+manşette MÜKERRER id oluşuyordu, artık ikinci takas reddediliyor. Kapılar
+değişmedi (`dedup_golden` 15/21 · 18/23 · 20/23, `zincir_olc` süzgeçli 0
+düşürme ve çeşitlilik 1 vaka, defter sahte "zaten manşet" 8); 730 test
+geçiyor.
