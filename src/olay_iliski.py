@@ -351,6 +351,81 @@ _MANSIZ_AD = {
 }
 
 
+# ── ÜLKE/YER ADI OLAY KİMLİĞİ DEĞİLDİR ───────────────────────────────────
+# Coğrafya olayın NEREDE olduğunu söyler, NE olduğunu söylemez. Kullanıcı
+# kararı (2026-09-28) aktör adı için bunu zaten sabitledi: "marka aktör adı
+# tek başına aynı-olay kanıtı sayılmaz". Ülke adı aynı sınıftadır ve daha da
+# zayıftır — bir ülkede aynı ay içinde birbirinden tamamen bağımsız onlarca
+# olay yaşanır.
+#
+# ÖLÇÜLDÜ (2026-10-06): günün en büyük haberi — Danimarka nüfus kayıt
+# sisteminden 8,8 milyon kişinin CPR verisinin sızması (95 puan, mukerrer=0) —
+# manşete GİREMEDİ. Defter onu 4 Ekim'in manşeti olan Danimarka Teknik
+# Üniversitesi ihlaliyle (200 bin kişi, apayrı kurum, apayrı olay)
+# `ortak=ad:danimark,ad:denmark topic=0.17` ile aynı olay saydı;
+# `_manset_disi_ids` "olay son 30 günde 1 kez manşet oldu" dedi, yayın
+# yönetmeninin takası reddedildi ve `manset_puan_tersinelik` adayı havuzdan
+# hariç tuttu. Tek sahte birleşme İKİ kapıyı birden kapattı.
+#
+# DF SÖZLÜĞÜ BU SINIFI YAKALAYAMAZ: 'danimark' ve 'denmark' derlemde 2/589
+# geçişle NADİRDİR, yani ölçüm onları ayırt edici sanır. Eşik ayarıyla
+# çözülmez; kural KATEGORİK olmalıdır.
+#
+# TR adların TEK KAYNAĞI `scripts/varlik_cikar.ULKE`'dir (53 ülke, sıfat
+# biçimleriyle); İngilizce karşılıklar burada tutulur çünkü o sözlük Türkçe
+# arşiv metnini tarar. Senkron testle sabitlenir:
+# tests/test_olay_iliski.py::test_cografi_ad_ulke_sozlugunu_kapsar
+_COGRAFI_TR = (
+    'abd', 'amerika', 'amerikan', 'amerikalı', 'birleşik', 'devletler',
+    'çin', 'çinli', 'çince', 'rusya', 'rus', 'rusça', 'i̇ran', 'iran',
+    'i̇ranlı', 'kuzey', 'kore', 'koreli', 'güney', 'ukrayna', 'ukraynalı',
+    'i̇srail', 'israil', 'i̇srailli', 'almanya', 'alman', 'fransa', 'fransız',
+    'krallık', 'i̇ngiltere', 'ingiltere', 'i̇ngiliz', 'ingiliz', 'hollanda',
+    'hollandalı', 'i̇spanya', 'ispanya', 'i̇spanyol', 'danimarka', 'danimark',
+    'i̇sveç', 'isveç', 'norveç', 'finlandiya', 'i̇talya', 'italya', 'japonya',
+    'hindistan', 'kanada', 'kanadalı', 'avustralya', 'brezilya', 'tayvan',
+    'belarus', 'polonya', 'meksika', 'kamboçya', 'bae', 'arap', 'emirlikl',
+    'suudi', 'arabista', 'türkiye', 'vietnam', 'endonezya', 'pakistan',
+    'singapur', 'i̇sviçre', 'isviçre', 'avusturya', 'belçika', 'portekiz',
+    'yunanist', 'romanya', 'bulgarist', 'çekya', 'macarist', 'i̇rlanda',
+    'irlanda', 'zelanda', 'afrika', 'mısır', 'nijerya', 'kenya', 'arjantin',
+    'şili', 'kolombiya', 'avrupa', 'birliği', 'afganist', 'filipinl', 'ırak',
+    'irak', 'makedonya', 'litvanya', 'malezya', 'tayland', 'venezuel',
+    'ürdün', 'urdun',
+    # `tests/..::test_cografi_ad_ulke_sozlugunu_kapsar` ile ULKE sözlüğünden
+    # türetilen kökler (8 karakterlik gövdeleme + Türkçe noktalı İ). Çok
+    # sözcüklü yer adlarının parçaları ('Beyaz Rusya', 'Yeni Zelanda',
+    # 'Avrupa Komisyonu/Parlamentosu') da buraya girer: tek başına hiçbiri
+    # olay kimliği değildir.
+    'afgan', 'amerikal', 'avustral', 'belarusl', 'belçikal', 'beyaz',
+    'devletle', 'endonezy', 'filipin', 'finlandi', 'hindista', 'hintli',
+    'iraklı', 'i̇ngilte', 'i̇spanyo', 'i̇sraill', 'i̇sveçli', 'i̇talyan',
+    'japon', 'kenyalı', 'komisyon', 'makedony', 'meksikal', 'mısırlı',
+    'nijeryal', 'parlamen', 'polonyal', 'rumen', 'ukraynal', 'venezüel',
+    'yeni', 'ürdünlü',
+)
+_COGRAFI_EN = (
+    'united', 'states', 'usa', 'washingt', 'china', 'chinese', 'russia',
+    'russian', 'iranian', 'korea', 'korean', 'ukraine', 'ukrainia', 'israel',
+    'israeli', 'germany', 'german', 'france', 'french', 'kingdom', 'britain',
+    'british', 'england', 'netherla', 'dutch', 'spain', 'spanish', 'denmark',
+    'danish', 'sweden', 'swedish', 'norway', 'norwegia', 'finland', 'finnish',
+    'italy', 'italian', 'japan', 'japanese', 'india', 'indian', 'canada',
+    'canadian', 'australi', 'brazil', 'brazilia', 'taiwan', 'taiwanes',
+    'belarusi', 'poland', 'polish', 'mexico', 'mexican', 'cambodia',
+    'cambodia', 'emirates', 'saudi', 'arabia', 'turkey', 'turkish',
+    'vietname', 'indonesi', 'pakistan', 'singapor', 'switzerl', 'swiss',
+    'austria', 'austrian', 'belgium', 'belgian', 'portugal', 'portugue',
+    'greece', 'greek', 'romania', 'romanian', 'bulgaria', 'czech', 'czechia',
+    'hungary', 'hungaria', 'ireland', 'irish', 'zealand', 'africa', 'egypt',
+    'egyptian', 'nigeria', 'nigerian', 'kenyan', 'argentin', 'chile',
+    'chilean', 'colombia', 'europe', 'european', 'afghanis', 'philippi',
+    'iraq', 'iraqi', 'macedoni', 'lithuani', 'malaysia', 'thailand',
+    'venezuel', 'jordan',
+)
+_COGRAFI_AD = frozenset(_COGRAFI_TR) | frozenset(_COGRAFI_EN)
+
+
 def olay_kimlikleri(view, sozluk=None):
     """Bir haberin OLAY kimliği: kurban/hedef/zafiyet/paket/kod adı.
 
@@ -398,7 +473,7 @@ def _olay_kimlikleri_ham(view, sozluk):
     # haberleri 'ad:sandworm' ortaklığı üzerinden AYNI OLAYA bağlandı.
     kesin = kesin - _aktor_kokleri(view)
     kimlikler |= {'ad:' + a for a in sozluk.ayirt_edici(kesin)
-                  if a not in _MANSIZ_AD}
+                  if a not in _MANSIZ_AD and a not in _COGRAFI_AD}
     return kimlikler
 
 
@@ -526,7 +601,50 @@ def _ayirt_edici_sayisi(ortak):
     return len({k.split(':', 1)[-1] for k in ortak})
 
 
-def _kimlik_yeterli(ortak, zayif=()):
+def _bitisik_gecer(a, b, metin):
+    """İki kök metinde YAN YANA mı geçiyor? ('check point', 'hugging face')"""
+    return bool(re.search(rf'\b{re.escape(a)}\w*\s+{re.escape(b)}\w*', metin)
+                or re.search(rf'\b{re.escape(b)}\w*\s+{re.escape(a)}\w*', metin))
+
+
+def _varlik_sayisi(ortak, metin_a, metin_b):
+    """Ortak kimlikler kaç ayrı VARLIĞA karşılık geliyor?
+
+    MIN_ORTAK_AD "iki bağımsız kimlik" ister, ama sayım SÖZCÜK KÖKÜ üzerinden
+    yapılıyordu: tek bir ÇOK SÖZCÜKLÜ ad ("Check Point", "Hugging Face",
+    "Coast Guard", "Known Exploited", "Temsilciler Meclisi", "Active
+    Directory", "Veri Koruma") iki kök üretir ve kapıyı TEK BAŞINA açar.
+
+    ÖLÇÜLDÜ (2026-10-06, son 31 günün 150 defter birleşmesi): **32'si (%21)**
+    tam olarak buna dayanıyordu — Check Point ×4 (raporlayan firma!), Hugging
+    Face ×3, Coast Guard ×2, "Known Exploited" (KEV katalog adı), Temsilciler
+    Meclisi ×3, Bölge Mahkemesi, Uzak Masaüstü Hizmetleri, Early Access,
+    Arap Emirlikleri, Firewall Management Center.
+
+    İki kök, İKİ TARAFIN metninde de YAN YANA geçiyorsa aynı adın parçasıdır
+    ve TEK kimlik sayılır. Kural ELEME DEĞİL, SAYIM düzeltmesidir: başka
+    ayırt edici ad da ortaksa (ör. `ad:check,ad:jsceal,ad:point` → {checkpoint,
+    jsceal}) birleşme eskisi gibi kurulur — ölçümdeki gerçek eşleşmelerin
+    hepsi bu yolla korunur.
+    """
+    belirtecler = sorted({k.split(':', 1)[-1] for k in ortak})
+    if len(belirtecler) < 2:
+        return len(belirtecler)
+    ebeveyn = {b: b for b in belirtecler}
+
+    def kok_bul(x):
+        while ebeveyn[x] != x:
+            x = ebeveyn[x]
+        return x
+
+    for i, a in enumerate(belirtecler):
+        for b in belirtecler[i + 1:]:
+            if _bitisik_gecer(a, b, metin_a) and _bitisik_gecer(a, b, metin_b):
+                ebeveyn[kok_bul(a)] = kok_bul(b)
+    return len({kok_bul(b) for b in belirtecler})
+
+
+def _kimlik_yeterli(ortak, zayif=(), varlik_sayisi=None):
     """Ortak kimlik kümesi 'aynı olay' demeye yeter mi?
 
     `zayif`: yüksek derece SAYILMAYACAK kimlikler (bkz. iliski_belirle'deki
@@ -534,6 +652,8 @@ def _kimlik_yeterli(ortak, zayif=()):
     """
     if _yuksek_derece_var(set(ortak) - set(zayif)):
         return True
+    if varlik_sayisi is not None:
+        return varlik_sayisi >= MIN_ORTAK_AD
     return _ayirt_edici_sayisi(ortak) >= MIN_ORTAK_AD
 
 
@@ -671,7 +791,8 @@ def iliski_belirle(view_a, view_b, ayni_gun=False, explain=False, sozluk=None):
     # buradan geliyordu (2026-10-05 ölçümü).
     _aktor_kok = _aktor_kokleri(view_a) | _aktor_kokleri(view_b)
     ortak_kimlik |= {'ad:' + a for a in _ortak_adlar(view_a, view_b, sozluk)
-                     if a not in _MANSIZ_AD and a not in _aktor_kok}
+                     if a not in _MANSIZ_AD and a not in _aktor_kok
+                     and a not in _COGRAFI_AD}
 
     topic = _konu_ortusmesi(view_a, view_b)
 
@@ -696,9 +817,14 @@ def iliski_belirle(view_a, view_b, ayni_gun=False, explain=False, sozluk=None):
     govde_kod = {k for k in ortak_kimlik
                  if k.startswith('kod:') and k.split(':', 1)[1] not in on_plan}
 
-    yeterli = _kimlik_yeterli(ortak_kimlik, zayif=govde_kod)
+    # TEK ÇOK SÖZCÜKLÜ AD TEK KİMLİKTİR — bkz. `_varlik_sayisi` ölçümü.
+    _varlik = _varlik_sayisi(ortak_kimlik, _metin(view_a).lower(),
+                             _metin(view_b).lower()) if ortak_kimlik else 0
+    yeterli = _kimlik_yeterli(ortak_kimlik, zayif=govde_kod,
+                              varlik_sayisi=_varlik)
     esik = KIMLIK_ILE_KONU_MIN
-    if not yeterli and govde_kod and _kimlik_yeterli(ortak_kimlik):
+    if not yeterli and govde_kod and _kimlik_yeterli(ortak_kimlik,
+                                                     varlik_sayisi=_varlik):
         # Yeterliliği YALNIZCA gövde düzeyi kod adı sağlıyor → güçlü konu şartı.
         yeterli, esik = True, GOVDE_KOD_ADI_KONU_MIN
 

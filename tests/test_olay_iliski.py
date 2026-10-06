@@ -411,3 +411,91 @@ def test_defter_capa_tutar_ve_zincirlemez():
                dict(kok, paragraph=kok['paragraph'] + f' Güncelleme {i}.'))
     assert d.kayitlar[0][oi.OlayDefteri.CAPA_ALANI] is kok
     assert len(d.kayitlar[0]['views']) == oi.OlayDefteri.TEMSILCI
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 6 EKİM: ÜLKE ADI VE TEK ÇOK SÖZCÜKLÜ AD (ölçüm, 2026-10-06)
+# ─────────────────────────────────────────────────────────────────────────────
+# Günün en büyük haberi — Danimarka nüfus kayıt sisteminden 8,8 milyon kişinin
+# CPR verisinin sızması (95 puan, mukerrer=0) — manşete GİREMEDİ. Defter onu
+# 4 Ekim'in manşeti olan Danimarka Teknik Üniversitesi ihlaliyle (200 bin kişi,
+# apayrı kurum) `ortak=ad:danimark,ad:denmark topic=0.17` ile aynı olay saydı;
+# `_manset_disi_ids` "olay son 30 günde 1 kez manşet oldu" dedi ve hem yayın
+# yönetmeninin takası hem `manset_puan_tersinelik`'in aday havuzu kapandı.
+# Ortak olan tek şey ÜLKE ADIYDI, üstelik aynı ülkenin iki dildeki yazımı İKİ
+# kimlik sayılıyordu.
+
+def _danimarka_cifti():
+    a = {'tr_title': 'Danimarka Nüfus Kayıt Sisteminden Milyonlarca Verinin '
+                     'Sızdırılması',
+         'paragraph': 'Danimarka nüfus kayıt sistemi CPR üzerinden 8,8 milyon '
+                      'kişinin verisine bir şirket hesabı üzerinden erişildiği '
+                      'bildirilmiştir.',
+         'title': 'Denmark Says Attackers Accessed CPR Data for 8.8 Million '
+                  'People via Company Account',
+         'full_text': ''}
+    b = {'tr_title': "Danimarka Teknik Üniversitesi'nde 200 Bin Kişinin "
+                     'Verilerinin Sızdırılması',
+         'paragraph': 'Danimarka Teknik Üniversitesi DTUBasen kimlik yönetim '
+                      'sisteminden 200 bin kişinin verisi sızdırılmıştır.',
+         'title': 'Danish university DTU breach exposes data of up to 200,000 '
+                  'people',
+         'full_text': ''}
+    return a, b
+
+
+def test_ulke_adi_olay_kimligi_degil():
+    a, b = _danimarka_cifti()
+    for v in (a, b):
+        kimlikler = oi.olay_kimlikleri(v)
+        assert not any(k in ('ad:danimark', 'ad:denmark', 'ad:danish')
+                       for k in kimlikler), kimlikler
+    iliski, neden = oi.iliski_belirle(a, b, explain=True)
+    assert iliski == oi.ILISKISIZ, neden
+
+
+def test_cografi_ad_ulke_sozlugunu_kapsar():
+    """TR adların TEK KAYNAĞI `scripts/varlik_cikar.ULKE`; senkron şart."""
+    import importlib.util
+    import pathlib
+    yol = pathlib.Path(__file__).resolve().parent.parent / 'scripts' / 'varlik_cikar.py'
+    spec = importlib.util.spec_from_file_location('varlik_cikar', yol)
+    V = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(V)
+    eksik = []
+    for ad, varyantlar in V.ULKE.items():
+        for metin in (ad,) + tuple(varyantlar):
+            for sozcuk in metin.split():
+                if len(sozcuk) <= 2:
+                    continue
+                if sozcuk.strip().lower()[:oi._KOK] not in oi._COGRAFI_AD:
+                    eksik.append((ad, sozcuk))
+    assert not eksik, f'ULKE sözlüğündeki ülke kökleri _COGRAFI_AD dışında: {eksik}'
+
+
+def test_tek_cok_sozcuklu_ad_tek_kimliktir():
+    """'Check Point' iki kök üretir ama TEK varlıktır."""
+    ma = 'check point research firması raporladı'
+    mb = 'check point ekibi açıkladı'
+    assert oi._varlik_sayisi({'ad:check', 'ad:point'}, ma, mb) == 1
+    # Başka ayırt edici ad da ortaksa birleşme KORUNUR.
+    assert oi._varlik_sayisi({'ad:check', 'ad:point', 'ad:jsceal'},
+                             ma + ' jsceal', mb + ' jsceal') == 2
+    # Yan yana geçmeyen iki ad iki varlıktır.
+    assert oi._varlik_sayisi({'ad:odido', 'ad:tilaa'},
+                             'odido ve tilaa', 'tilaa, odido') == 2
+
+
+def test_raporlayan_firma_adi_tek_basina_olay_bagi_kurmaz():
+    a = {'tr_title': 'JSCeal Zararlı Yazılımının Kimlik Doğrulamayı Atlatması',
+         'paragraph': 'Check Point Research, JSCeal zararlı yazılımının kimlik '
+                      'doğrulama akışını atlattığını bildirmiştir.',
+         'title': '', 'full_text': ''}
+    b = {'tr_title': 'Brezilya Hükümet Sunucularının Kimlik Avı İçin Ele '
+                     'Geçirilmesi',
+         'paragraph': 'Check Point Research, kumar temalı kimlik avı '
+                      'kampanyasında hükümet sunucularının kullanıldığını '
+                      'bildirmiştir.',
+         'title': '', 'full_text': ''}
+    iliski, neden = oi.iliski_belirle(a, b, explain=True)
+    assert iliski == oi.ILISKISIZ, neden

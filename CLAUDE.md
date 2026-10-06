@@ -900,3 +900,70 @@ manşette MÜKERRER id oluşuyordu, artık ikinci takas reddediliyor. Kapılar
 değişmedi (`dedup_golden` 15/21 · 18/23 · 20/23, `zincir_olc` süzgeçli 0
 düşürme ve çeşitlilik 1 vaka, defter sahte "zaten manşet" 8); 730 test
 geçiyor.
+
+## ÜLKE ADI VE TEK ÇOK SÖZCÜKLÜ AD OLAY KİMLİĞİ DEĞİLDİR (ölçüm, 2026-10-06)
+
+6 Ekim raporu mekanik olarak temizdi (25 haber, değişmez ihlali 0, kaçak 0) ama
+günün EN BÜYÜK haberi manşete girmedi: Danimarka nüfus kayıt sisteminden
+**8,8 milyon kişinin CPR verisinin** sızması (95 puan,
+`stratejik_kurum_saldirisi`, mukerrer=0) gövdede kaldı; manşet 95/91/**83** ile
+kapandı ve 83'lük haber ABD Senatosu'nun sağlık siber yasasıydı.
+
+ARIZA ZİNCİRİ (tamamı tekrar üretilebilir):
+1. Olay defteri bu haberi 4 Ekim'in MANŞETİ olan Danimarka Teknik Üniversitesi
+   ihlaliyle (200 bin kişi, apayrı kurum, apayrı olay) aynı olay saydı:
+   `ortak=ad:danimark,ad:denmark topic=0.17`.
+2. `_manset_disi_ids` → `manset_gunu_sayisi=1` → haber manşete KAPANDI.
+3. Yayın yönetmeni takası reddedildi ("olay son 30 günde 1 kez manşet oldu")
+   VE `manset_puan_tersinelik` adayı `haric=manset_disi` ile havuzdan çıkardı:
+   **tek sahte birleşme İKİ kapıyı birden kapattı.**
+4. Tersinelik elde kalan en iyi adayı (91) alıp 78'lik manşeti değiştirdi;
+   95 gövdede kaldı.
+
+KÖK SEBEPLER:
+- **ÜLKE ADI KİMLİK SAYILIYORDU.** Coğrafya olayın NEREDE olduğunu söyler, NE
+  olduğunu söylemez; bir ülkede aynı ay birbirinden bağımsız onlarca olay olur.
+  Bu, 28 Eylül'deki "marka aktör adı tek başına kanıt değildir" kararının
+  coğrafi karşılığıdır. Çare `_COGRAFI_AD`: ülke/yer kökleri `ad:` kimlik
+  kümesinden düşer (hem `olay_kimlikleri` hem `_ortak_adlar` yolunda).
+  TR adların TEK KAYNAĞI `scripts/varlik_cikar.ULKE`'dir; İngilizce karşılıklar
+  `olay_iliski` içinde tutulur (o sözlük Türkçe arşiv metni tarar) ve senkron
+  `test_cografi_ad_ulke_sozlugunu_kapsar` ile sabitlenir.
+- **MIN_ORTAK_AD SÖZCÜK KÖKÜ SAYIYORDU, VARLIK DEĞİL.** Tek bir çok sözcüklü
+  ad ("Check Point", "Hugging Face", "Coast Guard", "Known Exploited",
+  "Temsilciler Meclisi", "Active Directory", "Uzak Masaüstü Hizmetleri") ya da
+  aynı adın iki dildeki yazımı ("Danimarka"/"Denmark") iki kök üretip
+  `MIN_ORTAK_AD=2` kapısını TEK BAŞINA açıyordu. Çare `_varlik_sayisi`: iki kök
+  İKİ TARAFIN metninde de YAN YANA geçiyorsa aynı adın parçasıdır ve tek kimlik
+  sayılır. Kural ELEME DEĞİL SAYIM düzeltmesidir — başka ayırt edici ad da
+  ortaksa (`ad:check,ad:point,ad:jsceal` → {checkpoint, jsceal}) birleşme
+  eskisi gibi kurulur. 3 Ekim'deki `_ayirt_edici_sayisi` yalnızca AYNI
+  sözcüğün farklı SINIFLARINI (ad:/kod:) birleştiriyordu; bu onun genellemesi.
+- **DF SÖZLÜĞÜ BU İKİ SINIFI YAKALAYAMAZ**: 'danimark' ve 'denmark' derlemde
+  2/589 geçişle NADİRDİR, yani ölçüm onları ayırt edici sanır. Eşik ayarıyla
+  çözülmez, kural KATEGORİK olmalıdır.
+- **ÜÇ TANIM YİNE AYRIŞMIŞTI**: aynı çift için `dedup.same_event` False,
+  `mukerrer_karari` FARKLI, `iliski_belirle` ise YENI_GELISME diyordu. Defter
+  iki ölçülmüş tanımdan DAHA GEVŞEKTİ.
+
+ÖLÇÜLDÜ (son 31 gün, üretim sözlüğüyle, öncesi → sonrası):
+- defter birleşmesi **150 → 129** (21 sahte birleşme düştü), olay 439 → 460
+- tek varlığa dayanan birleşme **3 → 0**, coğrafi 0 → 0
+- gerçek manşetlerin "zaten manşet oldu" görünenleri **9 → 7**
+- 6 Ekim vakası: `YENI_GELISME` → `ILISKISIZ`, `manset_gunu_sayisi` 1 → **0**
+  (haber artık manşete açık)
+- KAPILAR DEĞİŞMEDİ: `dedup_golden` 15/21 · 18/23 · 20/23, `zincir_olc`
+  süzgeçli 0 düşürme + çeşitlilik 1 vaka — hepsi birebir aynı; 734 test geçiyor.
+- Kalan 7 "zaten manşet" vakasının hepsi gerçek devam haberi (Florida DMV,
+  İran/Telegram, ShinyHunters Hollanda, Bitget, Denizcilik/Sahil Güvenlik).
+
+YAPILMADI — TÜRKÇE ÖN PLAN SÜZGECİ: zincir kuralındaki (2026-09-29) "ortak kök
+haberin TÜRKÇE başlık/paragrafında da geçmeli" filtresi defter için de ölçüldü:
+9 birleşmeyi düşürüyor ama ikisi GERÇEK (Denizcilik↔Sahil Güvenlik tankerleri,
+CISA KEV). `_varlik_sayisi` o dokuzun yedisini daha dar bir mekanizmayla zaten
+kapatıyor; süzgeç ek risk getirip tekil değer katmıyor.
+
+Araç: `scripts/kimlik_olc.py` (yalnızca OKUR) her birleşmeyi kanıt sınıfına
+ayırır: yapısal / adlandırılmış / tek_varlik / cografi / salt_konu.
+Regresyon: `tests/test_olay_iliski.py` (Danimarka↔DTU ayrı olay, Check Point
+raporlayan firma, ülke kökü kimlik değil, ULKE senkronu).
