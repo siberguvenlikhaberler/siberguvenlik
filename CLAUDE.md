@@ -1147,3 +1147,38 @@ Boru hattının ikinci şansı VAR: çift LLM hakemine taşınıyor
 (`aday_benzerligi` 5,81 · `ADAY_BENZERLIK_MIN` 0,55 · aday sayısı 1), yani
 deterministik ayırma son söz değildir. Vaka `dedup_golden`da bilinçli olarak
 BAŞARISIZ durur — çözünürlük sınırını ölçmeye devam etsin.
+
+### HAKEM KARARI ÖLÇÜLEBİLİR HALE GETİRİLDİ — `scripts/hakem_olc.py` (2026-10-07)
+
+Deterministik tanımın çözünürlük sınırına takılan çiftlerde karar LLM
+hakemine kalıyor ama **hakemin ne dediği bugüne dek hiç ölçülmedi**. Betik
+ÜRETİM YOLUNU çağırır (`main.HaberSistemi._mukerrer_llm_hakem`) — prompt,
+parti boyutu, önbellek ve yanıt ayrıştırması üretimdekiyle aynıdır; kopya
+prompt KURMAZ.
+
+KAPSAM üretimden türetilir: hakeme yalnızca `llm_adaylari`nın taşıdıkları
+(ortak aday anahtarı + `ADAY_BENZERLIK_MIN`) sorulur. Varsayılan kapsam
+KARARSIZ çiftlerdir — `ayni_olay` ile etiket ayrışıyor: 28 golden çiftin
+**12'si** (İran su altyapısı, Patch Tuesday, Kimwolf, Delta Wi-Fi, SIM,
+Mozilla GPG, Gunra, CEVA, DeadLock, Suisun City ve iki yeni TR↔TR vakası:
+FBI/Accenture ile Linux e-posta taklidi). `--hepsi` 21 çifte çıkar ve
+kontrol grubunu ekler (etiketi ILISKISIZ olanlarda hakem SAHTE BİRLEŞTİRME
+yapıyor mu). 7 çift hakeme HİÇ ULAŞMAZ ve betik bunu yazar (ör. Deepfake
+sertifika çiftinin ortak aday anahtarı yok).
+
+MALİYET: 12 çift tek partiye sığar (`MUKERRER_HAKEM_BATCH`=12), yani
+varsayılan kapsam **1 çağrı**, `--hepsi` 2 çağrı.
+
+ANAHTARSIZ ORTAMDA ÖLÇÜM YAPILAMAZ ve betik bunu söyler: anahtar yoksa
+çıkış kodu 2 ile DURUR, sonuç uydurmaz. Bu geliştirme ortamında
+`GEMINI_API_KEY` yok ve `generativelanguage.googleapis.com` 403 veriyor
+(`pencere_olc.py`'deki egress duvarının aynısı), dolayısıyla **FBI/Accenture
+çiftine hakemin ne dediği HENÜZ ÖLÇÜLMEDİ** — anahtarlı bir koşuda
+`python scripts/hakem_olc.py --vaka "FBI ihlali"` ile ölçülecek.
+
+`--kuru` LLM'i çağırmadan boru hattını sınar (sahte yanıt) ve çıktısını
+"KARAR DEĞİLDİR" diye işaretler; anahtar harcamadan betiğin kendisini
+doğrulamak içindir. Sahte yanıt çift numarasını İSTEMDEN okur: ilk sürüm her
+parti için 1..n üretiyordu ve üretim numaraları GLOBAL olduğu için ikinci
+parti yanıtsız görünüyordu — sahte yanıt da üretimin sözleşmesine uymalı,
+yoksa kuru koşu olmayan bir hata gösterir.
