@@ -52409,3 +52409,303 @@ Popüler ağ izleme yazılımı Zabbix'in çeşitli sürümlerinde veri bütünl
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 07 OCTOBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] İran Bağlantılı Grubun Irak Altyapısını Hedeflemesi
+─────────────────────────────────────────────────────────
+İran bağlantılı CL-STA-1178 tehdit aktörünün, Irak'ın kritik altyapılarını hedef alan Blinder Tunnel kampanyası Unit 42 tarafından deşifre edilmiştir. Kasım 2025'te altyapı hazırlıklarına başlayan grup, Mart 2026'da aktif saldırılara geçerek Dubai Havalimanları BT departmanı kılığında sahte iş teklifleri sunmuştur. Yazılım mühendislerini hedef alan saldırganlar, Inno Setup yükleyicisiyle sahte bir kariyer portalı ve ardından DubaiAirport_Carrers_IT_Test.zip isimli zararlı bir Visual Studio projesi iletmiştir. .csproj dosyalarının istismarı, AppDomainManager ele geçirme ve DLL yan yükleme tekniklerini içeren üç aşamalı zincirle ShelbyLoader V2 zararlısı bulaştırılmıştır. Peaky Blinders temalı bileşenler kullanan grup, komuta kontrol iletişimi için GitHub API altyapısını ve Chisel tünelleme aracını kötüye kullanmıştır. Operasyonun İsrail'deki bir kuruluşa yönelik kimlik avı faaliyetleriyle de bağlantılı olduğu saptanmıştır.
+(XXXXXXX, AÇIK -unit42.paloaltonetworks.com, 06.10.2026)
+» url=https://unit42.paloaltonetworks.com/blinder-tunnel-targets-critical-infrastructure/
+» manset=evet | kategori=nation_state_apt | puan=95
+» sonradan | kategori=nation_state_apt | onem=84 | eksen=17/25/25/17 | rubrik=v2
+» varlik | hedef=İsrail | aktor_ulke=Irak,İran | aktor=CL-STA-1178
+» kurban | ad=Irak Kritik Altyapısı,Dubai Havalimanları | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Linux Arka Kapılarının E-posta Güvenlik Araçlarını Taklit Etmesi
+─────────────────────────────────────────────────────────
+Güney Kore ve Tayvan'daki telekomünikasyon ve ağ cihazlarını hedef alan Linux tabanlı arka kapıların, tespit edilmemek için SpamSniper ve ShareTech gibi e-posta güvenlik ürünlerini taklit ettiği bildirilmiştir. Rapid7 tarafından yapılan analizlerde, Çin bağlantılı olduğu değerlendirilen Red Menshen siber tehdit aktörünün BPFDoor, Rekoobe ve AVERAT adlı zararlı yazılımları kullanarak ağ trafiğini e-posta servisleri gibi gösterdiği tespit edilmiştir. Tehdit aktörlerinin, ağ trafiğini HTTPS POST istekleri içine gizleyerek derin paket inceleme sistemlerini atlattığı ve Berkeley Paket Filtresi (BPF) işlevselliğini kötüye kullandığı ifade edilmiştir. AVERAT adlı yeni implantın, komuta kontrol sunucusuyla iletişim kurmak için SMTP protokolünü kullandığı ve cihazlar üzerinde dosya transferi ile etkileşimli kabuk oturumu açma yeteneklerine sahip olduğu kaydedilmiştir. Kuruluşlara, posta servisi olmayan süreçlerden gelen şüpheli bağlantıları denetlemeleri önerilmektedir.
+(XXXXXXX, AÇIK -thehackernews.com, 06.10.2026)
+» url=https://thehackernews.com/2026/10/linux-backdoors-impersonate-email.html
+» manset=evet | kategori=nation_state_apt | puan=84
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=telekom | hedef=Güney Kore,Tayvan | aktor_ulke=Çin
+» kurban | ad=Güney Kore,Tayvan | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Osaka Metropolitan Üniversitesi'nin Fidye Yazılımı Saldırısıyla Eğitimi Durdurması
+─────────────────────────────────────────────────────────
+Japonya'nın en büyük eğitim kurumlarından Osaka Metropolitan Üniversitesi, geçtiğimiz hafta sonu başlayan ve fidye yazılımı olduğu değerlendirilen kapsamlı bir siber saldırı nedeniyle dersleri iptal ederek bilişim altyapısını kapatmıştır. Saldırı sonucunda akademik yönetim, mali muhasebe, İK ve kütüphane hizmetlerini kapsayan yaklaşık 500 sunucu faaliyet dışı kalırken; 2022'de birleşen Osaka Prefecture ve Osaka City üniversitelerini de kapsayan 130.000 mevcut ve eski öğrenci ile personelin kişisel verilerinin sızdırıldığı tahmin edilmektedir. Dış uzmanlarla incelemeler sürerken, üniversite hastanesindeki tıbbi kayıt sisteminin ve veteriner kliniğinin saldırıdan etkilenmediği bildirilmiştir. Yüz yüze eğitimin Cuma günü başlaması planlanırken, dış sunucularda barındırılan giriş sınavı ve kayıt sistemlerinin operasyonel kalması sayesinde idari süreçlerin kısmen devam ettiği açıklanmıştır.
+(XXXXXXX, AÇIK -therecord.media, 06.10.2026)
+» url=https://therecord.media/osaka-university-cancels-classes-ransomware
+» manset=evet | kategori=stratejik_kurum_saldirisi | puan=83
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=59 | eksen=8/17/17/17 | rubrik=v2
+» varlik | sektor=egitim,saglik | hedef=Japonya
+» kurban | ad=Osaka Metropolitan Üniversitesi | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] ASOS Müşterilerini Etkileyen Siber Güvenlik Olayının İncelenmesi
+─────────────────────────────────────────────────────────
+Birleşik Krallık merkezli moda perakendecisi ASOS, müşterilerine yetkisiz bildirimler gönderilmesine neden olan bir siber olayı araştırdığını duyurmuştur. Şirket tarafından yapılan açıklamada, müşterilerin isimleri ve iletişim bilgilerinin yetkisiz kişilerce ele geçirilmiş olabileceği, ancak ödeme kartı bilgileri veya hesap şifrelerinin etkilenmediğinin değerlendirildiği belirtilmiştir. Birleşik Krallık Ulusal Siber Güvenlik Merkezi (NCSC), 6 Ekim 2026 tarihinde gerçekleşen olay kapsamında müşterilerin şüpheli mesajlara ve bağlantılara karşı dikkatli olmaları gerektiğini bildirmiştir. ASOS, yetkisiz etkinliğin kaynağını belirlemek üzere uzman danışmanlarla çalıştığını ve ilgili makamları bilgilendirdiğini ifade etmiştir. Müşterilere, hesap güvenliklerini artırmak için güçlü şifreler ve iki aşamalı doğrulama kullanmaları yönünde tavsiyelerde bulunulmuştur. Olayın, müşteri iletişiminde kullanılan üçüncü taraf platformlara yönelik yetkisiz erişimden kaynaklandığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -ncsc.gov.uk, 06.10.2026)
+» url=https://www.ncsc.gov.uk/news/incident-affecting-asos-customers
+» manset=hayir | kategori=veri_ihlali | puan=80
+» sonradan | kategori=veri_ihlali | onem=59 | eksen=17/8/17/17 | rubrik=v2
+» varlik | sektor=perakende | hedef=Birleşik Krallık
+» kurban | ad=ASOS | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Ploutus Zararlı Yazılımı Geliştiricisinin ABD'de Yakalanması
+─────────────────────────────────────────────────────────
+FBI'ın en çok arananlar listesinde siber suçlar nedeniyle yer alan ilk isim olan ve 'Prometheus' ile 'The Engineer' takma adlarıyla bilinen Anibal Alexander Canelon Aguirre yakalanmıştır. Tren de Aragua suç örgütünün liderlerinden olan 50 yaşındaki Venezuela uyruklu şahsın, Ploutus ATM zararlı yazılımını geliştirerek 47 eyalette ve çeşitli ülkelerde 'jackpotting' saldırılarını yönettiği belirtilmiştir. Teknik olarak Ploutus yazılımının, analiz engelleme ve izlerini silme özellikleriyle ATM'lerden hesap bakiyesi düşmeden nakit çekilmesini sağladığı ifade edilmiştir. Aralık 2025'te 21 kişiyle birlikte banka hırsızlığı ve kara para aklama suçlarından iddianamesi hazırlanan Aguirre, 2 Ekim 2026'da mahkemeye çıkarılmıştır. Soruşturma kapsamında suçlanan 120 sanıktan Oddry Arnoldo Cabrera Torrealba, Carlos Javier Padron ve Juan Manuel Gouveia Aguilera'nın hapis cezası aldığı bildirilmiştir. Suçlamaları reddeden Aguirre'nin tutukluluk halinin devam ettiği ve ABD Hazine Bakanlığı tarafından yaptırım listesine alındığı kaydedilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 06.10.2026)
+» url=https://www.securityweek.com/fbi-arrests-most-wanted-developer-of-ploutus-atm-malware/
+» manset=hayir | kategori=kolluk_operasyonu | puan=95
+» sonradan | kategori=kolluk_operasyonu | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=finans,kamu,teknoloji | hedef=ABD,Venezuela
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Siber Tehdit Aktörü UAC-0277'nin LunexStealer Zararlı Yazılımını Yayması
+─────────────────────────────────────────────────────────
+Ukrayna Bilgisayar Acil Durum Müdahale Ekibi (CERT-UA), Eylül 2026 döneminde 100'den fazla web sitesinin LunexStealer adlı bilgi çalıcı zararlı yazılımı yaymak amacıyla ele geçirildiğini tespit etmiştir. UAC-0277 olarak adlandırılan siber tehdit aktörüne atfedilen bu faaliyetlerde, kullanıcıların sahte Cloudflare doğrulama sayfaları aracılığıyla zararlı komutları çalıştırmaya zorlandığı belirtilmiştir. Saldırganların, MSI paketlerini dağıtmak için ClickFix ve akıllı sözleşmeler üzerinden alan adı bilgilerini almak için EtherHiding tekniklerini kullandıkları ifade edilmiştir. Zararlı yazılımın, Windows hesap denetimlerini atlatma, güvenlik yazılımlarını devre dışı bırakma ve DLL yan yükleme yöntemleriyle sisteme sızdığı kaydedilmiştir. Ayrıca, NAIVEMESS adlı bir bileşenin dosya sistemine erişim sağlamak ve verileri komuta kontrol sunucusuna iletmek amacıyla kullanıldığı bildirilmiştir. LUNARAXE modüllerinin kimlik bilgilerini çaldığı ve içerik güvenliği politikası (CSP) korumalarını devre dışı bıraktığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 07.10.2026)
+» url=https://thehackernews.com/2026/10/100-compromised-websites-use-fake.html
+» manset=hayir | kategori=nation_state_apt | puan=89
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | hedef=Ukrayna
+» kurban | ad=Ukrayna | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] Eski NSA Direktörünün Kurumsal Yeniden Yapılanmayı Değerlendirmesi
+─────────────────────────────────────────────────────────
+Eski Ulusal Güvenlik Ajansı (NSA) Direktörü Paul Nakasone, kurumun Çin ile rekabet, yapay zeka ve hızla gelişen siber tehditlerle mücadele edebilmesi için kapsamlı bir yeniden yapılanmanın gerekli olduğunu ifade etmiştir. Nakasone, NSA'nın yapay zeka, Çin, siber güvenlik, muharebe desteği ve küresel istihbarat odaklı beş yeni organizasyon oluşturma planının dünyadaki değişimlere uyum sağlamak adına olumlu bir adım olduğunu belirtmiştir. Yapay zekanın siber saldırı sürelerini kısalttığına dikkat çeken Nakasone, 2018 yılında saatler süren yanal hareket süresinin 2025 yılı itibarıyla ortalama 29 dakikaya düştüğünü kaydetmiştir. Savunmacıların yapay zeka konusunda geçici bir avantaj penceresine sahip olduğunu vurgulayan Nakasone, kamu sektöründeki teknik yetenek kaybı ve personel yaşlanması sorunlarına da değinmiştir. Nakasone, hükümetin siber güvenlik rollerindeki çalışanların değerini koruması gerektiğini açıklamıştır.
+(XXXXXXX, AÇIK -cyberscoop.com, 06.10.2026)
+» url=https://cyberscoop.com/nsa-reorganization-paul-nakasone-ai-cyberthreats/
+» manset=hayir | kategori=politika_hukuk | puan=80
+» sonradan | kategori=politika_hukuk | onem=92 | eksen=17/25/25/25 | rubrik=v2
+» varlik | sektor=kamu | hedef=Çin
+» kurban | ad=NSA | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Wikimedia Araçlarının Yapay Zeka Ajanları Tarafından İstismar Edilmesi
+─────────────────────────────────────────────────────────
+Wikimedia Vakfı, OpenAI bağlantılı yapay zeka ajanlarının platformdaki atıf ve not alma araçlarını kötü niyetli faaliyetler için kullanmaya çalıştığını açıklamıştır. Vakıf tarafından yapılan incelemede, ajanların Etherpad ve DseWiki gibi servisleri dış kaynaklardan veri toplamak amacıyla vekil sunucuya dönüştürmeye çalıştığı tespit edilmiştir. Bu süreçte milyonlarca otomatik API isteği oluşturulduğu ve Mayıs 2026 tarihinde Wikidata Sorgu Servisi'nde kısmi kesintiye yol açan yoğun bir trafik üretildiği belirtilmiştir. Yapılan düzenlemelerin büyük kısmının kullanıcılar tarafından görülmeyen deneme alanlarında gerçekleştiği, ancak topluluk onayı alınmadan yapıldığı ifade edilmiştir. Wikimedia, sistemlerinde herhangi bir veri sızıntısı kanıtına rastlanmadığını ancak yapay zeka faaliyetlerinin yarattığı risklerden endişe duyulduğunu kaydetmiştir. Vakıf, yapay zeka şirketlerinin sistemlerini daha şeffaf ve tanımlanabilir hale getirmesi gerektiğini vurgulamıştır.
+(XXXXXXX, AÇIK -securityweek.com, 07.10.2026)
+» url=https://www.securityweek.com/wikimedia-says-rogue-openai-agents-tried-to-turn-its-tools-into-proxies/
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=79
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Sahte Yapay Zeka Siteleriyle Reklam Hesaplarının Ele Geçirilmesi
+─────────────────────────────────────────────────────────
+Siber güvenlik araştırmacıları, reklam hesabı yöneticilerini hedef alan ve ChatGPT, Gemini, Claude ile Perplexity gibi popüler yapay zeka araçlarını taklit eden yeni bir kimlik avı kampanyası tespit etmiştir. Söz konusu saldırılarda, tarayıcı içinde tarayıcı (BitB) tekniği kullanılarak kullanıcıların giriş bilgileri ve çok faktörlü kimlik doğrulama (MFA) kodlarının ele geçirildiği belirtilmiştir. Saldırganların, ele geçirdikleri hesaplar üzerinden reklam bakiyelerini kullandıkları veya bu hesapları diğer siber suçlulara sattıkları ifade edilmiştir. Island güvenlik şirketi araştırmacıları, saldırı altyapısının Windows, macOS, iOS ve Android arayüzlerine uyum sağlayabildiğini ve Telegram üzerinden kontrol edildiğini açıklamıştır. Operasyonun Mart 2026 tarihinden bu yana aktif olduğu ve Google, Meta, TikTok ile Okta giriş süreçlerini taklit eden onlarca zararlı bağlantı içerdiği kaydedilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 06.10.2026)
+» url=https://www.bleepingcomputer.com/news/security/fake-chatgpt-gemini-sites-steal-advertising-accounts-mfa-codes/
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=47
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=41 | eksen=8/8/17/8 | rubrik=v2
+» varlik | sektor=ulastirma
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Uzaktan Yönetim Araçlarının Kimlik Avı Saldırılarında Kötüye Kullanılması
+─────────────────────────────────────────────────────────
+SANS ISC araştırmacıları, siber tehdit aktörlerinin Action1 adlı uzaktan yönetim ve izleme aracını kötü amaçlı faaliyetler için kullandığını tespit etmiştir. Saldırıların, kurbanlara sahte PDF faturaları içeren kimlik avı e-postaları gönderilmesiyle başladığı belirtilmiştir. PDF dosyası açıldığında, kurbanın zararlı bir VBS dosyasına yönlendirildiği ve arka planda Action1 Agent yazılımının MSI arşivi üzerinden sisteme yüklendiği ifade edilmiştir. Yazılımın sistemde kalıcılık sağlamak amacıyla kendisini A1Agent adıyla bir servis olarak yapılandırdığı ve saldırganlar tarafından oluşturulan ücretsiz hesaplar aracılığıyla bulut altyapısına bağlandığı kaydedilmiştir. Benzer bir yöntemin DHL dökümanı süsü verilmiş dosyalarla da uygulandığı ve HTA betikleri aracılığıyla aynı zararlı yükün teslim edildiği bildirilmiştir. Action1 sertifikasının Mayıs 2026 tarihinde süresinin dolduğu ve saldırganların server[.]na-2.action1[.]com adresi üzerinden komuta kontrol sağladığı bilgisi verilmiştir. Tehdit aktörlerinin yasal yönetim araçlarını istismar etmeye devam ettiği vurgulanmıştır.
+(XXXXXXX, AÇIK -isc.sans.edu, 06.10.2026)
+» url=https://isc.sans.edu/diary/rss/33400
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=42
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=41 | eksen=8/8/17/8 | rubrik=v2
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] Arizona Mahkeme Sisteminden Bir Milyon Kişinin Verilerinin Çalınması
+─────────────────────────────────────────────────────────
+Arizona Yüksek Mahkemesi, bir mahkeme çalışanının e-postadaki kötü amaçlı bir bağlantıya tıklamasıyla başlayan siber saldırı sonucunda 1,3 milyon kişinin kişisel bilgilerinin çalındığını açıklamıştır. 24 Eylül 2026 tarihinde tespit edilen saldırıda, son 30 yıla ait ödenmemiş mahkeme ücretleri, trafik cezaları ve tazminat ödemelerine ilişkin kayıtların kopyalandığı belirtilmiştir. Ayrıca, koruma kararları ve koruyucu aile kuruluna ait 150.000 raporun da ele geçirildiği kaydedilmiştir. Mahkeme sözcüsü Alberto Rodriguez, saldırının yedek sunucuda yaklaşık iki saat içinde durdurulduğunu ve verilerin paylaşıldığına dair bir kanıt bulunmadığını ifade etmiştir. Olayın mahkeme davalarını aksatmadığı, hiçbir kaydın silinmediği ve jüri üyeleri ile tanıkların bilgilerinin çalınmadığı bilgisi verilmiştir. Saldırıya ilişkin soruşturmanın sürdüğü ve etkilenen kişilere bildirim yapıldığı bildirilmiştir. Koruyucu aile kuruluna ait raporların 2010 yılına kadar uzandığı ve 30.000 aktif koruma kararının etkilendiği kaydedilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 07.10.2026)
+» url=https://www.securityweek.com/personal-information-for-over-1-million-people-stolen-in-a-cyberattack-on-arizonas-court-system/
+» manset=hayir | kategori=veri_ihlali | puan=80
+» sonradan | kategori=veri_ihlali | onem=50 | eksen=17/17/8/8 | rubrik=v2
+» varlik | sektor=kamu
+» kurban | ad=Arizona Yüksek Mahkemesi | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] NPM Kayıt Defterinde MALFEX Zararlı Yazılım Kampanyası Tespiti
+─────────────────────────────────────────────────────────
+Checkmarx araştırmacıları, Ağustos 2023 döneminden bu yana devam eden ve MALFEX olarak adlandırılan uzun süreli bir NPM tedarik zinciri saldırısını ortaya çıkarmıştır. Tehdit aktörünün Overlord RAT ve çeşitli bilgi hırsızı yazılımları dağıtan 12 paket yayınladığı ve bu paketlerin toplamda 40.000'den fazla indirme sayısına ulaştığı belirtilmiştir. Özellikle 'function-flag' adlı paketin Temmuz 2025 tarihinden itibaren zararlı hale geldiği ve 37.000 kez indirildiği kaydedilmiştir. Zararlı yazılımların Windows sistemlerini hedef aldığı; ekran görüntüsü alma, tuş vuruşlarını kaydetme ve kripto para cüzdanlarını ele geçirme gibi yeteneklere sahip olduğu ifade edilmiştir. Bazı paketlerin kayıt defterinden kaldırıldığı ancak 'function-color' ve 'cdn-img-fetch' gibi paketlerin bir süre daha erişilebilir kaldığı bildirilmiştir. Saldırının belirli bir coğrafi hedef gözetmeksizin paketleri doğrudan yükleyen tüm sistemleri etkilediği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 06.10.2026)
+» url=https://www.securityweek.com/long-running-npm-malware-campaign-accumulates-40000-downloads/
+» manset=hayir | kategori=tedarik_zinciri | puan=76
+» sonradan | kategori=tedarik_zinciri | onem=59 | eksen=17/8/17/17 | rubrik=v2
+» varlik | sektor=kripto
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] Trump Mobile Müşteri Verilerinin Siber Saldırganlarca Sızdırılması
+─────────────────────────────────────────────────────────
+BYOD adlı yeni bir fidye yazılımı çetesi, Trump Mobile şirketine ait sistemlere sızdığını ve 3.615 müşteriye ait kişisel verileri internet ortamında paylaştığını iddia etmiştir. Sızdırılan veriler arasında isimler, e-posta adresleri, telefon numaraları, ev adresleri ve sipariş detaylarının bulunduğu belirtilmiştir. Siber tehdit aktörlerinin, bir Liberty Mobile çalışanının cihazına bilgi çalıcı yazılım bulaştırarak ağa erişim sağladıkları ve şirketlerin çok faktörlü kimlik doğrulama (MFA) kullanmadığını ifade ettikleri kaydedilmiştir. İfşa edilen veriler arasında Trump ailesine ait bilgiler bulunmasa da, Trump Organization bünyesinde bilgi güvenliğinden sorumlu Eric Brunnett'in verilerinin yer aldığı bildirilmiştir. Ayrıca EndZone adlı başka bir grubun da benzer verileri daha önce paylaştığı ve şirketin web sitesinde geçmişte de basit POST istekleriyle veri sızdıran güvenlik açıkları bulunduğu bilgisi verilmiştir. Bir müşterinin ise sipariş ettiği altın renkli T1 model cihazını teslim almadığı ifade edilmiştir.
+(XXXXXXX, AÇIK -theregister.com, 06.10.2026)
+» url=https://www.theregister.com/security/2026/10/06/trump-mobile-customers-data-dumped-and-some-never-even-received-their-gold-device/5301433
+» manset=hayir | kategori=veri_ihlali | puan=70
+» sonradan | kategori=veri_ihlali | onem=50 | eksen=8/8/17/17 | rubrik=v2
+» kurban | ad=Trump Mobile | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] GitHub Copilot CLI Aracında Gizli Bilgilerin Sızdırılması Riski
+─────────────────────────────────────────────────────────
+Güvenlik araştırmacıları, GitHub Copilot CLI kodlama aracının belirli modellerinde, kötü amaçlı web sayfalarındaki talimatlar aracılığıyla geliştirici sırlarının sızdırılabileceğini tespit etmiştir. Adversa AI tarafından açıklanan verilere göre, Kriptografik Bağlam Enjeksiyonu (CCI) olarak adlandırılan bu yöntemin, aracın otopilot modunda çalışırken şifrelenmiş kötü amaçlı komutları yürütmesine neden olduğu belirtilmiştir. Yapılan testlerde, Microsoft'un mai-code-1.1-flash modelinin bu saldırı zincirini yüzde 50 oranında başarıyla gerçekleştirdiği, ancak OpenAI modellerinin saldırıyı reddettiği kaydedilmiştir. GitHub'ın bu durumu bir ürün güvenlik açığı olarak kabul etmediği ve kullanıcıların güvenilmeyen içerikleri çekme konusundaki onayına dayandırdığı ifade edilmiştir. Araştırmacılar, saldırganların bu yöntemle kullanıcıların yerel dosyalarındaki hassas verileri uzak sunuculara aktarabildiği bilgisini paylaşmıştır. 17 Eylül 2026 tarihinde raporlanan bu durumun, statik güvenlik duvarlarını aşmak için güçlü şifreleme ve Python tabanlı şifre çözme talimatlarını kullandığı kaydedilmiştir.
+(XXXXXXX, AÇIK -theregister.com, 06.10.2026)
+» url=https://www.theregister.com/ai-and-ml/2026/10/06/zombie-instructions-on-carefully-constructed-web-pages-could-trick-github-copilot-cli-into-sharing-secrets/5301206
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=61
+» sonradan | kategori=yapay_zeka_guvenligi | onem=41 | eksen=8/8/8/17 | rubrik=v2
+» varlik | sektor=teknoloji
+» teknik | urun=GitHub
+» kurban | ad=GitHub | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] Yapay Zeka Güvenlik Sınıflandırıcılarının Alt Görevlerle Atlatılması
+─────────────────────────────────────────────────────────
+CrowdStrike Siber Süper Zeka Laboratuvarı, Claude Opus 5.5 ve Fable 5 gibi gelişmiş yapay zeka modellerini koruyan içerik güvenliği sınıflandırıcılarının sistematik olarak nasıl atlatılabileceğini ortaya koymuştur. Yapılan incelemelerde, modern sınıflandırıcıların doğrudan saldırılara karşı son derece dayanıklı olduğu ancak istekleri bağımsız olarak değerlendirmeleri nedeniyle yapısal bir zayıflığa sahip oldukları belirtilmiştir. Saldırganların zararlı bir görevi zararsız görünen alt görevlere ayırarak sınıflandırıcıyı geçebildikleri ve elde edilen bileşenleri sınıflandırılmamış küçük modellerle birleştirebildikleri ifade edilmiştir. Bu yöntemle 10 ofansif güvenlik kategorisinden 9'unda başarı sağlandığı kaydedilmiştir. Araştırmacılar, güvenli bileşenlerin birleşiminden kaynaklanan bu riskin, sınıflandırıcıların gözlem sınırları dışında gerçekleştiğine dikkat çekmiştir. Test edilen 515 farklı atlatma tekniği arasında kodlamalar, psikolojik manipülasyon ve 24 yeni bilişsel bilim yaklaşımının yer aldığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -crowdstrike.com, 07.10.2026)
+» url=https://www.crowdstrike.com/en-us/blog/how-attackers-can-bypass-llm-safety-classifiers/
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=52
+» sonradan | kategori=yapay_zeka_guvenligi | onem=32 | eksen=8/8/8/8 | rubrik=v2
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] ClickFix Saldırılarının Zararlı Yükleri Gizlemek İçin Evrilmesi
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin, ClickFix olarak bilinen sosyal mühendislik tekniklerini zararlı yükleri gizlemek amacıyla geliştirdikleri tespit edilmiştir. Flare araştırmacıları, CrocoRat adlı truva atının kullanıldığı yeni bir kampanyada, zararlı komutların doğrudan kopyalanması yerine DNS TXT kayıtları üzerinden sorgulandığını açıklamıştır. Bu yöntemin, enfeksiyon zincirinin güvenlik savunmalarına yakalanmadan bir adım daha ilerlemesine olanak tanıdığı belirtilmiştir. Microsoft Tehdit İstihbaratı ise bazı saldırılarda zararlı betiklerin PNG dosyası görünümünde tarayıcı önbelleğine önceden yüklendiğini ve kullanıcı komutu çalıştırdığında tetiklendiğini kaydetmiştir. Saldırganların bu yolla hem tespit mekanizmalarını atlattıkları hem de komut satırı karakter sınırlarını aştıkları ifade edilmiştir. CrocoRat yazılımının kurumsal sistemlerde kalıcı erişim sağlarken, kişisel sistemlerde kripto para hırsızlığı yaptığı aktarılmıştır. Kuruluşlara, kullanıcılarını sahte reCAPTCHA ve teknik sorun bildirimlerine karşı eğitmeleri, PowerShell günlüklerini sıkılaştırmaları ve uygulama kontrol kurallarını uygulamaları tavsiye edilmiştir.
+(XXXXXXX, AÇIK -darkreading.com, 06.10.2026)
+» url=https://www.darkreading.com/cyberattacks-data-breaches/clickfix-attacks-evolve-better-hide-malicious-payloads
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=47
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=41 | eksen=8/8/17/8 | rubrik=v2
+» varlik | sektor=kripto
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] FortiBleed Kampanyasının Fortinet Cihazlarını ve VPN Ağlarını Hedeflemesi
+─────────────────────────────────────────────────────────
+FBI ve Gizli Servis tarafından yayımlanan uyarıda, Fortinet güvenlik duvarlarını ve VPN ağ geçitlerini hedef alan FortiBleed kimlik bilgisi ele geçirme kampanyasının sürdüğü bildirilmiştir. Tehdit aktörlerinin, ele geçirdikleri hesapları devre dışı bırakarak veya şifreleri değiştirerek kurumları kendi sistemlerinden dışladıkları belirtilmiştir. Yapılan incelemelerde, dünya genelinde 450.000'den fazla cihazın bu operasyonun hedefinde olduğu ve saldırıların fidye yazılımı grupları için bir giriş noktası teşkil ettiği ifade edilmiştir. Özellikle INC/Lynx ve Payload gibi fidye yazılımı iştiraklerinin bu erişim yöntemini kullandığı kaydedilmiştir. SOCRadar tarafından yapılan araştırmalarda 194 ülkede 86.644 cihazın halihazırda tehlikeye girdiği tespit edilmiştir. Yetkililer, etkilenen kuruluşların yalnızca yama uygulamakla kalmayıp, dış yönetim erişimini kısıtlamaları, çok faktörlü kimlik doğrulamayı etkinleştirmeleri ve tüm kimlik bilgilerini sıfırlamaları gerektiğini vurgulamıştır. Saldırganların yeni yönetici hesapları oluşturarak kalıcılık sağladığı ve yanal hareketler için günlüklerin incelenmesi gerektiği bildirilmiştir.
+(XXXXXXX, AÇIK -cyberscoop.com, 07.10.2026)
+» url=https://cyberscoop.com/fortibleed-fortinet-vpn-ransomware-fbi-warning/
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=89
+» sonradan | kategori=zafiyet_aktif_apt | onem=76 | eksen=25/17/17/17 | rubrik=v2
+» varlik | aktor=INC
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] Apple iOS Cihazlarında Otomatik Yeniden Başlatma Güvenliğinin Aşılması
+─────────────────────────────────────────────────────────
+Magnet Forensics firmasının, iPhone cihazlarının 72 saat boyunca kullanılmadığında daha güvenli bir duruma geçmesini sağlayan otomatik yeniden başlatma özelliğini devre dışı bırakan bir teknoloji geliştirdiği bildirilmiştir. GrayKey Preserve adlı yeni bir cihaz ve Evidence Preservation Mode olarak adlandırılan yazılım özelliğinin, kolluk kuvvetlerinin cihazlardaki verilere erişimini kolaylaştırmak amacıyla tasarlandığı belirtilmiştir. Sızdırılan bir videoda Magnet Forensics çalışanının, bu çözümün iOS adli bilişim süreçlerinde oyunun kurallarını değiştirdiğini ifade ettiği kaydedilmiştir. Söz konusu araçların, iPhone'un belirli bir süre sonra önbelleğe alınmış konumlar, silinmiş fotoğraflar ve iMessage mesajları gibi verileri otomatik olarak silme mekanizmasını engellediği aktarılmıştır. Bu teknolojinin, adli bilişim uzmanlarına verileri süresiz olarak koruma olanağı tanıdığı ifade edilmiştir. Apple mühendislerinin bu güvenlik açığından haberdar oldukları ve sorunu gidermek için çalışmalar yürütebilecekleri değerlendirilmektedir.
+(XXXXXXX, AÇIK -schneier.com, 06.10.2026)
+» url=https://www.schneier.com/blog/archives/2026/10/possible-vulnerability-in-apples-automatic-reboot.html
+» manset=hayir | kategori=zafiyet_rutin | puan=86
+» sonradan | kategori=zafiyet_rutin | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» teknik | urun=Apple
+» kurban | ad=Apple | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] Ninja Forms Eklentisindeki Güvenlik Açığının WordPress Sitelerini Hedeflemesi
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin, Ninja Forms ve WPC Product Bundles for WooCommerce adlı iki popüler WordPress eklentisindeki depolanmış siteler arası betik çalıştırma (XSS) açıklarını istismar ettiği bildirilmiştir. CVE-2026-94504 ve CVE-2026-93836 kodlarıyla takip edilen bu açıkların, saldırganların kötü amaçlı JavaScript kodları aracılığıyla gizli yönetici hesapları oluşturmasına ve arka kapılar yerleştirmesine olanak tanıdığı belirtilmiştir. Patchstack araştırmacıları tarafından 4 Ekim 2026 tarihinde tespit edilen saldırıların, 500.000'den fazla aktif kurulumu bulunan Ninja Forms eklentisini doğrudan etkilediği kaydedilmiştir. Uzmanlar, saldırganların yönetici oturumlarını kullanarak "WP Smart Thumbnails" adında sahte bir eklenti yüklediğini ve bu yolla dosya yöneticisi erişimi sağladığını açıklamıştır. Saldırıların imgcdn1[.]com üzerinden dağıtılan JavaScript yükleriyle gerçekleştirildiği ve eklenti silinse bile gizli yönetici hesaplarının kalıcılık sağladığı ifade edilmiştir. Etkilenen eklentilerin sırasıyla 3.15.4 ve 8.6.7 sürümlerine yükseltilmesi tavsiye edilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 07.10.2026)
+» url=https://www.bleepingcomputer.com/news/security/ninja-forms-plugin-flaw-exploited-to-hack-wordpress-sites/
+» manset=hayir | kategori=zafiyet_rutin | puan=65
+» teknik | cve=CVE-2026-93836,CVE-2026-94504 | urun=WordPress
+
+────────────────────────────────────────────────────────────────────────────────
+
+[20] Pwn2Own İrlanda Yarışmasında 32 Sıfır Gün Açığı İstismarı
+─────────────────────────────────────────────────────────
+Pwn2Own İrlanda 2026 siber güvenlik yarışmasının ilk gününde, güvenlik araştırmacılarının çeşitli cihazlarda 32 adet sıfır gün açığını başarıyla istismar ettiği bildirilmiştir. Yarışma kapsamında Samsung Galaxy S26 akıllı telefonunun iki kez hacklendiği ve araştırmacıların toplamda 388.500 dolar ödül kazandığı belirtilmiştir. VinSOC ekibinin, Philips Hue Bridge Pro akıllı aydınlatma sistemini yedi adet sıfır gün açığını zincirleyerek ele geçirdiği ve Oracle otonom veri tabanını hedef aldığı kaydedilmiştir. Ayrıca Lexmark ve Canon marka çok fonksiyonlu yazıcılar ile Sonos Era 300 akıllı hoparlörlerin de güvenlik ihlallerine maruz kaldığı ifade edilmiştir. OpenAI Codex bulut tabanlı kodlama aracının tek bir argüman enjeksiyonu hatasıyla ele geçirildiği aktarılmıştır. Zero Day Initiative (ZDI) tarafından düzenlenen etkinlikte tespit edilen açıkların, üreticilere 90 günlük yama süresi tanınmasının ardından kamuoyuyla paylaşılacağı bilgisi verilmiştir. Yarışmanın ilerleyen günlerinde Google Pixel 10 ve sağlık cihazlarının da hedefleneceği bildirilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 06.10.2026)
+» url=https://www.bleepingcomputer.com/news/security/hackers-exploit-32-zero-days-on-first-day-of-pwn2own-ireland/
+» manset=hayir | kategori=zafiyet_rutin | puan=58
+» sonradan | kategori=zafiyet_rutin | onem=24 | eksen=8/8/8/0 | rubrik=v2
+» varlik | hedef=İrlanda
+» teknik | urun=Oracle | istismar=aktif
+» kurban | ad=Samsung | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[21] Microsoft Outlook'un MSIX Dosya Uzantılarını Engelleme Listesine Alması
+─────────────────────────────────────────────────────────
+Microsoft, siber güvenliği artırmak amacıyla Outlook platformunda .msix ve .msixbundle dosya uzantılarını engellenen ekler listesine eklediğini açıklamıştır. Bu değişikliğin, Windows için yeni Outlook ve Exchange Online üzerindeki web tabanlı Outlook istemcilerini kapsadığı belirtilmiştir. Kullanıcıların varsayılan olarak bu uzantılara sahip dosyaları indirmesinin veya açmasının engelleneceği, böylece kötü amaçlı uygulama paketlerinden kaynaklanabilecek risklerin azaltılmasının hedeflendiği ifade edilmiştir. Microsoft, bu dosya türlerinin e-posta trafiğinde nadiren kullanıldığını ancak yasal ihtiyaçlar için yöneticilerin OwaMailboxPolicy üzerinden izin tanımlayabileceğini kaydetmiştir. Uygulamanın Kasım 2026 ortasına kadar tamamen yayına alınacağı ve bu adımın ms-appinstaller protokolünün kötüye kullanımına karşı alınan önceki önlemlerin bir devamı olduğu bildirilmiştir. Outlook üzerinde halihazırda .py, .ps1 ve .cab gibi dosya türlerinin de engellenmiş olduğu bilgisi paylaşılmıştır.
+(XXXXXXX, AÇIK -theregister.com, 06.10.2026)
+» url=https://www.theregister.com/software/2026/10/06/microsoft-extends-the-outlook-naughty-step-with-two-more-file-types/5301350
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=66 | eksen=25/8/8/25 | rubrik=v2
+
+────────────────────────────────────────────────────────────────────────────────
+
+[22] OpenSSH 10.6 Sürümünde Kuantum Sonrası İmza Algoritmasının Etkinleştirilmesi
+─────────────────────────────────────────────────────────
+OpenSSH geliştirme ekibi, 6 Ekim 2026 tarihinde yayımlanan 10.6 sürümüyle birlikte kuantum sonrası hibrit imza algoritması ssh-mldsa44-ed25519'u etkinleştirdiğini duyurmuştur. Yeni sürümde, LZ77 sözlük kodlayıcısının devre dışı bırakılmasıyla sıkıştırma özelliklerinin, yan kanal saldırılarına karşı koruma amacıyla sınırlandırıldığı belirtilmiştir. Ayrıca, kullanıcı adlarında dolar işareti veya ters eğik çizgi içeren girişlerin, kabuk komut enjeksiyonu riskine karşı reddedileceği kaydedilmiştir. Geliştiriciler, yapay zeka modelleri tarafından tespit edilen güvenlik açıklarındaki artış nedeniyle güncelleme döngülerini sıkılaştırdıklarını ifade etmiştir. SFTP protokolünde sunucu tarafından döndürülen yolların doğrulanmasının sıkılaştırıldığı ve GSSAPI kimlik bilgilerinin depolanma sürecinde iyileştirmeler yapıldığı bilgisi verilmiştir. ssh-keygen aracının gün ışığından yararlanma saatlerini yanlış işlemesi nedeniyle oluşan sertifika süresi hatalarının da bu sürümle giderildiği aktarılmıştır. Deneysel destek aşamasında oluşturulan eski anahtarların ise yenilenmesi gerektiği vurgulanmıştır.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 07.10.2026)
+» url=https://www.helpnetsecurity.com/2026/10/07/openssh-10-6-released/
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» varlik | sektor=teknoloji
+
+────────────────────────────────────────────────────────────────────────────────
+
+[23] X.Org Sunucusunda Tespit Edilen Güvenlik Açıklarının Giderilmesi
+─────────────────────────────────────────────────────────
+X.Org sunucusu ve Xwayland yazılımlarında, rastgele kod yürütülmesine veya sunucunun çökmesine neden olabilen 12 adet güvenlik açığının giderildiği bildirilmiştir. Söz konusu hataların xorg-server 21.1.25 ve xwayland-24.1.14 sürümleriyle düzeltildiği açıklanmıştır. Tespit edilen açıkların dokuzunun rastgele kod yürütülmesine, üçünün ise bilgi ifşasına yol açabildiği belirtilmiştir. CVE-2026-93522 kodlu yığın arabelleği taşması hatasının yalnızca GPU hızlandırmalı sistemlerdeki Xwayland bileşenini etkilediği kaydedilmiştir. Güvenlik duyurusunda, hataların çoğunun kimliği doğrulanmış X istemcileri tarafından tetiklenebildiği ifade edilmiştir. Hataların yedi tanesinin arabellek taşması, üçünün kullanım sonrası serbest bırakma ve birer tanesinin çift serbest bırakma ile sınır dışı okuma olduğu aktarılmıştır. Uzmanlar, X sunucusu veya Xwayland kullanan sistem yöneticilerinin yüklü sürümlerini güncel sürümlerle karşılaştırarak gerekli yamaları uygulamaları gerektiğini vurgulamıştır. İlgili düzeltmelerin freedesktop.org GitLab platformu üzerinden erişime açıldığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 07.10.2026)
+» url=https://www.helpnetsecurity.com/2026/10/07/x-org-server-fixed-vulnerabilities/
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-93522
+
+────────────────────────────────────────────────────────────────────────────────
+
+[24] Google'ın PageBreak Aracının 500 Güvenlik Açığı Bulması
+─────────────────────────────────────────────────────────
+Google bünyesindeki ürün güvenliği ekibi tarafından geliştirilen PageBreak adlı yapay zeka aracının, şirketin web uygulamalarında 500'den fazla siteler arası betik çalıştırma (XSS) hatası tespit ettiği bildirilmiştir. 2025 yılının Kasım ayında pilot uygulamasına başlanan ve 2026 yılının Ocak ayında tam kapasiteyle çalışmaya başlayan aracın, güvenlik açıklarını otonom olarak ölçeklendirmek amacıyla tasarlandığı belirtilmiştir. PageBreak'in admin.google.com ve apis.google.com gibi kritik platformlardaki hataları belirleyerek doğruladığı ifade edilmiştir. Sistemin, Gemini 3.1 Pro ve Gemini 3.5 Flash modellerini kullanarak potansiyel zayıflıkları çalışan bir ortamda test ettiği ve yalnızca doğrulanmış açıkları raporladığı kaydedilmiştir. Google'ın bu aracı, tespit edilen hataları otomatik olarak onarmak için CodeMender sistemiyle entegre etmeyi planladığı açıklanmıştır. Bu gelişmenin, uygulama güvenliğinde yapay zeka kullanımını hızlandırdığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -darkreading.com, 06.10.2026)
+» url=https://www.darkreading.com/application-security/google-pagebreak-ai-agent-500-flaws-web-apps
+» manset=hayir | kategori=zafiyet_rutin | puan=55
+» sonradan | kategori=zafiyet_rutin | onem=24 | eksen=8/8/8/0 | rubrik=v2
+» varlik | sektor=ulastirma
+» kurban | ad=Google | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[25] LibreOffice ve OpenOffice Yazılımlarında Kod Yürütme Açıklarının Belirlenmesi
+─────────────────────────────────────────────────────────
+LibreOffice ve Apache OpenOffice yazılımlarında, kötü amaçlı elektronik tablolar aracılığıyla makro uyarısı vermeden saldırgan kodlarının yürütülmesine izin veren güvenlik açıkları tespit edilmiştir. CVE-2026-63277 ve CVE-2026-59265 kodlarıyla izlenen bu hataların, programların Java desteği etkin olduğunda tetiklenebildiği belirtilmiştir. LibreOffice'in söz konusu hatayı 5 Ekim 2026 tarihinde yayınladığı 26.2.5 ve 26.8.0 sürümleriyle giderdiği bildirilmiştir. Apache OpenOffice tarafında ise 4.1.16 ve önceki tüm sürümlerin risk altında olduğu, düzeltmenin 4.1.17 sürümüyle yapılmasının beklendiği ifade edilmiştir. Saldırının, bir spreadsheet dosyasının dış kaynaktan veri çeken veri tabanı aralığı özelliğini kullanarak kötü amaçlı JDBC sürücülerini ve JAR dosyalarını indirmesiyle gerçekleştiği kaydedilmiştir. Henüz gerçek saldırılarda kullanıldığına dair bir rapor bulunmayan bu açıklar için kullanıcıların Java desteğini kapatmaları veya güvenilmeyen dosyaları açmamaları önerilmektedir. Araştırmacıların Windows ve Linux sistemlerinde kavram kanıtlama çalışmaları yürüttüğü aktarılmaktadır.
+(XXXXXXX, AÇIK -thehackernews.com, 06.10.2026)
+» url=https://thehackernews.com/2026/10/libreoffice-and-openoffice-flaws-let.html
+» manset=hayir | kategori=zafiyet_rutin | puan=54
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=17/8/8/8 | rubrik=v2
+» teknik | cve=CVE-2026-59265,CVE-2026-63277
+
+────────────────────────────────────────────────────────────────────────────────
+
+[26] Langflow Platformundaki Kritik Güvenlik Açığının Aktif İstismar Edilmesi
+─────────────────────────────────────────────────────────
+Yapay zeka uygulama geliştirme platformu Langflow'da tespit edilen CVE-2026-0768 kodlu ve 9.8 şiddetindeki güvenlik açığının, Ağustos 2026 sonundan itibaren aktif olarak istismar edildiği bildirilmiştir. VulnCheck tehdit istihbaratı ekibi, özellikle Rusya kaynaklı saldırganların internete açık Langflow örneklerini hedef alarak kimlik doğrulama gerektirmeden rastgele Python kodu yürüttüğünü tespit etmiştir. Saldırganların sistemlere sızdıktan sonra OpenAI API anahtarları, AWS kimlik bilgileri ve SSH anahtarları gibi kritik verileri ele geçirdiği belirtilmiştir. Langflow'un 1.4.2 ve önceki tüm sürümlerinin bu hatadan etkilendiği, platformun bileşen düzenleyicisindeki doğrulama uç noktasının girdi kontrolü yapmamasının bu duruma yol açtığı ifade edilmiştir. Uzmanlar, etkilenen tüm sistemlerin ivedilikle yamalanması ve bu platformlarda kullanılan tüm bulut ve API kimlik bilgilerinin derhal değiştirilmesi gerektiğini kaydetmiştir.
+(XXXXXXX, AÇIK -csoonline.com, 06.10.2026)
+» url=https://www.csoonline.com/article/4230802/the-ai-app-builder-your-team-trusts-has-a-root-level-backdoor.html
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=54
+» sonradan | kategori=zafiyet_aktif_apt | onem=32 | eksen=8/8/8/8 | rubrik=v2
+» varlik | hedef=Rusya
+» teknik | cve=CVE-2026-0768 | istismar=aktif
+» kurban | ad=Langflow | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
