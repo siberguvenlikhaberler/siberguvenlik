@@ -967,3 +967,32 @@ Araç: `scripts/kimlik_olc.py` (yalnızca OKUR) her birleşmeyi kanıt sınıfı
 ayırır: yapısal / adlandırılmış / tek_varlik / cografi / salt_konu.
 Regresyon: `tests/test_olay_iliski.py` (Danimarka↔DTU ayrı olay, Check Point
 raporlayan firma, ülke kökü kimlik değil, ULKE senkronu).
+
+
+## 📌 BEKLEYEN İŞ — KRİTİK 3 GİRİŞ ARACISI (plan, 2026-10-07)
+
+7 Ekim raporunda 3 Ekim'in üçüncü manşeti (Linux arka kapılarının e-posta
+güvenlik araçlarını taklit etmesi) DÖRT GÜN SONRA yeniden manşet oldu. Defter
+doğru biliyordu (`same_event` çapraz-gün True, `manset_gunu_sayisi=1`); haberi
+içeri alan `_kritik3_dominans_takasi` kendi havuz süzgecini kullanıyor ve
+`_manset_disi_ids`'i HİÇ çağırmıyor.
+
+ÖLÇÜLDÜ (son 31 gün, 93 yayımlanmış manşet): **8'i (%8,6)** defterin "bu olay
+zaten manşet oldu" dediği haberdi. Kapı dağılımı: `kritik3_dominans` 3,
+`manset_capraz_gun_llm` 2, ilk LLM seçimi 2, `yayin_yonetmeni_takas` 1.
+8 günün 7'sinde gövdede defter-temiz aday vardı (11-22 aday); yalnızca 5 Ekim
+kıtlık gününde yoktu.
+
+KÖK SEBEP: uygunluk ("bu aday manşete girebilir mi?") KATMAN BAŞINA elle
+kodlanıyor — yedi kapıdan dördü defter tekrar kapısını, biri (dominans) hem
+onu hem çapraz-günü uygulamıyor, biri (yönetmen) aday başına değil HAVUZ
+üzerinden uyguluyor. 5 Ekim'de ÇIKIŞ tarafı merkezîleştirildi (manşet
+aracısı); GİRİŞ tarafı hâlâ dağınık.
+
+PLAN: `KRITIK3_PLAN.md` — tek uygunluk yüklemi (`_manset_uygun_mu`, aday
+başına, kapılar sabit sırada), `_kritik3_yedek_bul`'un onun ince sarmalayıcısı
+olması (G3 artık içeride, çağıran unutamaz), dominans ve yönetmenin yükleme
+bağlanması, ilk seçimin de sınanması, yapı testleri ve kabul ölçütleri
+(tekrar manşet 8 → 1, KRİTİK 3 hiç 2'ye düşmez, golden/zincir ölçümleri
+birebir aynı, LLM maliyeti nötr). Üç tanımın (`same_event` /
+`iliski_belirle` / `mukerrer_karari`) ayrışması AYRI adımdır (P6).
