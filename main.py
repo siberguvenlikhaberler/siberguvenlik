@@ -6424,6 +6424,52 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"   ⚠️  Manşet seçimi geçersiz ({secim}) — deterministik "
                   f"seçim korundu.")
             return list(deterministik_top3)
+
+        # SEÇİLEN ÜÇLÜ YÜKLEMDEN GEÇER (P3, bkz. KRITIK3_PLAN.md).
+        #
+        # Kısa liste tek tek temizdi ama ÜÇLÜNÜN KENDİSİ sınanmıyordu: bir
+        # kapı yalnızca seçim yapıldıktan sonra anlam kazanır. ÖLÇÜLDÜ
+        # (2026-09-29): FBI personel ihlali ile Hollanda'daki ShinyHunters
+        # yakalaması aynı hattan iki manşet oldu (`aktor:shinyhunters`);
+        # çeşitlilik kuralı bunu ÜÇ KATMAN sonra takasla düzeltiyordu, yani
+        # hata daha pahalıya kapanıyordu.
+        #
+        # PUAN BANDI ATLANIR — yukarıda kısa liste tavanına göre zaten
+        # uygulandı; burada ikinci kez uygulamak aynı adayı iki kez takas
+        # ettirirdi.
+        _p2 = lambda x: (records.get(x) or {}).get('toplam', 0)  # noqa: E731
+        _vfn = self._dedup_view_fn(content_by_id, articles_by_id)
+        for _ in range(len(uygun)):
+            _bozuk = None
+            for x in uygun:
+                ok, neden = self._manset_uygun_mu(
+                    x, [o for o in uygun if o != x], records, _vfn,
+                    atla=('puan_bandi',))
+                if not ok:
+                    _bozuk = (x, neden)
+                    break
+            if _bozuk is None:
+                break
+            x, neden = _bozuk
+            # YEDEK: kısa listenin seçilmemiş en yüksek puanlı UYGUN adayı.
+            # KRİTİK 3 ASLA 2'YE DÜŞMEZ — temiz yedek yoksa seçim olduğu gibi
+            # kalır ve karar sonraki katmanlara bırakılır.
+            y = None
+            for c in sorted(aday_ids, key=lambda z: -_p2(z)):
+                if c in uygun:
+                    continue
+                if self._manset_uygun_mu(
+                        c, [o for o in uygun if o != x], records, _vfn,
+                        atla=('puan_bandi',))[0]:
+                    y = c
+                    break
+            if y is None:
+                print(f"   ⚠️  Manşet seçimi: ID {x} uygun değil ({neden}) "
+                      f"ama temiz yedek YOK — yerinde bırakıldı.")
+                break
+            print(f"   🚧 Manşet seçimi: ID {x} ({_p2(x)}) uygun değil "
+                  f"({neden}) → ID {y} ({_p2(y)}) ile değiştirildi.")
+            uygun[uygun.index(x)] = y
         if set(uygun) != set(deterministik_top3):
             gerekce = {}
             for g in (data.get('gerekce') or []):
@@ -6846,26 +6892,37 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # Süregelen hikâyenin her gün manşet olmasını engelleyen koruma
         # KAYBOLMAZ, ÖLÇÜLÜR: artık "bayrak var mı" değil, "bu olay kaç gün
         # manşet oldu" sorulur.
-        manset_yasak = getattr(self, '_manset_yasak', None) or set()
-        defter = getattr(self, '_olay_defteri', None)
+        # UYGUNLUK TEK YÜKLEMDEN SORULUR (P3, bkz. KRITIK3_PLAN.md).
+        #
+        # İLİŞKİSEL KAPILAR BURADA ATLANIR, çünkü HAVUZ süzülüyor — henüz bir
+        # manşet listesi yok. Aynı-olay ayrıklığı `pick_distinct` ile, çapraz
+        # gün `exclude_views=recent_k3` ve kısa liste temizliğiyle, puan bandı
+        # `_manset_llm_sec` içinde (kısa liste tavanına göre) uygulanır.
+        # Çeşitlilik ve aynı-olay, seçilen ÜÇLÜ üzerinde `_manset_llm_sec`
+        # sonunda sınanır.
+        #
+        # DEFTERE ARTIK ÜRETİM GÖRÜNÜMÜYLE SORULUYOR. Eski kod
+        # `_kaynak_view` geçiriyordu: tr_title/paragraph BOŞ, title
+        # İNGİLİZCE. Defterin geçmişi (`rapor_gecmis`) ise yalnızca
+        # Türkçedir; ortak özel adlar iki dilde de geçtiği için `ad:`
+        # kimlikleri tutuyor ama KONU ÖRTÜŞMESİ tutmuyor ve defter kimlik +
+        # konu desteği istiyor. ÖLÇÜLDÜ (2026-10-07,
+        # `scripts/kritik3_olc.py --gorunum`): son 31 günün 93 manşetinde
+        # defter TÜRKÇE görünümle 4 tekrar buluyor, KAYNAK görünümüyle
+        # **0** — yani kapı fiilen ölüydü. Dört vakanın hepsi gerçek tekrar
+        # (19 Eylül Telegram, 1 Ekim Bitget, 5 Ekim denizcilik, 7 Ekim Linux
+        # arka kapıları).
         if getattr(self, '_mukerrer_kritik3', True):
             uygun, dusen = [], {}
+            _atla = ('capraz_gun', 'ayni_gun_ayni_olay', 'cesitlilik',
+                     'puan_bandi')
             for aid in eligible:
-                if aid in manset_yasak:
-                    dusen[aid] = 'gerçek mükerrer (AYNI_GELISME)'
-                    continue
-                tekrar = 0
-                if defter is not None:
-                    try:
-                        tekrar = defter.manset_gunu_sayisi(
-                            self._kaynak_view(aid, articles_by_id))
-                    except Exception:
-                        tekrar = 0
-                if tekrar >= self.MANSET_TEKRAR_SINIRI:
-                    dusen[aid] = (f'olay son {REPORT_HISTORY_DAYS} günde '
-                                  f'{tekrar} kez manşet oldu')
-                    continue
-                uygun.append(aid)
+                ok, neden = self._manset_uygun_mu(
+                    aid, (), records, view_fn, atla=_atla)
+                if ok:
+                    uygun.append(aid)
+                else:
+                    dusen[aid] = neden
             # Garanti korunur: yeterli aday kalmıyorsa kapı UYGULANMAZ.
             if len(uygun) >= 3:
                 for aid, neden in dusen.items():

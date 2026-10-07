@@ -254,3 +254,52 @@ Regresyon: `tests/test_kritik3_dominans.py` (`test_yasakli_aday_kullanilmaz`,
 ÖLÇÜM ARACI DÜZELTMESİ: `--matris` ham metin tarıyordu ve katmanın YORUMUNU
 kendi süzgeci sanıyordu (yönetmendeki "takas kapısı
 KRITIK3_HARIC_KATEGORILER'e bakar" notu). Yorum satırları artık sayılmıyor.
+
+### P3 — İLK SEÇİM DE YÜKLEMDEN GEÇİYOR (2026-10-07)
+
+İki kapı kaldı ve ikisi de ilk seçimdeydi.
+
+**(a) HAVUZ KAPISI ÖLÜYDÜ — ASİMETRİK BESLEME.**
+`_derive_top3_by_score` deftere `_kaynak_view` ile soruyordu: tr_title ve
+paragraph BOŞ, title İNGİLİZCE. Defterin geçmişi (`rapor_gecmis`) ise
+yalnızca Türkçedir. Ortak özel adlar iki dilde de geçtiği için `ad:`
+kimlikleri tutuyor ama KONU ÖRTÜŞMESİ tutmuyor; defter kimlik + konu
+desteği istediği için eşleşme düşüyor. Yani boru hattının ilk kapısı,
+geri kalanından yapısal olarak DAHA GEVŞEKTİ.
+
+ÖLÇÜLDÜ (`scripts/kritik3_olc.py --gorunum`, son 31 gün, 93 manşet):
+defter TÜRKÇE görünümle **4** tekrar buluyor, KAYNAK görünümüyle **0**.
+Dördü de gerçek tekrar: 19 Eylül Telegram, 1 Ekim Bitget, 5 Ekim
+denizcilik, 7 Ekim Linux arka kapıları. Ölçüm ALT SINIRDIR — kaynak gövde
+metni hiçbir yerde saklanmıyor, üretimdeki `_kaynak_view` 2500 karakter
+İngilizce gövde de taşır ve o da Türkçe geçmişle konu örtüşmesi üretmez.
+Havuz kapısı artık `_manset_uygun_mu`yu ÜRETİM görünümüyle çağırıyor.
+
+İLİŞKİSEL KAPILAR HAVUZDA ATLANIR (`capraz_gun`, `ayni_gun_ayni_olay`,
+`cesitlilik`, `puan_bandi`): orada henüz bir manşet listesi yok. Aynı-olay
+`pick_distinct` ile, çapraz gün `exclude_views=recent_k3` + kısa liste
+temizliğiyle, puan bandı `_manset_llm_sec` içinde kısa liste tavanına göre
+uygulanır. ≥3 garantisi aynen korunur: yeterli aday kalmıyorsa kapı
+UYGULANMAZ.
+
+**(b) SEÇİLEN ÜÇLÜ HİÇ SINANMIYORDU.** Kısa liste tek tek temizdi ama bir
+kapı ancak seçim yapıldıktan sonra anlam kazanır. ÖLÇÜLDÜ (2026-09-29): FBI
+personel ihlali ile Hollanda'daki ShinyHunters yakalaması aynı hattan
+(`aktor:shinyhunters`) iki manşet oldu; çeşitlilik kuralı bunu ÜÇ KATMAN
+sonra takasla düzeltiyordu. `_manset_llm_sec` artık seçtiği her haberi
+diğer ikisine karşı yükleme soruyor ve uygunsuzu kısa listenin en yüksek
+puanlı UYGUN adayıyla değiştiriyor. Puan bandı burada ATLANIR (yukarıda
+zaten uygulandı; iki kez uygulamak aynı adayı iki kez takas ettirirdi).
+Temiz yedek yoksa seçim yerinde kalır — **KRİTİK 3 ASLA 2'YE DÜŞMEZ**.
+
+ÖLÇÜLDÜ (önce → sonra):
+- matris: yüklemden geçmeyen katman 2 → **0** (on katmanın tamamı)
+- kapılar birebir aynı: `dedup_golden` 15/21 · 18/23 · 20/23,
+  `zincir_olc` süzgeçli 6 düşürme + çeşitlilik 1 vaka, defter 475 olay
+- 750 test geçiyor; LLM çağrısı sayısı DEĞİŞMEDİ (yüklem deterministik,
+  yedek kısa listeden gelir — yeni çağrı yok)
+
+Regresyon: `tests/test_manset_llm_secim.py`
+(`test_secilen_uclu_cesitlilik_yukleminden_gecer`,
+`test_temiz_yedek_yoksa_manset_uce_sadik_kalir`,
+`test_havuz_kapisi_uretim_gorunumuyle_sorulur`).

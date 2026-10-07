@@ -12,6 +12,10 @@ bkz. KRITIK3_PLAN.md. Üç ölçüm verir:
             defter-temiz aday olup olmadığını söyler (kabul ölçütü 1 ve 2).
   --kapi    Manşet karar izindeki her `giren` id için defter tekrar durumu —
             hangi katmanın kaç tekrar soktuğu.
+  --gorunum ASİMETRİK BESLEME ölçümü: defter aynı manşete TÜRKÇE görünümle mi
+            yoksa KAYNAK (İngilizce) görünümle mi sorulduğunda tekrar diyor.
+            İlk seçim (`_derive_top3_by_score`) deftere `_kaynak_view` ile
+            soruyordu; defterin kendi geçmişi ise yalnızca Türkçe.
 
 Yüklemin kendisi aday/manşet bağlamı ister (records, view_fn); bu betik
 rapor_gecmis görünümleriyle çalıştığı için yalnızca DEFTER kapısını
@@ -132,6 +136,55 @@ def tekrar():
           f"(%{100*bulasik/max(toplam,1):.1f})")
 
 
+def gorunum():
+    """DEFTERE HANGİ GÖRÜNÜMLE SORULDUĞU SONUCU DEĞİŞTİRİR.
+
+    `_derive_top3_by_score` defter kapısını `_kaynak_view` ile soruyor:
+    tr_title/paragraph BOŞ, title İngilizce. Defterin geçmişi
+    (`rapor_gecmis`) ise YALNIZCA Türkçe (tr_title + paragraph). Ortak özel
+    adlar iki dilde de geçtiği için `ad:` kimlikleri tutuyor ama KONU
+    ÖRTÜŞMESİ tutmuyor — defter kimlik + konu desteği istediği için eşleşme
+    düşüyor. Yani kapı, boru hattının geri kalanından DAHA GEVŞEK çalışıyor.
+
+    Ölçüm kaynak başlığı `skorlama_log.jsonl`dan alır (`yerlesim=kritik3`);
+    kaynak gövde metni hiçbir yerde saklanmadığı için bu ALT SINIRDIR —
+    üretimdeki `_kaynak_view` 2500 karakter İngilizce gövde de taşır, o da
+    Türkçe geçmişle konu örtüşmesi üretmez.
+    """
+    kaynak = {}
+    for satir in (VERI / 'skorlama_log.jsonl').read_text('utf-8').splitlines():
+        try:
+            r = json.loads(satir)
+        except ValueError:
+            continue
+        if r.get('yerlesim') == 'kritik3' and r.get('baslik'):
+            kaynak.setdefault(r['tarih'], []).append(r['baslik'])
+
+    tr_tekrar = kv_tekrar = toplam = 0
+    for g, defter, mansetler, gunun in _defter_akisi():
+        rapor_gorunum = {(v.get('tr_title') or ''): v for v in gunun}
+        basliklar = list(kaynak.get(g, []))
+        if not basliklar:
+            continue
+        for i, v0 in enumerate(mansetler):
+            if i >= len(basliklar):
+                break
+            v = rapor_gorunum.get(v0.get('tr_title') or '', v0)
+            toplam += 1
+            n_tr = defter.manset_gunu_sayisi(v)
+            # KAYNAK GÖRÜNÜMÜ: üretimdeki `_kaynak_view` ile aynı şekil.
+            n_kv = defter.manset_gunu_sayisi(
+                {'tr_title': '', 'paragraph': '',
+                 'title': basliklar[i], 'full_text': ''})
+            tr_tekrar += n_tr >= 1
+            kv_tekrar += n_kv >= 1
+            if (n_tr >= 1) != (n_kv >= 1):
+                print(f"  {g}  türkçe={n_tr} kaynak={n_kv}  "
+                      f"{(v.get('tr_title') or '')[:48]}")
+    print(f"\nkarşılaştırılan manşet: {toplam}  ·  defter tekrarı: "
+          f"türkçe görünüm {tr_tekrar}  ·  kaynak görünüm {kv_tekrar}")
+
+
 def kapi():
     den = {}
     for line in (VERI / 'kalite_denetim.jsonl').read_text('utf-8').splitlines():
@@ -226,9 +279,10 @@ def main():
     ap.add_argument('--tekrar', action='store_true')
     ap.add_argument('--kapi', action='store_true')
     ap.add_argument('--yuklem', action='store_true')
+    ap.add_argument('--gorunum', action='store_true')
     a = ap.parse_args()
-    if not (a.matris or a.tekrar or a.kapi or a.yuklem):
-        a.matris = a.tekrar = a.kapi = a.yuklem = True
+    if not (a.matris or a.tekrar or a.kapi or a.yuklem or a.gorunum):
+        a.matris = a.tekrar = a.kapi = a.yuklem = a.gorunum = True
     if a.matris:
         matris()
     if a.tekrar:
@@ -237,6 +291,9 @@ def main():
     if a.kapi:
         print()
         kapi()
+    if a.gorunum:
+        print()
+        gorunum()
     if a.yuklem:
         print()
         yuklem()
