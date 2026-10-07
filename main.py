@@ -7577,6 +7577,120 @@ document.addEventListener('DOMContentLoaded', initDragFile);
     # düzeltmek.
     YAYIN_YONETMENI_MAX_TAKAS = 2
 
+    # ─────────────────────────────────────────────────────────────────────
+    # KRİTİK 3 GİRİŞ ARACISI — TEK UYGUNLUK YÜKLEMİ (P0, bkz. KRITIK3_PLAN.md)
+    # ─────────────────────────────────────────────────────────────────────
+    # 5 Ekim'de ÇIKIŞ tarafı merkezîleştirildi (manşet aracısı: kararın ve
+    # listenin tek yazarı). GİRİŞ tarafı dağınık kaldı: "bu aday manşete
+    # girebilir mi?" sorusu YEDİ ayrı yerde elle yanıtlanıyordu ve her süzgeç
+    # FARKLI bir kapıyı atlıyordu.
+    #
+    # ÖLÇÜLDÜ (2026-10-07, son 31 gün, 93 yayımlanmış manşet): **8'i (%8,6)**
+    # defterin "bu olay zaten manşet oldu" dediği haberdi — ortalama dört
+    # günde bir tekrar manşet. Kapı dağılımı: `kritik3_dominans` 3 (en son
+    # 10-07, 3 Ekim manşeti olan Linux arka kapıları dört gün sonra yeniden
+    # manşet oldu), `manset_capraz_gun_llm` 2, ilk LLM seçimi 2,
+    # `yayin_yonetmeni_takas` 1. 8 günün 7'sinde gövdede defter-temiz aday
+    # vardı (11-22 aday); yalnızca 5 Ekim kıtlık gününde yoktu.
+    #
+    # İKİ YAPISAL HATA: (a) uygunluk katman başına kodlanıyordu, (b) kapı ADAY
+    # BAŞINA değil HAVUZ üzerinde çalışıyordu (`_manset_disi_ids(havuz, …)`) —
+    # havuzu kuran yer bir id'yi koymazsa kapı onu hiç görmüyordu (09-12).
+    #
+    # YÜKLEM ELEME YETKİSİ TAŞIMAZ: yalnızca TAKASIN adayını belirler.
+    # "KRİTİK 3 ASLA 2'YE DÜŞMEZ" kuralı çağıranlarda kalır — temiz aday
+    # yoksa manşet yerinde bırakılır.
+
+    # Kapılar SABİT SIRADA uygulanır; sıra ve liste testle sabitlenir
+    # (tests/test_manset_uygunluk.py::test_uygunluk_kapilari_sabit).
+    MANSET_UYGUNLUK_KAPILARI = (
+        'kategori',            # KRITIK3_HARIC_KATEGORILER + zafiyet (G1)
+        'yasak',               # _manset_yasak — aracının kalıcı yargısı (G2)
+        'defter_tekrari',      # olay defteri: bu olay zaten manşet oldu (G3)
+        'capraz_gun',          # son günlerin olaylarıyla aynı/gelişme (G4)
+        'ayni_gun_ayni_olay',  # mevcut manşetlerden biriyle aynı olay (G5)
+        'cesitlilik',          # mevcut manşetle AYNI HAT (marka aktör/CVE)
+        'puan_bandi',          # tavandan MANSET_PUAN_TOLERANSI'ndan fazla düşük
+    )
+
+    def _manset_hatti(self, aid, view_fn):
+        """Haberin MANŞET HATTI: marka aktör + CVE kimlikleri.
+
+        TEK TANIM: `_kritik3_cesitlilik` bunu kendi içinde tanımlıyordu; aynı
+        ölçüt artık uygunluk yükleminde de kullanıldığı için modül düzeyine
+        çıkarıldı (kural KOPYALANMAZ). Kod adı BİLEREK dışarıdadır — 23
+        Eylül'de `kod:spycloud` iki manşeti aynı hat saymıştı, oysa SpyCloud
+        raporlayan firmaydı (bkz. CLAUDE.md, manşet çeşitliliği).
+        """
+        blob = ' '.join(_dedup._bundle(view_fn(aid)))
+        aktorler = _dedup.extract_actors(blob)
+        return ({'aktor:' + a for a in aktorler if _dedup._aktor_markasi(a)}
+                | {'cve:' + a for a in aktorler if a.startswith('cve')})
+
+    def _manset_uygun_mu(self, aid, mevcut_manset, records, view_fn,
+                         recent_views=(), *, bant_tavani=None,
+                         aday_puanlari=None, atla=()):
+        """ADAY BAŞINA uygunluk yüklemi: (uygun_mu, gerekçe).
+
+        `mevcut_manset`: adayın KATILACAĞI manşet listesi (çıkacak haber hariç).
+        `atla`: geçici olarak uygulanmayacak kapı adları — yalnızca ölçülmüş
+        bir davranışı korumak için kullanılır, varsayılan TÜM kapılar açıktır.
+        Gerekçe, manşet izine yazılabilecek biçimde döner.
+        """
+        rec = records.get(aid) or {}
+        kat = rec.get('kat')
+
+        if 'kategori' not in atla:
+            if kat in KRITIK3_HARIC_KATEGORILER:
+                return False, 'kategori manşete uygun değil'
+            if kat in ZAFIYET_KATEGORILERI:
+                return False, ('zafiyet haberi — yeri Güvenlik Açıkları '
+                               'bölümü, manşet olmaz')
+
+        if 'yasak' not in atla and aid in (getattr(self, '_manset_yasak', None)
+                                           or set()):
+            return False, 'gerçek mükerrer (manşet yasağı)'
+
+        sozluk = getattr(self, '_olay_sozlugu', None)
+        cv = view_fn(aid)
+
+        if 'defter_tekrari' not in atla:
+            defter = getattr(self, '_olay_defteri', None)
+            if defter is not None:
+                try:
+                    tekrar = defter.manset_gunu_sayisi(cv)
+                except Exception:
+                    tekrar = 0
+                if tekrar >= self.MANSET_TEKRAR_SINIRI:
+                    return False, (f'olay son {REPORT_HISTORY_DAYS} günde '
+                                   f'{tekrar} kez manşet oldu')
+
+        if 'capraz_gun' not in atla and recent_views:
+            if any(_olay.mukerrer_karari(cv, ev, sozluk=sozluk) != _olay.FARKLI
+                   for ev in recent_views):
+                return False, 'son günlerin bir olayının tekrarı/gelişmesi'
+
+        if 'ayni_gun_ayni_olay' not in atla:
+            if any(_olay.ayni_olay(cv, view_fn(o), sozluk=sozluk,
+                                   ayni_gun=True)
+                   for o in mevcut_manset if o != aid):
+                return False, 'mevcut bir manşetle aynı olay'
+
+        if 'cesitlilik' not in atla:
+            hat = self._manset_hatti(aid, view_fn)
+            if hat and any(hat & self._manset_hatti(o, view_fn)
+                           for o in mevcut_manset if o != aid):
+                return False, 'mevcut bir manşetle aynı hat (aktör/CVE)'
+
+        if 'puan_bandi' not in atla and bant_tavani:
+            puan = ((aday_puanlari or {}).get(aid)
+                    if aday_puanlari else rec.get('toplam', 0)) or 0
+            if puan < bant_tavani - self.MANSET_PUAN_TOLERANSI:
+                return False, (f'puan bandı dışı ({puan} < {bant_tavani} - '
+                               f'{self.MANSET_PUAN_TOLERANSI})')
+
+        return True, ''
+
     def _manset_disi_ids(self, aday_ids, records, view_fn, yonetmen=True):
         """Manşete ÇIKAMAYACAK id'ler ve nedenleri: {id: neden}.
 
