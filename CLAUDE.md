@@ -1117,3 +1117,33 @@ kullanıyor ve o şekil 23 vakanın yalnızca 3'ünde temsil ediliyor. Yeni vaka
 eklenirken TR↔TR şekline öncelik verilmelidir. Dağılım
 `tests/test_dedup_golden.py::test_gorunum_sekli_dagilimi_sabit` ile
 sabitlendi — yeni vaka testi güncellemeye zorlar, şekil sessizce kaymaz.
+
+### `ayni_olay` GEREKÇENİN ÖN EKİNE GÖRE YÖNLENDİRİR (ölçüm, 2026-10-07)
+
+FBI/Accenture çiftini neden ayırdığı incelendi. `same_event` onu
+`actor:shinyhunters+kimlik:bürosu,soruştur+topic=0.14` ile BİRLEŞTİRİYOR;
+`ayni_olay` ise gerekçenin ÖN EKİNE bakıp süzgeç seçiyor. Ön ek `actor:`
+olduğu için süzgeç (5) devreye giriyor ve aktör eşleşmesinden
+`AKTOR_KONU_MIN` (0,25) konu desteği istiyor — konu 0,145, dolayısıyla False.
+Gerekçenin `+kimlik:bürosu,soruştur` yarısı, ki onu DF sözlüğüyle yargılayacak
+süzgeç (3) vardır, HİÇ OKUNMUYOR. Yani kusur eşikte değil YÖNLENDİRMEDE:
+bileşik gerekçe yalnızca ilk bileşenine göre, en sıkı kapıda yargılanıyor.
+
+YENİDEN YÖNLENDİRME ÇÖZÜM DEĞİL (ölçüldü, son 31 gün): bileşik
+`actor:+kimlik:` gerekçeli çift yalnızca **5** tane; `ayni_olay` bunların
+4'ünü ayırıyor ve **3 ayırma DOĞRU** — Trump Mobile ↔ ShinyHunters
+(`kimlik:killsec`, 3 Ekim'in sayfa şablonu artefaktı), FBI/Accenture ↔ Rey'in
+Ürdün'de yakalanması, Hollanda yakalaması ↔ teslim çağrısı. Süzgeç (3)'e
+yönlendirmek 1 vakayı düzeltip 3'ünü bozardı.
+
+DAHA SERTİ: 3. vaka (FBI/Accenture ↔ Rey yakalaması, ayırma DOĞRU) ile
+4. vaka (FBI/Accenture ↔ FBI personel ihlali, ayırma YANLIŞ) her
+deterministik sinyalde AYNIDIR — aynı aktör, aynı ortak adlar
+(`bürosu`/`soruştur`), aynı konu örtüşmesi (0,14). Hiçbir eşik ya da
+yönlendirme değişikliği ikisini ayıramaz; bu, deterministik tanımın ÇÖZÜNÜRLÜK
+SINIRIDIR.
+
+Boru hattının ikinci şansı VAR: çift LLM hakemine taşınıyor
+(`aday_benzerligi` 5,81 · `ADAY_BENZERLIK_MIN` 0,55 · aday sayısı 1), yani
+deterministik ayırma son söz değildir. Vaka `dedup_golden`da bilinçli olarak
+BAŞARISIZ durur — çözünürlük sınırını ölçmeye devam etsin.
