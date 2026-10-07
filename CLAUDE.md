@@ -1027,8 +1027,31 @@ gevşetmek bağı 240→233 yapıyor ve ölçülen 5 vakanın HİÇBİRİNİ ç�
 Kalan iş eşik ayarı değil YENİ VERİ: kurum adlarının iki dildeki karşılıklarını
 bağlayan bir eşlem. Eşlem olmadan her genelleme gerçek birleşme kaybediyor.
 
-NOT — `mukerrer_golden` ARTIK ÖLÇMÜYOR: 38 çiftin tamamı 17-24 Ağustos
-günlerindendir, `rapor_gecmis` 30 günde döndüğü için görünümleri dosyada yok
-(`scripts/mukerrer_olc.py` "38 çift geçmişten düşmüş, atlandı" der). Set elle
-etiketli referanstır, SİLİNMEZ; yeniden ölçülebilmesi için çiftlerin
-görünümlerinin sete GÖMÜLMESİ gerekir (`dedup_golden` öyle yapıyor).
+### `mukerrer_golden` YENİDEN ÖLÇÜYOR — GÖRÜNÜMLER GÖMÜLDÜ (2026-10-07)
+
+Set yalnızca GÜN + BAŞLIK tutuyor, görünümleri `rapor_gecmis`ten okuyordu; o
+dosya 30 günde döndüğü için 38 çiftin TAMAMI "geçmişten düşmüş, atlandı" diye
+atlanıyordu. Yani elle etiketli referans aylarca ölçüyor sanılırken HİÇBİR ŞEY
+ölçmüyordu; arıza P6 ölçümünde fark edildi. Görünümler git geçmişindeki anlık
+görüntülerden geri alındı (08-24 çok bloklu bir gündür, o günün beş görünümü
+yalnızca daha eski commit'lerde duruyordu) ve artık setin İÇİNDE `a`/`b`
+alanlarında — `dedup_golden` ile aynı sözleşme. Alanlar rapor geçmişindeki
+biçimle birebir aynıdır (paragraf 500 / full_text 400 karakter kırpık), yani
+ölçüm özgün koşuyla aynı girdiyi görür.
+
+ÖLÇÜLDÜ (şimdi → özgün koşu, 2026-08-24):
+same_event **33/38** (27), dört-değerli **32/38** (22), ayni_olay **38/38**
+(23 — o gün ikisinin OR'uydu). Kazanç KODDANDIR, pencereden değil: sözlük
+güncel derlemden (703 görünüm) ya da ağustos derleminden (533) kurulduğunda
+skor BİREBİR aynı, sözlüksüz koşuda yalnızca dört-değerli 1 puan düşüyor.
+Aradaki fark marka aktör adı, coğrafi ad, `_varlik_sayisi`, çelişen yapısal
+kimlik ve gövde kod adı kapısı düzeltmelerinin toplamıdır.
+
+**38/38 BİR KALİTE KANITI DEĞİL, ÖRNEKLEM İÇİ UYUMDUR:** `ayni_olay`ın eleme
+süzgeçleri tam bu 38 çifte bakılarak seçildi. Sayı REGRESYON EŞİĞİ olarak
+kullanılır (`tests/test_mukerrer_golden.py`), kalite iddiası olarak değil.
+Yeni ölçüm `dedup_golden` ile birlikte okunmalıdır (15/21 · 18/23 · 20/23).
+
+SÖZLÜK GÖMÜLMEZ: DF sözlüğü güncel derlemden kurulur (`dedup_olc` da öyle
+yapar) — üretimde de her gün yeniden kurulur. Bu sette pencere etkisi ölçülüp
+SIFIR bulundu, ama yeni çift eklenirse yeniden ölçülmelidir.

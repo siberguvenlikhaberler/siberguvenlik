@@ -19,15 +19,32 @@ from src import dedup, olay_iliski as O  # noqa: E402
 
 
 def _yukle():
+    """Çiftler + görünüm indeksi + DF sözlüğü.
+
+    GÖRÜNÜMLER SETİN İÇİNDEDİR (2026-10-07). Eskiden `rapor_gecmis`ten
+    okunuyordu ve o dosya 30 günde döndüğü için 38 çiftin TAMAMI "geçmişten
+    düşmüş" diye atlanıyordu — set sessizce ölçmez olmuştu. Gömülü görünüm
+    yoksa eski yola (geçmiş dosyaları) düşülür, böylece yeni çift eklemek
+    için önce ölçüp sonra gömmek mümkün kalır.
+
+    SÖZLÜK GÖMÜLMEZ: DF sözlüğü GÜNCEL derlemden kurulur (`dedup_olc` da öyle
+    yapar). Bu bilinçlidir — sözlük üretimde de her gün yeniden kurulur — ama
+    sayıların sözlük penceresine bağlı olduğu anlamına gelir.
+    """
     def _oku(p):
+        if not os.path.exists(p):
+            return {}
         with open(p, encoding='utf-8') as f:
             return {r['date']: r.get('views', []) or [] for r in json.load(f)}
     rapor = _oku('data/rapor_gecmis.json')
+    k3 = _oku('data/kritik3_gecmis.json')
     with open('data/mukerrer_golden.json', encoding='utf-8') as f:
         altin = json.load(f)['ciftler']
     indeks = {(g, (v.get('tr_title') or '')): v
-              for g, vs in rapor.items() for v in vs}
-    tum = [v for vs in rapor.values() for v in vs]
+              for kaynak in (rapor, k3)
+              for g, vs in kaynak.items() for v in vs}
+    tum = [v for kaynak in (rapor, k3)
+           for vs in kaynak.values() for v in vs]
     return altin, indeks, O.OlaySozlugu(tum)
 
 
@@ -43,8 +60,8 @@ def olc():
     hatalar = {ad: [] for ad in yontemler}
     atlanan = 0
     for c in altin:
-        a = indeks.get((c['gun_a'], c['baslik_a']))
-        b = indeks.get((c['gun_b'], c['baslik_b']))
+        a = c.get('a') or indeks.get((c['gun_a'], c['baslik_a']))
+        b = c.get('b') or indeks.get((c['gun_b'], c['baslik_b']))
         if a is None or b is None:
             atlanan += 1
             continue
