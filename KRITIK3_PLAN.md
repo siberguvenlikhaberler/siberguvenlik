@@ -303,3 +303,30 @@ Regresyon: `tests/test_manset_llm_secim.py`
 (`test_secilen_uclu_cesitlilik_yukleminden_gecer`,
 `test_temiz_yedek_yoksa_manset_uce_sadik_kalir`,
 `test_havuz_kapisi_uretim_gorunumuyle_sorulur`).
+
+### P4 ✅ (2026-10-07) — giriş tarafının bekçisi
+
+- `test_kapilar_tek_yuklemden_gecer`: manşete id SOKABİLEN on katmanın her
+  biri ya `_manset_uygun_mu` ya `_kritik3_yedek_bul` çağırmalı. 5 Ekim'deki
+  `test_katmanlar_takasi_elle_yapmaz`ın (çıkış tarafı) ikizidir. BEKÇİLİĞİ
+  DOĞRULANDI: dominanstan yüklem çağrısı geçici olarak kaldırıldığında test
+  kırılıyor.
+- `test_kapilar_yuklemde_sirayla_uygulanir`: `MANSET_UYGUNLUK_KAPILARI`
+  tuple'ını güncelleyip gövdeyi güncellememek sessiz bir ayrışmadır; sıra
+  artık kaynaktan da doğrulanıyor (`test_kapi_sirasi_sabit` tuple'ın
+  KENDİSİNİ sabitler, bu test UYGULAMASINI).
+- Vaka testleri yüklem düzeyinde: 7 Ekim Linux arka kapıları (3 Ekim
+  manşetinin tekrarı), 4 Ekim OpenAI/Avustralya (çapraz-gün), 21 Ağustos
+  Siemens PLC (üst üste iki gün aynı manşet).
+
+ÖLÇÜM NOTU — KISALTILMIŞ METİN YANILTIR: 4 Ekim vakası ilk denemede iki
+satırlık özetle yazıldı ve `mukerrer_karari` FARKLI döndü; ortak kimlik
+"OpenAI" TEK varlıktır ("Avustralya" coğrafi ad olduğu için 6 Ekim kuralınca
+kimlik sayılmaz) ve konu örtüşmesi (0,19) tek başına eşiği aşmaz. Gerçek
+arşiv paragrafıyla karar TAM_MUKERRER'dir — kurum adları (Medicare
+İstatistik Raporlama Servisi, Victoria) orada geçer. Vaka testleri bu yüzden
+ARŞİV METNİNİ gömülü taşır; `rapor_gecmis` 30 günde döndüğü için dosyadan
+okunamaz.
+
+755 test geçiyor; `dedup_golden` 15/21 · 18/23 · 20/23 ve `zincir_olc`
+(süzgeçli 6 düşürme, çeşitlilik 1 vaka) birebir aynı.
