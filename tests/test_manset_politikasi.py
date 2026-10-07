@@ -288,7 +288,10 @@ def test_yedek_bulucu_puan_bandi_uygular():
     import inspect
     import main
     kaynak = inspect.getsource(main.HaberSistemi._kritik3_yedek_bul)
-    assert 'MANSET_PUAN_TOLERANSI' in kaynak, 'yedek bulucuda puan bandı yok'
+    # Bant artık tek yüklemde (P1): bulucu yüklemi çağırır, bant oradadır.
+    assert '_manset_uygun_mu' in kaynak, 'yedek bulucu yüklemi çağırmıyor'
+    assert 'MANSET_PUAN_TOLERANSI' in inspect.getsource(
+        main.HaberSistemi._manset_uygun_mu), 'yüklemde puan bandı yok'
     assert 'sorted(aday_ids' in kaynak, 'yedek havuzu puan sırasında taranmıyor'
 
 

@@ -121,9 +121,13 @@ def test_yedek_bulucu_manset_yasagina_uyar():
     """
     import inspect
     kaynak = inspect.getsource(main.HaberSistemi._kritik3_yedek_bul)
-    assert '_manset_yasak' in kaynak, 'yedek bulucu manşet yasağına bakmıyor'
-    assert 'mukerrer_karari(' in kaynak, \
-        'yedek bulucu geçmişi eski karşılaştırıcıyla ölçüyor'
+    # Ölçütler artık TEK YÜKLEMDE (P1, KRITIK3_PLAN.md): yedek bulucu
+    # yüklemi çağırmalı, yüklem de kapıyı taşımalı.
+    assert '_manset_uygun_mu' in kaynak, 'yedek bulucu yüklemi çağırmıyor'
+    yuklem = inspect.getsource(main.HaberSistemi._manset_uygun_mu)
+    assert '_manset_yasak' in yuklem, 'yüklem manşet yasağına bakmıyor'
+    assert 'mukerrer_karari(' in yuklem, \
+        'yüklem geçmişi eski karşılaştırıcıyla ölçüyor'
 
 
 def test_hakem_secimden_once_de_kosar():

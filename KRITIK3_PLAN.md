@@ -168,3 +168,51 @@ P0 → P1 → P4 (test) → P2 → P3 → P5 (ölçüm) → (ayrı) P6.
 En riskli adım P3: ilk seçimin sınanması, kıtlık günlerinde havuzu
 boşaltabilir — P5'in 2. kabul ölçütü tam bunu denetler. P2'deki dominans
 değişikliği en yüksek getirili (8 vakanın 3'ü).
+
+
+---
+
+## 8. UYGULAMA GÜNLÜĞÜ (önce/sonra ölçümleriyle)
+
+### P0 ✅ (2026-10-07, commit 3d57565) — tek uygunluk yüklemi
+`_manset_uygun_mu` (aday başına, kapılar sabit sırada, gerekçeli) +
+`_manset_hatti` (çeşitlilik ölçütü tek tanım). KABLOLAMA YAPILMADI.
+Ölçüm: giriş matrisi 10 katmandan 4'ü ne yüklemden ne ortak yedek bulucudan
+geçiyor; `dedup_golden` 15/21 · 18/23 · 20/23, `zincir_olc` süzgeçli 6
+düşürme + çeşitlilik 1 vaka (öncesi/sonrası birebir — 6 değeri 31 günlük
+pencerenin 7 Ekim'i içermesiyle 0'dan yükseldi, KOD DEĞİL VERİ kayması;
+P0 öncesi kodla aynı veride de 6). 745 test.
+
+### P1 ✅ (2026-10-07) — yedek bulucu yüklemin sarmalayıcısı
+`_kritik3_yedek_bul` artık havuzu puan sırasında tarayıp `_manset_uygun_mu`
+doğru diyen ilk adayı döndürüyor; kopya kural kalmadı. **G3 (defter tekrarı)
+artık yüklemin İÇİNDE** — `manset_disi` geçmeyi unutan üç çağrı
+(`_dedup_kritik3_ici`, `_audit_kritik3_selection`,
+`_dedup_kritik3_cross_day_llm`) kapıyı otomatik uyguluyor. Yapı testleri
+kapıları yüklemde arar hale getirildi.
+Ölçüm: tüm kapılar birebir aynı (dedup_golden, zincir_olc, defter_olc);
+745 test.
+
+### ÖLÇÜM BÜTÜNLÜĞÜ DÜZELTMESİ — TABAN ÇİZGİSİ 8 DEĞİL 5
+`scripts/kritik3_olc.py --yuklem` ilk koşuda tekrar manşetlerin 8'inden
+yalnızca 5'ini reddetti. Sebep ölçüm aracındaydı: **aynı haberi İKİ AYRI
+TEMSİLLE soruyordum.** `kritik3_gecmis` görünümleri daha uzun saklanıyor
+(paragraf 600 / full_text 1500 karakter), `rapor_gecmis` kırpık (500 / 400).
+Uzun görünümle sorulduğunda defter Florida Motorlu Araçlar ihlalini
+"Çin Bağlantılı Grubun Sogou Yazılımına Arka Kapı Yerleştirmesi" manşetiyle
+aynı olay sayıyor — fazladan 1.100 karakterlik sayfa şablonu metni yüzünden;
+kırpık görünümle eşleşme yok.
+
+DÜZELTİLDİ: `--tekrar` artık yalnızca RAPOR GEÇMİŞİ görünümüyle sorar.
+**Taban çizgisi: 93 yayımlanmış manşetin 4'ü (%4,3) defter tekrarı** (09-19,
+10-01, 10-05, 10-07) + 1'i aynı-hat ihlali (09-29) = toplam **5 uygunsuz
+manşet**; 5'in 4'ünde temiz yedek var, yalnızca 10-05 kıtlık gününde yok
+(kural gereği yerinde kalır). Kabul ölçütü buna göre güncellendi: **5 → 1**.
+
+### YENİ BULGU (P6'ya eklendi) — DEFTER ASİMETRİK BESLENİYOR
+Defter, manşetleri 1.500 karakterlik `full_text` ile, gövde haberlerini 400
+karakterle görüyor; yani AYNI haber "manşet görünümü" ile sorulduğunda daha
+çok sahte eşleşme üretiyor. Bu, uzun metnin sayfa şablonu gürültüsünü içeri
+taşımasının defterdeki karşılığıdır (bkz. CLAUDE.md "sayfa şablonundaki kod
+adı"). P6 kapsamına alınır: defter TEK ve KIRPIK temsille beslenmeli, ya da
+`_load_recent_events` iki dosyayı aynı uzunlukta saklamalı.

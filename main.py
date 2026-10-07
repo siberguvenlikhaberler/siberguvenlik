@@ -4279,87 +4279,51 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                            bant=True):
         """Manşete uygun ilk yedek adayı bulur (yoksa None).
 
-        Ölçütler: manşete uygun kategori, 'mükerrer' işaretsiz, mevcut
-        manşetlerle aynı-olay DEĞİL, son günlerin olaylarıyla çapraz-gün aynı
-        DEĞİL. Manşet düzeltmelerinin ORTAK yedek seçicisidir — her denetim
-        kendi kopyasını taşırsa ölçütler zamanla ayrışır.
+        ARTIK İNCE SARMALAYICI (P1, bkz. KRITIK3_PLAN.md): havuzu PUAN
+        SIRASINDA tarar ve `_manset_uygun_mu` doğru diyen ilk adayı döndürür.
+        Ölçütlerin TAMAMI yüklemdedir; burada kopya kural YOKTUR.
+
+        NEDEN DEĞİŞTİ: ölçütler burada tek tek kodluyken `defter_tekrari`
+        kapısı (G3) yükleme değil ÇAĞIRANA bırakılmıştı — çağıranlar
+        `haric=manset_disi` geçmek zorundaydı ve ALTI çağrının ÜÇÜ bunu
+        geçmiyordu (`_dedup_kritik3_ici`, `_audit_kritik3_selection`,
+        `_dedup_kritik3_cross_day_llm`). ÖLÇÜLDÜ (2026-10-07): son 31 günün
+        93 yayımlanmış manşetinin 8'i defter tekrarıydı ve 2'si tam bu
+        yoldan, çapraz-gün katmanının yedeğinden girdi (09-28, 09-29).
+        Kapı artık yüklemin içinde: çağıran unutamaz.
+
+        KORUNAN ÖLÇÜMLER (yüklemde karşılıkları var):
+        · HAM `mukerrer` BAYRAĞI KULLANILMAZ — bayrak "bu haber bir aynı-olay
+          grubunun üyesiydi" der ve grubun RAPORDA TUTULAN temsilcisi de onu
+          taşır. ÖLÇÜLDÜ (2026-08-26): Interpol Jackal IV operasyonunun yedi
+          kopyasından hayatta kalan ID 83 (95 puan) bayrak yüzünden yedek
+          havuzunda hiç değerlendirilmedi; manşet 76 ve 74 puana düştü.
+          Gerçek mükerrerler `_manset_yasak` (G2) ve çapraz-gün (G4) ile
+          elenir — ikisi de bayraktan dar ve ölçülmüş tanımlardır.
+        · MANŞET YASAĞI YEDEK SEÇİMİNDE DE GEÇERLİDİR (2026-08-24: GELISME
+          yasağı almış bir haber yedek olarak manşete geri gelmişti).
+        · ÇAPRAZ-GÜN TANIMI `mukerrer_karari`DIR, `same_event` DEĞİL
+          (data/mukerrer_golden.json: ayrıştığı 5 çiftin BEŞİ de sahte pozitif
+          — GitLab↔Citrix, Adobe↔Microsoft, Stripe↔AWS, CISA Ray↔CISA
+          katalog, TikTok senatör↔TikTok cezası).
+        · PUAN BANDI (2026-08-25: 44 puanlık Weedhack haberi manşet oldu,
+          aynı raporda 96 puanlı İran yaptırımı vardı). `bant=False` çağıran
+          "mükerrer manşeti tutmaktansa bant altındaki TEMİZ haberi çıkar"
+          diyor (son mükerrer kapısının ikinci denemesi).
         """
-        sozluk = getattr(self, '_olay_sozlugu', None)
-        yasak = getattr(self, '_manset_yasak', None) or set()
-        # Havuz PUAN SIRASINDA taranır; eskiden çağıranın verdiği sırayla
-        # taranıyor ve ilk uygun aday alınıyordu.
         if aday_puanlari is None:
             aday_puanlari = {a: (records.get(a) or {}).get('toplam', 0)
                              for a in aday_ids}
-        aday_ids = sorted(aday_ids, key=lambda a: -aday_puanlari.get(a, 0))
-        for cand in aday_ids:
+        tavan = (max(aday_puanlari.values(), default=0)
+                 if (bant and aday_puanlari) else None)
+        for cand in sorted(aday_ids, key=lambda a: -aday_puanlari.get(a, 0)):
             if cand in sonuc or cand in haric:
                 continue
-            rec = records.get(cand, {})
-            if rec.get('kat') in KRITIK3_HARIC_KATEGORILER:
-                continue
-            # HAM `mukerrer` BAYRAĞI BURADA KULLANILMAZ.
-            #
-            # Bayrak "bu haber bir aynı-olay grubunun üyesiydi" der; grubun
-            # RAPORDA TUTULAN kopyası da bayrağı taşır. Yani mükerrer temizliği
-            # bir olaydan tek temsilci bıraktığında, o temsilci manşete
-            # ÇIKAMAZ hâle geliyordu. Manşet kapısı (_derive_top3_by_score) bu
-            # bayrağı tam da bu yüzden terk edip ölçülmüş `_manset_yasak`
-            # kümesine geçmişti; yedek bulucu geride kalmıştı.
-            #
-            # ÖLÇÜLDÜ (2026-08-26): Interpol Jackal IV operasyonunun yedi
-            # kopyasından hayatta kalan ID 83 (95 puan, günün 2. haberi)
-            # mukerrer=1 taşıdığı için yedek havuzunda hiç değerlendirilmedi;
-            # manşet sırayla 76 ve 74 puanlı haberlere düştü.
-            #
-            # Gerçek mükerrerler zaten iki ölçütle eleniyor: `_manset_yasak`
-            # (aşağıda) ve geçmişe karşı `mukerrer_karari` (birkaç satır
-            # aşağıda) — ikisi de bayraktan daha dar ve ölçülmüş tanımlar.
-            # MANŞET YASAĞI YEDEK SEÇİMİNDE DE GEÇERLİDİR.
-            #
-            # ÖLÇÜLDÜ (2026-08-24): "İran Bağlantılı Aktörlerin Birleşik
-            # Krallık Enerji Santralini Hedeflemesi" haberi manşet oldu —
-            # oysa aynı olay 08-23'te de manşetti ve GELISME olarak manşet
-            # yasağı almıştı. Yasak `_derive_top3_by_score` kapısında
-            # uygulanıyordu ama SONRAKİ yedek bulucular ona hiç bakmıyordu;
-            # bir manşet çapraz-gün elemesi tetiklenince yasaklı haber
-            # yedek olarak manşete geri geldi.
-            if cand in yasak:
-                continue
-            cv = view_fn(cand)
-            # TANIM BİRLİĞİ: burası `_dedup.same_event` kullanıyordu. ÖLÇÜLDÜ
-            # (data/mukerrer_golden.json, 38 elle etiketli çift): iki tanımın
-            # ayrıştığı 5 çiftin BEŞİNDE de same_event yanılıyor ve hepsi
-            # SAHTE POZİTİF — GitLab↔Citrix, Adobe↔Microsoft, Stripe↔AWS,
-            # CISA Ray↔CISA katalog, TikTok senatörler↔TikTok cezası "aynı
-            # olay" sayılıyor. Manşet yolunda bu, farklı iki haberi mükerrer
-            # sanıp birini zayıf bir haberle değiştirmek demek.
-            if any(_olay.ayni_olay(cv, view_fn(o), sozluk=sozluk, ayni_gun=True)
-                   for o in sonuc):
-                continue
-            # Geçmişle KISMEN bile aynı olan haber manşete yedek olamaz —
-            # burada GELISME de yeterli sebeptir (manşet tekrarı tam da
-            # kullanıcının şikâyet ettiği şey).
-            if recent_views and any(
-                    _olay.mukerrer_karari(cv, ev, sozluk=sozluk) != _olay.FARKLI
-                    for ev in recent_views):
-                continue
-            # PUAN BANDI YEDEK SEÇİMİNDE DE GEÇERLİDİR.
-            #
-            # Bant `_manset_llm_sec` içinde vardı ama SONRAKİ katmanların
-            # koyduğu yedekler ona hiç bakmıyordu. ÖLÇÜLDÜ (2026-08-25):
-            # 44 puanlık "Weedhack zararlısının sahte Minecraft istemcileri
-            # üzerinden yayılması" haberi manşet oldu; aynı raporda 96 puanlı
-            # İran yaptırımı manşetteydi. Yedek bulucu havuzu puan sırasında
-            # taramadığı ve bant uygulamadığı için ilk uygun adayı alıyordu.
-            # bant=False: çağıran, mükerrer bir manşeti tutmaktansa bant
-            # altındaki TEMİZ haberi çıkarmayı yeğlediğini söylüyor
-            # (son mükerrer kapısının ikinci denemesi).
-            if bant and aday_puanlari:
-                tavan = max(aday_puanlari.values(), default=0)
-                if aday_puanlari.get(cand, 0) < tavan - self.MANSET_PUAN_TOLERANSI:
-                    continue
-            return cand
+            uygun, _ = self._manset_uygun_mu(
+                cand, sonuc, records, view_fn, recent_views,
+                bant_tavani=tavan, aday_puanlari=aday_puanlari)
+            if uygun:
+                return cand
         return None
 
     def _dedup_kritik3_ici(self, top3_ids, yedek_ids, records,
