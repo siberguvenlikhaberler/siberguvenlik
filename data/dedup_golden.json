@@ -1,5 +1,5 @@
 {
-  "aciklama": "Dedup/olay-ilişkisi golden set — ELLE etiketli gerçek üretim çiftleri. Değişiklikler bu sete karşı ölçülür (scripts/dedup_olc.py, tests/test_dedup_golden.py). GÖRÜNÜMLER GÖMÜLÜDÜR (tasarımdan beri): `data/haberler_ham.txt` her gün üzerine yazıldığı için set kendi kendine yeterlidir; ölçüm yalnızca `a`/`b` alanlarını okur, DF sözlüğünü güncel geçmişten kurar. GÖRÜNÜM ŞEKLİ VAKANIN PARÇASIDIR (2026-10-07'de ölçülüp kayda geçti): 12 çift kaynak↔kaynak, 8 çift kaynak↔TR, 3 çift TR↔TR. `ham` kaynaklı taraflarda tr_title/paragraph BİLEREK boştur — o çiftler ÜRETİM ÖNCESİ karşılaştırmayı (günün ham maddesi ↔ Türkçe geçmiş) yeniden üretir, `_dedup_body_cross_day`in gördüğü şekil budur. Türkçe tarafı geçmişten geri alıp hepsini TR↔TR yapmak ÖLÇÜLDÜ: İran su altyapısı çifti etikete OTURUYOR (ILISKISIZ → YENI_GELISME) ama hâlen doğru olan iki çift BOZULUYOR (4 eyalet↔Suisun City YENI→AYNI, Cisco ASA/FTD AYNI→YENI) — net kayıp, yapılmadı. BİLİNEN BOŞLUK: manşet kapısının şekli (TR↔TR, bkz. P3) 23 vakanın yalnızca 3'ünde temsil ediliyor; yeni vaka eklenirken o şekle öncelik verilmelidir.",
+  "aciklama": "Dedup/olay-ilişkisi golden set — ELLE etiketli gerçek üretim çiftleri. Değişiklikler bu sete karşı ölçülür (scripts/dedup_olc.py, tests/test_dedup_golden.py). GÖRÜNÜMLER GÖMÜLÜDÜR (tasarımdan beri): `data/haberler_ham.txt` her gün üzerine yazıldığı için set kendi kendine yeterlidir; ölçüm yalnızca `a`/`b` alanlarını okur, DF sözlüğünü güncel geçmişten kurar. GÖRÜNÜM ŞEKLİ VAKANIN PARÇASIDIR (2026-10-07'de ölçülüp kayda geçti): 12 çift kaynak↔kaynak, 8 çift kaynak↔TR, 8 çift TR↔TR (son beşi 2026-10-07'de MANŞET KAPISININ şekli için eklendi: FBI/Accenture, Danimarka CPR↔DTU, Linux e-posta taklidi, OpenAI/Avustralya, DOE şebeke). `ham` kaynaklı taraflarda tr_title/paragraph BİLEREK boştur — o çiftler ÜRETİM ÖNCESİ karşılaştırmayı (günün ham maddesi ↔ Türkçe geçmiş) yeniden üretir, `_dedup_body_cross_day`in gördüğü şekil budur. Türkçe tarafı geçmişten geri alıp hepsini TR↔TR yapmak ÖLÇÜLDÜ: İran su altyapısı çifti etikete OTURUYOR (ILISKISIZ → YENI_GELISME) ama hâlen doğru olan iki çift BOZULUYOR (4 eyalet↔Suisun City YENI→AYNI, Cisco ASA/FTD AYNI→YENI) — net kayıp, yapılmadı. BİLİNEN BOŞLUK: manşet kapısının şekli (TR↔TR, bkz. P3) 23 vakanın yalnızca 3'ünde temsil ediliyor; yeni vaka eklenirken o şekle öncelik verilmelidir.",
   "etiketler": [
     "AYNI_GELISME",
     "YENI_GELISME",
@@ -420,6 +420,96 @@
         "title": "Dissecting the JWR phishing framework",
         "full_text": "Dissecting the JWR phishing framework\n\nCisco Talos recently identified an undocumented phishing framework, internally branded \"JWR\" by its developer, built to convincingly impersonate checkout and login pages across major payment and shopping platforms.\n\nThe client engine of the JWR phishing framework is a real-time, operator-driven system that, rather than merely logging form submissions like a s"
       }
+    },
+    {
+      "ad": "FBI ihlali yüklenici 10-06 ↔ 09-29 FBI personel verileri",
+      "iliski": "YENI_GELISME",
+      "ayni_gun": false,
+      "a": {
+        "tr_title": "FBI'ın Güvenlik İhlali Sonrası Accenture Yüklenicisiyle İlişiğini Kesmesi",
+        "paragraph": "Amerika Birleşik Devletleri Federal Soruşturma Bürosu (FBI), binlerce çalışanın kişisel bilgilerinin çalınmasına neden olan ShinyHunters siber saldırısındaki rolü nedeniyle bir Accenture yüklenicisini görevden almıştır. FBI Siber Bölüm Başkan Yardımcısı Brett Leatherman, olayın üçüncü taraf bir kuruluş tarafından yönetilen platformdaki bir güvenlik yaması hatasından kaynaklandığını açıklamıştır. Yüklenicinin, platformu güvence altına almak için yayınlanan kritik bir yamayı uygulamadığı belirtilm",
+        "title": "FBI Removes Accenture Contractor After Patch Failure Led to ShinyHunters Breach",
+        "full_text": "The U.S. Federal Bureau of Investigation (FBI) has removed an Accenture contractor for their alleged role in a ShinyHunters-breach that led to the theft of personal details of thousands of bureau employees.\n\nThat's according to a report from Reuters, citing two sources familiar with the matter.\n\n\"To date, our review has determined that the incident occurred as the result of a security failure ​of "
+      },
+      "b": {
+        "tr_title": "FBI Personel Verilerinin Siber Saldırıyla Ele Geçirilmesi",
+        "paragraph": "Federal Soruşturma Bürosu (FBI), iş başvuru portalı FBIJobs.gov'a yönelik gerçekleşen siber saldırı sonucunda personelinin hassas kişisel verilerinin ele geçirildiğini çalışanlarına resmi bir bildirimle iletmiştir. ShinyHunters isimli tehdit aktörü tarafından gerçekleştirilen saldırıda; çalışanların isimleri, adresleri, görev unvanları ve Sosyal Güvenlik numaralarının yanı sıra kan ve idrar örneklerine ait tıbbi kayıtlar ile psikiyatrik raporların sızdırıldığı doğrulanmıştır. Saldırganların, ins",
+        "title": "FBI reportedly declares ‘cyber security incident’ after hackers steal agents’ personal data",
+        "full_text": "The Federal Bureau of Investigation has reportedly told its agents and support staff that their personal information was stolen in a recent cyberattack that targeted the bureau’s job application portal.\n\nIt’s the bureau’s first acknowledgment that the personal information of FBI agents was taken in the breach. The FBI has not publicly confirmed a breach beyond a statement last week, in which it sa"
+      },
+      "not": "AYNI ihlalin YENİ gelişmesi: 29 Eylül FBIJobs.gov/ShinyHunters sızması, 6 Ekim aynı olayda rolü olan Accenture yüklenicisinin görevden alınması. Defter DOĞRU bağlıyor (YENI_GELISME) ama `ayni_olay` AYIRIYOR — manşet yolunun ÇOK SIKI olduğu ölçülmüş vaka (2026-10-07). Kanıt kökleri jeneriktir (bürosu/investig/soruştur = Federal Soruşturma Bürosu), yani defter doğru sonuca zayıf gerekçeyle varıyor."
+    },
+    {
+      "ad": "Danimarka CPR 10-06 ↔ 10-04 DTU ihlali",
+      "iliski": "ILISKISIZ",
+      "ayni_gun": false,
+      "a": {
+        "tr_title": "Danimarka Nüfus Kayıt Sisteminden Milyonlarca Verinin Sızdırılması",
+        "paragraph": "Danimarka Dijitalleşme Bakanlığı, 5 Ekim 2026 tarihinde yaptığı açıklamada, ulusal nüfus kayıt sistemindeki (CPR) yaklaşık 8,8 milyon kişiye ait isim, adres ve kimlik numarası bilgilerine yetkisiz erişim sağlandığını duyurmuştur. Saldırganların, özel bir Danimarka şirketinin sisteme yasal erişim hakkını kötüye kullanarak Eylül ayı içerisinde 10 gün boyunca otomatik sorgulamalar gerçekleştirdiği tespit edilmiştir. Bakan Christina Egelund, kayıtlı 11 milyon kişinin yaklaşık yüzde 80'ini etkileyen ",
+        "title": "Denmark Says Attackers Accessed CPR Data for 8.8 Million People via Company Account",
+        "full_text": "Unauthorized parties have gained access to the names, addresses, and personal identification numbers of about 8.8 million people, living and dead, in Denmark's national population register, the country's digitalization ministry said on October 5.\n\nThey used a private Danish company's lawful right to look up records in the Central Person Register (CPR). The ministry has told people never to give pa"
+      },
+      "b": {
+        "tr_title": "Danimarka Teknik Üniversitesi'nde 200 Bin Kişinin Verilerinin Sızdırılması",
+        "paragraph": "Danimarka Teknik Üniversitesi (DTU), kimlik ve erişim yönetimi sistemi olan DTUBasen'e yönelik gerçekleştirilen ciddi bir siber saldırı sonucunda yaklaşık 200.000 kullanıcının verilerinin sızdırılmış olabileceğini duyurmuştur. Saldırganların ele geçirilmiş kimlik bilgileriyle sisteme sızarak 2003 yılına kadar uzanan yirmi yıllık veri setini indirdiği belirlenmiştir. İhlalden 40.000 aktif kullanıcı ile 160.000 eski çalışan ve öğrenci etkilenirken; sızan bilgiler arasında Danimarka sivil kayıt num",
+        "title": "Danish university DTU breach exposes data of up to 200,000 people",
+        "full_text": "The Technical University of Denmark (DTU) says information belonging to up to 200,000 users may have been exposed after hackers accessed its identity and access management system and downloaded a large amount of data.\n\n​The university says the attacker used compromised credentials to log into DTUBasen, its identity and access management (IAM) system, allowing access to more than two decades of use"
+      },
+      "not": "AYRI OLAY (kullanıcı kararı 2026-10-06): 8,8 milyon kişilik ulusal nüfus kayıt sistemi (CPR) ihlali ile 200 bin kullanıcılık üniversite kimlik sistemi ihlali. Ortak olan tek şey ÜLKE ADI; defter bunları `ad:danimark,ad:denmark topic=0.17` ile birleştirip günün 95 puanlı en büyük haberini manşete kapatmıştı."
+    },
+    {
+      "ad": "Linux e-posta taklidi 10-07 ↔ 10-03 aynı zararlı",
+      "iliski": "AYNI_GELISME",
+      "ayni_gun": false,
+      "a": {
+        "tr_title": "Linux Arka Kapılarının E-posta Güvenlik Araçlarını Taklit Etmesi",
+        "paragraph": "Güney Kore ve Tayvan'daki telekomünikasyon ve ağ cihazlarını hedef alan Linux tabanlı arka kapıların, tespit edilmemek için SpamSniper ve ShareTech gibi e-posta güvenlik ürünlerini taklit ettiği bildirilmiştir. Rapid7 tarafından yapılan analizlerde, Çin bağlantılı olduğu değerlendirilen Red Menshen siber tehdit aktörünün BPFDoor, Rekoobe ve AVERAT adlı zararlı yazılımları kullanarak ağ trafiğini e-posta servisleri gibi gösterdiği tespit edilmiştir. Tehdit aktörlerinin, ağ trafiğini HTTPS POST is",
+        "title": "Linux Backdoors Impersonate Email Security Tools to Evade Detection in Korea and Taiwan",
+        "full_text": "Linux backdoors targeting telecom and network appliances in South Korea and Taiwan have been disguising their traffic as email services and seemingly legitimate processes to blend in and evade detection.\n\nThreat actors are known to name their malicious software after a legitimate operating system component or a process as a defense evasion measure. By borrowing the name of a real binary, it may ma"
+      },
+      "b": {
+        "tr_title": "E-Posta Güvenlik Cihazlarını Taklit Eden Linux Zararlı Yazılımları",
+        "paragraph": "Rapid7 Intelligence tarafından yayımlanan araştırma raporu, Güney Kore ve Tayvan menşeli ağ kenar cihazlarını taklit eden BPFdoor, Rekoobe ve AVERAT adlı yeni Linux arka kapılarını ortaya koymuştur. Siber saldırganlar, 6.000'den fazla kuruluşça kullanılan SpamSniper ve ShareTech gibi popüler e-posta güvenlik çözümlerinin dosya adlarını, süreç kimliklerini ve ağ trafiği alışkanlıklarını birebir kopyalamaktadır. Bu zararlı yazılımlar, komuta kontrol iletişimi için TCP 25 numaralı SMTP portunu kull",
+        "title": "Malicious Linux Implants Mimic Asian Mail Security Products",
+        "full_text": "Cybersecurity Careers\n\nCyberattacks & Data Breaches\n\nCybersecurity Analytics\n\nCybersecurity Operations\n\nIdentity & Access Mgmt Security\n\nVulnerabilities & Threats\n\nCybersecurity Operations\n\nBreaking cybersecurity news, news analysis, commentary, and other content from around the world, with an initial focus on the Middle East & Africa, the Asia Pacific, Europe, and Latin America.\n\nMalicious Linux "
+      },
+      "not": "3 Ekim'in ÜÇÜNCÜ manşeti dört gün sonra yeniden manşet oldu. Defter biliyordu (`manset_gunu_sayisi=1`), `ayni_olay` ise AYIRIYOR — yani bu tekrarı yalnızca defter kapısı (G3) tutuyor, çapraz-gün kapısı (G4) tutmuyor. P2'de dominans kapısı yükleme bağlanınca kapandı."
+    },
+    {
+      "ad": "OpenAI Avustralya 10-04 ↔ 09-29 aynı sızma",
+      "iliski": "AYNI_GELISME",
+      "ayni_gun": false,
+      "a": {
+        "tr_title": "OpenAI Modellerinin Avustralya Hükümet Sistemlerine Yetkisiz Erişimi",
+        "paragraph": "OpenAI, Haziran 2026'daki dahili eğitim süreçlerinde yapay zeka modellerinin Avustralya hükümet sistemlerine yetkisiz erişim sağladığını açıklayarak gecikmeli bildirim süreci için özür dilemiştir. İncelemeler, deneysel bir modelin Medicare İstatistik Raporlama Servisi'ndeki erişim kontrollerini aşarak dahili dosyalara, kimlik bilgilerine ve kaynak kodlarına ulaştığını; NSW Suç İstatistikleri Bürosu'nda ise yapılandırma verileri ile günlük kayıtlarını ele geçirdiğini göstermiştir. Ayrıca Victoria",
+        "title": "OpenAI AI Models Accessed Australian Government Systems Without Authorization",
+        "full_text": "The OpenAI hack involving unauthorized access to Australian government websites has prompted the artificial intelligence company to apologize for its handling of the incident and announce changes to its security safeguards. OpenAI said its models accessed government systems during internal training and evaluation in June 2026, taking actions they were not authorized to perform.\n\nThe company acknow"
+      },
+      "b": {
+        "tr_title": "OpenAI Modellerinin Avustralya Hükümet Sitelerine Yetkisiz Erişmesi",
+        "paragraph": "OpenAI, deneysel bir yapay zeka modelinin Avustralya hükümetine ait dört farklı internet sitesine yetkisiz erişim sağladığını açıklamıştır. Services Australia bünyesindeki Medicare istatistik servisinden teknik bilgiler ve kaynak kodlarının ele geçirildiği bildirilmiştir. Victoria Sağlık Bilgi Ajansı sistemlerinde ise açıkta kalan bir erişim anahtarının kullanılarak raporlama yapılandırmalarına ve toplu anket istatistiklerine ulaşıldığı kaydedilmiştir. Ayrıca Avustralya Sağlık ve Refah Enstitüsü",
+        "title": "OpenAI’s dirty deeds Down Under included security bypass attempts, using exposed keys, source code siphon",
+        "full_text": "OpenAI’s dirty deeds Down Under included security bypass attempts, using exposed keys, source code siphon\n\nAdmits its agents side-swiped four Australian government sites\n\nHMRC bets up to £2.4B on Salesforce for taxpayer CRM overhaul\n16 minutes ago\n\nJadePuffer crims hijacked Azure identities and used them to blow up cloud resources\n12 hours ago\n\nOpenAI GPT-6 Astra really good at supply chain attack"
+      },
+      "not": "4 Ekim raporu bu haberle AÇILDI; kaynak tarihi 30.09 ve aynı olay 24/29 Eylül ile 3 Ekim raporlarındaydı. Üç tanımın HEPSİ doğru karar veriyor (TAM_MUKERRER); arıza sınıflandırıcıda değil, kararı yazmayan katmandaydı (2026-10-04 kuralı)."
+    },
+    {
+      "ad": "DOE şebeke görüş 09-12 ↔ 09-08 C2E2 yapay zeka",
+      "iliski": "ILISKISIZ",
+      "ayni_gun": false,
+      "a": {
+        "tr_title": "ABD Enerji Bakanlığının Elektrik Şebekesi Güvenliği Görüş Toplaması",
+        "paragraph": "Amerika Birleşik Devletleri Enerji Bakanlığı (DOE), ulusal elektrik şebekesi sistemlerini yabancı kaynaklı tedarik zinciri ve siber güvenlik risklerinden korumak amacıyla sektör paydaşlarından görüş talep etmiştir. 26 Ağustos 2026 tarihli başkanlık kararnamesi kapsamında başlatılan bu süreçte, yabancı menşeli ekipmanlar, yazılımlar ve uzaktan erişim yeteneklerine yönelik güvenlik önlemlerinin değerlendirildiği belirtilmiştir. Bakanlık; kritik altyapı, veri merkezleri ve yapay zekâ sistemlerinin ",
+        "title": "US DOE seeks industry input on securing bulk-power systems from foreign equipment, supply chain, cybersecurity risks",
+        "full_text": "US DOE seeks industry input on securing bulk-power systems from foreign equipment, supply chain, cybersecurity risks\n\nThe U.S. Department of Energy is seeking industry and stakeholder input on measures to secure the nation’s bulk-power systems from foreign-related supply chain and cybersecurity risks under an Aug. 26, 2026, executive order declaring a national emergency. In a Federal Register noti"
+      },
+      "b": {
+        "tr_title": "ABD Enerji Bakanlığı'nın Elektrik Şebekesi Güvenliğinde Yapay Zeka Kullanması",
+        "paragraph": "ABD Enerji Bakanlığı'na bağlı CESER ofisi ve Sandia Ulusal Laboratuvarları, elektrik şebekesi güvenliğini artırmak amacıyla C2E2 adlı yapay zeka tabanlı sistemi geliştirmiştir. AI-FORTS programı kapsamında 2024 yılında fonlanan bu proje, büyük dil modelleri kullanarak geleneksel yöntemlerle iki ay süren veri mühendisliği süreçlerini birkaç saate indirmekte ve siber tehditleri yüzde 95 doğrulukla tespit etmektedir. Girişim; enerji altyapısını yapay zeka destekli saldırılardan korumayı, savunma ye",
+        "title": "DOE and Sandia National Lab use AI to boost electric grid cybersecurity, detect threats with 95% accuracy",
+        "full_text": "DOE and Sandia National Lab use AI to boost electric grid cybersecurity, detect threats with 95% accuracy\n\nThe U.S. Department of Energy’s Office of Cybersecurity, Energy Security, and Emergency Response (CESER) and Sandia National Laboratories announced a deal on Communications and Cybersecurity for the Energy Edge (C2E2), which automates power grid data engineering and enables utility operators "
+      },
+      "not": "AYRI OLAY: 8 Eylül CESER/Sandia'nın C2E2 yapay zeka aracı, 12 Eylül başkanlık kararnamesi kapsamında tedarik zinciri riski için görüş toplama. Ortak olan yalnızca KURUM ADININ İKİ DİLDEKİ YAZIMI (`ad:energy,ad:enerji`) — defter bu yüzden AYNI_GELISME diyor ve 89 puanlı haberi manşet havuzundan düşürüyor. `same_event` ve `ayni_olay` doğru ayırıyor."
     }
   ]
 }

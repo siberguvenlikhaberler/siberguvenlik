@@ -607,7 +607,51 @@ def _bitisik_gecer(a, b, metin):
                 or re.search(rf'\b{re.escape(b)}\w*\s+{re.escape(a)}\w*', metin))
 
 
-def _varlik_sayisi(ortak, metin_a, metin_b):
+def _tr_on_plan(view):
+    """Görünümün TÜRKÇE ön planı: başlık + paragraf, küçük harfe indirilmiş.
+
+    İngilizce `title`/`full_text` BİLEREK dışarıdadır — kaynak sayfanın menü
+    ve kenar çubuğu metni oradadır.
+    """
+    if not isinstance(view, dict):
+        return ''
+    return ((view.get('tr_title') or '') + ' '
+            + (view.get('paragraph') or '')).lower()
+
+
+def _ayni_ad_iki_dilde(a, b, tr_metin):
+    """İki kök AYNI ADIN iki dildeki yazımı mı? ('energy'/'enerji')
+
+    ÖLÇÜLDÜ (2026-10-07, son 31 gün): defterin kurduğu 240 bağın 5'i tam
+    buna dayanıyordu ve BEŞİ DE SAHTEYDİ — ABD Enerji Bakanlığı'nın üç ayrı
+    olayı (CESER/Sandia'nın C2E2 yapay zeka aracı, başkanlık kararnamesi
+    kapsamında görüş toplama, küçük şebeke finansmanı) `ad:energy,ad:enerji`
+    ile; "Eski NSA Direktörü" ile "ABD Ulusal Siber Direktörü" ve "CIA siber
+    istihbaratı" `ad:director,ad:direktör` ile tek olay sayılıyordu. Biri
+    (DOE görüş toplama, 89 puan) o yüzden manşet havuzundan düşmüştü.
+
+    6 Ekim'deki `_varlik_sayisi` kuralının devamıdır: orada aynı adın iki
+    PARÇASI (Check Point) birleştirilir, burada aynı adın iki DİLİ.
+    Danimarka/Denmark çifti coğrafi ad olduğu için zaten düşüyor; bu kural
+    kurum adlarını kapsar.
+
+    İKİ ŞART BİRLİKTE: (1) ortak önek en az 4 karakter — sezgisel ama
+    sözlük gerektirmeyen tek sinyal; (2) köklerden YALNIZCA BİRİ Türkçe ön
+    planda geçiyor, öteki İngilizce kaynak metninden geliyor. İkinci şart
+    şarttır: tek başına önek benzerliği gerçekten ayrı iki adı
+    ('microsoft'/'micron') birleştirebilirdi.
+    """
+    ortak = 0
+    for x, y in zip(a, b):
+        if x != y:
+            break
+        ortak += 1
+    if ortak < 4:
+        return False
+    return (a in tr_metin) != (b in tr_metin)
+
+
+def _varlik_sayisi(ortak, metin_a, metin_b, tr_metin=''):
     """Ortak kimlikler kaç ayrı VARLIĞA karşılık geliyor?
 
     MIN_ORTAK_AD "iki bağımsız kimlik" ister, ama sayım SÖZCÜK KÖKÜ üzerinden
@@ -639,7 +683,9 @@ def _varlik_sayisi(ortak, metin_a, metin_b):
 
     for i, a in enumerate(belirtecler):
         for b in belirtecler[i + 1:]:
-            if _bitisik_gecer(a, b, metin_a) and _bitisik_gecer(a, b, metin_b):
+            if ((_bitisik_gecer(a, b, metin_a)
+                 and _bitisik_gecer(a, b, metin_b))
+                    or _ayni_ad_iki_dilde(a, b, tr_metin)):
                 ebeveyn[kok_bul(a)] = kok_bul(b)
     return len({kok_bul(b) for b in belirtecler})
 
@@ -818,8 +864,10 @@ def iliski_belirle(view_a, view_b, ayni_gun=False, explain=False, sozluk=None):
                  if k.startswith('kod:') and k.split(':', 1)[1] not in on_plan}
 
     # TEK ÇOK SÖZCÜKLÜ AD TEK KİMLİKTİR — bkz. `_varlik_sayisi` ölçümü.
-    _varlik = _varlik_sayisi(ortak_kimlik, _metin(view_a).lower(),
-                             _metin(view_b).lower()) if ortak_kimlik else 0
+    _varlik = _varlik_sayisi(
+        ortak_kimlik, _metin(view_a).lower(), _metin(view_b).lower(),
+        _tr_on_plan(view_a) + ' ' + _tr_on_plan(view_b)
+    ) if ortak_kimlik else 0
     yeterli = _kimlik_yeterli(ortak_kimlik, zayif=govde_kod,
                               varlik_sayisi=_varlik)
     esik = KIMLIK_ILE_KONU_MIN

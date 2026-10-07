@@ -1014,18 +1014,49 @@ milyon dolarlık kripto hırsızlığı, Claude yetkisiz erişim). Tek tanıma i
 
 Gevşekliğin manşete maliyeti ölçüldü: 31 günde 33 gövde adayı defter yüzünden
 manşet havuzundan düştü, 23'ü YALNIZCA defter tanımıyla, 5'i o günün en zayıf
-manşetinden yüksek puanlıydı. Güncel kodda kalan GERÇEK hasar 2 vaka ve ikisi
-de **aynı adın iki dildeki yazımının iki kimlik sayılması**: FBI ↔ Accenture
-(`ad:bürosu,ad:investig,ad:soruştur` = Federal Soruşturma Bürosu) ve DOE
-(`ad:energy,ad:enerji`). 6 Ekim'deki `_varlik_sayisi` kuralının devamıdır; o
-kural kökleri yalnızca İKİ TARAFIN metninde YAN YANA geçerse birleştirir.
+manşetinden yüksek puanlıydı.
+
+**DÜZELTME (aynı gün, vaka metinleri okununca):** o beşten FBI ↔ Accenture
+"sahte birleşme" DEĞİLDİR. Metinler okundu: 29 Eylül FBIJobs.gov/ShinyHunters
+sızması, 6 Ekim aynı olayda rolü olan Accenture yüklenicisinin görevden
+alınması — AYNI ihlalin YENİ gelişmesi. Defter DOĞRU bağlıyor (kanıt kökleri
+jenerik olsa da), asıl kusur `ayni_olay`ın onu AYIRMASIDIR, yani manşet yolu
+bu çiftte ÇOK SIKI. İlk değerlendirme kanıt köklerine bakıp sonuca atlamıştı.
 
 İKİ ADAY DÜZELTME REDDEDİLDİ: (a) zincir ayarındaki süzgeçler (DF %0,5 +
 Türkçe ön plan) 190 bağın 69'unu düşürüyor ama 6 Ekim ölçümü bunun GERÇEK
 birleşmeleri de düşürdüğünü kaydetmişti; (b) `_bitisik_gecer`'i tek tarafa
-gevşetmek bağı 240→233 yapıyor ve ölçülen 5 vakanın HİÇBİRİNİ çözmüyor.
-Kalan iş eşik ayarı değil YENİ VERİ: kurum adlarının iki dildeki karşılıklarını
-bağlayan bir eşlem. Eşlem olmadan her genelleme gerçek birleşme kaybediyor.
+gevşetmek bağı 240→233 yapıyor ve ölçülen vakaların HİÇBİRİNİ çözmüyor.
+
+### AYNI ADIN İKİ DİLDEKİ YAZIMI TEK KİMLİKTİR (ölçüm + düzeltme, 2026-10-07)
+
+`_ayni_ad_iki_dilde`, 6 Ekim'deki `_varlik_sayisi` kuralının devamıdır: orada
+aynı adın iki PARÇASI (Check Point), burada aynı adın iki DİLİ birleştirilir.
+İKİ ŞART BİRLİKTE: ortak önek ≥4 karakter VE köklerden yalnızca BİRİ Türkçe ön
+planda geçiyor (öteki İngilizce kaynak metninden gelir). İkinci şart zorunlu —
+tek başına önek benzerliği gerçekten ayrı iki adı ('microsoft'/'micron')
+birleştirebilirdi.
+
+ÖLÇÜLDÜ (son 31 gün): defter bağı 240 → **235**; düşen BEŞ bağın BEŞİ DE
+sahte — ABD Enerji Bakanlığı'nın üç ayrı olayı (CESER/Sandia'nın C2E2 yapay
+zeka aracı, başkanlık kararnamesi kapsamında görüş toplama, küçük şebeke
+finansmanı) `ad:energy,ad:enerji` ile, "Eski NSA Direktörü" ile "ABD Ulusal
+Siber Direktörü" ve "CIA siber istihbaratı" `ad:director,ad:direktör` ile tek
+olay sayılıyordu. 89 puanlı DOE haberi o yüzden manşet havuzundan düşmüştü;
+yalnızca defter yüzünden kapanan ve günün en zayıf manşetinden yüksek puanlı
+aday **5 → 4**. Kalan üçü: 09-22 `ad:gert,ad:global` (sahte), 09-16 Tajin ↔
+Xinbi (tartışmalı), 09-30 FBI (28 Eylül kuralı zaten düzeltti).
+
+KAPILAR: `dedup_golden` dört-değerli **22/28 → 23/28**, davranış 24/28 →
+25/28 (yalnızca DOE vakası düzeldi); `same_event` 19/25, `mukerrer_golden`
+33/32/38, `zincir_olc` süzgeçli 6 düşürme + çeşitlilik 1 vaka — hepsi birebir
+aynı. Olay sayısı 475 → 477. 762 test geçiyor.
+
+NOT: bu kural ilk ölçümde "1 gerçek + 4 sahte düşürüyor, net kayıp" diye
+REDDEDİLMİŞTİ. Fark, DOE 09-08 ↔ 09-12 çiftinin metinlerinin OKUNMASIDIR:
+başlıklar benzer ("Elektrik Şebekesi Güvenliği") ama biri bir yapay zeka
+aracının geliştirilmesi, öteki bir kararname kapsamında görüş toplamadır —
+AYRI olay. Başlığa bakıp "gerçek devam haberi" demek hataydı.
 
 ### `mukerrer_golden` YENİDEN ÖLÇÜYOR — GÖRÜNÜMLER GÖMÜLDÜ (2026-10-07)
 
@@ -1064,7 +1095,12 @@ YETERLİDİR, çünkü `haberler_ham.txt` her gün üzerine yazılır"). Ölçü
 yalnızca gömülü görünümleri okur, DF sözlüğünü güncel geçmişten kurar —
 `mukerrer_golden` ile aynı sözleşme.
 
-ŞEKİL DAĞILIMI: 12 çift kaynak↔kaynak, 8 çift kaynak↔TR, 3 çift TR↔TR.
+ŞEKİL DAĞILIMI: 12 çift kaynak↔kaynak, 8 çift kaynak↔TR, 8 çift TR↔TR
+(son beşi 2026-10-07'de MANŞET KAPISININ şekli için eklendi: FBI/Accenture
+YENI_GELISME — `ayni_olay` kaçırıyor; Danimarka CPR↔DTU ILISKISIZ; Linux
+e-posta taklidi AYNI_GELISME — yalnızca defter kapısı tutuyor;
+OpenAI/Avustralya AYNI_GELISME — üç tanım da doğru; DOE şebeke ILISKISIZ —
+`_ayni_ad_iki_dilde` ile düzeltildi).
 `ham` kaynaklı tarafta `tr_title`/`paragraph` BİLEREK boştur: o vakalar
 ÜRETİM ÖNCESİ karşılaştırmayı (günün ham maddesi ↔ Türkçe geçmiş) yeniden
 üretir ve `_dedup_body_cross_day` tam bu şekli görür. Yani eksiklik değil,

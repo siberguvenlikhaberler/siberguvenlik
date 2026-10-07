@@ -48,7 +48,10 @@ BIRLESMELI = {'AYNI_GELISME'}
 #
 # Bu sayı DÜŞERSE bir regresyon vardır. YÜKSELİRSE burayı güncelle — kapı
 # yeni seviyeyi korusun.
-TABAN_DOGRU = 15
+# 2026-10-07: manşet kapısının şekli (TR↔TR) için 5 vaka eklendi; dördü
+# same_event tarafında PUANLANIYOR (FBI/Accenture YENI_GELISME olduğu için
+# bilgi amaçlı) ve dördü de doğru → 15 + 4.
+TABAN_DOGRU = 19
 
 
 def _ciftler():
@@ -204,7 +207,7 @@ def test_farkli_urun_bultenleri_ayni_olay_degil():
 # yapılırsa İran su altyapısı çifti etikete oturuyor ama hâlen doğru olan iki
 # çift bozuluyor (4 eyalet↔Suisun City, Cisco ASA/FTD) — net kayıp.
 SEKIL_DAGILIMI = {('kaynak', 'kaynak'): 12, ('kaynak', 'TR'): 8,
-                  ('TR', 'TR'): 3}
+                  ('TR', 'TR'): 8}
 
 
 def test_gorunum_sekli_dagilimi_sabit():
