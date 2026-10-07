@@ -343,7 +343,10 @@ def test_puan_bandi_disi_takas_reddedilir():
     t3, govde = s._yayin_yonetmeni([1, 2, 3], [4, 5], records, content, arts)
     assert 5 not in t3, 'bandın çok altındaki haber yönetmen eliyle manşete çıktı'
     assert 3 in t3
-    assert any(e.get('neden') == 'puan bandı dışı' for e in s._yy_eylemler)
+    # Gerekçe artık yüklemden gelir ve sayıları taşır ("puan bandı dışı
+    # (50 < 97 - 25)") — kapı aynı, metin daha açık.
+    assert any((e.get('neden') or '').startswith('puan bandı dışı')
+               for e in s._yy_eylemler)
 
 
 def test_mansetle_ayni_olay_takasi_reddedilir():
@@ -367,5 +370,5 @@ def test_mansetle_ayni_olay_takasi_reddedilir():
     s._yy_eylemler = []
     t3, govde = s._yayin_yonetmeni([1, 2, 3], [4, 5], records, content, arts)
     assert 5 not in t3, 'manşetle aynı olay olan haber manşete çıkarıldı'
-    assert any(e.get('neden') == 'başka manşetle aynı olay'
+    assert any(e.get('neden') == 'mevcut bir manşetle aynı olay'
                for e in s._yy_eylemler)

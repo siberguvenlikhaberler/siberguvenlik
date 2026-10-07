@@ -6526,7 +6526,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         return yeni_top3, yeni_top10, yeni_kalan
 
     def _kritik3_dominans_takasi(self, top3_ids, top10_ids, remaining_ids,
-                                 records, content_by_id, articles_by_id):
+                                 records, content_by_id, articles_by_id,
+                                 recent_views=()):
         """DOMINE EDİLEN MANŞETİ TAKAS EDER — deterministik, LLM'den bağımsız.
 
         KURAL: bir haber manşette KALAMAZ, eğer havuzda kategori önceliği
@@ -6574,7 +6575,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         oncelik = lambda aid: self._kat_oncelik(records.get(aid) or {})  # noqa: E731
         puan = lambda aid: (records.get(aid) or {}).get('toplam', 0)  # noqa: E731
         view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
-        yasak = getattr(self, '_manset_yasak', None) or set()
 
         yeni_top3 = list(top3_ids)
         yeni_top10 = list(top10_ids)
@@ -6582,26 +6582,39 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         takas_edilen = []
 
         # Her manşet için en fazla bir takas; döngü sınırı manşet sayısıdır.
+        # UYGUNLUK TEK YÜKLEMDEN SORULUR (P2, bkz. KRITIK3_PLAN.md).
+        #
+        # Bu katman havuzunu KENDİ eliyle süzüyordu: kategori + ham `mukerrer`
+        # bayrağı + `_manset_yasak` + aynı GÜN aynı olay. Eksik olan iki kapı
+        # DEFTER TEKRARI ve ÇAPRAZ-GÜNDÜ; `_manset_disi_ids` buradan hiç
+        # çağrılmıyordu.
+        #
+        # ÖLÇÜLDÜ (2026-10-07): son 31 günün 5 uygunsuz manşetinin ÜÇÜ bu
+        # kapıdan girdi — en son 7 Ekim'de, 3 Ekim'in üçüncü manşeti olan
+        # "Linux arka kapılarının e-posta güvenlik araçlarını taklit etmesi"
+        # dört gün sonra yeniden manşet oldu (haberin `mukerrer` bayrağı 0'dı
+        # ve `_manset_yasak`ta değildi; defter ise `manset_gunu_sayisi=1`
+        # diyordu).
+        #
+        # HAM `mukerrer` BAYRAĞI ARTIK KULLANILMIYOR — yüklem onu bilerek
+        # taşımaz (2026-08-26 Interpol ölçümü: grubun hayatta kalan temsilcisi
+        # de bayrağı taşır ve 95 puanla havuzdan düşerdi). Gerçek mükerrer
+        # `yasak` ve `capraz_gun` kapılarıyla, daha dar tanımlarla elenir.
         for _ in range(len(yeni_top3)):
-            havuz = [a for a in (yeni_top10 + yeni_kalan)
-                     if a not in yeni_top3
-                     and (records.get(a) or {}).get('kat')
-                     not in KRITIK3_HARIC_KATEGORILER
-                     and not (records.get(a) or {}).get('mukerrer')
-                     and a not in yasak]
+            havuz = [a for a in (yeni_top10 + yeni_kalan) if a not in yeni_top3]
             if not havuz:
                 break
             # En zayıf manşetten başla: takas edilecekse önce o edilmeli.
             ihlal = None
             for x in sorted(yeni_top3, key=lambda a: (oncelik(a), puan(a))):
+                # DOMİNANS ÖLÇÜTÜ katmanda kalır (sıralama kuralı), UYGUNLUK
+                # yüklemden sorulur (giriş kuralı). Aday, x'in ÇIKACAĞI
+                # manşet listesine karşı sınanır.
+                kalanlar = [h for h in yeni_top3 if h != x]
                 adaylar = [y for y in havuz
-                           if oncelik(y) > oncelik(x) and puan(y) >= puan(x)]
-                # Manşette ZATEN temsil edilen olay ikinci kez manşet olamaz.
-                adaylar = [y for y in adaylar
-                           if not any(_olay.ayni_olay(view_fn(y), view_fn(h),
-                                                      sozluk=self._olay_sozlugu,
-                                                      ayni_gun=True)
-                                      for h in yeni_top3)]
+                           if oncelik(y) > oncelik(x) and puan(y) >= puan(x)
+                           and self._manset_uygun_mu(
+                               y, kalanlar, records, view_fn, recent_views)[0]]
                 if adaylar:
                     y = max(adaylar, key=lambda a: (oncelik(a), puan(a)))
                     ihlal = (x, y)
@@ -7710,7 +7723,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         return disi
 
     def _yayin_yonetmeni(self, top3_ids, govde_ids, records,
-                         content_by_id, articles_by_id, manset_disi=None):
+                         content_by_id, articles_by_id, manset_disi=None,
+                         recent_views=()):
         """Bitmiş raporun TAMAMINA bakan son editoryal geçiş.
 
         Diğer tüm LLM denetimleri parça görür (yalnızca paragraflar, yalnızca
@@ -7809,17 +7823,6 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                                           'karar': 'reddedildi',
                                           'neden': manset_disi[cikan]})
                 continue
-            # Manşete ÇIKAN haberin kategorisi manşete uygun olmalı. Kategori
-            # düzeltmeleri artık YUKARIDA uygulandığı için burada güncel değer
-            # okunur.
-            if (records.get(cikan) or {}).get('kat') in KRITIK3_HARIC_KATEGORILER:
-                print(f"   ⛔ Yayın yönetmeni takası REDDEDİLDİ: ID {cikan} "
-                      f"kategorisi manşete uygun değil "
-                      f"({records[cikan]['kat']}).")
-                self._yy_eylemler.append({'tur': 'takas', 'id': cikan,
-                                          'karar': 'reddedildi',
-                                          'neden': 'kategori manşete uygun değil'})
-                continue
             # ÇİFT DÜŞÜŞ REDDİ — takas hem puanı hem kategori önceliğini
             # düşürüyorsa ortada düzeltilecek bir sıralama hatası yoktur.
             # Yönetmenin işi puanı EZMEKTİR (yamalanmış zafiyet yerine süren
@@ -7838,42 +7841,32 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                                           'karar': 'reddedildi',
                                           'neden': 'puan ve kategori birlikte düşüyor'})
                 continue
-            # PUAN BANDI YÖNETMENDE DE GEÇERLİDİR.
+            # UYGUNLUK TEK YÜKLEMDEN SORULUR (P2, bkz. KRITIK3_PLAN.md).
             #
-            # Yukarıdaki "çift düşüş" kuralı yalnızca puan VE kategori birlikte
-            # inerse reddediyor; kategori önceliği yükselen bir takas puanı
-            # istediği kadar düşürebiliyordu (ör. 95 puanlı kolluk operasyonu
-            # yerine 55 puanlık bir casus yazılım haberi). Yönetmenin işi puan
-            # sıralamasını düzeltmektir, uçurum açmak değil — bant boru
-            # hattının geri kalanında (seçici, yedek bulucu, son kapı) zaten
-            # uygulanıyordu, tek istisna burasıydı.
-            _tavan = max((( records.get(x) or {}).get('toplam', 0)
+            # Bu katman kapılarını KENDİ eliyle sıralıyordu: kategori, puan
+            # bandı ve "başka manşetle aynı olay". Üçü de yüklemde var; eksik
+            # olan ÇAPRAZ-GÜN ve ÇEŞİTLİLİK kapılarıydı. Kapı kararları
+            # (`manset_disi`) yukarıda ayrıca uygulanıyor — çağıranın yazdırdığı
+            # gerekçeler korunsun diye; yüklem onun üst kümesidir.
+            #
+            # PUAN BANDI TAVANI katmanda hesaplanır: yönetmen raporun TAMAMINI
+            # görür, bu yüzden tavan manşet+gövde birleşiminin en yükseğidir
+            # (ÖLÇÜLDÜ 2026-08-21: bant yalnızca burada uygulanmıyordu ve 95
+            # puanlı kolluk operasyonu yerine 55 puanlık haber çıkabiliyordu).
+            _tavan = max(((records.get(x) or {}).get('toplam', 0)
                           for x in list(yeni_top3) + list(yeni_govde)),
                          default=0)
-            if _p_ck < _tavan - self.MANSET_PUAN_TOLERANSI:
-                print(f"   ⛔ Yayın yönetmeni takası REDDEDİLDİ: ID {cikan} "
-                      f"({_p_ck}) tavanın ({_tavan}) "
-                      f"{self.MANSET_PUAN_TOLERANSI} puandan fazla altında.")
-                self._yy_eylemler.append({'tur': 'takas', 'id': cikan,
-                                          'karar': 'reddedildi',
-                                          'neden': 'puan bandı dışı'})
-                continue
-            # MANŞETE ÇIKAN HABER DİĞER MANŞETLERLE AYNI OLAY OLAMAZ.
-            #
-            # Bu denetim yoktu: yönetmen aynı olayın gövdedeki kopyasını
-            # manşete çıkarabiliyordu. Son kapı bunu yakalıyor ama çaresi
-            # DEĞİŞTİRME olduğu için manşet bir kademe daha zayıflıyordu —
-            # yani hata bir katman sonra, daha pahalıya kapanıyordu.
             _vfn = self._dedup_view_fn(content_by_id, articles_by_id)
-            _sz_yy = getattr(self, '_olay_sozlugu', None)
-            if any(_olay.ayni_olay(_vfn(cikan), _vfn(o), sozluk=_sz_yy,
-                                   ayni_gun=True)
-                   for o in yeni_top3 if o != inen):
+            _kalanlar = [h for h in yeni_top3 if h != inen]
+            _uygun, _gerekce = self._manset_uygun_mu(
+                cikan, _kalanlar, records, _vfn, recent_views,
+                bant_tavani=_tavan)
+            if not _uygun:
                 print(f"   ⛔ Yayın yönetmeni takası REDDEDİLDİ: ID {cikan} "
-                      f"mevcut bir manşetle aynı olay.")
+                      f"— {_gerekce}.")
                 self._yy_eylemler.append({'tur': 'takas', 'id': cikan,
                                           'karar': 'reddedildi',
-                                          'neden': 'başka manşetle aynı olay'})
+                                          'neden': _gerekce})
                 continue
             neden = str(t.get('neden', ''))[:80]
             # YÖNETMEN TAKASI İKİ YÖNLÜDÜR: inen haber gövdede ÇIKANIN yerini
@@ -9509,7 +9502,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"{sorted(_yy_disi)}")
         top3_ids, _ = self._yayin_yonetmeni(
             top3_ids, _yy_govde, score_records, content_by_id, articles_by_id,
-            manset_disi=_yy_disi)
+            manset_disi=_yy_disi, recent_views=recent_report)
 
         # MUTABAKAT — manşet katmanlarının ortak kuralı: manşete ÇIKAN gövdeden
         # alınır, manşetten DÜŞEN gövdeye eklenir (bkz. Auditor (d) sonrası aynı
@@ -9622,7 +9615,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # ÖNCE çalışır ki dizilen liste nihai manşet olsun.
         top3_ids, top10_ids, remaining_ids = self._kritik3_dominans_takasi(
             top3_ids, top10_ids, remaining_ids, score_records,
-            content_by_id, articles_by_id)
+            content_by_id, articles_by_id, recent_report)
         top3_ids, top10_ids, remaining_ids = _senkron('kritik3_dominans')
 
         # MANŞET SIRASI — seçim bitti, sıra burada BİR KEZ belirlenir.

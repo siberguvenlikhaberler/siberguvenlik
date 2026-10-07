@@ -63,7 +63,13 @@ def matris():
         g = fns.get(f, '')
         y = '_manset_uygun_mu' in g
         yb = '_kritik3_yedek_bul' in g
-        kendi = bool(re.search(r'KRITIK3_HARIC_KATEGORILER|not \(records', g))
+        # YORUM SATIRLARI SAYILMAZ: katman kapıyı artık yükleme devretmiş
+        # olsa da gerekçesini yorumda ANLATIYOR olabilir (yönetmendeki "takas
+        # kapısı KRITIK3_HARIC_KATEGORILER'e bakar" notu gibi). Ham metin
+        # taraması bunu kendi süzgeci sanıyordu.
+        kod = '\n'.join(l for l in g.split('\n')
+                         if not l.lstrip().startswith('#'))
+        kendi = bool(re.search(r'KRITIK3_HARIC_KATEGORILER|not \(records', kod))
         print(f'  {f:<32}{"✓" if y else "·":^8}{"✓" if yb else "·":^11}'
               f'{"✓" if kendi else "·":^14}')
         if not (y or yb):

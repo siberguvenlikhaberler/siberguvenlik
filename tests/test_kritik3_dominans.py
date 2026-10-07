@@ -34,7 +34,7 @@ _METIN = {
 }
 
 
-def _calistir(s, top3, top10, records, icerik=None):
+def _calistir(s, top3, top10, records, icerik=None, recent_views=()):
     if icerik is None:
         icerik = {}
         for i in set(top3) | set(top10):
@@ -42,7 +42,8 @@ def _calistir(s, top3, top10, records, icerik=None):
             icerik[i] = {'tr_title': b, 'paragraph': p}
     art = {i: {'title': c['tr_title'], 'full_text': c['paragraph']}
            for i, c in icerik.items()}
-    return s._kritik3_dominans_takasi(top3, top10, [], records, icerik, art)
+    return s._kritik3_dominans_takasi(top3, top10, [], records, icerik, art,
+                                      recent_views)
 
 
 def test_17_eylul_pixel_takas_edilir():
@@ -104,17 +105,32 @@ def test_dusuk_puanli_aday_takas_etmez():
     assert 4 not in t3
 
 
-def test_mukerrer_ve_yasakli_aday_kullanilmaz():
+def test_yasakli_aday_kullanilmaz():
+    """Yasak kapısı (G2) dominans kapısında da geçerlidir."""
     s = _sistem()
     s._manset_yasak = {5}
     records = {1: {'kat': 'zafiyet_aktif_apt', 'toplam': 80},
                2: {'kat': 'kolluk_operasyonu', 'toplam': 90},
                3: {'kat': 'veri_ihlali', 'toplam': 88},
-               4: {'kat': 'nation_state_apt', 'toplam': 95, 'mukerrer': 1},
                5: {'kat': 'nation_state_apt', 'toplam': 95}}
-    t3, _, _ = _calistir(s, [1, 2, 3], [4, 5], records)
-    assert 4 not in t3 and 5 not in t3, 'mükerrer/yasaklı aday manşete alındı'
+    t3, _, _ = _calistir(s, [1, 2, 3], [5], records)
+    assert 5 not in t3, 'yasaklı aday manşete alındı'
     assert t3 == [1, 2, 3]
+
+
+def test_ham_mukerrer_bayragi_tek_basina_elemez():
+    """ÖLÇÜLDÜ (2026-08-26, Interpol): ham `mukerrer` bayrağı bir KÜMEYE
+    konur, kümenin hayatta kalan TEMSİLCİSİ de onu taşır. Yedek bulucu bu
+    yüzden bayrağı bırakmış, dominans kapısı ise okumaya devam etmişti —
+    aynı aday iki kapıda farklı yanıt alıyordu. Gerçek mükerrer artık yasak
+    (G2) ve çapraz-gün (G4) kapılarıyla elenir; bayrak tek başına elemez."""
+    s = _sistem()
+    records = {1: {'kat': 'zafiyet_aktif_apt', 'toplam': 80},
+               2: {'kat': 'kolluk_operasyonu', 'toplam': 90},
+               3: {'kat': 'veri_ihlali', 'toplam': 88},
+               4: {'kat': 'nation_state_apt', 'toplam': 95, 'mukerrer': 1}}
+    t3, _, _ = _calistir(s, [1, 2, 3], [4], records)
+    assert 4 in t3, 'ham bayrak temiz adayı manşetten düşürdü'
 
 
 def test_kritik3_disi_kategori_aday_olamaz():
@@ -200,3 +216,35 @@ def test_dogrulanmis_apt_takas_edebilir():
                4: {'kat': 'nation_state_apt', 'toplam': 95}}       # öncelik 10
     t3, _, _ = _calistir(s, [1, 2, 3], [4], records)
     assert 4 in t3
+
+
+def test_capraz_gun_manseti_tekrar_manset_olmaz():
+    """ÖLÇÜLDÜ (2026-10-07): 3 Ekim'in üçüncü manşeti olan "Linux arka
+    kapılarının e-posta güvenlik araçlarını taklit etmesi" DÖRT GÜN SONRA
+    yeniden manşet oldu. Defter doğru biliyordu (`manset_gunu_sayisi=1`);
+    haberi içeri alan bu kapı `_manset_disi_ids`'i hiç çağırmıyordu."""
+    s = _sistem()
+    icerik = {
+        1: {'tr_title': 'Sogou girdi yöntemi arka kapısı',
+            'paragraph': 'Sogou yazılımına arka kapı yerleştirildi'},
+        2: {'tr_title': 'Revolut veri sızıntısı',
+            'paragraph': 'Revolut müşteri verileri sızdırıldı'},
+        3: {'tr_title': 'Xinbi pazarı çökertildi',
+            'paragraph': 'Xinbi Guarantee pazarı çökertildi'},
+        4: {'tr_title': 'Linux arka kapıları e-posta güvenlik araçlarını taklit ediyor',
+            'paragraph': 'BusyBox tabanlı Linux arka kapıları e-posta güvenlik '
+                         'geçitlerini taklit ederek tespitten kaçıyor'},
+    }
+    records = {1: {'kat': 'veri_ihlali', 'toplam': 90},
+               2: {'kat': 'yapay_zeka_guvenligi', 'toplam': 88},
+               3: {'kat': 'tedarik_zinciri', 'toplam': 85},
+               4: {'kat': 'nation_state_apt', 'toplam': 95}}
+    # Aynı olay ÜÇ GÜN ÖNCE manşet olmuş: defter görünümü.
+    gecmis = [{'id': 'g1', 'kritik3': True,
+               'tr_title': 'Linux arka kapıları e-posta güvenlik araçlarını taklit ediyor',
+               'paragraph': 'BusyBox tabanlı Linux arka kapıları e-posta '
+                            'güvenlik geçitlerini taklit ederek tespitten kaçıyor',
+               'tarih': '2026-10-03'}]
+    t3, _, _ = _calistir(s, [1, 2, 3], [4], records, icerik, gecmis)
+    assert 4 not in t3, 'çapraz-gün manşeti dominans kapısından yeniden girdi'
+    assert t3 == [1, 2, 3]

@@ -216,3 +216,41 @@ karakterle görüyor; yani AYNI haber "manşet görünümü" ile sorulduğunda d
 taşımasının defterdeki karşılığıdır (bkz. CLAUDE.md "sayfa şablonundaki kod
 adı"). P6 kapsamına alınır: defter TEK ve KIRPIK temsille beslenmeli, ya da
 `_load_recent_events` iki dosyayı aynı uzunlukta saklamalı.
+
+### P2 — DOMİNANS VE YAYIN YÖNETMENİ YÜKLEME BAĞLANDI (2026-10-07)
+
+İki katman kapılarını kendi eliyle sıralıyordu. `_kritik3_dominans_takasi`
+kategori + ham `mukerrer` + `_manset_yasak` + aynı-gün-aynı-olay okuyordu,
+DEFTER TEKRARI ve ÇAPRAZ-GÜN hiç yoktu (`_manset_disi_ids` buradan hiç
+çağrılmıyordu). `_yayin_yonetmeni` kategori + puan bandı + aynı-olay
+okuyordu, ÇAPRAZ-GÜN ve ÇEŞİTLİLİK yoktu.
+
+Her ikisi artık `_manset_uygun_mu`yu ADAY BAŞINA çağırıyor. Dominans ölçütü
+(öncelik + puan) katmanda kalır — o bir SIRALAMA kuralıdır; yönetmenin çift
+düşüş reddi ve iki yönlü liste mekaniği de katmanda kalır. Puan bandı
+tavanı yönetmende katmanda hesaplanır (raporun tamamını görür).
+
+HAM `mukerrer` BAYRAĞI DOMİNANSTA BIRAKILDI: 2026-08-26 Interpol ölçümü —
+bayrak kümeye konur, kümenin hayatta kalan temsilcisi de taşır; yedek
+bulucu bu yüzden bayrağı bırakmıştı, dominans okumaya devam ediyordu, yani
+aynı aday iki kapıda farklı yanıt alıyordu. Gerçek mükerrer `yasak` (G2) ve
+`capraz_gun` (G4) kapılarıyla, daha dar tanımlarla elenir.
+
+ÖLÇÜLDÜ (önce → sonra):
+- matris: yüklemden geçmeyen katman 4 → **2** (`_derive_top3_by_score`,
+  `_manset_llm_sec` — P3'ün konusu)
+- yüklem tekrarı (replay): uygunsuz 8 kaydın 5'ini yüklem REDDEDİYOR;
+  dominans kapısından giren ÜÇÜNÜN (19 Eylül Telegram, 1 Ekim Bitget,
+  7 Ekim Linux arka kapıları) hepsi artık RED
+- kapılar birebir aynı: `dedup_golden` 15/21 · 18/23 · 20/23,
+  `zincir_olc` süzgeçli 6 düşürme + çeşitlilik 1 vaka (P2 `src/`e
+  dokunmadı), 747 test geçiyor
+- LLM çağrısı sayısı DEĞİŞMEDİ — yüklem deterministiktir
+
+Regresyon: `tests/test_kritik3_dominans.py` (`test_yasakli_aday_kullanilmaz`,
+`test_ham_mukerrer_bayragi_tek_basina_elemez`,
+`test_capraz_gun_manseti_tekrar_manset_olmaz` — 7 Ekim vakası).
+
+ÖLÇÜM ARACI DÜZELTMESİ: `--matris` ham metin tarıyordu ve katmanın YORUMUNU
+kendi süzgeci sanıyordu (yönetmendeki "takas kapısı
+KRITIK3_HARIC_KATEGORILER'e bakar" notu). Yorum satırları artık sayılmıyor.
