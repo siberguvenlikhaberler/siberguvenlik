@@ -330,3 +330,50 @@ okunamaz.
 
 755 test geçiyor; `dedup_golden` 15/21 · 18/23 · 20/23 ve `zincir_olc`
 (süzgeçli 6 düşürme, çeşitlilik 1 vaka) birebir aynı.
+
+### P5 ✅ (2026-10-07) — KABUL ÖLÇÜMÜ
+
+Yeni mod: `scripts/kritik3_olc.py --kabul`. `--yuklem` yalnızca TEKRAR
+manşetlere bakıyordu; kabul ölçütü 2 ("KRİTİK 3 hiçbir günde 3'ün altına
+düşmez") 31 günün TAMAMINI ister, çünkü yüklem artık her seçimde koşuyor ve
+tekrarı olmayan bir günde de çeşitlilik ya da aynı-olay kapısı kapanabilir.
+Yöntem: her günün yayımlanmış manşetleri yüklemden geçirilir, reddedilen her
+manşet için `_kritik3_yedek_bul` ile gövdeden temiz yedek aranır, bulunmazsa
+manşet YERİNDE BIRAKILIR; gün sonunda manşet sayısı sayılır. Görünümler TEK
+TEMSİLDEN (`rapor_gecmis`) alınır.
+
+SINIR AÇIKÇA: bu bir yeniden oynatmadır, LLM çağrısı yapmaz. Ölçümün üretime
+bağı P4'ün yapı testidir — manşete id sokabilen her katman bu yüklemden
+geçtiği için, yüklemin REDDETTİĞİ haber artık hiçbir kapıdan giremez.
+
+SONUÇ (31 gün, 93 yayımlanmış manşet):
+
+| ölçüt | hedef | ölçülen |
+|---|---|---|
+| 1. uygunsuz yayımlanmış manşet | 5 → 1 | **5 → 1** (yalnızca 5 Ekim) |
+| 2. KRİTİK 3 < 3 olan gün | 0 | **0** (31/31 gün üç manşet) |
+| 3. `dedup_golden` | değişmez | 15/21 · 18/23 · 20/23 ✅ |
+| 4. `zincir_olc` | değişmez | süzgeçli 6 düşürme · çeşitlilik 1 vaka ✅ |
+| 5. `defter_olc --kume` en büyük küme | ≤ 5 gün | 6 gün — bkz. not |
+| 6. test takımı / LLM maliyeti | geçer / aynı | 755 test ✅ · çağrı yeri diff'i BOŞ |
+
+Reddedilen beşin dağılımı: 4'ü defter tekrarı (19 Eylül Telegram, 1 Ekim
+Bitget, 5 Ekim denizcilik, 7 Ekim Linux arka kapıları), 1'i aynı hat
+(29 Eylül FBI ↔ ShinyHunters). Dördü temiz yedekle takas edilebiliyor;
+5 Ekim kıtlık günüdür (gövdede defter-temiz aday YOK) ve kural gereği manşet
+yerinde kalır — bu 1, hedefin kendisidir.
+
+5. ÖLÇÜTÜN NOTU — VERİ KAYMASI, REGRESYON DEĞİL: ölçüt 6 Ekim penceresinde
+yazıldı; bugünün penceresinde en büyük küme 6 gün. `src/` ve ölçüm betikleri
+P0'dan beri HİÇ değişmedi (`git diff 3d57565~1..HEAD -- src/` boş), yani sayı
+kodla değil pencereyle değişti. Küme `manşet=0` taşıyor: ScreenConnect /
+uzaktan yönetim aracı kötüye kullanımı haberleri, manşet kuralını hiç
+etkilemiyor.
+
+6. ÖLÇÜTÜN KANITI: `git diff 3d57565~1..HEAD -- main.py` içinde
+`_gemini_call_json` ya da `_mukerrer_llm_hakem` satırı YOK — beş adımda tek
+bir LLM çağrı yeri eklenmedi, kaldırılmadı, değiştirilmedi. Yüklem
+deterministiktir (`test_yuklem_llm_cagrisi_yapmaz`).
+
+KALAN İŞ: P6 — `same_event` / `iliski_belirle` / `mukerrer_karari` üç
+tanımının ayrışması (ayrı adım, kendi ölçümünü ister).

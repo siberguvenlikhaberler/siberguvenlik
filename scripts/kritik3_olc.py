@@ -97,7 +97,7 @@ def _defter_akisi():
     defter = oi.OlayDefteri(sozluk=sozluk)
     for g in sorted(rapor):
         bas = {w.get('tr_title') for w in k3.get(g, [])}
-        yield g, defter, k3.get(g, []), rapor[g]
+        yield g, defter, k3.get(g, []), rapor[g], sozluk
         defter.gunleri_isle(
             [(g, rapor[g], [v for v in rapor[g] if v.get('tr_title') in bas])])
 
@@ -115,7 +115,7 @@ def tekrar():
     Aynı haberi iki temsille sormak 8 ve 5 gibi İKİ AYRI sayı veriyordu.
     """
     toplam = bulasik = 0
-    for g, defter, mansetler, gunun in _defter_akisi():
+    for g, defter, mansetler, gunun, _sz in _defter_akisi():
         bas = {w.get('tr_title') for w in mansetler}
         rapor_gorunum = {(v.get('tr_title') or ''): v for v in gunun}
         for v0 in mansetler:
@@ -161,7 +161,7 @@ def gorunum():
             kaynak.setdefault(r['tarih'], []).append(r['baslik'])
 
     tr_tekrar = kv_tekrar = toplam = 0
-    for g, defter, mansetler, gunun in _defter_akisi():
+    for g, defter, mansetler, gunun, _sz in _defter_akisi():
         rapor_gorunum = {(v.get('tr_title') or ''): v for v in gunun}
         basliklar = list(kaynak.get(g, []))
         if not basliklar:
@@ -211,6 +211,96 @@ def kapi():
     print('\nkapı dağılımı:', dict(say.most_common()))
 
 
+def _gun_tablosu(g, mansetler, gunun, sko):
+    """O günün (view_fn, records, manset_idx) üçlüsü — TEK TEMSİL.
+
+    ⚠️ Görünümler YALNIZCA `rapor_gecmis`ten alınır. `kritik3_gecmis` aynı
+    haberi daha uzun saklıyor (paragraf 600 / full_text 1500 karakter) ve
+    sayfa şablonu metni sahte eşleşme üretiyor; iki temsili karıştırmak
+    2026-10-07'de 8 ve 5 gibi İKİ AYRI tekrar sayısı vermişti.
+    """
+    idx = {(v.get('tr_title') or ''): i for i, v in enumerate(gunun)}
+    records = {}
+    for i, v in enumerate(gunun):
+        r = (sko.get(g) or {}).get(v.get('tr_title')) or {}
+        records[i] = {'kat': r.get('kat') or 'nation_state_apt',
+                      'toplam': r.get('toplam', 0)}
+    manset_idx = [idx[v.get('tr_title') or ''] for v in mansetler
+                  if (v.get('tr_title') or '') in idx]
+    return (lambda k: gunun[k]), records, manset_idx
+
+
+def _skorlama():
+    sko = {}
+    for line in (VERI / 'skorlama_log.jsonl').read_text('utf-8').splitlines():
+        if not line.strip():
+            continue
+        r = json.loads(line)
+        sko.setdefault(r['tarih'], {})[r['baslik']] = r
+    return sko
+
+
+def kabul():
+    """KABUL ÖLÇÜTÜ 1-2 (KRITIK3_PLAN.md P5) — 31 GÜNÜN TAMAMI.
+
+    `--yuklem` yalnızca TEKRAR manşetlere bakar; kabul ölçütü 2 ("KRİTİK 3
+    hiçbir günde 3'ün altına düşmez") her günü ister, çünkü yüklem artık her
+    seçimde koşuyor ve tekrarı olmayan bir günde de çeşitlilik ya da
+    aynı-olay kapısı kapanabilir.
+
+    YÖNTEM: her gün için yayımlanmış manşetler yüklemden geçirilir; reddedilen
+    her manşet için `_kritik3_yedek_bul` ile gövdeden temiz yedek aranır ve
+    bulunamazsa manşet YERİNDE BIRAKILIR (projenin değişmez kuralı). Günün
+    sonunda manşet sayısı sayılır.
+
+    SINIR: bu bir yeniden oynatmadır, LLM çağrısı yapılmaz. Yapı testi
+    (`test_kapilar_tek_yuklemden_gecer`) manşete id sokabilen her katmanın bu
+    yüklemden geçtiğini sabitlediği için, yüklemin REDDETTİĞİ bir haber artık
+    hiçbir kapıdan giremez — ölçümün üretime bağı budur.
+    """
+    import main                                        # noqa: E402
+
+    sko = _skorlama()
+    sistem = main.HaberSistemi.__new__(main.HaberSistemi)
+    gun = red = yedekli = yerinde = eksik = 0
+    for g, defter, mansetler, gunun, sozluk in _defter_akisi():
+        if not mansetler:
+            continue
+        gun += 1
+        view_fn, records, manset_idx = _gun_tablosu(g, mansetler, gunun, sko)
+        sistem._olay_defteri = defter
+        sistem._olay_sozlugu = sozluk
+        sistem._manset_yasak = set()
+        kalan = list(manset_idx)
+        havuz = [i for i in range(len(gunun)) if i not in manset_idx]
+        for k in list(manset_idx):
+            digerleri = [m for m in kalan if m != k]
+            uygun, neden = sistem._manset_uygun_mu(
+                k, digerleri, records, view_fn, ())
+            if uygun:
+                continue
+            red += 1
+            yedek = sistem._kritik3_yedek_bul(
+                havuz, digerleri, records, view_fn, (), bant=False)
+            if yedek is None:
+                yerinde += 1
+                print(f"  {g}  YERİNDE  {(gunun[k].get('tr_title') or '')[:44]}"
+                      f"\n        {neden} · temiz yedek YOK")
+                continue
+            yedekli += 1
+            kalan[kalan.index(k)] = yedek
+            havuz.remove(yedek)
+            print(f"  {g}  TAKAS    {(gunun[k].get('tr_title') or '')[:44]}"
+                  f"\n        {neden}\n        yerine: "
+                  f"{(gunun[yedek].get('tr_title') or '')[:44]}")
+        if len(kalan) != len(manset_idx) or len(set(kalan)) != len(kalan):
+            eksik += 1
+            print(f"  ⚠️ {g}  manşet sayısı {len(manset_idx)} → {len(kalan)} "
+                  f"(tekil {len(set(kalan))})")
+    print(f"\ngün: {gun}  ·  yüklem REDDETTİ: {red}  ·  temiz yedekle takas: "
+          f"{yedekli}  ·  yedek yok, yerinde: {yerinde}  ·  "
+          f"manşet sayısı bozulan gün: {eksik}")
+
 def yuklem():
     """Tekrar manşetleri YÜKLEME sorar: reddedilir mi, yerine aday var mı?
 
@@ -221,16 +311,10 @@ def yuklem():
     """
     import main                                        # noqa: E402
 
-    sko = {}
-    for line in (VERI / 'skorlama_log.jsonl').read_text('utf-8').splitlines():
-        if not line.strip():
-            continue
-        r = json.loads(line)
-        sko.setdefault(r['tarih'], {})[r['baslik']] = r
-
+    sko = _skorlama()
     sistem = main.HaberSistemi.__new__(main.HaberSistemi)
     red = tutulan = yedeksiz = 0
-    for g, defter, mansetler, gunun in _defter_akisi():
+    for g, defter, mansetler, gunun, _sz in _defter_akisi():
         tekrarli = [v for v in mansetler if defter.manset_gunu_sayisi(v) >= 1]
         if not tekrarli:
             continue
@@ -280,8 +364,10 @@ def main():
     ap.add_argument('--kapi', action='store_true')
     ap.add_argument('--yuklem', action='store_true')
     ap.add_argument('--gorunum', action='store_true')
+    ap.add_argument('--kabul', action='store_true')
     a = ap.parse_args()
-    if not (a.matris or a.tekrar or a.kapi or a.yuklem or a.gorunum):
+    if not (a.matris or a.tekrar or a.kapi or a.yuklem or a.gorunum
+            or a.kabul):
         a.matris = a.tekrar = a.kapi = a.yuklem = a.gorunum = True
     if a.matris:
         matris()
@@ -294,6 +380,9 @@ def main():
     if a.gorunum:
         print()
         gorunum()
+    if a.kabul:
+        print()
+        kabul()
     if a.yuklem:
         print()
         yuklem()
