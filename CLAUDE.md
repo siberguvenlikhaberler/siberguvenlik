@@ -996,3 +996,39 @@ bağlanması, ilk seçimin de sınanması, yapı testleri ve kabul ölçütleri
 (tekrar manşet 8 → 1, KRİTİK 3 hiç 2'ye düşmez, golden/zincir ölçümleri
 birebir aynı, LLM maliyeti nötr). Üç tanımın (`same_event` /
 `iliski_belirle` / `mukerrer_karari`) ayrışması AYRI adımdır (P6).
+
+## İKİ AYNI-OLAY TANIMI KALIR (ölçüm, 2026-10-07)
+
+Manşet yolunda iki tanım iş görüyor: `ayni_olay`→`mukerrer_karari` (çapraz-gün
+eleme + manşet uygunluğu) ve `iliski_belirle` (OLAY DEFTERİ'ni kuran, yani
+"bu olay kaç kez manşet oldu" sorusunu yanıtlayan tanım). Araç:
+`scripts/tanim_olc.py` (yalnızca OKUR).
+
+ÖLÇÜLDÜ (son 31 gün, ortak anahtarlı 14.600 çapraz-gün çifti): ayrışma
+**%1,42** (207 çift). Defter 240 çift bağlıyor, manşet yolu 67 — defter ~4 kat
+GEVŞEK. **HİÇBİRİ ÜSTÜN DEĞİL:** defter manşet yolunun kaçırdığı gerçek devam
+haberlerini yakalıyor (OpenAI/DseWiki, Grindr HIV davası, AB Siber Dayanıklılık
+Yasası, ChatGPT/Gmail), manşet yolu da defterin kaçırdıklarını (245 ↔ 240
+milyon dolarlık kripto hırsızlığı, Claude yetkisiz erişim). Tek tanıma indirmek
+İKİ YÖNDE kayıp verir — **yapılmadı**.
+
+Gevşekliğin manşete maliyeti ölçüldü: 31 günde 33 gövde adayı defter yüzünden
+manşet havuzundan düştü, 23'ü YALNIZCA defter tanımıyla, 5'i o günün en zayıf
+manşetinden yüksek puanlıydı. Güncel kodda kalan GERÇEK hasar 2 vaka ve ikisi
+de **aynı adın iki dildeki yazımının iki kimlik sayılması**: FBI ↔ Accenture
+(`ad:bürosu,ad:investig,ad:soruştur` = Federal Soruşturma Bürosu) ve DOE
+(`ad:energy,ad:enerji`). 6 Ekim'deki `_varlik_sayisi` kuralının devamıdır; o
+kural kökleri yalnızca İKİ TARAFIN metninde YAN YANA geçerse birleştirir.
+
+İKİ ADAY DÜZELTME REDDEDİLDİ: (a) zincir ayarındaki süzgeçler (DF %0,5 +
+Türkçe ön plan) 190 bağın 69'unu düşürüyor ama 6 Ekim ölçümü bunun GERÇEK
+birleşmeleri de düşürdüğünü kaydetmişti; (b) `_bitisik_gecer`'i tek tarafa
+gevşetmek bağı 240→233 yapıyor ve ölçülen 5 vakanın HİÇBİRİNİ çözmüyor.
+Kalan iş eşik ayarı değil YENİ VERİ: kurum adlarının iki dildeki karşılıklarını
+bağlayan bir eşlem. Eşlem olmadan her genelleme gerçek birleşme kaybediyor.
+
+NOT — `mukerrer_golden` ARTIK ÖLÇMÜYOR: 38 çiftin tamamı 17-24 Ağustos
+günlerindendir, `rapor_gecmis` 30 günde döndüğü için görünümleri dosyada yok
+(`scripts/mukerrer_olc.py` "38 çift geçmişten düşmüş, atlandı" der). Set elle
+etiketli referanstır, SİLİNMEZ; yeniden ölçülebilmesi için çiftlerin
+görünümlerinin sete GÖMÜLMESİ gerekir (`dedup_golden` öyle yapıyor).

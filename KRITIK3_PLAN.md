@@ -377,3 +377,73 @@ deterministiktir (`test_yuklem_llm_cagrisi_yapmaz`).
 
 KALAN İŞ: P6 — `same_event` / `iliski_belirle` / `mukerrer_karari` üç
 tanımının ayrışması (ayrı adım, kendi ölçümünü ister).
+
+### P6 ⛔ (2026-10-07) — TEK TANIMA İNDİRME REDDEDİLDİ (ölçüm)
+
+Araç: `scripts/tanim_olc.py` (yalnızca OKUR; `--ayrisma` / `--ornek N` /
+`--sikilastir` / `--golden`).
+
+Manşet yolunda iki tanım iş görüyor: **(A)** `ayni_olay` → `mukerrer_karari`
+(çapraz-gün eleme + manşet uygunluğu; temeli `same_event`, üstünde ölçülmüş
+eleme süzgeçleri) ve **(B)** `iliski_belirle` (OLAY DEFTERİ'ni kuran tanım,
+yani G3'ü yanıtlayan kayıt).
+
+**1. AYRIŞMANIN BÜYÜKLÜĞÜ** (son 31 gün, ortak anahtarlı 14.600 çapraz-gün
+çifti): ayrışan çift **207 (%1,42)**. Defter 240 çift bağlıyor, manşet yolu
+67 — defter ~4 kat GEVŞEK. Dağılım: A=aynı·B=bağlı 50, A=ayrı·B=bağlı **190**,
+A=aynı·B=bağsız **17**.
+
+**2. HİÇBİR TANIM ÜSTÜN DEĞİL** (12 ayrışan çift elle okundu). Defterin tek
+başına bağladığı gerçek devam haberleri: OpenAI/DseWiki ↔ Alman wiki, Grindr
+HIV davası, AB Siber Dayanıklılık Yasası, ChatGPT/Gmail sızıntısı, DOE
+elektrik şebekesi. Manşet yolunun tek başına birleştirdiği gerçekler: 245 ↔
+240 milyon dolarlık kripto hırsızlığı, Claude yetkisiz erişim. Defterin sahte
+birleşmeleri jenerik köklerden geliyor: `ad:firewall,ad:manageme` (CISA ↔
+Check Point), `kod:captcha`, `ad:center,ad:unit` (Unit 42 = raporlayan),
+`ad:screenco`. **Tek tanıma indirmek İKİ YÖNDE de kayıp verir** — bu yüzden
+yapılmadı.
+
+**3. GEVŞEKLİĞİN MANŞETE ÖLÇÜLEN MALİYETİ.** 31 günde gövdedeki 33 aday
+defter yüzünden manşet havuzundan düştü; **23'ü YALNIZCA defter tanımıyla**
+(manşet yolu onlara mükerrer demiyor). Bunların **5'i o günün EN ZAYIF
+yayımlanmış manşetinden yüksek puanlıydı** (puanlar arşivin `» manset=...|
+puan=` satırından; `skorlama_log` İNGİLİZCE başlık tuttuğu için Türkçe
+görünümle eşleşmiyor — ilk denemede hepsi 0 okundu):
+
+| gün | puan > taban | haber | bağın dayanağı |
+|---|---|---|---|
+| 09-12 | 89 > 84 | DOE elektrik şebekesi | `ad:energy,ad:enerji` — GERÇEK tekrar |
+| 09-16 | 81 > 77 | Tajin Group | `ad:xinbi,ad:guarante,ad:telegram` — tartışmalı |
+| 09-22 | 89 > 88 | Orta Doğu üretim tesisi | `ad:gert,ad:global` — SAHTE |
+| 09-30 | 93 > 92 | FBI'ın ShinyHunters çağrısı | bugün `ILISKISIZ` — 28 Eylül kuralı zaten düzeltti |
+| 10-06 | 91 > 83 | FBI ↔ Accenture yüklenicisi | `ad:bürosu,ad:investig,ad:soruştur` — SAHTE |
+
+Yani güncel kodda kalan gerçek hasar ~2 vaka/31 gün ve ikisi de **aynı adın
+iki dildeki yazımının iki kimlik sayılması**ndan geliyor (FBI = Federal
+Soruşturma Bürosu; Energy = Enerji). Bu, 6 Ekim'deki `_varlik_sayisi`
+kuralının doğrudan devamıdır — o kural kökleri yalnızca İKİ TARAFIN metninde
+YAN YANA geçtiklerinde birleştiriyor.
+
+**4. İKİ ADAY DÜZELTME ÖLÇÜLDÜ VE REDDEDİLDİ.**
+- *Zincir ayarındaki süzgeçler* (DF %0,5 + Türkçe ön planda geçme) defterin
+  tek başına kurduğu 190 bağın 69'unu düşürüyor; örnekler temiz sahtelerdi
+  (`bürosu/investig/soruştur`, `director/direktör`, `claude/gemini`) ama
+  yapısal kimlikli 81 bağa hiç dokunmuyor ve 6 Ekim ölçümü bu süzgecin
+  GERÇEK birleşmeleri de düşürdüğünü (Denizcilik↔Sahil Güvenlik, CISA KEV)
+  zaten kaydetmişti.
+- *`_bitisik_gecer`'i tek tarafa gevşetmek* (yan yana geçme İKİ taraf değil
+  TEK taraf) defter bağını 240 → 233 yapıyor; düşen 7 bağın hiçbiri
+  ölçülen 5 vakadan DEĞİL — yani hasarı çözmüyor, yalnızca ilgisiz 7 bağı
+  oynatıyor. Getirisi sıfır, riski var.
+
+**KARAR:** iki tanım KALIR. Kalan iş bir eşik ayarı değil, YENİ VERİ
+gerektiriyor: kurum adlarının iki dildeki karşılıklarını bağlayan bir eşlem
+(FBI/Federal Soruşturma Bürosu, DOE/Enerji Bakanlığı). Bu ayrı bir adımdır ve
+kendi ölçümünü ister; eşlem olmadan yapılan her genelleme yukarıdaki iki
+ölçümde gerçek birleşme kaybediyor.
+
+`mukerrer_golden` ile DOĞRULANAMADI: o setin 38 çifti 17-24 Ağustos
+günlerindendir ve `rapor_gecmis` 30 günde döndüğü için görünümleri artık
+dosyada YOK (`scripts/mukerrer_olc.py` "38 çift geçmişten düşmüş, atlandı"
+diyor). Ölçüm bu yüzden son 31 günün kendi çiftleriyle ve elle okumayla
+yapıldı.
