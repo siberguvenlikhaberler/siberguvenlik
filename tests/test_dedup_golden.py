@@ -191,3 +191,33 @@ def test_farkli_urun_bultenleri_ayni_olay_degil():
         _v('Synacor Zimbra Collaboration Yazılımında Çoklu Güvenlik Açıkları',
            'Multiples vulnérabilités dans Synacor Zimbra Collaboration '
            '(20 août 2026)')), 'aynı ürün bülteni birleşmedi'
+
+
+# GÖRÜNÜM ŞEKLİ DAĞILIMI — vakanın hangi ÜRETİM AŞAMASINI yeniden ürettiğini
+# söyler, dolayısıyla sessizce değişmemelidir. `ham` kaynaklı tarafta
+# tr_title/paragraph BİLEREK boştur: o çiftler üretim ÖNCESİ karşılaştırmayı
+# (günün ham maddesi ↔ Türkçe geçmiş) yeniden üretir — `_dedup_body_cross_day`
+# tam bu şekli görür. Manşet kapısı (`_manset_uygun_mu`, P3) ise TR↔TR
+# şeklini kullanır ve o şekil burada yalnızca 3 vakayla temsil ediliyor.
+#
+# ÖLÇÜLDÜ (2026-10-07): Türkçe taraf git geçmişinden geri alınıp hepsi TR↔TR
+# yapılırsa İran su altyapısı çifti etikete oturuyor ama hâlen doğru olan iki
+# çift bozuluyor (4 eyalet↔Suisun City, Cisco ASA/FTD) — net kayıp.
+SEKIL_DAGILIMI = {('kaynak', 'kaynak'): 12, ('kaynak', 'TR'): 8,
+                  ('TR', 'TR'): 3}
+
+
+def test_gorunum_sekli_dagilimi_sabit():
+    """Yeni vaka eklemek bu sayıyı değiştirir ve testi güncellemeye zorlar —
+    şeklin sessizce kaymasını (ör. bir vakanın Türkçe tarafının silinmesi)
+    engeller. Yeni vakada TR↔TR şekli TERCİH EDİLMELİDİR: manşet kapısının
+    kullandığı şekil o ve en az temsil edileni."""
+    import collections
+
+    def _sekil(v):
+        return 'TR' if (v.get('tr_title') or '').strip() else 'kaynak'
+
+    sayim = collections.Counter(
+        (_sekil(c['a']), _sekil(c['b'])) for c in _ciftler())
+    assert dict(sayim) == SEKIL_DAGILIMI, \
+        f'görünüm şekli dağılımı değişti: {dict(sayim)}'

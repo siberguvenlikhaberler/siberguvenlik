@@ -1,5 +1,5 @@
 {
-  "aciklama": "Dedup/olay-ilişkisi golden set — ELLE etiketli gerçek üretim çiftleri. Değişiklikler bu sete karşı ölçülür (scripts/dedup_olc.py, tests/test_dedup_golden.py).",
+  "aciklama": "Dedup/olay-ilişkisi golden set — ELLE etiketli gerçek üretim çiftleri. Değişiklikler bu sete karşı ölçülür (scripts/dedup_olc.py, tests/test_dedup_golden.py). GÖRÜNÜMLER GÖMÜLÜDÜR (tasarımdan beri): `data/haberler_ham.txt` her gün üzerine yazıldığı için set kendi kendine yeterlidir; ölçüm yalnızca `a`/`b` alanlarını okur, DF sözlüğünü güncel geçmişten kurar. GÖRÜNÜM ŞEKLİ VAKANIN PARÇASIDIR (2026-10-07'de ölçülüp kayda geçti): 12 çift kaynak↔kaynak, 8 çift kaynak↔TR, 3 çift TR↔TR. `ham` kaynaklı taraflarda tr_title/paragraph BİLEREK boştur — o çiftler ÜRETİM ÖNCESİ karşılaştırmayı (günün ham maddesi ↔ Türkçe geçmiş) yeniden üretir, `_dedup_body_cross_day`in gördüğü şekil budur. Türkçe tarafı geçmişten geri alıp hepsini TR↔TR yapmak ÖLÇÜLDÜ: İran su altyapısı çifti etikete OTURUYOR (ILISKISIZ → YENI_GELISME) ama hâlen doğru olan iki çift BOZULUYOR (4 eyalet↔Suisun City YENI→AYNI, Cisco ASA/FTD AYNI→YENI) — net kayıp, yapılmadı. BİLİNEN BOŞLUK: manşet kapısının şekli (TR↔TR, bkz. P3) 23 vakanın yalnızca 3'ünde temsil ediliyor; yeni vaka eklenirken o şekle öncelik verilmelidir.",
   "etiketler": [
     "AYNI_GELISME",
     "YENI_GELISME",

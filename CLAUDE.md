@@ -1055,3 +1055,29 @@ Yeni ölçüm `dedup_golden` ile birlikte okunmalıdır (15/21 · 18/23 · 20/23
 SÖZLÜK GÖMÜLMEZ: DF sözlüğü güncel derlemden kurulur (`dedup_olc` da öyle
 yapar) — üretimde de her gün yeniden kurulur. Bu sette pencere etkisi ölçülüp
 SIFIR bulundu, ama yeni çift eklenirse yeniden ölçülmelidir.
+
+### `dedup_golden`da GÖRÜNÜM GÖMÜLÜ — ŞEKİL VAKANIN PARÇASIDIR (2026-10-07)
+
+Denetlendi: 23 çiftin TAMAMINDA `a`/`b` görünümü ve dört alanın hepsi var;
+bu tasarımdan beri böyle (`scripts/golden_set_kur.py`: "çıktı KENDİ KENDİNE
+YETERLİDİR, çünkü `haberler_ham.txt` her gün üzerine yazılır"). Ölçüm
+yalnızca gömülü görünümleri okur, DF sözlüğünü güncel geçmişten kurar —
+`mukerrer_golden` ile aynı sözleşme.
+
+ŞEKİL DAĞILIMI: 12 çift kaynak↔kaynak, 8 çift kaynak↔TR, 3 çift TR↔TR.
+`ham` kaynaklı tarafta `tr_title`/`paragraph` BİLEREK boştur: o vakalar
+ÜRETİM ÖNCESİ karşılaştırmayı (günün ham maddesi ↔ Türkçe geçmiş) yeniden
+üretir ve `_dedup_body_cross_day` tam bu şekli görür. Yani eksiklik değil,
+vakanın aşamasıdır.
+
+HEPSİNİ TR↔TR YAPMAK ÖLÇÜLDÜ VE YAPILMADI: Türkçe taraf git geçmişinden geri
+alınınca "İran su altyapısı ↔ CISA Minnesota" çifti etikete OTURUYOR
+(ILISKISIZ → YENI_GELISME, yani dört-değerli hatalarından biri aslında ŞEKİL
+ARTEFAKTIYDI) ama hâlen doğru olan iki çift BOZULUYOR (4 eyalet↔Suisun City
+YENI→AYNI, Cisco ASA/FTD AYNI→YENI). Net kayıp.
+
+BİLİNEN BOŞLUK: P3'ten sonra manşet kapısı (`_manset_uygun_mu`) TR↔TR şeklini
+kullanıyor ve o şekil 23 vakanın yalnızca 3'ünde temsil ediliyor. Yeni vaka
+eklenirken TR↔TR şekline öncelik verilmelidir. Dağılım
+`tests/test_dedup_golden.py::test_gorunum_sekli_dagilimi_sabit` ile
+sabitlendi — yeni vaka testi güncellemeye zorlar, şekil sessizce kaymaz.
