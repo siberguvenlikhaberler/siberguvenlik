@@ -8818,8 +8818,24 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 'kume_golge': kume_golge,
                 'capraz_gun_kacak': capraz,
                 'rapor_ici_kacak': ici,
+                # SIRA KENDİNİ AÇIKLAMALI — kategori ve ETKİN öncelik de
+                # yazılır. `_kritik3_sirala` sırayı `_kat_oncelik` ile dizer,
+                # yani doğrulanmamış bir nation_state_apt iddiası önceliğini
+                # KAYBEDER (10 → 4). Kayıt yalnızca puanı tutuyordu ve
+                # 8 Ekim raporu bu yüzden adli incelemede "sıra uygulanmamış"
+                # diye okundu: manşet 90/80/**97** yayımlandı, 97 puanlı haber
+                # (Google alan adı sertifikaları) `apt_dogrulanmadi=1`
+                # taşıdığı için ÜÇÜNCÜ sıradaydı — kural doğru çalışmıştı ama
+                # kayıttan anlaşılamıyordu. Arşivden kategori okuyup yeniden
+                # hesaplamak da yanıltır: arşiv atıf bayrağını taşımaz.
                 'manset_sirasi': {
-                    'manset': [{'id': a, 'puan': _puan(a), 'baslik': _ad(a)}
+                    'manset': [{'id': a, 'puan': _puan(a), 'baslik': _ad(a),
+                                'kat': (records.get(a) or {}).get('kat'),
+                                'oncelik': self._kat_oncelik(
+                                    records.get(a) or {}),
+                                'apt_dogrulanmadi': bool(
+                                    (records.get(a) or {}).get(
+                                        'apt_dogrulanmadi'))}
                                for a in top3_ids],
                     'daha_yuksek_puanli_govde': tersine[:5],
                 },

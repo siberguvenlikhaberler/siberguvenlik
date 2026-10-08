@@ -499,3 +499,42 @@ def test_raporlayan_firma_adi_tek_basina_olay_bagi_kurmaz():
          'title': '', 'full_text': ''}
     iliski, neden = oi.iliski_belirle(a, b, explain=True)
     assert iliski == oi.ILISKISIZ, neden
+
+
+def test_jenerik_ortak_ad_olay_bagi_kurmaz():
+    """RAPORLAYAN TARAFIN ADI VE DÜZ İSİM OLAY KİMLİĞİ DEĞİLDİR (2026-10-08).
+
+    8 Ekim raporunun BİRİNCİ MANŞETİ ("Bulut Tedarik Zinciri Saldırılarında
+    Web3 Mimarileri") olay defterinde `ad:center,ad:unit` üzerinden —
+    Palo Alto **Unit 42**, yani RAPORLAYAN taraf — Kubernetes yetki
+    yapılandırmaları ve CL-CRI-1171 haberleriyle tek olay sayılıyor ve
+    "bu olay zaten manşet oldu" diye işaretleniyordu."""
+    a = {'tr_title': 'Bulut Tedarik Zinciri Saldırılarında Web3 Mimarilerinin '
+                     'Kullanılmaya Başlanması',
+         'paragraph': 'Siber tehdit aktörlerinin komuta kontrol altyapılarını '
+                      'Web3 ve merkeziyetsiz blok zinciri mimarilerine '
+                      'taşıdığı tespit edilmiştir. Unit 42 tarafından '
+                      'yayımlanan rapora göre Kuzey Kore bağlantılı Alluring '
+                      'Pisces grubu akıllı sözleşmeler kullanmıştır.',
+         'title': '', 'full_text': ''}
+    b = {'tr_title': "Siber Suç Grubu CL-CRI-1171'in Küresel Kurumsal "
+                     'Enfeksiyon Kampanyası',
+         'paragraph': 'CL-CRI-1171 kodlu siber suç grubunun kurumsal ağlara '
+                      'yönelik enfeksiyon kampanyası Unit 42 tarafından '
+                      'incelenmiş, Threat Intelligence Center verileri '
+                      'paylaşılmıştır.',
+         'title': '', 'full_text': ''}
+    assert 'ad:unit' not in oi.olay_kimlikleri(a), 'Unit 42 kimlik sayıldı'
+    assert 'ad:center' not in oi.olay_kimlikleri(b), 'center kimlik sayıldı'
+    assert oi.iliski_belirle(a, b) == oi.ILISKISIZ, \
+        'raporlayan firma adı üzerinden olay bağı kuruldu'
+
+
+def test_kurum_adi_sozcukleri_jenerik_listede_degildir():
+    """ÖLÇÜLDÜ (2026-10-08): 'bürosu/investig/soruştur' (Federal Soruşturma
+    Bürosu), 'meclisi', 'temsilci', 'hazine', 'yasası' eklenince 8 defter
+    bağı daha düşüyor ama bunların arasında FBI ihlali ↔ Accenture
+    yüklenicisi çifti VAR ve o birleşme GERÇEK. Liste bilerek dar tutuldu."""
+    for kok in ('bürosu', 'investig', 'soruştur', 'meclisi', 'hazine'):
+        assert kok not in oi._MANSIZ_AD, \
+            f'{kok} jenerik listeye alınmış — FBI/Accenture birleşmesi kaybolur'

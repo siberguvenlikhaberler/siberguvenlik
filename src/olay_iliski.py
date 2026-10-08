@@ -331,6 +331,32 @@ _MANSIZ_AD = {
     # üzerinden aynı olay sayıldı — farklı satıcı, farklı ürün, farklı CVE,
     # ortak olan tek şey iki ayrı takma adın ikinci sözcüğü.
     'eclipse', 'chaotic',
+    # JENERİK ORTAK AD — kurum adının parçası ya da düz İngilizce/Türkçe
+    # isim. Özel ad sezgisi Başlık Düzeni metinde bunları özel ad sanıyor,
+    # DF sözlüğü de yakalayamıyor: derlemde nadir geçtikleri için "ayırt
+    # edici" görünüyorlar (6 Ekim'deki 'danimark'/'denmark' dersinin aynısı —
+    # eşik ayarıyla çözülmez, kural KATEGORİK olmalı).
+    #
+    # ÖLÇÜLDÜ (2026-10-08, son 31 günün defter bağları): bu köklerin TEK
+    # BAŞINA kurduğu 16 bağın 16'sı da sahteydi ve biri 8 Ekim raporunun
+    # BİRİNCİ MANŞETİNİ "zaten manşet oldu" diye işaretliyordu —
+    # "Bulut Tedarik Zinciri Saldırılarında Web3" haberi `ad:center,ad:unit`
+    # (Palo Alto Unit 42, RAPORLAYAN taraf) üzerinden Kubernetes, CL-CRI-1171
+    # ve İran-Irak haberleriyle tek olay sayılıyordu. Diğer vakalar:
+    # `ad:manageme` CISA bülteni ↔ Check Point; `ad:access,ad:manager`
+    # F5 BIG-IP ↔ SolarWinds Access Rights Manager; `ad:educatio` Transluce
+    # araştırması ↔ OpenAI/SEC erişimi; `ad:city` Birleşik Krallık polis
+    # verileri ↔ Londra'da mülk yönetimi; `ad:global` Orta Doğu üretim
+    # tesisi ↔ NightEagle (89 puanlı haberi manşet havuzundan düşürmüştü).
+    'unit', 'center', 'centre', 'manageme', 'manager', 'access',
+    'educatio', 'global', 'enterpri', 'director', 'direktör', 'city',
+    # KURUM ADI SÖZCÜKLERİ BİLEREK DIŞARIDA: 'bürosu', 'investig',
+    # 'soruştur' (Federal Soruşturma Bürosu), 'meclisi', 'temsilci',
+    # 'hazine', 'yasası' eklenince 8 bağ daha düşüyor ama bunların arasında
+    # FBI ihlali ↔ Accenture yüklenicisi çifti VAR ve o birleşme GERÇEK
+    # (bkz. dedup_golden "FBI ihlali yüklenici"). Ölçüm: Tier B 202 bağ,
+    # Tier A 210 — fazladan 8 bağın biri elle etiketli gerçek vakayı
+    # kaybettiriyor, bu yüzden ALINMADI.
     # SEKTÖR/ALAN sözcükleri kimlik değildir: iki ayrı sağlık kuruluşunun ayrı
     # veri ihlali 'entity:sağlık' ya da 'entity:health' üzerinden aynı olay
     # sayılıyordu. ÖLÇÜLDÜ (2026-09-02): Aesto Health ihlali, Brown Health /

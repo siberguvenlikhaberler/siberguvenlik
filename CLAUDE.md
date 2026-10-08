@@ -1182,3 +1182,74 @@ doğrulamak içindir. Sahte yanıt çift numarasını İSTEMDEN okur: ilk sürü
 parti için 1..n üretiyordu ve üretim numaraları GLOBAL olduğu için ikinci
 parti yanıtsız görünüyordu — sahte yanıt da üretimin sözleşmesine uymalı,
 yoksa kuru koşu olmayan bir hata gösterir.
+
+## 8 EKİM: İKİ BULGU — BİRİ ARIZA, BİRİ BENİM OKUMA HATAM (ölçüm, 2026-10-08)
+
+Rapor mekanik olarak temizdi (28 haber, değişmez ihlali 0, rapor-içi ve
+çapraz-gün kaçağı 0, tarih düzeltmesi 0) ama manşet 90 / 80 / **97** kapandı.
+
+**(A) SIRA DOĞRUYDU, KAYIT EKSİKTİ — DÜZELTME BENDE.** "Sıralama uygulanmamış"
+dedim; yanlıştı. `_kritik3_sirala` sırayı ETKİN öncelikle (`_kat_oncelik`)
+dizer ve 97 puanlı haber (Google alan adı sertifikaları) `apt_dogrulanmadi=1`
+taşıyor — doğrulanmamış `nation_state_apt` iddiası önceliğini 10'dan 4'e
+kaybeder, dolayısıyla ÜÇÜNCÜ sıra kuralın kendisidir. Hatanın kaynağı:
+`kalite_denetim.jsonl`'daki `manset_sirasi` yalnızca puan tutuyordu ve ben
+kategoriyi ARŞİVDEN okuyup yeniden hesapladım — arşiv atıf bayrağını TAŞIMAZ.
+Kayıt artık `kat`, `oncelik` (etkin) ve `apt_dogrulanmadi` da yazıyor; sıra
+kendini açıklıyor. Regresyon: `test_manset_sirasi_kaydi_onceligi_de_yazar`.
+Davranış DEĞİŞMEDİ — yalnızca gözlemlenebilirlik.
+
+**(B) RAPORLAYAN TARAFIN ADI OLAY KİMLİĞİ DEĞİLDİR.** Günün BİRİNCİ manşeti
+olay defterinde `ortak=ad:center,ad:unit topic=0.11` ile — Palo Alto **Unit
+42**, yani raporlayan taraf — Kubernetes yetki yapılandırmaları, CL-CRI-1171
+ve İran/Irak haberleriyle TEK olay sayılıyordu (küme 5 gün, 1 manşet günü) ve
+"bu olay zaten manşet oldu" bayrağı alıyordu. Aynı mekanizma 95 puanlı Hafnium
+ödül haberini de yönetmen kapısında düşürdü ("olay son 30 günde 1 kez manşet
+oldu"), bu yüzden üçüncü manşet 80'de kaldı: gövdede 95/91/91/87/85 puanlı beş
+UYGUN aday vardı ve `manset_puan_tersinelik` (eşik 10, fark 15) ateşlenmedi —
+çünkü havuzu `_manset_disi_ids`'in `haric` kümesiyle süzüyor ve o küme aynı
+sahte bayrağı taşıyordu. Tek sahte birleşme hem #1'i kirletti hem #3'ü zayıf
+bıraktı (6 Ekim Danimarka vakasının aynı deseni).
+
+ÇARE — JENERİK ORTAK AD (`_MANSIZ_AD`'a eklendi): `unit`, `center`, `centre`,
+`manageme`, `manager`, `access`, `educatio`, `global`, `enterpri`, `director`,
+`direktör`, `city`. Özel ad sezgisi Başlık Düzeni metinde bunları özel ad
+sanıyor, DF sözlüğü de yakalayamıyor (derlemde nadir geçtikleri için "ayırt
+edici" görünürler — 6 Ekim'deki `danimark`/`denmark` dersinin aynısı: eşikle
+çözülmez, kural KATEGORİK olmalı).
+
+ÖLÇÜLDÜ (son 31 gün, önce → sonra):
+- defter bağı **226 → 210**; düşen 16 bağın **16'sı da sahte** (elle okundu):
+  Web3 ↔ Kubernetes/CL-CRI-1171/İran-Irak, AWS AgentCore ↔ aynı küme, CISA
+  bülteni ↔ Check Point (`manageme`), F5 BIG-IP ↔ SolarWinds Access Rights
+  Manager, Fortra BoKS ↔ ikisi, Transluce araştırması ↔ OpenAI/SEC erişimi
+  (`educatio`), Birleşik Krallık polis verileri ↔ Londra'da mülk yönetimi
+  (`city`), Orta Doğu üretim tesisi ↔ NightEagle (`global`), ayrık CVE'li üç
+  Check Point bülteni.
+- tanım ayrışması %1,42 → **%1,12**; defterin tek başına bağladığı çift
+  190 → 159; olay sayısı 496 → **504**
+- 8 Ekim #1: `manset_gunu_sayisi` 1 → **0** (sahte bayrak kalktı)
+- yayımlanmış manşette defter tekrarı 5 → 5 AMA BİLEŞİM DEĞİŞTİ: 8 Ekim sahte
+  bayrağı düştü, 28 Eylül Birleşik Krallık polis verileri GERÇEK tekrar olarak
+  ortaya çıktı (21 Eylül manşetiyle `ad:dyson,ad:guardian,ad:london
+  topic=0.54`) — daha önce `city` çöp kümesinin içinde saklıydı. Sayı aynı,
+  kayıt daha doğru.
+- KAPILAR BİREBİR AYNI: `dedup_golden` 19/25 · 23/28 · 25/28,
+  `mukerrer_golden` 33/32/38, `zincir_olc` süzgeçli 8 düşürme + çeşitlilik
+  1 vaka, kabul ölçümü 6 ret / 5 takas / 1 yerinde / manşet sayısı bozulan
+  gün 0. 765 test geçiyor.
+
+KURUM ADI SÖZCÜKLERİ BİLEREK DIŞARIDA: `bürosu`, `investig`, `soruştur`
+(Federal Soruşturma Bürosu), `meclisi`, `temsilci`, `hazine`, `yasası`
+eklenince 8 bağ daha düşüyor ama aralarında FBI ihlali ↔ Accenture
+yüklenicisi çifti VAR ve o birleşme GERÇEK (bkz. `dedup_golden`). Ölçüm:
+Tier A 210 bağ, Tier B 202 — fazladan 8 bağın biri elle etiketli gerçek
+vakayı kaybettiriyor. Regresyon:
+`test_kurum_adi_sozcukleri_jenerik_listede_degildir`.
+
+NOT — HAFNIUM VAKASI KANITLANMADI: üretim defterin sorgusunu ÜRETİM
+görünümüyle yapıyor (tr_title + paragraf + İngilizce başlık + 2500 karakter
+gövde), saklanan görünüm ise kırpık; o yüzden yönetmenin id 64'ü düşürme
+kararı çevrimdışı yeniden ÜRETİLEMEDİ. Mekanizma artık kapalı ama bu TEK
+vakanın düzeldiği ölçülmedi — ölçülmesi için kaynak gövdesinin saklanması
+gerekir (aynı sınır `kucuk_model_olc` ölçümünde de kayıtlıdır).

@@ -442,3 +442,23 @@ def test_temiz_aday_yoksa_manset_eksilmez():
     s = _sistem(kayit, views)
     top3, _, _ = s._kritik3_cesitlilik([1, 2, 3], [], [], kayit, {}, {}, [])
     assert len(top3) == 3 and set(top3) == {1, 2, 3}
+
+
+def test_manset_sirasi_kaydi_onceligi_de_yazar():
+    """SIRA KENDİNİ AÇIKLAMALI (2026-10-08).
+
+    `_kritik3_sirala` sırayı ETKİN öncelikle (`_kat_oncelik`) dizer: atıfı
+    doğrulanmamış bir `nation_state_apt` iddiası önceliğini 10'dan 4'e
+    kaybeder. Kalite kaydı yalnızca puanı tutuyordu ve 8 Ekim raporu
+    (90/80/**97**) adli incelemede "sıra uygulanmamış" diye okundu — oysa
+    97 puanlı haber `apt_dogrulanmadi=1` taşıdığı için üçüncüydü, kural
+    doğru çalışmıştı. Arşivden kategori okuyup yeniden hesaplamak da
+    yanıltır: arşiv atıf bayrağını taşımaz, bu yüzden kayıt taşımalı."""
+    import inspect
+    import main as uretim
+    kaynak = inspect.getsource(uretim.HaberSistemi._kalite_denetimi_yaz)
+    parca = kaynak.split("'manset_sirasi'", 1)[1][:700]
+    for alan in ("'kat'", "'oncelik'", "'apt_dogrulanmadi'"):
+        assert alan in parca, f'manşet sırası kaydında {alan} yok'
+    assert '_kat_oncelik(' in parca, \
+        'öncelik HAM KATEGORI_ONCELIK ile yazılıyor — etkin öncelik olmalı'
