@@ -52709,3 +52709,341 @@ Yapay zeka uygulama geliştirme platformu Langflow'da tespit edilen CVE-2026-076
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 08 OCTOBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Bulut Tedarik Zinciri Saldırılarında Web3 Mimarilerinin Kullanılmaya Başlanması
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin, komuta ve kontrol altyapılarını Web3 ve merkeziyetsiz blok zinciri mimarilerine taşıdığı tespit edilmiştir. Unit 42 tarafından yayımlanan rapora göre, Kuzey Kore bağlantılı siber tehdit aktörü Alluring Pisces'in de dahil olduğu grupların, akıllı sözleşmeler aracılığıyla botnet ağlarını dinamik olarak güncellediği belirtilmektedir. Saldırganların, açık kaynaklı yazılım bağımlılıklarını zehirleyerek geliştirici uç noktalarından ve CI/CD süreçlerinden bulut kimlik doğrulama belirteçlerini ele geçirdiği ifade edilmiştir. ChainDrop ve PolinRider gibi kampanyalarda, kötü amaçlı yazılımların statik alan adları yerine blok zinciri üzerindeki işlem verilerini kullanarak tespit mekanizmalarını atlattığı kaydedilmiştir. Bu yöntemle saldırganların, geleneksel ağ izleme araçlarına yakalanmadan bulut yönetim konsollarına erişim sağladığı ve kurumsal altyapılarda kalıcılık elde ettiği bilgisi paylaşılmıştır. Güvenlik ekiplerine, blok zinciri trafiğini izlemeleri ve CI/CD süreçlerinde politika kontrollerini otomatize etmeleri önerilmektedir.
+(XXXXXXX, AÇIK -unit42.paloaltonetworks.com, 08.10.2026)
+» url=https://unit42.paloaltonetworks.com/web3-cloud-supply-chain-attacks/
+» manset=evet | kategori=nation_state_apt | puan=90
+» sonradan | kategori=nation_state_apt | onem=84 | eksen=25/17/25/17 | rubrik=v2
+» varlik | sektor=kripto,teknoloji | aktor_ulke=Kuzey Kore
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] ABD'li Eyaletlerin TP-Link Şirketine Çin Bağlantısı Davası
+─────────────────────────────────────────────────────────
+Florida, Iowa, Montana ve Nebraska eyalet başsavcıları, ağ donanımı devi TP-Link aleyhine yanıltıcı pazarlama ve Çin ile olan stratejik bağlarını gizleme suçlamalarıyla dava açmıştır. Şikayet dilekçesinde, şirketin HomeShield gibi ürünleri için sunduğu %100 güvenlik garantisinin gerçeği yansıtmadığı; cihazların Volt Typhoon ve Flax Typhoon gibi Çin ve Rusya destekli siber operasyonlarda istismar edildiği belirtilmiştir. Eski NSA Direktörü Rob Joyce'un verilerine göre ABD perakende pazarında %60 paya sahip olan şirketin, Vietnam'daki fabrikasında kullanılan bileşenlerin değer bazında yalnızca %0,5'inin yerel olduğu, geri kalanının Çin'den tedarik edildiği iddia edilmektedir. Ayrıca, Vietnam tesisinin inşasında Çin askeri bağlantılı bir şirketin yer aldığı ve TP-Link'in Çin istihbarat yasalarına tabi olduğu vurgulanmıştır. Şirket ise iddiaları reddederek ABD yasalarına uyumlu olduğunu savunmaktadır.
+(XXXXXXX, AÇIK -theregister.com, 07.10.2026)
+» url=https://www.theregister.com/security/2026/10/07/us-states-sue-popular-kitmaker-tp-link-over-china-risks/5301653
+» manset=evet | kategori=politika_hukuk | puan=80
+» sonradan | kategori=politika_hukuk | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=perakende,savunma,uretim | hedef=ABD,Vietnam | aktor_ulke=Rusya,Çin | aktor=Volt Typhoon
+» kurban | ad=TP-Link | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Saldırganların Google Alan Adları İçin Yetkisiz Sertifikalar Alması
+─────────────────────────────────────────────────────────
+Google, 6 Ekim 2026'da yaptığı açıklamada Gana (.gh), Sierra Leone (.sl) ve Amerikan Samoası (.as) ülke kodu üst düzey alan adlarının (ccTLD) ele geçirilmesiyle sonuçlanan bir siber saldırıyı duyurmuştur. Saldırganlar, yetkili DNS kayıtlarını değiştirerek google.com.gh ve youtube.com gibi kritik adresler dahil olmak üzere yedi farklı alan adı için Let's Encrypt ve ZeroSSL üzerinden en az 12 adet yetkisiz HTTPS sertifikası üretmiştir. 22-27 Eylül tarihleri arasında gerçekleşen bu ihlalde Google'ın kendi sistemleri sızmaya uğramamış, ancak saldırganlar alan adı kontrolünü ele geçirerek şifreli trafiği izleme riski oluşturmuştur. Chrome, CRLSets mekanizmasıyla bu sahte sertifikaları derhal engellemiş ve Google, diğer tarayıcı kullanıcılarını korumak adına ilgili sertifika otoriteleriyle çalışarak tüm sertifikaları iptal ettirmiştir. Şirket, benzer risklere karşı alan adı sahiplerine sıkı CAA kayıtları yayınlamalarını ve Şeffaflık Günlüklerini (CT) izlemelerini önermektedir.
+(XXXXXXX, AÇIK -thehackernews.com, 07.10.2026)
+» url=https://thehackernews.com/2026/10/attackers-hijack-gh-sl-and-as.html
+» manset=evet | kategori=nation_state_apt | puan=97
+» varlik | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Güney Kore Finans Sektörüne Yapay Zeka Destekli Saldırılar
+─────────────────────────────────────────────────────────
+CrowdStrike Intelligence, Güney Koreli finans kuruluşlarını hedef alan ve yapay zeka araçlarının kullanıldığı yeni bir siber casusluk kampanyası tespit etmiştir. Eylül 2026 sonunda başlayan saldırılarda, Çin menşeli açık kaynaklı ARTEX adlı otonom sızma testi aracının ve çeşitli büyük dil modellerinin (LLM) kullanıldığı belirlenmiştir. Saldırganların, bir bankanın kredi sorgulama servisini ve bir diğerinin mobil iş destek sistemini ihlal ederek veri sızdırdığı bildirilmiştir. Analizler, saldırganın muhtemelen Çince konuştuğunu ve finansal motivasyonla hareket ettiğini göstermektedir. Tehdit aktörünün, çalınan verileri satmak için Telegram grupları aradığı ve operasyonel hızını artırmak amacıyla DeepSeek ve Claude gibi yapay zeka modellerinden yararlandığı tespit edilmiştir. Bu gelişmenin, siber tehdit aktörlerinin geleneksel yöntemleri yapay zeka yetenekleriyle birleştirerek saldırı temposunu artırdığına dair somut bir örnek teşkil ettiği ifade edilmiştir.
+(XXXXXXX, AÇIK -crowdstrike.com, 08.10.2026)
+» url=https://www.crowdstrike.com/en-us/blog/unknown-threat-actor-uses-artex-to-target-south-korean-finance/
+» manset=hayir | kategori=nation_state_apt | puan=91
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=finans | aktor_ulke=Güney Kore,Çin
+» kurban | ad=Güney Kore | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Tensorlake npm Paketinin Shai-Hulud Zararlı Yazılımıyla Ele Geçirilmesi
+─────────────────────────────────────────────────────────
+Tensorlake npm paketinin, ChainDrop ve Shai-Hulud tedarik zinciri saldırıları kapsamında ele geçirildiği tespit edilmiştir. Kötü amaçlı 0.5.144 sürümünün, kimlik bilgilerini topladığı, gizli verileri dışarı aktardığı ve sistemde kalıcılık sağladığı belirtilmiştir. Zararlı yazılımın AWS, Kubernetes ve kripto para cüzdanlarına ait verileri hedef aldığı ifade edilmiştir. Shai-Hulud olarak adlandırılan solucanın, kurbanın kimliğini kullanarak paketleri yeniden yayınladığı ve GitHub üzerinden komuta kontrol merkeziyle iletişim kurduğu kaydedilmiştir. Saldırganların, kurbanın çalınan GitHub belirtecini iptal etmesi durumunda yıkıcı komutlar çalıştıran bir mekanizma kullandığı bildirilmiştir. Yapay zeka altyapılarını hedef alan bu saldırı sonrasında ilgili sürümün kaldırılması ve kimlik bilgilerinin değiştirilmesi önerilmiştir. Saldırının ilk olarak 7 Ekim 2026 tarihinde maintainer adına yapılan rogue commitlerle başladığı ve ertesi gün yayınlandığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 08.10.2026)
+» url=https://thehackernews.com/2026/10/tensorlake-npm-package-compromised-to.html
+» manset=hayir | kategori=tedarik_zinciri | puan=80
+» sonradan | kategori=tedarik_zinciri | onem=50 | eksen=17/17/8/8 | rubrik=v2
+» varlik | sektor=kripto
+» kurban | ad=Tensorlake | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Avustralya'da Yapay Zeka Olay Raporlamasının Zorunlu Kılınması
+─────────────────────────────────────────────────────────
+Avustralya hükümeti, Medicare sistemlerine yönelik gerçekleştirilen yapay zeka kaynaklı siber saldırıların ardından, teknoloji şirketleri için zorunlu olay raporlama kuralları getirmeyi planlamaktadır. Senato komitesi tarafından düzenlenen oturumlarda OpenAI, Microsoft, Google ve Anthropic yöneticilerinin, yapay zeka güvenliği ve kritik altyapı riskleri konusunda sorgulandığı belirtilmiştir. OpenAI strateji başkanının, geçen yaz Avustralya kamu hizmetlerine yönelik gerçekleşen saldırıyı zamanında bildiremedikleri için özür dilediği ifade edilmiştir. Tartışılan konular arasında, yapay zeka ajanlarının yetki dışı faaliyetlerinin 12 ile 72 saat içerisinde bildirilmesi zorunluluğunun yer aldığı kaydedilmiştir. Siber güvenlik uzmanları, mevcut yasaların yapay zeka hızına yetişemediğini ve bağımsız bir danışma konseyi kurulması gerektiğini savunmuştur. Avustralya Sinyal Müdürlüğü'nün (ASD) incelemelerinin ardından, yapay zeka laboratuvarlarını sorumlu tutacak yeni yasal düzenlemelerin hayata geçirilmesinin beklendiği bildirilmiştir.
+(XXXXXXX, AÇIK -darkreading.com, 07.10.2026)
+» url=https://www.darkreading.com/cybersecurity-operations/australian-govt-ai-incident-reporting
+» manset=hayir | kategori=politika_hukuk | puan=77
+» sonradan | kategori=politika_hukuk | onem=84 | eksen=17/17/25/25 | rubrik=v2
+» varlik | sektor=kamu,teknoloji | hedef=Avustralya
+» kurban | ad=Avustralya | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] Oracle Health Veri İhlalinden 20 Milyon Kişinin Etkilenmesi
+─────────────────────────────────────────────────────────
+Oracle Health'in eski Cerner sistemlerine yönelik geçen yıl gerçekleşen siber saldırıda, yaklaşık 20 milyon kişinin kişisel ve tıbbi bilgilerinin sızdırıldığı bildirilmiştir. Teksas Başsavcılığı'nın raporuna dayandırılan veriler, ihlalin boyutunun daha önce açıklanan rakamlardan çok daha büyük olduğunu ortaya koymuştur. Saldırganların, çalınan müşteri kimlik bilgilerini kullanarak Oracle bulut sistemine henüz taşınmamış eski sunuculara erişim sağladığı belirtilmiştir. İhlal edilen veriler arasında isimler, Sosyal Güvenlik numaraları, tıbbi kayıtlar, tanılar ve test sonuçlarının yer aldığı ifade edilmiştir. 'Andrew' takma adlı bir tehdit aktörünün, verileri sızdırmamak karşılığında milyonlarca dolar kripto para talep ettiği ve kurban hastaneler üzerinde baskı kurmak için web siteleri oluşturduğu kaydedilmiştir. Bu olayın, ABD tarihindeki en büyük sağlık verisi ihlallerinden biri olduğu ve Change Healthcare saldırısından sonra ikinci sırada yer alabileceği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 08.10.2026)
+» url=https://www.securityweek.com/oracle-health-data-breach-tally-climbs-to-nearly-20-million/
+» manset=hayir | kategori=veri_ihlali | puan=76
+» sonradan | kategori=veri_ihlali | onem=58 | eksen=25/17/8/8 | rubrik=v2
+» varlik | sektor=kripto,saglik | hedef=ABD
+» olcek | etkilenen=20000000
+» kurban | ad=Oracle Health | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] ABD'nin Çinli Hafnium Operatörü İçin Ödül Koyması
+─────────────────────────────────────────────────────────
+Amerika Birleşik Devletleri Dışişleri Bakanlığı, Hafnium siber saldırı kampanyasının kilit isimlerinden Zhang Yu'nun yakalanması için 10 milyon dolar ödül teklif etmiştir. Shanghai Firetech Information Science and Technology direktörü olan Yu'nun, Çin Devlet Güvenlik Bakanlığı (MSS) ve Şanghay Devlet Güvenlik Bürosu (SSSB) talimatıyla hareket ettiği belirtilmiştir. Şubat 2020 ile Haziran 2021 tarihleri arasında gerçekleşen saldırılarda, dünya genelinde 60.000'den fazla kuruluşun hedef alındığı ve 12.700'den fazla kurbanın hassas verilerinin çalındığı kaydedilmiştir. Yu'nun suç ortağı Xu Zewei'nin Temmuz 2025'te İtalya'nın Milano kentinde yakalanarak Nisan ayında ABD'ye iade edildiği bildirilmiştir. Zhang Yu'nun ise üniversitelerden COVID-19 araştırmaları ve hukuk firmalarından e-postalar çaldığı iddiasıyla hâlâ firari olduğu ifade edilmektedir.
+(XXXXXXX, AÇIK -therecord.media, 07.10.2026)
+» url=https://therecord.media/accused-hafnium-hacker-zhang-yu-10million-reward
+» manset=hayir | kategori=nation_state_apt | puan=95
+» sonradan | kategori=nation_state_apt | onem=84 | eksen=17/25/25/17 | rubrik=v2
+» varlik | sektor=egitim,kamu | hedef=ABD,Çin,İtalya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Qilin Fidye Yazılımı Şüphelisinin Japonya'da Yakalanarak Almanya'ya İadesi
+─────────────────────────────────────────────────────────
+Qilin fidye yazılımı grubunun çekirdek üyesi olduğu değerlendirilen 28 yaşındaki bir Rus vatandaşının, Japonya'nın Osaka kentinde yakalandıktan sonra 2 Ekim 2026 tarihinde Almanya'ya iade edildiği bildirilmiştir. Şüphelinin, Eylül 2024 tarihinde bir lojistik şirketinin sistemlerini şifreleyerek 160.000 dolardan fazla kripto para talep etmekle suçlandığı belirtilmiştir. Agenda adıyla da bilinen Qilin grubunun, Ağustos 2022 tarihinden bu yana dünya genelinde yüzlerce kuruluşu hedef aldığı ve milyonlarca dolar zarara yol açtığı kaydedilmiştir. Grubun geçmişte Synnovis laboratuvar hizmetlerine ve Asahi Group'a yönelik saldırılar düzenlediği, ayrıca Check Point ürünlerindeki CVE-2026-50751 kodlu güvenlik açığını istismar ettiği ifade edilmiştir. Son olarak Ağustos ayında ABD Alkol, Tütün, Ateşli Silahlar ve Patlayıcılar Bürosu'nun (ATF) da grubun mağdurları arasına eklendiği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 07.10.2026)
+» url=https://www.securityweek.com/qilin-ransomware-suspect-arrested-in-japan-extradited-to-germany/
+» manset=hayir | kategori=kolluk_operasyonu | puan=91
+» sonradan | kategori=kolluk_operasyonu | onem=59 | eksen=17/8/17/17 | rubrik=v2
+» varlik | sektor=kripto,savunma,ulastirma | hedef=ABD,Almanya,Japonya,Rusya | aktor=Qilin
+» teknik | cve=CVE-2026-50751 | urun=Check Point
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Southern Company Müşteri Portalı İhlalinden 400.000 Hesabın Etkilenmesi
+─────────────────────────────────────────────────────────
+Atlanta merkezli enerji holdingi Southern Company, yaklaşık 400.000 müşterisinin hesap bilgilerinin yetkisiz bir üçüncü tarafça ele geçirildiğini açıklamıştır. Şirketin çevrimiçi müşteri portalı üzerinden gerçekleşen ihlalden, Georgia Power'a ait 300.000 ve Alabama Power'a ait 100.000 hesabın etkilendiği belirtilmiştir. Mississippi Power müşterilerinin de olaydan etkilendiği ancak kesin bir sayı belirlenmediği ifade edilmiştir. Ele geçirilen veriler arasında müşteri isimleri, posta adresleri, telefon numaraları, e-posta adresleri ve Sosyal Güvenlik numaralarının son dört hanesinin bulunduğu kaydedilmiştir. Şirket, banka hesap numaraları, ödeme kartı bilgileri veya sürücü belgesi numaralarına erişilmediğini bildirmiştir. Olayın tespit edilmesinin ardından kolluk kuvvetlerine haber verildiği ve etkilenen müşterilere bir yıllık ücretsiz kredi izleme hizmeti sunulduğu bilgisi verilmiştir. Saldırganın portala nasıl erişim sağladığına dair incelemelerin sürdüğü aktarılmıştır.
+(XXXXXXX, AÇIK -securityweek.com, 07.10.2026)
+» url=https://www.securityweek.com/georgia-power-alabama-power-data-breach-hits-400000-accounts/
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=87
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=58 | eksen=17/25/8/8 | rubrik=v2
+» varlik | sektor=finans
+» kurban | ad=Georgia Power,Alabama Power | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] PoeLLM Zararlı Yazılımının 3.400 Sunucuyu Enfekte Etmesi
+─────────────────────────────────────────────────────────
+Canto Incognito olarak adlandırılan finansal motivasyonlu bir kampanya kapsamında, PoeLLM adlı yeni bir zararlı yazılım ailesinin yapay zeka ve büyük dil modeli altyapılarını hedef aldığı tespit edilmiştir. Zararlı yazılımın, komuta ve kontrol adresini bir GitHub deposunda barındırılan şiir dizeleri içerisine gizleyerek tespit edilmekten kaçındığı belirtilmiştir. Nisan 2026 tarihinden bu yana aktif olduğu ifade edilen kampanyanın, özellikle ABD ve Batı Avrupa'daki 3.400'den fazla sunucuyu enfekte ettiği bildirilmiştir. Ele geçirilen sunucuların XMRig ve Iron gibi kripto para madenciliği yazılımlarını çalıştırmak ve botnet ağını genişletmek amacıyla tarayıcı olarak kullanıldığı kaydedilmiştir. İtalyanca konuşan bir aktör tarafından yönetildiği tahmin edilen saldırıların, LiteLLM ve Ivanti Sentry gibi internete açık servisleri hedef aldığı ifade edilmiştir. Yapay zeka altyapılarının yüksek işlem gücü nedeniyle siber suçlular için cazip bir hedef haline geldiği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 07.10.2026)
+» url=https://thehackernews.com/2026/10/poellm-malware-infects-3400-servers-to.html
+» manset=hayir | kategori=nation_state_apt | puan=85
+» sonradan | kategori=nation_state_apt | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=kripto | hedef=ABD,İtalya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] MonsterCloud Sahibinin Fidye Yazılımı Mağdurlarını Dolandırmakla Suçlanması
+─────────────────────────────────────────────────────────
+ABD Adalet Bakanlığı, MonsterCloud adlı şirketin sahibi Zohar Pinhasi'nin, fidye yazılımı mağdurlarını dolandırdığı gerekçesiyle suçlandığını duyurmuştur. Pinhasi'nin, verileri kurtarmak için özel teknolojik araçlar kullandığını iddia etmesine rağmen, gizlice siber suçlulara fidye ödeyerek şifre çözücüleri temin ettiği belirtilmiştir. Şüphelinin, müşterilerinden ödediği fidye miktarının çok üzerinde ücretler talep ederek haksız kazanç sağladığı ifade edilmiştir. Bir örnekte, saldırganlara 8.200 dolar ödeme yapan Pinhasi'nin, müşterisine 150.000 dolarlık fatura kestiği kaydedilmiştir. Toplamda müşterilerden 19 milyon dolardan fazla tahsilat yapıldığı ve bunun 8 milyon dolarının fidye ödemelerinde kullanıldığı bildirilmiştir. FBI tarafından yürütülen soruşturma sonucunda, Pinhasi'nin elektronik dolandırıcılık suçlamasıyla 20 yıla kadar hapis cezasıyla karşı karşıya olduğu açıklanmıştır. Olayın, veri kurtarma sektöründeki etik dışı uygulamaları ortaya koyduğu belirtilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 08.10.2026)
+» url=https://thehackernews.com/2026/10/monstercloud-owner-accused-of-billing.html
+» manset=hayir | kategori=kolluk_operasyonu | puan=79
+» sonradan | kategori=kolluk_operasyonu | onem=59 | eksen=17/8/17/17 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD
+» olcek | fidye=19000000USD | kumulatif=fidye
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] FBI ve Fransız Makamlarından Yapay Zeka İstismar Operasyonu
+─────────────────────────────────────────────────────────
+FBI ve Fransız yetkililer, yapay zeka tarafından üretilen derin sahte içerikler de dahil olmak üzere çocuk istismarı materyalleri dağıtan iki internet sitesini ele geçirmiştir. NudeLeaksTeens ve NLTVIDS adlı sitelerin kapatıldığı ve sitelerin yöneticisi olduğundan şüphelenilen 25 yaşındaki bir Fransız vatandaşının tutuklandığı bildirilmiştir. Sitelerin, genç kızlara ait çalınmış ve hacklenmiş içerikleri kripto para karşılığında sattığı belirtilmiştir. Bazı içeriklerin kurbanların sosyal medya hesaplarından çalındığı, bazılarının ise halihazırda cezaevinde bulunan suçlular tarafından derlendiği ifade edilmiştir. Operasyon kapsamında Virginia merkezli bir alan adı tescil kuruluşunda arama yapıldığı ve sunuculara el konulduğu kaydedilmiştir. Bu gelişmenin, rıza dışı derin sahte içeriklerin oluşturulmasını ve paylaşılmasını suç sayan yasal düzenlemelerin ardından gerçekleştirilen önemli bir müdahale olduğu vurgulanmıştır. Yetkililerin, bu tür yasa dışı platformlara yönelik uluslararası iş birliğini sürdürdüğü bilgisi verilmiştir.
+(XXXXXXX, AÇIK -cyberscoop.com, 07.10.2026)
+» url=https://cyberscoop.com/fbi-french-authorities-seize-deepfake-csam-websites/
+» manset=hayir | kategori=kolluk_operasyonu | puan=78
+» sonradan | kategori=kolluk_operasyonu | onem=84 | eksen=17/25/17/25 | rubrik=v2
+» varlik | sektor=kripto | hedef=Fransa
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] ASOS'un Siber Saldırı Ve Veri İhlalini Doğrulaması
+─────────────────────────────────────────────────────────
+İngiliz çevrimiçi perakendecisi ASOS, müşterilerine gönderilen yetkisiz bildirimlerin ardından bir siber saldırıya uğradığını teyit etmiştir. Kullanıcıların mobil uygulamaları üzerinden 'ASOS hacklendi' başlıklı mesajlar aldığı ve saldırganların Snowflake veri platformuna eriştiklerini iddia ettikleri belirtilmiştir. Şirket, Londra Borsası'na yaptığı bildirimde, müşteri iletişiminde kullanılan üçüncü taraf bir platformun ele geçirildiğini açıklamıştır. İhlal sonucunda kullanıcıların isimleri ve iletişim bilgilerine erişilmiş olabileceği, ancak ödeme kartı verileri veya şifrelerin etkilenmediği ifade edilmiştir. Saldırıyı Xuanye Group adlı bir grubun üstlendiği, ancak bu ismin yanıltıcı bir bayrak operasyonu olabileceği kaydedilmiştir. Güvenlik uzmanları, saldırganların doğrudan uygulama üzerinden mesaj göndererek kamuoyu baskısı oluşturmaya çalıştığına dikkat çekmiştir. ASOS, bildirim platformlarına erişimi kısıtladığını ve olayla ilgili iç ve dış uzmanlarla inceleme başlattığını duyurmuştur.
+(XXXXXXX, AÇIK -securityweek.com, 07.10.2026)
+» url=https://www.securityweek.com/asos-confirms-cyberattack-data-breach/
+» manset=hayir | kategori=veri_ihlali | puan=76
+» sonradan | kategori=veri_ihlali | onem=41 | eksen=17/8/8/8 | rubrik=v2
+» varlik | sektor=finans,perakende | hedef=Birleşik Krallık
+» kurban | ad=ASOS | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] Federal Yüklenicilere Hassas Veri Koruma Kurallarının Yürürlüğe Girmesi
+─────────────────────────────────────────────────────────
+ABD federal hükümetiyle çalışan yükleniciler için 'kontrollü sınıflandırılmamış bilgiler' (CUI) kategorisindeki verilerin korunmasına yönelik yeni ve kapsamlı düzenlemelerin yıl sonuna kadar tamamlanması beklenmektedir. Yeni kurallar, Sosyal Güvenlik numaraları ve kritik altyapı zafiyetleri gibi hassas verileri işleyen şirketlerin, herhangi bir ihlali 72 saat içerisinde bildirmesini zorunlu kılmaktadır. Düzenlemelerin, yüklenicilerin NIST SP 800-171 siber güvenlik standartlarına uymasını şart koştuğu ve uymayanların Yanlış Beyan Yasası kapsamında ağır cezalara çarptırılabileceği belirtilmiştir. Sektör temsilcileri, 72 saatlik bildirim süresinin maliyetli ve uygulanması zor olduğunu savunarak sürenin 30 güne çıkarılmasını talep etmiştir. Ancak hükümetin, siber olaylara müdahale hızını artırmak amacıyla bu standartlarda kararlı olduğu ifade edilmiştir. Bu değişikliğin, sivil kurumlarla çalışan binlerce şirket için siber güvenlik süreçlerinde köklü bir dönüşüm anlamına geldiği kaydedilmiştir.
+(XXXXXXX, AÇIK -cyberscoop.com, 07.10.2026)
+» url=https://cyberscoop.com/federal-contractors-cui-cybersecurity-rules/
+» manset=hayir | kategori=politika_hukuk | puan=74
+» sonradan | kategori=politika_hukuk | onem=84 | eksen=17/17/25/25 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] CISA'ya Federal Operasyonel Teknoloji Güvenlik Kuralları Çağrısı
+─────────────────────────────────────────────────────────
+Operasyonel Teknoloji Siber Güvenlik Koalisyonu (OTCC), federal siber güvenlik ajansı CISA'ya çağrıda bulunarak operasyonel teknolojiler (OT) için zorunlu güvenlik standartları getirilmesini talep etmiştir. Yayımlanan beyaz bültende, su sistemleri ve enerji tesisleri gibi kritik altyapıların siber suçlular ve devlet destekli aktörler için açık hedef haline geldiği belirtilmiştir. Mevcut gönüllü önlemlerin yetersiz kaldığı ve 22 sivil kurumdan sadece 7'sinin ağa bağlı cihaz envanterini tam olarak çıkarabildiği ifade edilmiştir. OTCC, CISA'nın bağlayıcı bir operasyonel direktif yayımlayarak ağ segmentasyonu, varsayılan şifrelerin değiştirilmesi ve uzaktan erişim kontrolleri gibi temel güvenlik adımlarını zorunlu kılması gerektiğini savunmuştur. Yapay zekanın karmaşık saldırıları kolaylaştırdığı bir dönemde, federal binalardaki HVAC ve güç yönetim sistemlerinin korunmasının ulusal güvenlik için kritik olduğu vurgulanmıştır. CISA'nın bu direktifle kurumlar üzerinde denetim yetkisi kazanması hedeflenmektedir.
+(XXXXXXX, AÇIK -therecord.media, 07.10.2026)
+» url=https://therecord.media/cyber-experts-call-on-cisa-require-ot-security
+» manset=hayir | kategori=politika_hukuk | puan=74
+» sonradan | kategori=politika_hukuk | onem=92 | eksen=17/25/25/25 | rubrik=v2
+» varlik | sektor=enerji,su
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] Advantest'in Fidye Yazılımı Saldırısı Sonrası Veri İhlali Bildirimi
+─────────────────────────────────────────────────────────
+Japon çip test devi Advantest, Şubat 2026'da ağını hedef alan fidye yazılımı saldırısında hassas verilerin sızdırıldığını açıklamıştır. Intel ve Samsung gibi devlere ekipman sağlayan şirket, sunucularından isimler, doğum tarihleri, sosyal güvenlik numaraları, pasaport numaraları ve tıbbi bilgiler gibi kişisel verilerin çalındığını belirtmiştir. California Başsavcılığı'na yapılan başvuruda, eyaletteki 500'den fazla sakinin bu durumdan etkilendiği ifade edilmiştir. Ayrıca Massachusetts'te 14 ve Vermont'ta 8 bireyin etkilendiği kaydedilmiştir. Advantest, verilerin kamuya açıklandığına dair bir kanıt bulunmadığını ancak mağdurların kimlik hırsızlığı ve dolandırıcılık riskiyle karşı karşıya olduğunu bildirmiştir. Saldırıyı üstlenen herhangi bir siber suç grubu tespit edilememiştir. Şirketin güvenlik ekiplerinin, ihlalin kapsamını belirlemek ve sistemleri korumak için çalışmalarını sürdürdüğü aktarılmaktadır.
+(XXXXXXX, AÇIK -securityweek.com, 07.10.2026)
+» url=https://www.securityweek.com/advantest-discloses-data-breach-months-after-ransomware-attack/
+» manset=hayir | kategori=veri_ihlali | puan=67
+» sonradan | kategori=veri_ihlali | onem=50 | eksen=17/8/17/8 | rubrik=v2
+» varlik | hedef=Japonya
+» kurban | ad=Advantest | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] Yapay Zeka Botlarıyla Müzik Dolandırıcılığı Yapan Şahsa Hapis Cezası
+─────────────────────────────────────────────────────────
+Kuzey Karolina'da yaşayan 54 yaşındaki Michael Smith, yapay zeka botlarını kullanarak müzik platformlarından 10 milyon dolardan fazla haksız kazanç elde ettiği gerekçesiyle 18 ay hapis cezasına çarptırılmıştır. Smith'in, 2017-2024 yılları arasında Spotify, Apple Music ve Amazon Music gibi platformlara yüz binlerce yapay zeka üretimi şarkı yüklediği belirtilmiştir. Bu şarkıların dinlenme sayılarını artırmak için 1.000'den fazla bot hesabı kullandığı ve tespit edilmemek için VPN servislerinden yararlandığı ifade edilmiştir. Adalet Bakanlığı, Smith'in günde yaklaşık 661.440 sahte dinleme gerçekleştirdiğini ve yıllık kazancının 1,2 milyon doları aştığını açıklamıştır. Mahkeme, hapis cezasının yanı sıra Smith'in 8 milyon dolardan fazla paraya el konulmasına ve iki yıl denetimli serbestliğe tabi tutulmasına hükmetmiştir. Bu operasyonun, gerçek sanatçıların telif gelirlerini gasp ettiği vurgulanmıştır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 07.10.2026)
+» url=https://www.bleepingcomputer.com/news/security/musician-gets-18-months-in-prison-for-10-million-streaming-fraud-using-ai-bots/
+» manset=hayir | kategori=kolluk_operasyonu | puan=65
+» sonradan | kategori=kolluk_operasyonu | onem=67 | eksen=17/8/17/25 | rubrik=v2
+» varlik | sektor=kamu
+» teknik | urun=Apple
+» kurban | ad=Spotify,Apple Music,Amazon Music,YouTube Music | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] AWS Otonom Yapay Zeka Ajanları İçin Güvenlik Alanı
+─────────────────────────────────────────────────────────
+Amazon Web Services (AWS), otonom yapay zeka ajanlarının kontrolsüz davranışlarını engellemek amacıyla Strands Box adlı açık kaynaklı bir güvenlik alanı başlatmıştır. 7 Ekim 2026 tarihinde duyurulan bu aracın, yapay zeka ajanlarının kritik sistemlere zarar vermesini önlemek için işletim sistemi düzeyinde izolasyon sağladığı belirtilmiştir. Strands Box, ajanların eylemlerini geçmişteki faaliyetleriyle kıyaslayarak denetleyen Dogwood yerel motorunu kullanmaktadır. Örneğin, bir ajanın Slack üzerinden mesaj gönderme sıklığının sınırlandırılabileceği veya maliyetli API çağrılarına kısıtlama getirilebileceği ifade edilmiştir. AWS yetkilileri, bu sistemin ajanların talimatları çiğnemesini engelleyecek kesin kurallar uyguladığını açıklamıştır. Aracın şu an için yalnızca macOS platformunda kullanılabildiği, Linux ve Windows desteklerinin ise geliştirme aşamasında olduğu bildirilmiştir. Geliştiricilerin, ajanların eylemlerini daha anlaşılır kılan Strands Shell ve Monty araçlarını da kullanabileceği kaydedilmektedir.
+(XXXXXXX, AÇIK -theregister.com, 07.10.2026)
+» url=https://www.theregister.com/ai-and-ml/2026/10/07/aws-launches-open-source-ai-agent-sandbox-to-prevent-yolo-mode-disasters/5301687
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=60
+» sonradan | kategori=yapay_zeka_guvenligi | onem=41 | eksen=17/8/8/8 | rubrik=v2
+» varlik | sektor=teknoloji
+
+────────────────────────────────────────────────────────────────────────────────
+
+[20] Microsoft, Adobe ve Apple Ürünlerindeki Güvenlik Açıklarının Kapatılması
+─────────────────────────────────────────────────────────
+Cisco Talos güvenlik ekibi; Adobe, Apple, Foxit ve Microsoft ürünlerinde tespit edilen çeşitli kritik güvenlik açıklarını açıklamıştır. İlgili satıcıların, Cisco'nun üçüncü taraf açıklama politikası uyarınca bu açıkları yamaladığı belirtilmiştir. Adobe Photoshop'ta ayrıcalık yükseltmeye neden olan CVE-2026-48388 açığının giderildiği ifade edilmiştir. Apple macOS sisteminde CoreWLAN işlevselliğinde bulunan ve API çağrılarıyla tetiklenen bir bilgi sızıntısı hatasının düzeltildiği kaydedilmiştir. Foxit Reader yazılımında ise uzaktan kod yürütülmesine imkan tanıyan CVE-2026-57256 ve CVE-2026-91799 numaralı açıkların kapatıldığı bildirilmiştir. Microsoft Windows tarafında ise NETIO.sys sürücüsünde hassas veri sızıntısına yol açan CVE-2026-50475 ve bulut dosya sürücülerindeki ayrıcalık yükseltme ile tip karışıklığı açıklarının yamalandığı açıklanmıştır. Kullanıcıların güncel Snort kurallarını uygulayarak bu tehditlere karşı korunabileceği belirtilmektedir.
+(XXXXXXX, AÇIK -blog.talosintelligence.com, 07.10.2026)
+» url=https://blog.talosintelligence.com/microsoft-adobe-apple-and-foxit-vulnerabilities/
+» manset=hayir | kategori=zafiyet_rutin | puan=60
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-48388,CVE-2026-50475,CVE-2026-57256,CVE-2026-91799 | urun=Adobe,Apple,Cisco,Microsoft
+» kurban | ad=Microsoft,Adobe,Apple,Foxit | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[21] WordPress'teki Çok Sayıda Güvenlik Açığının Tespit Edilmesi
+─────────────────────────────────────────────────────────
+Fransa Ulusal Siber Güvenlik Ajansı (ANSSI) tarafından yayımlanan duyuruya göre, WordPress içerik yönetim sisteminde veri bütünlüğünü ve gizliliğini tehdit eden çok sayıda güvenlik açığı tespit edilmiştir. 7 Ekim 2026 tarihinde paylaşılan bilgilere göre, söz konusu zafiyetlerin WordPress'in 7.1.3 sürümünden önceki tüm versiyonlarını etkilediği belirtilmiştir. Bu açıkların kötü niyetli aktörler tarafından uzaktan hizmet dışı bırakma saldırıları, SQL enjeksiyonu ve çapraz site betik çalıştırma (XSS) faaliyetleri için kullanılabileceği ifade edilmiştir. WordPress tarafından 6 Ekim 2026 tarihinde yayımlanan güvenlik bülteninde, kullanıcıların veri güvenliğini sağlamak amacıyla ilgili güncellemeleri ivedilikle uygulamaları gerektiği kaydedilmiştir. ANSSI, bu zafiyetlerin sistemlerin bütünlüğüne ve gizliliğine yönelik ciddi riskler barındırdığını resmi olarak bildirmiştir. Kullanıcıların, üreticinin sağladığı bakım ve güvenlik sürümüne geçiş yapmaları gerektiği vurgulanmaktadır.
+(XXXXXXX, AÇIK -cert.ssi.gouv.fr, 07.10.2026)
+» url=https://www.cert.ssi.gouv.fr/avis/CERTFR-2026-AVI-1273/
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» varlik | hedef=Fransa
+» teknik | urun=WordPress
+» kurban | ad=WordPress | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[22] Citrix NetScaler Cihazlarında Sıfır Gün Açığının İstismar Edilmesi
+─────────────────────────────────────────────────────────
+Citrix, NetScaler ADC ve Gateway bileşenlerinde bulunan ve aktif olarak istismar edilen CVE-2026-88779 kodlu yeni bir bellek taşması açığını doğrulamıştır. Hizmet dışı bırakma (DoS) saldırılarına yol açan bu güvenlik zafiyetinin, SAML kimlik doğrulama yapılandırmasına sahip sistemleri etkilediği belirtilmiştir. ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), açığın istismar edildiğini onaylayarak federal kurumlara 8 Ekim 2026 tarihine kadar yamaların uygulanması talimatını vermiştir. Güvenlik araştırmacıları, bu açığın cihazları çevrimdışı bırakmak için basit bir istekle tetiklenebildiğini ve önceki zafiyetlerin istismarını hızlandırmak amacıyla kullanıldığını ifade etmiştir. Citrix, etkilenen kuruluşların acilen güncel sürümleri yüklemesi veya geçici hafifletme önlemlerini devreye alması gerektiğini kaydetmiştir. Şirket, saldırı yüzeyi yönetimi firmaları watchTowr ve Bishop Fox'a sürece katkıları nedeniyle teşekkür etmiştir.
+(XXXXXXX, AÇIK -theregister.com, 06.10.2026)
+» url=https://www.theregister.com/security/2026/10/05/citrix-netscaler-security-snafus-get-even-worse-amid-more-0-day-reports/5301232
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=92
+» sonradan | kategori=zafiyet_aktif_apt | onem=92 | eksen=25/25/25/17 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD
+» teknik | cve=CVE-2026-88779 | urun=Citrix | istismar=aktif
+» kurban | ad=Citrix | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[23] IBM ve Red Hat'in Java Kütüphanelerindeki Açıkları Kapatması
+─────────────────────────────────────────────────────────
+IBM ve Red Hat, Lightwell programı kapsamında yaygın olarak kullanılan Java kütüphanelerinde 400'den fazla yeni güvenlik açığı tespit ederek yamalamıştır. Şirketler, bu açıkların üretim aşamasındaki uygulamalarda bulunduğunu ve otonom yapay zeka araçlarının bu zayıflıkları birleştirerek ciddi saldırılar düzenleyebileceğini belirtmiştir. Red Hat yetkilileri, tespit edilen hataların doğrudan aktif uygulamalara entegre edildiğini ve böylece güvenlik ile çalışma süresi arasında bir seçim yapılmasına gerek kalmadığını ifade etmiştir. Ayrıca, kurumsal müşterilerin açık kaynak bağımlılıklarını öncelikli inceleme için sunabileceği Lightwell Clearinghouse hizmetinin genel kullanıma açıldığı duyurulmuştur. Yamaların sorumlu açıklama ilkeleri çerçevesinde açık kaynak projelerine iletildiği, program dışındaki kullanıcıların bu düzeltmelere genel yayınlar aracılığıyla erişebileceği kaydedilmiştir. Sürecin yapay zeka destekli teslimatlardaki hesap verebilirlik boşluğunu kapatmayı hedeflediği bildirilmektedir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 08.10.2026)
+» url=https://www.helpnetsecurity.com/2026/10/08/lightwell-java-library-vulnerabilities/
+» manset=hayir | kategori=zafiyet_rutin | puan=70
+» sonradan | kategori=zafiyet_rutin | onem=49 | eksen=25/8/8/8 | rubrik=v2
+» varlik | sektor=kamu,teknoloji
+» teknik | urun=Linux
+» kurban | ad=IBM,Red Hat | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[24] SonicWall SMA1000 Cihazlarında Kritik Güvenlik Açığının Yamalanması
+─────────────────────────────────────────────────────────
+SonicWall, SMA1000 serisi ağ geçidi cihazlarında tespit edilen ve CVSS puanı 10.0 olan kritik bir güvenlik açığı için düzeltme yayınlamıştır. CVE-2026-102255 koduyla takip edilen bu sunucu tarafı istek sahteciliği (SSRF) hatasının, kimlik doğrulaması gerektirmeden dahili işlevlere erişim sağlayabildiği belirtilmiştir. Şirket, hatanın WorkPlace portalındaki hatalı bir erişim yolundan kaynaklandığını ve 6210, 7210 ile 8200v modellerini etkilediğini açıklamıştır. SonicWall, söz konusu açığın şu ana kadar herhangi bir saldırıda kullanıldığına dair kanıt bulunmadığını ifade etmiştir. Kullanıcıların güvenliği sağlamak için 12.4.3-03670 veya 12.5.0-03082 ve üzeri sürümlere yükseltme yapmaları gerektiği bildirilmiştir. Bu gelişmenin, şirketin son üç ay içinde aynı arayüzde düzelttiği üçüncü kritik SSRF açığı olduğu kaydedilmiştir. Anthropic ve DigitalCanion SA araştırmacılarına bu açıkların tespitindeki katkıları için teşekkür edilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 07.10.2026)
+» url=https://thehackernews.com/2026/10/sonicwall-patches-cvss-100-pre.html
+» manset=hayir | kategori=zafiyet_rutin | puan=68
+» sonradan | kategori=zafiyet_rutin | onem=34 | eksen=17/17/0/0 | rubrik=v2
+» teknik | cve=CVE-2026-102255 | urun=Anthropic,SonicWall
+» kurban | ad=SonicWall | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[25] Pwn2Own İrlanda Etkinliğinde Samsung Galaxy S26'nın Hacklenmesi
+─────────────────────────────────────────────────────────
+Pwn2Own İrlanda 2026 yarışmasının ikinci gününde güvenlik araştırmacıları, 45 adet sıfır gün açığını istismar ederek toplam 232.500 dolar ödül kazanmıştır. Etkinliğin öne çıkan gelişmesi, Samsung Galaxy S26 amiral gemisi akıllı telefonunun üç farklı ekip tarafından başarıyla hacklenmesi olmuştur. KAIST Hacking Lab, PetoWorks ve Mobile Hacking Lab ekiplerinin cihaz üzerindeki güvenlik açıklarını gösterdiği belirtilmiştir. Ayrıca, Oracle Autonomous AI Database ve Philips Hue Bridge Pro gibi sistemlerin de çoklu açık zincirleri kullanılarak ele geçirildiği ifade edilmiştir. Trend Micro'nun Sıfır Gün Girişimi (ZDI) tarafından düzenlenen yarışmada, üreticilere açıklarını kapatmaları için 90 günlük süre tanındığı kaydedilmiştir. Yarışmanın ilk iki gününde Samsung Galaxy S26'nın yanı sıra akıllı ev merkezleri ve yapay zeka altyapılarının da hedef alındığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 08.10.2026)
+» url=https://www.bleepingcomputer.com/news/security/samsung-galaxy-s26-hacked-three-more-times-at-pwn2own-ireland/
+» manset=hayir | kategori=zafiyet_rutin | puan=68
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» varlik | sektor=ulastirma | hedef=İrlanda
+» teknik | urun=Trend Micro | istismar=aktif
+» kurban | ad=Samsung,Sonos,Oracle,Home Assistant | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[26] LMCache Yazılımında Kritik Uzaktan Kod Yürütme Açığı
+─────────────────────────────────────────────────────────
+Büyük dil modeli sunucularını hızlandıran açık kaynaklı LMCache yazılımında, kimlik doğrulaması gerektirmeyen kritik bir güvenlik açığı tespit edilmiştir. CVE-2026-105192 koduyla takip edilen ve 9.8 şiddetinde puanlanan bu açığın, saldırganların önbellek sunucusunda uzaktan kod yürütmesine olanak tanıdığı belirtilmiştir. JFrog tarafından 7 Ekim 2026 tarihinde açıklanan hatanın, yazılımın çoklu işlem modundaki ZeroMQ mesajlaşma kütüphanesinden kaynaklandığı ifade edilmiştir. LMCache'in 0.3.9 ile 0.5.5 arasındaki tüm sürümlerinin bu durumdan etkilendiği ve henüz bir düzeltme yayınlanmadığı kaydedilmiştir. Sunucunun varsayılan olarak yerel makinede çalıştığı ancak operatörler tarafından dışa açıldığında riskin arttığı bildirilmiştir. Güvenlik ekipleri, bir yama yayınlanana kadar sunucunun güvenilmeyen ağlara açılmaması ve güvenlik duvarı önlemlerinin artırılması gerektiğini vurgulamıştır. Ayrıca vLLM üzerinde benzer bir hizmet dışı bırakma açığının giderildiği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 07.10.2026)
+» url=https://thehackernews.com/2026/10/unpatched-critical-lmcache-flaw-lets.html
+» manset=hayir | kategori=zafiyet_rutin | puan=66
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=8/17/0/17 | rubrik=v2
+» teknik | cve=CVE-2026-105192
+» kurban | ad=LMCache | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[27] Google Android İşletim Sisteminde Güvenlik Açığının Giderilmesi
+─────────────────────────────────────────────────────────
+Google Android işletim sisteminde veri gizliliğini, sistem bütünlüğünü ve kullanıcı güvenliğini tehdit eden çok sayıda güvenlik açığı tespit edilmiştir. CERT-FR tarafından yapılan açıklamada, bu zafiyetlerin saldırganlara uzaktan kod yürütme, yetki yükseltme ve hassas verilere erişim imkanı tanıdığı belirtilmiştir. Etkilenen sürümler arasında Android 14, 15, 16 ve 17'nin güncel olmayan versiyonlarının bulunduğu ifade edilmiştir. CVE-2026-28667 ve CVE-2026-58880 dahil olmak üzere yirmiden fazla CVE koduyla tanımlanan açıklar için 5 Ekim 2026 tarihinde güvenlik yamalarının yayınlandığı bildirilmiştir. Google'ın yayınladığı güvenlik bülteninde, kullanıcıların sistemlerini korumak amacıyla ilgili güncellemeleri ivedilikle uygulamaları gerektiği vurgulanmıştır. Zafiyetlerin giderilmesi için üretici tarafından sağlanan resmi düzeltme paketlerine başvurulması gerektiği ve bu yamaların sistem güvenliği için kritik olduğu kaydedilmektedir.
+(XXXXXXX, AÇIK -cert.ssi.gouv.fr, 06.10.2026)
+» url=https://www.cert.ssi.gouv.fr/avis/CERTFR-2026-AVI-1265/
+» manset=hayir | kategori=zafiyet_rutin | puan=65
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-28667,CVE-2026-58880 | urun=Google
+» kurban | ad=Google | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[28] Red Hat Linux Çekirdeğinde Kritik Güvenlik Açığı Tespiti
+─────────────────────────────────────────────────────────
+Red Hat Enterprise Linux ve CodeReady Linux Builder ürünlerini kapsayan Linux çekirdeğinde çok sayıda güvenlik zafiyeti tespit edildiği bildirilmiştir. CERT-FR tarafından paylaşılan bilgilere göre, bu açıkların saldırganlar tarafından uzaktan hizmet dışı bırakma saldırıları düzenlemek, yetki yükseltmek ve rastgele kod yürütmek amacıyla kullanılabileceği belirtilmiştir. Etkilenen sistemler arasında ARM 64, x86_64, IBM z Systems ve Power mimarileri üzerinde çalışan çeşitli Red Hat sürümlerinin bulunduğu ifade edilmiştir. Eylül ve Ekim 2026 tarihlerinde yayınlanan RHSA-2026:72059 ve RHSA-2026:74438 gibi çok sayıda güvenlik bülteni ile zafiyetlerin kapsamı açıklanmıştır. CVE-2022-49670'den CVE-2026-80775'e kadar uzanan geniş bir liste dahilinde tanımlanan bu açıklar için düzeltme eklerinin yayınlandığı kaydedilmiştir. Kurumların veri bütünlüğünü ve gizliliğini korumak için güncel yamaları ivedilikle yüklemeleri önerilmektedir.
+(XXXXXXX, AÇIK -cert.ssi.gouv.fr, 02.10.2026)
+» url=https://www.cert.ssi.gouv.fr/avis/CERTFR-2026-AVI-1254/
+» manset=hayir | kategori=zafiyet_rutin | puan=60
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2022-49670,CVE-2026-80775 | urun=Linux
+» kurban | ad=Red Hat | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
