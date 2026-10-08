@@ -40,6 +40,10 @@ CERRAHİ DÜZENLE (silme, sadece bugünü çıkar — yoksa re-fetch mükerrer s
 DOKUNMA (kendi kendini düzeltir / değerli geçmiş / append-only):
 - `data/kritik3_gecmis.json`, `data/rapor_gecmis.json` — yükleme bugünü (`d >= today`) HARİÇ tutar, kayıt bugünü değiştirir; silme.
 - `data/skorlama_log.jsonl`, `data/rss_errors.txt` — işlevsel değil; silme.
+- `data/kaynak_govde.jsonl` — KAYNAK GÖVDE DEPOSU (son 30 gün, kayıt başına
+  2000 karakter). İşlevsel DEĞİL, yalnızca ölçüm içindir; silme. Üretim
+  hattı her koşuda o günün satırlarını yeniden yazar, eski günleri pencereye
+  göre düşürür — aynı gün yeniden üretimde şişmez, reset gerektirmez.
 - `data/kalite_denetim.jsonl` — rapor sonrası kaçak taraması; append-only, işlevsel değil; silme.
 - `data/dedup_golden.json` — elle etiketli kalite kapısı referansı; ÜRETİM VERİSİ DEĞİL, silme.
 - `data/mukerrer_golden.json` — elle etiketli MÜKERRER referansı (38 çift);
@@ -228,6 +232,13 @@ isteyecek: yaşanan siber vaka türleri ve sayıları, çeşitli kriterlere gör
   kayıtlar. `scripts/arsiv_kapsam.py --yaz` ile yeniden üretilir; yıl sonu
   raporu sayım yapmadan ÖNCE bunu okumalıdır.
 - `data/skorlama_log.jsonl` — kategori, puan, yerleşim, eleme nedeni. 18 Temmuz'dan beri.
+- `data/kaynak_govde.jsonl` — **kaynak gövde metni, son 30 gün, kayıt başına
+  2000 karakter** (2026-10-08'den itibaren biriker, geçmişe dönük YOK).
+  Ölçümün eksik parçasıydı: `skorlama_log` yalnızca İngilizce başlık tutuyor,
+  oysa hat tam metni okuyor; olay defteri de kararını ÜRETİM görünümüyle
+  veriyor. Bu yüzden iki ölçüm durmuştu — küçük model denemesi (2026-09-30)
+  ve Hafnium vakası (2026-10-08). Kırpma sınırı `olay_iliski._metin`in tarama
+  sınırıyla aynıdır (2000): kimlik çıkarımı gövdenin fazlasını görmez.
 - `data/kalite_denetim.jsonl` — koşu denetimi, manşet karar izi, `metin_onarim`.
 - `data/rapor_gecmis.json`, `data/kritik3_gecmis.json` — **yalnızca 30-31 gün.**
 - `docs/raporlar/*.html` — **30 günde siliniyor** (`_cleanup_old_reports`).
@@ -1253,3 +1264,28 @@ gövde), saklanan görünüm ise kırpık; o yüzden yönetmenin id 64'ü düş�
 kararı çevrimdışı yeniden ÜRETİLEMEDİ. Mekanizma artık kapalı ama bu TEK
 vakanın düzeldiği ölçülmedi — ölçülmesi için kaynak gövdesinin saklanması
 gerekir (aynı sınır `kucuk_model_olc` ölçümünde de kayıtlıdır).
+
+
+### ÖLÇÜMÜN İKİ BOŞLUĞU KAPATILDI (2026-10-08)
+
+**KAYNAK GÖVDE DEPOSU — `data/kaynak_govde.jsonl`.** Üretim hattı her koşuda
+o günün kaynak gövdelerini (kayıt başına 2000 karakter) ayrı bir depoya
+yazıyor; tavan GÜN cinsinden ve `rapor_gecmis` ile hizalı (30 gün), böylece
+replay iki kaynağı aynı pencerede görür. Satır cinsinden tavan yanlış olurdu:
+kalabalık bir gün tek başına pencereyi yer. Gövdeyi `skorlama_log`a eklemek
+o dosyayı ~12 MB'a çıkarır ve her koşuda TAMAMI yeniden yazılır — arşivdeki
+"boyut sorun değil, YAZIM sorundu" dersinin aynısı, bu yüzden AYRI dosya.
+Aynı gün yeniden üretimde o günün satırları çoğalmaz; yazım hatası raporu
+DÜŞÜRMEZ (skorlama logunun sözleşmesi). Regresyon:
+`tests/test_kaynak_govde.py`. BUNUNLA ÖLÇÜLEBİLİR HALE GELEN İKİ ŞEY:
+Hafnium sınıfı kararların çevrimdışı yeniden üretimi ve küçük model
+denemesinin gövdeli yeniden ölçümü — ikisi de "veri birikmesini bekler",
+depo 2026-10-08'de boştur.
+
+**HAKEM ÖLÇÜMÜ ANAHTARIN BULUNDUĞU YERDE KOŞAR.** `scripts/hakem_olc.py`
+hazırdı ama bu ortamda anahtar yok ve egress 403 veriyor. Yeni iş akışı
+`.github/workflows/hakem_olc.yml` (`workflow_dispatch`) betiği üretimin
+kendi sırlarıyla koşturur: `vaka` girdisi varsayılan "FBI ihlali", `hepsi`
+onay kutusu kontrol grubunu ekler. Rapor üretmez, commit'lemez, veri
+dosyalarına dokunmaz; maliyet 1-2 LLM çağrısı. Sonuç Actions logunda
+görünür — oradan okunup buraya kayda geçirilmelidir.

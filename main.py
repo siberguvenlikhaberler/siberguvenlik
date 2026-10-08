@@ -68,6 +68,7 @@ from src.config import (
     REPORT_HISTORY_FILE, REPORT_HISTORY_DAYS,
     ENABLE_LLM_CROSS_DAY_DEDUP, CROSS_DAY_DEDUP_WINDOW_DAYS,
     SCORING_LOG_FILE, SCORING_LOG_MAX_LINES,
+    SOURCE_BODY_LOG_FILE, SOURCE_BODY_LOG_DAYS, SOURCE_BODY_CHARS,
     SOCIAL_SIGNAL_CONFIG, SKIP_URL_PATTERNS, FEED_SUMMARY_MIN_WORDS, ARTICLE_PROXY,
     FEED_BASLIK_GURULTU_ONEKLERI,
     ARTICLE_PROXY_MAX_CALLS, ARTICLE_PROXY_BUDGET_SEC, REPORT_FLOOR,
@@ -8973,6 +8974,67 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"({SCORING_LOG_FILE})")
         except Exception as e:
             print(f"   ⚠️  Skorlama log'u yazılamadı (atlanıyor): {str(e)[:120]}")
+
+        self._kaynak_govde_logla(date_str, articles_by_id)
+
+    def _kaynak_govde_logla(self, date_str, articles_by_id):
+        """Günün KAYNAK GÖVDE metinlerini ayrı bir depoya yazar.
+
+        NEDEN AYRI DOSYA ve NEDEN GEREKLİ: bkz. `src/config.SOURCE_BODY_*`.
+        Kısaca: olay defteri ve `ayni_olay` kararlarını ÜRETİM görünümüyle
+        verir, saklanan görünümler ise kırpıktır; gövde olmadan "bu kararı
+        hangi kök üretti" sorusu çevrimdışı yanıtlanamıyor (2026-10-08
+        Hafnium vakası) ve küçük model denemesi de aynı eksikten durmuştu
+        (2026-09-30).
+
+        TAVAN GÜN CİNSİNDEN: `SOURCE_BODY_LOG_DAYS` günden eski satırlar
+        düşer — `rapor_gecmis` ile aynı pencere, böylece replay iki kaynağı
+        aynı aralıkta görür. Satır cinsinden tavan yanlış olurdu: kalabalık
+        bir gün tek başına pencereyi yiyebilir.
+
+        BAŞARISIZLIK RAPORU DÜŞÜRMEZ — bu bir ölçüm deposudur, üretim verisi
+        değil; hata yalnızca yazdırılır (skorlama logunun aynı sözleşmesi).
+        """
+        try:
+            satirlar = []
+            for aid, a in (articles_by_id or {}).items():
+                govde = (a.get('full_text') or '')[:SOURCE_BODY_CHARS]
+                if not govde:
+                    continue
+                satirlar.append(json.dumps({
+                    'tarih': date_str,
+                    'id': aid,
+                    'baslik': (a.get('title', '') or '')[:200],
+                    'govde': govde,
+                }, ensure_ascii=False))
+            if not satirlar:
+                return
+            eski = []
+            if os.path.exists(SOURCE_BODY_LOG_FILE):
+                with open(SOURCE_BODY_LOG_FILE, 'r', encoding='utf-8') as f:
+                    eski = [x for x in f.read().splitlines() if x.strip()]
+            # BUGÜNÜN SATIRLARI TEKRAR YAZILMAZ: aynı gün yeniden üretilen
+            # koşularda (bkz. CLAUDE.md reset prosedürü) dosya şişmesin.
+            sinir = (_now_tr() - timedelta(days=SOURCE_BODY_LOG_DAYS)
+                     ).strftime('%Y-%m-%d')
+            tutulan = []
+            for x in eski:
+                try:
+                    g = json.loads(x).get('tarih', '')
+                except ValueError:
+                    continue
+                if g and g >= sinir and g != date_str:
+                    tutulan.append(x)
+            os.makedirs(os.path.dirname(SOURCE_BODY_LOG_FILE) or '.',
+                        exist_ok=True)
+            with open(SOURCE_BODY_LOG_FILE, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(tutulan + satirlar) + '\n')
+            print(f"   🗄️  Kaynak gövde deposu: {len(satirlar)} haber, "
+                  f"{len(tutulan) + len(satirlar)} satır "
+                  f"({SOURCE_BODY_LOG_FILE}, son {SOURCE_BODY_LOG_DAYS} gün)")
+        except Exception as e:
+            print(f"   ⚠️  Kaynak gövde deposu yazılamadı (atlanıyor): "
+                  f"{str(e)[:120]}")
 
     # ═══════════════════════════════════════════════════════════════
     # HTML OLUŞTURMA — DOĞRULAMA + TAMAMLAMA MEKANİZMALI (v2.1)

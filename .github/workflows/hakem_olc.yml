@@ -1,0 +1,48 @@
+name: Mükerrer Hakemi Ölçümü (teşhis)
+
+# Elle tetiklenen ÖLÇÜM: deterministik `ayni_olay`ın çözünürlük sınırına
+# takılan çiftlerde LLM hakeminin NE DEDİĞİNİ ölçer. Hakemin kararı bugüne
+# dek hiç ölçülmemişti (bkz. CLAUDE.md "HAKEM KARARI ÖLÇÜLEBİLİR HALE
+# GETİRİLDİ"); geliştirme ortamında API anahtarı olmadığı ve egress 403
+# verdiği için ölçüm ancak anahtarın BULUNDUĞU yerde, yani burada yapılabilir.
+#
+# Rapor ÜRETMEZ, commit'LEMEZ, veri dosyalarına DOKUNMAZ — betik yalnızca
+# okur ve sonucu loga yazar.
+# Maliyet: varsayılan kapsam 1 LLM çağrısı, `--hepsi` 2 çağrı.
+# Çalıştır: Actions → "Mükerrer Hakemi Ölçümü (teşhis)" → Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      vaka:
+        description: 'Çift adında geçen metin (boş = tüm kararsız çiftler)'
+        required: false
+        default: 'FBI ihlali'
+      hepsi:
+        description: 'Hakeme ULAŞAN tüm golden çiftlerini sor (kontrol grubu dahil)'
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  olc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - env:
+          LLM_PROVIDER: openrouter
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          VAKA: ${{ inputs.vaka }}
+          HEPSI: ${{ inputs.hepsi }}
+        run: |
+          ARGS=""
+          if [ -n "$VAKA" ]; then ARGS="--vaka \"$VAKA\""; fi
+          if [ "$HEPSI" = "true" ]; then ARGS="$ARGS --hepsi"; fi
+          echo "komut: python -u scripts/hakem_olc.py $ARGS"
+          eval python -u scripts/hakem_olc.py $ARGS

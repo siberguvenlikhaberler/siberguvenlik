@@ -151,6 +151,31 @@ CROSS_DAY_DEDUP_WINDOW_DAYS = 2
 SCORING_LOG_FILE = "data/skorlama_log.jsonl"
 SCORING_LOG_MAX_LINES = 5000   # dosya büyürse en yeni bu kadar satır tutulur
 
+# ─── KAYNAK GÖVDE DEPOSU — ÖLÇÜMÜN EKSİK PARÇASI ───────────────────────────
+# NEDEN VAR: iki ölçüm aynı duvara çarptı çünkü KAYNAK GÖVDE METNİ hiçbir
+# yerde saklanmıyordu.
+#   • 2026-09-30 küçük model denemesi: `skorlama_log` öznitelik olarak yalnızca
+#     İngilizce başlık + kaynak tutuyor, oysa üretim hattı TAM METNİ okuyup
+#     puanlıyor — bu yoldan gidilecekse "önce gövdenin loglanması" gerektiği
+#     kayda geçmişti.
+#   • 2026-10-08 Hafnium vakası: yönetmenin 95 puanlı haberi düşürme kararı
+#     ÇEVRİMDIŞI YENİDEN ÜRETİLEMEDİ, çünkü olay defteri sorguyu ÜRETİM
+#     görünümüyle yapıyor (`_dedup_view`: tr_title + paragraf + İngilizce
+#     başlık + ham gövde) ve saklanan görünüm kırpıktır (paragraf 500 /
+#     full_text 400). Sahte birleşmeyi üreten köklerin gövdeden mi geldiği
+#     ancak gövde elde olunca gösterilebilir.
+# AYRI DOSYA, ÇÜNKÜ BOYUT AYRI YÖNETİLİR: gövdeyi `skorlama_log`a eklemek o
+# dosyayı ~12 MB'a çıkarır ve her koşuda TAMAMI yeniden yazılır (arşivdeki
+# "boyut sorun değil, YAZIM sorundu" dersinin aynısı). Burada tavan GÜN
+# cinsindendir ve `rapor_gecmis` ile HİZALIDIR — replay ikisini aynı pencerede
+# görür.
+SOURCE_BODY_LOG_FILE = "data/kaynak_govde.jsonl"
+SOURCE_BODY_LOG_DAYS = 30      # rapor_gecmis ile aynı pencere
+# Kırpma sınırı `olay_iliski._metin`in tarama sınırıyla AYNI (2000) — kimlik
+# çıkarımı gövdenin yalnızca bu kadarını görür, fazlasını saklamak ölçüme
+# hiçbir şey katmaz.
+SOURCE_BODY_CHARS = 2000
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PUAN TABANLI DETERMİNİSTİK SEÇİM — RUBRİK & KATEGORİLER
