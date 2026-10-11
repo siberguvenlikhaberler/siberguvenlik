@@ -1,34 +1,36 @@
-# KAYNAK SAĞLIK RAPORU — 2026-10-10 12:06
-# aktif=36  üretiyor=17  boş(200/0)=0  hata/timeout=2
-# çıkarım : 248/248 haberin tam metni çıktı (%100)
-# dedup   : 52/248 haber filtreleri geçti (%21)
-# 🚨 DEDUP SIFIR (1) [metin var, filtreler eliyor]: CERT-EU
+# KAYNAK SAĞLIK RAPORU — 2026-10-11 12:05
+# aktif=36  üretiyor=9  boş(200/0)=0  hata/timeout=0
+# çıkarım : 237/237 haberin tam metni çıktı (%100)
+# dedup   : 15/237 haber filtreleri geçti (%6)
+# 🚨 DEDUP SIFIR (6) [metin var, filtreler eliyor]: ANSSI (CERT-FR), Dark Reading, Help Net Security, Industrial Cyber, The Record, CERT-EU
 # KAYNAK                      HAM  KALAN  METİN  HAVUZ  DURUM
-The Hacker News              40     40     40     12  OK
-BleepingComputer             15     15     15      5  OK
-CSO Online                   20     20     20      4  OK
-Dark Reading                 40     18     18      4  OK
-SecurityWeek                 10     10     10      4  OK
-ANSSI (CERT-FR)              40     35     35      3  OK
-The Register                 40     22     22      3  OK
-Help Net Security            10     10     10      3  OK
+BleepingComputer             15     15     15      4  OK
 Security Affairs             10     10     10      3  OK
-The Record                    5      5      5      3  OK
-Industrial Cyber              9      9      9      2  OK
-TechCrunch Security          20      4      4      1  OK
-Schneier on Security         10      4      4      1  OK
-Recorded Future              40      2      2      1  OK
-Graham Cluley                20      2      2      1  OK
-Infoblox Blog                12      2      2      1  OK
-Krebs on Security            10      2      2      1  OK
-Cyberscoop                   10     10     10      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+The Hacker News              40     34     34      2  OK
+The Register                 40     15     15      1  OK
+CSO Online                   20     15     15      1  OK
+Cyberscoop                   10     10     10      1  OK
+SecurityWeek                 10     10     10      1  OK
+The Cyber Express            10      9      9      1  OK
+SANS ISC                      5      5      5      1  OK
+ANSSI (CERT-FR)              40     35     35      0  🚨 DEDUP SIFIR (OK)
+Dark Reading                 40     13     13      0  🚨 DEDUP SIFIR (OK)
+Help Net Security            10     10     10      0  🚨 DEDUP SIFIR (OK)
+Industrial Cyber              9      9      9      0  🚨 DEDUP SIFIR (OK)
 CrowdStrike                  10      7      7      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 Talos Intelligence           15      5      5      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+The Record                    5      5      5      0  🚨 DEDUP SIFIR (OK)
 NIST                         40      3      3      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+TechCrunch Security          20      3      3      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 Citizen Lab                  10      3      3      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 Microsoft Security           10      3      3      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+Schneier on Security         10      3      3      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+Recorded Future              40      2      2      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+Graham Cluley                20      2      2      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 NCSC UK                      20      2      2      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 Unit 42                      15      2      2      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+Infoblox Blog                12      2      2      0  ↩️  ZATEN RAPORLANMIŞ (OK)
+Krebs on Security            10      2      2      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 BSI                          40      1      1      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 Bellingcat                   10      1      1      0  ↩️  ZATEN RAPORLANMIŞ (OK)
 CERT-EU                      10      1      1      0  🚨 DEDUP SIFIR (OK)
@@ -38,5 +40,3 @@ Proofpoint Threat Insight    10      0      -      0  OK
 Securelist (Kaspersky)       10      0      -      0  OK
 SentinelOne Labs             10      0      -      0  OK
 The DFIR Report              10      0      -      0  OK
-SANS ISC                      0      0      -      0  HATA: syntax error: line 1, column 0
-The Cyber Express             0      0      -      0  HATA: HTTP 403
