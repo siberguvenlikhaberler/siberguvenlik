@@ -58280,3 +58280,387 @@ EmbedThis tarafından geliştirilen ve milyonlarca gömülü cihazda kullanılan
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 29 OCTOBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Volt Typhoon Grubunun Silent Train Altyapısını Kullanması
+─────────────────────────────────────────────────────────
+Çin bağlantılı siber casusluk grubu Volt Typhoon'un, stratejik erişim sağlamak ve sıfır gün açıklarını istismar etmek amacıyla Silent Train adlı gizli bir ağ kullandığı tespit edilmiştir. Lumen Technologies tarafından yayınlanan raporda, bu ağın ele geçirilmiş yönlendiriciler, nesnelerin interneti (IoT) cihazları ve kurumsal altyapılardan oluşan değişken bir zincir yapısına sahip olduğu belirtilmiştir. Grubun, telekomünikasyon, savunma, enerji ve ulaşım gibi kritik sektörlerdeki yüzlerce kuruluşu hedef aldığı bildirilmiştir. Silent Train altyapısının, saldırıların kökenini gizlemek için çok katmanlı ve kısa süreli oturumlar üzerinden çalıştığı ifade edilmektedir. Volt Typhoon'un Cisco, Fortinet ve Versa Director gibi platformlardaki kritik güvenlik açıklarını bu ağ üzerinden istismar ettiği kaydedilmiştir. Operasyonların özellikle Hawaii, Kaliforniya ve Teksas gibi askeri tesislerin yoğun olduğu bölgelere odaklandığı dikkat çekilmiştir. Grubun, tespit edilmemek için her operasyon sonrası dijital izlerini temizlediği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 28.10.2026)
+» url=https://thehackernews.com/2026/10/volt-typhoon-used-covert-silent-train.html
+» manset=evet | kategori=nation_state_apt | puan=94
+» sonradan | kategori=nation_state_apt | onem=100 | eksen=25/25/25/25 | rubrik=v2
+» varlik | sektor=savunma,telekom | aktor_ulke=Çin | aktor=Volt Typhoon
+» teknik | urun=Cisco,Fortinet
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Çinli Aktörlerin VMware ESXi Sıfır Gün Açığını Kullanması
+─────────────────────────────────────────────────────────
+CISA, Çin bağlantılı Warp Panda grubunun VMware ESXi sistemlerindeki CVE-2026-41709 kodlu yetersiz günlük kaydı hatasını sıfır gün açığı olarak istismar ettiğini duyurmuştur. Düşük öncelikli bu açık, yönetici yetkisine sahip saldırganların denetim izi bırakmadan işlem yapmasına olanak tanımaktadır. CrowdStrike raporuna göre grup, 2025'ten 2026 başlarına kadar ABD'deki hukuk firmalarını hedef alarak ağlara internete açık uç cihazlardan sızmış; vCenter ortamlarına BrickStorm, TetanusStorm ve SharpStorm gibi özel zararlı yazılımlar yerleştirmiştir. Ayrıca Broadcom'un Temmuz 2026 duyurusunda yer alan CVE-2026-59309 ve CVE-2026-59310 gibi kritik açıkların da aktif olarak kullanıldığı, yaklaşık 360 sunucunun etkilendiği belirtilmiştir. CISA, federal kurumların bu açıkları 11 Kasım 2026'ya kadar kapatmalarını ve ESXi-9.1.0.0 gibi güncel sürümlere geçilmesini resmi olarak talep etmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 29.10.2026)
+» url=https://www.securityweek.com/chinese-hackers-quietly-used-low-severity-esxi-logging-flaw-as-zero-day/
+» manset=evet | kategori=nation_state_apt | puan=90
+» sonradan | kategori=nation_state_apt | onem=92 | eksen=25/25/25/17 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD | aktor_ulke=Çin
+» teknik | cve=CVE-2026-41709,CVE-2026-59309,CVE-2026-59310 | urun=Broadcom,VMware | istismar=aktif
+» kurban | ad=VMware | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] DHS Çalışanlarına Ait Verilerin İnternette Yayınlanması
+─────────────────────────────────────────────────────────
+Amerika Birleşik Devletleri İç Güvenlik Bakanlığı (DHS) bünyesinde görev yapan 41 binden fazla personel ve yükleniciye ait dahili veriler, 'Department of Peace' adlı aktivist grup tarafından ele geçirilerek Distributed Denial of Secrets platformunda yayınlanmıştır. Sızıntı, bakanlığın kullandığı Okta tekli oturum açma servisinden elde edilen verilerle; gizli operasyonları yöneten yetkilileri, sınır dışı etme programlarını ve CISA bünyesindeki siber güvenlik uzmanlarını deşifre etmiştir. 2023 yılındaki zirvelere ve COVID-19 planlamalarına kadar uzanan bu kapsamlı veri seti, göçmenlik operasyonlarının artırılmasına tepki olarak sızdırılmıştır. Okta firması sistemlerinde ihlal bulgusuna rastlanmadığını belirtirken, araştırmacılar bu verilerin şeffaflık talepleri için kritik olduğunu vurgulamaktadır. Bakanlığın geçmişteki büyük veri ihlalleriyle benzerlik gösteren bu olay, kurumun organizasyonel yapısını ve personel iletişim bilgilerini kamuoyuna açık hale getirmiştir.
+(XXXXXXX, AÇIK -cyberscoop.com, 29.10.2026)
+» url=https://cyberscoop.com/dhs-employee-data-leak-ddosecrets/
+» manset=evet | kategori=stratejik_kurum_saldirisi | puan=97
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=84 | eksen=17/25/17/25 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD
+» kurban | ad=ABD İç Güvenlik Bakanlığı | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Kamera Yönetim Yazılımı Üzerinden Kurumsal Ağlara Sızılması
+─────────────────────────────────────────────────────────
+Siber güvenlik firması Huntress tarafından yapılan araştırmada, saldırganların kurumsal ağlara sızmak için kamera yönetim yazılımlarını kullandığı tespit edilmiştir. Eylül ve Ekim 2026 döneminde gerçekleşen olaylarda, Güney Kore menşeli bir üreticiye ait olduğu değerlendirilen CMS.exe adlı uygulamanın istismar edildiği bildirilmiştir. Saldırganların sisteme giriş yaptıktan sonra rs.win32.exe adlı bir ters kabuk dosyası yerleştirdiği ve meşru Microsoft dosyalarını taklit ederek DLL yan yükleme tekniklerini kullandığı kaydedilmiştir. Özellikle WpcMon.exe dosyasının kötüye kullanıldığı ve IPHLPAPI.DLL ile samcli.dll dosyalarının sisteme yüklendiği ifade edilmiştir. Güvenlik analistleri, kötü amaçlı yazılımın her oturum açılışında çalışması için kayıt defteri anahtarlarında değişiklik yapıldığını ve 144.172.116.37 adresine dış bağlantı kurulduğunu belirtmiştir. Kuruluşlara, geleneksel saldırı yüzeyi dışındaki kamera sistemlerini ve yönetim uygulamalarını yakından izlemeleri ve yetkisiz dış bağlantıları kısıtlamaları tavsiye edilmiştir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 28.10.2026)
+» url=https://www.helpnetsecurity.com/2026/10/28/compromised-camera-management-software-initial-access/
+» manset=hayir | kategori=tedarik_zinciri | puan=78
+» sonradan | kategori=tedarik_zinciri | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | aktor_ulke=Güney Kore
+» teknik | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] 123 Reg'in Yapay Zeka Destekli Saldırıya Uğraması
+─────────────────────────────────────────────────────────
+Birleşik Krallık merkezli alan adı kayıt kuruluşu 123 Reg, müşteri verilerinin sızdırılmasına yol açan yapay zeka destekli bir siber saldırıya maruz kaldığını açıklamıştır. 18 Eylül 2026 tarihinde gerçekleşen olayda, müşterilerin iletişim bilgileri, KDV numaraları ve API üzerinden çekilen ürün bilgilerinin tehlikeye girdiği belirtilmiştir. Şirket sözcüsü, saldırı altyapısının Çin ve Singapur'da barındırıldığını ve saldırganların Anthropic'e ait açık kaynaklı yapay zeka araçlarını kullandığını ifade etmiştir. Soruşturma bulguları, saldırının Güney Kore finans kurumlarını hedef alan ve ARTEX adlı aracı kullanan Çin bağlantılı bir grupla benzerlikler taşıdığını göstermiştir. 123 Reg, durumu veri koruma otoritelerine bildirdiğini ve Singapur merkezli servis sağlayıcılarla iş birliği yaparak saldırgan sunucularını kapattığını kaydetmiştir. Müşterilere, kimlik avı girişimlerine karşı dikkatli olmaları ve iki aşamalı doğrulamayı etkinleştirmeleri tavsiye edilmiştir.
+(XXXXXXX, AÇIK -theregister.com, 28.10.2026)
+» url=https://www.theregister.com/cyber-crime/2026/10/28/123-reg-discloses-ai-cyberattack-on-customer-data-suspects-china-nexus/5305936
+» manset=hayir | kategori=veri_ihlali | puan=86
+» sonradan | kategori=veri_ihlali | onem=84 | eksen=25/17/25/17 | rubrik=v2
+» varlik | hedef=Birleşik Krallık,Güney Kore,Singapur | aktor_ulke=Çin
+» kurban | ad=123 Reg | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] İsrailli Reklam Teknolojisi Firmasının Starlink Kullanıcılarını Takibi
+─────────────────────────────────────────────────────────
+Trend Micro'nun bir birimi olan TrendAI, İsrail merkezli Discover-Tech firmasının Starlink uydu interneti kullanıcılarını dijital reklamlar aracılığıyla coğrafi olarak takip ettiğini raporlamıştır. Shadow-Earth-79 kod adıyla tanımlanan yapının, Starlink trafiğinde 105 ülkede en yüksek teklifi veren reklam alıcısı olduğu ve özellikle çatışma bölgelerindeki kullanıcıları hedeflediği belirtilmiştir. Araştırmacılar, bu faaliyetin ticari bir reklam operasyonundan ziyade bir istihbarat toplama ve gözetleme altyapısı olarak tasarlandığını ifade etmiştir. Discover-Tech'in reklam ihale süreçlerindeki verileri kullanarak kullanıcıları de-anonimize ettiği ve hassas konumlardaki bireyleri izlediği kaydedilmiştir. Google ve Comcast gibi teknoloji devlerinin, bu bulgular üzerine söz konusu firmayı reklam platformlarından çıkardığı bildirilmiştir. Starlink'in özellikle Ukrayna gibi savaş bölgelerinde kritik iletişim için kullanılması, bu tür gözetleme faaliyetlerinin stratejik riskini artırdığı şeklinde değerlendirilmektedir.
+(XXXXXXX, AÇIK -securityaffairs.com, 28.10.2026)
+» url=https://securityaffairs.com/201947/intelligence/ads-or-surveillance-researchers-flag-suspicious-targeting-of-starlink-users.html
+» manset=hayir | kategori=casus_yazilim | puan=86
+» sonradan | kategori=casus_yazilim | onem=84 | eksen=25/25/17/17 | rubrik=v2
+» varlik | hedef=Ukrayna,İsrail
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] ABD'den Kuzey Koreli Bilişim Çalışanlarına Yardım Edenlere Yaptırım
+─────────────────────────────────────────────────────────
+ABD Hazine Bakanlığı, Kuzey Kore'nin yasa dışı bilişim çalışanı kampanyasına destek veren Rus ve Kuzey Kore uyruklu şahıslar ile şirketlere yaptırım kararı almıştır. Rus vatandaşları Ilya Boykov ve Vitold Obertas'ın, ABD'li şirketlerde sahte kimliklerle çalışan Kuzey Korelilerin kazandığı milyonlarca dolarlık kripto parayı akladıkları iddia edilmiştir. Obertas'ın Ocak 2025'ten bu yana en az 3,5 milyon dolar değerinde dijital varlığı dönüştürdüğü, Boykov'un ise benzer miktarda aklama faaliyetinin yanı sıra lojistik destek sağladığı belirtilmiştir. Yaptırım listesine ayrıca, çalışanları denetleyen Kim Ki Hyok ve Kim Hyo Dong gibi üst düzey isimlerin de dahil edildiği kaydedilmiştir. Bakanlık, bu gelirlerin Pyongyang'ın balistik füze programlarını finanse etmek için kullanıldığını ifade etmiştir. Operasyonun, Kuzey Kore'nin yapay zeka kullanarak işe alım süreçlerini manipüle etme çabalarını da kapsadığı bildirilmiştir.
+(XXXXXXX, AÇIK -therecord.media, 28.10.2026)
+» url=https://therecord.media/north-korea-russia-sanctions
+» manset=hayir | kategori=politika_hukuk | puan=86
+» sonradan | kategori=politika_hukuk | onem=92 | eksen=25/17/25/25 | rubrik=v2
+» varlik | sektor=kamu,kripto,ulastirma | hedef=ABD,Kuzey Kore,Rusya
+» kurban | ad=ABD | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Alman Siyasi Partisi AfD'nin 345.000 E-Posta Adresinin Sızdırılması
+─────────────────────────────────────────────────────────
+Almanya'nın sağcı partisi AfD'nin bilişim altyapısına düzenlenen siber saldırı sonucunda 345.000 benzersiz e-posta adresinin ve çok sayıda mesajın sızdırıldığı bildirilmiştir. Have I Been Pwned servisinin 27 Ekim 2026 tarihinde veritabanına eklediği bilgiler, Eylül ayında gerçekleşen ihlalin boyutlarını ortaya koymuştur. Saldırganların partiye ait bir WordPress sitesindeki zafiyeti kullanarak e-posta yönetim sistemine eriştikleri ve yetkililerin şifrelerini değiştirerek verileri kopyaladıkları belirtilmiştir. Sızdırılan belgeler arasında eyalet teşkilatlarına ait üye veritabanları ve ilk kez oy kullanacak gençlere dair kayıtların bulunduğu ifade edilmiştir. AfD yönetimi, saldırının demokrasiye bir müdahale olduğunu savunurken, sızdırılan e-postaların Alice Weidel gibi parti liderlerinin geçmişteki bağış süreçleri hakkındaki beyanlarıyla çelişen bilgiler içerdiği kaydedilmiştir. Veri koruma yetkililerinin olayla ilgili soruşturması devam ederken, etkilenen kişilerin bilgilendirilme süreci hakkında tartışmaların sürdüğü ifade edilmektedir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 28.10.2026)
+» url=https://www.helpnetsecurity.com/2026/10/28/afd-data-breach-email-leak/
+» manset=hayir | kategori=veri_ihlali | puan=82
+» sonradan | kategori=veri_ihlali | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | hedef=Almanya
+» teknik | urun=WordPress
+» kurban | ad=AfD | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Kuzey Koreli Sahte Bilişim Çalışanlarının İç Tehdit Analizi
+─────────────────────────────────────────────────────────
+Güvenlik araştırmacıları, sahte kimliklerle ABD'li şirketlerde işe giren Kuzey Koreli bilişim çalışanlarının oluşturduğu iç tehditleri analiz etmek amacıyla yapay bir girişim şirketi kurmuştur. Yapılan çalışma, bu çalışanların işe alım süreçlerini geçtikten sonra ağlara meşru erişim sağladıklarını ve herhangi bir teknik açık kullanmadan veri sızdırabildiklerini ortaya koymuştur. Uzmanlar, Kuzey Koreli operatörlerin şirketlerde uzun süreli varlık göstermek için çalışan kimlik bilgilerini topladığını ve bu bilgileri casusluk faaliyetleri için kullandığını belirtmiştir. Araştırmada, bu kişilerin genellikle Rusya gibi ülkelerde konuşlandığı ve kazandıkları parayı Pyongyang hazinesine aktardıkları ifade edilmiştir. Ayrıca, Kuzey Koreli çalışanların yazılım tedarik zincirlerine sızarak kod imzalama mekanizmalarını etkisiz hale getirebilecekleri konusunda uyarıda bulunulmuştur. Şirketlerin işe alım süreçlerinde daha sıkı denetimler yapması ve şüpheli çalışanların tespit edilmesi için mülakat tekniklerini geliştirmesi gerektiği kaydedilmiştir.
+(XXXXXXX, AÇIK -schneier.com, 28.10.2026)
+» url=https://www.schneier.com/blog/archives/2026/10/studying-fraudulent-north-korean-it-workers.html
+» manset=hayir | kategori=nation_state_apt | puan=80
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | hedef=ABD,Kuzey Kore,Rusya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Batı Virginia'da Kamu Görevlilerinin Verilerini Koruyan Yasanın İptali
+─────────────────────────────────────────────────────────
+ABD 4. Temyiz Mahkemesi, Batı Virginia eyaletinde kolluk kuvvetleri ve hakimlerin kişisel bilgilerinin paylaşılmasını yasaklayan Daniel Yasası'nın anayasaya aykırı olduğuna karar vermiştir. Mahkeme, söz konusu yasanın ifade özgürlüğünü içeriğe dayalı olarak hukuka aykırı şekilde kısıtladığını ve veri simsarlarını aşırı geniş kapsamda sorumlu tuttuğunu belirtmiştir. Kararın, veri simsarları için önemli bir kazanım olduğu ve diğer eyaletlerdeki benzer davaları etkileyebileceği ifade edilmiştir. Yasanın, 2020 yılında bir federal hakimin oğlunun öldürülmesinin ardından kişisel verilerin internetten elde edilmesini engellemek amacıyla çıkarıldığı hatırlatılmıştır. Temyiz heyeti, eyalet yasasının diğer eyaletlerdeki benzerlerinden farklı olarak ön bildirim şartı içermediğini ve bu durumun anayasal hakları ihlal ettiğini kaydetmiştir. WhitePages, Thomson Reuters ve LexisNexis gibi şirketlerin taraf olduğu davada, ihlal başına 1.000 dolara kadar tazminat öngören yasal çerçevenin geçersiz kılındığı bildirilmiştir.
+(XXXXXXX, AÇIK -therecord.media, 28.10.2026)
+» url=https://therecord.media/west-virginia-daniels-law-struck-down-appellate-court
+» manset=hayir | kategori=politika_hukuk | puan=61
+» sonradan | kategori=politika_hukuk | onem=84 | eksen=17/17/25/25 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD
+» olcek | ceza=1000USD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] Cloudflare Doğrulama Sayfalarını Taklit Eden Yeni ClickFix Kampanyası
+─────────────────────────────────────────────────────────
+SANS ISC araştırmacıları, 28 Ekim 2026 tarihinde hem Windows hem de macOS kullanıcılarını hedef alan yeni bir ClickFix saldırı kampanyası tespit etmiştir. Saldırının, sahte bir Cloudflare doğrulama sayfası kullanarak kurbanları zararlı komutları çalıştırmaya ikna etmeye çalıştığı belirtilmiştir. İncelemeler sırasında, Windows sistemlerinde zararlı yazılım sunucusunun erişim engeli verdiği, macOS tarafında ise ilgili alan adının çözümlenemediği ifade edilmiştir. Kampanyanın 'js-static.cfd' alan adı üzerinden yürütüldüğü ve ele geçirilmiş meşru web siteleri aracılığıyla yayıldığı kaydedilmiştir. Araştırmacı Bradley Duncan, saldırı zincirinde kullanılan çok sayıda URL ve göstergeyi paylaşarak sistem yöneticilerini uyarmıştır. Henüz dağıtılan nihai zararlı yazılımın türü belirlenememiş olsa da, ClickFix tekniklerinin kullanıcıları manuel olarak kod yürütmeye zorladığı ve bu durumun ciddi risk teşkil ettiği bildirilmiştir.
+(XXXXXXX, AÇIK -isc.sans.edu, 29.10.2026)
+» url=https://isc.sans.edu/diary/rss/33466
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=47
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=32 | eksen=8/8/8/8 | rubrik=v2
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] Moldova Hükümet Sistemlerine Yönelik Kapsamlı Siber Saldırı Soruşturması
+─────────────────────────────────────────────────────────
+Moldova Başbakanı Vasile Tofan, hükümet sistemlerini hedef alan ve hassas kişisel verilerin sızdırılmasına neden olan koordinatörlü bir siber saldırı hakkında soruşturma başlatıldığını açıklamıştır. 19-23 Ekim 2026 tarihleri arasında gerçekleşen olayda, saldırganların hükümet servislerine 11 milyon veri erişim talebi gönderdiği ve yaklaşık 750.000 kimlik numarasıyla bağlantılı bilgiyi ele geçirdiği belirtilmiştir. Moldova Elektronik Yönetişim Ajansı, sızdırılan veriler arasında kimlik bilgileri, sağlık sigortası durumu, emeklilik kayıtları, araç sahipliği ve vergi borcu detaylarının bulunduğunu ifade etmiştir. Yetkililer, saldırının ardından 82 dijital kamu hizmetini inceleyerek 30'dan fazla sistemi geçici olarak devre dışı bırakmıştır. Başbakan Tofan, saldırının arkasında yabancı devlet aktörlerinin bulunma ihtimalinin değerlendirildiğini ve olayın münferit bir vaka olmadığını kaydetmiştir. Saldırının Moldova'nın dijital altyapısına yönelik hibrit bir kampanya olabileceği değerlendirilmektedir.
+(XXXXXXX, AÇIK -therecord.media, 28.10.2026)
+» url=https://therecord.media/moldova-investigates-possible-foreign-involvement-cyberattacks
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=93
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=84 | eksen=17/25/25/17 | rubrik=v2
+» varlik | sektor=finans,kamu
+» kurban | ad=Moldova | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] Asya Hükümet Sistemlerini Hedef Alan NetamLoader Zararlı Yazılımı
+─────────────────────────────────────────────────────────
+Kaspersky araştırmacıları, Asya'daki hükümet kurumları için özel olarak özelleştirilmiş Windows 10 sürümlerini hedef alan NetamLoader adlı gelişmiş bir yükleyici çerçevesi tespit etmiştir. 2026 yılının ilk yarısında ortaya çıkarılan bu tehdidin, Windows işletim sistemi güncelleme paketlerinin depolandığı dizinlere yerleştirilen kötü amaçlı yapılandırma dosyaları aracılığıyla yayıldığı belirtilmiştir. Enfeksiyon zincirinin, meşru bir yama yönetim aracı olan Patch My PC bileşenlerini kullanarak AMSI güvenlik taramalarını devre dışı bıraktığı ve karmaşık XAML işaretleme dilleri üzerinden çok katmanlı yükler çalıştırdığı ifade edilmiştir. Analizler, saldırganların tespit edilmemek için hassas dizeleri küçük parçalara böldüğünü ve bellek içi yamalar uyguladığını ortaya koymuştur. Söz konusu operasyonun henüz bilinen bir gelişmiş kalıcı tehdit grubuyla ilişkilendirilmediği ancak yüksek düzeyde teknik karmaşıklık içerdiği kaydedilmiştir.
+(XXXXXXX, AÇIK -securelist.com, 29.10.2026)
+» url=https://securelist.com/netamloader/121676/
+» manset=hayir | kategori=tedarik_zinciri | puan=91
+» sonradan | kategori=tedarik_zinciri | onem=84 | eksen=17/25/25/17 | rubrik=v2
+» varlik | sektor=kamu
+» teknik | urun=Microsoft
+» kurban | ad=Asya | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] iRhythm Veri İhlalinden Sekiz Milyon Kişinin Etkilenmesi
+─────────────────────────────────────────────────────────
+Tıbbi ekipman üreticisi iRhythm, Haziran 2026'da gerçekleşen veri ihlali sonucunda 8.179.772 kişinin kişisel verilerinin sızdırıldığını açıklamıştır. ABD Sağlık ve İnsani Hizmetler Bakanlığına (HHS) sunulan raporlarda, ihlalin üçüncü taraf bulut uygulamalarından kaynaklandığı ve saldırganların fidye talebiyle veri sızdırma tehdidinde bulunduğu belirtilmiştir. Çalınan veriler arasında hastaların isimleri, adresleri, doğum tarihleri, e-posta adresleri, telefon numaraları ve sigorta numaraları ile Zio giyilebilir ECG cihazı kullanım verilerinin yer aldığı kaydedilmiştir. Şirket, ihlalin tıbbi cihazların güvenliğini, üretim operasyonlarını veya hasta emniyetini etkilemediğini ifade etmiştir. Etkilenen bireylere yönelik bildirim sürecinin başladığı ve kimlik hırsızlığı riskine karşı uyarıların yapıldığı bildirilmiştir. Olayın, giyilebilir kardiyak izleme teknolojileri sunan şirketin iş süreçlerini doğrudan hedef aldığı ve Oregon Başsavcılığına da gerekli bildirimlerin yapıldığı kaydedilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 29.10.2026)
+» url=https://www.securityweek.com/hhs-filing-puts-irhythm-data-breach-toll-at-8-2-million/
+» manset=hayir | kategori=veri_ihlali | puan=78
+» sonradan | kategori=veri_ihlali | onem=76 | eksen=25/17/17/17 | rubrik=v2
+» varlik | sektor=finans,kamu,saglik | hedef=ABD
+» olcek | etkilenen=8179772
+» kurban | ad=iRhythm | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] Sony İştiraki So-net Veri İhlalinde Milyonlarca Kaydın Sızdırılması
+─────────────────────────────────────────────────────────
+Sony Group iştiraki Sony Network Communications, 19 Ekim 2026'da gerçekleşen ve dört gün sonra tespit edilen siber saldırıda 2.585.481 müşteri kaydının sızdırıldığını doğrulamıştır. So-net üye veri tabanına yönelik bu ihlalde, internet bağlantı kimlikleri ve 54.401 e-posta adresi ile hesap şifreleri ele geçirilmiştir. Sızıntı, 2.141.986 So-net kaydının yanı sıra NTT Docomo'nun Docomo Hikari hizmetini etkileyen 443.495 plala (S Course) kaydını da kapsamaktadır. NTT Docomo, mevcut ve son altı ayda ayrılan müşterilerini USJ kampanyası temalı kimlik avı saldırılarına karşı uyarmıştır. Japon hükümeti; KDDI, GMO Internet Group ve Capcom gibi devleri hedef alan benzer büyük ölçekli saldırılar nedeniyle acil durum toplantısı düzenlemiştir. Şirket, Kişisel Bilgileri Koruma Komisyonuna bildirimde bulunarak sunucuları dış iletişime kapatmış ve kapsamlı bir teknik inceleme başlatmıştır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 28.10.2026)
+» url=https://www.bleepingcomputer.com/news/security/sony-isp-subsidiary-data-breach-exposes-25-million-customer-records/
+» manset=hayir | kategori=veri_ihlali | puan=77
+» sonradan | kategori=veri_ihlali | onem=58 | eksen=25/8/17/8 | rubrik=v2
+» varlik | sektor=kamu | hedef=Japonya
+» olcek | etkilenen=2585481
+» kurban | ad=Sony Network Communications | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] ABD'deki Kuruluşları Hedef Alan Skyw4lker Kimlik Avı Kampanyası
+─────────────────────────────────────────────────────────
+ABD merkezli üretim, teknoloji ve sağlık kuruluşlarını hedef alan Skyw4lker adlı yeni bir kimlik avı kampanyası tespit edilmiştir. Saldırganların, geleneksel kimlik bilgisi hırsızlığı yerine Microsoft'un cihaz kodu yetkilendirme akışını istismar ederek kurumsal hesaplara erişim sağladığı bildirilmiştir. ANY.RUN tarafından yapılan analizde, kurbanlara parola korumalı sahte sözleşme belgeleri gönderildiği ve Google altyapısı üzerinden Microsoft kimlik doğrulama sayfalarına yönlendirildikleri kaydedilmiştir. Bu yöntemle saldırganların, çok faktörlü kimlik doğrulama (MFA) önlemlerini aşarak geçerli erişim jetonları elde ettiği ifade edilmiştir. Kampanyanın arka planında IP adresi ve coğrafi konum verilerini toplayan PHP tabanlı bir altyapı kullanıldığı belirtilmiştir. Güvenlik ekiplerine, bu tür sofistike saldırıları tespit etmek için davranışsal analiz ve etkileşimli kum havuzu yöntemlerini kullanmaları tavsiye edilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 28.10.2026)
+» url=https://thehackernews.com/2026/10/american-organizations-under-attack.html
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=72
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=saglik | hedef=ABD
+» teknik | urun=Microsoft
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] Okul Bölgeleri Arasında Yayılan Hesap Ele Geçirme Saldırıları
+─────────────────────────────────────────────────────────
+ABD'deki K-12 okul bölgelerinde, çalınan personel kimlik bilgileri üzerinden yayılan siber saldırıların arttığı tespit edilmiştir. MS-ISAC verilerine göre, 808 okul organizasyonuna ait hesap bilgilerinin karanlık web forumlarında satışa sunulduğu bildirilmiştir. Saldırganların, ele geçirdikleri meşru okul hesaplarını kullanarak diğer bölgelerdeki personele kimlik avı e-postaları gönderdiği ve bu sayede güvenlik filtrelerini aştığı kaydedilmiştir. İnternet Güvenliği Merkezi (CIS), okulların yüzde 66'sının siber güvenlikten sorumlu sadece bir veya iki kişiye sahip olduğunu ve bütçe kısıtlılıkları nedeniyle projelerin ertelendiğini açıklamıştır. Okul ağlarındaki kötü amaçlı yazılım enfeksiyonlarının yüzde 65'inin meşru sitelerdeki reklamlar üzerinden bulaştığı ifade edilmiştir. Eğitim kurumlarına, çok faktörlü kimlik doğrulama (MFA) kullanımını genişletmeleri ve düzenli müdahale tatbikatları yapmaları önerilmiştir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 29.10.2026)
+» url=https://www.helpnetsecurity.com/2026/10/29/cis-k-12-cybersecurity/
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=69
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=egitim | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] GitHub Hesaplarını Hedef Alan GhostAction Tedarik Zinciri Saldırıları
+─────────────────────────────────────────────────────────
+GitHub üzerindeki geliştirici hesaplarını ve depolarını hedef alan GhostAction adlı tedarik zinciri saldırı kampanyasının yeni bir dalgası tespit edilmiştir. Saldırganların, ele geçirdikleri hesaplar üzerinden depolara kötü amaçlı GitHub Actions iş akışı dosyaları enjekte ederek kimlik bilgilerini ve bulut erişim anahtarlarını çalmaya çalıştığı bildirilmiştir. GitGuardian araştırmacıları, Ekim 2026 döneminde 23.000 kamuya açık depoya 72.000 sahte kayıt yapıldığını kaydetmiştir. Kampanyada, Kuzey Kore bağlantılı PolinRider grubunun tekniklerinin taklit edildiği ve yerel geliştirici makinelerine sızmak için sahte yazı tipi yükleyicilerinin kullanıldığı ifade edilmiştir. GitHub'ın birçok kötü amaçlı iş akışının çalışmasını engellediği ancak saldırganların 1.800'e yakın hesapta erişimlerini sürdürdüğü belirtilmiştir. Depo sahiplerine, şüpheli dosyaları silmeleri ve tüm erişim jetonlarını yenilemeleri yönünde uyarıda bulunulmuştur.
+(XXXXXXX, AÇIK -darkreading.com, 28.10.2026)
+» url=https://www.darkreading.com/application-security/ghostaction-hacking-wave-fizzles-attackers-github
+» manset=hayir | kategori=tedarik_zinciri | puan=67
+» sonradan | kategori=tedarik_zinciri | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=teknoloji | aktor_ulke=Kuzey Kore
+» kurban | ad=GitHub | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] Scale AI Şirketine Çalışan İzleme Nedeniyle Dava Açılması
+─────────────────────────────────────────────────────────
+Avusturya merkezli dijital haklar kuruluşu noyb, yapay zeka şirketi Scale AI aleyhine çalışanların internet faaliyetlerini ve biyometrik verilerini hukuka aykırı şekilde takip ettiği gerekçesiyle beş ayrı şikayette bulunmuştur. Fransa, İtalya, Hollanda ve Avusturya'da açılan davalarda, şirketin Outlier platformu üzerinden serbest çalışanların fare tıklamalarını ve klavye hareketlerini saniyeler bazında kaydettiği iddia edilmiştir. Noyb, platformun çalışanları işe alım şartı olarak Persona üzerinden biyometrik veri sunmaya zorladığını ve bu durumun Avrupa Genel Veri Koruma Yönetmeliği'ni ihlal ettiğini belirtmiştir. Ayrıca, 18 farklı üçüncü taraf izleyicinin çalışanların IP adreslerini ve ziyaret edilen sayfaları topladığı ifade edilmiştir. Scale AI sözcüsü ise iddiaların asılsız olduğunu savunarak, ekran kaydı ve biyometrik doğrulama işlemlerinin dolandırıcılığı önlemek amacıyla ve yalnızca çalışanların onayıyla gerçekleştirildiğini ifade etmiştir. Kuruluş, mahkemelerden para cezası verilmesini ve hükümetlerin soruşturma başlatmasını talep etmiştir.
+(XXXXXXX, AÇIK -therecord.media, 28.10.2026)
+» url=https://therecord.media/noyb-sues-scale-ai-for-worker-surveillance
+» manset=hayir | kategori=politika_hukuk | puan=65
+» sonradan | kategori=politika_hukuk | onem=84 | eksen=25/17/25/17 | rubrik=v2
+» varlik | sektor=kamu | hedef=Fransa,Hollanda,İtalya
+» kurban | ad=Scale AI | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[20] Sahte Yapay Zeka Uygulamaları Üzerinden Zararlı Yazılım Yayılması
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin, OpenAI ve Anthropic firmalarına ait dijital imzalı meşru dosyaları kullanarak Windows sistemlerine zararlı yazılım bulaştırdığı tespit edilmiştir. Check Point Research tarafından yapılan açıklamaya göre, Yoba olarak adlandırılan kampanya kapsamında sahte ChatGPT ve Claude masaüstü uygulamaları dağıtılmaktadır. Saldırganların, SEO zehirlemesi teknikleriyle arama motoru sonuçlarında üst sıralara çıkan sahte GitHub depoları ve web siteleri oluşturduğu belirtilmiştir. İndirilen paketlerin içindeki meşru yürütülebilir dosyaların, DLL yan yükleme yöntemiyle YobaDropper adlı zararlı kütüphaneyi sisteme dahil ettiği ifade edilmiştir. Nihai aşamada XMRig kripto para madencisi yüklendiği, ancak altyapının farklı zararlı yazılımları da dağıtabilecek kapasitede olduğu bildirilmiştir. Saldırının Telegram ve Google DNS-over-HTTPS gibi meşru servisleri komuta kontrol trafiği için kullandığı kaydedilmiştir.
+(XXXXXXX, AÇIK -csoonline.com, 28.10.2026)
+» url=https://www.csoonline.com/article/4241634/fake-chatgpt-claude-apps-spread-malware-via-signed-ai-binaries.html
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=62
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=59 | eksen=17/8/17/17 | rubrik=v2
+» varlik | sektor=kripto
+
+────────────────────────────────────────────────────────────────────────────────
+
+[21] Yapay Zeka Botlarını Taklit Edenlerin Kimlik Avı Taraması
+─────────────────────────────────────────────────────────
+Bir siber tehdit aktörünün, OpenAI, Anthropic ve Meta gibi kurumlara ait 30'dan fazla farklı yapay zeka botunu taklit ederek hassas verilere ulaşmaya çalıştığı tespit edilmiştir. CQ Prime Research tarafından yayımlanan raporda, saldırganın Eylül sonundan bu yana perakende, finans ve enerji sektörlerindeki kuruluşları hedef aldığı belirtilmiştir. Kötü niyetli tarayıcının, yapılandırma dosyaları, bulut kimlik bilgileri ve özel SSH anahtarlarını ele geçirmek amacıyla sürekli tarama yaptığı ifade edilmiştir. Araştırmacılar, tarayıcının tek bir gün içinde korunan kuruluşların yüzde 48'ine trafik gönderdiğini kaydetmiştir. Saldırganın, meşru botların aksine kısa süre içinde çok sayıda farklı kimliğe büründüğü ve Anthropic'in iletişim adreslerini kopyaladığı bilgisi verilmiştir. Çoğu isteğin engellendiği ancak finansal kurumlar için riskin sürdüğü bildirilmiştir.
+(XXXXXXX, AÇIK -darkreading.com, 28.10.2026)
+» url=https://www.darkreading.com/cyber-risk/attacker-impersonates-ai-bots-scans-credentials
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=62
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=32 | eksen=8/8/8/8 | rubrik=v2
+» varlik | sektor=enerji,perakende
+
+────────────────────────────────────────────────────────────────────────────────
+
+[22] Yapay Zeka Güvenlik Bariyerlerinin Zafiyet Tespitinde Kullanılması
+─────────────────────────────────────────────────────────
+CrowdStrike araştırmacıları, yapay zeka modellerindeki güvenlik bariyerlerinin siber güvenlik zafiyetlerini tespit etmek için bir sinyal olarak kullanılabileceğini ortaya koymuştur. Guardrail Tabanlı Zafiyet Keşfi (GbVD) olarak adlandırılan bu yöntemde, modelin belirli bir kod bloğunu açıklamayı reddetmesinin o bölgede bir güvenlik açığı bulunduğuna işaret ettiği belirtilmiştir. Yapılan testlerde, modelin doğrudan bir zafiyet bildirmese de tehlikeli kod parçalarına karşı sergilediği davranış değişikliğinin 86 senaryonun 73'ünde doğru sonuç verdiği kaydedilmiştir. Araştırma, yapay zeka laboratuvarlarının modelleri saldırganlardan korumak için geliştirdiği kısıtlamaların, aynı zamanda savunmacılar için birer bulgu kaynağına dönüştüğünü göstermektedir. Bu metodolojinin, açık kaynaklı projelerdeki gerçek zafiyetlerin tespitinde de başarıyla uygulandığı bilgisi verilmiştir. Ayrıca, modelin yanıt süresi, token kullanımı ve çıktı özgünlüğündeki değişimlerin de potansiyel zafiyet göstergeleri olarak değerlendirilebileceği ifade edilmiştir.
+(XXXXXXX, AÇIK -crowdstrike.com, 29.10.2026)
+» url=https://www.crowdstrike.com/en-us/blog/when-ai-guardrails-expose-vulnerabilities/
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=51
+» sonradan | kategori=yapay_zeka_guvenligi | onem=32 | eksen=8/8/8/8 | rubrik=v2
+» teknik | urun=CrowdStrike
+
+────────────────────────────────────────────────────────────────────────────────
+
+[23] Cisco SD-WAN Zafiyetinin Şifreleme Anahtarlarını Çalmak İçin İstismar Edilmesi
+─────────────────────────────────────────────────────────
+Siber saldırganların, Cisco Catalyst SD-WAN sistemlerindeki kritik bir açığı istismar ederek şifreleme anahtarlarını çalmak üzere tasarlanmış KeyDrift zararlı yazılımını yerleştirdiği tespit edilmiştir. Cisco Talos tarafından 28 Ekim 2026 tarihinde paylaşılan bilgilere göre, CVE-2026-20127 kodlu ve 10.0 tam puanlı zafiyet, saldırganların yönetici ayrıcalıkları elde etmesine olanak tanımıştır. UAT-11473 olarak izlenen grubun, LittleFilch bileşeni aracılığıyla yönlendiriciler arasındaki AES-256 anahtar materyallerini topladığı ve RSA ile şifreleyerek dışarı aktardığı belirtilmiştir. Grubun altyapısının, Çin devlet destekli Volt Typhoon ile ilişkilendirilen Silent Train ağıyla benzerlik gösterdiği ifade edilmiştir. Saldırganların vdaemon sürecine PolyFlame modülünü enjekte ederek komut yürüttüğü ve dosya sistemine eriştiği kaydedilmiştir. Cisco, zafiyetin sınırlı sayıda istismar edildiğini onaylayarak kullanıcıları güncel sürümlere geçmeleri konusunda uyarmıştır.
+(XXXXXXX, AÇIK -thehackernews.com, 29.10.2026)
+» url=https://thehackernews.com/2026/10/hackers-exploited-cisco-sd-wan-flaw-to.html
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=82
+» varlik | aktor_ulke=Çin | aktor=UAT-11473,Volt Typhoon
+» teknik | cve=CVE-2026-20127 | urun=Cisco
+
+────────────────────────────────────────────────────────────────────────────────
+
+[24] Red Hat Ürünlerinde Çok Sayıda Güvenlik Zafiyetinin Giderilmesi
+─────────────────────────────────────────────────────────
+Fransa Siber Güvenlik Ajansı (ANSSI), çeşitli Red Hat ürünlerinde güvenlik politikası ihlali ve hizmet dışı bırakma riskleri barındıran birden fazla zafiyet tespit edildiğini duyurmuştur. Etkilenen sistemler arasında Red Hat Enterprise Linux 7, 8, 9 ve 10 sürümlerinin yanı sıra CodeReady Linux Builder ve SAP çözümleri için sunulan güncellemelerin yer aldığı bildirilmiştir. Saldırganların bu açıkları kullanarak sistemlerin güvenlik politikalarını baypas edebileceği ve servisleri durdurabileceği kaydedilmiştir. Red Hat, Ekim 2026 ortasında yayınladığı güvenlik bültenleri ile zafiyetlerin giderilmesi için gerekli yamaları kullanıcılara sunmuştur. Kurum, sistem yöneticilerinin etkilenen mimarilerdeki (x86_64, ARM 64, IBM z Systems, Power) paketleri ivedilikle güncellemesi gerektiğini vurgulamıştır. Zafiyetlerin teknik detaylarının üretici tarafından yayınlanan RHSA kodlu bültenlerde yer aldığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 23.10.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1373/
+» manset=hayir | kategori=zafiyet_rutin | puan=65
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» varlik | hedef=Fransa
+» teknik | urun=Linux,SAP
+» kurban | ad=Red Hat | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[25] Oracle E-Business Suite Kritik RCE Açığının İstismar Edilmesi
+─────────────────────────────────────────────────────────
+Tehdit istihbaratı firması Defused Cyber, Oracle E-Business Suite (EBS) yazılımındaki yeni yamalanan kritik bir güvenlik açığının aktif olarak taranmaya başladığını raporlamıştır. CVE-2026-101767 kodlu açığın, Thin Client Framework servletindeki bir SQL enjeksiyonu hatası olduğu ve uzaktan kod çalıştırılmasına (RCE) imkan tanıdığı belirtilmiştir. Saldırganların bu açık üzerinden APPS veritabanı kullanıcısı yetkileriyle SQL komutları çalıştırabildiği ve ardından işletim sistemi seviyesinde erişim sağlayabildiği ifade edilmiştir. Horizon3.ai araştırmacıları, başarılı bir istismarın finansal kayıtlar, bordro ve insan kaynakları verileri gibi hassas bilgilere erişim sağlayabileceği konusunda uyarıda bulunmuştur. 27 Ekim 2026 sabahı itibarıyla internete açık EBS örneklerine yönelik keşif amaçlı saldırıların kaydedildiği bildirilmiştir. Kullanıcıların sistemlerini derhal en son sürüme güncellemeleri veya geçici bir önlem olarak ilgili servlete erişimi kısıtlamaları tavsiye edilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 28.10.2026)
+» url=https://thehackernews.com/2026/10/hackers-target-critical-oracle-e.html
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=80
+» sonradan | kategori=zafiyet_aktif_apt | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» teknik | cve=CVE-2026-101767 | urun=Oracle
+» kurban | ad=Oracle | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[26] UEFI Yazılımında 16 Yıllık Kritik Güvenlik Açığının Keşfedilmesi
+─────────────────────────────────────────────────────────
+EDK II açık kaynak kodlu UEFI yazılımında, ağ üzerinden önyükleme yapan sunucuları etkileyen 16 yıllık kritik bir güvenlik zafiyeti tespit edilmiştir. CVE-2026-97631 olarak tanımlanan zafiyetin, işletim sistemi yüklenmeden ve Secure Boot gibi savunma mekanizmaları devreye girmeden önce kod yürütülmesine olanak tanıdığı belirtilmiştir. TianoCore projesi tarafından 22 Ekim 2026 tarihinde yayınlanan duyuruda, zafiyetin PXE ağ önyükleme kodundaki 504 baytlık bellek alanında oluşan bir taşmadan kaynaklandığı ifade edilmiştir. Red Hat, SUSE ve Debian gibi Linux dağıtımlarının bu durumdan etkilendiği, ancak henüz kararlı bir yama yayınlanmadığı kaydedilmiştir. Saldırganların bu açığı istismar edebilmesi için cihazın ağ önyükleme sürecinde olması ve özel olarak yapılandırılmış ICMP hata mesajlarının gönderilmesi gerektiği bilgisi verilmiştir. Uzmanlar, yama yayınlanana kadar ağ önyükleme özelliğinin devre dışı bırakılmasını önermektedir. Microsoft'un Project Mu kolunun ise ilgili düzeltmeyi 26 Ekim tarihinde uyguladığı bildirilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 28.10.2026)
+» url=https://thehackernews.com/2026/10/critical-16-year-old-uefi-flaw-can-run.html
+» manset=hayir | kategori=zafiyet_rutin | puan=74
+» sonradan | kategori=zafiyet_rutin | onem=75 | eksen=25/25/8/17 | rubrik=v2
+» teknik | cve=CVE-2026-97631 | urun=Linux
+
+────────────────────────────────────────────────────────────────────────────────
+
+[27] Intelbras Güvenlik Kameralarında Hizmet Dışı Bırakma Zafiyeti
+─────────────────────────────────────────────────────────
+Kaspersky araştırmacıları, Intelbras marka IP kamera sistemlerinde cihazların çevrimdışı bırakılmasına neden olan kritik bir hizmet dışı bırakma (DoS) zafiyeti keşfetmiştir. Zafiyetin, kimlik doğrulama gerektirmeyen bir yazılım güncelleme uç noktasından kaynaklandığı ve yerel ağdaki bir saldırganın tek bir HTTP isteğiyle kamerayı yeniden başlatabildiği belirtilmiştir. Periyodik istekler gönderilerek cihazın süresiz olarak devre dışı bırakılabileceği kaydedilmiştir. Intelbras, bildirimin ardından R.260804 sürümlü yeni bir yazılım yayınlayarak hatayı gidermiştir. Zafiyetin Brezilya başta olmak üzere birçok Güney Amerika ülkesindeki milyonlarca kullanıcıyı etkilediği bilgisi verilmiştir. Intelbras Mibo Smart uygulamasının 4 milyondan fazla indirilmiş olması, riskin ölçeğini ortaya koymaktadır. Kullanıcıların, güvenlik kameralarının kesintisiz çalışmasını sağlamak için yazılımlarını en son sürüme güncellemeleri gerektiği vurgulanmıştır.
+(XXXXXXX, AÇIK -securelist.com, 28.10.2026)
+» url=https://securelist.com/intelbras-camera-vulnerability/121131/
+» manset=hayir | kategori=zafiyet_rutin | puan=69
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» varlik | hedef=Brezilya
+» teknik | urun=Kaspersky
+» kurban | ad=Intelbras | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[28] Debian LTS Linux Çekirdeğinde Kritik Zafiyetlerin Yamalanması
+─────────────────────────────────────────────────────────
+Debian Uzun Süreli Destek (LTS) ekibi, Linux çekirdeğinde veri gizliliğini ve sistem bütünlüğünü tehdit eden çok sayıda güvenlik zafiyetini gidermiştir. Debian 12 Bookworm sürümünü etkileyen bu açıkların, saldırganlara yetki yükseltme, veri sızdırma ve hizmet dışı bırakma imkanı tanıdığı belirtilmiştir. CVE-2023-52629, CVE-2024-49568 ve CVE-2026-100070 gibi çok sayıda zafiyetin bu güncelleme kapsamında ele alındığı kaydedilmiştir. Özellikle çekirdek seviyesindeki bellek yönetimi ve sürücü hatalarının giderildiği ifade edilmiştir. ANSSI, kullanıcıların sistemlerini korumak için çekirdek sürümlerini 6.1.190-1 veya 6.12.113-1~deb12u1 ve daha yeni versiyonlara yükseltmeleri gerektiğini bildirmiştir. Güncelleme sonrası sistemlerin yeniden başlatılmasının zorunlu olduğu ve yamaların Debian'ın resmi duyuru listeleri üzerinden 17 ve 22 Ekim 2026 tarihlerinde dağıtıldığı bilgisi verilmiştir. Bu kapsamlı yama setinin, sistemlerin kararlılığını ve güvenliğini artırmak amacıyla yayınlandığı ifade edilmiştir.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 23.10.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1375/
+» manset=hayir | kategori=zafiyet_rutin | puan=65
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2023-52629,CVE-2024-49568,CVE-2026-100070 | urun=Linux
+» kurban | ad=Debian | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[29] Adobe Campaign Classic Yazılımındaki Kritik Açıkların Kapatılması
+─────────────────────────────────────────────────────────
+Adobe, Campaign Classic yazılımında uzaktan kod yürütülmesine ve yetki yükseltilmesine olanak tanıyan sekiz kritik güvenlik zafiyetini gidermek için yamalar yayınlamıştır. CVE-2026-104351 ve CVE-2026-104353 kodlu açıkların 9.9 gibi en yüksek kritiklik seviyesinde olduğu ve doğrudan işletim sistemi seviyesinde kod enjeksiyonuna izin verdiği belirtilmiştir. Zafiyetlerin Windows ve Linux platformlarındaki 7.4.4 build 9402 ve önceki sürümleri etkilediği kaydedilmiştir. Ayrıca Adobe Connect uygulamasında da benzer riskler taşıyan kritik bir açık giderilmiştir. Şirket, söz konusu zafiyetlerin henüz aktif bir saldırıda kullanıldığına dair bir bilgi bulunmadığını açıklamıştır. Kullanıcıların, güvenlik özelliklerinin baypas edilmesini önlemek için sistemlerini 7.4.4 build 9403 sürümüne yükseltmeleri tavsiye edilmiştir. Güncellemelerin hem masaüstü hem de mobil platformları kapsadığı bildirilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 28.10.2026)
+» url=https://thehackernews.com/2026/10/adobe-fixes-8-critical-campaign-classic.html
+» manset=hayir | kategori=zafiyet_rutin | puan=63
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-104351,CVE-2026-104353 | urun=Adobe,Microsoft
+» kurban | ad=Adobe | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[30] Mattermost Sunucusunda Belirlenemeyen Bir Güvenlik Açığının Tespit Edilmesi
+─────────────────────────────────────────────────────────
+Mattermost Server yazılımının çeşitli sürümlerinde, üretici tarafından teknik ayrıntıları tam olarak belirtilmeyen bir güvenlik açığı tespit edilmiştir. ANSSI tarafından 26 Ekim 2026 tarihinde yayımlanan bildiriye göre, söz konusu zafiyetin 11.7.x, 11.10.x ve 11.11.x serilerindeki belirli sürümleri doğrudan etkilediği ifade edilmiştir. Bu açığın, saldırganların sistem üzerinde tanımlanmamış güvenlik sorunlarına yol açmasına imkan tanıdığı belirtilmiştir. Mattermost, 23 Ekim 2026 tarihinde MMSA-2026-00759 referans numaralı bir güvenlik bülteni yayımlayarak sorunu gideren güncellemeleri kamuoyuna sunmuştur. Özellikle 11.10.4, 11.11.3 ve 11.7.14 sürümlerinden önceki versiyonların risk altında olduğu kaydedilmiştir. Sistem yöneticilerinin ve kullanıcıların, olası güvenlik risklerini bertaraf etmek adına sunucularını ivedilikle ilgili yamalı sürümlere yükseltmeleri gerektiği vurgulanmıştır. Zafiyetin teknik doğasına dair spesifik detaylar paylaşılmamış olsa da düzeltme içeren sürümlerin listesi doğrulanmıştır.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 26.10.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1380/
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» kurban | ad=Mattermost | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[31] Microsoft Edge'in Mantıksal Hatalar Zinciriyle Ele Geçirilmesi
+─────────────────────────────────────────────────────────
+Güvenlik araştırmacısı Orange Tsai, Microsoft Edge tarayıcısını herhangi bir bellek bozulması hatası kullanmadan, yalnızca mantıksal hataları birleştirerek ele geçirdiğini açıklamıştır. Pwn2Own Berlin yarışmasında 175.000 dolar ödül kazanan bu yöntemin, 100 satırdan az kodla tarayıcı korumalı alanından çıkabildiği belirtilmiştir. Saldırının, Edge'in kurumsal oturum açma özellikleri ve Windows'un protokol işleyicilerindeki zayıflıkları kullandığı ifade edilmiştir. Araştırmacı, bu zincir sayesinde herhangi bir web sitesinde JavaScript çalıştırabildiğini ve nihayetinde sistem üzerinde dosya yazma yetkisi elde ettiğini kaydetmiştir. Microsoft'un, yarışmanın hemen ardından 15 Mayıs 2026'da yayımladığı 148.0.3967.70 sürümüyle CVE-2026-45492, CVE-2026-45494 ve CVE-2026-45495 kodlu açıkları giderdiği bildirilmiştir. Güncel tarayıcı kullanan kullanıcıların bu saldırıdan etkilenmediği ve araştırmanın 2026 Pwnie Ödülleri'nde Destansı Başarı kategorisinde ödül kazandığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 28.10.2026)
+» url=https://thehackernews.com/2026/10/researcher-reveals-how-logic-bugs-alone.html
+» manset=hayir | kategori=zafiyet_rutin | puan=45
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-45492,CVE-2026-45494,CVE-2026-45495
+» kurban | ad=Microsoft Edge | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[32] Axis Camera Station Pro Yazılımında Veri Gizliliği Zafiyeti
+─────────────────────────────────────────────────────────
+Axis Camera Station Pro video yönetim yazılımında, verilerin gizliliğini tehlikeye atan bir güvenlik açığı tespit edilmiştir. ANSSI tarafından 28 Ekim 2026 tarihinde yayımlanan bildiriye göre, CVE-2026-63286 olarak tanımlanan bu zafiyet, saldırganların hassas bilgilere yetkisiz erişim sağlamasına imkan tanımaktadır. Sorunun, yazılımın 6.20 sürümünden önceki tüm versiyonlarını etkilediği ifade edilmiştir. Axis firmasının, zafiyeti gidermek amacıyla aynı tarihte bir güvenlik bülteni yayımladığı ve gerekli düzeltmeleri sunduğu belirtilmiştir. Sistem yöneticilerine, veri gizliliğini korumak adına etkilenen sistemleri ivedilikle güncellemeleri tavsiye edilmiştir. Olayın teknik detayları ve yama uygulama talimatlarının üreticinin resmi destek sayfasında paylaşıldığı kaydedilmiştir. Bu zafiyetin, özellikle kurumsal gözetim sistemlerinde veri sızıntısı riskini artırdığına dikkat çekilmiş ve sistemlerin bütünlüğünün korunması için sürüm yükseltmenin zorunlu olduğu vurgulanmıştır.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 28.10.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1408/
+» manset=hayir | kategori=zafiyet_rutin | puan=43
+» sonradan | kategori=zafiyet_rutin | onem=24 | eksen=8/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-63286
+
+────────────────────────────────────────────────────────────────────────────────
+
