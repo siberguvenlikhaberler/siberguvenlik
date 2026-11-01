@@ -59520,3 +59520,74 @@ Ruby on Rails ekosisteminde kullanılan Trilogy veritabanı istemci kütüphanes
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 01 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Asya'daki Hükümet Sistemlerini Hedef Alan NetamLoader Tespiti
+─────────────────────────────────────────────────────────
+Kaspersky araştırmacıları, Asya'daki hükümet kuruluşlarına ait özel Windows 10 sürümlerini hedef alan NetamLoader isimli yeni bir zararlı yazılım çerçevesini ortaya çıkarmıştır. 2026 yılının ilk yarısında tespit edilen bu saldırının, güvenilir bir üçüncü taraf tedarikçinin ele geçirilmesiyle gerçekleştirilen bir tedarik zinciri saldırısı olduğu şüphelenilmektedir. Zararlı yazılımın, meşru uygulamaların süreçleri içinde kod çalıştırmak amacıyla AppDomainManager enjeksiyon tekniğini kullandığı belirtilmiştir. Enfeksiyon zincirinin, Windows güncelleme paketlerinin depolandığı dizinlere yerleştirilen kabine arşiv dosyaları aracılığıyla başlatıldığı kaydedilmiştir. Yapılan incelemelerde, saldırganların izlerini gizlemek için sistem önbellek dosyalarını ve kullanım günlüklerini sildiği tespit edilmiştir. Telemetri verileri, saldırının özellikle Çin hükümeti için özelleştirilmiş Windows 10 sürümlerini kullanan kurumları hedef aldığını göstermektedir. Olayın herhangi bir bilinen tehdit grubuyla henüz ilişkilendirilmediği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 01.11.2026)
+» url=https://thehackernews.com/2026/11/netamloader-malware-targets-government.html
+» manset=evet | kategori=tedarik_zinciri | puan=83
+» sonradan | kategori=tedarik_zinciri | onem=84 | eksen=17/25/25/17 | rubrik=v2
+» varlik | sektor=kamu | hedef=Çin
+» teknik | urun=Microsoft
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] VOLTA Zararlı Yazılımının Kurbanları Yapay Zekayla Önceliklendirmesi
+─────────────────────────────────────────────────────────
+VOLTA-AUTODOXER olarak tanımlanan yeni nesil bilgi çalma yazılımı, ele geçirdiği verileri analiz ederek kurbanların maddi değerini belirlemek için yapay zeka modellerini kullanmaktadır. Yazılım, çalınan kimlik bilgilerini ve kripto cüzdan verilerini OpenRouter üzerinden Claude-4.6, Kimi-k2 ve Gemini-2.5-flash modellerinden oluşan çoklu bir mimariye göndererek kurbanları ticarileştirme değerine göre sıralamaktadır. Model engellerini aşmak için tasarlanan bu sistem, kurbanın ağ bağlantısını kullanarak Gmail, Amazon ve Uber Eats gibi platformlardaki sipariş geçmişinden ev adresi tespiti yapmaktadır. WlanGetProfileList çağrısıyla Wi-Fi şifrelerini de ele geçiren zararlı yazılım, düşük sıcaklık ayarıyla (0.2) tutarlı analiz raporları oluşturmaktadır. Kendi kendini silme özelliğine sahip olan VOLTA, saldırganın manuel iş yükünü azaltarak süreci tamamen otomatize etmektedir.
+(XXXXXXX, AÇIK -blog.talosintelligence.com, 31.10.2026)
+» url=https://blog.talosintelligence.com/appraisal-by-ai-model-driven-victim-prioritization-in-the-volta-infostealer/
+» manset=evet | kategori=yapay_zeka_guvenligi | puan=68
+» varlik | sektor=kripto,ulastirma
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Northflank Platformundaki Güvenlik İhlaliyle Müşteri API Anahtarlarının Çalınması
+─────────────────────────────────────────────────────────
+Bulut uygulama barındırma platformu Northflank, 30 Ekim 2026 tarihinde Wiz adlı güvenlik firmasından gelen kritik bir uyarı üzerine, müşterilerine ait yapay zeka API anahtarlarının ve ortam değişkenlerinin yetkisiz kişilerce ele geçirildiğini duyurmuştur. Platformda saklanan hassas verilerin şifrelerinin çözüldüğü tespit edilirken; şirket, PostgreSQL, MongoDB, MySQL ve Redis gibi veritabanı servisleri için kimlik bilgilerini sıfırlamış ve tüm kullanıcılara ortam değişkenlerini derhal değiştirmeleri çağrısında bulunmuştur. Birden fazla müşterinin çalınan anahtarlar üzerinden yetkisiz faturalandırma bildirdiği olay, Wiz tarafından 'LLMJacking' olarak adlandırılan ve çalınan API anahtarlarıyla yüksek maliyetli yapay zeka modellerine erişim sağlayan geniş kapsamlı bir saldırı dalgasının parçasıdır. Northflank, ağ politikası yamaları uygulayarak tüm hesaplar için denetim günlüklerini etkinleştirmiş ve kullanıcıları iş yüklerindeki gizli verileri rotasyona tabi tutmaları konusunda uyarmıştır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 31.10.2026)
+» url=https://www.bleepingcomputer.com/news/security/northflank-security-breach-leads-to-abuse-of-customers-ai-api-keys/
+» manset=evet | kategori=veri_ihlali | puan=73
+» sonradan | kategori=veri_ihlali | onem=59 | eksen=17/17/17/8 | rubrik=v2
+» kurban | ad=Northflank | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Ivanti Connect Secure Yazılımındaki Üç Güvenlik Açığının İstismarı
+─────────────────────────────────────────────────────────
+Amerika Birleşik Devletleri Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Ivanti Connect Secure yazılımını etkileyen iki yeni güvenlik açığını aktif olarak istismar edildiği gerekçesiyle bilinen istismar edilen zafiyetler kataloğuna eklemiştir. CVE-2026-111357 ve CVE-2026-118527 kodlu bu açıkların, daha önce tanımlanan bir kimlik doğrulama atlatma hatasıyla birleştirilerek yetkisiz kök erişimi sağlamak amacıyla kullanıldığı belirtilmiştir. Siber tehdit aktörü UTA0576 tarafından yönetilen saldırı zincirinin, hedef sistemlerden kimlik bilgileri ve Active Directory meta verilerini sızdırmak için kullanıldığı tespit edilmiştir. Ivanti, söz konusu yerel ayrıcalık yükseltme hataları için gerekli yamaları yayınladığını açıklamıştır. Federal kurumların bu güvenlik açıklarını kapatmak için belirlenen tarihlere kadar güncellemeleri tamamlamaları gerektiği bildirilmiştir. Şirket, ürün güvenlik programı kapsamında bu açıkların bir kısmını daha önce tespit ettiğini ifade etmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 31.10.2026)
+» url=https://thehackernews.com/2026/10/attackers-chain-three-ivanti-connect.html
+» manset=hayir | kategori=zafiyet_rutin | puan=91
+» varlik | sektor=kamu | hedef=ABD
+» teknik | cve=CVE-2026-111357,CVE-2026-118527 | urun=Ivanti | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Chainalysis Sistemlerine Yapay Zeka Destekli Siber Saldırı Düzenlenmesi
+─────────────────────────────────────────────────────────
+Amerikan blokzinciri analiz firması Chainalysis, dış bir aktörün saldırgan etmen teknikleri kullanarak sistemlerine ve dahili araçlarına yetkisiz erişim sağladığını açıklamıştır. Şirket tarafından yapılan açıklamada; kullanıcı kimlikleri, tam isimler, e-posta adresleri ve platformda tanımlı kullanıcıların organizasyonel rol etiketleri gibi hassas olmayan müşteri verilerine erişildiği belirtilmiştir. Soruşturma içerikleri, kimlik doğrulama bilgileri veya oturum belirteçlerinin saldırıdan etkilenmediği kaydedilmiştir. Saldırının, siber saldırı döngüsünün farklı aşamalarını otomatikleştirmek için yapay zeka destekli araçlar kullanan yöntemlerle gerçekleştirildiği ifade edilmiştir. Chainalysis, endüstri genelinde yapay zeka kaynaklı siber saldırılarda artış gözlemlendiğini ve güvenlik duruşunu bu gelişen ortama göre güçlendirdiğini bildirmiştir. Olayın ardından zafiyetlerin yamandığı ve güvenlik protokollerinin güncellendiği bilgisi verilmiştir. Sektör genelinde Vapor Panda gibi grupların benzer yapay zeka tabanlı çerçevelerle geniş ölçekli operasyonlar yürüttüğüne dikkat çekilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 31.10.2026)
+» url=https://thehackernews.com/2026/10/chainalysis-confirms-intrusion-into.html
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=73
+» varlik | sektor=kripto | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Android Cihazları Uzaktan Çökerten SMS Açığının Tespit Edilmesi
+─────────────────────────────────────────────────────────
+Android işletim sisteminde, saldırganların özel olarak hazırlanmış bir metin mesajıyla telefonları uzaktan çökertmesine olanak tanıyan CVE-2026-58882 kodlu bir güvenlik açığı bildirilmiştir. "SMS of Death" olarak adlandırılan bu sıfır etkileşimli hizmet dışı bırakma hatasının, acil durum aramaları dahil tüm hücresel iletişimi kesintiye uğratabildiği belirtilmiştir. Güvenlik araştırmacısı Mark Blah, Android'in mesajı gelen kutusuna ulaşmadan önce işlemesi nedeniyle kurbanların çökmenin nedenini göremediğini ifade etmiştir. Google'ın bu hatayı Ekim 2026 güvenlik güncellemeleriyle Android 14 ve üzeri sürümler için yamaladığı, ancak Android 12 ve 13 sürümlerinin savunmasız kalmaya devam ettiği kaydedilmiştir. Kötü amaçlı mesajların gönderilmesi durumunda cihazların sürekli yeniden başlatma döngüsüne girebildiği ve bazı durumlarda fabrika ayarlarına dönülmesinin zorunlu hale geldiği aktarılmıştır. Kullanıcılara, cihazlarını korumak için en son güvenlik güncellemelerini yüklemeleri tavsiye edilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 31.10.2026)
+» url=https://www.bleepingcomputer.com/news/security/new-android-sms-of-death-exploit-can-remotely-crash-unpatched-phones/
+» manset=hayir | kategori=zafiyet_rutin | puan=67
+» sonradan | kategori=zafiyet_rutin | onem=75 | eksen=25/25/8/17 | rubrik=v2
+» varlik | sektor=uretim
+» teknik | cve=CVE-2026-58882 | urun=Google
+
+────────────────────────────────────────────────────────────────────────────────
+
