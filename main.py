@@ -8,6 +8,7 @@ import re
 import json
 import time
 import hashlib
+from collections import Counter
 import html as _html_mod
 import requests
 import xml.etree.ElementTree as ET
@@ -4153,14 +4154,25 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             except Exception:
                 return 0
 
-        def _anahtar(aid):
+        def _bas(aid):
             rec = records.get(aid, {}) or {}
             return (-rec.get('toplam', 0),
                     -self._kat_oncelik(rec),
                     -rec.get('k', 0),
-                    -rec.get('a', 0),
-                    _tekrar(aid),          # 0 = yeni, 1 = tanıdık → yeni önce
-                    orijinal[aid])
+                    -rec.get('a', 0))
+
+        # YALNIZCA BERABERLİK GRUPLARI SORGULANIR. `_tekrar` sıralamayı ancak
+        # ilk dört bileşende berabere kalan adaylar arasında değiştirebilir;
+        # geri kalanlar için hesaplamak sonucu DEĞİŞTİRMEZ ama her adayı
+        # ~800 geçmiş görünümle önbelleksiz `same_event`'ten geçirir.
+        # ÖLÇÜLDÜ (2026-11-06): üretimde Pass 4 bu yüzden 40 sn sürüyordu ve
+        # `_derive_top3_by_score` koşu başına birkaç kez çağrılıyor.
+        _sayac = Counter(_bas(a) for a in eligible)
+
+        def _anahtar(aid):
+            b = _bas(aid)
+            return b + ((_tekrar(aid) if _sayac[b] > 1 else 0),  # 0 = yeni
+                        orijinal[aid])
 
         yeni_sira = sorted(eligible, key=_anahtar)
         if yeni_sira != list(eligible):
