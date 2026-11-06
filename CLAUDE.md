@@ -1328,9 +1328,8 @@ gerçekten yanlıştı (bu vaka, 24 Eylül CISA kılavuzu), biri doğruydu
 katmanı aynı promptu kullanır, yalnızca id okur (`parse_cross_day_dupes` iki
 biçimi de ayrıştırır). Maliyet nötr. Regresyon: `tests/test_capraz_gun_kanit.py`.
 
-**GÖZLENEN, DÜZELTİLMEDİ:** "Dayanaksız mükerrer elemesi" 30 Ekim'de Binance
-ID 41'i "ne raporda ne geçmişte karşılığı var" diyerek gövdeye geri aldı;
-oysa eşi ID 62 aynı raporun gövdesindeydi — rapor aynı soygunu iki kez taşıdı.
+**GÖZLENEN → DÜZELTİLDİ:** "Dayanaksız mükerrer elemesi" 30 Ekim'de Binance
+ID 41'i eşi raporda dururken geri almıştı — bkz. aşağıdaki geri alma bölümü.
 
 ### GENEL DENETİM — RAPOR KAYBINA KARŞI ÜÇ ÖNLEM (2026-11-06)
 - **SÜRE BEKÇİSİ** (`main.sure_doldu_mu`): koşu 33. dakikayı geçerse
@@ -1352,6 +1351,32 @@ oysa eşi ID 62 aynı raporun gövdesindeydi — rapor aynı soygunu iki kez ta�
   32 adayın manşet sorgusu 37,8 → 6,5 sn (üretimde manşet sorgusu koşu başına
   birkaç kez ~95 adayla yapılır). Sosyal çeviri bütçesi 2048 → 4096 (her
   koşuda kesilip ikinci çağrıya düşüyordu).
-- AÇIK RİSK, DOKUNULMADI: çapraz-gün mükerrer hakemi geçmiş büyüdükçe daha çok
-  çift soruyor (6 Kasım: 238 çift, ~20 çağrı, ~1,5 dk). Kaliteyi etkilediği
-  için ölçümsüz kısılmadı.
+- HAKEM ÇİFT SAYISI BÜYÜMÜYOR (ölçüldü, aynı gün): çapraz-gün hakemi 30 Ekim
+  281, 5 Kasım 221, 6 Kasım 238 kararsız çift sordu (+ rapor içi 41-53);
+  koşu başına 26-34 çağrı, 4-7 olumlu karar. Geçmiş penceresi 30 gün ve aday
+  başına komşu sayısı (`ADAY_UST_SINIR`) sabit olduğundan sayı havuz
+  büyüklüğüyle oynar, zamanla birikmez. Önceki "açık risk" notu yanlıştı;
+  dokunulmadı.
+
+### "DAYANAKSIZ MÜKERRER" GERİ ALMASI GERÇEK TEKRARLARI GERİ GETİRİYORDU (2026-11-06)
+`_son_grup_bosalmasi` mükerrer diye elenen haberi yalnızca `ayni_olay`
+ile sınayıp geri alıyordu; eleyen katmanlar ise defter, `mukerrer_karari` ya
+da LLM hakemiyle karar vermişti. Tanımlar ayrışınca kazanan hep "geri al"
+oluyordu: koşu başına **8-19 haber** geri alındı (30 Ekim 17, 5 Kasım 8,
+6 Kasım 19). Gerçek tekrarlar rapora döndü: 5 Kasım'da Binance soygununun
+beşinci gün tekrarı (98) ve önceki günün cPGuard/OpsShield olayı; 30 Ekim'de
+LLM hakeminin "ID 62 ile aynı olay" dediği Binance ID 41, eşi raporda
+dururken geri alındı ve rapor soygunu iki kez taşıdı.
+ÇARE: (1) önce ÇAPA KAYDI (`_mukerrer_capa_zinciri`) — eleyen katmanın adını
+verdiği eş raporda duruyorsa eleme dayanaklıdır; (2) dayanak = ölçülmüş üç
+tanımdan biri (`ayni_olay`, `mukerrer_karari`, defter `AYNI_GELISME`).
+`same_event` BİLEREK dışarıda (mukerrer_golden'da 5 sahte pozitif):
+NIKKE↔OpsShield, Chrome 157↔156 gibi gerçekten ayrı olayları bağlıyordu ve o
+elemeleri geri almak katmanın asıl işidir.
+ÖLÇÜLDÜ (koşu günlükleriyle çevrimdışı): 5 Kasım 8 → 5 geri alma (Binance,
+OpsShield, sahte yükleyici kampanyası dışarıda; NIKKE, Chrome 157, Xen,
+WordPress geri dönüyor); 30 Ekim 17 → 11 (Binance ikinci kopyası, PHP2Shell,
+ABD iflas mahkemeleri↔BAE Systems dışarıda). BEDEL: 30 Ekim'de eski kuralın
+zaten elediği 2-3 düşük puanlı haber (60-82: NIST yapay zekâ ajanları ↔ NIST
+su sektörü, ABD yerel seçim siteleri) defterin şüpheli AYNI_GELISME bağı
+yüzünden dışarıda kalıyor. Regresyon: `tests/test_son_grup_bosalmasi.py`.

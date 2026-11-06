@@ -8320,20 +8320,47 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   + self._load_recent_kritik3_views())
         gecmis_anahtar = [(_olay.aday_anahtarlari(ev), ev) for ev in gecmis]
 
+        # DAYANAK = ÖLÇÜLMÜŞ ÜÇ TANIMDAN BİRİ. Eskiden yalnızca `ayni_olay`
+        # soruluyordu; eleyen katmanlar ise başka tanımlarla (defter,
+        # mukerrer_karari, LLM hakemi) karar vermişti. Tanımlar ayrıştığında
+        # kazanan hep "geri al" oluyordu. ÖLÇÜLDÜ (2026-11-06): koşu başına
+        # 8-19 haber geri alınıyordu; 5 Kasım'da Binance soygununun BEŞİNCİ
+        # gün tekrarı (98) ve 4 Kasım'daki cPGuard/OpsShield olayı defterin
+        # AYNI_GELISME dediği haberler olarak gövdeye döndü, 30 Ekim'de
+        # LLM hakeminin "ID 62 ile aynı olay" dediği Binance ID 41 eşi raporda
+        # dururken geri alındı (rapor aynı soygunu iki kez taşıdı).
+        # `same_event` BİLEREK dışarıda: mukerrer_golden'da 5 sahte pozitifi
+        # var; NIKKE↔OpsShield, Chrome 157↔156 gibi gerçekten ayrı olayları
+        # bağlıyordu — o elemeleri geri almak bu katmanın asıl işidir.
+        def _dayanak(av, ov, ayni_gun):
+            if _olay.ayni_olay(av, ov, sozluk=sozluk, ayni_gun=ayni_gun):
+                return True
+            if _olay.mukerrer_karari(av, ov, sozluk=sozluk,
+                                     ayni_gun=ayni_gun) != _olay.FARKLI:
+                return True
+            return _olay.iliski_belirle(av, ov, sozluk=sozluk,
+                                        ayni_gun=ayni_gun) == _olay.AYNI_GELISME
+
         geri = []
         for aid in sorted(adaylar, key=lambda a: -_puan(a)):
             rec = records.get(aid) or {}
             if not rec.get('siber') or rec.get('kat') in ('urun_icerik',
                                                           'siber_disi'):
                 continue
+            # ÇAPA KAYDI ÖNCE — bkz. _mukerrer_capa_kaydet. Eleyen katman eşi
+            # ADIYLA kaydettiyse ve eş (ya da zincirindeki biri) raporda
+            # duruyorsa olay temsil ediliyor: eleme dayanaklıdır.
+            if any(c in rapor or c in geri
+                   for c in self._mukerrer_capa_zinciri(aid)):
+                continue
             av = view_fn(aid)
             # Raporda (ya da bu turda geri alınanlar arasında) karşılığı var mı?
-            if any(_olay.ayni_olay(av, view_fn(o), sozluk=sozluk, ayni_gun=True)
+            if any(_dayanak(av, view_fn(o), True)
                    for o in list(rapor) + geri):
                 continue
             # Geçmişte yayımlandı mı? Yayımlandıysa eleme DOĞRUDUR.
             ka = _olay.aday_anahtarlari(av)
-            if any(ka & gk and _olay.ayni_olay(av, ev, sozluk=sozluk)
+            if any(ka & gk and _dayanak(av, ev, False)
                    for gk, ev in gecmis_anahtar):
                 continue
             geri.append(aid)

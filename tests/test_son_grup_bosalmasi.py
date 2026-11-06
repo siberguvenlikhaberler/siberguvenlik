@@ -98,3 +98,34 @@ def test_kanca_boru_hattinin_SONUNDA():
     assert i_kapi < i_grup, 'koruma son kapıdan ÖNCE çalışıyor'
     assert "_senkron('son_grup_bosalmasi')" in kaynak, \
         'geri alma katmanı değişmez denetiminden geçmiyor'
+
+
+def test_capa_kaydindaki_es_raporda_ise_geri_alinmaz():
+    """2026-10-30: LLM hakemi 'ID 41, ID 62 ile aynı olay' dedi ve çapayı
+    kaydetti; deterministik tanım ikisini bağlayamadığı için katman 41'i geri
+    aldı ve rapor aynı Binance soygununu İKİ KEZ taşıdı."""
+    s, rec, cnt, art = _kur()
+    s._mukerrer_capa_kaydet(1, 3)          # eleyen katmanın kaydı: 1 ≈ 3
+    nedenler = {1: 'kapi_rapor_ici_llm'}
+    t3, t10, kal = s._son_grup_bosalmasi([3], [3], [], rec, cnt, art, nedenler)
+    assert 1 not in (t3 + t10 + kal), 'çapası raporda duran haber geri alındı'
+    assert nedenler.get(1) == 'kapi_rapor_ici_llm'
+
+
+def test_defter_ayni_gelisme_dayanaktir(monkeypatch):
+    """2026-11-05: Binance soygununun beşinci gün tekrarı (98) defterin
+    AYNI_GELISME dediği haberdi ama `ayni_olay` bağlamadığı için gövdeye geri
+    alındı. Ölçülmüş üç tanımdan biri bağlıyorsa eleme dayanaklıdır."""
+    s, rec, cnt, art = _kur(gecmis=[{'tr_title': 'x', 'paragraph': 'y',
+                                     'title': '', 'full_text': ''}])
+    monkeypatch.setattr(main._olay, 'ayni_olay', lambda *a, **k: False)
+    monkeypatch.setattr(main._olay, 'mukerrer_karari',
+                        lambda *a, **k: main._olay.FARKLI)
+    monkeypatch.setattr(main._olay, 'aday_anahtarlari', lambda v: {'k'})
+    monkeypatch.setattr(
+        main._olay, 'iliski_belirle',
+        lambda a, b, **k: (main._olay.AYNI_GELISME if b.get('tr_title') == 'x'
+                           else main._olay.ILISKISIZ))
+    nedenler = {1: 'capraz_gun'}
+    t3, t10, kal = s._son_grup_bosalmasi([3], [3], [], rec, cnt, art, nedenler)
+    assert 1 not in (t3 + t10 + kal)
