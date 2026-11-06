@@ -114,7 +114,11 @@ MIN_DERLEM = 25
 #
 # Anahtar, görünümün METİN İÇERİĞİDİR (id() değil): id yeniden kullanılabilir
 # ve aynı içerik farklı sözlük nesnelerinde gelebilir.
-_ONBELLEK_SINIRI = 4096
+# 4096 YETMİYORDU (ölçüldü 2026-11-06): 30 günlük ~800 görünüm × birkaç
+# çıkarım türü sınırı aşıyor, önbellek bir koşuda 45 kez TAMAMEN silinip
+# baştan doluyordu. Defter kurulumu 20,2 → 9,1 sn, 32 adayın manşet sorgusu
+# 37,8 → 6,5 sn. Gerçek doluluk ~5 bin kayıt; tavan yalnızca taşma güvencesi.
+_ONBELLEK_SINIRI = 50000
 _onbellek = {}
 
 

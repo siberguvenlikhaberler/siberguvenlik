@@ -96,6 +96,53 @@ from src.config import (
 from src.http_utils import requests_get_with_retry as _requests_get_with_retry
 
 
+# ── KOŞU SÜRE BEKÇİSİ ────────────────────────────────────────────────────────
+# 2026-11-06: üç slotun üçü de raporu BİTİRDİ ama iş akışının süre sınırına
+# commit'ten 3 saniye önce takıldı — rapor yayımlanmadı, LLM maliyeti 3 kez
+# ödendi. Sınır 50 dk'ya çıkarıldı; bu bekçi ise yoğun bir günde ya da yavaş
+# bir sağlayıcıda raporun YİNE de yetişmesini garanti eder: süre eşiği
+# aşılınca YALNIZCA KOZMETİK onarım geçişleri (başlık kısaltma, paragraf
+# uzatma, resmi dil, sosyal çeviri) atlanır. Seçim, mükerrer ve manşet
+# katmanları HİÇBİR ZAMAN atlanmaz. Atlama izi `_atlanan_onarimlar`a yazılır.
+_KOSU_T0 = time.time()
+# İş akışı sınırı 50 dk; kurulum ~1 dk, arşiv/commit ~1 dk. Onarımlar
+# atlandıktan sonra kalan zorunlu iş (Pass 6 + HTML + arşiv) ~1 dk sürer.
+KOZMETIK_ONARIM_SINIRI_DK = float(os.getenv('KOZMETIK_ONARIM_SINIRI_DK') or 33)
+# Manşet paragraf uzatması da kozmetiktir ama manşette görünür; daha geç kesilir.
+MANSET_ONARIM_SINIRI_DK = float(os.getenv('MANSET_ONARIM_SINIRI_DK') or 38)
+
+
+def _rapor_sonrasi_adim(etiket, fn, *args):
+    """Rapor diske yazıldıktan SONRAKİ adımı yalıtır: hata raporu düşürmez,
+    ama sessiz de kalmaz — GitHub Actions uyarısı ve tam iz basılır."""
+    try:
+        return fn(*args)
+    except Exception as e:                      # noqa: BLE001
+        import traceback
+        print(f"::warning title=Rapor sonrası adım başarısız::{etiket}: {e}")
+        print(f"   🚨 {etiket} BAŞARISIZ ({e!r}) — rapor yayımlanıyor, bu adım "
+              f"eksik kaldı.")
+        traceback.print_exc()
+        return None
+
+
+def kosu_dakika():
+    return (time.time() - _KOSU_T0) / 60.0
+
+
+def sure_doldu_mu(esik_dk, etiket, kayit=None):
+    """Eşik aşıldıysa True döner ve bir kez uyarı basar."""
+    gecen = kosu_dakika()
+    if gecen < esik_dk:
+        return False
+    print(f"   ⏱️  {etiket} ATLANDI — koşu {gecen:.1f} dk sürdü "
+          f"(eşik {esik_dk:.0f} dk); rapor süre sınırına yetişsin diye "
+          f"kozmetik onarım yapılmıyor.")
+    if kayit is not None:
+        kayit.append({'gecis': etiket, 'dakika': round(gecen, 1)})
+    return True
+
+
 def auditor_goreli_sinir(maddeler, records, govde_ids,
                          goreli_madde=AUDITOR_GORELI_MADDE,
                          pencere=AUDITOR_GOVDE_PENCERE):
@@ -959,6 +1006,7 @@ class HaberSistemi:
         # Dedup elemesinin NEDENİ, kaynak bazında (bkz. _note_dedup):
         # src -> {'seen': daha önce raporlanmış, 'filtered': benzerlik/hash/kod adı}
         self.dedup_reasons = {}
+        self._atlanan_onarimlar = []   # bkz. sure_doldu_mu
         self.source_health_file = "data/kaynak_saglik.txt"
         # Proxy fallback sayaçları (bkz. _article_proxy_fallback) — workflow
         # zaman bütçesini korumak için çağrı sayısı ve toplam süre sınırlanır.
@@ -4920,6 +4968,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         YERİNDE güncellenir. Laubali kip bulunmazsa/LLM başarısızsa paragraf
         DEĞİŞMEZ (güvenli degrade). KRİTİK 3 dahil TÜM rapor haberlerine uygulanır
         (yalnızca metin düzeltir, haber silmez)."""
+        if sure_doldu_mu(KOZMETIK_ONARIM_SINIRI_DK, 'Resmi dil denetimi',
+                         getattr(self, '_atlanan_onarimlar', None)):
+            return
+
         flagged = []
         for aid in rendered_ids:
             para = (content_by_id.get(aid, {}) or {}).get('paragraph', '') or ''
@@ -7152,6 +7204,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
           - Boş/tek kelimelik yanıt reddedilir.
           - Bütçe dolunca durulur; en uzun başlıklardan başlanır.
         """
+        if sure_doldu_mu(KOZMETIK_ONARIM_SINIRI_DK, 'Başlık kısaltma',
+                         getattr(self, '_atlanan_onarimlar', None)):
+            return
+
         adaylar = []
         for aid in ids:
             c = content_by_id.get(aid) or {}
@@ -7200,6 +7256,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         kaynak metin kısaysa denenmez, kısalan sonuç reddedilir, hedef
         tutturulamazsa en iyi deneme bırakılır ve içerik UYDURULMAZ.
         """
+        if sure_doldu_mu(KOZMETIK_ONARIM_SINIRI_DK, 'Gövde paragraf uzatma',
+                         getattr(self, '_atlanan_onarimlar', None)):
+            return
+
         adaylar = []
         for aid in ids:
             c = content_by_id.get(aid) or {}
@@ -7312,6 +7372,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             (en uzun) deneme sonucu bırakılır ve durum loglanır. Kısa ama
             doğru bir paragraf, uzun ama halüsinasyonlu bir paragraftan iyidir.
         """
+        if sure_doldu_mu(MANSET_ONARIM_SINIRI_DK, 'Manşet paragraf uzatma',
+                         getattr(self, '_atlanan_onarimlar', None)):
+            return
+
         # DENEME SAYACI — koşu boyunca haber başına en fazla
         # KRITIK3_UZUNLUK_DENEME çağrı. Manşet en fazla 3 haberdir, bu yüzden
         # ikinci deneme ucuzdur; ama bu metot boru hattında birçok kez
@@ -8872,6 +8936,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 },
                 # Hangi katman hangi manşeti düşürdü (bkz. _manset_karar_kaydet)
                 'manset_karar_izi': getattr(self, '_manset_izi', []),
+                # Süre bekçisinin atladığı kozmetik onarımlar ve kayıt anındaki
+                # koşu süresi (bkz. sure_doldu_mu) — süre eğilimi izlenebilsin.
+                'atlanan_onarimlar': getattr(self, '_atlanan_onarimlar', []),
+                'kosu_dakika': round(kosu_dakika(), 1),
                 # Yayın yönetmeninin takas DIŞI eylemleri (kategori/başlık/
                 # paragraf düzeltmeleri ve olgu koruması nedeniyle reddedilenler).
                 # Önceden yalnızca stdout'a yazılıyordu; koşu bittikten sonra
@@ -10023,16 +10091,22 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         print("✅ docs/index.html")
         print(f"✅ {rapor_yolu}")
 
-        # Çapraz-gün dedup referansı: bugünkü KRİTİK 3'ü parmak-izi deposuna yaz.
-        self._save_kritik3_history(top3_ids, content_by_id, articles_by_id)
-        # Çapraz-gün rapor-geneli dedup referansı: bugün RAPORA giren TÜM haberleri
-        # (KRİTİK 3 + gövde) parmak-izi deposuna yaz.
-        self._save_report_history(
+        # RAPOR DİSKTE — bundan sonraki adımlar raporu DÜŞÜREMEZ.
+        # Biri istisna atarsa süreç çöker, iş akışının push adımı atlanır ve
+        # yayımlanmaya hazır rapor kaybolur; sonraki slot her şeyi baştan
+        # üretip LLM maliyetini yeniden öder (2026-11-06 kaybının aynı
+        # sonucu). Her adım yalıtılır, hata Actions'ta uyarı olarak görünür.
+        _rapor_sonrasi_adim('KRİTİK 3 geçmişi', self._save_kritik3_history,
+                            top3_ids, content_by_id, articles_by_id)
+        _rapor_sonrasi_adim(
+            'Rapor geçmişi', self._save_report_history,
             list(top3_ids) + list(top10_ids) + list(remaining_ids),
             content_by_id, articles_by_id)
-        self.save_summary_to_archive(
-            html, self._arsiv_meta_kur(top3_ids, content_by_id, score_records))
-        self._cleanup_old_reports()
+        _rapor_sonrasi_adim(
+            'Arşiv yazımı', lambda: self.save_summary_to_archive(
+                html, self._arsiv_meta_kur(top3_ids, content_by_id,
+                                           score_records)))
+        _rapor_sonrasi_adim('Eski rapor temizliği', self._cleanup_old_reports)
         return html
 
     @staticmethod
@@ -10401,17 +10475,20 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         print("✅ docs/index.html (legacy)")
         print(f"✅ {rapor_yolu} (legacy)")
-        # Çapraz-gün dedup referansı: bugünkü KRİTİK 3'ü parmak-izi deposuna yaz.
-        self._save_kritik3_history(top3_ids, content_by_id, id_to_article)
-        # Çapraz-gün rapor-geneli dedup referansı: bugün RAPORA giren TÜM haberler.
-        self._save_report_history(
+        # Rapor diskte — sonraki adımlar raporu düşüremez (bkz. ana yol).
+        _rapor_sonrasi_adim('KRİTİK 3 geçmişi', self._save_kritik3_history,
+                            top3_ids, content_by_id, id_to_article)
+        _rapor_sonrasi_adim(
+            'Rapor geçmişi', self._save_report_history,
             list(top3_ids) + list(top10_ids) + list(remaining_ids),
             content_by_id, id_to_article)
         # Legacy yolda puan kaydı yok; manşet + kategori yine de yazılır.
-        self.save_summary_to_archive(
-            html, self._arsiv_meta_kur(top3_ids, content_by_id,
-                                       getattr(self, '_son_score_records', None)))
-        self._cleanup_old_reports()
+        _rapor_sonrasi_adim(
+            'Arşiv yazımı', lambda: self.save_summary_to_archive(
+                html, self._arsiv_meta_kur(
+                    top3_ids, content_by_id,
+                    getattr(self, '_son_score_records', None))))
+        _rapor_sonrasi_adim('Eski rapor temizliği', self._cleanup_old_reports)
         return html
 
     def _translate_social_signals(self):
@@ -10420,6 +10497,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         Sonuç her öğenin 'title_tr' alanına yazılır.
         Hata durumunda orijinal başlık kullanılmaya devam eder.
         """
+        if sure_doldu_mu(KOZMETIK_ONARIM_SINIRI_DK, 'Sosyal sinyal çevirisi',
+                         getattr(self, '_atlanan_onarimlar', None)):
+            return
+
         import re as _re
         if not self.social_data:
             return
@@ -10448,7 +10529,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         )
         if is_openrouter_active():
             text = _llm.generate_text(
-                prompt, max_output_tokens=2048, temperature=0.2,
+                # 2048 her koşuda kesilip ikinci ücretli çağrıya düşüyordu.
+                prompt, max_output_tokens=4096, temperature=0.2,
                 label='sosyal-ceviri',
             ) or ''
             matched = 0

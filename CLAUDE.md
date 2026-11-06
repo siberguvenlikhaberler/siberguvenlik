@@ -1331,3 +1331,27 @@ biçimi de ayrıştırır). Maliyet nötr. Regresyon: `tests/test_capraz_gun_kan
 **GÖZLENEN, DÜZELTİLMEDİ:** "Dayanaksız mükerrer elemesi" 30 Ekim'de Binance
 ID 41'i "ne raporda ne geçmişte karşılığı var" diyerek gövdeye geri aldı;
 oysa eşi ID 62 aynı raporun gövdesindeydi — rapor aynı soygunu iki kez taşıdı.
+
+### GENEL DENETİM — RAPOR KAYBINA KARŞI ÜÇ ÖNLEM (2026-11-06)
+- **SÜRE BEKÇİSİ** (`main.sure_doldu_mu`): koşu 33. dakikayı geçerse
+  kozmetik onarımlar (başlık kısaltma, gövde paragraf uzatma, resmi dil,
+  sosyal çeviri), 38. dakikayı geçerse manşet paragraf uzatması ATLANIR.
+  Seçim/mükerrer/manşet katmanları hiçbir zaman atlanmaz. Atlananlar ve
+  koşu süresi `kalite_denetim.jsonl`'a (`atlanan_onarimlar`,
+  `kosu_dakika`) yazılır — süre eğilimi artık kayıttan izlenir. Eşikler
+  ortam değişkeniyle ayarlanabilir; test, eşiğin iş akışı sınırının en az
+  10 dk altında kaldığını sabitler.
+- **RAPOR DİSKTEYSE DÜŞMEZ** (`_rapor_sonrasi_adim`): HTML yazıldıktan sonraki
+  geçmiş/arşiv/temizlik adımlarından biri istisna atarsa eskiden süreç
+  çöküyor, push adımı atlanıyor ve hazır rapor kayboluyordu. Artık her adım
+  yalıtılır, hata Actions'ta `::warning` olarak görünür. Yapı testi bu
+  adımların doğrudan çağrılmasını yasaklar.
+- **ÖNBELLEK TAŞMASI** (`olay_iliski._ONBELLEK_SINIRI` 4096 → 50000): ~800
+  geçmiş görünüm × çıkarım türleri sınırı aşıyor, önbellek bir koşuda 45 kez
+  tamamen silinip baştan doluyordu. Ölçüldü: defter kurulumu 20,2 → 9,1 sn,
+  32 adayın manşet sorgusu 37,8 → 6,5 sn (üretimde manşet sorgusu koşu başına
+  birkaç kez ~95 adayla yapılır). Sosyal çeviri bütçesi 2048 → 4096 (her
+  koşuda kesilip ikinci çağrıya düşüyordu).
+- AÇIK RİSK, DOKUNULMADI: çapraz-gün mükerrer hakemi geçmiş büyüdükçe daha çok
+  çift soruyor (6 Kasım: 238 çift, ~20 çağrı, ~1,5 dk). Kaliteyi etkilediği
+  için ölçümsüz kısılmadı.
