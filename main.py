@@ -7146,7 +7146,11 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     tr_title=c.get('tr_title', ''),
                     paragraph=' '.join((c.get('paragraph') or '').split()[:80]),
                     current_wc=n, max_words=TR_TITLE_MAX_WORDS),
-                max_output_tokens=256, label=f'Başlık-Kısaltma-{aid}')
+                # 256 ile başlıyordu: thinking modelinde reasoning bütçeyi
+                # yiyor, 2026-11-06'da 10 başlığın 10'u 256 ve 512'de, 6'sı
+                # 1024'te kesildi — başlık başına 3-4 ücretli çağrı. Başarılı
+                # yanıtlar 1024-2048 arasında geldi.
+                max_output_tokens=2048, label=f'Başlık-Kısaltma-{aid}')
             if not isinstance(fixed, dict):
                 continue
             yeni = (fixed.get('tr_title') or '').strip().rstrip('.')
@@ -7324,7 +7328,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     tr_title=c.get('tr_title', ''), paragraph=paragraph,
                     full_text=_cap_fulltext(full_text), current_wc=wc,
                 ),
-                max_output_tokens=2048,
+                # 2048'de 5 denemenin 3'ü kesiliyordu (2026-11-06).
+                max_output_tokens=4096,
                 label=f'Kritik3-Uzunluk-{aid}',
             )
             if not isinstance(fixed, dict):

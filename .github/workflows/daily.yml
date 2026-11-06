@@ -45,7 +45,11 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # 25 dk yetmedi (2026-11-06): yoğun günde (95 haber) koşu 24:54'te
+    # TAMAMLANDI ama commit adımına geçemeden kesildi; üç slot da aynı
+    # şekilde düştü, rapor yayımlanmadı ve LLM maliyeti 3 kez ödendi.
+    # Son 30 günde süre 8-23,5 dk arasında ve artıyordu. Pay bırakıldı.
+    timeout-minutes: 50
     permissions:
       contents: write
       issues: write
@@ -113,7 +117,9 @@ jobs:
       # çöken koşu kendini bir issue ile bildirir (aynı gün ikinci kez
       # çökerse yeni issue açılmaz, mevcut olana yorum düşer).
       - name: Koşu çöktüyse issue aç
-        if: failure()
+        # cancelled(): zaman aşımı işi 'cancelled' yapar, failure() onu
+        # görmez — 2026-11-06'daki üç kesinti hiç bildirilmedi.
+        if: failure() || cancelled()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KOSU: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
