@@ -2063,8 +2063,11 @@ def get_cross_day_dedup_prompt(today_items, recent_items):
 
     today_items:  "=== HABER ID: N ===\\nBaşlık: ...\\nÖzet: ...\n" (bugünkü adaylar)
     recent_items: "--- [Rk] Başlık: ...\\nÖzet: ...\n"             (son günler)
-    Döndürülen JSON: {"duplicates": [id, ...]} — SON GÜNLERDE zaten raporlanmış
-    bir olayın AYNISINI (aynı gelişme) anlatan BUGÜNKÜ haber ID'leri."""
+    Döndürülen JSON: {"duplicates": [{"id", "gecmis", "ortak"}, ...]} — SON
+    GÜNLERDE zaten raporlanmış bir olayın AYNISINI anlatan BUGÜNKÜ haberler,
+    eşleştirilen geçmiş kayıt ve ortak özel adla (manşet katmanı bu kanıtı
+    `olay_iliski.capraz_gun_kaniti` ile sınar; gövde katmanı yalnızca id'leri
+    kullanır). Eski düz liste biçimi de ayrıştırılır."""
     return f"""Sen bir siber güvenlik haber editörüsün. Görevin TEK: BUGÜNKÜ haber
 adaylarından, SON GÜNLERDE ZATEN RAPORLANMIŞ bir olayın AYNISINI (aynı gelişmeyi)
 anlatan — yani okuyucuya YENİ hiçbir şey katmayan MÜKERRER — olanları bulmak.
@@ -2091,9 +2094,15 @@ haberle AŞAĞIDAKİLERDEN BİRİ TAM SAĞLANIYORSA işaretle:
 EN ÖNEMLİ KURAL: Emin değilsen veya "biraz benziyor" diyorsan İŞARETLEME. Yeni bir
 haberi yanlışlıkla elemek, mükerrer bırakmaktan ÇOK DAHA KÖTÜDÜR. Şüphede boş liste döndür.
 
+KANIT ZORUNLU: işaretlediğin her haber için eşleştirdiğin geçmiş kaydın
+numarasını ("gecmis": "R3") ve İKİ HABERDE DE GEÇEN ortak kurban/hedef, ürün ya
+da operasyon ÖZEL ADINI ("ortak") yaz. Ülke adı, sektör ya da tema ("soğutma
+sistemleri", "fidye yazılımı") ve aktör/grup adı ortak ad SAYILMAZ — böyle bir
+ad bulamıyorsan o haber mükerrer DEĞİLDİR, işaretleme.
+
 SADECE JSON — başka hiçbir şey yazma. Mükerrer yoksa boş liste:
 {{
-  "duplicates": [7, 15]
+  "duplicates": [{{"id": 7, "gecmis": "R3", "ortak": "Binance"}}]
 }}
 
 SON GÜNLERDE ZATEN RAPORLANMIŞ HABERLER:

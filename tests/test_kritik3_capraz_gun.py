@@ -202,3 +202,28 @@ def test_yerinde_birakilan_haber_yasaklanmaz():
     out = _cagir(s, [1, 2, 3], [1, 2, 3])
     assert out == [1, 2, 3]
     assert 3 not in getattr(s, '_manset_yasak', set())
+
+
+def test_kanitsiz_isaret_reddedilir_ve_ize_yazilir():
+    """2026-11-06: 'tekrar' işareti, bildirilen geçmiş kayıtla ne
+    deterministik bağ ne de iki metinde geçen ortak ad taşımıyorsa
+    REDDEDİLİR — manşet yerinde kalır, karar ize yazılır."""
+    s = main.HaberSistemi.__new__(main.HaberSistemi)
+    s._gemini_call_json = lambda *a, **k: {'duplicates': [
+        {'id': 1, 'gecmis': 'R1', 'ortak': 'npm paketleri'}]}
+    iz = []
+    s._manset_karar_kaydet = lambda katman, aid, yedek, neden: iz.append(
+        (katman, aid))
+    out = s._dedup_kritik3_cross_day_llm(
+        [1, 2, 3], [1, 2, 3, 4, 5], KAYITLAR, ICERIK, {}, GECMIS)
+    assert out == [1, 2, 3]
+    assert ('capraz_gun_kanit_siniri', 1) in iz
+
+
+def test_kanitli_isaret_yeni_bicimde_de_uygulanir():
+    s = main.HaberSistemi.__new__(main.HaberSistemi)
+    s._gemini_call_json = lambda *a, **k: {'duplicates': [
+        {'id': 3, 'gecmis': 'R1', 'ortak': 'keyv'}]}
+    out = s._dedup_kritik3_cross_day_llm(
+        [1, 2, 3], [1, 2, 3, 4, 5], KAYITLAR, ICERIK, {}, GECMIS)
+    assert 3 not in out and len(out) == 3

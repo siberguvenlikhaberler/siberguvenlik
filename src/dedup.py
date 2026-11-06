@@ -971,13 +971,35 @@ def parse_cross_day_dupes(data, candidate_ids):
     out = set()
     if not isinstance(data, dict):
         return out
+    return set(parse_cross_day_kanit(data, candidate_ids))
+
+
+def parse_cross_day_kanit(data, candidate_ids):
+    """Çapraz-gün yanıtını KANITIYLA ayrıştırır: {id: (gecmis_no, ortak)}.
+
+    İki biçim kabul edilir: eski düz liste ([7, 15]) ve kanıtlı nesne
+    ([{"id": 7, "gecmis": "R3", "ortak": "Binance"}]). `gecmis_no` 1 tabanlı
+    geçmiş kaydı sırasıdır (yoksa None), `ortak` LLM'in bildirdiği ortak
+    özel addır (yoksa ''). Bozuk öğe sessizce atlanır."""
+    idset = set(candidate_ids)
+    out = {}
+    if not isinstance(data, dict):
+        return out
     for x in (data.get('duplicates', []) or []):
+        gecmis, ortak = None, ''
+        if isinstance(x, dict):
+            ham_id = x.get('id')
+            m = re.search(r'\d+', str(x.get('gecmis') or ''))
+            gecmis = int(m.group()) if m else None
+            ortak = str(x.get('ortak') or '').strip()[:80]
+        else:
+            ham_id = x
         try:
-            xi = int(x)
+            xi = int(ham_id)
         except (TypeError, ValueError):
             continue
         if xi in idset:
-            out.add(xi)
+            out[xi] = (gecmis, ortak)
     return out
 
 

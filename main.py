@@ -4643,12 +4643,37 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         data = self._gemini_call_json(
             get_cross_day_dedup_prompt('\n'.join(today_lines), '\n'.join(recent_lines)),
-            max_output_tokens=512, label='Auditor-ManşetÇaprazGün')
-        flagged = _dedup.parse_cross_day_dupes(data, top3_ids)
+            # 512 bugün de kesildi (2026-11-06) ve yanıt artık kanıt taşıyor.
+            max_output_tokens=1024, label='Auditor-ManşetÇaprazGün')
+        kanit = _dedup.parse_cross_day_kanit(data, top3_ids)
+        if not kanit:
+            return list(top3_ids)
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+        # KANIT KAPISI — bkz. olay_iliski.capraz_gun_kaniti (5 Kasım Fransa
+        # Ulusal Kan Hizmeti vakası). LLM'in "tekrar" kararı, bildirdiği geçmiş
+        # kayda karşı (bildirmediyse gösterilen tüm kayıtlara karşı) sınanır;
+        # kanıtsız işaret REDDEDİLİR ve gerekçesi ize yazılır. Maliyet nötr.
+        sozluk = getattr(self, '_olay_sozlugu', None)
+        flagged = set()
+        for aid, (gno, ortak) in kanit.items():
+            hedefler = ([recent_views[gno - 1]]
+                        if gno and 1 <= gno <= len(recent_views)
+                        else list(recent_views))
+            kabul, gerekce = False, 'gösterilen geçmiş yok'
+            for gv in hedefler:
+                kabul, gerekce = _olay.capraz_gun_kaniti(
+                    view_fn(aid), gv, ortak, sozluk=sozluk)
+                if kabul:
+                    break
+            if kabul:
+                flagged.add(aid)
+                continue
+            print(f"   🛡️  Manşet çapraz-gün: ID {aid} tekrar olarak "
+                  f"işaretlendi ama {gerekce} — İŞARET REDDEDİLDİ.")
+            self._manset_karar_kaydet('capraz_gun_kanit_siniri', aid, 0,
+                                      gerekce)
         if not flagged:
             return list(top3_ids)
-
-        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
         sonuc = list(top3_ids)
         for aid in list(flagged):
             yedek = self._kritik3_yedek_bul(

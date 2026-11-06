@@ -368,6 +368,16 @@ _MANSIZ_AD = {
     # ihlal duyurusunda geçer. 'Gentlemen fidyesi ↔ Levi Strauss' bu yüzden
     # aynı olay sayıldı.
     'borsa', 'komisyon', 'menkul', 'kıymetle',
+    # Kripto soygunlarının ORTAK ÜÇÜNCÜ TARAFLARI: çalınan fonları donduran
+    # stablecoin ihraççıları her soygun haberinin gövdesinde geçer; kurban
+    # ya da fail değildirler (raporlayan tarafın — Unit 42 — karşılığı).
+    # ÖLÇÜLDÜ (2026-11-06, 30 Ekim koşusu yeniden oynatıldı): 6,3 milyar
+    # dolarlık Binance soygunu (100 puan) 1 Ekim'deki Bitget soygunuyla
+    # `ortak=ad:circle,ad:tether topic=0.11` üzerinden AYNI_GELISME sayıldı,
+    # 'olay son 30 günde 1 kez manşet oldu' denip manşete kapandı; auditor
+    # 'Binance daha önemli' dediği halde yerine 93 puanlı Belçika haberi
+    # girdi. Ortak kurban, fail, CVE yok — iki ayrı borsa, iki ayrı olay.
+    'circle', 'tether',
     # Genel teknik sözcükler. 'node' hem Node.js hem ağ/blokzincir düğümü
     # anlamında geçiyor. ÖLÇÜLDÜ (2026-09-04): Node.js çalışma zamanının
     # zararlı dağıtımında kullanılması (Symantec) ile FTP sunucu bannerlarının
@@ -1521,3 +1531,81 @@ def mukerrer_karari(a, b, sozluk=None, ayni_gun=False, explain=False):
         else:
             karar, ek = TAM_MUKERRER, neden
     return (karar, ek) if explain else karar
+
+
+# ── MANŞET ÇAPRAZ-GÜN KANIT KAPISI ───────────────────────────────────────────
+# Kurum adlarının jenerik parçaları: tek başına iki ayrı kurumu bağlar
+# ("Fransa Ulusal Kan Hizmeti" ↔ "Ulusal Siber Güvenlik Merkezi").
+_KANIT_JENERIK = frozenset({
+    'ulusal', 'national', 'federal', 'genel', 'general', 'devlet', 'state',
+    'hükümet', 'governme', 'bakanlığ', 'ministry', 'hizmeti', 'service',
+    'services', 'kurumu', 'ajansı', 'agency',
+})
+
+
+def _ortak_ad_kokleri(ortak):
+    """LLM'in bildirdiği ortak ad dizesinden aday kökler (8 karakter)."""
+    kokler = set()
+    for t in re.findall(r"[^\W\d_][\w\-]{2,}", str(ortak or '')):
+        k = t.lower()[:_KOK]
+        if k in _MANSIZ_AD or k in _COGRAFI_AD or k in _KANIT_JENERIK:
+            continue
+        kokler.add(k)
+    return kokler
+
+
+_CUMLE_ICI_AD_RE = re.compile(
+    r"(?:[a-zçğıöşü0-9),;:’']|\bve|\bile)\s+([A-ZÇĞİÖŞÜ][\w\-]{2,})")
+
+
+def _cumle_ici_buyuk_kokler(view):
+    """Paragraf + gövdede CÜMLE ORTASINDA büyük harfle geçen sözcüklerin kökleri.
+
+    `ozel_adlar` burada YETMEZ: sabit denylist'leri 'OpenAI' gibi sık geçen
+    adları bilerek düşürür (olay kimliği için doğru, kanıt sınaması için
+    yanlış). Başlıklar dışarıdadır — Başlık Düzeni her sözcüğü büyük yazar
+    ("Soğutma Sistemlerine"); cümle başı da dışarıdadır."""
+    metin = ' '.join([view.get('paragraph') or '',
+                      (view.get('full_text') or '')[:2000]])
+    return {m.group(1).lower()[:_KOK] for m in _CUMLE_ICI_AD_RE.finditer(metin)}
+
+
+def capraz_gun_kaniti(bugun, gecmis, ortak='', sozluk=None):
+    """Manşet çapraz-gün LLM işaretinin KANITI var mı? → (kabul, gerekçe).
+
+    LLM "bu manşet son günlerin bir olayının tekrarı" dediğinde hangi geçmiş
+    haberle ve hangi ortak AD ile eşleştirdiğini bildirir. İşaret YALNIZCA şu
+    iki kanıttan biri varsa kabul edilir:
+      (1) DETERMİNİSTİK: ölçülmüş iki tanımdan biri (`mukerrer_karari` ya da
+          defterin `iliski_belirle`'si) iki haberi bağlıyor;
+      (2) LLM KANITI: bildirilen ortak ad, iki haberin paragraf/gövdesinde de
+          cümle ortasında büyük harfle geçiyor — ülke adı, jenerik sözcük,
+          DF'ce jenerik ad ve AKTÖR adı sayılmaz
+          (aynı fail farklı olay yapar; bkz. 2026-09-28 kararı).
+
+    ÖLÇÜLDÜ (2026-11-06): 5 Kasım'da Fransa Ulusal Kan Hizmeti'nin soğutma
+    sistemlerine saldırı (99 puan) "tekrar" denip manşetten çıkarıldı ve
+    kalıcı yasak aldı; ertesi gün rapordan da düştü. Geçmişteki dokuz soğutma
+    haberinin (Avrupa süpermarketleri, ABD askeri üsleri) HİÇBİRİYLE ortak
+    kimlik yok, iki tanım da FARKLI diyor — aynı kampanyanın YENİ KURBANIYDI
+    ve promptun kendisi "yeni kurban → YENİ haber" der. Son 3 ayın ölçülebilen
+    7 işaretinin 3'ünde deterministik kanıt yoktu: ikisi gerçekten yanlıştı
+    (bu vaka ve 24 Eylül CISA kılavuzu — öncesinde hiç raporlanmamıştı), biri
+    doğruydu (29 Eylül OpenAI/Avustralya — deterministik tanımlar kaçırıyor;
+    (2) numaralı yol bunun içindir: 'Medicare' iki metinde de geçer).
+    """
+    if mukerrer_karari(bugun, gecmis, sozluk=sozluk) != FARKLI:
+        return True, 'deterministik:mukerrer_karari'
+    if iliski_belirle(bugun, gecmis, sozluk=sozluk) != ILISKISIZ:
+        return True, 'deterministik:defter'
+    istenen = _ortak_ad_kokleri(ortak)
+    if not istenen:
+        return False, 'kanıt yok (ortak ad bildirilmedi ya da jenerik/ülke)'
+    aktor = _aktor_kokleri(bugun) | _aktor_kokleri(gecmis)
+    ortak_kok = (istenen & _cumle_ici_buyuk_kokler(bugun)
+                 & _cumle_ici_buyuk_kokler(gecmis)) - aktor
+    if sozluk is not None:
+        ortak_kok = set(sozluk.ayirt_edici(ortak_kok))
+    if ortak_kok:
+        return True, 'llm_kanit:' + ','.join(sorted(ortak_kok))
+    return False, f'kanıt yok (bildirilen ortak ad "{str(ortak)[:40]}" iki gövdede birden geçmiyor)'

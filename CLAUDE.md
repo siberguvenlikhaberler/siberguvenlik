@@ -1289,3 +1289,45 @@ kendi sırlarıyla koşturur: `vaka` girdisi varsayılan "FBI ihlali", `hepsi`
 onay kutusu kontrol grubunu ekler. Rapor üretmez, commit'lemez, veri
 dosyalarına dokunmaz; maliyet 1-2 LLM çağrısı. Sonuç Actions logunda
 görünür — oradan okunup buraya kayda geçirilmelidir.
+## İKİ MANŞET KAÇAĞI + ZAMAN AŞIMI (ölçüm + düzeltme, 2026-11-06)
+
+**ZAMAN AŞIMI.** 6 Kasım'da üç slotun üçü de raporu BİTİRDİ ama 25 dakikalık
+`timeout-minutes` sınırına commit'ten 3 saniye önce takıldı; hiçbir şey push
+edilmediği için her slot sıfırdan çekip LLM hattını yeniden ödedi (günün
+maliyeti ×3, rapor yok). Koşu süresi son 30 günde 8-23,5 dk arasında ve
+artıyordu. Sınır 50 dk; "çöktüyse issue aç" adımı `cancelled()` durumunda da
+çalışıyor (zaman aşımı işi `cancelled` yapar, `failure()` görmüyordu).
+Başlık-Kısaltma bütçesi 256 → 2048 (başlık başına 3-4 kesilme tekrarı
+yapıyordu; koşunun 74 çağrısına 34 tekrar ekleniyordu), Kritik3-Uzunluk
+2048 → 4096.
+
+**(A) STABLECOIN İHRAÇÇISI OLAY KİMLİĞİ DEĞİLDİR.** 30 Ekim'de 6,3 milyar
+dolarlık Binance soygunu (100) defterde 1 Ekim'in Bitget manşetiyle
+`ortak=ad:circle,ad:tether topic=0.11` üzerinden AYNI_GELISME sayıldı (iki
+borsanın gövdesinde de fonları donduran Tether/Circle geçiyor), "zaten
+manşet oldu" diye manşete kapandı; auditor "Binance daha önemli" dediği halde
+yerine 93 puanlı Belçika haberi girdi. `circle`/`tether` `_MANSIZ_AD`'a
+eklendi (raporlayan taraf — Unit 42 — dersinin aynısı). Koşu çevrimdışı
+yeniden oynatıldı: Binance artık uygun. Kapılar birebir aynı, saklı
+görünümlerle defter bağı 128 → 128 (sinyal yalnızca gövdede).
+
+**(B) MANŞET ÇAPRAZ-GÜN LLM İŞARETİ KANITLA SINANIR**
+(`olay_iliski.capraz_gun_kaniti`). 5 Kasım'da Fransa Ulusal Kan Hizmeti'ne
+soğutma saldırısı (99) "son günlerin tekrarı" denip manşetten çıkarıldı ve
+kalıcı yasak aldı; dokuz geçmiş soğutma haberinin hiçbiriyle ortak kimlik
+yok, iki tanım da FARKLI diyor — kampanyanın YENİ KURBANIYDI ve promptun
+kendisi "yeni kurban → YENİ haber" der. Prompt artık eşleşen geçmiş kaydı
+(`gecmis`) ve ortak özel adı (`ortak`) istiyor; işaret yalnızca (1) iki
+ölçülmüş tanımdan biri bağlıyorsa ya da (2) bildirilen ad iki haberin
+paragraf/gövdesinde de cümle ortasında büyük harfle geçiyorsa kabul edilir
+(ülke, jenerik kurum sözcüğü, aktör adı sayılmaz). Reddedilen işaret
+`capraz_gun_kanit_siniri` katmanıyla ize yazılır. ÖLÇÜLDÜ (son 3 ayın
+ölçülebilen 7 işareti): deterministik kanıt 4'ünde var; kalan 3'ün 2'si
+gerçekten yanlıştı (bu vaka, 24 Eylül CISA kılavuzu), biri doğruydu
+(29 Eylül OpenAI/Avustralya) ve (2) yolu onu 'Medicare' ile korur. Gövde
+katmanı aynı promptu kullanır, yalnızca id okur (`parse_cross_day_dupes` iki
+biçimi de ayrıştırır). Maliyet nötr. Regresyon: `tests/test_capraz_gun_kanit.py`.
+
+**GÖZLENEN, DÜZELTİLMEDİ:** "Dayanaksız mükerrer elemesi" 30 Ekim'de Binance
+ID 41'i "ne raporda ne geçmişte karşılığı var" diyerek gövdeye geri aldı;
+oysa eşi ID 62 aynı raporun gövdesindeydi — rapor aynı soygunu iki kez taşıdı.
