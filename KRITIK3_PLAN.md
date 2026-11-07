@@ -447,3 +447,62 @@ günlerindendir ve `rapor_gecmis` 30 günde döndüğü için görünümleri art
 dosyada YOK (`scripts/mukerrer_olc.py` "38 çift geçmişten düşmüş, atlandı"
 diyor). Ölçüm bu yüzden son 31 günün kendi çiftleriyle ve elle okumayla
 yapıldı.
+
+## 9. PLAN — ZAFİYET SON ÇARE (kullanıcı talebi, 2026-11-07) — ONAY BEKLİYOR
+
+### Sorun (7 Kasım, ölçüldü)
+Manşet çapraz-gün denetimi ikinci manşeti ("Avrupa süpermarket soğutma
+saldırıları", 94) önceki günün manşetiyle (FBI/CISA soğutma uyarısı) AYNI
+kampanya olarak DOĞRU yakaladı, ama gövdedeki beş siber-olay adayının beşi de
+kapalıydı (ARTEX/WorkOS/Claude Code "zaten manşet oldu", GitHub sahte araçlar
+aynı kapı, Perry Johnson "devam haberi"). Kalanların hepsi zafiyetti ve zafiyet
+manşete giremediği için tekrar haberi YERİNDE BIRAKILDI.
+
+### Kural
+Bir manşet yuvası için TEMİZ siber-olay adayı KESİN OLARAK yoksa ve elde
+kalan seçenek ya "mükerrer/tekrar manşeti yerinde bırakmak" ya da "manşeti
+2'ye düşürmek" ise, YALNIZCA bu durumda en yüksek puanlı UYGUN zafiyet haberi
+manşete girer. Başka hiçbir durumda zafiyet manşete giremez (2026-09-28 kararı
+aynen geçerli).
+
+### Tetik koşulları (HEPSİ birden)
+1. Bir katman yuvayı boşaltmak/değiştirmek istiyor (tekrar, mükerrer, auditor
+   madde 1/2) YA DA ilk seçimde uygun aday 3'ten az.
+2. `_kritik3_yedek_bul` iki denemede de (bantlı, sonra bant gevşetilmiş)
+   siber-olay adayı bulamadı.
+3. Zafiyet adayı, KATEGORİ kapısı DIŞINDAKİ bütün kapılardan geçiyor:
+   manşet yasağı, defter tekrarı, çapraz-gün, aynı-gün aynı olay, çeşitlilik.
+   (Yani zafiyetin kendisi de tekrar olamaz — 7 Kasım'da SonicWall 89
+   bu yüzden düşer, OpenSSH SSHole 76 girer.)
+4. Kategori `zafiyet_rutin` / `zafiyet_aktif_apt`; `urun_icerik` ve
+   `siber_disi` ASLA (onlar zaten manşet adayı değil).
+5. Asgari nitelik: puan ≥ 70 VEYA aktif istismar (`istismar=aktif`).
+   CERT-FR "Multiples vulnérabilités" tipi rutin bültenler (51-59) böylece
+   manşete çıkmaz — eşik ONAY BEKLİYOR.
+
+### Senaryolar
+| # | Durum | Davranış |
+|---|---|---|
+| S1 | Tekrar yakalandı, temiz olay adayı yok, temiz zafiyet var (7 Kasım) | En yüksek puanlı temiz zafiyet girer, tekrar haber manşetten iner |
+| S2 | Tekrar yakalandı, zafiyet adayları da tekrar ya da eşik altı | Bugünkü davranış: tekrar haber YERİNDE kalır, iz yazılır |
+| S3 | Temiz siber-olay adayı var ama puan bandının ALTINDA | Önce bant gevşetilmiş olay adayı denenir (mevcut ikinci deneme); zafiyet ancak o da yoksa — sıra ONAY BEKLİYOR |
+| S4 | Aynı gün iki yuva boşalıyor | En fazla 1 zafiyet manşeti; ikinci yuva S2 gibi davranır — sınır ONAY BEKLİYOR |
+| S5 | Pass 4 ilk seçimde uygun aday < 3 | Bugün kapı "UYGULANMADI" denip tekrarlar geri alınıyor; yeni sıra: önce temiz zafiyet (aynı koşullarla), o da yoksa bugünkü davranış |
+| S6 | Zafiyet manşete girdi, sonraki katmanda (yönetmen/tersinelik/dominans) temiz olay adayı ortaya çıktı | Zafiyet YER TUTUCUDUR: her katman onu sıradan bir manşet gibi takas edebilir; kalıcı yasak almaz |
+| S7 | Zafiyet manşete çıktı | "Güvenlik Açıkları" bölümünden çıkarılır (rapor aynı haberi iki kez göstermez) |
+| S8 | Kıtlık günü, hiç aday yok (5 Ekim tipi) | Değişiklik yok |
+
+### Uygulama noktası
+TEK YER: `_kritik3_yedek_bul` sonunda `zafiyet_son_care=True` parametresiyle
+ikinci aşama. Altı "YERİNDE BIRAKILDI" yolu (rapor içi, auditor seçim,
+çapraz-gün LLM, son kapı, çeşitlilik, Pass 4 eksik) bu parametreyle çağırır;
+mevcut Pass 4 `vuln_pool` kopyası kaldırılıp aynı yola bağlanır. Karar ize
+`zafiyet_son_care` katmanıyla, `MANSET_GORELI_KATMAN` sınıfında yazılır.
+
+### Kabul ölçütleri
+- `kritik3_olc --kabul`: zafiyet manşeti yalnızca "yedek yok" günlerinde;
+  31 günde beklenen 0-2 gün (deterministik oynatmada "yerinde" 0 idi, 7 Kasım
+  LLM işaretiyle oldu).
+- KRİTİK 3 < 3 olan gün 0; `dedup_golden`/`mukerrer_golden`/`zincir_olc`
+  birebir aynı; LLM maliyeti nötr.
+- Regresyon: 7 Kasım fikstürü (S1 → OpenSSH girer, SonicWall girmez), S2, S4, S6.
