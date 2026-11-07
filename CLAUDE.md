@@ -28,6 +28,9 @@ SİL (taze üretimi engelleyen durum dosyaları):
 - `docs/raporlar/<BUGÜN>.html` — Kontrol 1: başarılı rapor varsa schedule/dispatch ATLAR.
 - `data/haberler_ham.txt` — Kontrol 2: `SESSION_DATE: <BUGÜN>` ise haber çekmeyi ATLAR (her tetikte). Silmek RE-FETCH'i zorlar.
 - `data/cron_basarili.txt` — bugünkü başarı işareti; sonraki cron slotlarını atlatır.
+- `data/tam_kosu_sayaci.json` — GÜNLÜK TAM KOŞU SINIRI sayacı (en fazla 2,
+  `scripts/kosu_sayaci.py`). Otomatik tetikle yeniden üretim isteniyorsa
+  silinir; manuel `workflow_dispatch` sınıra tabi DEĞİLDİR.
 - `data/bekleyen_linkler.json` — "görüldü" işaretlenmeyi bekleyen linkler. Linkler
   artık save_txt'te DEĞİL, rapor başarılı olduktan sonra işaretlenir; bu dosya o
   bekleyen listeyi taşır. Silinmezse önceki denemenin linkleri yanlışlıkla
@@ -1386,3 +1389,14 @@ ABD iflas mahkemeleri↔BAE Systems dışarıda). BEDEL: 30 Ekim'de eski kuralı
 zaten elediği 2-3 düşük puanlı haber (60-82: NIST yapay zekâ ajanları ↔ NIST
 su sektörü, ABD yerel seçim siteleri) defterin şüpheli AYNI_GELISME bağı
 yüzünden dışarıda kalıyor. Regresyon: `tests/test_son_grup_bosalmasi.py`.
+
+### GÜNLÜK TAM KOŞU SINIRI (kullanıcı kararı, 2026-11-07)
+6 Kasım'da kaydedilemeyen üç koşu + başarılı yedek = dört tam ücretli koşu
+(~3 $). Günde 6 tetik slotu var (cron-job.org `repository_dispatch` 09/10/11
+UTC + GitHub `schedule` yedeği, saatlerce gecikmeli). Artık bir günde en
+fazla **2** tam koşu: `scripts/kosu_sayaci.py` sayacı (`data/tam_kosu_sayaci.json`)
+ANA İŞTEN ÖNCE push eder — zaman aşımında sondaki commit adımı koşmadığı için
+sona yazılan sayaç kaybolurdu. Başarılı rapor varsa koşu sayılmaz (main.py
+zaten erken çıkar). Sınır dolunca adım hata verir, ana iş koşmaz, issue adımı
+haber verir; BEDELİ: iki deneme de düşerse o gün otomatik rapor çıkmaz —
+manuel tetik muaftır. Regresyon: `tests/test_kosu_sayaci.py`.

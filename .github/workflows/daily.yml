@@ -67,6 +67,29 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # GÜNLÜK TAM KOŞU SINIRI (kullanıcı kararı, 2026-11-07) — bkz.
+      # scripts/kosu_sayaci.py. Sayaç ANA İŞTEN ÖNCE push edilir: zaman
+      # aşımında sondaki commit adımı hiç koşmaz. Sınır dolduysa adım hata
+      # verir, ana iş koşmaz ve issue adımı haber verir. Manuel tetik muaf.
+      - name: Günlük tam koşu sınırı
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          set -e
+          python scripts/kosu_sayaci.py
+          if [ -f .sayac_artirildi ]; then
+            rm -f .sayac_artirildi
+            git config user.name "Bot"
+            git config user.email "bot@github.com"
+            git add data/tam_kosu_sayaci.json
+            git commit -m "🧮 tam koşu sayacı $(TZ='Europe/Istanbul' date +'%Y-%m-%d')"
+            for i in 1 2 3; do
+              git pull --rebase origin main || true
+              if git push origin HEAD:main; then exit 0; fi
+              sleep $((2 ** i))
+            done
+            echo "::warning::Sayaç push edilemedi — koşu yine de devam ediyor."
+          fi
+
       - env:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           # OpenRouter (varsayılan model: src/config.py OPENROUTER_MODEL) — AKTİF.
