@@ -71,10 +71,13 @@ class RaporDurumu:
     """
 
     def __init__(self, manset, top10, kalan, manset_yasak=None, yazdir=None,
-                 kat_fn=None, manset_disi_katlar=()):
+                 kat_fn=None, manset_disi_katlar=(), manset_istisna=None):
         # kat_fn: id → kategori. Verilmezse D4 denetlenmez (geriye dönük uyum).
         self._kat_fn = kat_fn
         self._manset_disi_katlar = set(manset_disi_katlar or ())
+        # Kategori kuralının BİLİNÇLİ istisnaları (zafiyet son çare). Canlı
+        # referans tutulur: katmanlar koşu sırasında ekler.
+        self._manset_istisna = manset_istisna if manset_istisna is not None else set()
         self.manset = list(manset)
         self.top10 = list(top10)
         self.kalan = list(kalan)
@@ -182,7 +185,8 @@ class RaporDurumu:
         if self._kat_fn and self._manset_disi_katlar:
             for aid in yeni_manset:
                 kat = self._kat_fn(aid)
-                if kat in self._manset_disi_katlar:
+                if (kat in self._manset_disi_katlar
+                        and aid not in self._manset_istisna):
                     self._kaydet(UYGUNSUZ_KATEGORI, katman, aid,
                                  f'manşette ama kategorisi manşete uygun '
                                  f'değil ({kat})')

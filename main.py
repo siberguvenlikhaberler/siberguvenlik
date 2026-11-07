@@ -4337,7 +4337,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
     def _kritik3_yedek_bul(self, aday_ids, sonuc, records, view_fn,
                            recent_views, haric=(), aday_puanlari=None,
-                           bant=True):
+                           bant=True, zafiyet_son_care=False):
         """Manşete uygun ilk yedek adayı bulur (yoksa None).
 
         ARTIK İNCE SARMALAYICI (P1, bkz. KRITIK3_PLAN.md): havuzu PUAN
@@ -4394,6 +4394,61 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     (cand, aday_puanlari.get(cand, 0), neden))
         for cand, puan, neden in self._son_yedek_red[:6]:
             print(f"      ↳ yedek adayı ID {cand} ({puan}) reddedildi: {neden}")
+        if not zafiyet_son_care:
+            return None
+        # ZAFİYET SON ÇARE (kullanıcı kararı, 2026-11-07) — KRITIK3_PLAN §9.
+        # Sıra kullanıcı kararıdır: ÖNCE TEMİZ HABER — bandın altındaki temiz
+        # siber-olay adayı zafiyetten önce gelir; zafiyet ancak o da yoksa.
+        if bant:
+            yedek = self._kritik3_yedek_bul(
+                aday_ids, sonuc, records, view_fn, recent_views, haric=haric,
+                aday_puanlari=aday_puanlari, bant=False)
+            if yedek is not None:
+                return yedek
+        return self._zafiyet_son_care_bul(
+            [a for a in aday_ids if a not in haric], sonuc, records, view_fn,
+            recent_views)
+
+    ZAFIYET_SON_CARE_MIN_PUAN = 70   # kullanıcı kararı, 2026-11-07
+
+    def _zafiyet_son_care_bul(self, aday_ids, mevcut, records, view_fn,
+                              recent_views=(), atla=()):
+        """Temiz siber-olay adayı KESİN OLARAK yokken manşete girecek zafiyet.
+
+        YALNIZCA mükerrer/tekrar bir manşetin yerine konacak temiz aday
+        bulunamadığında çağrılır (kullanıcı kararı, 2026-11-07; plan
+        KRITIK3_PLAN §9). 2026-09-28'deki "zafiyet manşete giremez" kuralı
+        başka HER durumda geçerlidir. Koşullar:
+          · kategori zafiyet_rutin / zafiyet_aktif_apt (urun_icerik ve
+            siber_disi ASLA), puan ≥ ZAFIYET_SON_CARE_MIN_PUAN (70);
+          · kategori kapısı DIŞINDAKİ bütün kapılar geçerli — zafiyetin
+            kendisi de tekrar/mükerrer olamaz;
+          · manşette en fazla BİR zafiyet.
+        ÖLÇÜLDÜ (7 Kasım): soğutma kampanyası tekrarı yakalandı, beş olay
+        adayının beşi kapalıydı; SonicWall (89) çapraz-gün tekrarı olduğu için
+        girmez, OpenSSH SSHole (76) girer."""
+        if any((records.get(o) or {}).get('kat') in ZAFIYET_KATEGORILERI
+               for o in mevcut):
+            return None
+        adaylar = [a for a in aday_ids
+                   if a not in mevcut
+                   and (records.get(a) or {}).get('kat') in ZAFIYET_KATEGORILERI
+                   and ((records.get(a) or {}).get('toplam', 0) or 0)
+                   >= self.ZAFIYET_SON_CARE_MIN_PUAN]
+        for a in sorted(adaylar,
+                        key=lambda x: -((records.get(x) or {}).get('toplam', 0))):
+            ok, neden = self._manset_uygun_mu(
+                a, mevcut, records, view_fn, recent_views,
+                atla=tuple(atla) + ('kategori', 'puan_bandi'))
+            if ok:
+                if not hasattr(self, '_zafiyet_son_care_ids'):
+                    self._zafiyet_son_care_ids = set()
+                self._zafiyet_son_care_ids.add(a)
+                print(f"   🛡️→🎯 Zafiyet son çare: temiz siber-olay adayı yok — "
+                      f"ID {a} ({(records.get(a) or {}).get('toplam', 0)} puan) "
+                      f"manşete alındı.")
+                return a
+            print(f"      ↳ zafiyet adayı ID {a} reddedildi: {neden}")
         return None
 
     def _dedup_kritik3_ici(self, top3_ids, yedek_ids, records,
@@ -4422,7 +4477,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 sonuc.append(aid)
                 continue
             yedek = self._kritik3_yedek_bul(yedek_ids, sonuc, records, view_fn,
-                                            recent_views, haric=set(top3_ids))
+                                            recent_views, haric=set(top3_ids),
+                                            zafiyet_son_care=True)
             if yedek is None:
                 print(f"   ⚠️  Manşet içi mükerrer: ID {aid} başka bir manşetle "
                       f"aynı olay ama yedek aday yok — YERİNDE BIRAKILDI.")
@@ -4747,7 +4803,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         for aid in list(flagged):
             yedek = self._kritik3_yedek_bul(
                 yedek_ids, [o for o in sonuc if o != aid], records, view_fn,
-                tam_gecmis, haric=flagged)
+                tam_gecmis, haric=flagged, zafiyet_son_care=True)
             if yedek is None:
                 print(f"   ⚠️  Manşet çapraz-gün: ID {aid} tekrar olarak işaretlendi "
                       f"ama uygun yedek aday yok — YERİNDE BIRAKILDI (KRİTİK 3 eksilmez).")
@@ -6222,6 +6278,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # yapan tek yer `_manset_yasagi_koy` aracısıdır (bkz. MANŞET ARACISI).
         # tests/test_manset_araci.py bunu kaynak taramasıyla sabitler.
         self._manset_yasak = set()
+        self._zafiyet_son_care_ids = set()   # bkz. _zafiyet_son_care_bul
         self._iliski_izi = {}
 
         ranked, filtered_ids = [], []
@@ -7022,6 +7079,14 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     uygun.append(aid)
                 else:
                     dusen[aid] = neden
+            # S5 — ZAFİYET SON ÇARE (KRITIK3_PLAN §9): kapı yüzünden aday
+            # 3'ün altına düşüyorsa, tekrarları geri almadan ÖNCE temiz
+            # zafiyet denenir (en fazla bir).
+            if len(uygun) < 3 and dusen:
+                _z = self._zafiyet_son_care_bul(
+                    ranked_ids, uygun, records, view_fn, atla=_atla)
+                if _z is not None:
+                    uygun.append(_z)
             # Garanti korunur: yeterli aday kalmıyorsa kapı UYGULANMAZ.
             if len(uygun) >= 3:
                 for aid, neden in dusen.items():
@@ -7051,13 +7116,15 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
         # Kademe 3 — kritik kriterlere en yakın güvenlik açıklarını manşete al
         if len(top3_ids) < 3:
-            vuln_pool = [aid for aid in ranked_ids
-                         if aid not in top3_ids
-                         and records.get(aid, {}).get('kat') in ZAFIYET_KATEGORILERI]
-            if vuln_pool:
-                print(f"   🛡️→🎯 KRİTİK 3 eksik ({len(top3_ids)}/3) — kritik "
-                      f"kriterlere en yakın güvenlik açık(lar)ı manşete alınıyor.")
-                top3_ids = _dedup.pick_distinct(list(top3_ids) + vuln_pool, view_fn, n=3)
+            # Eskiden eşiksiz ve sayısız tüm zafiyet havuzu eklenirdi; artık
+            # ZAFİYET SON ÇARE kuralıyla (≥70 puan, en fazla bir, kategori
+            # dışı kapılar geçerli) — bkz. _zafiyet_son_care_bul.
+            print(f"   🛡️→🎯 KRİTİK 3 eksik ({len(top3_ids)}/3) — zafiyet son "
+                  f"çare deneniyor.")
+            _z = self._zafiyet_son_care_bul(
+                ranked_ids, list(top3_ids), records, view_fn)
+            if _z is not None:
+                top3_ids = list(top3_ids) + [_z]
 
         # Kademe 4 — SON ÇARE: aynı-olay ayrıklığını da gevşet, 3'e tamamla
         if len(top3_ids) < 3:
@@ -8658,7 +8725,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     yedek_havuz, [o for o in yeni_top3 if o != aid], records,
                     view_fn, gecmis,
                     haric=set(manset_disi) | set(dusen) | set(manset_cikar),
-                    aday_puanlari=_bant_puan, bant=False)
+                    aday_puanlari=_bant_puan, bant=False,
+                    zafiyet_son_care=True)
                 if yedek is not None:
                     print(f"   🔁 Son mükerrer kapısı: ID {aid} mükerrer → "
                           f"bant gevşetildi, ID {yedek} ile DEĞİŞTİRİLDİ.")
@@ -9384,7 +9452,10 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             top3_ids, top10_ids, remaining_ids,
             manset_yasak=getattr(self, '_manset_yasak', None),
             kat_fn=lambda aid: (score_records.get(aid) or {}).get('kat'),
-            manset_disi_katlar=KRITIK3_HARIC_KATEGORILER)
+            manset_disi_katlar=KRITIK3_HARIC_KATEGORILER,
+            # Zafiyet son çare kuralıyla bilerek manşete alınan zafiyet ihlal
+            # DEĞİLDİR (canlı küme: koşu boyunca eklenenleri de görür).
+            manset_istisna=getattr(self, '_zafiyet_son_care_ids', None))
 
         def _senkron(katman):
             """Katman sonrası değişmez denetimi + onarım (tek satırlık kanca)."""

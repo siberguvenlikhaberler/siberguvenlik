@@ -128,6 +128,12 @@ KURALLAR:
   listesindedir; Kategori 3 fallback'inden "aktif istismar altındaki
   kritik açık" ve "protokol zafiyeti keşfi" maddeleri çıkarıldı.
   Zafiyetin raporda kendi bölümü var: Güvenlik Açıkları.
+- **TEK İSTİSNA — ZAFİYET SON ÇARE** (kullanıcı kararı, 2026-11-07,
+  `KRITIK3_PLAN.md` §9): mükerrer/tekrar bir manşetin yerine konacak TEMİZ
+  siber-olay adayı kesin olarak yoksa (bant altı temiz haber dahil — önce
+  temiz haber), puanı ≥70 olan ve kategori dışındaki bütün kapılardan geçen
+  en yüksek puanlı zafiyet manşete girer; manşette en fazla BİR zafiyet.
+  7 Kasım'da soğutma kampanyası tekrarı bu yüzden yerinde kalmıştı.
 
 ## SÜREGELEN HİKÂYE ZİNCİRİ + MANŞET ÇEŞİTLİLİĞİ (2026-09-29)
 

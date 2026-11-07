@@ -448,7 +448,7 @@ dosyada YOK (`scripts/mukerrer_olc.py` "38 çift geçmişten düşmüş, atland�
 diyor). Ölçüm bu yüzden son 31 günün kendi çiftleriyle ve elle okumayla
 yapıldı.
 
-## 9. PLAN — ZAFİYET SON ÇARE (kullanıcı talebi, 2026-11-07) — ONAY BEKLİYOR
+## 9. ZAFİYET SON ÇARE (kullanıcı kararı, 2026-11-07) — UYGULANDI
 
 ### Sorun (7 Kasım, ölçüldü)
 Manşet çapraz-gün denetimi ikinci manşeti ("Avrupa süpermarket soğutma
@@ -478,15 +478,15 @@ aynen geçerli).
    `siber_disi` ASLA (onlar zaten manşet adayı değil).
 5. Asgari nitelik: puan ≥ 70 VEYA aktif istismar (`istismar=aktif`).
    CERT-FR "Multiples vulnérabilités" tipi rutin bültenler (51-59) böylece
-   manşete çıkmaz — eşik ONAY BEKLİYOR.
+   manşete çıkmaz. KARAR: yalnızca puan ≥ 70 (aktif istismar şartı yok).
 
 ### Senaryolar
 | # | Durum | Davranış |
 |---|---|---|
 | S1 | Tekrar yakalandı, temiz olay adayı yok, temiz zafiyet var (7 Kasım) | En yüksek puanlı temiz zafiyet girer, tekrar haber manşetten iner |
 | S2 | Tekrar yakalandı, zafiyet adayları da tekrar ya da eşik altı | Bugünkü davranış: tekrar haber YERİNDE kalır, iz yazılır |
-| S3 | Temiz siber-olay adayı var ama puan bandının ALTINDA | Önce bant gevşetilmiş olay adayı denenir (mevcut ikinci deneme); zafiyet ancak o da yoksa — sıra ONAY BEKLİYOR |
-| S4 | Aynı gün iki yuva boşalıyor | En fazla 1 zafiyet manşeti; ikinci yuva S2 gibi davranır — sınır ONAY BEKLİYOR |
+| S3 | Temiz siber-olay adayı var ama puan bandının ALTINDA | KARAR: önce temiz haber — bant altı temiz olay adayı zafiyetten önce gelir |
+| S4 | Aynı gün iki yuva boşalıyor | KARAR: en fazla 1 zafiyet manşeti; ikinci yuva S2 gibi davranır |
 | S5 | Pass 4 ilk seçimde uygun aday < 3 | Bugün kapı "UYGULANMADI" denip tekrarlar geri alınıyor; yeni sıra: önce temiz zafiyet (aynı koşullarla), o da yoksa bugünkü davranış |
 | S6 | Zafiyet manşete girdi, sonraki katmanda (yönetmen/tersinelik/dominans) temiz olay adayı ortaya çıktı | Zafiyet YER TUTUCUDUR: her katman onu sıradan bir manşet gibi takas edebilir; kalıcı yasak almaz |
 | S7 | Zafiyet manşete çıktı | "Güvenlik Açıkları" bölümünden çıkarılır (rapor aynı haberi iki kez göstermez) |
@@ -506,3 +506,15 @@ mevcut Pass 4 `vuln_pool` kopyası kaldırılıp aynı yola bağlanır. Karar iz
 - KRİTİK 3 < 3 olan gün 0; `dedup_golden`/`mukerrer_golden`/`zincir_olc`
   birebir aynı; LLM maliyeti nötr.
 - Regresyon: 7 Kasım fikstürü (S1 → OpenSSH girer, SonicWall girmez), S2, S4, S6.
+
+### Uygulama (2026-11-07)
+`_kritik3_yedek_bul(..., zafiyet_son_care=True)` → bantlı deneme → bant
+gevşetilmiş temiz haber → `_zafiyet_son_care_bul`. Bayrak YALNIZCA mükerrer/
+tekrar yollarında: manşet içi mükerrer, manşet çapraz-gün LLM, son mükerrer
+kapısının ikinci denemesi; Pass 4'te kapı adayı 3'ün altına düşürüyorsa ve
+eski eşiksiz `vuln_pool` yolu yerine. Çeşitlilik ve auditor "manşetlik değil"
+kararları BİLEREK dışarıda (mükerrer değiller). Bekçi (`RaporDurumu`)
+`_zafiyet_son_care_ids`'i kategori ihlali saymaz. Doğrulama: 7 Kasım
+yeniden oynatması → SonicWall (89) tekrar olduğu için reddedildi, OpenSSH
+SSHole (76) manşete girdi, soğutma tekrarı indi. Regresyon:
+`tests/test_zafiyet_son_care.py` (S1, S2, eşik, S3, S4, bekçi istisnası).
