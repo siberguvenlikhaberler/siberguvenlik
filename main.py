@@ -4377,14 +4377,23 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                              for a in aday_ids}
         tavan = (max(aday_puanlari.values(), default=0)
                  if (bant and aday_puanlari) else None)
+        # Reddedilen adaylar ve gerekçeleri — "uygun yedek aday yok" mesajı
+        # artık NEDEN yok olduğunu da söyler (2026-11-07: manşet tekrarı
+        # yakalandı, yedek bulunamadı ve hiçbir yerde sebep yazmıyordu).
+        self._son_yedek_red = []
         for cand in sorted(aday_ids, key=lambda a: -aday_puanlari.get(a, 0)):
             if cand in sonuc or cand in haric:
                 continue
-            uygun, _ = self._manset_uygun_mu(
+            uygun, neden = self._manset_uygun_mu(
                 cand, sonuc, records, view_fn, recent_views,
                 bant_tavani=tavan, aday_puanlari=aday_puanlari)
             if uygun:
                 return cand
+            if not str(neden).startswith(('kategori', 'zafiyet')):
+                self._son_yedek_red.append(
+                    (cand, aday_puanlari.get(cand, 0), neden))
+        for cand, puan, neden in self._son_yedek_red[:6]:
+            print(f"      ↳ yedek adayı ID {cand} ({puan}) reddedildi: {neden}")
         return None
 
     def _dedup_kritik3_ici(self, top3_ids, yedek_ids, records,
@@ -7768,6 +7777,24 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         return ({'aktor:' + a for a in aktorler if _dedup._aktor_markasi(a)}
                 | {'cve:' + a for a in aktorler if a.startswith('cve')})
 
+    @staticmethod
+    def _defter_eslesme_notu(defter, view):
+        """"Zaten manşet oldu" gerekçesine EŞLEŞEN manşeti ekler.
+
+        2026-11-07: GitHub'daki sahte güvenlik araçları haberi (75) bu kapıda
+        "olay son 30 günde 1 kez manşet oldu" denip manşet yedeği olamadı;
+        hangi manşetle eşleştirildiği yazmadığı için karar çevrimdışı
+        denetlenemedi (saklı görünümle hiçbir geçmiş manşet eşleşmiyor)."""
+        try:
+            k = defter._manset_kaydi(view)
+            if not k or not k.get('manset_gunleri'):
+                return ''
+            capa = k.get(defter.CAPA_ALANI) or (k.get('views') or [{}])[0]
+            baslik = (capa.get('tr_title') or capa.get('title') or '')[:60]
+            return f" — eşleşen: {k['manset_gunleri'][-1]} «{baslik}»"
+        except Exception:
+            return ''
+
     def _manset_uygun_mu(self, aid, mevcut_manset, records, view_fn,
                          recent_views=(), *, bant_tavani=None,
                          aday_puanlari=None, atla=()):
@@ -7804,7 +7831,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     tekrar = 0
                 if tekrar >= self.MANSET_TEKRAR_SINIRI:
                     return False, (f'olay son {REPORT_HISTORY_DAYS} günde '
-                                   f'{tekrar} kez manşet oldu')
+                                   f'{tekrar} kez manşet oldu'
+                                   f'{self._defter_eslesme_notu(defter, cv)}')
 
         if 'capraz_gun' not in atla and recent_views:
             if any(_olay.mukerrer_karari(cv, ev, sozluk=sozluk) != _olay.FARKLI
@@ -7883,7 +7911,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                     tekrar = 0
                 if tekrar >= self.MANSET_TEKRAR_SINIRI:
                     disi[aid] = (f'olay son {REPORT_HISTORY_DAYS} günde '
-                                 f'{tekrar} kez manşet oldu')
+                                 f'{tekrar} kez manşet oldu'
+                                 f'{self._defter_eslesme_notu(defter, view_fn(aid))}')
         return disi
 
     def _yayin_yonetmeni(self, top3_ids, govde_ids, records,
