@@ -1400,3 +1400,26 @@ sona yazılan sayaç kaybolurdu. Başarılı rapor varsa koşu sayılmaz (main.p
 zaten erken çıkar). Sınır dolunca adım hata verir, ana iş koşmaz, issue adımı
 haber verir; BEDELİ: iki deneme de düşerse o gün otomatik rapor çıkmaz —
 manuel tetik muaftır. Regresyon: `tests/test_kosu_sayaci.py`.
+
+### TEKRAR MANŞET "GÜNCELLEME" ETİKETİ + HAFTALIK ÖZET FİLTRESİ (kullanıcı kararı, 2026-11-08)
+8 Kasım (pazar, 8 aday) raporu 3 haberdi ve üç manşetin üçü de tekrardı:
+Crédit Mutuel Arkéa'nın 133 milyon dolarlık soygunu 5 Kasım'da gövdedeydi,
+ARTEX 25 Ekim manşetinin devamıydı, üçüncüsü Help Net "Week in review"
+özetiydi (soğutma kampanyası, 6-7 Kasım manşeti). Sistem üçünü de tekrar diye
+işaretledi; zafiyet son çare adayı SonicWall da tekrardı; KRİTİK 3 ikiye
+düşmediği için hepsi yerinde kaldı. Sayaç doğru çalıştı (1/2, sonraki iki
+slot 20 sn'de çıktı).
+- **GÜNCELLEME ETİKETİ** (`_guncelleme_isaretle`, seçenek a): tekrar olduğu
+  bilinip temiz yedek bulunamadığı için yerinde bırakılan manşet raporda
+  "🔄 GÜNCELLEME — bu olay son günlerde raporlandı" etiketiyle çıkar.
+  İşaret noktaları: manşet çapraz-gün LLM, son kapının ÇAPRAZ-GÜN kararı
+  (rapor-içi kopya güncelleme sayılmaz), Pass 4'te "manşet oldu" kapısının
+  3 garantisi için uygulanmadığı adaylar. Render YALNIZCA son manşette kalan
+  işaretlileri etiketler. Etiket başlık div'inin DIŞINDADIR (arşiv yazımı
+  `top3-card-title` metnini okur). İz katmanı `manset_guncelleme_etiketi`.
+- **HAFTALIK ÖZETLER HABERE GİRMEZ** (`FEED_BASLIK_GURULTU_ONEKLERI`): "Week
+  in review", "Weekly Recap" (baştaki emoji atılarak), "Weekly Roundup" —
+  feed aşamasında, LLM maliyetinden ÖNCE elenir. Ölçüldü (64 gün): 25 kayıt,
+  84-97 puanla gövdeye girenler vardı; geçmiş başlıklarda yanlış eşleşme 0.
+  Patch Tuesday özetleri bilerek dışarıda (gerçek ayın yama haberi).
+Regresyon: `tests/test_feed_gurultu.py`, `tests/test_zafiyet_son_care.py`.

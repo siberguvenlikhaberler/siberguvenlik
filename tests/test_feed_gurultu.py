@@ -102,3 +102,15 @@ def test_proxy_gercek_makale_kabul_edilir(monkeypatch):
     art = {'link': 'https://example.com/makale'}
     s._article_proxy_fallback(art, 'Test Kaynak')
     assert art.get('success') and art.get('from_article_proxy')
+
+
+def test_haftalik_ozetler_elenir():
+    """2026-11-08: Help Net 'Week in review' manşet oldu (soğutma tekrarı)."""
+    for t in ("Week in review: Refrigeration cyberattacks hit European retailers again",
+              "⚡ Weekly Recap: Critical CVEs, Linux DDoS Botnet and More",
+              "The Cyber Express Weekly Roundup: Hackers Turn Supermarket Freezers"):
+        assert main.HaberSistemi._feed_baslik_gurultusu(t), t
+    for t in ("October Patch Tuesday roundup: Over 1,400 Microsoft holes",
+              "Hackers pull off $133 million French bank heist via service provider",
+              "Researchers review weekly ransomware trends in Europe"):
+        assert not main.HaberSistemi._feed_baslik_gurultusu(t), t

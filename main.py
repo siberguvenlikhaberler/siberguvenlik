@@ -1207,7 +1207,7 @@ class HaberSistemi:
     @staticmethod
     def _build_html(articles, top10_ids, remaining_ids, content_by_id, today_str,
                     top3_ids=None, exec_summary='', category_by_id=None,
-                    promote_ids=None):
+                    promote_ids=None, guncelleme_ids=None):
         """
         Yapılandırılmış içerikten tam HTML raporu üretir (kod tarafı assembly).
         content_by_id: {art_id: {'tr_title': str, 'paragraph': str}}
@@ -1446,6 +1446,12 @@ class HaberSistemi:
         .top3-section-label {
             font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
             text-transform: uppercase; color: #1a237e; margin-bottom: 12px;
+        }
+        .top3-guncelleme {
+            display: inline-block; font-size: 0.78em; font-weight: 700;
+            letter-spacing: 0.04em; color: #8a5a00; background: #fff4d6;
+            border: 1px solid #f0c36d; border-radius: 4px;
+            padding: 2px 8px; margin-bottom: 8px;
         }
         .top3-card {
             background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fb 100%);
@@ -1721,8 +1727,15 @@ class HaberSistemi:
                 art = articles_by_id.get(art_id, {})
                 tr_title, paragraph = _safe_content(art_id)
                 link, domain, art_date = _safe_source(art)
+                # GÜNCELLEME etiketi başlık div'inin DIŞINDA: arşiv yazımı
+                # top3-card-title metnini okur, etiket başlığa karışmamalı.
+                _guncel = (
+                    '                    <div class="top3-guncelleme">🔄 '
+                    'GÜNCELLEME — bu olay son günlerde raporlandı</div>\n'
+                    if art_id in (guncelleme_ids or ()) else '')
                 top3_cards_html += (
                     f'                <div class="top3-card">\n'
+                    f'{_guncel}'
                     f'                    <div class="top3-card-title">'
                     f'<a href="{link}" target="_blank" style="color:inherit;text-decoration:none;">'
                     f'{tr_title}</a></div>\n'
@@ -2323,7 +2336,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
     def _feed_baslik_gurultusu(baslik):
         """Haber değil, yayın takvimi olan feed kaydı mı? (bkz.
         FEED_BASLIK_GURULTU_ONEKLERI). Eşleşme başlığın BAŞINDA aranır."""
-        b = (baslik or '').strip().lower()
+        # Baştaki emoji/simge atılır ("⚡ Weekly Recap: ...").
+        b = re.sub(r'^[^\w]+', '', (baslik or '').strip().lower())
         return any(b.startswith(o) for o in FEED_BASLIK_GURULTU_ONEKLERI)
 
     def fetch_rss(self, url, source_name):
@@ -4411,6 +4425,24 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
     ZAFIYET_SON_CARE_MIN_PUAN = 70   # kullanıcı kararı, 2026-11-07
 
+    def _guncelleme_isaretle(self, aid, neden='', iz=True):
+        """Tekrar olduğu BİLİNEN ama temiz yedek olmadığı için manşette
+        bırakılan haberi işaretler; raporda "GÜNCELLEME" etiketiyle çıkar.
+
+        Kullanıcı kararı (2026-11-08): 8 Kasım (pazar, 8 aday) raporunun üç
+        manşetinin üçü de önceki günlerin tekrarıydı (Crédit Mutuel Arkéa
+        5 Kasım'da gövdedeydi; ARTEX 25 Ekim manşeti; soğutma kampanyası
+        6-7 Kasım manşeti). KRİTİK 3 ikiye düşmediği için yayımlanmaları
+        kaçınılmazdı; okura bunun yeni olay değil güncelleme olduğu açıkça
+        söylenir."""
+        if not hasattr(self, '_guncelleme_ids'):
+            self._guncelleme_ids = set()
+        if aid not in self._guncelleme_ids:
+            self._guncelleme_ids.add(aid)
+            if iz:
+                self._manset_karar_kaydet('manset_guncelleme_etiketi', aid, aid,
+                                          neden or 'tekrar, temiz yedek yok')
+
     def _zafiyet_son_care_bul(self, aday_ids, mevcut, records, view_fn,
                               recent_views=(), atla=()):
         """Temiz siber-olay adayı KESİN OLARAK yokken manşete girecek zafiyet.
@@ -4807,6 +4839,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if yedek is None:
                 print(f"   ⚠️  Manşet çapraz-gün: ID {aid} tekrar olarak işaretlendi "
                       f"ama uygun yedek aday yok — YERİNDE BIRAKILDI (KRİTİK 3 eksilmez).")
+                self._guncelleme_isaretle(aid, 'çapraz-gün tekrarı (LLM)')
                 continue
             # ÇAPRAZ-GÜN KARARI KALICIDIR.
             #
@@ -6279,6 +6312,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # tests/test_manset_araci.py bunu kaynak taramasıyla sabitler.
         self._manset_yasak = set()
         self._zafiyet_son_care_ids = set()   # bkz. _zafiyet_son_care_bul
+        self._guncelleme_ids = set()         # bkz. _guncelleme_isaretle
         self._iliski_izi = {}
 
         ranked, filtered_ids = [], []
@@ -7097,6 +7131,13 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 print(f"   ⚠️  KRİTİK 3: manşet kapısı {len(dusen)} adayı "
                       f"düşürecekti ama geriye {len(uygun)}<3 kalıyordu — "
                       f"kapı UYGULANMADI (3 manşet garantisi).")
+                # Bu adaylar manşete çıkarsa GÜNCELLEMEdir; render yalnızca
+                # son manşette kalanları etiketler.
+                for _aid, _neden in dusen.items():
+                    if 'manşet oldu' in str(_neden):
+                        # İz yazılmaz: aday manşete çıkmayabilir; render
+                        # yalnızca SON manşetteki adayları etiketler.
+                        self._guncelleme_isaretle(_aid, _neden[:80], iz=False)
 
         eligible = self._apply_novelty_tiebreak(eligible, records, view_fn, recent_k3)
 
@@ -8734,6 +8775,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 print(f"   ⚠️  Son mükerrer kapısı: ID {aid} manşette MÜKERRER "
                       f"ama hiç temiz aday yok — YERİNDE BIRAKILDI "
                       f"(KRİTİK 3 eksilmez).")
+                # Rapor-içi kopya güncelleme değildir; yalnızca çapraz-gün.
+                if 'capraz' in str(dusen.get(aid) or manset_cikar.get(aid) or ''):
+                    self._guncelleme_isaretle(aid, 'son kapı: çapraz-gün')
                 dusen.pop(aid, None)
                 manset_cikar.pop(aid, None)
                 eleme_nedeni.pop(aid, None)
@@ -10154,6 +10198,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             exec_summary = exec_summary,
             category_by_id = category_by_id,
             promote_ids = promote_ids,
+            guncelleme_ids = set(getattr(self, '_guncelleme_ids', ()) or ())
+                             & set(top3_ids),
         )
         _rapor_haber_sayisi = len(top10_ids) + len(remaining_ids)
         print(f"✅ HTML oluşturuldu ({len(html)} karakter, "

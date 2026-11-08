@@ -1698,6 +1698,18 @@ FEED_SUMMARY_MIN_WORDS = 100
 # bölümünden bahseden gerçek bir haber yanlışlıkla elenmez.
 FEED_BASLIK_GURULTU_ONEKLERI = (
     'isc stormcast',
+    # HAFTALIK ÖZET YAZILARI (kullanıcı kararı, 2026-11-08): haber değil,
+    # önceki günlerde zaten raporlanan olayların derlemesidir. ÖLÇÜLDÜ
+    # (skorlama_log, 64 gün): 25 kayıt — The Hacker News "⚡ Weekly Recap" 11,
+    # Help Net "Week in review" 8, The Cyber Express "Weekly Roundup" 1 —
+    # 84-97 puanla gövdeye girenler oldu, 8 Kasım'da biri MANŞET oldu
+    # (soğutma kampanyası tekrarı, 85 puan "kolluk_operasyonu"). Önek
+    # baştaki emoji/simge atılarak aranır. Patch Tuesday özetleri BİLEREK
+    # dışarıda: onlar o ayın gerçek yama haberidir.
+    'week in review',
+    'weekly recap',
+    'the cyber express weekly roundup',
+    'weekly roundup',
 )
 
 # Makale-gövdesi proxy fallback: doğrudan kazıma VE feed-özeti başarısız olunca,

@@ -85,3 +85,20 @@ def test_bekci_son_care_zafiyetini_ihlal_saymaz():
     d2.senkronla('test', [2, 3, 11], [], [])
     assert d2.ihlaller, 'istisna dışındaki zafiyet manşeti yine ihlal olmalı'
 
+
+
+def test_guncelleme_etiketi_yalnizca_isaretli_mansete_ve_baslik_disinda():
+    """2026-11-08: üç manşetin üçü de tekrardı; okura GÜNCELLEME olarak
+    gösterilir. Etiket başlık div'ine girmez (arşiv başlığı okur)."""
+    arts = [{'id': i, 'title': f'T{i}', 'link': 'https://ornek.test/x',
+             'source': 'Kaynak', 'art_date': '2026-11-08', 'full_text': ''}
+            for i in (1, 2, 3)]
+    icerik = {i: {'tr_title': f'Başlık {i}', 'paragraph': 'Paragraf.'}
+              for i in (1, 2, 3)}
+    html = main.HaberSistemi._build_html(
+        arts, [], [], icerik, '08 Kasım 2026', top3_ids=[1, 2, 3],
+        guncelleme_ids={2})
+    assert html.count('class="top3-guncelleme"') == 1
+    import re
+    basliklar = re.findall(r'class="top3-card-title">(.*?)</div>', html, re.S)
+    assert not any('GÜNCELLEME' in b for b in basliklar)
