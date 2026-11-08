@@ -1453,6 +1453,9 @@ class HaberSistemi:
             border: 1px solid #f0c36d; border-radius: 4px;
             padding: 2px 8px; margin-bottom: 8px;
         }
+        .top3-guncelleme.tekrar {
+            color: #5f6368; background: #eceff1; border-color: #b0bec5;
+        }
         .top3-card {
             background: linear-gradient(135deg, #e8eaf6 0%, #f5f6fb 100%);
             border: 1px solid #c5cae9;
@@ -1729,10 +1732,21 @@ class HaberSistemi:
                 link, domain, art_date = _safe_source(art)
                 # GÜNCELLEME etiketi başlık div'inin DIŞINDA: arşiv yazımı
                 # top3-card-title metnini okur, etiket başlığa karışmamalı.
-                _guncel = (
-                    '                    <div class="top3-guncelleme">🔄 '
-                    'GÜNCELLEME — bu olay son günlerde raporlandı</div>\n'
-                    if art_id in (guncelleme_ids or ()) else '')
+                # guncelleme_ids: {id: 'tekrar'|'gelisme'} (eski çağrılar
+                # küme geçirebilir → 'gelisme' sayılır).
+                _gt = (guncelleme_ids.get(art_id)
+                       if isinstance(guncelleme_ids, dict)
+                       else ('gelisme' if art_id in (guncelleme_ids or ())
+                             else None))
+                _guncel = ''
+                if _gt == 'tekrar':
+                    _guncel = ('                    <div class="top3-guncelleme '
+                               'tekrar">↩️ TEKRAR — daha önce raporlandı'
+                               '</div>\n')
+                elif _gt:
+                    _guncel = ('                    <div class="top3-guncelleme">'
+                               '🔄 GELİŞME — daha önce raporlanan olayda yeni '
+                               'gelişme</div>\n')
                 top3_cards_html += (
                     f'                <div class="top3-card">\n'
                     f'{_guncel}'
@@ -4425,7 +4439,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
     ZAFIYET_SON_CARE_MIN_PUAN = 70   # kullanıcı kararı, 2026-11-07
 
-    def _guncelleme_isaretle(self, aid, neden='', iz=True):
+    def _guncelleme_isaretle(self, aid, neden='', iz=True, tur=None):
         """Tekrar olduğu BİLİNEN ama temiz yedek olmadığı için manşette
         bırakılan haberi işaretler; raporda "GÜNCELLEME" etiketiyle çıkar.
 
@@ -4437,11 +4451,57 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         söylenir."""
         if not hasattr(self, '_guncelleme_ids'):
             self._guncelleme_ids = set()
+        # İşareti koyan katmanın İPUCU: 'tekrar' (yeni olgu yok) / 'gelisme'.
+        # Render'da deterministik `mukerrer_karari` varsa o önceliklidir
+        # (bkz. _guncelleme_turleri); 'tekrar' ipucu 'gelisme'yi ezer.
+        if not hasattr(self, '_guncelleme_ipucu'):
+            self._guncelleme_ipucu = {}
+        if tur and self._guncelleme_ipucu.get(aid) != 'tekrar':
+            self._guncelleme_ipucu[aid] = tur
         if aid not in self._guncelleme_ids:
             self._guncelleme_ids.add(aid)
             if iz:
                 self._manset_karar_kaydet('manset_guncelleme_etiketi', aid, aid,
                                           neden or 'tekrar, temiz yedek yok')
+
+    def _guncelleme_turleri(self, top3_ids, content_by_id, articles_by_id):
+        """Son manşette kalan işaretli haberler için {id: 'tekrar'|'gelisme'}.
+
+        Kullanıcı kararı (2026-11-08): okura "tam tekrar" ile "eski olayda
+        yeni gelişme" ayrı gösterilir. Öncelik DETERMİNİSTİK karardır —
+        `mukerrer_karari` TAM_MUKERRER → tekrar, GELISME (yeni olgu: sayı,
+        durum değişimi, yeni kimlik) → gelişme; kalite denetiminin kullandığı
+        tanımın aynısı. Karar yoksa işareti koyan katmanın ipucu kullanılır;
+        o da yoksa (yalnızca defter bağı) 'gelisme' — defter aynı olayı
+        bildirir ama yeni olgu olmadığını kanıtlamaz."""
+        isaretli = [a for a in top3_ids
+                    if a in (getattr(self, '_guncelleme_ids', ()) or ())]
+        if not isaretli:
+            return {}
+        ipucu = getattr(self, '_guncelleme_ipucu', {}) or {}
+        view_fn = self._dedup_view_fn(content_by_id, articles_by_id)
+        sozluk = getattr(self, '_olay_sozlugu', None)
+        try:
+            gecmis = (self._load_recent_report_views()
+                      + self._load_recent_kritik3_views())
+        except Exception:
+            gecmis = []
+        sonuc = {}
+        for aid in isaretli:
+            v = view_fn(aid)
+            ka = _olay.aday_anahtarlari(v)
+            karar = None
+            for ev in gecmis:
+                if not (ka & _olay.aday_anahtarlari(ev)):
+                    continue
+                k = _olay.mukerrer_karari(v, ev, sozluk=sozluk)
+                if k == _olay.TAM_MUKERRER:
+                    karar = 'tekrar'
+                    break
+                if k == _olay.GELISME:
+                    karar = 'gelisme'
+            sonuc[aid] = karar or ipucu.get(aid) or 'gelisme'
+        return sonuc
 
     def _zafiyet_son_care_bul(self, aday_ids, mevcut, records, view_fn,
                               recent_views=(), atla=()):
@@ -4839,7 +4899,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             if yedek is None:
                 print(f"   ⚠️  Manşet çapraz-gün: ID {aid} tekrar olarak işaretlendi "
                       f"ama uygun yedek aday yok — YERİNDE BIRAKILDI (KRİTİK 3 eksilmez).")
-                self._guncelleme_isaretle(aid, 'çapraz-gün tekrarı (LLM)')
+                # Prompt yalnızca "yeni hiçbir şey katmayan" haberi işaretler.
+                self._guncelleme_isaretle(aid, 'çapraz-gün tekrarı (LLM)',
+                                          tur='tekrar')
                 continue
             # ÇAPRAZ-GÜN KARARI KALICIDIR.
             #
@@ -6313,6 +6375,7 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         self._manset_yasak = set()
         self._zafiyet_son_care_ids = set()   # bkz. _zafiyet_son_care_bul
         self._guncelleme_ids = set()         # bkz. _guncelleme_isaretle
+        self._guncelleme_ipucu = {}
         self._iliski_izi = {}
 
         ranked, filtered_ids = [], []
@@ -8776,8 +8839,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                       f"ama hiç temiz aday yok — YERİNDE BIRAKILDI "
                       f"(KRİTİK 3 eksilmez).")
                 # Rapor-içi kopya güncelleme değildir; yalnızca çapraz-gün.
-                if 'capraz' in str(dusen.get(aid) or manset_cikar.get(aid) or ''):
-                    self._guncelleme_isaretle(aid, 'son kapı: çapraz-gün')
+                _ned = str(dusen.get(aid) or manset_cikar.get(aid) or '')
+                if 'capraz' in _ned or 'gelişme' in _ned:
+                    self._guncelleme_isaretle(
+                        aid, 'son kapı: çapraz-gün',
+                        tur=('gelisme' if _ned.startswith('gelişme')
+                             else 'tekrar'))
                 dusen.pop(aid, None)
                 manset_cikar.pop(aid, None)
                 eleme_nedeni.pop(aid, None)
@@ -10198,8 +10265,8 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             exec_summary = exec_summary,
             category_by_id = category_by_id,
             promote_ids = promote_ids,
-            guncelleme_ids = set(getattr(self, '_guncelleme_ids', ()) or ())
-                             & set(top3_ids),
+            guncelleme_ids = self._guncelleme_turleri(
+                top3_ids, content_by_id, articles_by_id),
         )
         _rapor_haber_sayisi = len(top10_ids) + len(remaining_ids)
         print(f"✅ HTML oluşturuldu ({len(html)} karakter, "

@@ -102,3 +102,33 @@ def test_guncelleme_etiketi_yalnizca_isaretli_mansete_ve_baslik_disinda():
     import re
     basliklar = re.findall(r'class="top3-card-title">(.*?)</div>', html, re.S)
     assert not any('GÜNCELLEME' in b for b in basliklar)
+
+
+def test_tekrar_ve_gelisme_ayri_etiket():
+    arts = [{'id': i, 'title': f'T{i}', 'link': 'https://ornek.test/x',
+             'source': 'Kaynak', 'art_date': '2026-11-08', 'full_text': ''}
+            for i in (1, 2, 3)]
+    icerik = {i: {'tr_title': f'Başlık {i}', 'paragraph': 'Paragraf.'}
+              for i in (1, 2, 3)}
+    html = main.HaberSistemi._build_html(
+        arts, [], [], icerik, '08 Kasım 2026', top3_ids=[1, 2, 3],
+        guncelleme_ids={1: 'gelisme', 3: 'tekrar'})
+    assert html.count('🔄 GELİŞME') == 1 and html.count('↩️ TEKRAR') == 1
+
+
+def test_tur_onceligi_deterministik_karar(monkeypatch):
+    s, rec, vf = _kur()
+    s._guncelleme_ids = {1, 2, 3}
+    s._guncelleme_ipucu = {1: 'tekrar', 2: 'tekrar'}
+    s._load_recent_report_views = lambda *a, **k: [{'tr_title': 'g'}]
+    s._load_recent_kritik3_views = lambda *a, **k: []
+    monkeypatch.setattr(main._olay, 'aday_anahtarlari', lambda v: {'k'})
+    kararlar = {'Başlık 1': main._olay.GELISME, 'Başlık 2': main._olay.FARKLI,
+                'Başlık 3': main._olay.FARKLI}
+    monkeypatch.setattr(main._olay, 'mukerrer_karari',
+                        lambda v, ev, **k: kararlar[v['tr_title']])
+    icerik = {i: {'tr_title': f'Başlık {i}', 'paragraph': ''} for i in (1, 2, 3)}
+    t = s._guncelleme_turleri([1, 2, 3], icerik, {})
+    # 1: deterministik GELISME ipucunu ezer; 2: karar yok → ipucu;
+    # 3: ne karar ne ipucu → gelisme (defter bağı yeni olgu yokluğunu kanıtlamaz)
+    assert t == {1: 'gelisme', 2: 'tekrar', 3: 'gelisme'}

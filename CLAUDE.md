@@ -1417,6 +1417,14 @@ slot 20 sn'de çıktı).
   3 garantisi için uygulanmadığı adaylar. Render YALNIZCA son manşette kalan
   işaretlileri etiketler. Etiket başlık div'inin DIŞINDADIR (arşiv yazımı
   `top3-card-title` metnini okur). İz katmanı `manset_guncelleme_etiketi`.
+  **İKİ AYRI ETİKET** (kullanıcı kararı, 2026-11-08): "↩️ TEKRAR — daha önce
+  raporlandı" (yeni olgu yok) ve "🔄 GELİŞME — daha önce raporlanan olayda
+  yeni gelişme". Tür `_guncelleme_turleri`'nde belirlenir: önce
+  deterministik `mukerrer_karari` (TAM_MUKERRER → tekrar, GELISME → gelişme;
+  kalite denetiminin tanımı), yoksa işaretleyen katmanın ipucu (çapraz-gün
+  LLM → tekrar, son kapı "gelişme" → gelişme), o da yoksa gelişme. 8 Kasım
+  yeniden oynatması: Crédit Mutuel Arkéa ve ARTEX → GELİŞME, haftalık özet →
+  TEKRAR. Ek LLM çağrısı yok.
 - **HAFTALIK ÖZETLER HABERE GİRMEZ** (`FEED_BASLIK_GURULTU_ONEKLERI`): "Week
   in review", "Weekly Recap" (baştaki emoji atılarak), "Weekly Roundup" —
   feed aşamasında, LLM maliyetinden ÖNCE elenir. Ölçüldü (64 gün): 25 kayıt,
