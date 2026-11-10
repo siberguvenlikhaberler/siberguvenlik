@@ -354,6 +354,17 @@ _MANSIZ_AD = {
     # tesisi ↔ NightEagle (89 puanlı haberi manşet havuzundan düşürmüştü).
     'unit', 'center', 'centre', 'manageme', 'manager', 'access',
     'educatio', 'global', 'enterpri', 'director', 'direktör', 'city',
+    # UNVAN VE GÜN ADI kimlik değildir. ÖLÇÜLDÜ (2026-11-10 raporu): İtalya
+    # Dışişleri Bakanı Tajani'nin verilerinin sızması (93) 26 Ekim'in
+    # "Japonya Sanayi Bakanı ... yapay zeka simülasyonu" manşetiyle aynı olay
+    # sayılıp manşet havuzundan düştü; iki haberin ortak yanı yalnızca
+    # "Bakanı"/"Minister" unvanıydı (Başlık Düzeni metinde özel ad sanılıyor,
+    # DF sözlüğü nadir olduğu için yakalayamıyor). Kişinin ADI (meloni,
+    # tajani, akazawa) kimlik olmaya devam eder.
+    'minister', 'ministry', 'bakanı', 'bakan', 'başbakan', 'premier',
+    'presiden', 'başkanı', 'chairman', 'secretar', 'sekreter',
+    'monday', 'tuesday', 'wednesda', 'thursday', 'friday', 'saturday',
+    'sunday', 'pazartes', 'çarşamba', 'perşembe', 'cumartes',
     # KURUM ADI SÖZCÜKLERİ BİLEREK DIŞARIDA: 'bürosu', 'investig',
     # 'soruştur' (Federal Soruşturma Bürosu), 'meclisi', 'temsilci',
     # 'hazine', 'yasası' eklenince 8 bağ daha düşüyor ama bunların arasında

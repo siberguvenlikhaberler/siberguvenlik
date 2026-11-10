@@ -538,3 +538,30 @@ def test_kurum_adi_sozcukleri_jenerik_listede_degildir():
     for kok in ('bürosu', 'investig', 'soruştur', 'meclisi', 'hazine'):
         assert kok not in oi._MANSIZ_AD, \
             f'{kok} jenerik listeye alınmış — FBI/Accenture birleşmesi kaybolur'
+
+
+def test_unvan_ve_gun_adi_olay_kimligi_degildir():
+    """ÖLÇÜLDÜ (2026-11-10 raporu): İtalya Dışişleri Bakanı Tajani'nin
+    verilerinin sızması (93) yalnızca 'Bakanı/Minister' ortaklığıyla Japonya
+    Sanayi Bakanı'nın yapay zeka simülasyonu manşetine bağlanıp manşete
+    kapandı. Son 31 günde unvan/gün adının kurduğu 10 bağın 10'u sahteydi."""
+    for kok in ('minister', 'bakanı', 'başbakan', 'friday', 'monday',
+                'thursday'):
+        assert kok in oi._MANSIZ_AD
+    tajani = {'tr_title': "İtalya Dışişleri Bakanının Kişisel Verilerinin "
+                          "Sızdırılması",
+              'paragraph': "İtalya Başbakanı Giorgia Meloni, Dışişleri Bakanı "
+                           "Antonio Tajani'nin verilerinin sızdırılmasından "
+                           "Rusya yanlısı hackerları sorumlu tutmuştur.",
+              'title': "Italy's Meloni Blames Pro-Russian Hackers for Leak "
+                       "of Foreign Minister's Data",
+              'full_text': "Prime Minister Giorgia Meloni said on Friday ..."}
+    japonya = {'tr_title': "Japonya'nın PHP Açıkları Sonrası Yapay Zeka "
+                           "Simülasyonu Planlaması",
+               'paragraph': "Sanayi Bakanı Ryosei Akazawa yapay zeka destekli "
+                            "saldırı simülasyon ekibi kurulacağını açıklamıştır.",
+               'title': "Japan AI Cyberattack Simulations Planned as PHP "
+                        "Flaws Disrupt Services",
+               'full_text': "Speaking on Friday, Industry Minister Ryosei "
+                            "Akazawa said ..."}
+    assert oi.iliski_belirle(tajani, japonya) == oi.ILISKISIZ

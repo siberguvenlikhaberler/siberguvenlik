@@ -1431,3 +1431,20 @@ slot 20 sn'de çıktı).
   84-97 puanla gövdeye girenler vardı; geçmiş başlıklarda yanlış eşleşme 0.
   Patch Tuesday özetleri bilerek dışarıda (gerçek ayın yama haberi).
 Regresyon: `tests/test_feed_gurultu.py`, `tests/test_zafiyet_son_care.py`.
+
+### UNVAN/GÜN ADI KİMLİK DEĞİL + OTOMATİK TETİK SAAT PENCERESİ (2026-11-10)
+- 10 Kasım: İtalya Dışişleri Bakanı Tajani'nin verilerinin sızması (93,
+  Meloni Rus yanlısı hackerları suçladı) "olay 2 kez manşet oldu — eşleşen:
+  26 Ekim Japonya PHP / yapay zeka simülasyonu" denip manşete kapandı; ortak
+  yan yalnızca "Bakanı/Minister" unvanıydı. Unvanlar (`minister`, `bakanı`,
+  `başbakan`, `presiden`…) ve gün adları (`friday`, `monday`…) `_MANSIZ_AD`'a
+  eklendi. ÖLÇÜLDÜ (son 31 gün): defter bağı 10 azaldı, 10'u da sahte
+  (Moldova↔Polonya Pegasus, CISA kampanyası↔İngiltere pilotları `monday`,
+  Florida↔Burger King Japonya `thursday`…); sahte "zaten manşet" 6 → 5;
+  `dedup_golden` 25/28, `mukerrer_golden` 33/32/38, `zincir_olc` 0 düşürme —
+  birebir aynı. Üretim kümesi çevrimdışı birebir üretilemedi (saklı görünümle
+  eşleşme yok), ama kanıt kökleri logda yazılı ve artık kimlik sayılmıyor.
+- GitHub `schedule` yedeği 12 saat gecikip TR 00:14'te koştu ve 10 Kasım
+  raporunu gece yarısı üretti; gündüz slotları "rapor var" deyip atladı.
+  `daily.yml` "Saat penceresi" adımı: otomatik tetik yalnızca TR 09:00-20:59
+  arasında koşar (manuel muaf). Pencere dışı koşu sayaç ARTIRMAZ, issue AÇMAZ.

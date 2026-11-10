@@ -57,6 +57,22 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
+      # SAAT PENCERESİ (2026-11-10): GitHub `schedule` yedeği saatlerce gecikebilir.
+      # 9 Kasım'ın 09:00 UTC slotu 21:14 UTC'de (TR 00:14) koştu, takvim günü
+      # dönmüş olduğu için 10 Kasım raporunu GECE YARISI üretti; o günün gündüz
+      # slotları "rapor var" diyip atladı ve günün haberleri ertesi rapora
+      # kaldı. Otomatik tetik yalnızca TR 09:00-20:59 arasında koşar; manuel
+      # tetik muaftır.
+      - name: Saat penceresi
+        id: saat
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          s=$(TZ='Europe/Istanbul' date +%H)
+          if [ "$((10#$s))" -lt 9 ] || [ "$((10#$s))" -gt 20 ]; then
+            echo "::notice::TR saat $s — otomatik tetik pencere dışında, koşu atlanıyor."
+            echo "atla=1" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -72,7 +88,7 @@ jobs:
       # aşımında sondaki commit adımı hiç koşmaz. Sınır dolduysa adım hata
       # verir, ana iş koşmaz ve issue adımı haber verir. Manuel tetik muaf.
       - name: Günlük tam koşu sınırı
-        if: github.event_name != 'workflow_dispatch'
+        if: github.event_name != 'workflow_dispatch' && steps.saat.outputs.atla != '1'
         run: |
           set -e
           python scripts/kosu_sayaci.py
@@ -90,7 +106,8 @@ jobs:
             echo "::warning::Sayaç push edilemedi — koşu yine de devam ediyor."
           fi
 
-      - env:
+      - if: steps.saat.outputs.atla != '1'
+        env:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           # OpenRouter (varsayılan model: src/config.py OPENROUTER_MODEL) — AKTİF.
           LLM_PROVIDER: openrouter
@@ -111,6 +128,7 @@ jobs:
       # tazelenir (rebase), sonra push denenir. Hepsi başarısızsa adım HATA verir
       # (sessiz yutma yok) ki Actions'ta görünür olsun.
       - name: Commit ve push (retry'li)
+        if: steps.saat.outputs.atla != '1'
         run: |
           set -e
           git config user.name "Bot"
