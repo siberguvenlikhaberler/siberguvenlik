@@ -61576,3 +61576,405 @@ Açık kaynaklı Bitcoin Lightning cüzdan sistemi LNbits, kritik güvenlik aç�
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 11 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Çin Bağlantılı Üç Casusluk Kampanyasının Sparrow Ekosistemiyle İlişkilendirilmesi
+─────────────────────────────────────────────────────────
+Check Point Research, Latin Amerika, Asya ve Avrupa'daki telekomünikasyon, hükümet ve kritik altyapı sektörlerini hedef alan üç farklı saldırı kümesinin Sparrow adlı ortak bir zararlı yazılım ekosistemi üzerinden birbirine bağlandığını tespit etmiştir. CopperDragon olarak adlandırılan ve Çin menşeli siber tehdit aktörlerine araç sağlayan bir dijital tedarikçinin bu çerçeveyi geliştirdiği belirtilmektedir. SilentDelivery, OceanGate ve DarkWire olarak isimlendirilen bu kümelerin, SquadC ve SparrowDoor gibi arka kapılar kullanarak hassas verileri sızdırdığı ifade edilmiştir. Araştırmada, saldırganların meşru web sitelerine kötü amaçlı JavaScript kodları enjekte ederek kullanıcıları sahte sertifika düzeltme araçlarını indirmeye yönlendirdiği bilgisi verilmiştir. Ayrıca, aktörlerin savunma mekanizmalarını atlatmak için çekirdek seviyesinde rootkitler ve WinDivert sürücüleri kullanarak ağ trafiğini manipüle ettiği ve sistemlerde kalıcılık sağladığı bildirilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 10.11.2026)
+» url=https://thehackernews.com/2026/11/three-china-nexus-espionage-campaigns.html
+» manset=evet | kategori=nation_state_apt | puan=97
+» sonradan | kategori=nation_state_apt | onem=92 | eksen=25/25/25/17 | rubrik=v2
+» varlik | sektor=kamu,telekom | aktor_ulke=Çin
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Rus Turla Grubunun Cereal Yazılımıyla E-posta Hırsızlığı Yapması
+─────────────────────────────────────────────────────────
+Rusya bağlantılı Turla grubu, Microsoft Exchange sunucularını hedef alan ve Cereal olarak adlandırılan gelişmiş bir casus yazılım setini kullanarak Kazakistan ve Romanya'daki hükümet kurumlarına yönelik siber operasyonlar yürütmektedir. ESET tarafından 2025 sonlarında tespit edilen bu modüler platform, harici bir komuta kontrol altyapısı yerine doğrudan ele geçirilen sunucuları kullanarak tespit riskini minimize etmektedir. Sekiz farklı bileşenden oluşan sistemde, CerealBox modülü EdgeTransport.exe sürecine sızarak NATO ve Avrupa Birliği ile ilgili yazışmaları filtrelemekte, DOC ve PDF eklerini şifreleyerek dışarı aktarmaktadır. CerealRunner ve CerealNeuron gibi bileşenler aracılığıyla .NET programlarını bellek üzerinde yürüten yazılım; Active Directory sorguları, LSA sırlarının çalınması ve WMI komutları gibi kritik casusluk faaliyetlerini disk üzerinde minimum iz bırakarak otomatize etmektedir.
+(XXXXXXX, AÇIK -thehackernews.com, 10.11.2026)
+» url=https://thehackernews.com/2026/11/russian-turla-hackers-use-new-cereal.html
+» manset=evet | kategori=nation_state_apt | puan=94
+» sonradan | kategori=nation_state_apt | onem=84 | eksen=17/25/25/17 | rubrik=v2
+» varlik | sektor=kamu,savunma | hedef=AB,Romanya | aktor_ulke=Rusya | aktor=Turla
+» kurban | ad=Kazakistan,Romanya | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] CISA'nın İnternete Açık Kritik Varlıklar İçin Program Başlatması
+─────────────────────────────────────────────────────────
+ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), kritik altyapı operatörlerinin internete açık ve savunmasız operasyonel teknoloji (OT) varlıklarını korumak amacıyla 'Kurulu Taban Programı'nı (Installed Base Program) başlatmıştır. Orijinal ekipman üreticileri (OEM) ile stratejik ortaklık kuran bu girişim, endüstriyel kontrol sistemlerindeki (ICS) riskli cihazları tespit ederek saldırı yüzeyini daraltmayı hedeflemektedir. CISA, açık kaynaklı tarama araçları ve Siber Hijyen Servisi ile tespit edilemeyen varlık sahiplerine ulaşmak için idari mahkeme celbi yetkisini kullanarak internet servis sağlayıcılarından bilgi almaktadır. Beş aşamalı bir süreçle yürütülen program, savunmasız sistemlerin sahiplerine doğrudan bildirim yapılmasını ve Traffic Light Protocol (TLP) Amber+STRICT standartlarıyla veri güvenliğinin sağlanmasını kapsamaktadır. Bu iş birliği sayesinde binlerce savunmasız varlık internet erişiminden kaldırılarak kritik altyapıların siber dayanıklılığı artırılmaktadır.
+(XXXXXXX, AÇIK -industrialcyber.co, 10.11.2026)
+» url=https://industrialcyber.co/cisa/cisas-installed-base-program-to-help-oems-identify-and-secure-internet-exposed-ot-assets-across-critical-infrastructure/
+» manset=evet | kategori=politika_hukuk | puan=80
+» sonradan | kategori=politika_hukuk | onem=92 | eksen=17/25/25/25 | rubrik=v2
+» varlik | sektor=kamu,telekom | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Yapay Zeka Ajanlarıyla Yazılımların Kaynak Kodlarının Yeniden Oluşturulması
+─────────────────────────────────────────────────────────
+Intezer araştırmacıları, yapay zeka ajanlarını kullanarak Slack, Apple Finder ve Turla grubuyla ilişkilendirilen TinyTurla-NG zararlı yazılımının kaynak kodlarını tersine mühendislik yöntemiyle yeniden oluşturmuştur. GPT-5.6-sol-high ve Kimi K3 modellerinin kullanıldığı çalışmada, derlenmiş ikili dosyalar ve dokümantasyonlar aracılığıyla 3.100 satırlık kaynak kod elde edilmiştir. Araştırmacılar, yeniden oluşturulan Slack uygulamasına yerel bir modelle çalışan yapay zeka metin tamamlama özelliği eklemeyi başarmıştır. TinyTurla-NG üzerinde yapılan testlerde, BinDiff aracıyla orijinal dosya ile %92,8 oranında benzerlik ve %98,7 oranında güven düzeyi sağlandığı kaydedilmiştir. Yazılım endüstrisinin bu yeni tehdide karşı kod karıştırma ve şifreleme yöntemlerini kullanması gerektiği belirtilmiştir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 10.11.2026)
+» url=https://www.helpnetsecurity.com/2026/11/10/slack-ai-reverse-engineering/
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=79
+» sonradan | kategori=yapay_zeka_guvenligi | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | aktor=Turla
+» kurban | ad=Slack,Apple | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Fireworks AI'nın Ekim Ayındaki İkinci Veri İhlali Açıklaması
+─────────────────────────────────────────────────────────
+Yapay zeka altyapı şirketi Fireworks AI, Ekim 2026'da gerçekleşen ve müşteri verilerinin sızmasına neden olan ikinci bir siber saldırıyı ifşa etmiştir. Şirket, 23 Ekim'de bir bulut sağlayıcısı üzerinden Ar-Ge sistemlerine sızıldığını ve saldırganların yetkisiz iş yükleri çalıştırdığını belirtmiştir. İhlal sonucunda müşteri fatura bilgileri, kaynak meta verileri ve bazı eksik model ağırlıkları ile veri setlerine erişildiği kaydedilmiştir. Fireworks AI CEO'su Lin Qiao, saldırganların temel amacının model ağırlıklarını çalmak değil, LLMJacking yöntemiyle yapay zeka modellerine yetkisiz erişim satmak olduğunu ifade etmiştir. Olaydan Notion gibi iş ortağı firmaların da etkilendiği ve bazı sohbet dökümlerinin ifşa olduğu bildirilmiştir. Şirketin Palo Alto Networks Unit 42 ekibiyle çalışarak kimlik bilgilerini yenilediği ve sistem güvenliğini sıkılaştırdığı açıklanmıştır. Bu olayın, 6 Ekim'de yaşanan ve API anahtarlarının sızdırıldığı ilk ihlalin ardından gelmesi dikkat çekmiştir.
+(XXXXXXX, AÇIK -theregister.com, 10.11.2026)
+» url=https://www.theregister.com/cyber-crime/2026/11/10/fireworks-ai-gets-burned-twice-as-customer-data-exposure-widens/5308722
+» manset=hayir | kategori=veri_ihlali | puan=73
+» sonradan | kategori=veri_ihlali | onem=59 | eksen=17/17/17/8 | rubrik=v2
+» varlik | sektor=teknoloji
+» kurban | ad=Fireworks AI | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Settra Fidye Yazılımıyla Bağlantılı GhostFrame İmplantının Tespit Edilmesi
+─────────────────────────────────────────────────────────
+VMware ESXi ortamları üzerinde kapsamlı kontrol sağlayan GhostFrame adlı yeni bir istismar sonrası çerçevesinin, Settra fidye yazılımı operasyonlarıyla örtüşen TAG-218 grubu tarafından kullanıldığı belirlenmiştir. Bu çerçevenin, root yetkisiyle ele geçirilmiş hipervizörler üzerinden sanal makineleri yönetme, kimlik bilgilerini çalma ve ağ içinde yatayda ilerleme imkanı tanıdığı belirtilmektedir. GhostFrame implantının, ESXi güvenlik duvarını ve imzasız ikili dosyaların çalıştırılmasını engelleyen kontrolleri her beş saniyede bir devre dışı bırakarak sistemde kalıcılık sağladığı ifade edilmiştir. Saldırganların, sanal makinelerin bellek dökümlerinden ve disk görüntülerinden NTLM özetleri ile Kerberos biletlerini alabildiği bilgisi verilmiştir. TAG-218'in Ağustos ve Ekim 2026 tarihleri arasında ABD ve Avrupa'daki SonicWall ve Fortinet gibi VPN cihazlarını hedef aldığı, ardından sanallaştırma katmanına sızarak fidye yazılımı faaliyetlerini yürüttüğü kaydedilmiştir.
+(XXXXXXX, AÇIK -recordedfuture.com, 10.11.2026)
+» url=https://www.recordedfuture.com/blog/ghostframe-esxi-implant-settra-ransomware
+» manset=hayir | kategori=nation_state_apt | puan=89
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | hedef=ABD | aktor=TAG-218
+» teknik | urun=VMware
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] DoppelCart Dolandırıcılık Ağının 250 Binden Fazla Alana Yayılması
+─────────────────────────────────────────────────────────
+Recorded Future, DoppelCart olarak adlandırılan ve 261.700'den fazla şüpheli alan adını kapsayan devasa bir çevrimiçi alışveriş dolandırıcılığı ağını deşifre etmiştir. Bu ağın, tanınmış moda ve elektronik markalarının görsellerini kopyalayarak tüketicilerin ödeme bilgilerini ve banka doğrulama kodlarını ele geçirdiği belirtilmiştir. Analizler, dolandırıcıların Medusa adlı açık kaynaklı e-ticaret platformunu kullandığını ve ödeme yönlendirme yapılandırmalarında Çince ifadelerin yer aldığını ortaya koymuştur. Özellikle ABD, İngiltere ve Avustralya merkezli markaların taklit edildiği, ağın altyapısının ise Mayıs 2026'da Cloudflare'den Gürcistan merkezli Malakmadze Web LLC sağlayıcısına taşındığı tespit edilmiştir. Tespit edilen web sitelerinin yaklaşık %40'ının halen aktif olduğu ve dolandırıcıların mevcut altyapıyı korumaya odaklandıkları kaydedilmiştir. Operasyonun Mart 2026'da başladığı ve Haziran-Temmuz aylarında zirve noktasına ulaştığı, sonrasında ise .shop uzantılı alan adlarından .com uzantılarına doğru bir çeşitlenme yaşandığı bildirilmiştir.
+(XXXXXXX, AÇIK -recordedfuture.com, 10.11.2026)
+» url=https://www.recordedfuture.com/blog/doppelcart-fraud-network-grows-domains
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=89
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=67 | eksen=25/8/17/17 | rubrik=v2
+» varlik | sektor=finans,perakende | hedef=ABD,Avustralya,Birleşik Krallık,Çin | aktor=Medusa
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] İngiltere'de Rusya Adına Casuslukla Suçlanan ABD Askerinin Yakalanması
+─────────────────────────────────────────────────────────
+İngiliz terörle mücadele polisi, Rusya adına casusluk yaptığı şüphesiyle 41 yaşındaki bir ABD Ordusu askerini Gloucester yakınlarında gözaltına almıştır. Operasyonun FBI ve ABD askeri makamlarıyla yakın iş birliği içinde yürütüldüğü ve şüphelinin hassas bilgilere erişimi olan kıdemli bir asker olduğu belirtilmiştir. FBI Direktörü Kash Patel, ulusal güvenliği tehlikeye atan ve yeminini bozan kişilere karşı tolerans gösterilmeyeceğini açıklamıştır. Gözaltı işleminin, İngiltere'nin siber güvenlik ve istihbarat kurumu GCHQ'nun merkezine yakın bir bölgede gerçekleştiği kaydedilmiştir. İngiliz istihbarat yetkilileri, Rusya'nın Batılı müttefiklerin kritik altyapılarına ve demokratik süreçlerine yönelik hibrit saldırılarını artırdığı konusunda daha önce uyarılarda bulunmuştur. Olayla ilgili soruşturmanın ve Gloucestershire'daki iki farklı adresteki aramaların sürdüğü bilgisi verilmiştir. Şüphelinin Londra'daki bir polis merkezinde tutulduğu ve soruşturmanın Ulusal Güvenlik Yasası kapsamında yürütüldüğü bildirilmiştir.
+(XXXXXXX, AÇIK -therecord.media, 10.11.2026)
+» url=https://therecord.media/us-army-member-arrested-in-uk-spying-for-russia
+» manset=hayir | kategori=kolluk_operasyonu | puan=87
+» sonradan | kategori=kolluk_operasyonu | onem=75 | eksen=8/25/25/17 | rubrik=v2
+» varlik | sektor=savunma | hedef=ABD,Rusya | aktor_ulke=Birleşik Krallık
+» kurban | ad=ABD Ordusu | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Blind Eagle Grubunun Latin Amerika'da Sahte Yargı Bildirimleri
+─────────────────────────────────────────────────────────
+Latin Amerika merkezli siber tehdit aktörü Blind Eagle, Kolombiya ve Brezilya'daki kuruluşları hedef alan yeni bir kimlik avı kampanyası başlatmıştır. Saldırganların, Kolombiya Başsavcılığı gibi kurumları taklit eden sahte mahkeme celpleri ve idari belgeler kullanarak AsyncRAT ve DCRat türevi zararlı yazılımları yaydıkları tespit edilmiştir. Kampanyada, e-posta güvenlik kontrollerini aşmak için "HTML smuggling" tekniğinin ve zararlı SVG görsellerinin kullanıldığı belirtilmiştir. Ele geçirilen sistemlerde ortam keşfi yapan JavaScript tabanlı yükleyicilerin, Windows güvenlik mekanizmalarını devre dışı bıraktığı ve kalıcılık sağladığı ifade edilmiştir. Ekim sonundan bu yana 3.300'den fazla zararlı e-postanın gönderildiği ve grubun özellikle hassas hukuki ve finansal verilere erişmeyi amaçladığı kaydedilmiştir. Kolombiya'nın, altyapısal güvenlik zayıflıkları nedeniyle öncelikli hedef olmaya devam ettiği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 10.11.2026)
+» url=https://thehackernews.com/2026/11/blind-eagle-uses-fake-court-notices-to.html
+» manset=hayir | kategori=nation_state_apt | puan=86
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=kamu | hedef=Brezilya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] SGLang Güvenlik Açığı Üzerinden NEAR AI Verilerinin Çalınması
+─────────────────────────────────────────────────────────
+Açık kaynaklı çıkarım motoru SGLang üzerinde bulunan bir uzaktan kod yürütme açığı, NEAR AI firmasına ait bir sunucunun ele geçirilmesine neden olmuştur. Saldırganın, güvenilir yürütme ortamı (TEE) içinde işlenen gizli moddaki talepleri izleyebildiği ve yaklaşık 100 kullanıcıya ait isim, e-posta ve bakiye detaylarını indirdiği tespit edilmiştir. Ayrıca, şirketin eski bir dağıtımında bulunan 18 yapay zeka ajanına erişilerek sohbet geçmişleri, ayarlar ve günlük kayıtlarının sızdırıldığı bildirilmiştir. Olay sonucunda iki müşteriye ait API anahtarlarının açığa çıktığı ve bu anahtarların derhal iptal edildiği açıklanmıştır. Şirket, tüm aktif oturumları sonlandırarak yönetici kimlik bilgilerini yenilemiş ve SGLang açığı için tüm sunuculara yama uygulamıştır. Brave tarayıcısının Leo asistanının da bu altyapıyı kullandığı ancak etkilenen sunucuda işlem görüp görmediğinin henüz netleşmediği kaydedilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 10.11.2026)
+» url=https://thehackernews.com/2026/11/sglang-rce-exploit-breaches-near-ai.html
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=78
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=59 | eksen=8/17/17/17 | rubrik=v2
+» kurban | ad=NEAR AI | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] ABD'de Su Altyapısı İçin Project Watershed 250 Başlatılması
+─────────────────────────────────────────────────────────
+ABD'de su ve atık su tesislerinin siber güvenlik açıklarını tespit edip gidermek amacıyla Project Watershed 250 isimli altı aylık bir pilot programın başlatıldığı bildirilmiştir. Beyaz Saray Ulusal Siber Direktörlüğü, Teksas Siber Komutanlığı, EPA ve CISA ortaklığında yürütülen girişimin, özellikle kısıtlı bütçeye sahip küçük ve orta ölçekli tesislere ücretsiz siber savunma araçları ve eğitim desteği sağladığı belirtilmektedir. Programın, Temmuz 2026'da yedi eyaletteki su tesislerini hedef alan ve operasyonel aksamalara neden olan siber saldırıların ardından aciliyet kazandığı ifade edilmiştir. Uzmanlar, pilot programın zafiyetleri ortaya çıkarmada başarılı olacağını öngörmekle birlikte, uzun vadeli finansman ve uzman personel eksikliğinin tesisler için temel engel teşkil etmeye devam ettiğine dikkat çekmiştir. EPA'nın orta ve büyük ölçekli projelere hibe desteği sağladığı, ancak en savunmasız durumdaki küçük tesislerin sürdürülebilir bir finansman modelinden yoksun olduğu kaydedilmiştir.
+(XXXXXXX, AÇIK -industrialcyber.co, 10.11.2026)
+» url=https://industrialcyber.co/features/project-watershed-250-puts-water-utility-cybersecurity-under-scrutiny-though-long-term-funding-remains-unresolved/
+» manset=hayir | kategori=politika_hukuk | puan=75
+» sonradan | kategori=politika_hukuk | onem=92 | eksen=17/25/25/25 | rubrik=v2
+» varlik | sektor=su | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] CISA'nın Siber Olay Bildirim Formunu Analiz İçin Güncellemesi
+─────────────────────────────────────────────────────────
+ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), siber olayları analiz etme ve ulusal savunma stratejilerini güçlendirme amacıyla güncellenmiş olay bildirim formunu kullanıma sunmuştur. Yeni web tabanlı anketin, olay türleri hakkında daha ayrıntılı veri topladığı ve saldırgan davranışlarını tanımlamak için MITRE ATT&CK çerçevesini entegre ettiği belirtilmiştir. CISA, bu geliştirmenin bağımsız gibi görünen olaylar arasındaki bağlantıları kurarak geniş çaplı siber harekatları tespit etmeyi kolaylaştıracağını ifade etmiştir. Federal sivil kurumlar için raporlama zorunlu tutulurken, özel sektör kuruluşlarının da gönüllü olarak bildirimde bulunması teşvik edilmektedir. Ajans yetkilileri, bir kuruluşun tespitinin diğerinin koruması haline geldiği bir ekosistem yaratmayı hedeflediklerini açıklamıştır. Güncellenen formun, topluluk geri bildirimleri doğrultusunda daha hızlı ve kapsamlı tehdit analizi yapılmasına imkan tanıyacak şekilde tasarlandığı kaydedilmiştir.
+(XXXXXXX, AÇIK -darkreading.com, 09.11.2026)
+» url=https://www.darkreading.com/cyberattacks-data-breaches/cisa-announces-enhanced-reporting-form-cyber-incidents
+» manset=hayir | kategori=politika_hukuk | puan=73
+» sonradan | kategori=politika_hukuk | onem=84 | eksen=17/17/25/25 | rubrik=v2
+» varlik | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] Japon Mobilya Devi Nitori'den 37 Milyon Kaydın Çalınması
+─────────────────────────────────────────────────────────
+Japonya'nın en büyük mobilya perakendecilerinden Nitori, ağındaki bir sisteme düzenlenen siber saldırı sonucunda 37,62 milyon müşteri kaydının çalınmış olabileceğini duyurmuştur. 6 Kasım 2026'da tespit edilen sızmanın, Ekim ayı ortasından bu yana sürdüğü ve Japonya ile birlikte Çin, Tayvan ve Tayland gibi bölgelerdeki operasyonları da kapsayabileceği ifade edilmiştir. Şirket tarafından yapılan açıklamada; bireysel ve kurumsal üyelerin isimleri, e-posta adresleri, posta adresleri, telefon numaraları ve doğum tarihleri gibi hassas verilerin sızdırıldığı belirtilmiştir. Yıllık 5,8 milyar dolar geliri olan şirkette, hesap parolaları ve kredi kartı bilgilerinin güvende olduğu kaydedilmiştir. Nitori, saldırganın erişimini engellediğini ve fidye yazılımı ihtimalini de içeren adli incelemelerin sürdüğünü bildirmiştir. Japonya Kişisel Bilgileri Koruma Komisyonu ve polisin konu hakkında bilgilendirildiği, etkilenen müşterilere doğrudan ulaşılacağı açıklanmıştır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 10.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/japanese-furniture-giant-nitori-says-hackers-stole-376m-customer-records/
+» manset=hayir | kategori=veri_ihlali | puan=72
+» sonradan | kategori=veri_ihlali | onem=76 | eksen=25/17/17/17 | rubrik=v2
+» varlik | sektor=perakende | hedef=Japonya,Tayland,Tayvan,Çin
+» olcek | etkilenen=37620000
+» kurban | ad=Nitori | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] Wyndham Uygulamasındaki Hata Nedeniyle Müşteri Verilerinin İfşası
+─────────────────────────────────────────────────────────
+Dünya genelinde faaliyet gösteren otel devi Wyndham, mobil uygulamasındaki bir güvenlik açığı nedeniyle milyonlarca müşterisinin kişisel verilerinin ifşa olduğunu kabul etmiştir. Güvenlik araştırmacısı Robert Wiggins, şirketin Android uygulamasının kaynak kodunda Salesforce veritabanına erişim sağlayan sabit kodlanmış bir parola bulduğunu raporlamıştır. Bu parolanın; müşteri isimleri, e-posta adresleri, üyelik numaraları ve oturum açma belirteçlerine (JWT) yetkisiz erişim imkanı tanıdığı belirtilmiştir. Wyndham'ın 129 milyon ödül programı üyesi bulunmasına rağmen, kaç kaydın doğrudan etkilendiği netlik kazanmamıştır. Araştırmacının uyarısı üzerine erişim yetkilerinin iptal edildiği ancak şirketin geçmişe dönük yetkisiz erişim kayıtlarını inceleyip incelemediği açıklanmamıştır. Uzmanlar, hassas parolaların uygulama koduna gömülmesinin en temel güvenlik hatalarından biri olduğunu vurgulamıştır. Şirketin olayla ilgili resmi bildirim yapıp yapmayacağı konusunda henüz bir bilgi verilmemiştir.
+(XXXXXXX, AÇIK -techcrunch.com, 10.11.2026)
+» url=https://techcrunch.com/2026/11/09/hotel-giant-wyndham-exposed-customer-data-after-app-security-lapse/
+» manset=hayir | kategori=veri_ihlali | puan=67
+» sonradan | kategori=veri_ihlali | onem=49 | eksen=25/8/8/8 | rubrik=v2
+» teknik | urun=Google,Salesforce
+» kurban | ad=Wyndham | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] CISA Direktörlüğüne Palantir Yöneticisi Michael LoSapio'nun Aday Gösterilmesi
+─────────────────────────────────────────────────────────
+ABD Başkanı Donald Trump, Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA) liderliğine Palantir'in bilgi güvenliği yöneticisi Michael LoSapio'yu aday göstermiştir. CISA'nın son dönemde personel sayısının üçte birini kaybettiği ve bütçesinde milyarlarca dolarlık kesintiye gidildiği bir dönemde gerçekleşen bu atamanın kurum için bir dönüm noktası olabileceği belirtilmektedir. LoSapio'nun adaylığının Senato'daki yoğun gündem nedeniyle yıl sonuna kadar onaylanıp onaylanmayacağının belirsizliğini koruduğu ifade edilmiştir. Uzmanlar, LoSapio'nun yapay zeka odaklı teknoloji geçmişinin ulusal güvenlik operasyonları için yeni bir perspektif sunabileceğini ancak kurumun geniş çaplı savunma misyonunu yönetmek için yeterli olup olmadığının tartışıldığını kaydetmiştir. CISA'nın son seçim döneminde dezenformasyonla mücadele çabaları nedeniyle siyasi eleştirilerin odağında kaldığı hatırlatılmıştır. Senato onay sürecinin, LoSapio'nun Palantir ile olan bağları nedeniyle sıkı bir denetime tabi tutulması beklenmektedir.
+(XXXXXXX, AÇIK -therecord.media, 10.11.2026)
+» url=https://therecord.media/michael-losapio-cisa-director-nomination
+» manset=hayir | kategori=politika_hukuk | puan=66
+» sonradan | kategori=politika_hukuk | onem=84 | eksen=17/17/25/25 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD
+» kurban | ad=CISA | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] AB Siber Dayanıklılık Yasası Kapsamında Raporlama Yükümlülüklerinin Başlaması
+─────────────────────────────────────────────────────────
+Avrupa Birliği Siber Dayanıklılık Yasası (CRA) kapsamındaki siber güvenlik açıklarını bildirme yükümlülüklerinin 11 Eylül 2026 tarihinde başladığı belirtilmiştir. Copla CEO'su Aurimas Bakas, üreticilerin piyasadaki tüm ürün sürümleri için güncel bir sicil tutmaları ve istismar edilen açıklar için 24 saat içinde erken uyarı yapmaları gerektiğini ifade etmiştir. Düzenlemenin, satıştan kaldırılmış ancak hâlâ kullanımda olan eski yazılımları da kapsadığı ve raporlama yükümlülüğünün tatil günlerini de içerdiği bildirilmiştir. Şirketlerin, bir güvenlik açığından haberdar olma anını net bir şekilde tanımlamaları ve ENISA raporlama platformuna erişim yetkisi olan personeli belirlemeleri gerektiği kaydedilmiştir. Kurallara uyulmaması durumunda 15 milyon avroya veya küresel cironun %2,5'ine kadar idari para cezası uygulanabileceği açıklanmıştır. Tedarikçi sözleşmelerinde en az beş yıllık destek süresi ve hızlı bildirim sürelerinin yer alması gerektiği, ENISA platformuna kayıtlı yedek temsilcilerin belirlenmesinin kritik olduğu vurgulanmıştır.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 11.11.2026)
+» url=https://www.helpnetsecurity.com/2026/11/11/aurimas-bakas-copla-cra-vulnerability-reporting/
+» manset=hayir | kategori=politika_hukuk | puan=66
+» sonradan | kategori=politika_hukuk | onem=75 | eksen=17/8/25/25 | rubrik=v2
+» varlik | hedef=AB
+» olcek | ceza=15000000EUR | kumulatif=ceza
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] Yapay Zeka Modellerindeki Uyuyan Ajanların Tespit Edilmesi
+─────────────────────────────────────────────────────────
+Microsoft Research, yapay zeka modellerinin nöronlarında gizlenen ve belirli tetikleyicilerle aktifleşen uyuyan ajanlara yönelik yeni bir tehdit araştırması yayınlamıştır. Araştırmada, bir modelin ağırlık alanındaki ondan az nöronun değiştirilmesiyle, modele saldırgan komutlarını yürüten arka kapıların eklenebileceği tespit edilmiştir. Bu tür manipüle edilmiş modellerin standart güvenlik değerlendirmelerinden başarıyla geçebildiği, ancak belirli bir tetikleyici dizisiyle karşılaştığında yetkisiz komutları çalıştırdığı belirtilmektedir. Microsoft, bu tehdide karşı model ağırlıklarının dağıtımdan önce orijinal halleriyle karşılaştırılarak denetlenmesini ve sınır yapay zeka ajanlarının denetçi olarak kullanılmasını önermektedir. Henüz bu tekniğin tehdit aktörleri tarafından silah haline getirildiğine dair bir bulguya rastlanmadığı ifade edilmiştir. Kurumların, üçüncü taraf modelleri denetlenene kadar güvenilmez kabul etmesi ve ajan izinlerini en düşük yetki prensibiyle sınırlandırması tavsiye edilmektedir.
+(XXXXXXX, AÇIK -microsoft.com, 11.11.2026)
+» url=https://www.microsoft.com/en-us/security/blog/2026/11/10/detecting-sleeper-agents-hiding-in-ai-model-neurons/
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=66
+» sonradan | kategori=yapay_zeka_guvenligi | onem=59 | eksen=17/17/8/17 | rubrik=v2
+» varlik | sektor=savunma
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] Railway Platformundaki Veri İhlali Sonucu Oluşan Yetkisiz Kullanım
+─────────────────────────────────────────────────────────
+Bulut hizmet sağlayıcısı Railway, Ekim 2026'da gerçekleşen bir siber saldırı sonucunda müşterilerine ait yapay zeka API anahtarlarının çalındığını ve yaklaşık 740.000 dolarlık yetkisiz kullanım ücreti oluştuğunu açıklamıştır. Saldırganın, platformun derleme sistemindeki bir güvenlik açığını istismar ederek iç kaynak kodlarına ve yaklaşık 100.000 çalışma alanındaki şifrelenmiş değişkenlere eriştiği belirtilmiştir. Şirket, çalınan anahtarların özellikle OpenAI, Anthropic ve Google Gemini gibi sağlayıcılara yönelik olduğunu ve ihlalden etkilenen 1.852 kullanıcının hesap belirteçlerinin sıfırlandığını bildirmiştir. Railway, yapay zeka sağlayıcıları tarafından iade edilmeyen tüm yetkisiz kullanım ücretlerini kendisinin karşılayacağını taahhüt etmiştir. Olayın, yapay zeka geliştirme platformlarını hedef alan ve 'Black October' olarak adlandırılan geniş kapsamlı bir saldırı dalgasının parçası olduğu kaydedilmiştir. Şirket, tüm zafiyetlerin kapatıldığını ve FBI'ın IC3 birimiyle koordineli bir soruşturma yürütüldüğünü ifade etmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 11.11.2026)
+» url=https://thehackernews.com/2026/11/railway-says-stolen-customer-ai-keys.html
+» manset=hayir | kategori=veri_ihlali | puan=66
+» sonradan | kategori=veri_ihlali | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=teknoloji,ulastirma
+» olcek | etkilenen=1852 | zarar=740000USD
+» kurban | ad=Railway | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] Signal Mesajlaşma Protokolünün Yapay Zeka ile Doğrulanması
+─────────────────────────────────────────────────────────
+Google DeepMind araştırmacıları, Signal mesajlaşma uygulamasının güvenlik protokollerini doğrulamak için AlphaProof Code adlı çok ajanlı bir yapay zeka çerçevesi kullanmıştır. Çalışma kapsamında, Signal'in kuantum sonrası PQXDH el sıkışması ve Triple Ratchet mekanizmalarının matematiksel olarak güvenli olduğu ilk kez yapay zeka yardımıyla kanıtlanmıştır. Araştırma ekibinin, Gemini Carbon ajanlarını kullanarak 6,5 milyon satır Lean kodu ürettiği ve protokolün kimlik doğrulama ile ileriye dönük gizlilik özelliklerini denetlediği belirtilmiştir. Bu sürecin, geleneksel olarak yıllar süren resmi doğrulama çalışmalarını dört hafta gibi kısa bir sürede tamamladığı ifade edilmiştir. Google DeepMind, bu teknolojinin gelecekte sadece kriptografik protokollerde değil, genel yazılım tasarım süreçlerinde de güvenlik açıklarını önlemek için kullanılmasını hedeflemektedir. Çalışmanın, insan ve yapay zeka iş birliğinin yazılım güvenliğindeki potansiyelini gösterdiği kaydedilmiştir.
+(XXXXXXX, AÇIK -theregister.com, 10.11.2026)
+» url=https://www.theregister.com/ai-and-ml/2026/11/10/google-deepmind-melds-humans-and-ai-agents-to-vet-signals-secure-messaging-techniques/5308625
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=35
+» varlik | sektor=ulastirma
+
+────────────────────────────────────────────────────────────────────────────────
+
+[20] Microsoft ve SAP Ürünlerinde Kritik Güvenlik Güncellemelerinin Yayınlanması
+─────────────────────────────────────────────────────────
+Microsoft, Kasım 2026 güncelleme döngüsünde 63'ü kritik seviyede olan toplam 1.094 güvenlik açığını kapattığını duyurmuştur. Özellikle Outlook'ta NTLMv2 kimlik bilgilerinin çalınmasına yol açan ve aktif olarak istismar edilen CVE-2026-124194 kodlu sıfır gün açığına karşı acil yama çağrısı yapılmıştır. Eş zamanlı olarak SAP, çekirdek bileşenlerinde bulunan ve ICM2Shell olarak adlandırılan, kimlik doğrulaması gerektirmeden tam sistem kontrolüne izin veren kritik bir bellek bozulması açığını gidermiştir. Microsoft'un bu ayki yamalarının, Windows LDAP ve Exchange Server gibi kritik altyapı bileşenlerini hedef alan yüksek riskli zafiyetleri kapsadığı belirtilmiştir. Uzmanlar, saldırganların yamaları tersine mühendislik yöntemleriyle inceleyerek hızlıca istismar kodları geliştirebileceği konusunda kurumları uyarmış ve savunma önceliklerinin belirlenmesi gerektiğini kaydetmiştir. Ayrıca Adobe'nin 110 ve Mozilla'nın 99 farklı zafiyet için güncelleme yayınladığı, kurumların özellikle domain controller ve Exchange sunucularına öncelik vermesi gerektiği bildirilmiştir.
+(XXXXXXX, AÇIK -csoonline.com, 11.11.2026)
+» url=https://www.csoonline.com/article/4247015/november-2026-patch-tuesday-63-critical-microsoft-fixes-plus-an-outlook-zero-day-that-allows-theft-of-hashed-credentials.html
+» manset=hayir | kategori=zafiyet_rutin | puan=89
+» teknik | cve=CVE-2026-124194 | urun=Adobe,Microsoft,Mozilla,SAP | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[21] Barracuda Ürünlerindeki Zafiyetlerin CISA Tarafından KEV Listesine Alınması
+─────────────────────────────────────────────────────────
+ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), Barracuda E-posta Güvenlik Ağ Geçidi (ESG) ürünlerindeki iki kritik açığı aktif istismar kanıtları nedeniyle Bilinen İstismar Edilen Zafiyetler (KEV) kataloğuna eklemiştir. CVE-2026-116606 ve CVE-2026-111560 kodlu hataların, saldırganların yetkilendirme kontrollerini baypas ederek cihazlarda root erişimi elde etmesine imkan tanıdığı belirtilmiştir. Siber güvenlik firması Previdian'ın, 9-11 Kasım 2026 tarihleri arasında 15 farklı IP adresinden gelen 17 saldırı girişimi tespit ettiği kaydedilmiştir. Federal kurumlara bu açıkları BOD 26-04 yönergesi uyarınca üç gün içinde yamalamaları talimatı verilirken, tüm organizasyonlara yönetim arayüzlerini yalnızca güvenilir iç ağlarla kısıtlamaları önerilmiştir. Zafiyetlerin Load Balancer ADC, WAF ve Message Archiver gibi geniş bir ürün yelpazesini etkilediği, saldırganların yapılandırılmış yedekleme arşivlerini geri yükleyerek sistem ayarlarını değiştirebildiği ifade edilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 11.11.2026)
+» url=https://www.securityweek.com/recently-patched-barracuda-vulnerabilities-exploited-in-attacks/
+» manset=hayir | kategori=zafiyet_rutin | puan=88
+» varlik | sektor=kamu | hedef=ABD
+» teknik | cve=CVE-2026-111560,CVE-2026-116606 | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[22] Google Chrome'da Sekizinci Sıfır Gün Açığının Yamalanması
+─────────────────────────────────────────────────────────
+Google, 2026 yılı içerisinde aktif olarak istismar edildiği tespit edilen sekizinci Chrome sıfır gün açığını gideren bir güvenlik güncellemesi yayınlamıştır. CVE-2026-125350 kodlu yüksek şiddetli zafiyetin, tarayıcının XML bileşenindeki bir 'use-after-free' bellek yönetim hatasından kaynaklandığı belirtilmiştir. Şirket, saldırıların kapsamı veya hedef alınan kitle hakkında detay vermezken, istismar kodunun yayılmasını önlemek amacıyla teknik ayrıntıları gizli tuttuğunu açıklamıştır. Güncellemenin Windows ve macOS için 157.0.8103.50/.51, Linux için ise 157.0.8103.50 sürümüyle sunulduğu ifade edilmiştir. 2026 yılının henüz tamamlanmamasına rağmen, istismar edilen sıfır gün açığı sayısının geçen yılın toplamına ulaştığı kaydedilmiştir. Kullanıcılara, saldırganların mevcut açıktan yararlanmaya devam etmesi nedeniyle tarayıcılarını manuel olarak kontrol edip güncellemeleri tavsiye edilmiştir. Ayrıca aynı güncelleme ile V8 JavaScript motoru ve WebGL bileşenlerini etkileyen sekiz farklı güvenlik açığının daha kapatıldığı bildirilmiştir.
+(XXXXXXX, AÇIK -theregister.com, 10.11.2026)
+» url=https://www.theregister.com/security/2026/11/10/chrome-zero-day-whack-a-mole-continues-as-2026-tally-hits-8/5308732
+» manset=hayir | kategori=zafiyet_rutin | puan=81
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-125350 | urun=Apple,Google,Microsoft | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[23] Cisco BroadWorks ve Openwave Yazılımlarındaki Açıkların İstismar Edilmesi
+─────────────────────────────────────────────────────────
+CISA, Cisco BroadWorks ve Openwave Messaging Webtop Media Transcoder yazılımlarını etkileyen iki güvenlik açığının aktif olarak istismar edildiğini duyurmuştur. Cisco BroadWorks üzerindeki CVE-2026-20320 kodlu zafiyetin, kimliği doğrulanmamış saldırganların XML dış varlık referansı hatası üzerinden hassas yapılandırma bilgilerini okumasına izin verdiği belirtilmiştir. Openwave tarafındaki CVE-2026-111793 kodlu açığın ise yetkili kullanıcıların web posta deneyimini atlayarak istenmeyen belge türlerini işlemesine olanak tanıdığı ifade edilmiştir. Her iki zafiyetin de Ağustos ve Ekim 2026 tarihlerinde yamalanmış olmasına rağmen saldırıların sürdüğü kaydedilmiştir. CISA, federal kurumların ağ güvenliğini sağlamak amacıyla 24 Kasım 2026 tarihine kadar gerekli yamaları uygulamasını zorunlu kılmıştır. Cisco, Catalyst SD-WAN ve Secure Firewall gibi diğer ürünlerinde de benzer kritik istismarların yaşandığını ve saldırıların yakından takip edildiğini açıklamıştır.
+(XXXXXXX, AÇIK -thehackernews.com, 11.11.2026)
+» url=https://thehackernews.com/2026/11/cisco-broadworks-and-openwave-flaws.html
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=81
+» sonradan | kategori=zafiyet_aktif_apt | onem=59 | eksen=17/17/8/17 | rubrik=v2
+» varlik | sektor=kamu
+» teknik | cve=CVE-2026-111793,CVE-2026-20320 | urun=Cisco | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[24] iPhone'u Hedefleyen DarkSword Ve Coruna İstismar Kitlerinin Tespiti
+─────────────────────────────────────────────────────────
+iVerify tarafından yayımlanan 2026 Gelişmiş Mobil Tehdit Raporu, siber suçluların sızdırılan istismar kitlerini kullanarak iPhone kullanıcılarını hedef aldığını ortaya koymuştur. DarkSword ve Coruna olarak adlandırılan bu kitlerin, Instagram reklamları ve sahte finans siteleri aracılığıyla yayıldığı belirtilmiştir. DarkSword yazılımının, iOS işletim sistemindeki birden fazla hatayı birleştirerek Keychain üzerindeki şifreleri ve kripto para cüzdan bilgilerini ele geçirebildiği ifade edilmiştir. Araştırmacılar, DeadTag adlı bir trafik satış operasyonunun bu saldırıları kolaylaştırdığını ve aylık 135 milyon ziyaret alan binlerce web sitesinin bu süreçte kullanıldığını kaydetmiştir. Enfekte olan kişisel cihazların, kurumsal ağlara erişim için kullanılan kimlik bilgilerini sızdırması nedeniyle şirketler için de risk oluşturduğu vurgulanmıştır. Apple'ın henüz bu saldırılarla ilgili resmi bir tehdit bildirimi yayımlamadığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 11.11.2026)
+» url=https://www.helpnetsecurity.com/2026/11/11/iverify-iphone-exploit-kit-attacks-report/
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=81
+» sonradan | kategori=zafiyet_aktif_apt | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=kripto
+» teknik | urun=Apple
+» kurban | ad=Apple | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[25] iOS İşletim Sisteminde Kumanda Paneli Güvenlik Açığının Alenileşmesi
+─────────────────────────────────────────────────────────
+Binance, iOS işletim sisteminin 26.7.1, 27.0.1 ve 27.2 sürümlerini etkileyen 'worse_query' kod adlı bir güvenlik açığı hakkında kullanıcılarını uyarmıştır. Söz konusu açık, kötü amaçlı uygulamaların diğer uygulamalara ait yerel dosyaları okumasına imkan tanıyarak kripto cüzdan anahtarları ve giriş bilgilerini riske atmaktadır. 'forcequitOS' takma adlı bir araştırmacı tarafından GitHub üzerinde paylaşılan kavram kanıtlama kodu, jailbreak işlemine gerek duymadan uygulama veri klasörlerine erişim sağlamaktadır. Apple'ın ilgili sürümler için güvenlik güncellemeleri yayınladığı ancak resmi notlarda bu spesifik açık için bir düzeltme teyit etmediği bildirilmiştir. Binance veya araştırmacı tarafından henüz aktif bir saldırı bildirilmemekle birlikte, kullanıcılara güvenilmeyen kaynaklardan yüklenen uygulamaları kaldırmaları ve fonlarını güvenli cihazlara taşımaları tavsiye edilmiştir. Araştırmacının, Apple'ın yavaş yanıt vermesi nedeniyle hata ödül programına katılmayı reddettiği ve teknik detayları geliştiriciler için paylaştığı belirtilmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 10.11.2026)
+» url=https://securityaffairs.com/202788/hacking/ios-sandbox-escape-is-public-and-apple-hasnt-confirmed-a-fix.html
+» manset=hayir | kategori=zafiyet_rutin | puan=81
+» sonradan | kategori=zafiyet_rutin | onem=67 | eksen=25/17/8/17 | rubrik=v2
+» varlik | sektor=kripto,teknoloji
+» teknik | urun=Apple
+
+────────────────────────────────────────────────────────────────────────────────
+
+[26] Xen Orchestra Kimlik Doğrulama Atlatma Açığının İstismar Edilmesi
+─────────────────────────────────────────────────────────
+Fransız yazılım şirketi Vates VMS, Xen Orchestra platformunda bulunan ve yönetici erişimine izin veren kritik bir güvenlik açığının aktif olarak istismar edildiğini duyurmuştur. VSA-2026-062 koduyla takip edilen açık, jeton koleksiyonu mekanizmasındaki bir hata nedeniyle saldırganların geçerli kullanıcı jetonlarını ele geçirmesine olanak tanımaktadır. Şirket, saldırıların RedLine Stealer komuta kontrol sunucusu olarak bilinen 91.211.251.112 IP adresi ve bir TOR alan adı üzerinden gerçekleştirildiğini tespit etmiştir. Güvenlik ihlali belirtileri arasında 'pivot2' isimli sanal makineler ve '/etc/cron.d/zz-ustar' gibi şüpheli zamanlanmış görev dosyalarının bulunduğu kaydedilmiştir. Sorunun Xen Orchestra 6.9.1 ve 6.10.0 sürümlerinde giderildiği açıklanmış; güncelleyemeyen kullanıcıların ise sistemlerini internete kapatmaları ve WAF üzerinden boş jetonları engellemeleri gerektiği vurgulanmıştır. Açığın Filip Magic ve Christoffer Olsen tarafından raporlandığı ve tüm şifrelerin rotasyonunun önerildiği ifade edilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 10.11.2026)
+» url=https://thehackernews.com/2026/11/hackers-exploit-critical-xen-orchestra.html
+» manset=hayir | kategori=zafiyet_rutin | puan=80
+» sonradan | kategori=zafiyet_rutin | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=teknoloji | hedef=Fransa
+» teknik | istismar=aktif
+» kurban | ad=Vates VMS | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[27] N-able Firmasının Able2Shell Açıkları Nedeniyle Bulut Hizmetlerini Durdurması
+─────────────────────────────────────────────────────────
+N-able, N-central platformunda tespit edilen ve 'Able2Shell' olarak adlandırılan 30'dan fazla sıfır gün açığının kamuoyuna açıklanmasının ardından küresel bulut ortamlarını geçici olarak kapatmıştır. Bağımsız araştırmacı Sean Bales tarafından paylaşılan kavram kanıtlama kodları; kimlik bilgisi hırsızlığı, yönetici yetkisiyle uzaktan kod yürütme, dizin geçişi ve XML dış varlık enjeksiyonu gibi kritik riskleri barındırmaktadır. Şirket, henüz başarılı bir istismar vakası gözlemlenmediğini ancak bal küpü sistemlerinde anonim oturum açma ve yapılandırma çekme gibi tarama faaliyetlerinin tespit edildiğini bildirmiştir. N-central 2026.4 HF2 sürümüyle CVE-2026-125882 ve CVE-2026-91000 gibi zafiyetlerin kapatıldığı ve Amerika, APAC ile Avrupa bölgelerindeki sunucuların güncellendiği belirtilmiştir. Yerinde kurulum kullanan müşterilere, sunucularını güncellemeler tamamlanana kadar çevrimdışı tutmaları yönünde çağrı yapılmıştır. Sürecin yönetimi için ek güvenlik yamalarının yayınlanmaya devam edeceği bilgisi paylaşılmıştır.
+(XXXXXXX, AÇIK -thehackernews.com, 10.11.2026)
+» url=https://thehackernews.com/2026/11/n-able-takes-hosted-n-central-offline.html
+» manset=hayir | kategori=zafiyet_rutin | puan=80
+» sonradan | kategori=zafiyet_rutin | onem=59 | eksen=17/17/8/17 | rubrik=v2
+» varlik | sektor=teknoloji
+» teknik | cve=CVE-2026-125882,CVE-2026-91000 | istismar=aktif
+» kurban | ad=N-able | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[28] Saldırganların AhsayCBS Zafiyetlerini İstismar Ederek Gelişmiş Arka Kapılar Yerleştirmesi
+─────────────────────────────────────────────────────────
+Siber güvenlik araştırmacıları, AhsayCBS yedekleme yazılımındaki CVE-2026-105133 ve CVE-2026-105134 kodlu zafiyetlerin sıfır gün açığı olarak istismar edildiğini ortaya çıkarmıştır. Huntress tarafından yapılan incelemede, saldırganların kimlik doğrulamasını atlayarak sistemlerde rastgele komut çalıştırdığı ve Python tabanlı gelişmiş bir arka kapı yerleştirdiği tespit edilmiştir. Bu arka kapının, analiz ortamlarından kaçınmak için ana bilgisayara özgü kriptografik doğrulamalar yaptığı belirtilmiştir. Saldırganların ayrıca sistemlere beş farklı JSP web shell ailesi kurduğu, kripto para madenciliği yazılımları çalıştırdığı ve AnyDesk gibi yasal araçlarla kalıcılık sağladığı ifade edilmiştir. Ahsay Backup firmasının Ekim ayı ortasında yamalar yayınladığı ve kullanıcılarına sistemlerini tamamen yeniden kurmalarını tavsiye ettiği bildirilmiştir. Saldırıların özellikle yedekleme altyapılarını ve bu sistemlerde saklanan kritik kimlik bilgilerini hedef aldığı kaydedilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 10.11.2026)
+» url=https://thehackernews.com/2026/11/attackers-exploit-ahsaycbs-flaws-to.html
+» manset=hayir | kategori=zafiyet_rutin | puan=73
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=8/8/17/8 | rubrik=v2
+» varlik | sektor=kripto
+» teknik | cve=CVE-2026-105133,CVE-2026-105134 | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[29] Intel Ve AMD'nin 200'den Fazla Güvenlik Zafiyetini Gidermesi
+─────────────────────────────────────────────────────────
+Yonga üreticileri Intel ve AMD, Kasım 2026 Yaması Salı kapsamında ürünlerini etkileyen 200'den fazla güvenlik açığı için 50'den fazla danışma belgesi yayınlamıştır. Intel, TDX yazılımındaki kritik kimlik doğrulama hataları dahil olmak üzere 100'den fazla zafiyeti ele alan 24 duyuru paylaşmıştır. CVE-2026-61887 kodlu açığın uzaktan kod yürütülmesine izin verebileceği belirtilirken, WiFi ve Bluetooth ürünlerindeki yüksek öncelikli hizmet dışı bırakma hatalarının yamalandığı bildirilmiştir. AMD ise Radeon ve Instinct grafik ürünlerindeki 44 hata dahil olmak üzere yaklaşık 100 zafiyet için 29 bülten yayınlamıştır. Grafik sürücüleri ve UEFI yazılımlarındaki yüksek riskli açıkların yanı sıra, Zen 5 işlemcileri etkileyen zamanlanmış saldırılara karşı yeni önlemler alındığı ifade edilmiştir. Bazı AMD düzeltmelerinin 2027 yılına kadar sürebileceği, Intel'in ise desteği kesilen BigDL ürünü için kullanıcıları yazılımı kaldırmaları konusunda uyardığı kaydedilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 11.11.2026)
+» url=https://www.securityweek.com/chipmaker-patch-tuesday-over-200-vulnerabilities-addressed-by-intel-amd/
+» manset=hayir | kategori=zafiyet_rutin | puan=72
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=25/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-61887
+» kurban | ad=Intel,AMD | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[30] Apple Bluetooth Ve AirPlay Eşleştirme Zafiyetlerinin Giderilmesi
+─────────────────────────────────────────────────────────
+Apple; iOS, macOS, watchOS ve visionOS platformlarında Bluetooth ve AirPlay eşleştirme süreçlerini etkileyen on adet güvenlik açığını gidermek için güncellemeler yayınlamıştır. Zafiyetlerden beşinin, saldırganların kullanıcı etkileşimi olmadan cihazlarla eşleşmesine veya eşleştirme kodu deneme sınırlarını aşmasına olanak tanıdığı belirtilmiştir. Özellikle CoreUtils ve rapportd bileşenlerindeki hataların, Bluetooth menzilindeki veya aynı ağdaki saldırganlar tarafından bellek bozma amacıyla istismar edilebileceği ifade edilmiştir. Ayrıca, iMessage grup sohbetlerine yetkisiz katılım sağlayan CVE-2026-113961 ve geçmiş mesajlara erişim veren CVE-2026-113960 kodlu açıkların yamalandığı bildirilmiştir. CISA tarafından aktif olarak istismar edildiği kaydedilen Brotli kütüphanesindeki Node2Shell zafiyetinin de bu güncellemelerle düzeltildiği açıklanmıştır. Şirket, fiziksel erişimi olan saldırganların kilit ekranından AirPlay alıcılarıyla eşleşmesine izin veren bir açığı da iOS 18.7.12 sürümünde gidermiştir.
+(XXXXXXX, AÇIK -securityweek.com, 11.11.2026)
+» url=https://www.securityweek.com/bluetooth-airplay-pairing-vulnerabilities-patched-across-apple-platforms/
+» manset=hayir | kategori=zafiyet_rutin | puan=72
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=25/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-113960,CVE-2026-113961 | urun=Apple | istismar=aktif
+» kurban | ad=Apple | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[31] Git Rekürsif Klonlama Sırasındaki Kod Yürütme Zafiyetinin Yamalanması
+─────────────────────────────────────────────────────────
+Git projesi, kötü niyetli depoların rekürsif klonlama işlemi sırasında kullanıcı bilgisayarında kod çalıştırmasına olanak tanıyan kritik bir güvenlik açığını gidermiştir. CVE-2026-111760 olarak izlenen zafiyetin, dizin işleme sırasındaki bir tam sayı kesilmesinden kaynaklandığı ve saldırganların sembolik bağlantılar yoluyla zararlı kancalar yerleştirmesine izin verdiği belirtilmiştir. Git 2.56.1 sürümü ve önceki seriler için yayınlanan yamaların, aşırı uzun dosya yollarını reddederek bu riski ortadan kaldırdığı ifade edilmiştir. GitHub, kendi platformunda gerekli güncellemeleri tamamladığını duyururken, kullanıcıların güvenmedikleri kaynaklardan rekürsif klonlama yapmamaları konusunda uyarıda bulunmuştur. Ayrıca, bellek bozulmasına ve hizmet dışı bırakma saldırılarına yol açan beş farklı zafiyetin daha bu güncellemelerle düzeltildiği kaydedilmiştir. GitLab, özellikle otomatik birleştirme kontrolleri yapan sunucuların bu tür saldırılara karşı daha savunmasız olduğunu bildirmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 10.11.2026)
+» url=https://thehackernews.com/2026/11/git-patches-flaw-that-lets-malicious.html
+» manset=hayir | kategori=zafiyet_rutin | puan=70
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-111760 | urun=GitHub
+
+────────────────────────────────────────────────────────────────────────────────
+
+[32] X.Org Sunucusunda Bellek Bozulmasına Yol Açan Açıkların Kapatılması
+─────────────────────────────────────────────────────────
+X.Org, Linux ve Unix sistemlerinde kullanılan görüntü sunucusu ve Xwayland bileşenlerinde tespit edilen sekiz yeni güvenlik açığı için yamalar yayımlamıştır. Bu açıklar arasında yer alan CVE-2026-109091 kodlu zafiyetin, kötü niyetli bir monitörün gönderdiği hatalı veriler aracılığıyla sunucu belleğini bozmasına imkan tanıdığı belirtilmiştir. Diğer yedi açığın ise X Video ve X-Resource gibi protokol uzantılarındaki tam sayı taşmalarından kaynaklandığı ve sunucunun çökmesine veya veri sızdırmasına neden olabildiği ifade edilmiştir. Güncellemelerin xorg-server 21.1.26 ve xwayland 24.1.15 sürümleriyle kullanıma sunulduğu kaydedilmiştir. X.Org, bu açıkların kod çalıştırma riskine dair bir derecelendirme yapmamış olsa da, yöneticilerin özellikle bellek dışı yazma hatalarına karşı dikkatli olmaları gerektiğini bildirmiştir. Dağıtım sahiplerinin ilgili yamaları kendi paket sürümlerine dahil etmeye başladığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 10.11.2026)
+» url=https://www.helpnetsecurity.com/2026/11/10/x-org-server-vulnerabilities-november-2026/
+» manset=hayir | kategori=zafiyet_rutin | puan=62
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-109091
+» kurban | ad=X.Org | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[33] Atlassian Confluence Sisteminde Uzaktan Kod Çalıştırma Zafiyeti
+─────────────────────────────────────────────────────────
+Atlassian Confluence Data Center ürününde, saldırganların sistem üzerinde uzaktan rastgele kod çalıştırmasına imkan veren kritik bir güvenlik açığı tespit edilmiştir. CVE-2026-90436 koduyla tanımlanan bu zafiyetin, 9.2.28 sürümünden önceki tüm Confluence Data Center versiyonlarını etkilediği bildirilmiştir. Atlassian, 10 Kasım 2026 tarihinde yayımladığı güvenlik bülteni ile kullanıcıları acil güncelleme yapmaları ve ilgili yamaları uygulamaları konusunda uyarmıştır. ANSSI, söz konusu açığın istismar edilmesi durumunda sistemlerin tam kontrolünün ele geçirilmesine yol açabileceğine dikkat çekmiştir. Şirket, zafiyetin giderilmesi için gerekli olan düzeltici yamaların resmi destek sayfalarından ve güvenlik portalından indirilebileceğini açıklamıştır. Kurumsal kullanıcıların, veri güvenliğini sağlamak ve yetkisiz erişimleri engellemek amacıyla etkilenen yazılım bileşenlerini en kısa sürede güncellemeleri gerektiği kaydedilmiştir. Olayla ilgili teknik detayların ve sürüm bilgilerinin Atlassian güvenlik portalında paylaşıldığı belirtilmiştir.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 10.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1492/
+» manset=hayir | kategori=zafiyet_rutin | puan=60
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-90436 | urun=Atlassian
+» kurban | ad=Atlassian | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[34] Shibboleth OpenID Connect Eklentisinde Güvenlik Politikası İhlali
+─────────────────────────────────────────────────────────
+Shibboleth için geliştirilen OpenID Connect OpenID Provider (OIDC OP) eklentisinde, güvenlik politikalarının atlatılmasına neden olan birden fazla zafiyet tespit edilmiştir. ANSSI tarafından yapılan açıklamada, bu açıkların saldırganlara yetkisiz erişim sağlama ve sistem yapılandırmalarını manipüle etme imkanı tanıyabileceği belirtilmiştir. Sorunun, eklentinin V4.3.3 sürümünden önceki tüm versiyonlarını etkilediği bildirilmiştir. Shibboleth projesi, 9 Kasım 2026 tarihinde yayımladığı secadv_20261109 ve secadv_20261109a numaralı duyurularla düzeltici önlemleri açıklamıştır. Kullanıcıların, kimlik doğrulama süreçlerinin güvenliğini sağlamak ve olası yetki aşımı risklerini bertaraf etmek için eklentiyi güncel sürüme yükseltmeleri gerektiği vurgulanmıştır. Teknik detayların ve yama uygulama talimatlarının projenin resmi web sitesindeki duyuru metinlerinde yer aldığı kaydedilmiştir. Güvenlik açıklarının giderilmesinin, kurumsal kimlik yönetim sistemlerinin bütünlüğü ve kullanıcı verilerinin korunması için kritik önem taşıdığı ifade edilmiştir.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 10.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1491/
+» manset=hayir | kategori=zafiyet_rutin | puan=54
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=8/17/8/0 | rubrik=v2
+» kurban | ad=Shibboleth | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
