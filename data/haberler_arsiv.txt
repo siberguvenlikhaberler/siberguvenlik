@@ -61978,3 +61978,251 @@ Shibboleth için geliştirilen OpenID Connect OpenID Provider (OIDC OP) eklentis
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 12 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Falcon C2 Çerçevesinin Kamu Kurumlarını Hedef Alması
+─────────────────────────────────────────────────────────
+Unit 42 araştırmacıları, Mart ve Mayıs 2026 tarihleri arasında Orta Doğu'da bir ve Güneydoğu Asya'da dört ülkedeki kamu kurumlarını hedef alan Falcon (diğer adıyla XG) komuta ve kontrol çerçevesini tespit etmiştir. Dışişleri, savunma ve içişleri bakanlıkları ile kolluk kuvvetlerini hedef alan bu casusluk kampanyasında, web posta portallarına yerleştirilen kötü amaçlı JavaScript kodları aracılığıyla tarayıcılar ele geçirilmektedir. Operasyonel güvenliği sağlamak için Tetris veya Snake oyunlarıyla gizlenen ve F9 tuş kombinasyonuyla erişilen sistem, "PDF Viewer" maskesi altında kötü amaçlı Chrome eklentileri yükleyebilmekte ve OneDrive'ı C2 kanalı olarak kullanan Antino implantını sisteme dahil edebilmektedir. Teknik analizler, Falcon'un Ocak 2026'da raporlanan PeckBirdy ile yüksek benzerlik taşıdığını, her ikisinin de Baidu analitiklerini taklit eden "Hm_lvt_$" kimliklerini ve RSA-2048 ile AES-256-CBC şifreleme protokollerini kullandığını doğrulamaktadır.
+(XXXXXXX, AÇIK -unit42.paloaltonetworks.com, 11.11.2026)
+» url=https://unit42.paloaltonetworks.com/falcon-c2-browser-compromise/
+» manset=evet | kategori=nation_state_apt | puan=92
+» sonradan | kategori=nation_state_apt | onem=84 | eksen=17/25/25/17 | rubrik=v2
+» varlik | sektor=kamu
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Siber Saldırganların GSocket Aracını Kalıcılık İçin Kullanması
+─────────────────────────────────────────────────────────
+Microsoft, siber tehdit aktörlerinin ele geçirilmiş Linux sunucularında kalıcılık sağlamak amacıyla açık kaynaklı GSocket aracını kötüye kullandığını tespit etmiştir. Mart ve Ağustos 2026 döneminde GSocket bağlantılı tespitlerin yüzde 356 oranında arttığı ve saldırıların özellikle eğitim, teknoloji ve telekomünikasyon sektörlerindeki web uygulamalarını hedef aldığı belirtilmiştir. GSocket'in, trafiği genel bir röle ağı üzerinden yönlendirerek sabit bir komuta kontrol adresi ihtiyacını ortadan kaldırdığı ve güvenlik duvarlarını aştığı ifade edilmiştir. Saldırganların, uygulama açıklarını yamalayan yöneticilere rağmen sistemde kalabilmek için bu aracı gizli süreç isimleriyle çalıştırdığı kaydedilmiştir. Bazı vakalarda aktörlerin Dirty Frag olarak bilinen CVE-2026-43284 açığını kullanarak yetki yükseltmeye çalıştığı bildirilmiştir. Uzmanlar, yalnızca uygulama yamalamanın yeterli olmadığını, ana bilgisayar düzeyinde kapsamlı bir temizlik yapılması gerektiğini açıklamıştır.
+(XXXXXXX, AÇIK -microsoft.com, 11.11.2026)
+» url=https://www.microsoft.com/en-us/security/blog/2026/11/11/global-socket-how-threat-actors-weaponizing-gsocket-stealthy-c2/
+» manset=evet | kategori=nation_state_apt | puan=85
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=telekom
+» teknik | cve=CVE-2026-43284
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Maersk'in Veri Hırsızlığı ve Fidye Talebini Doğrulaması
+─────────────────────────────────────────────────────────
+Lojistik devi Maersk, 2022 yılında bünyesine kattığı Hong Kong merkezli LF Logistics platformundan 100 GB veri sızdırıldığını ve 5 milyon dolarlık bir fidye talebiyle karşı karşıya kaldığını doğrulamıştır. WhiteArmor fidye yazılımı grubu, 7 Kasım'da sızıntı sitesinde yayınladığı mesajda 29.000 sürücü kaydı, 16.123 personel hesabı ve 33 süper yönetici yetkisine sahip profilin ele geçirildiğini iddia etmiştir. Çalınan veriler arasında 16.093 adet açık metin şifre, teslimat makbuzları, envanter kayıtları ve 27.000'den fazla mobil cihaz günlüğü bulunmaktadır. Maersk, olayın yerel bir sistemle sınırlı kaldığını, API veya EDI bağlantılı ortak sistemlerin etkilenmediğini ve operasyonların kesintisiz sürdüğünü açıklamıştır. Saldırganlar ödemenin 30 gün içinde Bitcoin ile yapılmasını talep ederken, şirket hassas verilerin ifşasına dair incelemelerini sürdürmektedir.
+(XXXXXXX, AÇIK -securityweek.com, 12.11.2026)
+» url=https://www.securityweek.com/maersk-confirms-data-theft-amid-5-million-extortion-attempt/
+» manset=evet | kategori=stratejik_kurum_saldirisi | puan=93
+» varlik | sektor=kripto,ulastirma
+» olcek | fidye=5000000USD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] İngiltere Ve Fransa'dan Ticari Casus Yazılım Kılavuzu
+─────────────────────────────────────────────────────────
+İngiltere ve Fransa liderliğindeki Pall Mall Süreci kapsamında, 14 hükümet ticari siber sızma yetenekleri geliştiren şirketlere yönelik ilk küresel davranış standartlarını kabul etmiştir. Fransa Dışişleri Bakanlığı tarafından yapılan açıklamada, bu kılavuzun casus yazılım endüstrisindeki suistimalleri önlemeyi ve sorumlu davranış standartlarını belirlemeyi amaçladığı belirtilmiştir. Söz konusu belgeler, şirketlerin müşterilerini denetlemesini, kötüye kullanıma karşı teknik korumalar oluşturmasını ve ihlalleri raporlamasını talep etmektedir. Kılavuzun bağlayıcı olmadığı ve 43 ülkenin katıldığı konferansta Amerika Birleşik Devletleri, Almanya, İtalya ve Japonya gibi ülkeler dahil olmak üzere katılımcıların yarısından azı tarafından imzalandığı bildirilmiştir. İngiltere Dışişleri Bakanlığı, bu girişimin piyasadaki sorumsuz faaliyetleri caydırmayı ve şeffaflığı artırmayı hedeflediğini ifade etmiştir.
+(XXXXXXX, AÇIK -therecord.media, 11.11.2026)
+» url=https://therecord.media/britain-france-set-out-guidelines-for-commercial-hacking-firms
+» manset=hayir | kategori=politika_hukuk | puan=85
+» sonradan | kategori=politika_hukuk | onem=92 | eksen=25/17/25/25 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD,Almanya,Birleşik Krallık,Fransa,Japonya,İtalya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Üçüncü Taraf Siber Risklerin Kurumsal Güvenliğe Etkilerinin Değerlendirilmesi
+─────────────────────────────────────────────────────────
+FBI, işe alım platformu FBIJobs.gov'un ihlal edilmesinin, bir Accenture yüklenicisinin Oracle PeopleSoft sistemindeki kritik bir yamayı uygulamamasından kaynaklandığını açıklamıştır. Olay sonucunda 2 ila 3 terabayt verinin çalındığı iddia edilirken, Queensland hükümetinin bir dış telekomünikasyon sağlayıcısı üzerinden 809.000 Avustralya doları kaybettiği kaydedilmiştir. Kiteworks firması ise federal bir uyarı üzerine dünya genelindeki müşterilerinden sistemlerini geçici olarak kapatmalarını istemiş ve bu süreçte Advanced Forms aracında yeni bir zafiyet tespit etmiştir. DHS'nin siber hizmetleri merkezileştirmeyi hedefleyen 626 milyon dolar bütçeli NCCS 2.0 projesinin takvimini revize ettiği bildirilmiştir. Uzmanlar, kurumların kendi ağlarını korusalar bile tedarikçilerindeki zayıflıklar nedeniyle risk altında olduklarını belirterek, tedarik zinciri denetimlerinin ve ağ segmentasyonunun hayati önem taşıdığına dikkat çekmiştir.
+(XXXXXXX, AÇIK -industrialcyber.co, 10.11.2026)
+» url=https://industrialcyber.co/expert/inside-third-party-cyber-risk/
+» manset=hayir | kategori=tedarik_zinciri | puan=80
+» sonradan | kategori=tedarik_zinciri | onem=58 | eksen=8/25/17/8 | rubrik=v2
+» varlik | sektor=kamu,telekom | hedef=Avustralya
+» teknik | urun=Oracle
+» kurban | ad=FBI | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] AntiFox Platformunun AWS Kimlik Bilgilerini Çalmak İçin Kullanılması
+─────────────────────────────────────────────────────────
+Arctic Wolf Labs, AntiFox adlı yapay zekâ tabanlı sızma testi platformunun Amazon Web Services (AWS) kimlik bilgilerini çalmak ve ağlarda yanal hareket etmek amacıyla kullanıldığını açıklamıştır. Siber tehdit aktörlerinin, internete açık web servislerine saldırarak web shell yerleştirdikleri ve bu yolla yapılandırma dosyalarından AWS erişim anahtarlarını ele geçirdikleri belirtilmiştir. Ele geçirilen kimlik bilgileriyle Secrets Manager ve S3 gibi kritik bulut servislerinde yetkisiz işlemler yapıldığı kaydedilmiştir. AntiFox ve benzeri ARTEX tabanlı araçların, saldırganlara düşük teknik beceriyle yüksek hızda ve ölçekte saldırı yapma imkânı tanıdığı ifade edilmiştir. Check Point Research, dünya genelinde 2.500'den fazla sistemin bu tür otonom ajanlar tarafından hedef alındığını bildirmiştir. Ayrıca Çin bağlantılı bir aktörün Operation Ghost-Campus kapsamında yapay zekâ ajanlarını kullanarak akademik veri hırsızlığı gerçekleştirdiği bilgisi verilmiştir. Uzmanlar, bu araçların saldırı zincirlerini insan müdahalesi olmadan tamamlayabildiğine dikkat çekmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 11.11.2026)
+» url=https://thehackernews.com/2026/11/antifox-ai-pentesting-platform-linked.html
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=72
+» sonradan | kategori=yapay_zeka_guvenligi | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=egitim | aktor_ulke=Çin
+» kurban | ad=AWS | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] Baker Tilly Müşteri Verilerinin Üçüncü Taraf Kaynaklı Sızıntısı
+─────────────────────────────────────────────────────────
+ABD merkezli muhasebe ve danışmanlık firması Baker Tilly, üçüncü taraf bir hizmet sağlayıcısının platformunda yaşanan siber güvenlik olayı nedeniyle müşteri verilerinin sızdırıldığını duyurmuştur. Şirket, 6 Eylül 2026 tarihinde fark edilen ihlalin incelemesini 28 Ekim tarihinde tamamlamış ve etkilenen kişileri belirlemiştir. Teksas Başsavcılığı verilerine göre, yalnızca bu eyalette 10.456 kişinin sosyal güvenlik numaraları, isimleri ve adresleri gibi hassas bilgilerinin açığa çıktığı bildirilmiştir. Baker Tilly, kendi ağında herhangi bir yetkisiz faaliyet tespit edilmediğini ve sızıntıyla bağlantılı bir kimlik hırsızlığı vakasının raporlanmadığını açıklamıştır. Etkilenen müşterilere riskleri azaltmak amacıyla 24 aylık kredi ve kimlik izleme hizmeti sunulduğu belirtilmiştir. Yıllık 6,8 milyar dolar geliri olan firmanın, olayı kontrol altına almak için dış uzmanlarla çalıştığı ve kolluk kuvvetlerine gerekli bilgilendirmeleri yaptığı kaydedilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 12.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/baker-tilly-notifies-clients-of-data-breach-at-third-party-provider/
+» manset=hayir | kategori=veri_ihlali | puan=59
+» sonradan | kategori=veri_ihlali | onem=41 | eksen=17/8/8/8 | rubrik=v2
+» varlik | hedef=ABD
+» olcek | etkilenen=10456
+» kurban | ad=Baker Tilly | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Polonya'nın Siber Saldırı Sonrası E-Devlet Platformunu Kapatması
+─────────────────────────────────────────────────────────
+Polonya Dijital İşler Bakanlığı, ulusal e-devlet platformu ePUAP'a yönelik bir siber saldırının tespit edilerek durdurulduğunu açıklamıştır. Vatandaşların ve işletmelerin kamu hizmetlerine erişimini sağlayan sistemin, güvenlik ekiplerinin incelemeleri sürerken önlem amacıyla geçici olarak çevrimdışı bırakıldığı belirtilmiştir. Dijital İşler Bakanı Krzysztof Gawkowski, saldırının ardından sistemin istikrarını korumak için teknik çalışmaların devam ettiğini ve Merkezi Bilişim Merkezi altyapısının güvende olduğunu ifade etmiştir. Yetkililer, platformun herhangi bir hasar almadığını ancak güvenlik kontrolleri tamamlanana kadar hizmetlerin askıya alındığını kaydetmiştir. Saldırının faili veya yöntemi hakkında henüz resmi bir açıklama yapılmazken, olayın Polonya'daki kamu kurumlarını hedef alan geniş kapsamlı siber saldırı dalgasının bir parçası olduğu bildirilmiştir. Bu durumun Trusted Profile dijital kimlik sistemini de etkileyebileceği ifade edilmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 12.11.2026)
+» url=https://securityaffairs.com/202895/security/poland-takes-its-national-e-government-platform-offline-after-a-cyberattack.html
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=99
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=92 | eksen=25/25/25/17 | rubrik=v2
+» varlik | sektor=kamu | hedef=Polonya
+» kurban | ad=Polonya | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Qilin Fidye Yazılımı Grubu Yöneticisinin Kimliğinin Tespit Edilmesi
+─────────────────────────────────────────────────────────
+Dünyanın en aktif fidye yazılımı gruplarından biri olan Rusya merkezli Qilin'in yöneticisinin, St. Petersburg'da yaşayan 36 yaşındaki Aleksey Mikhailovich Yakovtsev olduğu tespit edilmiştir. NCC Group raporuna göre, son üç ayda 365 kuruluşu hedef alan grubun yöneticisi Haise takma adını kullanmaktadır. Güvenlik araştırmacıları, Yakovtsev'in geçmişte kullandığı Rjun ve Alexbigboss44 takma adları ile Gosuslugi platformundaki sızdırılmış verileri eşleştirerek bu sonuca ulaşmıştır. Yakovtsev'in bilişim sistemleri alanında yüksek lisans derecesine sahip olduğu ve siber suç forumlarında uzun süredir faaliyet gösterdiği kaydedilmiştir. Grubun, Scattered Spider ve RansomHub gibi diğer suç şebekeleriyle iş birliği yaptığı ve kurbanlardan elde edilen fidye gelirinin yüzde 80'ini bağlı ortaklarına sunduğu bilgisi verilmiştir. Yakovtsev'in mail-30a@mail.ru e-posta adresini ve +79602347275 numaralı telefonu kullandığı ifade edilmiştir.
+(XXXXXXX, AÇIK -krebsonsecurity.com, 11.11.2026)
+» url=https://krebsonsecurity.com/2026/11/who-runs-the-ransomware-group-qilin/
+» manset=hayir | kategori=kolluk_operasyonu | puan=84
+» varlik | hedef=Rusya | aktor=Qilin,Scattered Spider
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Bulut ve Yapay Zeka Hedefli Greeter Operasyonunun Keşfedilmesi
+─────────────────────────────────────────────────────────
+Era Security araştırmacıları, bulut sağlayıcıları genelindeki yapay zeka altyapılarını hedef alan ve Greeter olarak adlandırılan geniş kapsamlı bir saldırı kampanyası tespit etmiştir. Saldırganların, Flowise platformundaki CVE-2024-58351 kodlu kritik kod enjeksiyon açığını kullanarak AWS üzerindeki DynamoDB örneklerine sızdığı belirtilmiştir. Operasyonun, saldırganların izlerini gizlemek için sistem günlüklerine hello mesajları bırakması nedeniyle bu ismi aldığı ifade edilmiştir. Araştırmacılar, saldırganların bulut kimlik bilgilerini ele geçirmek ve organizasyon içinde yanal hareket etmek için gelişmiş teknikler kullandığını kaydetmiştir. Kampanyanın şimdiye kadar en az 46 gerçek dünya kurbanını etkilediği ve saldırıların arkasında yüksek düzeyde koordinasyon yeteneğine sahip, muhtemelen devlet destekli bir aktörün bulunduğu değerlendirilmektedir. Flowise kurulumlarının yaklaşık yüzde 90'ının yamalanmamış ve savunmasız durumda olduğu bilgisi verilmiştir.
+(XXXXXXX, AÇIK -darkreading.com, 11.11.2026)
+» url=https://www.darkreading.com/cloud-security/attackers-hello-scale-cloud-attack
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=83
+» sonradan | kategori=yapay_zeka_guvenligi | onem=76 | eksen=25/17/17/17 | rubrik=v2
+» varlik | sektor=teknoloji
+» teknik | cve=CVE-2024-58351 | urun=AWS
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] Citrus Fidye Yazılımı Grubunun Hibrit Saldırı Tekniklerini Kullanması
+─────────────────────────────────────────────────────────
+Citrus olarak adlandırılan yeni bir fidye yazılımı grubunun, altyapı sızmalarında büyük dil modellerinden (LLM) ve gelişmiş gizleme tekniklerinden yararlandığı tespit edilmiştir. Siber tehdit aktörünün, başlangıç erişimini yüklenici firmaların çalınan kimlik bilgileri üzerinden sağladığı ve ağ trafiğini HTTPS gibi göstermek için VLESS tünellerini kullandığı belirtilmiştir. Saldırı sürecinde kullanılan PowerShell betiklerinin yapay zeka modelleri tarafından oluşturulduğu ve bu betiklerin detaylı açıklamalar içerdiği ifade edilmiştir. Grubun, Sn00py ailesine ait bir fidye yazılımı kullandığı ve Active Directory üzerindeki CVE-2026-54121 zafiyetini istismar ederek yetki yükselttiği kaydedilmiştir. Ayrıca, saldırganların tespit edilmemek için güvenlik çözümlerini devre dışı bıraktığı, KasperskyGPO_Deploy_64.exe gibi meşru yazılım isimleri vererek kendilerini gizlemeye çalıştıkları ve Snaffler gibi araçlarla ağ paylaşımlarında kimlik bilgisi avladıkları bildirilmiştir.
+(XXXXXXX, AÇIK -securelist.com, 11.11.2026)
+» url=https://securelist.com/citrus-ransomware/121879/
+» manset=hayir | kategori=nation_state_apt | puan=81
+» teknik | cve=CVE-2026-54121 | urun=Microsoft
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] Grok İle Oluşturulan Binlerce Uygulamanın Veri Sızdırması
+─────────────────────────────────────────────────────────
+Güvenlik firması Claroc tarafından yapılan araştırmada, Grok yapay zekâ asistanı ile oluşturulan 37.571 uygulamanın 35.578'inin herhangi bir kimlik doğrulama olmaksızın internete açık olduğu tespit edilmiştir. Bu uygulamalar arasında X ve SpaceXSI çalışanları tarafından geliştirilen ve gizli satış planları ile federal ajans tekliflerini içeren 24 adet dahili uygulamanın da bulunduğu bildirilmiştir. Açık uygulamaların yaklaşık %10'unun hassas kurumsal veriler, personel listeleri ve şifreler içerdiği kaydedilmiştir. Araştırmacılar, Grok'un varsayılan erişim ayarlarının uygulamaları DNS kayıtları üzerinden bulunabilir hale getirdiğini ifade etmiştir. Yapılan testlerde, davet edilmemiş kullanıcıların uygulamalara erişebildiği ve verileri değiştirebildiği gözlemlenmiştir. SpaceXSI, kendi çalışanlarına ait uygulamaları yayından kaldırmış ancak diğer kullanıcıların açık uygulamaları için henüz bir işlem yapmamıştır. Claroc, kuruluşlara yapay zekâ ile oluşturulan uygulamaların erişim ayarlarını kontrol etmelerini tavsiye etmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 11.11.2026)
+» url=https://thehackernews.com/2026/11/over-35000-grok-built-apps-exposed.html
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=74
+» sonradan | kategori=yapay_zeka_guvenligi | onem=58 | eksen=25/17/8/8 | rubrik=v2
+» kurban | ad=X,SpaceXSI | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] Gmail Hesaplarına Sürekli Erişim Sağlayan Aracın Pazarlanması
+─────────────────────────────────────────────────────────
+Siber güvenlik firması Hudson Rock, Remus Stealer adlı zararlı yazılım geliştiricisinin Gmail hesaplarına sürekli erişim vaat eden bir aracı aylık 1.000 dolara satışa sunduğunu bildirmiştir. Söz konusu aracın, kurban şifresini değiştirse veya oturumları kapatsa dahi gelen kutusuna erişimi sürdürdüğü iddia edilmektedir. Yazılımın, tarayıcı üzerinden elde edilen yetkilendirme jetonlarını kullanarak Google'ın dolandırıcılık kontrollerini baypas ettiği öne sürülmüştür. Ancak bağımsız kuruluşlar, şifre değişiminden sonra erişimin sürdüğüne dair iddiaların henüz kontrollü testlerle doğrulanmadığını belirtmektedir. Tehdit aktörünün yazılımı Basic, Pro ve Enterprise olmak üzere üç farklı abonelik kademesiyle sunduğu ve özellikle yüksek profilli hedefleri hedeflediği kaydedilmiştir. Uzmanlar, enfekte cihazların temizlenmesi, şifrelerin güvenli bir cihazdan değiştirilmesi ve tüm üçüncü taraf erişimlerinin gözden geçirilmesi gerektiğini ifade etmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 11.11.2026)
+» url=https://securityaffairs.com/202853/malware/hackers-advertise-a-1000-gmail-tool-that-allegedly-survives-password-resets.html
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=44
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=41 | eksen=8/8/8/17 | rubrik=v2
+» varlik | sektor=teknoloji
+» olcek | zarar=1000USD
+» kurban | ad=Google | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] Citrix ve Ivanti Ürünlerinde Kritik Güvenlik Yamalarının Yayımlanması
+─────────────────────────────────────────────────────────
+Citrix ve Ivanti, ürünlerindeki uzaktan kod yürütme ve ana makine ele geçirme risklerini barındıran 19 güvenlik açığı için yamalar yayımlamıştır. Ivanti, Cloud Services Application (CSA) ve Endpoint Manager (EPM) ürünlerinde kimlik doğrulama gerektirmeyen ve kritik seviyede olan iki zafiyeti gidermiştir. CVE-2026-121653 kodlu SQL enjeksiyon hatasının, saldırganların herhangi bir yetki olmadan sistemde kod yürütmesine izin verdiği belirtilmiştir. Ivanti, söz konusu açıkların henüz sahada istismar edildiğine dair bir kanıt bulunmadığını ifade etmiştir. Citrix tarafında ise XenServer üzerinde yüksek öncelikli altı hata ve AMD işlemcilerle ilgili sanal makine izolasyon zafiyetleri için güncellemeler sunulmuştur. Bu açıkların, saldırganların ana makine sırlarını ele geçirmesine veya yetki yükseltmesine olanak tanıdığı kaydedilmiştir. Her iki şirket de yöneticilere, sistemlerin güvenliğini sağlamak adına ilgili güncellemeleri ivedilikle uygulamalarını tavsiye etmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 11.11.2026)
+» url=https://www.securityweek.com/citrix-ivanti-patch-critical-and-high-severity-vulnerabilities/
+» manset=hayir | kategori=zafiyet_rutin | puan=65
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-121653 | urun=Citrix,Ivanti
+» kurban | ad=Citrix,Ivanti | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] Qlik Sense Sunucularında PowerShell Ters Kabuk Saldırısı Tespiti
+─────────────────────────────────────────────────────────
+Cynet güvenlik ekipleri, Ekim 2026'da Avrupa merkezli müşterilerin Qlik Sense sunucularını hedef alan şüpheli siber faaliyetler tespit etmiştir. Saldırganların, CACTUS fidye yazılımı operasyonuyla bağlantılı olduğu ve CVE-2023-41265, CVE-2023-41266 ile CVE-2023-48365 kodlu eski güvenlik açıklarını istismar etmeye çalıştığı belirtilmiştir. Yapılan analizlerde, saldırganların PowerShell üzerinden ters kabuk komutları yürüterek sistemlerde kalıcılık sağlamaya çalıştığı kaydedilmiştir. Ayrıca, saldırganların Apache ActiveMQ ve Veeam yazılımlarına yönelik istismar araçlarını da içeren bir altyapı hazırladığı ifade edilmiştir. Kötü amaçlı yazılımın Linux sistemlerde /etc/shadow dosyalarını okumaya çalıştığı ve Windows sistemlerde OpenSSH kurulumu yaparak WinUpdCheck adlı zamanlanmış görevle arka kapı oluşturduğu bildirilmiştir. Cynet, 45.115.26.23 IP adresine bağlanan bu girişimlerin engellendiğini ancak saldırganların daha geniş kapsamlı saldırılar için hazırlık yaptığını açıklamıştır.
+(XXXXXXX, AÇIK -thehackernews.com, 11.11.2026)
+» url=https://thehackernews.com/2026/11/hackers-target-qlik-sense-servers-with.html
+» manset=hayir | kategori=zafiyet_rutin | puan=79
+» sonradan | kategori=zafiyet_rutin | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» teknik | cve=CVE-2023-41265,CVE-2023-41266,CVE-2023-48365 | urun=Microsoft,Veeam
+» kurban | ad=Qlik | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] Endüstriyel Teknoloji Üreticilerinin Kritik Güvenlik Açıklarını Yamalaması
+─────────────────────────────────────────────────────────
+Siemens, Schneider Electric ve diğer endüstriyel teknoloji sağlayıcıları, kritik sistemleri ciddi saldırılara maruz bırakabilecek yeni güvenlik uyarıları yayımlamıştır. Siemens, Node2Shell zafiyetinin etkilerini ve çeşitli ürün gruplarındaki yüksek öncelikli açıkları kapsayan dokuz yeni duyuru paylaşmıştır. Söz konusu açıkların kod enjeksiyonu, yetkisiz veri erişimi ve sistem ele geçirme amacıyla istismar edilebileceği belirtilmiştir. Schneider Electric ise EcoStruxure Power Build Rapsody yazılımında rastgele kod yürütülmesine izin veren bir açığı gidermiştir. VDE CERT, Beckhoff ve Weidmueller gibi üreticilerin ürünlerinde PHP2Shell dahil olmak üzere sekiz yeni zafiyet raporlamıştır. Johnson Controls ve Hitachi Energy de kimlik bilgisi hırsızlığı ve yetki yükseltme risklerine karşı yamalar yayımlamıştır. Siemens, bazı ürünler için henüz yama bulunmadığını belirterek müşterilere geçici hafifletme önlemlerini uygulama çağrısında bulunmuştur.
+(XXXXXXX, AÇIK -securityweek.com, 11.11.2026)
+» url=https://www.securityweek.com/ics-patch-tuesday-siemens-flags-high-severity-flaws-node2shell-exposure/
+» manset=hayir | kategori=zafiyet_rutin | puan=76
+» sonradan | kategori=zafiyet_rutin | onem=58 | eksen=25/25/8/0 | rubrik=v2
+» teknik | urun=Siemens
+» kurban | ad=Siemens,Schneider Electric | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] ScreenConnect Sunucularına Yönelik Zararlı Eklentiler Üzerinden Yürütülen Saldırılar
+─────────────────────────────────────────────────────────
+ConnectWise, ScreenConnect platformundaki üçüncü taraf eklentilerin kötüye kullanılması sonucu 48 kuruluştaki en az 288 uç noktanın hedef alındığını bildirmiştir. Saldırganların, ele geçirilmiş paneller üzerinden "Run" komutlarını kullanarak sistemlere sahte ScreenConnect istemcileri yerleştirdiği belirtilmiştir. Huntress tarafından yapılan analizde, saldırının teknisyenlerin iş istasyonlarına bulaşarak diğer panellere yayılan solucan benzeri bir yapıya sahip olduğu tespit edilmiştir. Saldırıda kullanılan bazı betiklerin yapay zeka tarafından oluşturulduğuna dair işaretler bulunduğu ifade edilmiştir. ConnectWise, önlem olarak beş eklentiyi devre dışı bırakmış ve yerinde kurulum kullanan ortaklarına bu eklentileri kapatmaları çağrısında bulunmuştur. Saldırganların, Microsoft Defender istisnaları oluşturduğu ve kalıcılık sağlamak için zamanlanmış görevler atadığı kaydedilmiştir. Etkilenen MSP'lerin ardışık numaralarla etiketlenmesinin, saldırının geniş kapsamlı bir operasyon olduğunu gösterdiği bildirilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 12.11.2026)
+» url=https://thehackernews.com/2026/11/screenconnect-attacks-target-at-least.html
+» manset=hayir | kategori=zafiyet_rutin | puan=70
+» sonradan | kategori=zafiyet_rutin | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» kurban | ad=ConnectWise | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] Microsoft'un Linux Çekirdeğinde Onlarca Güvenlik Açığı Bulması
+─────────────────────────────────────────────────────────
+Microsoft FORGE Lab araştırmacıları, MDASH kod adlı yapay zekâ tarama sistemiyle Linux çekirdeği alt sistemlerinde 59 güvenlik açığı raporlamış ve 33 CVE kodu atanmasını sağlamıştır. Yapılan çalışmada, sekiz adet CVE için yerel yetki yükseltme saldırılarının başarıyla gerçekleştirildiği ve 38 raporun ana hat çekirdeğe dahil edildiği belirtilmiştir. Tespit edilen hataların ortalama 8,1 yıldır çekirdek içerisinde bulunduğu, CVE-2026-74544 kodlu bir hatanın ise 21 yıldır mevcut olduğu kaydedilmiştir. Özellikle rhashtable kütüphanesindeki bir durum sıfırlama hatasının (CVE-2026-64563), Android dahil birçok sistemde root yetkisi elde etmek için istismar edilebildiği ifade edilmiştir. Araştırma ekibi, yapay zekâ ile binlerce bulgunun iki haftada tarandığını ancak bunların doğrulanması ve yamalanmasının aylar sürdüğünü açıklamıştır. Çekirdek bakımcılarıyla yapılan iş birliği sonucunda kritik açıkların giderildiği bildirilmiştir.
+(XXXXXXX, AÇIK -microsoft.com, 11.11.2026)
+» url=https://www.microsoft.com/en-us/security/blog/2026/11/11/lessons-from-59-linux-kernel-bug-reports/
+» manset=hayir | kategori=zafiyet_rutin | puan=68
+» sonradan | kategori=zafiyet_rutin | onem=58 | eksen=25/17/8/8 | rubrik=v2
+» teknik | cve=CVE-2026-64563,CVE-2026-74544 | urun=Google,Microsoft
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] Apache HTTP Sunucusunda Kritik Uzaktan Kod Çalıştırma Açığı
+─────────────────────────────────────────────────────────
+Apache HTTP Sunucusu'nun mod_http2 modülünde, kimlik doğrulaması gerektirmeyen uzak saldırganların sunucuda kod çalıştırmasına olanak tanıyan CVE-2026-119618 kodlu kritik bir güvenlik açığı tespit edilmiştir. Red Hat tarafından 10 üzerinden 9,8 CVSS puanı verilen bu zafiyetin, 2.4.55 ile 2.4.70 arasındaki sürümleri etkilediği ve 2.4.71 sürümüyle giderildiği bildirilmiştir. Anthropic'in OSS Scanner servisi tarafından 26 Ekim tarihinde raporlanan açığın, varsayılan yapılandırmadaki sunucularda tam kontrol sağlamaya imkan tanıdığı ifade edilmiştir. Red Hat Enterprise Linux 9 ve 10 sürümleri için yamalar yayınlanmış olup, yöneticilere güncellemeler uygulanana kadar Protocols direktifinden h2 ve h2c seçeneklerini kaldırarak yalnızca HTTP/1.1 kullanmaları tavsiye edilmiştir. Ayrıca, mod_h2 projesinin 2.0.8 ile 2.0.42 arasındaki sürümlerinin de bu durumdan etkilendiği kaydedilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 12.11.2026)
+» url=https://thehackernews.com/2026/11/critical-apache-http2-flaw-could-let.html
+» manset=hayir | kategori=zafiyet_rutin | puan=67
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=25/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-119618 | urun=Anthropic,Apache,Linux
+
+────────────────────────────────────────────────────────────────────────────────
+
+[20] SUSE Linux Çekirdeğinde Çok Sayıda Güvenlik Açığının Giderilmesi
+─────────────────────────────────────────────────────────
+Fransa Ulusal Siber Güvenlik Ajansı (ANSSI), SUSE Linux Enterprise çekirdeğinde veri gizliliği ve bütünlüğünü tehdit eden çok sayıda güvenlik açığı tespit edildiğini duyurmuştur. Bu açıkların, saldırganların güvenlik politikalarını devre dışı bırakmasına ve sistem verilerine yetkisiz erişim sağlamasına imkan tanıdığı belirtilmiştir. Etkilenen sistemler arasında SUSE Linux Enterprise Server, Desktop, High Availability Extension ve Real Time sürümlerinin 12 ve 15 numaralı servis paketlerinin bulunduğu kaydedilmiştir. Yayınlanan bildiride, CVE-2023-7356, CVE-2024-50241 ve CVE-2025-71232 gibi birçok farklı zafiyet koduna atıfta bulunulmuştur. SUSE'nin söz konusu hataları gidermek amacıyla Ekim ve Kasım 2026 tarihlerinde SUSE-SU-2026:4960-1 gibi çeşitli güvenlik bültenleri ve yamalar yayınladığı ifade edilmiştir. Sistem yöneticilerinin, veri güvenliğini sağlamak için ilgili güncellemeleri ivedilikle uygulamaları gerektiği vurgulanmıştır.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 06.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1470/
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» varlik | hedef=Fransa
+» teknik | cve=CVE-2023-7356,CVE-2024-50241,CVE-2025-71232
+
+────────────────────────────────────────────────────────────────────────────────
+
+[21] Botların Yapay Zeka Temsilcisi Kılığına Girerek Saldırması
+─────────────────────────────────────────────────────────
+Ekim 2026 döneminde bir çevrim içi pazar yerinin, yaygın kullanılan bir tüketici yapay zeka temsilcisi adını taşıyan trafikten 414.210 ziyaret aldığı bildirilmiştir. Cequence tarafından yapılan incelemede, söz konusu trafiğin tamamının giriş sayfasını hedeflediği ve kimlik bilgisi doldurma operasyonu yürüttüğü tespit edilmiştir. Sahte temsilcinin oluşturduğu hacmin, gerçek temsilci ziyaretlerinin yaklaşık bir buçuk katına ulaştığı belirtilmiştir. Bir telekomünikasyon operatöründe ise gerçek bir yapay zeka temsilcisinin kendisini sıradan bir tarayıcı gibi göstererek fatura inceleme ve sepet işlemleri gerçekleştirdiği kaydedilmiştir. Yapılan davranışsal analizler sonucunda, geleneksel bot tespit sistemlerini aşan 3,51 milyon yetkisiz giriş girişiminin engellendiği ifade edilmiştir. Uzmanlar, isim etiketlerinden ziyade oturum faaliyetlerinin izlenmesi gerektiğini vurgulayarak, ödeme ve hesap kontrolü gibi kritik işlemlerde kademeli doğrulama uygulanmasını tavsiye etmiştir.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 12.11.2026)
+» url=https://www.helpnetsecurity.com/2026/11/12/bots-ai-agent-impersonation/
+» manset=hayir | kategori=zafiyet_rutin | puan=54
+» sonradan | kategori=zafiyet_rutin | onem=32 | eksen=8/8/8/8 | rubrik=v2
+» varlik | sektor=telekom
+
+────────────────────────────────────────────────────────────────────────────────
+
