@@ -365,6 +365,10 @@ _MANSIZ_AD = {
     'presiden', 'başkanı', 'chairman', 'secretar', 'sekreter',
     'monday', 'tuesday', 'wednesda', 'thursday', 'friday', 'saturday',
     'sunday', 'pazartes', 'çarşamba', 'perşembe', 'cumartes',
+    # 12 Kasım: Polonya ePUAP (99) ↔ Birleşik Krallık 'Polis Dijital Servisi'
+    # yalnızca 'Dijital İşler Bakanlığı' sözcüğüyle aynı olay sayıldı ve
+    # manşete kapandı. Alan sıfatı kimlik değildir.
+    'digital', 'dijital',
     # KURUM ADI SÖZCÜKLERİ BİLEREK DIŞARIDA: 'bürosu', 'investig',
     # 'soruştur' (Federal Soruşturma Bürosu), 'meclisi', 'temsilci',
     # 'hazine', 'yasası' eklenince 8 bağ daha düşüyor ama bunların arasında

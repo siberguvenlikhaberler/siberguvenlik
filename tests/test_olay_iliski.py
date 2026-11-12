@@ -565,3 +565,29 @@ def test_unvan_ve_gun_adi_olay_kimligi_degildir():
                'full_text': "Speaking on Friday, Industry Minister Ryosei "
                             "Akazawa said ..."}
     assert oi.iliski_belirle(tajani, japonya) == oi.ILISKISIZ
+
+
+def test_dijital_sifati_olay_kimligi_degildir():
+    """ÖLÇÜLDÜ (2026-11-12 raporu): Polonya'nın ePUAP e-devlet platformunu
+    kapatması (99, günün en yüksek puanı) yalnızca 'Dijital İşler Bakanlığı'
+    ↔ 'Polis Dijital Servisi' ortaklığıyla 28 Ekim'in Birleşik Krallık polis
+    tedarikçileri manşetine bağlandı (ortak=ad:digital,ad:dijital
+    topic=0.12) ve manşete kapandı."""
+    assert 'digital' in oi._MANSIZ_AD and 'dijital' in oi._MANSIZ_AD
+    polonya = {'tr_title': "Polonya'nın Siber Saldırı Sonrası E-Devlet "
+                           "Platformunu Kapatması",
+               'paragraph': "Polonya Dijital İşler Bakanlığı, ulusal e-devlet "
+                            "platformu ePUAP'a yönelik bir siber saldırının "
+                            "tespit edilerek durdurulduğunu açıklamıştır.",
+               'title': "Poland takes its national e-government platform "
+                        "offline after a cyberattack",
+               'full_text': "Poland's Ministry of Digital Affairs said ..."}
+    polis = {'tr_title': "Birleşik Krallık Polis Verisi Tedarikçilerine Siber "
+                         "Saldırı Düzenlenmesi",
+             'paragraph': "Polis Dijital Servisi verilerine göre üçüncü taraf "
+                          "teknoloji tedarikçileri defalarca siber saldırıya "
+                          "uğramıştır.",
+             'title': "Hackers repeatedly breached suppliers holding UK "
+                      "police data, watchdog finds",
+             'full_text': "According to the Police Digital Service ..."}
+    assert oi.iliski_belirle(polonya, polis) == oi.ILISKISIZ

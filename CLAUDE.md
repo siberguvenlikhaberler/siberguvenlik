@@ -1448,3 +1448,11 @@ Regresyon: `tests/test_feed_gurultu.py`, `tests/test_zafiyet_son_care.py`.
   raporunu gece yarısı üretti; gündüz slotları "rapor var" deyip atladı.
   `daily.yml` "Saat penceresi" adımı: otomatik tetik yalnızca TR 09:00-20:59
   arasında koşar (manuel muaf). Pencere dışı koşu sayaç ARTIRMAZ, issue AÇMAZ.
+- 12 Kasım: Polonya ePUAP kapatması (99, günün en yüksek puanı) yalnızca
+  `ad:digital,ad:dijital` ("Dijital İşler Bakanlığı" ↔ "Polis Dijital
+  Servisi") ortaklığıyla 28 Ekim Birleşik Krallık polis tedarikçileri
+  manşetine bağlandı; yönetmen takası reddedildi, haber gövdede kaldı
+  (manşet 92/85/93). `digital`/`dijital` `_MANSIZ_AD`'a eklendi. Gövde
+  deposuyla yeniden oynatıldı: YENI_GELISME → ILISKISIZ. Saklı görünümlü
+  ölçümler (`kimlik_olc`, `defter_olc`, `dedup_golden`, `mukerrer_golden`,
+  `zincir_olc`) birebir aynı — sinyal yalnızca gövdede.
