@@ -591,3 +591,36 @@ def test_dijital_sifati_olay_kimligi_degildir():
                       "police data, watchdog finds",
              'full_text': "According to the Police Digital Service ..."}
     assert oi.iliski_belirle(polonya, polis) == oi.ILISKISIZ
+
+
+def test_uzun_kod_adi_ad_kokuyle_tek_belirtec():
+    """ÖLÇÜLDÜ (2026-11-13 raporu): `ad:` kökü 8 karaktere kırpılır, `kod:`
+    tam yazılır; 8 karakterden uzun TEK bir sözcük ('MalwareThreat', Unit 42
+    sayfa şablonundaki "Categories:MalwareThreat Research") iki kimlik
+    sayılıyor ve MIN_ORTAK_AD kapısını açıyordu. Cairn/otonom yapay zekâ
+    kampanyası (94) bu yüzden 16 Ekim'in Linux casusluk haberine bağlanıp
+    rapordan düştü."""
+    assert oi._belirtecler({'ad:malwaret', 'kod:malwarethreat'}) == {'malwaret'}
+    assert oi._ayirt_edici_sayisi({'ad:malwaret', 'kod:malwarethreat'}) == 1
+    assert oi._ayirt_edici_sayisi({'ad:killsec', 'kod:killsec'}) == 1
+    # Gerçekten ayrı iki kimlik hâlâ iki sayılır.
+    assert oi._ayirt_edici_sayisi({'ad:binance', 'kod:tradertraitor'}) == 2
+    sablon = "Threat Research Center\n\nPublished:2026\n\nCategories:MalwareThreat Research\n\n"
+    cairn = {'tr_title': "Çin Bağlantılı Grubun Otonom Yapay Zekayla "
+                         "Saldırılar Düzenlemesi",
+             'paragraph': '',
+             'title': "Attackers Use Autonomous AI to Target Semiconductor, "
+                      "Defense and Civil Society Sectors",
+             'full_text': sablon + "Chinese-speaking attackers used an "
+                          "open-source AI penetration testing framework "
+                          "called Cairn with Zhipu GLM and DeepSeek."}
+    linux = {'tr_title': "Yapay Zeka Destekli Casusluk Kampanyasının Linux "
+                         "Altyapılarını Hedeflemesi",
+             'paragraph': "Unit 42 araştırmacıları, hükümet kurumlarını "
+                          "hedef alan CL-UNK-1211 kodlu bir siber casusluk "
+                          "kampanyası tespit etmiştir.",
+             'title': "AI-Powered Espionage Campaign Targets Government "
+                      "Linux Infrastructure",
+             'full_text': sablon + "An espionage campaign tracked as "
+                          "CL-UNK-1211 targeted government Linux servers."}
+    assert oi.iliski_belirle(cairn, linux) != oi.AYNI_GELISME

@@ -1456,3 +1456,16 @@ Regresyon: `tests/test_feed_gurultu.py`, `tests/test_zafiyet_son_care.py`.
   deposuyla yeniden oynatıldı: YENI_GELISME → ILISKISIZ. Saklı görünümlü
   ölçümler (`kimlik_olc`, `defter_olc`, `dedup_golden`, `mukerrer_golden`,
   `zincir_olc`) birebir aynı — sinyal yalnızca gövdede.
+- 13 Kasım: Unit 42'nin Cairn/otonom yapay zekâ kampanyası (94) iki kopyasıyla
+  da rapordan düştü. Çapraz-gün katmanı onu 16 Ekim'in Linux casusluk
+  haberine `ortak=ad:malwaret,kod:malwarethreat topic=0.11` ile bağladı —
+  ortak olan tek şey Unit 42 sayfa şablonundaki "Categories:MalwareThreat
+  Research". Kusur sayımdaydı: `ad:` kökü 8 karaktere kırpılır, `kod:` tam
+  kalır; 8 karakterden uzun TEK sözcük İKİ kimlik sayılıyordu (3 Ekim
+  `killsec` düzeltmesi yalnızca kısa adlarda çalışıyordu). `_belirtecler`
+  ikisini tek belirteç sayar (`_ayirt_edici_sayisi` + `_varlik_sayisi`).
+  ÖLÇÜLDÜ: `kimlik_olc` birleşme 127 → 124, `defter_olc` olay 612 → 615 (Falcon
+  C2 ↔ UK Biobank ↔ BUGSTER sahte kümesi çözüldü); `dedup_golden`,
+  `mukerrer_golden`, `zincir_olc` birebir aynı. Aynı gün tersinelik katmanı
+  gövdeye inen manşeti `remaining` de taşırken ikinci kez yazıyordu (değişmez
+  denetimi yakalamıştı) — düzeltildi.

@@ -8488,7 +8488,12 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"({_puan(en_zayif)}) → ID {aday} ({_puan(aday)}) ile "
                   f"değiştirildi; fark eşiği {self.MANSET_TERSINELIK_MIN}.")
 
-        kalan = [i for i in remaining_ids if i not in yeni_top3]
+        # Gövdeye inen manşet `yeni_top10`'a girer; `remaining_ids` onu zaten
+        # taşıyorsa ikinci kez yazılırdı (13 Kasım: ID 85, değişmez denetimi
+        # `mukerrer_girdi` olarak yakaladı ve tekilleştirdi).
+        _govde = set(yeni_top10)
+        kalan = [i for i in remaining_ids
+                 if i not in yeni_top3 and i not in _govde]
         return yeni_top3, yeni_top10, kalan
 
     def _son_grup_bosalmasi(self, top3_ids, top10_ids, remaining_ids,

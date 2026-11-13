@@ -653,7 +653,28 @@ def _ayirt_edici_sayisi(ortak):
     kurumlara sızması haberi `ortak=ad:killsec,kod:killsec topic=0.13` ile
     aynı olay sayıldı; ortak olan tek şey "killsec" sözcüğüydü.
     """
-    return len({k.split(':', 1)[-1] for k in ortak})
+    return len(_belirtecler(ortak))
+
+
+def _belirtecler(ortak):
+    """Ortak kimliklerin BELİRTEÇ kümesi; aynı sözcüğün ad:/kod: biçimi tek.
+
+    `ad:` kökü 8 karaktere kırpılır, `kod:` tam yazılır. 'killsec' gibi kısa
+    adlarda iki biçim çakışıyordu, ama 8 karakterden uzun bir kod adında
+    çakışmıyor ve TEK sözcük İKİ kimlik sayılıyordu. ÖLÇÜLDÜ (2026-11-13):
+    Unit 42'nin Cairn/otonom yapay zekâ kampanyası (94) Unit 42 sayfa
+    şablonundaki "Categories:MalwareThreat Research" yüzünden
+    `ortak=ad:malwaret,kod:malwarethreat topic=0.11` ile 16 Ekim'in Linux
+    casusluk haberine bağlandı ve rapordan TAMAMEN düştü.
+    """
+    adlar = {k.split(':', 1)[1] for k in ortak if k.startswith('ad:')}
+    sonuc = set()
+    for k in ortak:
+        b = k.split(':', 1)[-1]
+        if k.startswith('kod:') and b[:8] in adlar:
+            b = b[:8]
+        sonuc.add(b)
+    return sonuc
 
 
 def _bitisik_gecer(a, b, metin):
@@ -726,7 +747,7 @@ def _varlik_sayisi(ortak, metin_a, metin_b, tr_metin=''):
     jsceal}) birleşme eskisi gibi kurulur — ölçümdeki gerçek eşleşmelerin
     hepsi bu yolla korunur.
     """
-    belirtecler = sorted({k.split(':', 1)[-1] for k in ortak})
+    belirtecler = sorted(_belirtecler(ortak))
     if len(belirtecler) < 2:
         return len(belirtecler)
     ebeveyn = {b: b for b in belirtecler}
