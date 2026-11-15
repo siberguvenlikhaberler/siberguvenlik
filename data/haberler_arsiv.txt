@@ -62828,3 +62828,53 @@ VMware Tanzu Greenplum veri platformunda, saldırganların sistem güvenliğini 
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 15 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] SilentAir ve Liminal Panda Gruplarının Mobil Ağlara Sızması
+─────────────────────────────────────────────────────────
+Siber güvenlik kuruluşu Enea, SilentAir ve Çin bağlantılı olduğu değerlendirilen Liminal Panda gruplarının mobil operatör ağlarına sızarak çağrı, konum ve kısa mesajları izlediğini bildirmiştir. 2025 yılı başından itibaren izlenen saldırılarda, operatörlerin trafik değişimi için kullandığı IPX ağını istismar eden tek aktör olan Liminal Panda'nın GTPDoor arka kapısını kullandığı tespit edilmiştir. Saldırganlar, en az altı Asya ülkesindeki operatör düğümlerini ele geçirerek Tayvan, Orta Doğu, Avrupa ve Doğu Afrika'daki üst düzey siyasi figürleri hedef almıştır. Enea, 2026'nın ilk çeyreğinde yüzlerce komuta kontrol sunucusu bağlantı girişimini engellemiş ve dünya genelinde onlarca operatörün enfekte olmuş olabileceğini öngörmüştür. Tespit edilemeyen 'sessiz SMS' yöntemini de kullanan bu tehdit aktörleri, telekomünikasyon altyapıları için kritik bir risk oluşturmaya devam etmektedir.
+(XXXXXXX, AÇIK -securityweek.com, 13.11.2026)
+» url=https://www.securityweek.com/silentair-hackers-intercept-calls-sms-from-inside-mobile-networks/
+» manset=evet | kategori=nation_state_apt | puan=93
+» varlik | sektor=telekom | hedef=Tayvan | aktor_ulke=Çin
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Cursor Platformunda Zararlı Yazılım İçeren Eklenti Yayınlanması
+─────────────────────────────────────────────────────────
+Yapay zeka destekli kod düzenleyici Cursor, Fireworks AI altyapı sağlayıcısından çalınan erişim anahtarları üzerinden gerçekleşen ve 'Kara Ekim' saldırı dalgasının bir parçası olan siber sızıntıyı doğrulamıştır. 29 Ekim 2026 tarihinde saldırganlar, Cursor'ın VS Code eklenti mağazasında Anthropic'in Claude Code eklentisinin 2.1.312 ve 2.1.313 sürümlerini taklit eden zararlı kopyalar yayınlamıştır. Yaklaşık 11 saat yayında kalan bu eklentiler, 5.000 kadar geliştiricinin sistemine sızarak kalıcı SSH arka kapıları yerleştirmeye ve sistem bilgilerini ele geçirmeye çalışmıştır. İhlal sonucunda Gizlilik Modu kapalı olan kullanıcıların 2025 yılına ait eğitim verileri, müşteri destek yazışmaları ve bazı kaynak kod depoları yetkisiz erişime maruz kalmıştır. Olay sonrası Cursor, Fireworks üzerindeki tüm trafiğini durdurmuş, etkilenen kimlik bilgilerini yenileyerek altyapısını yeniden yapılandırmıştır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 14.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/cursor-confirms-security-breach-led-to-malicious-claude-code-extension/
+» manset=evet | kategori=tedarik_zinciri | puan=91
+» sonradan | kategori=tedarik_zinciri | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=teknoloji
+» kurban | ad=Cursor,Fireworks AI | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Rus Şantaj Grubunun Expedia Verilerini Çaldığını İddia Etmesi
+─────────────────────────────────────────────────────────
+Rusya merkezli siber şantaj grubu n0n, dünyanın en büyük ikinci çevrimiçi seyahat acentesi olan Expedia'ya ait yaklaşık bir milyar yolcu kaydını ele geçirdiğini iddia etmiştir. Expedia, saldırganların Google Cloud ortağı Qubole'a ait çalınan bir satıcı erişim anahtarı üzerinden sistemlerine sızdığını ve bir tedarik zinciri saldırısının gerçekleştiğini doğrulamıştır. Ele geçirilen veriler arasında 830 milyon sadakat programı kaydı, 58 milyon yolcu profili, 333 milyon tüketici hesabı ve 2,5 milyon kredi kartı harcama kaydı bulunduğu öne sürülmektedir. Eylül ortasında ortaya çıkan n0n grubu, fidye yazılımı kullanmak yerine verileri sızdırmakla tehdit ederek şantaj yapmaktadır. Hotels.com ve Vrbo gibi markaları da bünyesinde barındıran Expedia, sızıntıyı kontrol altına almak için harici uzmanlarla çalışırken, kullanıcılara kimlik avı riskine karşı şifrelerini değiştirme çağrısında bulunmuştur.
+(XXXXXXX, AÇIK -securityaffairs.com, 14.11.2026)
+» url=https://securityaffairs.com/203062/cyber-crime/extortion-group-claims-theft-of-nearly-one-billion-expedia-traveler-records.html
+» manset=evet | kategori=tedarik_zinciri | puan=89
+» sonradan | kategori=tedarik_zinciri | onem=76 | eksen=25/17/17/17 | rubrik=v2
+» varlik | aktor_ulke=Rusya
+» kurban | ad=Expedia | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] CISA'nın UnrealIRCd Sunucularındaki Komut Enjeksiyonu Açığını Bildirmesi
+─────────────────────────────────────────────────────────
+ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), UnrealIRCd açık kaynaklı sohbet sunucularını etkileyen yüksek öncelikli bir güvenlik açığını aktif istismar edildiği gerekçesiyle Bilinen İstismar Edilen Güvenlik Açıkları (KEV) kataloğuna eklemiştir. CVE-2026-114713 koduyla takip edilen ve 8.6 CVSS puanı alan bu hatanın, sunucu yetkileriyle rastgele komut yürütülmesine olanak tanıdığı belirtilmiştir. UnrealIRCd proje lideri Bram Matthys, 6.0.0 ile 6.2.7.1 arasındaki sürümleri etkileyen bu sorunun son 15 yılın en kritik hatası olduğunu ifade etmiştir. Düzeltme yayımlandıktan bir gün sonra, 7 Kasım 2026 tarihinde saldırıların başladığı kaydedilmiştir. Federal sivil kurumlara, risk temelli güvenlik güncellemeleri kapsamında ilgili yamaları uygulamaları için 16 Kasım 2026 tarihine kadar süre tanınmıştır. Geliştirici ekip, sistem yöneticilerine sunucularını acilen güncellemeleri veya spam filtresi önlemlerini devreye almaları konusunda uyarıda bulunmuştur.
+(XXXXXXX, AÇIK -thehackernews.com, 14.11.2026)
+» url=https://thehackernews.com/2026/11/attackers-exploit-unrealircd-flaw-that.html
+» manset=hayir | kategori=zafiyet_rutin | puan=81
+» varlik | sektor=teknoloji | hedef=ABD
+» teknik | cve=CVE-2026-114713 | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
