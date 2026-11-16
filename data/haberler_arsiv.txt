@@ -62878,3 +62878,99 @@ ABD Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA), UnrealIRCd açık ka
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 16 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Meta'nın İtalya'da 805 Milyon Avro Para Cezasına Çarptırılması
+─────────────────────────────────────────────────────────
+İtalya veri koruma otoritesi Garante, Android kullanıcılarının galeri içeriklerine izinsiz eriştiği gerekçesiyle Meta şirketine 805 milyon avro para cezası kesmiştir. Yapılan incelemede, Facebook uygulamasının kullanıcıların fotoğraf, video ve ilgili üst verilerine açık rıza almaksızın eriştiği ve galeri önerisi özelliğinin varsayılan olarak açık bırakıldığı tespit edilmiştir. İtalya Gizlilik Yasası'nın 122. maddesinin ihlal edildiği kararda, yaklaşık 20 milyon kullanıcının etkilendiği ve ihlalin 2023'ten beri sürdüğü belirtilmiştir. Kurum, şirkete söz konusu özelliği 60 gün içinde varsayılan olarak kapatması, her işlem için ayrı onay alması ve 30 gün içinde rapor sunması talimatını vermiştir. Meta'nın küresel gelirinin %0,47'sine tekabül eden bu cezada, şirketin soruşturma sürecindeki sınırlı iş birliği ve 2019 yılındaki geçmiş ihlalleri de etkili olmuştur.
+(XXXXXXX, AÇIK -thehackernews.com, 15.11.2026)
+» url=https://thehackernews.com/2026/11/italy-fines-meta-805-million-over.html
+» manset=evet | kategori=politika_hukuk | puan=76
+» varlik | hedef=İtalya
+» olcek | etkilenen=20000000 | ceza=805000000EUR
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Retadup Solucanının CoffeeLoader Zararlı Yazılımı İçin Yeniden Canlandırılması
+─────────────────────────────────────────────────────────
+Güvenlik araştırmacıları, 2019 yılında Fransız kolluk kuvvetleri tarafından çökertilen Retadup solucanının, CoffeeLoader adlı yeni bir truva atını yaymak amacıyla yeniden aktif hale getirildiğini tespit etmiştir. 2024 yılından itibaren solucanın eski komuta kontrol (C2) alan adlarının tekrar tescil edildiği ve enfekte USB sürücüler aracılığıyla sistemlere sızdığı belirlenmiştir. Yeni CoffeeLoader varyantının, analizden kaçmak için OpenGL kütüphanesini kullanarak GPU üzerinden şifre çözme işlemi gerçekleştirdiği ve Armoury paketleyicisiyle korunduğu ifade edilmiştir. Zararlı yazılımın, sistemde kalıcılık sağlamak için kayıt defteri anahtarları oluşturduğu ve dllhost.exe gibi meşru süreçlere kod enjekte ettiği kaydedilmiştir. Peru, Angola ve Rusya başta olmak üzere yaklaşık 15.000 sistemin bu yeni kampanyadan etkilendiği bildirilmiştir. C2 sunucularıyla iletişimin Base64 ve hex kodlamalı düz metin komutlarıyla sürdürüldüğü bilgisi verilmiştir.
+(XXXXXXX, AÇIK -securelist.com, 16.11.2026)
+» url=https://securelist.com/retadup-delivers-coffeeloader/121908/
+» manset=evet | kategori=casus_yazilim | puan=80
+» sonradan | kategori=casus_yazilim | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | hedef=Fransa,Rusya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Fransız Maileva Veri İhlalinden 22 Milyon Kişinin Etkilenmesi
+─────────────────────────────────────────────────────────
+La Poste grubunun iştiraki Maileva, Eylül ayı ortasında gerçekleşen ve 22 milyon kişinin isim ile adres bilgilerini sızdıran büyük bir siber saldırıyı doğrulamıştır. Platform üzerinden yılda 180 milyon belge gönderen şirketin veri ihlali; Flandre Opale Habitat gibi sosyal konut sağlayıcılarını, Inovie grubuna bağlı tıbbi laboratuvarları ve Foch Hastanesi hastalarını doğrudan etkilemiştir. Kiwee.care adlı alt yüklenicinin belgeleri üzerinden sızan veriler arasında tedavi tarihleri, fatura numaraları ve borç tutarları gibi hassas tıbbi ödeme detayları yer almaktadır. Maileva, Fransız veri koruma kurumu CNIL'e bildirimde bulunarak adli süreç başlatırken, saldırının arkasında Rus yanlısı Noname057 grubunun olabileceği değerlendirilmektedir. Bu olay, La Poste'un Aralık 2025'te dijital bankacılık ve Digiposte hizmetlerini aksatan saldırıdan sonra yaşadığı en kapsamlı güvenlik krizlerinden biri olarak kayıtlara geçmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 15.11.2026)
+» url=https://securityaffairs.com/203126/data-breach/data-breach-at-la-poste-subsidiary-maileva-affects-22-million-people-in-france.html
+» manset=evet | kategori=veri_ihlali | puan=77
+» sonradan | kategori=veri_ihlali | onem=67 | eksen=25/17/17/8 | rubrik=v2
+» varlik | sektor=finans,saglik | hedef=Fransa,Rusya
+» olcek | etkilenen=22000000
+» kurban | ad=Maileva | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Yapay Zeka Ajanlarının Hassas API Anahtarlarını Hedeflemesi
+─────────────────────────────────────────────────────────
+Amazon tehdit istihbarat ekibi, LiteLLM ve Dify gibi internete açık yapay zeka uygulamalarındaki zayıf noktaları tarayarak API anahtarlarını çalan bir siber saldırı kampanyası tespit etmiştir. Saldırganların, çaldıkları anahtarları daha fazla anahtar bulmak amacıyla kullandıkları yapay zeka modellerini çalıştırmak için kullandıkları belirtilmiştir. Operasyonun, açık kaynaklı bir sızma testi aracı olan ARTEX üzerinden yürütüldüğü ifade edilmiştir. Amazon, Çin bağlantılı olduğu değerlendirilen grupların varsayılan yönetici kimlik bilgilerini ve yapılandırma hatalarını istismar ettiğini açıklamıştır. Cloudflare ise benzer bir vakada, ARTEX ajanlarının bir saat içinde 400 veri tabanı dökümü talebi gönderdiğini kaydetmiştir. Siber güvenlik uzmanları, yapay zeka ajanlarının saldırı hızını ve sürekliliğini artırdığına dikkat çekmiştir. Savunmacıların varsayılan şifreleri değiştirmesi ve API anahtarlarına IP kısıtlaması getirmesi önerilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 16.11.2026)
+» url=https://thehackernews.com/2026/11/amazon-uncovers-ai-agent-campaign.html
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=75
+» varlik | aktor_ulke=Çin
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] BO Team'in Rus Yazılım Firmasının Kod Sunucusuna Sızması
+─────────────────────────────────────────────────────────
+Kaspersky ICS CERT ekibi, Ukrayna kökenli BO Team (Black Owl) grubunun bir Rus yazılım firmasının CI/CD altyapısını ve kod imzalama sunucusunu ele geçirdiğini bildirmiştir. Haziran 2025'te tespit edilen saldırıda, VMware vCenter sunucusundaki CVE-2021-44228 (Log4Shell) zafiyetini istismar eden saldırganlar, hypervisor üzerinde "pgcache" adlı gizli bir betik çalıştırarak kalıcılık sağlamıştır. GitLab depolarına sızan ve Ansible orkestrasyon sistemi üzerinden tüm Windows altyapısını komuta eden grup; ntds.dit veritabanını deşifre ederek tüm kullanıcı kimlik bilgilerini çalmıştır. Saldırganların tespiti zorlaştırmak için timestomping ve LotL tekniklerini kullandığı, ayrıca olay sonrası SPF ve DKIM kontrollerini aşan bir oltalama kampanyası yürüttüğü belirtilmiştir. Casusluk ve hacktivizm motivasyonuyla hareket eden grubun, ticari yazılımlara zararlı kod enjekte etmeyi hedeflediği kaydedilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 16.11.2026)
+» url=https://thehackernews.com/2026/11/bo-team-exploits-log4shell-in-vmware.html
+» manset=hayir | kategori=nation_state_apt | puan=87
+» sonradan | kategori=nation_state_apt | onem=75 | eksen=8/25/25/17 | rubrik=v2
+» varlik | sektor=teknoloji | hedef=Rusya,Ukrayna
+» teknik | cve=CVE-2021-44228 | urun=VMware
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Tor Projesi'nin DDoS Saldırılarına Karşı Güvenlik Güncellemesi Yayınlaması
+─────────────────────────────────────────────────────────
+Tor Projesi, gönüllülerin işlettiği aktarıcı ağını hedef alan ve hizmet kesintilerine neden olan yoğun dağıtık hizmet dışı bırakma (DDoS) saldırılarına karşı Tor 0.4.9.17 sürümünü yayınlamıştır. 13 Kasım'da duyurulan yeni sürümün, özellikle IPv6 protokolü üzerinden gelen saldırılara karşı savunma mekanizmalarını güçlendirdiği belirtilmiştir. Geliştirici David Goulet, ağın saniyede yüzlerce yeni devre isteğiyle aşırı yüklendiğini ve bu durumun aktarıcı operatörlerini zor durumda bıraktığını ifade etmiştir. Bazı operatörler, güncellemeye rağmen saldırganların teknik değiştirerek dizin sunucularını (HSDir) hedef almaya devam ettiğini ve ağın yanıt vermez hale geldiğini rapor etmiştir. Tor Projesi, tüm operatörlerin gecikmeksizin güncellemeyi yapmalarını istemiş ve ek savunma önlemleri üzerinde çalışıldığını duyurmuştur. Saldırıların anonimlik üzerindeki olası etkilerine dair henüz resmi bir uyarı yapılmadığı kaydedilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 16.11.2026)
+» url=https://www.securityweek.com/tor-updates-dos-defenses-again-as-relay-attacks-continue/
+» manset=hayir | kategori=zafiyet_rutin | puan=83
+» sonradan | kategori=zafiyet_rutin | onem=58 | eksen=25/17/8/8 | rubrik=v2
+» varlik | sektor=teknoloji
+» kurban | ad=Tor Project | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] TSMC Çalışan Verilerinin Bulut Sağlayıcı Kaynaklı İfşası
+─────────────────────────────────────────────────────────
+Dünyanın en büyük yarı iletken üreticisi TSMC, bir bulut hizmet sağlayıcısının sistemlerinden sızdırılan veriler nedeniyle mevcut ve eski çalışanlarına ait bilgilerin internete düştüğünü doğrulamıştır. Şirket, sızıntının kendi iç altyapısından kaynaklanmadığını ve operasyonlarının etkilenmediğini açıklamıştır. 'SmithBianl' takma adını kullanan bir tehdit aktörünün, 46 bin çalışana ait olduğu iddia edilen 6,9 GB boyutundaki veri setini bir forumda açık artırmaya çıkardığı belirtilmiştir. Sızdırılan bilgiler arasında ulusal kimlik numaraları, adresler, iletişim detayları ve banka bilgilerinin yer aldığı ifade edilmiştir. Saldırganın veriler için 3 BTC başlangıç fiyatı belirlediği ve ödeme yapılmaması durumunda verileri ücretsiz yayınlayacağı tehdidinde bulunduğu kaydedilmiştir. TSMC, etkilenen personeli bilgilendirdiğini ve durumu yönetmek için üçüncü taraf bir siber güvenlik firmasıyla çalıştığını bildirmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 15.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/tsmc-employee-data-breach-linked-to-cloud-provider/
+» manset=hayir | kategori=veri_ihlali | puan=73
+» varlik | sektor=finans,teknoloji
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Yapay Zeka Modellerinin Eski Cihazlardaki Açıkları Tespit Etmesi
+─────────────────────────────────────────────────────────
+Forescout araştırmacıları, yapay zeka modellerini kullanarak üretici desteği kesilmiş cihazlardaki güvenlik açıklarını tespit eden bir sistem geliştirmiştir. Yapılan çalışmada, 10 farklı TCP/IP yığını üzerinde 66'sı daha önce bilinmeyen toplam 99 güvenlik açığı doğrulanmıştır. Yeni keşfedilen açıkların yüzde 52'sinin yüksek veya kritik ciddiyet seviyesinde olduğu belirtilmiştir. Bu yazılımların endüstriyel ekipmanlar, tıbbi cihazlar ve ağ donanımlarında yaygın olarak kullanıldığı ifade edilmiştir. Araştırma, yapay zekanın güvenlik açığı keşif maliyetini düşürdüğünü ve süreci hızlandırdığını ortaya koymuştur. Özellikle üreticisi kapanmış veya desteği sona ermiş eski sistemlerin, yama yapılamadığı için ciddi risk oluşturmaya devam ettiği kaydedilmiştir. Forescout, kritik altyapılarda yama yapmanın mümkün olmadığı durumlarda riskin sınırlandırılmasına öncelik verilmesi gerektiğini vurgulamıştır.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 16.11.2026)
+» url=https://www.helpnetsecurity.com/2026/11/16/forescout-ai-models-vulnerability-research/
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=73
+» sonradan | kategori=yapay_zeka_guvenligi | onem=67 | eksen=17/25/8/17 | rubrik=v2
+» varlik | sektor=saglik
+» kurban | ad=Siemens | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
