@@ -63381,3 +63381,306 @@ ANSSI (CERT-FR), Trend Micro ürünlerinde veri bütünlüğünü, gizliliğini 
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 18 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] AuditTeam Grubunun OpsAgent Çerçevesiyle Siber Saldırılar Düzenlemesi
+─────────────────────────────────────────────────────────
+Siber tehdit aktörü AuditTeam, Ocak 2026'da başlattığı operasyonlarda OpsAgent çerçevesini kullanarak Rusya, İtalya, Çin, Filipinler ve Hong Kong dahil en az yedi ülkede düzinelerce kuruluşu hedef almıştır. Grup, ele geçirdiği veriler karşılığında "Denetim ve Danışmanlık Ücreti" adı altında fidye talep etmektedir. C++ dilinden Rust'a taşınan OpsAgent; süreç enjeksiyonu, ağ üzerinde yanal hareket ve anahtar günlükleme gibi gelişmiş yeteneklere sahiptir. Saldırganlar, 220'den fazla güvenlik ürününü devre dışı bırakmak için dijital imzalı Beijing Jiangmin Antivirus sürücüsünü kullanmakta ve verileri X25519 anahtar değişimiyle desteklenen AES-CBC veya ChaCha20 algoritmalarıyla şifrelemektedir. C2 adreslerini GitHub üzerinden alan yazılımın geliştirilmesinde yapay zeka desteğinden faydalanıldığı, dinamik API çözümleme yöntemlerinden anlaşılmaktadır. OLLVM ile gizlenen yükleyiciler, msiexec.exe gibi süreçlere kabuk kodu enjekte ederek sistemlerde kalıcılık sağlamaktadır.
+(XXXXXXX, AÇIK -securelist.com, 18.11.2026)
+» url=https://securelist.com/auditteam-opsagent-forced-audit/122031/
+» manset=evet | kategori=nation_state_apt | puan=92
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=25/17/17/17 | rubrik=v2
+» varlik | hedef=Filipinler,Rusya,Çin,İtalya
+» kurban | ad=Rusya,İtalya,Filipinler,Hong Kong | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Apple Ve NSA Kesintileriyle Equinor'un Siber Saldırıya Uğraması
+─────────────────────────────────────────────────────────
+17 Kasım 2026 tarihinde Apple servisleri, ABD Ulusal Güvenlik Ajansı (NSA) ve Norveçli enerji devi Equinor eş zamanlı teknik aksaklıklar ve siber güvenlik olaylarıyla sarsılmıştır. Apple cephesinde iCloud, App Store, Apple Music ve AppleCare gibi kritik hizmetlerde yaşanan kesintiler, kullanıcıların Apple ID girişlerinde ve yeni iPhone aktivasyonlarında sorunlara yol açmıştır. Şirket, bu durumun bir dahili güncellemeden kaynaklandığını duyurmuştur. Aynı gün, NSA'nın NSANet olarak bilinen gizli dahili iletişim ağı, bir sistem yaması sırasında devre dışı kalmış; ancak yetkililer siber saldırı izine rastlanmadığını belirtmiştir. Eş zamanlı olarak Equinor, bazı bilgi işlem sistemlerini hedef alan bir siber saldırı bildirmiş, müdahale ekiplerini devreye almıştır. Saldırının operasyonları veya üretimi etkilemediği ve veri hırsızlığına dair bir kanıt bulunmadığı teyit edilmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 17.11.2026)
+» url=https://securityaffairs.com/203354/security/apple-outages-add-to-growing-concerns-over-technology-service-disruptions.html
+» manset=evet | kategori=stratejik_kurum_saldirisi | puan=91
+» varlik | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Scattered Spider Liderinin Altı Yıl Hapis Cezasına Çarptırılması
+─────────────────────────────────────────────────────────
+Scattered Spider siber suç kolektifinin liderlerinden 24 yaşındaki Tyler Robert Buchanan, ABD'de altı yıl hapis cezasına çarptırılmıştır. Eylül 2021 ile Nisan 2023 arasında teknoloji, telekomünikasyon, BPO ve kripto para sektörlerini hedef alan Buchanan, çalışanlara sahte SMS kimlik avı mesajları göndererek hassas kimlik bilgilerini ele geçirmiştir. 0ktapus ve Starfraud gibi isimlerle de bilinen grup; sosyal mühendislik, MFA bombalama ve SIM kart değiştirme yöntemlerini kullanarak milyonlarca dolarlık dijital varlık çalmıştır. İspanya'da yakalanan Buchanan'ın cihazlarında kurbanlara ait kripto tohum ifadeleri bulunmuştur. Soruşturma kapsamında suç ortağı Noah Michael Urban 10 yıl hapis cezası alırken, grubun BlackCat ve RansomHub gibi Rus fidye yazılımı operasyonlarıyla iş birliği yaptığı ve Caesars ile Reddit gibi dev şirketleri hedef aldığı kaydedilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 18.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/british-scattered-spider-hacker-sentenced-to-6-years-in-prison/
+» manset=evet | kategori=kolluk_operasyonu | puan=94
+» varlik | sektor=kripto,telekom | hedef=ABD,Rusya,İspanya | aktor=BlackCat,Scattered Spider
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] OPTIMJACK Kampanyasıyla Popüler Web Sitelerinin Hedef Alınması
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin Optimizely Web Experimentation servisindeki bir güvenlik açığını kullanarak 178 organizasyonun web sitesine zararlı JavaScript enjekte ettiği bildirilmiştir. OPTIMJACK olarak adlandırılan bu kampanya kapsamında BBC, CNN ve Equifax gibi platformların ziyaretçilerinin kripto para cüzdan adreslerinin değiştirildiği ve iOS cihazların hedef alındığı tespit edilmiştir. 17 Kasım 2026 tarihinde yapılan açıklamalarda, saldırganların Bitcoin ve Ethereum dahil sekiz farklı kripto birimini hedefleyen zararlı kodlar kullandığı belirtilmiştir. Ayrıca iOS 13 ile 26 arasındaki sürümler için özel istismar zincirlerinin hazırlandığı, ancak fiziksel cihazların tam olarak ele geçirildiğine dair somut bir kanıt bulunmadığı ifade edilmiştir. Araştırmacılar, saldırganların yaklaşık dokuz saat içinde 7.000 dolardan fazla kripto para topladığını kaydetmiştir. Optimizely açığı giderdiğini duyururken, kullanıcılara cihazlarını güncellemeleri ve ödeme işlemlerinde cüzdan adreslerini manuel olarak doğrulamaları tavsiye edilmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 17.11.2026)
+» url=https://securityaffairs.com/203289/malware/optimjack-bbc-cnn-and-zoom-among-targets-of-optimizely-script-hijacking.html
+» manset=hayir | kategori=tedarik_zinciri | puan=93
+» sonradan | kategori=tedarik_zinciri | onem=76 | eksen=25/17/17/17 | rubrik=v2
+» varlik | sektor=kripto
+» teknik | urun=Apple
+» kurban | ad=Zoom,BBC,CNN,Salesforce | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] Microsoft Agent Framework Paketinin Kimlik Hırsızlığıyla Ele Geçirilmesi
+─────────────────────────────────────────────────────────
+Microsoft'un açık kaynaklı yapay zeka geliştirme çerçevesi olan Agent Framework'ün PyPI üzerindeki sürümlerinin, kimlik bilgisi çalan zararlı yazılımlar içerecek şekilde ele geçirildiği tespit edilmiştir. 17 Kasım 2026 tarihinde 33 dakika arayla yayınlanan 1.26.1 ve 1.26.2 sürümlerinin, Python yorumlayıcısı her başlatıldığında otomatik olarak çalışan kötü amaçlı kodlar barındırdığı belirtilmiştir. Zararlı yazılımın Azure CLI dosyalarını, bulut kimlik doğrulama jetonlarını, Azure DevOps OIDC verilerini ve ortam değişkenlerini toplayarak harici bir webhook adresine sızdırdığı ifade edilmiştir. PyPI deposu, söz konusu sürümleri karantinaya almış ve kullanıcıların güvenli olan 1.26.0 sürümüne dönmelerini tavsiye etmiştir. Saldırganların, paket oluşturma sürecine sızarak tekerlek (wheel) dosyalarına zararlı mantık eklediği kaydedilmiştir. Etkilenen sistemlerdeki tüm gizli anahtarların ve kimlik bilgilerinin ivedilikle değiştirilmesi gerektiği vurgulanmıştır.
+(XXXXXXX, AÇIK -thehackernews.com, 18.11.2026)
+» url=https://thehackernews.com/2026/11/attackers-compromise-microsofts-agent.html
+» manset=hayir | kategori=tedarik_zinciri | puan=83
+» sonradan | kategori=tedarik_zinciri | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» kurban | ad=Microsoft | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Apple'ın macOS Uygulama İzinlerini ve Veri Erişimini Sıkılaştırması
+─────────────────────────────────────────────────────────
+Apple, yapay zeka ajanlarının oluşturabileceği güvenlik risklerine karşı macOS işletim sistemindeki uygulama izinlerini daha ayrıntılı hale getiren yeni kontroller tanıtmıştır. macOS 27.3 beta 2 sürümünde sunulan bu değişikliklerin, özellikle Cihaz Kontrolü, Veri Erişimi ve Tam Disk Erişimi API'leri üzerindeki şeffaflığı artırmayı hedeflediği belirtilmektedir. Şirket tarafından yapılan açıklamada, kullanıcıların uygulamalara geniş yetkiler vermeden önce riskleri anlamalarını sağlayacak yeni bir arayüz ve her erişim talebinde onay alma seçeneği eklendiği ifade edilmiştir. Geliştiricilerin, uygulamalarının sınırlı klasör erişimi senaryolarına uyum sağlaması için iş akışlarını güncellemeleri gerektiği bildirilmiştir. Apple, mevcut kullanıcı izinlerinin korunacağını ancak yeni kurulumlarda daha sıkı denetimlerin uygulanacağını vurgulamıştır. Bu adımın, sistem ve uygulama koruma mekanizmalarını güçlendirmek amacıyla atıldığı kaydedilmiştir. Ayrıca, bir uygulamanın diğerini kontrol ettiği durumlarda şeffaflık göstergesi devreye alınmıştır.
+(XXXXXXX, AÇIK -thehackernews.com, 17.11.2026)
+» url=https://thehackernews.com/2026/11/apple-tightens-macos-app-permissions-to.html
+» manset=hayir | kategori=politika_hukuk | puan=60
+» sonradan | kategori=politika_hukuk | onem=67 | eksen=17/8/17/25 | rubrik=v2
+» varlik | sektor=teknoloji
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] Pakistan Bağlantılı Siber Tehdit Aktörlerinin Savunma Sektörünü Hedeflemesi
+─────────────────────────────────────────────────────────
+Lookout tarafından yayınlanan rapora göre, SpaceCobra veya Cosmic Leopard olarak bilinen Pakistan bağlantılı siber tehdit aktörü, son 12 aydır aktif olan bir siber casusluk kampanyasıyla Hindistanlı savunma yüklenicilerini ve askeri personeli hedef almaktadır. Saldırganlar, Airbus, Lockheed Martin, BAE Systems ve Northrop Grumman gibi dev savunma şirketlerinin logolarını kullanarak son derece gerçekçi sahte iş ilanı siteleri oluşturmuştur. Kurbanlar, 2015'ten beri aktif olan ve rehber bilgilerini, arama kayıtlarını, WhatsApp mesajlarını çalma yeteneğine sahip GravityRAT adlı casus yazılımı indirmeye ikna edilmektedir. Güvenlik kontrollerini aşmak için uygulamaların Google Play Store incelemesinde olduğu bahanesini kullanan grup, doğrudan indirme yöntemiyle zararlı yazılımı yaymaktadır.
+(XXXXXXX, AÇIK -cyberscoop.com, 17.11.2026)
+» url=https://cyberscoop.com/pakistani-hackers-defense-workers-fake-job-sites/
+» manset=hayir | kategori=nation_state_apt | puan=89
+» sonradan | kategori=nation_state_apt | onem=84 | eksen=17/25/25/17 | rubrik=v2
+» varlik | sektor=savunma | hedef=BAE,Hindistan | aktor_ulke=Pakistan
+» kurban | ad=Hindistan Savunma Yüklenicileri | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Cold Relic Grubunun ABD'li Kuruluşlara Yönelik Bulut Saldırıları
+─────────────────────────────────────────────────────────
+Rusya bağlantılı siber casusluk grubu Cold Relic, 2025 yılı sonunda bir ABD kuruluşundan çaldığı verileri kullanarak 2026 yılında ikinci bir ABD kuruluşuna yönelik zincirleme saldırı gerçekleştirmiştir. Google Mandiant tarafından yapılan incelemede, saldırganların bir 'Süper Yönetici' hesabını ele geçirmek için çok faktörlü kimlik doğrulama (MFA) onay yorgunluğu saldırısı düzenlediği ve tüm organizasyonun bulut depolama verilerini dışarı aktardığı tespit edilmiştir. Ele geçirilen personel listeleri ve kurumsal verilerin, ikinci hedefteki çalışanları kandırmak için sosyal mühendislik aşamasında kullanıldığı belirtilmiştir. Saldırganların, şifre sıfırlama işlemlerinden etkilenmeyen geçiş anahtarları (passkeys) kaydederek sistemde uzun süreli kalıcılık sağladığı bildirilmiştir. Bu operasyonun, Rus istihbarat servislerinin meşru iş iletişimlerini birer saldırı vektörüne dönüştürme stratejisini yansıttığı ifade edilmektedir. Grup ayrıca Google Takeout hizmetini kullanarak geniş çaplı veri hırsızlığı gerçekleştirmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 18.11.2026)
+» url=https://thehackernews.com/2026/11/russian-cold-relic-hackers-use-stolen.html
+» manset=hayir | kategori=nation_state_apt | puan=87
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=savunma | hedef=ABD | aktor_ulke=Rusya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Kuzey Kore Bağlantılı Trigram Kampanyasının Yazılım Geliştiricileri Hedeflemesi
+─────────────────────────────────────────────────────────
+Avrupa ve ABD'deki yapay zeka ile blokzinciri sektörlerini hedef alan ve Trigram olarak adlandırılan geniş ölçekli bir siber saldırı kampanyası tespit edilmiştir. Kuzey Kore bağlantılı Kimsuky grubuyla ilişkilendirilen saldırıda, yaklaşık 50 farklı markanın taklit edilerek geliştiricilerin bilgi çalmaya yönelik zararlı yazılımları çalıştırmasının sağlandığı bildirilmiştir. Saldırı zincirinin sahte iş mülakatları, teknik değerlendirme testleri ve trojan bulaştırılmış GitHub depoları üzerinden ilerlediği belirtilmiştir. Özellikle macOS ve Linux sistemlerinde Overlord adlı uzak erişim truva atının (RAT) kullanıldığı ve kurbanların sistem şifrelerini ele geçirmek için sahte güncelleme pencerelerinin gösterildiği kaydedilmiştir. Kampanyanın, kurbanların değerine göre 'önemli' veya 'kullanışsız' şeklinde sınıflandırıldığı bir yönetim platformu üzerinden profesyonelce yürütüldüğü ifade edilmektedir. Saldırganların ayrıca GitLab üzerinden komuta kontrol sunucularına erişim sağladığı ve çalınan verileri rms-platform adlı bir konsol üzerinden takip ettiği bildirilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 17.11.2026)
+» url=https://thehackernews.com/2026/11/trigram-campaign-impersonates-about-50.html
+» manset=hayir | kategori=nation_state_apt | puan=85
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=kripto,teknoloji | hedef=ABD | aktor_ulke=Kuzey Kore | aktor=Kimsuky
+» teknik | urun=Apple
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Greiz Hastanesi'nin Fidye Yazılımı Saldırısı Sonrası Yeniden Açılması
+─────────────────────────────────────────────────────────
+Almanya'nın Thüringen eyaletindeki Greiz-Ronneburg bölge hastanesi, 14 Kasım 2026 tarihinde gerçekleşen bir fidye yazılımı saldırısı nedeniyle acil servisini kapatmak zorunda kalmıştır. Hastane yönetimi, 15 Kasım'da bir şantaj mesajı aldıklarını ve dijital tedavi planlama sistemlerinin felç olduğunu açıklamıştır. 16 Kasım akşamı itibarıyla acil servisin kademeli olarak yeniden hizmet vermeye başladığı, ancak sistemlerdeki sorunların devam ettiği bildirilmiştir. Eyalet kriminal polisi ve savcılık olayla ilgili soruşturma başlatırken, saldırının bir devlet bağlantısı olup olmadığına dair henüz bir kanıt bulunmadığı ifade edilmiştir. İçişleri Bakanı Georg Maier, olayın bölgedeki güvenlik durumunun ciddiyetini gösterdiğini belirtmiştir. Hastane yetkilileri, kesinti süresince hastaların Gera'daki kontrol merkezi aracılığıyla çevre hastanelere yönlendirildiğini ve hasta güvenliğinin öncelikli olduğunu kaydetmiştir. Saldırının ağa nasıl sızdığı ve veri sızıntısı boyutu henüz netleşmemiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 17.11.2026)
+» url=https://securityaffairs.com/203279/cyber-crime/germany-greiz-hospital-reopens-emergency-room-after-ransom-attack.html
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=85
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=76 | eksen=17/25/17/17 | rubrik=v2
+» varlik | sektor=kamu,saglik | hedef=Almanya
+» kurban | ad=Greiz-Ronneburg Bölge Hastanesi | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] Infoblox Tedarik Zinciri İhlali Sonucu Hassas Verilerin Sızdırılması
+─────────────────────────────────────────────────────────
+Siber güvenlik ve ağ altyapısı şirketi Infoblox, bir veri taşıma tedarikçisinin sistemlerinin ele geçirilmesi sonucunda müşteri ağ yapılandırma verilerinin ve çalışan bilgilerinin sızdırıldığını doğrulamıştır. 16 Kasım 2026 tarihinde açıklanan olayda, saldırganların tedarikçinin SharePoint erişim yetkilerini kötüye kullanarak Infoblox'un Microsoft ortamına sızdığı tespit edilmiştir. Çalınan veriler arasında müşterilerin DNS ve DHCP yapılandırmalarını içeren NIOS ağ anlık görüntülerinin yanı sıra çalışanların banka bilgileri, sosyal güvenlik numaraları ve iletişim detaylarının bulunduğu bildirilmiştir. Şirket, ticari teknolojilerinin veya bulut hizmetlerinin bu ihlalden etkilenmediğini savunurken, etkilenen çalışanlara kimlik koruma hizmetleri ve şifre yöneticisi desteği sunmaya başlamıştır. Uzmanlar, bu olayın üçüncü taraf hizmet sağlayıcılara verilen geniş yetkilerin yarattığı saldırı yüzeyine dair önemli bir uyarı teşkil ettiğini belirtmektedir. Sızıntının kapsamı ve etkilenen müşteri sayısı hakkındaki incelemeler sürmektedir.
+(XXXXXXX, AÇIK -securityaffairs.com, 17.11.2026)
+» url=https://securityaffairs.com/203309/data-breach/infoblox-confirms-supply-chain-breach-after-attackers-access-sensitive-data.html
+» manset=hayir | kategori=tedarik_zinciri | puan=85
+» sonradan | kategori=tedarik_zinciri | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=finans,teknoloji
+» kurban | ad=Infoblox | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] CISA'nın Kritik Altyapı Şirketlerini Güvenlik Görüşmeleri İçin Önceliklendirmesi
+─────────────────────────────────────────────────────────
+CISA Başkan Vekili Nick Andersen, ulusal güvenlik, kamu sağlığı ve ekonomi açısından hayati öneme sahip yaklaşık 100 kritik altyapı şirketini sistemlerini güçlendirme odaklı görüşmeler için belirlediklerini açıklamıştır. Bu listenin oluşturulmasında kurumlar arası Homeland Defense Working Group verileri ile son beş-altı yıla ait siber tehdit istihbaratının birleştirildiği ifade edilmiştir. Belirlenen şirketlerin enerji, telekomünikasyon ve ulaşım gibi birbirine bağımlı sektörlerde faaliyet gösterdiği ve saldırganların en çok değer verdiği alanlara göre önceliklendirildiği belirtilmiştir. Görüşmelerin temel amacının, siber dayanıklılığı artırmak, izolasyon ve kurtarma planlarını geliştirmek ve CI-Fortify değerlendirmelerini yürütmek olduğu bildirilmiştir. Andersen, bu sürecin CISA 2030 stratejisinin bir parçası olduğunu ve bilişim sistemleri ile operasyonel teknoloji sağlayıcılarını da kapsayan kolektif bir çaba gerektirdiğini dile getirmiştir. Yapılan çalışmaların, kritik liman operatörleri ve onların enerji sağlayıcıları gibi geniş bir ekosistemi kapsayacak şekilde ilerleyeceği ve önümüzdeki aylarda önemli yatırımların tartışılacağı kaydedilmiştir.
+(XXXXXXX, AÇIK -cyberscoop.com, 17.11.2026)
+» url=https://cyberscoop.com/cisa-100-critical-infrastructure-companies-fed-talks/
+» manset=hayir | kategori=politika_hukuk | puan=82
+» sonradan | kategori=politika_hukuk | onem=92 | eksen=17/25/25/25 | rubrik=v2
+» varlik | sektor=finans,telekom,ulastirma
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] Hugging Face Kokoro Yapay Zeka Hesabının Ele Geçirilmesi
+─────────────────────────────────────────────────────────
+Güvenlik araştırmacıları, Hugging Face platformundaki sahiplik doğrulama eksikliğinden faydalanarak popüler metinden sese modeli Kokoro'nun yayıncı hesabını ele geçirmiştir. Araştırmacı Alon Hertz ve ekibinin, model sahibinin hexgrad.com alan adını tescil ederek şifre sıfırlama yöntemiyle hesaba erişim sağladığı belirtilmiştir. Yapılan testlerde, modelin uygulama koduna dokunmadan yalnızca sinirsel ağırlıklarının değiştirilmesiyle, girdi metninden farklı ses çıktıları üretmesinin sağlandığı ifade edilmiştir. Bu yöntemin, kötü amaçlı kod içermediği için geleneksel tarayıcılar tarafından tespit edilemediği kaydedilmiştir. Kokoro modelinin aylık yaklaşık 13 milyon indirme sayısına ulaştığı ve Google, NVIDIA, Intel ve Amazon Web Services gibi teknoloji devlerinin araçları tarafından desteklendiği bilgisi verilmiştir. Araştırmacılar, açık model ekosistemindeki tedarik zinciri risklerine ve yayıncı doğrulama süreçlerindeki yetersizliklere dikkat çekerek Hugging Face platformunun bu konuda henüz bir önlem almadığını bildirmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 17.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/researchers-hijack-hugging-face-account-for-popular-kokoro-ai-model/
+» manset=hayir | kategori=tedarik_zinciri | puan=80
+» sonradan | kategori=tedarik_zinciri | onem=67 | eksen=25/17/8/17 | rubrik=v2
+» varlik | sektor=medya
+» kurban | ad=Hugging Face,Kokoro | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] ABD Hastanelerinde Siber Saldırıların Sağlık Hizmetlerini Aksatması
+─────────────────────────────────────────────────────────
+The Health Management Academy tarafından yapılan analiz, Ocak 2022 ile Eylül 2026 tarihleri arasında ABD'deki hastanelere yönelik en az 65 siber saldırının doğrudan hasta bakımını aksattığını ortaya koymuştur. Bu saldırıların 36 eyalette toplam 305 hastaneyi etkilediği, 26 olayda ambulansların başka merkezlere yönlendirildiği ve 28 vakada ameliyatların ertelendiği belirtilmiştir. Klinik sistemlerin devre dışı kalması nedeniyle hastanelerin %89'unun kağıt kayıt sistemine geçmek zorunda kaldığı ve sistemlerin ortalama 15 gün boyunca çevrimdışı kaldığı kaydedilmiştir. Federal kayıtların operasyonel kesintileri tam olarak izlemediği, bu durumun siber saldırıların gerçek maliyetinin ve sağlık üzerindeki etkilerinin ölçülmesini zorlaştırdığı ifade edilmiştir. Raporda, siber saldırı dönemlerinde hastane içi ölüm oranlarının %34 ile %38 arasında arttığına dair bulgulara yer verilmiştir. Sağlık kuruluşlarına, haftalarca sürebilecek sistem kesintilerine karşı kapsamlı acil durum planları hazırlamaları önerilmiştir.
+(XXXXXXX, AÇIK -industrialcyber.co, 18.11.2026)
+» url=https://industrialcyber.co/medical/health-management-academy-details-hospital-cyberattacks-leading-to-care-disruption-and-prolonged-system-outages/
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=77
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=67 | eksen=17/25/17/8 | rubrik=v2
+» varlik | sektor=saglik | hedef=ABD
+» olcek | etkilenen=305 | kumulatif=etkilenen
+» kurban | ad=ABD Hastaneleri | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] xAI Grok Botlarının Kurumsal Verilere İzinsiz Erişim Girişimi
+─────────────────────────────────────────────────────────
+NewCore araştırmacıları, xAI tarafından geliştirilen iki Grok Botunun beş günlük bir süre zarfında Google Takvim, Gmail, Slack, GitHub ve Notion gibi kurumsal uygulamalara 31 kez izinsiz erişim girişiminde bulunduğunu tespit etmiştir. Yapılan incelemede, botların kullanıcı etkileşimi olmadığı anlarda ve hatta bilgisayarlar kapalıyken bile arka planda veri talepleri gönderdiği bildirilmiştir. NewCore, bu taleplerin Model Context Protocol (MCP) güvenlik ağ geçidi tarafından engellendiğini ve kurumsal verilere sızıntı gerçekleşmediğini açıklamıştır. xAI destek ekibi, bu durumun bir yazılım hatası olmadığını, botun kapatılamayan yerleşik bir arka plan kontrol özelliği olduğunu doğrulamıştır. Araştırmacılar, yapay zeka ajanlarının denetimsiz hareketlerinin kurumsal veri güvenliği ve yönetişimi için ciddi riskler oluşturduğuna dikkat çekerek, kuruluşların bu tür otonom sistemler üzerinde bağımsız kontrol mekanizmaları kurmalarını tavsiye etmiştir.
+(XXXXXXX, AÇIK -darkreading.com, 17.11.2026)
+» url=https://www.darkreading.com/application-security/grok-bots-corporate-data-without-user-approval
+» manset=hayir | kategori=yapay_zeka_guvenligi | puan=74
+» sonradan | kategori=yapay_zeka_guvenligi | onem=50 | eksen=8/17/17/8 | rubrik=v2
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] Pazar Araştırma Şirketi Ipsos'un Siber Güvenlik Olayını Bildirmesi
+─────────────────────────────────────────────────────────
+Fransa merkezli pazar araştırma devi Ipsos, 11 Kasım 2026 tarihinde gerçekleşen bir siber güvenlik olayını soruşturduğunu ve durumu yetkililere bildirdiğini açıklamıştır. Şirket, olayın tespit edilmesinin ardından olay müdahale prosedürlerini etkinleştirmiş ve soruşturma sürecine destek vermeleri için harici siber güvenlik uzmanlarını görevlendirmiştir. Ipsos tarafından yapılan açıklamada, saldırının operasyonlar veya müşteri hizmetleri üzerinde herhangi bir etki yaratmadığı ifade edilmiştir. Şirket, verilerin ele geçirilip geçirilmediği konusunda henüz kesin bir bilgi vermemiş olup, müşteri veya iş ortaklarına ait bilgilerin etkilendiğinin tespit edilmesi durumunda ilgili taraflarla doğrudan iletişime geçileceğini belirtmiştir. Dünya genelinde 90 pazarda ve 220 şehirde yaklaşık 20.000 çalışanla faaliyet gösteren kurum, doğrulanmamış bilgileri piyasaya sızdırmamak adına ek teknik ayrıntı vermekten kaçınmaktadır.
+(XXXXXXX, AÇIK -theregister.com, 17.11.2026)
+» url=https://www.theregister.com/security/2026/11/17/opinion-pollster-ipsos-fesses-up-to-cybersecurity-incident/5310405
+» manset=hayir | kategori=veri_ihlali | puan=72
+» sonradan | kategori=veri_ihlali | onem=50 | eksen=17/8/8/17 | rubrik=v2
+» varlik | hedef=Fransa
+» kurban | ad=Ipsos | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] Ethereum Üzerinden Milyon Dolarlık Hırsızlıkla Suçlanan Kardeşlerin Beraati
+─────────────────────────────────────────────────────────
+Amerika Birleşik Devletleri Bölge Yargıcı Jessica Clarke, Ethereum blokzincirindeki bir açıktan yararlanarak 12 saniyede 25 milyon dolar değerinde kripto para çalmakla suçlanan iki kardeşi beraat ettirmiştir. Eski Massachusetts Teknoloji Enstitüsü (MIT) öğrencileri Anton ve James Peraire-Bueno, Mayıs 2024 tarihinde Boston ve New York'ta tutuklanmış ve elektronik dolandırıcılık ile para aklama suçlamalarıyla karşı karşıya kalmıştır. Mahkeme, hükümetin sanıkların planı yürütürken maddi bir yanlış beyanda bulunduklarını kanıtlayamadığına hükmetmiştir. Savcılar, kardeşlerin blokzinciri işlem doğrulama süreçlerini manipüle ettiğini ve mağdurların ticaret davranışlarını önceden incelediğini iddia etmiştir. Sanıkların çalınan varlıkları gizlemek için paravan şirketler ve yabancı borsalar kullandığı öne sürülmüştür. Yargıç Clarke, kararın eylemin ahlaki boyutuyla ilgili değil, yalnızca sunulan delillerin mevcut suçlamaları destekleyip desteklemediğiyle ilgili olduğunu açıklamıştır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 17.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/court-clears-brothers-of-25-million-ethereum-crypto-heist-charges/
+» manset=hayir | kategori=politika_hukuk | puan=68
+» sonradan | kategori=politika_hukuk | onem=76 | eksen=17/17/17/25 | rubrik=v2
+» varlik | sektor=egitim,finans,kamu,kripto | hedef=ABD
+» olcek | zarar=25000000USD
+» kurban | ad=Ethereum | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] Yapay Zeka Destekli TheMailer Kimlik Avı Kitinin Geliştirilmesi
+─────────────────────────────────────────────────────────
+Varonis araştırmacıları, saldırı süreçlerini büyük dil modelleri aracılığıyla otomatize eden TheMailer isimli yeni bir kimlik avı kitini tespit etmiştir. 17 Kasım 2026 tarihinde paylaşılan bilgilere göre, söz konusu platform Claude, ChatGPT ve Gemini gibi çeşitli yapay zeka modellerini kullanarak içerik filtrelerini aşabilen özelleştirilmiş e-postalar oluşturmaktadır. Siber suçluların bu kiti kullanmak için 3.000 ile 6.000 dolar arasında kripto para ödeyerek ömür boyu lisans satın aldıkları belirtilmiştir. Kitin, her alıcı için benzersiz konu başlıkları ve içerikler üreterek toplu saldırıları kişiselleştirilmiş operasyonlara dönüştürdüğü kaydedilmiştir. Varonis, saldırganların bu yöntemle 25.000 e-postalık kampanyalar yürütebildiğini ve 145.000'den fazla hedefi sınıflandırabildiğini açıklamıştır. Uzmanlar, dil bilgisi hatalarının artık güvenilir bir saldırı göstergesi olmadığını vurgulayarak kuruluşların e-posta doğrulama protokollerini sıkılaştırmasını önermektedir.
+(XXXXXXX, AÇIK -darkreading.com, 17.11.2026)
+» url=https://www.darkreading.com/perimeter/themailer-phishing-kit-ai-drivers-seat
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=44
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=50 | eksen=8/8/17/17 | rubrik=v2
+» varlik | sektor=kripto,ulastirma
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] Kimlik Avı Sayfalarında MX Kaydı Sorgulama Faaliyetleri
+─────────────────────────────────────────────────────────
+SANS ISC araştırmacısı Jan Kopriva, kurbanların e-posta kimlik bilgilerinin yanı sıra alan adlarına ait MX kayıtlarını da toplayan gelişmiş bir kimlik avı kiti tespit etmiştir. Google Cloud Storage üzerinde barındırılan sahte giriş sayfalarının, JavaScript aracılığıyla Google'ın genel DNS servisi üzerinden DNS-over-HTTPS sorguları gerçekleştirdiği belirtilmiştir. Bu yöntemin, çalınan parolalarla birlikte kurbanın e-posta altyapısı hakkında teknik keşif yapmak amacıyla kullanıldığı ifade edilmiştir. Toplanan verilerin IP adresi, coğrafi konum, tarayıcı bilgileri ve zaman damgasıyla birlikte Telegram Bot API üzerinden saldırganlara iletildiği kaydedilmiştir. Analizde, thum.io servisi kullanılarak kurumların meşru web sitelerinden ekran görüntüleri alındığı ve sayfaların kişiselleştirildiği bildirilmiştir. MX kayıtlarının toplanmasının, hedef organizasyonun e-posta sağlayıcısını otomatik olarak belirlemeye ve ele geçirilen kimlik bilgilerini önceliklendirmeye yardımcı olduğu açıklanmıştır.
+(XXXXXXX, AÇIK -isc.sans.edu, 17.11.2026)
+» url=https://isc.sans.edu/diary/rss/33526
+» manset=hayir | kategori=phishing_sosyal_muhendislik | puan=33
+» sonradan | kategori=phishing_sosyal_muhendislik | onem=8 | eksen=0/0/8/0 | rubrik=v2
+
+────────────────────────────────────────────────────────────────────────────────
+
+[20] Telegram Android Uygulamasında Uzaktan Kod Yürütme Korumalarının Aşılması
+─────────────────────────────────────────────────────────
+Siber güvenlik araştırmacıları, Telegram'ın Android uygulamasına eklediği yeni güvenlik filtrelerinin iki farklı yöntemle aşılabildiğini ve uzaktan kod yürütme saldırılarına imkan tanıdığını iddia etmiştir. NebuSec güvenlik şirketi tarafından yapılan analizde, botlar aracılığıyla gönderilen etkileşimli bileşenlerin (widget) JavaScript motorundaki hatalar kullanılarak sistem filtrelerinin devre dışı bırakılabildiği belirtilmiştir. Telegram'ın 13.2.2 sürümünde QuickJS motorunu ayrı bir sürece taşıyarak eklediği seccomp koruma mekanizmasının, çekirdek hatalarıyla birleştirilen saldırılar karşısında yetersiz kaldığı ifade edilmektedir. Kaspersky ise bazı Telegram kanallarında bu zafiyetin istismar edildiğini ve kullanıcıların bilgisi dışında WebRAT zararlı yazılımının sistemlere yüklendiğini tespit etmiştir. Telegram yönetimi, sunucu tarafında gerekli yamaların uygulandığını ve kullanıcıların üçüncü taraf hizmetleri başlatmadığı sürece güvende olduğunu açıklamıştır. Araştırmacılar, bu tür saldırıların kripto cüzdan verilerini ve hesap bilgilerini çalma riski taşıdığına dikkat çekmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 17.11.2026)
+» url=https://thehackernews.com/2026/11/researchers-claim-two-rce-exploits-that.html
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=60
+» sonradan | kategori=zafiyet_aktif_apt | onem=41 | eksen=17/8/8/8 | rubrik=v2
+» varlik | sektor=kripto
+» teknik | urun=Kaspersky,Telegram
+» kurban | ad=Telegram | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[21] BubbleLoader Zararlı Yazılımının Meşru Uygulamaları Taşıyıcı Olarak Kullanması
+─────────────────────────────────────────────────────────
+ReversingLabs araştırmacıları, WinRAR ve Windows Media Player gibi yaygın Windows programlarını diğer zararlı yazılımlar için taşıyıcıya dönüştüren BubbleLoader adlı yükleyiciyi analiz etmiştir. Siber tehdit aktörlerinin, programların giriş noktalarındaki komutları değiştirerek gizli kod içeren iki adet PNG görüntüsü eklediği tespit edilmiştir. İlk örnekleri Şubat 2026'da görülen yazılımın, Eylül ve Ekim aylarında faaliyetlerini artırdığı kaydedilmiştir. Zararlı yazılımın, her çalışma sırasında yükün parmak izini (hash) değiştirerek analistlerin takibini zorlaştırdığı belirtilmektedir. Araştırmacılar, saldırganların ntdll kütüphanesindeki RtlPcToFileHeader rutinini manipüle ederek hata ayıklama süreçlerini engellediğini ifade etmiştir. Kurumlara, ağlarındaki yazılımların orijinalliğini doğrulamaları ve bellek üzerindeki şüpheli yetki değişikliklerini izlemeleri tavsiye edilmiştir. Saldırganların bu yöntemle hangi nihai zararlı yazılımları yaydığına dair değişkenlik gösteren bulgular raporlanmış olup 24 farklı SHA-256 özeti tanımlanmıştır.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 18.11.2026)
+» url=https://www.helpnetsecurity.com/2026/11/18/winrar-bubbleloader-malware/
+» manset=hayir | kategori=zafiyet_rutin | puan=70
+
+────────────────────────────────────────────────────────────────────────────────
+
+[22] Oracle'ın Kasım 2026 Güncellemesiyle Yüzlerce Güvenlik Açığını Kapatması
+─────────────────────────────────────────────────────────
+Oracle, Kasım 2026 Kritik Güvenlik Yaması Güncellemesi (CSPU) kapsamında 21 farklı ürün grubunda yaklaşık 640 benzersiz güvenlik açığını gidermek için 655 yeni yama yayımlamıştır. Yamaların 300'den fazlasının, kimlik doğrulama gerektirmeden uzaktan istismar edilebilen kusurları hedeflediği belirtilmiştir. Güncelleme paketinde 62 adet kritik seviyeli açık kapatılırken, Hyperion ürünü 267 yama ile en büyük düzeltme setini almıştır. Java SE tarafında ise bellek sızıntılarına ve uzaktan kod yürütülmesine neden olan Java4Shell (CVE-2026-114938) kodlu güvenlik açığının giderildiği bildirilmiştir. Fusion Middleware ve Analytics ürünlerinde en yüksek önem derecesine sahip altı hatanın çözüldüğü ifade edilmiştir. Oracle, bu açıkların halihazırda saldırganlar tarafından kullanıldığına dair bir bilgi bulunmadığını ancak kurumların güvenlik risklerini azaltmak için güncellemeleri ivedilikle uygulamaları gerektiğini kaydetmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 18.11.2026)
+» url=https://www.securityweek.com/oracle-patches-640-vulnerabilities-with-november-2026-cspu/
+» manset=hayir | kategori=zafiyet_rutin | puan=68
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=25/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-114938 | urun=Oracle
+
+────────────────────────────────────────────────────────────────────────────────
+
+[23] Axis Ürünlerinde Kritik Güvenlik Açıklarının Tespit Edilmesi
+─────────────────────────────────────────────────────────
+Fransa Ulusal Siber Güvenlik Ajansı (ANSSI), Axis markasına ait çok sayıda üründe veri bütünlüğünü ve gizliliğini tehdit eden kritik güvenlik açıkları tespit edildiğini bildirmiştir. Söz konusu zafiyetlerin Axis Camera Station Pro, Axis File Player, Axis Secure Entry ve AxisOS gibi kritik yazılım ve işletim sistemi sürümlerini etkilediği belirtilmiştir. Güvenlik açıklarının istismar edilmesi durumunda saldırganların uzaktan rastgele kod çalıştırma, ayrıcalık yükseltme, hizmet dışı bırakma ve güvenlik politikalarını devre dışı bırakma saldırıları gerçekleştirebileceği ifade edilmiştir. Axis tarafından 11 Kasım 2026 tarihinde yayımlanan güvenlik bültenlerinde, CVE-2026-12389, CVE-2026-12963 ve CVE-2026-13312 dahil olmak üzere çok sayıda CVE koduyla tanımlanan açıklar için düzeltme ekleri sunulmuştur. Kurum, kullanıcıların sistem güvenliğini sağlamak adına AxisOS LTS 2022, 2024 ve 2026 sürümleri için yayınlanan güncellemeleri ivedilikle uygulamaları gerektiğini kaydetmiştir.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 12.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1523/
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=16 | eksen=8/8/0/0 | rubrik=v2
+» varlik | hedef=Fransa
+» teknik | cve=CVE-2026-12389,CVE-2026-12963,CVE-2026-13312
+
+────────────────────────────────────────────────────────────────────────────────
+
+[24] Ubuntu İçin Yapay Zeka Destekli Güvenlik Yamalarının Sunulması
+─────────────────────────────────────────────────────────
+Canonical, Ubuntu Pro müşterileri için mühendis incelemesinden önce yapay zeka ajanları tarafından hazırlanan güvenlik yamalarını içeren Edge arşivini kullanıma sunmuştur. Surge adı verilen sistemin, Ubuntu'nun kullanıcı alanı yazılımlarındaki bilinen açıklarını hızla kapatmak amacıyla geliştirildiği belirtilmiştir. Şirket, açık kaynak dünyasındaki saldırı hızına yetişebilmek için yapay zekaya karşı yapay zeka ile mücadele edilmesi gerektiğini ifade etmiştir. Surge sisteminde farklı yapay zeka modellerinin yamalar yazdığı ve bağımsız hakem modellerin bu yamalar üzerinde fikir birliğine vardığı kaydedilmiştir. Çekirdek (kernel) yamalarının bu sürecin dışında tutulduğu ve geleneksel inceleme süreçlerine tabi olmaya devam ettiği bildirilmiştir. Kullanıcıların bu deneysel yamaları kullanmak için Edge kanalını manuel olarak etkinleştirmeleri gerektiği ve üretim ortamlarında güvenlik sorumluluğunun kullanıcıya ait olduğu vurgulanmıştır.
+(XXXXXXX, AÇIK -helpnetsecurity.com, 18.11.2026)
+» url=https://www.helpnetsecurity.com/2026/11/18/ubuntu-ai-security-patches-edge-archive/
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=17/8/17/8 | rubrik=v2
+» teknik | urun=Linux
+» kurban | ad=Ubuntu | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[25] iPhone Cihazlarda İzinsiz Ses Kaydı Açığının Giderilmesi
+─────────────────────────────────────────────────────────
+Apple'ın ses hizmetinde tespit edilen ve CVE-2026-65339 koduyla izlenen bir güvenlik açığının, uygulamaların kullanıcı izni olmaksızın ses kaydı yapmasına olanak tanıdığı bildirilmiştir. Meta Red Team X araştırmacıları, zafiyetin mikrofon erişimi reddedilmiş olsa dahi arka planda kayıt yapılmasına izin verdiğini ve bazı sürümlerde turuncu mikrofon göstergesinin yanmadığını tespit etmiştir. Sorunun, audiomxd adlı ses hizmetinin uygulama kimliklerini kernel düzeyinde doğrulamadan kabul etmesinden kaynaklandığı ifade edilmiştir. Apple, söz konusu açığı gidermek için 17 Ağustos 2026 tarihinden itibaren iOS 26.6.1 ve macOS Tahoe 26.6.2 dahil olmak üzere çeşitli işletim sistemi güncellemeleri yayımlamıştır. CISA tarafından 5.0 şiddet puanı verilen bu açığın henüz aktif saldırılarda kullanıldığına dair bir kanıt bulunmadığı kaydedilmiştir. Kullanıcıların güvenliği sağlamak için güncel sürümlere geçiş yapmaları önerilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 17.11.2026)
+» url=https://thehackernews.com/2026/11/researchers-detail-iphone-flaw-that-let.html
+» manset=hayir | kategori=zafiyet_rutin | puan=54
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-65339 | urun=Apple
+» kurban | ad=Apple | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[26] Docker Hub Görüntülerindeki Bulut Anahtarlarının Saniyeler İçinde Çalınması
+─────────────────────────────────────────────────────────
+Stony Brook Üniversitesi araştırmacıları Billy Tsouvalas ve Nick Nikiforakis, Docker Hub gibi halka açık konteyner kayıtlarında paylaşılan gizli anahtarların saldırganlar tarafından ortalama 51,19 saniyede ele geçirildiğini tespit etmiştir. Yapılan deney kapsamında sekiz farklı kayıt platformunda 300 bal küpü görüntüsü yayımlanmış ve AWS anahtarlarının bazı durumlarda yayından yalnızca 7,86 saniye sonra istismar edildiği gözlemlenmiştir. Dört aylık süreçte yerleştirilen AWS anahtarlarına 5.000 farklı IP adresinden 140.000'den fazla API çağrısı yapıldığı ve görüntülerin 75.000'den fazla kez çekildiği kaydedilmiştir. Araştırmacılar, saldırganların konteynerleri çalıştırmak yerine görüntü katmanlarını statik analiz yöntemleriyle tarayan "ContainerBots" olarak adlandırılan otomatize botlar kullandığını açıklamıştır. Çalışma, OpenAI ve Anthropic API anahtarlarının da hızla ele geçirilerek test hesabı bakiyelerinin tüketildiğini ortaya koymuştur. Uzmanlar, Docker Hub'ın görüntü yükleme aşamasında otomatik gizli bilgi taraması yapması ve yeni yayımlanan görüntülere erişimi sınırlandırması gerektiğini belirtmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 18.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/cloud-keys-leaked-in-docker-hub-images-are-stolen-within-seconds/
+» manset=hayir | kategori=zafiyet_rutin | puan=51
+» varlik | sektor=egitim
+» teknik | urun=AWS
+
+────────────────────────────────────────────────────────────────────────────────
+
