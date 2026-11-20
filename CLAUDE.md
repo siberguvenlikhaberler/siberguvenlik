@@ -1469,3 +1469,19 @@ Regresyon: `tests/test_feed_gurultu.py`, `tests/test_zafiyet_son_care.py`.
   `mukerrer_golden`, `zincir_olc` birebir aynı. Aynı gün tersinelik katmanı
   gövdeye inen manşeti `remaining` de taşırken ikinci kez yazıyordu (değişmez
   denetimi yakalamıştı) — düzeltildi.
+
+### YAMALANMIŞ ZAFİYET BAŞKA KATEGORİ KILIĞINDA MANŞETE ÇIKAMAZ (2026-11-20)
+20 Kasım'da WinGet moderasyon aracındaki yamalanmış, istismar kanıtı olmayan
+açık `tedarik_zinciri` etiketiyle 94 puan alıp ikinci manşet oldu; "zafiyet
+KRİTİK 3'e giremez" kuralı kategoriye baktığı için devre dışı kaldı. Yönetmen
+onu Cold Relic ile değiştirdi, Cold Relic 18 Kasım tekrarı olarak düştü ve
+WinGet geri döndü. `_enforce_apt_attribution` artık girişte (başlık + ilk 150
+sözcük) hem yama hem varsayım ("could have ...") ifadesi taşıyan ve gerçek
+olay izi (istismar, ihlal, kurban) OLMAYAN haberi `zafiyet_rutin`e indirir
+(`_yamali_varsayimsal_zafiyet`). ÖLÇÜLDÜ (gövde deposu, 2.129 kayıt): kural 6
+kayda uyuyor, 5'i zaten zafiyet, tek istisna WinGet. Daha geniş "zafiyet
+sözcüğü var, saldırı sözcüğü yok" kuralı 73 kayda uyup politika/yapay zekâ
+haberlerini yakaladı — reddedildi. Arşivdeki manşet taraması (264 manşet,
+23 Ağu → 20 Kas) aynı sınıftan 2 olası vaka daha gösteriyor (11 Eki Chromium
+typosquatting, 30 Ağu Claude Code); ikisinin gövdesi depoda olmadığı için
+kurala uyup uymadıkları ölçülemedi. Regresyon: `tests/test_yamali_zafiyet.py`.

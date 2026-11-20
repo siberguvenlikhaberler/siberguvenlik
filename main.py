@@ -3664,6 +3664,36 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                   f"(kurban/kampanya/satıcı) → casus_yazilim → zafiyet_rutin "
                   f"(kritik3 dışı)")
 
+        # ── YAMALANMIŞ VARSAYIMSAL ZAFİYET, BAŞKA KATEGORİ KILIĞINDA ──────
+        # "Zafiyet haberi KRİTİK 3'e giremez" kuralı (2026-09-28) KATEGORİYE
+        # bakar; kategori yanlışsa kural da devre dışı kalır. ÖLÇÜLDÜ
+        # (2026-11-20): "A single pull request could have handed attackers
+        # the keys to Microsoft's software supply chain" — araştırmacıların
+        # bulduğu, YAMALANMIŞ, istismar kanıtı OLMAYAN WinGet açığı —
+        # `tedarik_zinciri` etiketiyle 94 puan alıp ikinci manşet oldu.
+        # Kurban yok, saldırı yok; haber bir zafiyet bülteniydi.
+        #
+        # Kural DAR tutuldu: girişte hem "yamalandı" hem "...yapabilirdi"
+        # (varsayım) olmalı, gerçek bir olay izi OLMAMALI. Gövde deposunda
+        # (2026-10-08 → 11-20, 2.129 kayıt) kural 9 kayda uyuyor: 8'i zaten
+        # zafiyet kategorisinde, tek istisna WinGet. Daha geniş "zafiyet
+        # sözcüğü var, saldırı sözcüğü yok" denemesi 73 kayda uyup politika
+        # ve yapay zekâ haberlerini yakaladı — reddedildi.
+        for aid, rec in records.items():
+            if rec.get('kat') in ZAFIYET_KATEGORILERI or \
+                    rec.get('kat') in KRITIK3_HARIC_KATEGORILER:
+                continue
+            a = articles_by_id.get(aid, {})
+            if not self._yamali_varsayimsal_zafiyet(
+                    a.get('title', ''), a.get('full_text', '')):
+                continue
+            eski = rec.get('kat')
+            rec['kat'] = 'zafiyet_rutin'
+            rec['toplam'] = self._record_total(rec)
+            downgraded.add(aid)
+            print(f"   🛡️  ID {aid}: yamalanmış, istismar kanıtı olmayan "
+                  f"zafiyet → {eski} → zafiyet_rutin (kritik3 dışı)")
+
         # ── nation_state_apt DOĞRULAMASI ──────────────────────────────────
         # nation_state_apt, KATEGORI_ONCELIK'teki EN YÜKSEK öncelik. Yani aynı
         # puanda bu etiket beraberliği tek başına bozuyor; artık manşetin İÇ
@@ -3722,6 +3752,43 @@ document.addEventListener('DOMContentLoaded', initDragFile);
 
     # Kanıtın aranacağı giriş uzunluğu (başlık + gövde başı).
     CASUS_GIRIS_SOZCUK = 60
+
+    # Yamalanmış varsayımsal zafiyet sinyalleri (bkz. _enforce_apt_attribution).
+    _YAMALANDI_RE = re.compile(
+        r"\b(?:now[- ]patched|(?:has|have) (?:since |now )?been (?:patched|fixed)"
+        r"|(?:patched|fixed|addressed|plugged) (?:the |a |two |three |several "
+        r"|multiple )?(?:critical |serious )?(?:flaw|vulnerabilit|bug|issue|hole)s?)",
+        re.IGNORECASE)
+    _VARSAYIM_RE = re.compile(
+        r"\bcould (?:have )?(?:allow|let|enable|hand|give|grant|expose|lead|been)",
+        re.IGNORECASE)
+    # Olumsuzlanmış istismar ifadesi ("no evidence ... exploited in the wild")
+    # olay izi sayılmasın diye önce metinden ÇIKARILIR.
+    _ISTISMAR_YOK_RE = re.compile(
+        r"\b(?:no (?:evidence|sign|signs|indication)s?(?: yet)?(?: that)?[^.]{0,60}?"
+        r"(?:exploit|abused)[^.]*|(?:not|never) (?:been |yet been |being )?"
+        r"(?:exploited|abused)[^.]*)", re.IGNORECASE)
+    _GERCEK_OLAY_RE = re.compile(
+        r"\b(?:exploited in the wild|actively exploit|under active exploitation"
+        r"|breached|were compromised|was compromised|stole|stolen|exfiltrat"
+        r"|victims?\b|were hacked|was hacked|ransomware attack)",
+        re.IGNORECASE)
+    YAMALI_GIRIS_SOZCUK = 150
+
+    def _yamali_varsayimsal_zafiyet(self, title, full_text):
+        """Haber, yamalanmış ve istismar edilmemiş bir açığı mı anlatıyor?
+
+        Başlık + gövdenin ilk YAMALI_GIRIS_SOZCUK sözcüğünde hem yama hem
+        varsayım ("could have ...") ifadesi aranır; gerçek bir olay izi
+        (istismar, ihlal, kurban) varsa False döner.
+        """
+        giris = (str(title or '') + '. ' + ' '.join(
+            str(full_text or '').split()[:self.YAMALI_GIRIS_SOZCUK]))
+        if not (self._YAMALANDI_RE.search(giris)
+                and self._VARSAYIM_RE.search(giris)):
+            return False
+        temiz = self._ISTISMAR_YOK_RE.sub(' ', giris)
+        return not self._GERCEK_OLAY_RE.search(temiz)
 
     def _has_spyware_evidence(self, *texts):
         """`casus_yazilim` iddiasını destekleyen KANIT var mı?
