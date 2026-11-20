@@ -64011,3 +64011,251 @@ Berlin Teknik Üniversitesi araştırmacıları, AMD ve bazı Intel tabanlı bil
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 20 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Avrupa Komisyonu İnsan Kaynakları Sistemlerine Siber Saldırı
+─────────────────────────────────────────────────────────
+Avrupa Komisyonu, 22 Ekim 2026 tarihinde tespit edilen bir siber saldırı sonucunda insan kaynakları sistemlerinin hedef alındığını ve koruyucu önlem olarak birçok uygulamanın on günden fazla süreyle erişime kapatıldığını doğrulamıştır. Saldırganlar, Temmuz ayında GitHub'da yayınlanan ve Ekim başında erişimi kısıtlanan ARTEX adlı yapay zeka destekli açık kaynaklı sızma testi aracını kullanarak personel kayıtlarına ve kimlik bilgilerine ulaşmaya çalışmıştır. FBI, ARTEX'in karmaşık saldırı tekniklerini hızlandırarak üç saatten kısa sürede ayrıcalıklı erişim sağladığı konusunda uyarırken, Komisyon sözcüsü Thomas Regnier tüm personeli etkileyen bir veri ihlali kanıtı bulunmadığını belirtmiştir. Avrupa Veri Koruma Denetçisi ve CERT-EU ile koordineli yürütülen incelemelerde, saldırının Azure kimlik bilgilerini ve SAS tokenlarını hedefleyen geniş kapsamlı bir kampanya olduğu anlaşılmıştır.
+(XXXXXXX, AÇIK -csoonline.com, 20.11.2026)
+» url=https://www.csoonline.com/article/4251068/european-commission-hr-hit-by-cyber-attack.html
+» manset=evet | kategori=stratejik_kurum_saldirisi | puan=99
+» varlik | hedef=AB
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Microsoft WinGet Aracında Kritik Tedarik Zinciri Açığının Giderilmesi
+─────────────────────────────────────────────────────────
+Microsoft'un 1,4 milyar Windows 10, 11 ve Server 2025 cihazında yüklü olan Windows Paket Yöneticisi (WinGet) aracında, Cycode araştırmacıları tarafından sıfır etkileşimli kritik bir tedarik zinciri açığı tespit edilmiştir. Hata, moderatörlerin kullandığı PowerShell tabanlı dahili otomasyon aracının, GitHub Kişisel Erişim Belirteçlerini (PAT) hedef adresi doğrulamadan giden her HTTP isteğine eklemesinden kaynaklanmaktadır. Saldırganlar, hazırladıkları kötü niyetli bir çekme isteği (PR) üzerinden moderatörün tüm kurumsal kimlik yetkilerine sahip token bilgilerini kendi sunucularına sızdırabilmektedir. Bu durum, saldırganların 14.000 pakete zararlı kod enjekte etmesine ve Microsoft'un diğer depolarına sızmasına imkan tanımaktadır. Microsoft, kimlik doğrulama mekanizmasını yalnızca yetkili GitHub uç noktalarıyla sınırlayarak açığı yamalamıştır.
+(XXXXXXX, AÇIK -csoonline.com, 20.11.2026)
+» url=https://www.csoonline.com/article/4251117/a-single-pull-request-could-have-handed-attackers-the-keys-to-microsofts-software-supply-chain.html
+» manset=evet | kategori=tedarik_zinciri | puan=94
+» sonradan | kategori=tedarik_zinciri | onem=66 | eksen=25/25/8/8 | rubrik=v2
+» varlik | sektor=teknoloji
+» teknik | urun=GitHub,Microsoft
+» kurban | ad=Microsoft | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Finans Devlerinin Üçüncü Taraf Sağlayıcılarına Siber Saldırı
+─────────────────────────────────────────────────────────
+JPMorgan Chase, Visa ve Mastercard, müşteri bilgilerinin ifşa olmuş olabileceği üçüncü taraf kaynaklı siber saldırıları araştırdıklarını doğrulamıştır. Rusya merkezli olduğu değerlendirilen n0n adlı veri hırsızlığı ve şantaj çetesinin, finans devlerine ait verileri ele geçirdiğini iddia etmesi üzerine kurumlar açıklama yapmıştır. Visa, olayın Asya-Pasifik bölgesindeki bir hizmet sağlayıcıyla ilgili olduğunu ve kendi sistemlerinin etkilenmediğini belirtmiştir. Mastercard, belirli bir avantaj programına kayıtlı az sayıda kart sahibinin e-posta adreslerinin sızdırıldığını ancak ödeme ağının güvende olduğunu ifade etmiştir. JPMorgan Chase ise bazı pazarlama verilerine erişildiğini ve bu verilerin müşteri isimleri ile e-posta adreslerini içerebileceğini kaydetmiştir. Her üç kurum da saldırıların kendi operasyonel süreçlerinde bir kesintiye yol açmadığını ve ödeme bilgilerinin tehlikede olmadığını vurgulamıştır. n0n grubunun sızıntı sitesinde yaklaşık 200 kurbanı listelediği bildirilmiştir.
+(XXXXXXX, AÇIK -theregister.com, 20.11.2026)
+» url=https://www.theregister.com/security/2026/11/19/chase-visa-mastercard-confirm-third-party-cyberattacks-that-may-have-exposed-customers-info/5311175
+» manset=evet | kategori=veri_ihlali | puan=91
+» sonradan | kategori=veri_ihlali | onem=84 | eksen=25/25/17/17 | rubrik=v2
+» varlik | hedef=Rusya
+» kurban | ad=JPMorgan Chase,Visa,Mastercard | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] N-able Bulut Sunucularına Yönelik Siber Saldırı Gerçekleşmesi
+─────────────────────────────────────────────────────────
+Bilişim yönetimi çözümleri sunan N-able, Mail Assure ve Spam Experts barındırma bulut sistemindeki bir sunucuya yetkisiz erişim sağlandığını açıklamıştır. 16 Kasım 2026 tarihinde başlayan hizmet kesintisinin başlangıçta yapılandırma hatası sanıldığı, ancak yapılan incelemeler sonucunda bir güvenlik ihlali olduğunun tespit edildiği belirtilmiştir. Şirket, saldırı sonucunda yönetim arayüzlerinin ve API servislerinin çevrimdışı bırakıldığını, ancak müşteri verilerinin veya e-posta kutularının ele geçirildiğine dair bir kanıt bulunmadığını ifade etmiştir. Amerika kıtasındaki servislerin daha yoğun etkilendiği ve sistemlerin güvenli bir şekilde geri yüklenmesi için çalışmaların 19 Kasım 2026 itibarıyla sürdüğü kaydedilmiştir. N-able, temel e-posta akışının ve filtreleme hizmetlerinin çalışmaya devam ettiğini, ancak yönetim portalının doğrulama ve sertleştirme süreçleri tamamlanana kadar kapalı kalacağını bildirmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 19.11.2026)
+» url=https://thehackernews.com/2026/11/n-able-confirms-hackers-accessed-cloud.html
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=80
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» kurban | ad=N-able | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] İngiliz Hükümetinin Apple'a Gizli Şifreleme Emrini Açıklamaya Zorlanması
+─────────────────────────────────────────────────────────
+İngiltere'deki Soruşturma Yetkileri Mahkemesi, hükümetin Apple'dan kullanıcı verilerine erişim için şifreleme arka kapısı talep eden gizli bir emir verdiğini onaylamasını kararlaştırmıştır. Mahkeme, İçişleri Bakanlığı'nın bu emrin varlığını açıklamanın ulusal güvenliğe zarar vereceği yönündeki itirazını reddetmiştir. Söz konusu kararın, Apple'ın İngiliz makamlarının iCloud verilerine erişim talebini reddetmesi ve İngiltere'deki kullanıcılar için Gelişmiş Veri Koruma özelliğini devre dışı bırakmasının ardından geldiği belirtilmiştir. Hak savunucusu grup Liberty International tarafından başlatılan hukuki süreç sonucunda, hükümetin ilk kez gizli bir teknik yetenek bildiriminin varlığını teyit etmeye zorlandığı kaydedilmiştir. Apple, ürünlerinde hiçbir zaman bir arka kapı oluşturmadığını ve oluşturmayacağını yinelerken, İçişleri Bakanlığı'nın konuya ilişkin detaylı açıklamaları içeren nihai duruşmasının gelecek yıl yapılacağı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -techcrunch.com, 19.11.2026)
+» url=https://techcrunch.com/2026/11/19/u-k-government-forced-to-disclose-secret-apple-backdoor-order/
+» manset=hayir | kategori=politika_hukuk | puan=86
+» sonradan | kategori=politika_hukuk | onem=92 | eksen=17/25/25/25 | rubrik=v2
+» varlik | sektor=kamu | hedef=Birleşik Krallık
+» teknik | urun=Apple
+» kurban | ad=Apple | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] ABD'de Kritik Altyapı Sistemlerinde Yaşanan Teknik Kesintiler
+─────────────────────────────────────────────────────────
+Amerika Birleşik Devletleri'nde son iki hafta içerisinde havayolu rezervasyon sistemleri, bankacılık platformları ve verimlilik araçlarında geniş çaplı teknik kesintiler yaşandığı bildirilmiştir. Federal Havacılık İdaresi (FAA) uçuşları durdurmak zorunda kalmış; Microsoft, Apple Pay ve NASA gibi kurumların sistemlerinde aksamalar meydana gelmiştir. Ulusal İstihbarat Direktörü ve çeşitli şirket yetkilileri, bu durumun devlet destekli bir siber saldırıdan ziyade modern sistemlerin eski altyapılarla entegrasyonu sırasında ortaya çıkan teknik sorunlardan kaynaklandığını ifade etmiştir. Uzmanlar, yapay zeka araçlarının mevcut güvenlik açıklarını hızla tespit etmesiyle birlikte kurumların yama yapma sürecinde zorlandığını ve bu yoğun yama trafiğinin kısa vadeli kesintilere yol açtığını belirtmiştir. Kritik altyapıların modernizasyon sürecinde risk yönetiminin, erişim kontrollerinin ve sistem segmentasyonunun sıkılaştırılması gerektiği kaydedilmiştir.
+(XXXXXXX, AÇIK -techcrunch.com, 20.11.2026)
+» url=https://techcrunch.com/2026/11/19/these-tech-outages-are-giving-y2k-ai-agent-style/
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=85
+» varlik | sektor=finans,ulastirma | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] CISA Direktör Adayı Michael LoSapio'nun Onay Sürecindeki Zorluklar
+─────────────────────────────────────────────────────────
+Amerika Birleşik Devletleri Siber Güvenlik ve Altyapı Güvenliği Ajansı (CISA) direktörlüğü için aday gösterilen Palantir yöneticisi Michael LoSapio, Senato İç Güvenlik ve Hükümet İşleri Komitesi'ndeki oturumda Demokrat üyelerin sert eleştirileriyle karşılaşmıştır. LoSapio'nun 6 Ocak Kongre baskınını bir saldırı olarak nitelendirmeyi reddetmesi üzerine Senatör Richard Blumenthal, adayın Beyaz Saray'dan bağımsızlık sergileyemediğini ve bu göreve uygun olmadığını ifade etmiştir. Oturumda siber dayanıklılık ve internete bağlı cihazların güvenliği gibi teknik konulara değinilse de, tartışmaların büyük oranda siyasi görüş ayrılıkları ekseninde şekillendiği kaydedilmiştir. CISA'nın bütçe kesintileri ve personel durumu hakkındaki soruları yanıtsız bırakan LoSapio'nun adaylığına, Cumhuriyetçi Senatör Thom Tillis'in de engel koyacağı bildirilmiştir. Kurumun iki yıldır onaylı bir direktörden yoksun olduğu belirtilmektedir.
+(XXXXXXX, AÇIK -cyberscoop.com, 19.11.2026)
+» url=https://cyberscoop.com/michael-losapio-cisa-confirmation-hearing/
+» manset=hayir | kategori=politika_hukuk | puan=74
+» sonradan | kategori=politika_hukuk | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=kamu | hedef=ABD
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Londra Ulaşım İdaresi Veri İhlalinde 265 Bin Kullanıcı
+─────────────────────────────────────────────────────────
+Londra'nın toplu taşıma otoritesi Transport for London (TfL), yaklaşık 265.000 Oyster fotokart kullanıcısının hesap bilgilerinin bir veri ihlali sonucunda açığa çıkmış olabileceğini açıklamıştır. Kurum, 16 Kasım 2026 tarihinde sistemlerinden gönderilen şüpheli e-postalar üzerine yaptığı incelemede, güvenlik soruları ve yanıtlarının sızdırıldığını tespit etmiştir. TfL tarafından yapılan değerlendirmede; şifrelerin, banka bilgilerinin, ödeme kartı detaylarının ve Zip Oyster kart sahibi çocukların isim bilgilerinin bu sızıntıdan etkilenmediği bilgisi verilmiştir. Olayın ardından Oyster fotokart web sitesinin önlem amaçlı çevrimdışı bırakıldığı ve Birleşik Krallık Bilgi Komisyonu Ofisi'ne (ICO) gerekli bildirimlerin yapıldığı kaydedilmiştir. Kurum, etkilenen verilerin kötüye kullanıldığına dair henüz bir kanıt bulunmadığını belirtirken, portal tekrar açıldığında tüm kullanıcıların şifre ve güvenlik sorularını güncellemeleri gerektiğini ifade etmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 19.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/transport-for-london-breach-exposes-265-000-oyster-card-users-data/
+» manset=hayir | kategori=veri_ihlali | puan=74
+» sonradan | kategori=veri_ihlali | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=finans | hedef=Birleşik Krallık
+» olcek | etkilenen=265000
+» kurban | ad=Transport for London | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] NVIDIA'nın Gentlemen Fidye Yazılımı Grubu Tarafından Hedef Alınması
+─────────────────────────────────────────────────────────
+Teknoloji devi NVIDIA, Gentlemen adlı fidye yazılımı grubunun şirketi siber saldırı kurbanları listesine eklemesi üzerine bir inceleme başlatmıştır. Siber suç örgütü, ele geçirdiğini iddia ettiği verileri 28 Kasım 2026 tarihine kadar sızdırmakla tehdit etse de henüz herhangi bir kanıt sunmamıştır. NVIDIA sözcüsü tarafından yapılan açıklamada, şirketin kendi sistemlerinde veya ağlarında herhangi bir sızma emaresine rastlanmadığı, ancak bir hizmet sağlayıcısını etkileyen ayrı bir olayın araştırıldığı ifade edilmiştir. Gentlemen grubunun, verileri şifrelemeden önce dışarı sızdıran 'çifte şantaj' yöntemini kullandığı ve bugüne kadar farklı sektörlerden 1.100'den fazla mağduru hedef aldığı belirtilmektedir. Şirket, durumu yakından izlemeye devam ettiğini kaydetmiştir. NVIDIA'nın geçmişte de benzer veri ihlalleriyle karşılaştığı ve 2022 yılında Lapsus$ grubunun saldırısına uğradığı hatırlatılmaktadır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 19.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/nvidia-investigating-gentlemen-ransomware-breach-claims/
+» manset=hayir | kategori=veri_ihlali | puan=73
+» sonradan | kategori=veri_ihlali | onem=68 | eksen=17/17/17/17 | rubrik=v2
+» varlik | sektor=teknoloji
+» kurban | ad=NVIDIA | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] ROMULUS Platformunun Yeni Casus Yazılımlar Dağıttığının Tespit Edilmesi
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin, ROMULUS ClickFix adlı zararlı yazılım dağıtım platformunu kullanarak daha önce belgelenmemiş bir uzaktan erişim truva atı yaydıkları tespit edilmiştir. Blackpoint Cyber araştırmacıları, bu platformun ChatGPT özel GPT'leri ve sahte Cloudflare doğrulama sayfaları gibi yöntemlerle kullanıcıları kandırdığını bildirmiştir. Saldırı zincirinde, MSI yükleyicileri ve DLL yan yükleme teknikleri kullanılarak CNCMachineRMS ve Legion Loader gibi zararlı yazılımların sisteme enjekte edildiği belirtilmiştir. Yeni tespit edilen truva atının, uzak masaüstü kontrolü, ekran yayını, mikrofon ve kamera erişimi ile dosya yönetimi yeteneklerine sahip olduğu kaydedilmiştir. Saldırganların ayrıca Google reklamlarını ve ele geçirilmiş WordPress sitelerini kullanarak kurbanları sahte indirme sayfalarına yönlendirdiği ifade edilmiştir. Operasyonun, DNS üzerinden HTTPS protokolünü kullanarak komuta kontrol sunucularıyla gizli iletişim kurduğu bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 20.11.2026)
+» url=https://thehackernews.com/2026/11/romulus-clickfix-attacks-deliver-rat.html
+» manset=hayir | kategori=casus_yazilim | puan=53
+» sonradan | kategori=casus_yazilim | onem=50 | eksen=8/8/17/17 | rubrik=v2
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] NGINX2Root Açıklarının Docker Konteyner Sınırlarını Tehdit Etmesi
+─────────────────────────────────────────────────────────
+CrowdStrike, NGINX web sunucularında tespit edilen ve NGINX2Root olarak markalanan beş kritik güvenlik açığının, saldırganların Docker konteynerlerinden sızarak ana sisteme ulaşmasına izin verdiğini raporlamıştır. En ciddi açıklar olan CVE-2026-123007 ve CVE-2026-123633'ün, hatalı yapılandırılmış HTTP/2 trafiği üzerinden bellek bozulmasına yol açtığı belirtilmiştir. Araştırmacıların, bu açıkları bir Linux çekirdek zafiyetiyle birleştirerek yetki yükseltme ve konteynerden kaçış senaryosunu başarıyla simüle ettikleri ifade edilmiştir. Dünya genelindeki web sitelerinin üçte birinden fazlasının NGINX kullandığına dikkat çekilerek, kurumların acilen yamalı sürümlere geçmesi veya geçici bir önlem olarak HTTP/2 protokolünü devre dışı bırakması önerilmiştir. CrowdStrike Falcon platformunun, etkilenen varlıkların tespiti ve istismar sonrası faaliyetlerin izlenmesi amacıyla güncellendiği ve NGINX Plus kullanıcıları için de düzeltmelerin yayınlandığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -crowdstrike.com, 20.11.2026)
+» url=https://www.crowdstrike.com/en-us/blog/crowdstrike-helps-protect-against-nginx2root-cve-2026-123007/
+» manset=hayir | kategori=zafiyet_rutin | puan=75
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=25/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-123007,CVE-2026-123633 | urun=CrowdStrike,Docker,Nginx
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] Çin Bağlantılı Grubun VMware vSphere Yazılımını İstismar Etmesi
+─────────────────────────────────────────────────────────
+Çin bağlantılı siber tehdit aktörü ARMORY CASTLE'ın, VMware vCenter Server sistemlerindeki CVE-2026-123890 kodlu sıfır gün açığını istismar ettiği tespit edilmiştir. Mandiant ve Google Tehdit İstihbarat Grubu, saldırganın bu açığı kullanarak kimlik doğrulama mekanizmalarını aştığını ve yönetici yetkileriyle komut çalıştırdığını raporlamıştır. Tehdit aktörünün, Eylül 2026 başında BONESAW adlı özel bir araç kullanarak veritabanlarını sızdırdığı ve SAML belirteçlerini ele geçirdiği belirtilmektedir. Operasyon kapsamında SLIMSAVAGE, CAGEMATCH ve BEARBONES gibi yeni zararlı yazılım ailelerinin de konuşlandırıldığı bilgisi verilmiştir. Saldırganların, uç nokta algılama araçlarının bulunmadığı iç Linux cihazlarına sızarak ayrıcalık yükselttiği ve VMware ortamlarında keşif faaliyetleri yürüttüğü kaydedilmiştir. Broadcom tarafından yayınlanan güvenlik yamalarının etkilenen kuruluşlarca ivedilikle uygulanması ve sistemlerin sıkılaştırılması tavsiye edilmektedir.
+(XXXXXXX, AÇIK -cloud.google.com, 19.11.2026)
+» url=https://cloud.google.com/blog/topics/threat-intelligence/armory-castle-exploits-vsphere/
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=95
+» varlik | aktor_ulke=Çin
+» teknik | cve=CVE-2026-123890 | urun=Broadcom,VMware | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] Cisco Expressway Cihazlarındaki Güvenlik Açığının Aktif İstismar Edilmesi
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin, Cisco Expressway cihazlarındaki bir güvenlik açığını kavram kanıtlama (PoC) kodunun GitHub üzerinde yayınlanmasının hemen ardından istismar etmeye başladığı bildirilmiştir. F6 güvenlik firması tarafından yapılan incelemede, Rusya'daki bir kuruluşun internete açık iki adet Expressway X15.5.3 cihazının ihlal edildiği ve saldırganların buradan iç ağdaki diğer küme düğümlerine sızarak kök yetkileri elde ettiği tespit edilmiştir. Saldırganların, ağ içerisinde yanal hareket gerçekleştirmek amacıyla yapay zeka asistanı desteğiyle geliştirildiği anlaşılan özel Python betikleri kullandığı ifade edilmiştir. Bu betiklerin SMB kaynaklarını tarama, SQL Server ve WinRM ile etkileşime girme ve GitLab depolarından hassas kimlik bilgilerini sızdırma amacı taşıdığı belirtilmiştir. Cisco'nun X15.5.20 sürümüyle açığı giderdiği, ancak yama uygulayamayan kuruluşların TCP 4371-4372 portlarını kısıtlaması gerektiği tavsiye edilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 19.11.2026)
+» url=https://www.securityweek.com/hackers-exploit-cisco-expressway-vulnerability-soon-after-poc-release/
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=87
+» sonradan | kategori=zafiyet_aktif_apt | onem=59 | eksen=8/17/17/17 | rubrik=v2
+» varlik | hedef=Rusya
+» teknik | urun=Cisco,GitHub | istismar=aktif
+» kurban | ad=Rusya | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] PHP Oturum Hatasından Kaynaklanan phpAfterShell Açığının Kapatılması
+─────────────────────────────────────────────────────────
+PHP geliştiricileri, varsayılan dosya tabanlı oturum depolama mekanizmasında tespit edilen ve phpAfterShell olarak adlandırılan kritik bir güvenlik açığını gidermek için yeni sürümler yayınlamıştır. CVE-2026-126714 kodlu bu açığın, oturum yazma işleminin belirli bir noktada kesilmesi durumunda saldırganların sunucuda rastgele kod çalıştırmasına olanak tanıdığı belirtilmiştir. Güvenlik araştırmacıları, bu yöntemin mevcut oturum verilerini bozmak veya kullanıcı yetkilerini değiştirmek için de kullanılabileceğine dikkat çekmiştir. Güncelleme ile birlikte PHP 8.2.36, 8.3.37, 8.4.28 ve 8.5.13 sürümlerinde dosya yazma güvenliğinin artırıldığı ve dosya yükleme ilerleme özelliğinin varsayılan olarak devre dışı bırakıldığı bildirilmiştir. Yetkililer, PHP 8.1 ve daha eski sürümleri kullanan yöneticilerin desteklenen güncel sürümlere geçiş yapmaları gerektiğini, aksi takdirde sistemlerin istismara açık kalmaya devam edeceğini önemle ifade etmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 19.11.2026)
+» url=https://thehackernews.com/2026/11/phpaftershell-explained-how-hackers.html
+» manset=hayir | kategori=zafiyet_rutin | puan=65
+» sonradan | kategori=zafiyet_rutin | onem=67 | eksen=25/17/8/17 | rubrik=v2
+» varlik | sektor=teknoloji
+» teknik | cve=CVE-2026-126714
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] ASUS Control Center Express Yazılımındaki Kritik Açıkların Yamalanması
+─────────────────────────────────────────────────────────
+ASUS, Control Center Express yönetim konsolunda saldırganların yönetici yetkileri elde etmesine imkan tanıyan üç kritik güvenlik açığını gidermek amacıyla v1.7.29 sürümünü yayınlamıştır. En yüksek risk seviyesine sahip olan ve 10.0 CVSS puanı alan CVE-2026-114202 kodlu açığın, yazılım içerisine gömülü sabit bir şifreleme anahtarından kaynaklandığı ve kimlik doğrulaması gerektirmeden sistemin ele geçirilmesine yol açtığı belirtilmiştir. Ayrıca, düşük yetkili kullanıcıların yönetici hesabı oluşturmasına izin veren CVE-2026-114205 ve oturum belirteci sahteciliğine imkan tanıyan CVE-2026-114204 hataları da düzeltilmiştir. Şirket, Control Center Enterprise ve Armoury Crate yazılımlarındaki yetki yükseltme açıklarını da yamalamıştır. Etkilenen kullanıcıların v1.7.29 sürümünü kurarak bağlı istemci araçlarını "Client Agent Updater" üzerinden güncellemeleri gerektiği bildirilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 20.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/asus-warns-of-critical-hard-coded-key-flaw-in-control-center-express/
+» manset=hayir | kategori=zafiyet_rutin | puan=65
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-114202,CVE-2026-114204,CVE-2026-114205
+» kurban | ad=ASUS | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] Drupal'ın Sitelere Tam Erişim Sağlayan Kritik Açığı Yamalaması
+─────────────────────────────────────────────────────────
+Drupal güvenlik ekibi, kimlik doğrulaması yapmamış saldırganların yerleşik yükleyiciyi kullanarak siteleri yeniden kurmasına veya uzaktan kod yürütmesine olanak tanıyan kritik bir açığı gidermiştir. CVE-2026-132165 koduyla izlenen ve risk ölçeğinde 25 üzerinden 18 puan alan zafiyetin, Drupal çekirdeğindeki /core/install.php dosyasından kaynaklandığı belirtilmiştir. Anthropic'in OSS Scanner adlı yapay zeka tabanlı aracı tarafından tespit edilen bu açığın, 10.6.22, 11.3.22 ve 11.4.13 öncesindeki tüm sürümleri etkilediği bildirilmiştir. Güvenlik ekibi, güncellemeler yapılmış olsa dahi yükleyici dosyasının sunucu seviyesinde engellenmesini tavsiye etmiştir. Henüz bir saldırı rapor edilmemiş olsa da, kavram kanıtlama aşamasındaki istismar kodlarının varlığına dikkat çekilmiştir. Ayrıca, Drupal 8 ve 9 gibi destek süresi dolmuş sürümlerin bu düzeltmeyi almayacağı ve savunmasız kalmaya devam edeceği ifade edilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 19.11.2026)
+» url=https://thehackernews.com/2026/11/drupal-patches-critical-installer-flaw.html
+» manset=hayir | kategori=zafiyet_rutin | puan=64
+» sonradan | kategori=zafiyet_rutin | onem=59 | eksen=17/17/8/17 | rubrik=v2
+» teknik | cve=CVE-2026-132165 | urun=Anthropic
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] Splunk'ın Üç Temel Ürününde 140 Güvenlik Açığını Gidermesi
+─────────────────────────────────────────────────────────
+Splunk; Enterprise, Enterprise Security ve SOAR ürünlerinde tespit edilen yaklaşık 140 güvenlik açığı için kapsamlı düzeltmeler yayınladığını duyurmuştur. Enterprise sürümünde, kimlik doğrulaması gerektirmeyen saldırganların boş bir kümeleme paylaşımlı sırrı kullanarak yapılandırmaları değiştirmesine veya SPL aramalarıyla veri okumasına imkan veren CVE-2026-76536 ve CVE-2026-76535 kodlu kritik hataların giderildiği belirtilmiştir. Enterprise Security 8.7.0 sürümünde, 'ess_admin' rolüne sahip kullanıcılarca istismar edilebilen ve uzaktan kod yürütülmesine yol açabilen CVE-2026-131202 kodlu kritik zafiyetin yamalandığı bilgisi verilmiştir. SOAR 8.8.0 platformunda ise kimlik doğrulaması gerektiren CVE-2026-131253 ve CVE-2026-131287 kodlu iki kritik uzaktan kod yürütme açığı dahil toplam 59 hatanın düzeltildiği kaydedilmiştir. Güncellemelerin ayrıca üçüncü taraf paketlerdeki yaklaşık 160 zafiyeti de kapsadığı ve kullanıcıların 10.6.1 veya 9.4.17 gibi güncel sürümlere yükseltme yapmaları gerektiği ifade edilmiştir.
+(XXXXXXX, AÇIK -securityweek.com, 19.11.2026)
+» url=https://www.securityweek.com/splunk-patches-nearly-140-flaws-across-three-core-products/
+» manset=hayir | kategori=zafiyet_rutin | puan=63
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-131202,CVE-2026-131253,CVE-2026-131287,CVE-2026-76535,CVE-2026-76536 | urun=Splunk
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] Typo3 İçerik Yönetim Sisteminde Çok Sayıda Zafiyetin Giderilmesi
+─────────────────────────────────────────────────────────
+Fransa Ulusal Siber Güvenlik Ajansı (ANSSI), Typo3 içerik yönetim sisteminde tespit edilen ve uzaktan kod yürütülmesine olanak tanıyan birden fazla güvenlik açığı hakkında 17 Kasım 2026 tarihinde bir uyarı yayınlamıştır. Bu zafiyetlerin veri gizliliğinin ihlaline, hizmet dışı bırakma saldırılarına, sunucu tarafı istek sahteciliğine (SSRF) ve dolaylı kod enjeksiyonuna (XSS) yol açabildiği belirtilmiştir. Etkilenen sistemler arasında 10.4.63, 11.5.57, 12.4.52, 13.4.40 ve 14.3.12 sürümlerinden önceki tüm versiyonların bulunduğu kaydedilmiştir. CVE-2026-119621, CVE-2026-119622 ve CVE-2026-125165 gibi çok sayıda tanımlayıcıyla duyurulan bu hataların, saldırganların güvenlik politikalarını atlatarak sistem üzerinde yetkisiz işlemler gerçekleştirmesine imkan tanıdığı ifade edilmiştir. Geliştirici ekibin ilgili düzeltmeleri içeren yeni sürümleri GitHub üzerinden paylaştığı ve sistem yöneticilerinin bu kritik yamaları ivedilikle uygulamaları gerektiği bildirilmiştir.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 17.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1553/
+» manset=hayir | kategori=zafiyet_rutin | puan=54
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» varlik | sektor=teknoloji | hedef=Fransa
+» teknik | cve=CVE-2026-119621,CVE-2026-119622,CVE-2026-125165 | urun=GitHub
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] ClamAV Yazılımında Tespit Edilen Güvenlik Açığının Giderilmesi
+─────────────────────────────────────────────────────────
+Fransa Ulusal Siber Güvenlik Ajansı (ANSSI) tarafından yayımlanan bildiriye göre, ClamAV yazılımının 1.5.5 öncesi 1.5.x ve 1.4.7 öncesi tüm sürümlerinde çok sayıda güvenlik açığı tespit edilmiştir. Söz konusu açıkların, saldırganların uzaktan hizmet dışı bırakma (DoS) saldırıları gerçekleştirmesine, veri gizliliğini ihlal etmesine ve güvenlik politikalarını devre dışı bırakmasına olanak tanıdığı belirtilmiştir. CVE-2026-76411 ve CVE-2026-76516 kodları arasındaki bir dizi zafiyeti kapsayan bu durumun, sistem bütünlüğünü doğrudan tehdit ettiği ifade edilmiştir. Geliştirici ekip, 18 Kasım 2026 tarihinde clamav-155-147 referansıyla yayımladığı güvenlik bülteniyle bu açıklar için gerekli düzeltme eklerini sunduğunu açıklamıştır. Kullanıcıların ve sistem yöneticilerinin, veri sızıntısı riskine karşı ilgili güvenlik güncellemelerini ivedilikle uygulamaları gerektiği kaydedilmiştir.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 19.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1572/
+» manset=hayir | kategori=zafiyet_rutin | puan=52
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» varlik | sektor=teknoloji | hedef=Fransa
+» teknik | cve=CVE-2026-76411,CVE-2026-76516
+
+────────────────────────────────────────────────────────────────────────────────
+
+[20] Wireshark Uzaktan Hizmet Dışı Bırakma Açıklarının Kapatılması
+─────────────────────────────────────────────────────────
+Wireshark ağ protokolü analiz yazılımında, saldırganların uzaktan hizmet dışı bırakma (DoS) saldırısı düzenlemesine imkan veren çok sayıda kritik güvenlik açığı tespit edilmiştir. ANSSI tarafından 19 Kasım 2026 tarihinde yayımlanan rapora göre, bu zafiyetlerin Wireshark'ın 4.4.20 öncesi 4.4.x ve 4.6.10 öncesi 4.6.x sürümlerini etkilediği belirtilmiştir. CVE-2026-130434 ile CVE-2026-130469 kod aralığında tanımlanan onlarca farklı açığın, yazılımın ağ trafiğini işleme süreçlerini hedef aldığı ifade edilmiştir. Geliştirici kurumun, söz konusu riskleri bertaraf etmek amacıyla wnpa-sec-2026-111 ile wnpa-sec-2026-149 aralığında çok sayıda güvenlik bülteni yayımladığı ve düzeltici yamaları kullanıma sunduğu bilgisi verilmiştir. Etkilenen sistemlerin güvenliğini sağlamak adına kullanıcıların ivedilikle güncel sürümlere geçiş yapmalarının zorunlu olduğu vurgulanmıştır.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 19.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1575/
+» manset=hayir | kategori=zafiyet_rutin | puan=47
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=17/8/8/0 | rubrik=v2
+» varlik | sektor=teknoloji
+» teknik | cve=CVE-2026-130434,CVE-2026-130469
+
+────────────────────────────────────────────────────────────────────────────────
+
+[21] FastUnlock Sıfır Gün Tekniğiyle Windows Kilit Ekranının Aşılması
+─────────────────────────────────────────────────────────
+Windows işletim sistemlerinde, kilitli bir bilgisayara fiziksel erişimi olan kişilerin oturum açmadan program çalıştırmasına olanak tanıyan FastUnlock adlı yeni bir sıfır gün tekniği ifşa edilmiştir. MSNightmare takma adını kullanan bir araştırmacı tarafından paylaşılan bu yöntemin, kilit ekranındaki kurtarma seçenekleri ve Narrator özelliği aracılığıyla sınırlı bir kullanıcı hesabı üzerinden işlem yapılmasına izin verdiği belirtilmiştir. Güvenlik firması ThreatLocker, yaptığı testlerde bu yöntemin çalıştığını ve BitLocker şifrelemesinin TPM üzerinden otomatik kilit açma modunda olduğu durumlarda koruma sağlamadığını doğrulamıştır. Microsoft tarafından henüz resmi bir yama yayımlanmadığı ifade edilmiştir. Uzmanlar, bu riskten korunmak için cihazların fiziksel güvenliğinin artırılmasını, BitLocker için başlangıç PIN kodu kullanılmasını ve cihazların kullanılmadığında tamamen kapatılmasını veya hazırda bekletme moduna alınmasını önermiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 20.11.2026)
+» url=https://thehackernews.com/2026/11/new-unpatched-windows-0-day-fastunlock.html
+» manset=hayir | kategori=zafiyet_rutin | puan=47
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=0/8/8/17 | rubrik=v2
+» teknik | urun=Microsoft
+
+────────────────────────────────────────────────────────────────────────────────
+
