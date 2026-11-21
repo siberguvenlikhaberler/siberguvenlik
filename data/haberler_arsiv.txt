@@ -64259,3 +64259,217 @@ Windows işletim sistemlerinde, kilitli bir bilgisayara fiziksel erişimi olan k
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 21 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] Çin Bağlantılı Aktörlerin Yapay Zekayla Sunucu Ele Geçirmesi
+─────────────────────────────────────────────────────────
+Çin bağlantılı olduğu değerlendirilen bir siber tehdit aktörünün, Cairn adlı otonom yapay zeka platformunu kullanarak tıbbi görüntüleme uygulamasındaki bir sıfır gün açığını istismar ettiği tespit edilmiştir. Amazon Tehdit İstihbaratı birimi, saldırganların MONAI Label uygulamasında buldukları dizin geçişi hatası sayesinde sunucularda tam yetki elde ettiklerini açıklamıştır. Eylül 2026 başında gerçekleşen saldırıların, özellikle Doğu Asya'daki eğitim kurumlarını hedef aldığı belirtilmiştir. Yapay zeka ajanlarının, API haritalama aşamasından zafiyet istismarına sadece 11 dakikada geçtiği ve sunuculara ters kabuk (reverse shell) yerleştirdiği kaydedilmiştir. Söz konusu zafiyet için 18 Kasım 2026 tarihinde bir güvenlik güncellemesi yayınlandığı bilgisi verilmiştir. Araştırmacılar, yapay zeka araçlarının güvenlik ekiplerinden daha hızlı zafiyet bulabildiği konusunda uyarıda bulunarak otonom savunma sistemlerinin önemine dikkat çekmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 20.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/hackers-use-autonomous-ai-tool-cairn-to-find-zero-day-take-over-server/
+» manset=evet | kategori=nation_state_apt | puan=90
+» varlik | sektor=egitim | aktor_ulke=Çin
+» teknik | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Çin Bağlantılı Grupların Finans Ve Sağlık Sektörlerine Saldırıları
+─────────────────────────────────────────────────────────
+Unit 42 araştırmacıları, Com topluluğuyla bağlantılı Bling Libra ve Vortex gibi siber tehdit aktörlerinin Ağustos 2026'dan bu yana finans, sağlık ve hukuk sektörlerini hedef alan geniş kapsamlı saldırılar düzenlediğini tespit etmiştir. Saldırganların başlangıç erişimi için sesli kimlik avı yöntemini kullandıkları ve kurbanları kurumsal destek sayfalarını taklit eden sahte alan adlarına yönlendirdikleri belirtilmiştir. Özellikle sağlık kuruluşlarını hedef alan CL-CRI-1264 kümesinin, çok faktörlü kimlik doğrulama süreçlerini aşmak için aradaki adam saldırısı tekniklerini kullandığı ve verileri Python betikleriyle otomatik olarak dışarı aktardığı kaydedilmiştir. Ayrıca, Google Chrome adını kullanarak kendini gizleyen kötü amaçlı bir tarayıcı eklentisinin, kurbanların cihazlarında tuş vuruşlarını kaydettiği ve ekran görüntüleri aldığı bildirilmiştir. Saldırıların ABD, İngiltere ve Avustralya merkezli, yüksek değerli veriye sahip kuruluşlara odaklandığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -unit42.paloaltonetworks.com, 21.11.2026)
+» url=https://unit42.paloaltonetworks.com/com-affiliate-vishing-attacks/
+» manset=evet | kategori=nation_state_apt | puan=86
+» varlik | sektor=saglik | hedef=ABD,Avustralya,Birleşik Krallık | aktor_ulke=Çin | aktor=CL-CRI-1264
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] ABD Ulusal Siber Direktörü Sean Cairncross'un Görevden Alınması
+─────────────────────────────────────────────────────────
+ABD Başkanı Donald Trump, Microsoft servisleri, havacılık sistemleri ve Ulusal Güvenlik Ajansı (NSA) ağında yaşanan büyük kesintilerin ardından Ulusal Siber Direktör Sean Cairncross'u görevden almıştır. Cairncross'un yerine geçici olarak Savunma Bakanlığı Bilgi İşlem Başkanı Kirsten Davies atanırken, yeni direktörün Ocak ayında Demokratların kontrolüne geçecek Senato tarafından onaylanması gerekecektir. Geçtiğimiz hafta Outlook ve Microsoft 365 hizmetlerinin aksamasıyla yüz milyonlarca kullanıcı etkilenmiş, ülke genelinde 18.000'den fazla uçuş durdurulmuş ve 17 Kasım 2026'da NSA'nın gizli ağı NSANet devre dışı kalmıştır. İstihbarat yetkilileri, kesintilerin koordineli bir saldırıdan ziyade teknik hatalar veya Fortinet cihazlarındaki açıkların hızla yamalanması sırasında oluşan aksaklıklardan kaynaklandığını değerlendirmektedir. Senatör Josh Hawley ise kamuoyunun bilgilendirilmesi adına yönetimin Kongre'ye resmi bir brifing vermesi gerektiğini savunmaktadır.
+(XXXXXXX, AÇIK -securityaffairs.com, 20.11.2026)
+» url=https://securityaffairs.com/203581/intelligence/trumps-first-move-after-the-outages-fire-the-cyber-director.html
+» manset=evet | kategori=politika_hukuk | puan=90
+» varlik | sektor=kamu,savunma,ulastirma | hedef=ABD
+» teknik | urun=Fortinet
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] Rus Bağlantılı Cold Relic Grubunun Kimlik Avı Operasyonları
+─────────────────────────────────────────────────────────
+Google Tehdit İstihbaratı ekibi, Rusya devlet destekli siber casusluk grubu Cold Relic'in (diğer adlarıyla Star Blizzard veya SEABORGIUM) ABD merkezli kuruluşlara yönelik yeni saldırılarını raporlamıştır. Saldırganların, bir kuruluşun Google Workspace yönetici hesabını çok faktörlü kimlik doğrulama (MFA) bombardımanı yöntemiyle ele geçirdiği ve sistemde kalıcı erişim sağladığı tespit edilmiştir. Ele geçirilen bu yetkili hesap üzerinden çalışan listeleri ve kurumsal verilerin sızdırıldığı, ardından bu bilgilerin güvenilir bir kişi gibi davranılarak ikinci bir kuruluşa yönelik kimlik avı saldırısında kullanıldığı belirtilmiştir. Saldırganların özellikle düşünce kuruluşları, gazeteciler ve hükümet yetkililerini hedef alarak Kremlin'in ilgisini çekebilecek stratejik bilgileri topladığı kaydedilmiştir. Google, bu tür saldırılara karşı donanım tabanlı güvenlik anahtarlarının kullanılmasını ve yönetici girişlerinin sıkı bir şekilde denetlenmesini önermiştir. Grubun, ele geçirilen verileri gelecekteki saldırılar için ikna edici içerikler oluşturmak amacıyla kullandığı ifade edilmiştir.
+(XXXXXXX, AÇIK -fortra.com, 19.11.2026)
+» url=https://www.fortra.com/blog/cold-relic-what-you-need-know
+» manset=hayir | kategori=nation_state_apt | puan=78
+» sonradan | kategori=nation_state_apt | onem=76 | eksen=17/17/25/17 | rubrik=v2
+» varlik | sektor=kamu,medya | hedef=ABD | aktor_ulke=Rusya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] The Container Store Siber Saldırı Sonrası Sistemlerini Onarması
+─────────────────────────────────────────────────────────
+Perakende zinciri The Container Store, çevrimiçi sipariş sistemlerini durduran ve mağaza içi işlemleri kısıtlayan bir siber saldırının ardından sistemlerini yeniden devreye aldığını açıklamıştır. Şirketin ana kuruluşu Neighborhood Intelligence, 20 Kasım 2026 tarihinde yaptığı açıklamada, hafta sonu gerçekleşen olayın ardından web sitesinin ve operasyonel ağların geri yüklendiğini bildirmiştir. Saldırıyı üstlenen n0n adlı siber suç grubunun, şirketi kendi sızıntı sitesinde listelediği ve fidye talebinde bulunduğu kaydedilmiştir. Güvenlik uzmanları, n0n grubunun saldırı betiklerini yazmak ve hataları gidermek için yapay zeka araçlarını kullandığını ve özellikle yıllık geliri 10 milyon doların üzerindeki firmaları hedeflediğini belirtmiştir. Şirket yetkilileri, şu ana kadar müşteri finansal verilerinin çalındığına dair bir kanıt bulunmadığını ifade etmiştir. Olayın kontrol altına alınması ve sistemlerin kurtarılması süreci için dışarıdan siber güvenlik uzmanlarının görevlendirildiği bilgisi verilmiştir.
+(XXXXXXX, AÇIK -therecord.media, 20.11.2026)
+» url=https://therecord.media/container-store-restores-systems-cyberattack
+» manset=hayir | kategori=veri_ihlali | puan=50
+» sonradan | kategori=veri_ihlali | onem=50 | eksen=17/8/17/8 | rubrik=v2
+» varlik | sektor=perakende
+» kurban | ad=The Container Store | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Rusça Konuşan Siber Suçluların Kimlik Bilgilerini Ele Geçirmesi
+─────────────────────────────────────────────────────────
+Hollanda merkezli bir sunucuda, Rusça konuşan bir siber suç grubuna ait olduğu belirlenen ve 603 bilgisayardan çalınan verileri içeren açık bir dizin tespit edilmiştir. Hunt.io tarafından yapılan incelemede, saldırganların ABD bankalarına, devlet kurumlarına ve LastPass ile 1Password gibi şifre yöneticilerine ait kimlik bilgilerini ele geçirdiği belirlenmiştir. Operasyonda HavoX, Phantom53 ve Kraken Bridge adlı özel yapım araçların kullanıldığı ve 12 Ekim 2026 tarihinden itibaren 1,2 milyondan fazla bağlantı kurulduğu bildirilmiştir. Saldırganların ayrıca Claude ve Gemini gibi yapay zeka geliştirme araçlarına ait oturum anahtarlarını ve kripto para platformu verilerini de hedef aldığı kaydedilmiştir. Uzmanlar, kurumların doğrudan hacklenmediğini, verilerin kullanıcıların kendi bilgisayarlarından çalındığını ifade etmiştir. Güvenlik analistleri, bu tür saldırılara karşı kimlik avına dayanıklı kimlik doğrulama yöntemlerinin kullanılmasını tavsiye etmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 20.11.2026)
+» url=https://securityaffairs.com/203554/cyber-crime/hunt-io-uncovers-russian-speaking-credential-theft-operation-targeting-us-banks-and-government-accounts.html
+» manset=hayir | kategori=nation_state_apt | puan=89
+» varlik | sektor=finans,kamu,kripto,ulastirma | hedef=ABD,Hollanda,Rusya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] Bell Canada'nın Kurumsal Müşteri Verilerinin Siber Saldırıyla Çalınması
+─────────────────────────────────────────────────────────
+Kanada'nın en büyük telekomünikasyon sağlayıcılarından Bell Canada, 17 Kasım 2026 tarihinde sistemlerine yönelik bir siber saldırı gerçekleştiğini ve kurumsal müşteri verilerinin çalındığını doğrulamıştır. Şirket tarafından yapılan açıklamada, saldırganın telekomünikasyon devrelerinin sipariş ve tedarik süreçlerinde kullanılan Maximo sisteminin üretim öncesi ortamına yetkisiz erişim sağladığı belirtilmiştir. Ele geçirilen veriler arasında isimler, iş unvanları, kurumsal e-posta adresleri, telefon numaraları ve iş adresleri gibi iletişim bilgilerinin yanı sıra bazı IP adreslerinin de bulunduğu kaydedilmiştir. Bell Canada, saldırganın yapay zeka destekli araçlar kullandığına dair bulgulara ulaşıldığını bildirmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 20.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/bell-canada-says-agentic-hacker-stole-enterprise-customer-data/
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=89
+» varlik | sektor=telekom | hedef=Kanada
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Tigerfish Şirketinin Hassas Müşteri Verilerini İnternete Açık Bırakması
+─────────────────────────────────────────────────────────
+San Francisco merkezli Tigerfish adlı deşifre şirketinin, aralarında emniyet birimleri ve teknoloji devlerinin de bulunduğu müşterilerine ait hassas verileri şifresiz bir bulut sunucusunda açık bıraktığı tespit edilmiştir. Güvenlik araştırmacısı Anurag Sen tarafından Ekim 2026'da ortaya çıkarılan veri sızıntısının, polis sorgu tutanaklarını, vücut kamerası kayıtlarını ve ham ses dosyalarını içerdiği bildirilmiştir. Verilerin Amazon S3 bulut sunucusunda herhangi bir parola koruması olmaksızın, tahmin edilebilir bir web adresi üzerinden erişilebilir durumda olduğu kaydedilmiştir. Tigerfish Başkanı Adam Goldberg, durumun bildirilmesinin ardından ilgili sunucuya erişimin engellendiğini ve diğer depolama birimlerinin güvenliğinin kontrol edildiğini açıklamıştır. Şirketin, araştırmacıdan gelen ilk uyarı e-postasının istenmeyen posta filtresine takılması nedeniyle müdahalede geciktiği ifade edilmiştir. Olayın, basit yapılandırma hatalarının yol açtığı riskleri vurguladığı belirtilmektedir.
+(XXXXXXX, AÇIK -techcrunch.com, 20.11.2026)
+» url=https://techcrunch.com/2026/11/20/a-transcription-firm-used-by-police-prosecutors-and-tech-giants-exposed-customer-data-online/
+» manset=hayir | kategori=veri_ihlali | puan=85
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] Batı Virginia Eyalet Meclisi Sistemlerine Siber Saldırı
+─────────────────────────────────────────────────────────
+Batı Virginia eyalet meclisinin bilgi işlem sistemleri ve resmi web sitesi, 19 Kasım 2026 tarihinde başlayan bir siber saldırı nedeniyle hizmet dışı kalmıştır. Meclis yetkilileri, olayın tespit edilmesinin ardından sistemlerin kontrol altına alınması için dışarıdan siber güvenlik uzmanlarıyla çalışmaya başladıklarını ve bazı sistemlerin geçici olarak devre dışı bırakıldığını açıklamıştır. Yapılan ilk incelemelerde, saldırının yalnızca meclis sistemleriyle sınırlı kaldığı ve diğer eyalet kurumlarının etkilenmediği bilgisi verilmiştir. Saldırının fidye yazılımı olup olmadığına dair henüz resmi bir açıklama yapılmamış ve herhangi bir siber suç grubu olayın sorumluluğunu üstlenmemiştir. ABD genelinde yerel yönetimlere yönelik siber saldırıların geçen yılın aynı dönemine göre yüzde 91 oranında arttığı kaydedilmektedir. Eyalet meclisinin 1,7 milyon vatandaşı temsil eden 134 üyesinin dijital çalışma ortamlarının güvenliğinin sağlanması için soruşturmanın sürdüğü bildirilmiştir.
+(XXXXXXX, AÇIK -therecord.media, 20.11.2026)
+» url=https://therecord.media/west-virginia-legislature-cyberattack
+» manset=hayir | kategori=stratejik_kurum_saldirisi | puan=81
+» sonradan | kategori=stratejik_kurum_saldirisi | onem=59 | eksen=8/17/17/17 | rubrik=v2
+» varlik | hedef=ABD
+» kurban | ad=Batı Virginia Eyalet Meclisi | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Signal'in Yapay Zeka Ajanlarının Ekran Taramasını Engellemesi
+─────────────────────────────────────────────────────────
+Signal, kullanıcı mesajlarının gizliliğini tehdit eden Google Gemini ve Apple Siri gibi yapay zeka ajanlarının ekran tarama özelliklerini engellemeye başladığını duyurmuştur. Uygulama CEO'su Meredith Whittaker, işletim sistemlerine derinlemesine entegre edilen bu ajanların kullanıcı sorularını yanıtlamak için ekranı sürekli taradığını ve bu süreçte özel mesajların şirket sunucularına aktarıldığını belirtmiştir. Signal'in iOS ve Android sürümlerine getirilen yeni kontrollerle, yapay zeka ajanlarının optik karakter tanıma (OCR) yöntemiyle metin çıkarmak için ekran görüntüsü almasının engellendiği kaydedilmiştir. Whittaker, bu korumanın ayarlardan kapatılabileceğini ancak bunun ciddi bir güvenlik riski oluşturacağını vurgulamıştır. İşletim sistemi üreticilerinin, uygulama geliştiricilerine yapay zeka veri erişimini kısıtlamak için yeterli teknik araç sunmadığı ifade edilmiştir. Apple'ın macOS üzerinde bazı kısıtlamalar getirmeye hazırlandığı ancak bu önlemlerin genellikle üçüncü taraf uygulamaları hedeflediği, kendi servislerini kapsamadığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -theregister.com, 20.11.2026)
+» url=https://www.theregister.com/security/2026/11/20/signal-slams-door-on-prying-ai-agents-to-protect-privacy/5311466
+» manset=hayir | kategori=politika_hukuk | puan=78
+» sonradan | kategori=politika_hukuk | onem=75 | eksen=25/17/8/25 | rubrik=v2
+» varlik | sektor=teknoloji,ulastirma
+» kurban | ad=Signal | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[11] RansomwareHelp Şirketi Yöneticisinin Dolandırıcılık Suçuyla İddianamesi
+─────────────────────────────────────────────────────────
+Florida merkezli RansomwareHelp şirketinin kurucu ortağı ve teknoloji müdürü Juan Ricardo Palacio Escobar, FBI tarafından düzenlenen bir gizli operasyon sonucunda kablolu dolandırıcılıkla suçlanmıştır. Şirketin, gelişmiş kriptografik araçlar kullanarak verileri kurtardığını iddia etmesine rağmen, aslında saldırganlara fidye ödediği ve bu tutarın üzerine yüksek kâr marjları ekleyerek mağdurları dolandırdığı tespit edilmiştir. FBI'ın hem mağdur hem de fidye grubu kılığına girerek yürüttüğü operasyonda, Escobar'ın saldırganlarla gizlice pazarlık yaptığı ve mağdurdan aldığı ücretin çok daha azını fidyecilere ödediği kaydedilmiştir. Şirketin, mağdurların fidyecilerle doğrudan iletişim kurmasını engellemek için sistemlerdeki fidye notlarını sildiği ve teknik olarak imkansız kurtarma yöntemleri vaat ettiği belirtilmiştir. İddianamede, sanığın özellikle teknoloji bilgisi sınırlı olan küçük işletmeleri hedef aldığı ve sahte teknik raporlarla güven kazandığı ifade edilmiştir. Benzer şekilde faaliyet gösteren diğer siber güvenlik firmalarına yönelik soruşturmaların da devam ettiği bildirilmiştir.
+(XXXXXXX, AÇIK -krebsonsecurity.com, 21.11.2026)
+» url=https://krebsonsecurity.com/2026/11/cto-of-ransomwarehelp-indicted-for-wire-fraud/
+» manset=hayir | kategori=kolluk_operasyonu | puan=73
+» sonradan | kategori=kolluk_operasyonu | onem=58 | eksen=8/8/17/25 | rubrik=v2
+» kurban | ad=RansomwareHelp | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[12] ABD'li Şirketlerin Çin Menşeli Yapay Zeka Kullanımına Tepki
+─────────────────────────────────────────────────────────
+ABD Temsilciler Meclisi İç Güvenlik Komitesi ve Çin Komünist Partisi Seçilmiş Komitesi tarafından hazırlanan 50 sayfalık ortak rapor, Amerikalı şirketlerin Çin menşeli açık ağırlıklı yapay zeka modellerini kullanmasını ulusal güvenlik riski olarak nitelendirilmiştir. Raporda, Airbnb, DoorDash ve Anysphere gibi firmaların müşteri hizmetleri, kodlama projeleri ve envanter yönetimi süreçlerinde bu modelleri kullandığı belirtilmiştir. Milletvekilleri, Çinli geliştiricilerin Amerikan modellerinden veri toplamak için paravan ağlar ve sahte hesaplar kullandığını, bu durumun Amerikan ağlarına sızılmasına ve uzun vadede milyarlarca dolarlık maliyete yol açacağını vurgulamıştır. Federal sözleşmelerden ve kritik altyapılardan bu modellerin men edilmesi dahil 12 politika önerisi sunulan raporda, Çin'in düşük maliyetli stratejisiyle küresel bağımlılık yaratarak rekabeti engellemeyi hedeflediği ifade edilmiştir. Raporda ayrıca, Amerikan açık ağırlıklı yapay zeka girişimlerinin desteklenmesi ve modellerin kaynak standartlarının belirlenmesi gerektiği kaydedilmiştir.
+(XXXXXXX, AÇIK -therecord.media, 20.11.2026)
+» url=https://therecord.media/chinese-open-weight-AI-use-by-US-companies-house-investigation
+» manset=hayir | kategori=politika_hukuk | puan=68
+» sonradan | kategori=politika_hukuk | onem=84 | eksen=17/17/25/25 | rubrik=v2
+» varlik | sektor=teknoloji | hedef=ABD | aktor_ulke=Çin
+
+────────────────────────────────────────────────────────────────────────────────
+
+[13] F5 BIG-IP Kritik Uzaktan Kod Çalıştırma Zafiyetlerinin Giderilmesi
+─────────────────────────────────────────────────────────
+F5 firması, BIG-IP Access Policy Manager (APM) ve iRule programlanabilir betik bileşenlerinde tespit edilen beş adet kritik güvenlik açığı için acil yamalar yayımlamıştır. 21 Kasım 2026 tarihinde duyurulan bu zafiyetlerin, 9.8 şiddet puanı ile en yüksek risk seviyesinde değerlendirildiği belirtilmiştir. CVE-2026-120292, CVE-2026-120285, CVE-2026-116953 ve CVE-2026-123637 kodlu açıkların, kimlik doğrulaması yapmamış saldırganların Trafik Yönetimi Mikroçekirdeği (TMM) birimini sonlandırarak uzaktan kod çalıştırmasına (RCE) imkân tanıdığı ifade edilmiştir. Ayrıca, BIG-IP APM SAML bileşeninde hizmet dışı bırakma saldırılarına yol açabilen CVE-2026-126822 kodlu yüksek seviyeli bir açık da giderilmiştir. F5, bu zafiyetler için herhangi bir geçici çözüm bulunmadığını vurgulayarak, kenar cihazlara yönelik artan siber saldırı tehditleri nedeniyle sistem yöneticilerinin ilgili düzeltme paketlerini ve hotfix uygulamalarını ivedilikle yüklemeleri gerektiğini bildirmiştir.
+(XXXXXXX, AÇIK -csoonline.com, 21.11.2026)
+» url=https://www.csoonline.com/article/4251711/f5-scrambles-to-fix-more-critical-big-ip-security-flaws-2.html
+» manset=hayir | kategori=zafiyet_rutin | puan=76
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=25/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-116953,CVE-2026-120285,CVE-2026-120292,CVE-2026-123637,CVE-2026-126822 | urun=F5
+
+────────────────────────────────────────────────────────────────────────────────
+
+[14] PHP Yazılımında Tespit Edilen Yeni Kritik Güvenlik Açıkları
+─────────────────────────────────────────────────────────
+PHP geliştirme ekibi, PHP2Shell vakasının ardından sistem mimarisindeki 18 yeni güvenlik açığını kapatmak için güncellemeler yayımlamıştır. Bu açıklar arasında, kimlik doğrulaması gerektirmeden uzaktan kod yürütülmesine imkan tanıyan 9.2 şiddetindeki CVE-2026-129289 kodlu istek kaçakçılığı (request smuggling) hatası dikkat çekmektedir. Söz konusu açığın özellikle yüksek trafikli sitelerde kullanılan PHP-FPM hizmetini etkilediği ve belirli sunucu yapılandırmalarında saldırganların tüm sunucuyu ele geçirmesine yol açabileceği belirtilmiştir. Yamaların PHP 8.5.13, 8.4.28, 8.3.37 ve 8.2.36 sürümlerini kapsadığı ve tüm kurumsal yöneticilerin sistemlerini acilen güncellemeleri gerektiği kaydedilmiştir. Uzmanlar, PHP 8.2 sürümünün yıl sonunda destek süresinin dolacağını ve bu sürümü kullananların risk altında kalacağını ifade etmiştir. Ayrıca, hata raporlama süreçlerindeki bazı açıkların şifrelerin ve jetonların düz metin olarak sızmasına neden olabileceği uyarısında bulunulmuştur.
+(XXXXXXX, AÇIK -csoonline.com, 21.11.2026)
+» url=https://www.csoonline.com/article/4251713/php2shell-aftershock-18-more-php-flaws-put-enterprise-web-admins-on-alert.html
+» manset=hayir | kategori=zafiyet_rutin | puan=76
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=25/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-129289
+
+────────────────────────────────────────────────────────────────────────────────
+
+[15] Progress WS_FTP Server Yazılımında Güvenlik Açığının Giderilmesi
+─────────────────────────────────────────────────────────
+Progress WS_FTP Server yazılımında, verilerin bütünlüğünü ve gizliliğini doğrudan tehdit eden çok sayıda kritik güvenlik açığı tespit edilmiştir. ANSSI (CERT-FR) tarafından 19 Kasım 2026 tarihinde duyurulan bu zafiyetlerin, saldırganlara uzaktan hizmet dışı bırakma (DoS) saldırısı gerçekleştirme ve hassas bilgilere yetkisiz erişim sağlama imkânı tanıdığı bildirilmiştir. CVE-2026-115338, CVE-2026-115339, CVE-2026-115340, CVE-2026-115341 ve CVE-2026-35189 kodlarıyla tanımlanan bu açıkların, yazılımın 2025.0.5 (10.0.5) sürümünden önceki tüm versiyonlarını etkilediği kaydedilmiştir. Progress firması, 9 Kasım 2026 tarihinde yayımladığı hizmet paketi ile söz konusu zafiyetler için gerekli teknik düzeltmeleri sunduğunu açıklamıştır. Kullanıcıların sistem kararlılığını korumak ve veri ihlallerini önlemek amacıyla ilgili güvenlik bültenindeki talimatları izleyerek sistemlerini en güncel sürüme yükseltmeleri gerektiği önemle ifade edilmiştir.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 19.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1570/
+» manset=hayir | kategori=zafiyet_rutin | puan=52
+» sonradan | kategori=zafiyet_rutin | onem=33 | eksen=8/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-115338,CVE-2026-115339,CVE-2026-115340,CVE-2026-115341,CVE-2026-35189
+» kurban | ad=Progress Software | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[16] Cisco Expressway Açığının Rusya'daki Bir Kuruma Saldırıda Kullanılması
+─────────────────────────────────────────────────────────
+Siber tehdit aktörlerinin, Cisco Expressway cihazlarındaki CVE-2026-76466 kodlu kritik güvenlik açığını istismar ederek Rusya merkezli bir kuruluşa sızdığı tespit edilmiştir. Rus güvenlik firması F6 tarafından yayımlanan raporda, saldırganların bir kavram kanıtlama (PoC) kodunun kamuya açıklanmasının hemen ardından harekete geçtiği ve internete açık cihazlar üzerinden kök (root) yetkisi kazandığı belirtilmiştir. Saldırganların ağ içinde yanal hareket ederek GitLab depolarına, SQL sunucularına ve SMB kaynaklarına erişmek için yapay zeka desteğiyle yazıldığı tahmin edilen özel Python betikleri kullandığı kaydedilmiştir. Cisco'nun 21 Ekim 2026 tarihinde yama yayımladığı bu açığın, kimlik doğrulaması gerektirmeden uzaktan komut yürütülmesine olanak tanıdığı ifade edilmiştir. Analizler, saldırganların hassas verileri ve kimlik bilgilerini sızdırmayı hedeflediğini ortaya koyarken, kuruluşlara sistemlerini acilen güncellemeleri ve ağ segmentasyonu önlemlerini artırmaları tavsiye edilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 20.11.2026)
+» url=https://thehackernews.com/2026/11/hackers-exploit-critical-cisco.html
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=84
+» varlik | hedef=Rusya
+» teknik | cve=CVE-2026-76466 | urun=Cisco
+
+────────────────────────────────────────────────────────────────────────────────
+
+[17] Linux KVM Açığının AMD Sunucularda Bellek Sızıntısı Yaratması
+─────────────────────────────────────────────────────────
+Linux çekirdeğine entegre KVM hipervizöründe tespit edilen CVE-2026-99312 kodlu güvenlik açığının, saldırganların ana makine belleğine erişmesine olanak tanıdığı bildirilmiştir. Terra Security araştırmacıları, AMD işlemcili ve iç içe sanallaştırma (nested virtualization) özelliği aktif olan sunucularda, bir sanal makine içerisinden ana makinenin 127 GB'lık RAM verisini okumayı başarmıştır. Sorunun, sanal işlemci sıfırlama sinyalleri sırasında bellek işaretçilerinin hatalı yönetilmesinden kaynaklandığı ve 2022 yılındaki bir güvenlik yamasının bu hataya yol açtığı belirtilmiştir. DigitalOcean gibi bulut sağlayıcılarının sistemlerini canlı yamalarla güncellediği, ancak kendi sunucularını yöneten operatörlerin çekirdek güncellemesi yapması veya iç içe sanallaştırmayı kapatması gerektiği kaydedilmiştir. Intel tabanlı sistemlerin bu açıktan etkilenmediği ve hatanın yaklaşık dört yıldır çekirdek kodunda bulunduğu ifade edilmiştir. Henüz aktif bir istismar vakası bildirilmezken, çekirdek 7.3.5 ve ilgili uzun süreli destek sürümlerinde düzeltme yayımlandığı bilgisi verilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 20.11.2026)
+» url=https://thehackernews.com/2026/11/new-linux-kvm-flaw-cve-2026-99312-lets.html
+» manset=hayir | kategori=zafiyet_rutin | puan=79
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» varlik | sektor=teknoloji
+» teknik | cve=CVE-2026-99312
+» kurban | ad=DigitalOcean | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[18] WhatsApp'ın Android Uygulamasındaki Kimlik Avı Açığını Gidermesi
+─────────────────────────────────────────────────────────
+WhatsApp, Android ve WhatsApp Business for Android uygulamalarında tespit edilen CVE-2026-23871 kodlu düşük etkili bir güvenlik açığını gidermiştir. Şirketin güvenlik ekibi tarafından bir dolandırıcılık kampanyasına müdahale edilirken keşfedilen bu zafiyetin, harici reklam yanıt URL'lerinin eksik doğrulanmasından kaynaklandığı ve saldırganların hedef cihazın IP bilgilerini ele geçirmesine imkân tanıdığı bildirilmiştir. Ayrıca Meta, resmi olmayan istemcilerden gönderilen mesajlar aracılığıyla cihazdaki dosyaların silinmesine yol açabilen CVE-2026-102769 kodlu SQL enjeksiyonu açığını ve Meta AI altyapısını etkileyen CVE-2026-44908 kodlu sertifika doğrulama hatasını yamalamıştır. Sertifika hatasının, donanım güven kökünün baypas edilmesine neden olabileceği ancak şeffaflık kayıtları üzerinden yapılan incelemelerde herhangi bir istismara rastlanmadığı ifade edilmiştir. Kullanıcıların güvenliği sağlamak adına 2.26.17.4 ve 2.26.35.74 sürümlerine geçmeleri önerilmektedir.
+(XXXXXXX, AÇIK -securityweek.com, 20.11.2026)
+» url=https://www.securityweek.com/whatsapp-fixes-flaw-uncovered-while-disrupting-scam-campaign/
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=70
+» teknik | cve=CVE-2026-102769,CVE-2026-23871,CVE-2026-44908 | urun=Google,WhatsApp
+
+────────────────────────────────────────────────────────────────────────────────
+
+[19] Mitel Ürünlerinde Uzaktan Kod Çalıştırma Ve Veri İhlali
+─────────────────────────────────────────────────────────
+Mitel, OpenScape 4000 ve OpenScape 4000 Manager ürünlerinde veri bütünlüğünü, gizliliğini ve sistem güvenliğini tehdit eden birden fazla kritik güvenlik açığı tespit etmiştir. 18 Kasım 2026 tarihinde yayımlanan 2026-0013 numaralı güvenlik bültenine göre, bu zafiyetler saldırganların uzaktan rastgele kod çalıştırmasına, hizmet dışı bırakma (DoS) saldırıları düzenlemesine ve yetkisiz veri erişimi sağlamasına imkan tanımaktadır. Etkilenen sistemler arasında OpenScape 4000 Manager'ın V11 R2.14 öncesi sürümleri ile OpenScape 4000'in V10 R0.28 ve V11 R0.22 arasındaki versiyonları yer almaktadır. Özellikle PLT HF5 güvenlik yaması uygulanmamış V11 R1.x serisi sistemlerin yüksek risk altında olduğu belirtilmiştir. Mitel, müşterilerine ağ güvenliğini korumak ve güvenlik politikası ihlallerini önlemek amacıyla yayımlanan güncel yazılım paketlerini ve düzeltme eklerini ivedilikle uygulamaları çağrısında bulunmuştur.
+(XXXXXXX, AÇIK -cert.cyber.gouv.fr, 19.11.2026)
+» url=https://www.cert.cyber.gouv.fr/avis/CERTFR-2026-AVI-1569/
+» manset=hayir | kategori=zafiyet_rutin | puan=57
+» sonradan | kategori=zafiyet_rutin | onem=42 | eksen=17/17/8/0 | rubrik=v2
+» kurban | ad=Mitel | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
