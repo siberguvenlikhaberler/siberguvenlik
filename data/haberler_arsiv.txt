@@ -64473,3 +64473,120 @@ Mitel, OpenScape 4000 ve OpenScape 4000 Manager ürünlerinde veri bütünlüğ�
 
 ────────────────────────────────────────────────────────────────────────────────
 
+
+================================================================================
+📅 22 NOVEMBER 2026 - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)
+================================================================================
+
+[ 1] FBI Veri Tabanına Yönelik Siber Saldırı Gerçekleştirilmesi
+─────────────────────────────────────────────────────────
+Federal Soruşturma Bürosu (FBI), yerel, eyalet ve federal kolluk kuvvetlerinin aranan şahıslar, kayıp kişiler, tutuklama emirleri, çalıntı araçlar ve ateşli silahlar gibi kritik verileri paylaştığı Ulusal Suç Bilgi Merkezi (NCIC) veri tabanına yönelik yeni bir siber saldırıyı soruşturmaktadır. İki ay içinde gerçekleşen ikinci ihlal olan bu olayda, trafik kontrolleri ve sabıka kayıtları taramalarında hayati öneme sahip hassas verilere erişilip erişilmediği henüz netleşmemiştir. Eylül ayında ShinyHunters grubunun yamalanmamış bir Oracle PeopleSoft açığını kullanarak FBIJobs.gov platformuna sızmasının ardından gelen bu yeni sızıntı, güvenlik endişelerini artırmıştır. Önceki saldırıyla bağlantısı henüz kanıtlanamayan bu son ihlal, CNN kaynaklarına göre son günlerde tespit edilmiş olup, FBI ve CISA yetkilileri saldırının kapsamını ve sistemin kullanılabilirliğini etkileyip etkilemediğini belirlemeye çalışmaktadır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 21.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/fbi-reportedly-hacked-again-this-time-targeting-nationwide-police-database/
+» manset=evet | kategori=stratejik_kurum_saldirisi | puan=95
+» varlik | sektor=savunma | aktor=ShinyHunters
+» teknik | urun=Oracle
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 2] Avusturya Dışişleri Bakanlığına Yönelik Siber Saldırı Düzenlenmesi
+─────────────────────────────────────────────────────────
+Avusturya Dışişleri Bakanlığı, dış hizmet sağlayıcı tarafından işletilen web sitesine yönelik 12-13 Kasım 2026 tarihlerinde gerçekleşen bir siber saldırıyla diplomatik personelin profesyonel iletişim bilgilerinin sızdırıldığını doğrulamıştır. Viyana'daki merkez çalışanları ile yurt dışı misyonlarda görevli personelin isim ve iletişim verilerine erişilen ihlal, küresel bir Microsoft kesintisiyle aynı döneme denk gelmiştir. Yetkililer, vatandaşlara ait kişisel verilerin etkilenmediğini belirtirken olayı Federal Siber Güvenlik Ofisi ve Veri Koruma Kurumu'na bildirmiştir. 2020 ve 2022 yıllarında da benzer saldırılara maruz kalan bakanlık, altyapı güvenliğini artırmak için ek teknik kontroller başlatmıştır. Henüz resmi bir suçlama yapılmasa da olay, Avusturya'nın Rusya ile yaşadığı diplomatik gerilimler ve geçmişteki karşılıklı diplomat sınır dışı etme kararlarının gölgesinde gerçekleşmiştir.
+(XXXXXXX, AÇIK -securityaffairs.com, 21.11.2026)
+» url=https://securityaffairs.com/203680/hacking/cyberattack-on-austrian-foreign-ministry-exposes-diplomatic-staff-data.html
+» manset=evet | kategori=stratejik_kurum_saldirisi | puan=81
+» varlik | sektor=kamu | hedef=Rusya
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 3] Microsoft Entra Connect Health Veri Sızıntısının Gerçekleşmesi
+─────────────────────────────────────────────────────────
+Microsoft, Entra Connect Health hizmetindeki bir API açığının istismar edilmesiyle yönetici e-posta adreslerinin ve kiracı yapılandırma verilerinin sızdırıldığını duyurmuştur. 23 Temmuz 2026'da ortaya çıkan ve 9 Kasım'da tespit edilen bu açık, saldırganların kiracı kimlikleri, alan adları, ülke kodları, lisans katmanları ve dizin senkronizasyon durumları gibi meta verilere salt okunur erişim sağlamasına yol açmıştır. Sızıntı kapsamında, 2024 sonunda kullanımdan kaldırılan bir hizmete ait süresi dolmuş sertifikalar da ele geçirilmiştir. Microsoft, 19 Kasım 2026'da sunucu tarafında bir düzeltme uygulayarak açığı kapatmış ve etkilenen kuruluşları bilgilendirmeye başlamıştır. Kullanıcı şifreleri veya kimlik doğrulama belirteçleri etkilenmese de kuruluşlara, sızdırılan yönetici bilgileri üzerinden yapılabilecek hedefli kimlik avı saldırılarına karşı dikkatli olmaları ve PowerShell betiği ile riskli verileri incelemeleri önerilmiştir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 21.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/microsoft-entra-connect-health-flaw-exploited-to-steal-tenant-data/
+» manset=evet | kategori=veri_ihlali | puan=79
+» sonradan | kategori=veri_ihlali | onem=76 | eksen=25/17/17/17 | rubrik=v2
+» teknik | urun=Microsoft
+» kurban | ad=Microsoft | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 4] BADBOX Botnetinin Rekor Seviyede Reklam Sahteciliğiyle Geri Dönmesi
+─────────────────────────────────────────────────────────
+BADBOX zararlı yazılım botneti, Android tabanlı cihazlar üzerinden günlük 40 milyar sahte reklam teklifi isteği oluşturarak, önceki rekor sahibi VASTFLUX'ı üçe katlayan devasa bir kapasiteyle yeniden faaliyete geçmiştir. HUMAN araştırmacıları, BADBOX 3.0 varyantının bugüne kadar belgelenmiş en büyük reklam sahteciliği operasyonu olduğunu ve tüm CTV trafiğinin %4'ünü oluşturduğunu açıklamıştır. Ucuz Android TV kutuları ve tabletlere fabrikada yüklenen yazılımlar aracılığıyla yayılan botnetin, cihazları sahiplerinin bilgisi dışında PXYEDGE gibi konut vekil sunucu ağlarına dahil ettiği tespit edilmiştir. Nisan 2025 itibarıyla 10 milyon cihazı etkileyen operasyonun arkasında Çin merkezli bir üreticinin bulunduğu, Google ve Shadowserver'ın müdahalelerine rağmen saldırganların altyapılarını hızla yenilediği kaydedilmiştir. Uzmanlar, kullanıcıların yalnızca sertifikalı cihazlar almalarını ve Play Protect özelliğini aktif tutmalarını önermektedir.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 21.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/badbox-30-botnet-returns-with-record-breaking-40-billion-daily-ad-requests/
+» manset=hayir | kategori=kolluk_operasyonu | puan=85
+» varlik | sektor=uretim | hedef=Çin
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 5] VMware vCenter Sunucularındaki Kritik Sıfır Gün Açığının Kapatılması
+─────────────────────────────────────────────────────────
+Broadcom, Çin bağlantılı siber casusluk grubu Armory Castle tarafından Eylül 2026'dan bu yana istismar edilen VMware vCenter Server üzerindeki kritik bir kimlik doğrulama atlatma açığını (CVE-2026-123890) yamalamıştır. VMSA-2026-0009 kapsamında giderilen bu zafiyetin, ağ erişimi olan saldırganların yönetici yetkileri elde etmesine ve sanal makineleri kontrol etmesine imkan tanıdığı belirtilmiştir. Mandiant raporuna göre saldırganlar, BeyondTrust Remote Support sistemindeki CVE-2026-102764 açığını kullanarak ağda yanal hareket etmiş ve BONESAW adlı özel araçla vCenter SSO hesapları oluşturmuştur. Ayrıca SAWSNAKE aracıyla Golden SAML saldırıları gerçekleştirilerek çok faktörlü doğrulamanın devre dışı bırakıldığı ve hassas verilerin sızdırıldığı tespit edilmiştir. Broadcom, VMware Cloud Foundation ve vSphere Foundation gibi platformları etkileyen bu durum için acil güncelleme çağrısı yapmıştır.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 20.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/vmware-patches-vcenter-zero-day-exploited-in-attacks-since-september/
+» manset=hayir | kategori=zafiyet_aktif_apt | puan=93
+» sonradan | kategori=zafiyet_aktif_apt | onem=84 | eksen=25/17/25/17 | rubrik=v2
+» varlik | aktor_ulke=Çin
+» teknik | cve=CVE-2026-102764,CVE-2026-123890 | urun=Broadcom,VMware | istismar=aktif
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 6] Yapay Zeka Ajanlarının MONAI Label Sunucusunda Zafiyet Tespiti
+─────────────────────────────────────────────────────────
+Amazon Tehdit İstihbaratı birimi, Çin bağlantılı siber aktörlerin otonom yapay zeka ajanlarını kullanarak MONAI Label adlı tıbbi görüntüleme sunucusunda kritik bir güvenlik açığı tespit ettiğini bildirmiştir. CVE-2026-133968 olarak tanımlanan ve 9.8 puan alan bu path-traversal zafiyetinin, Cairn adlı yapay zeka çerçevesi aracılığıyla bir üniversite sunucusunda kök erişimi elde etmek için kullanıldığı açıklanmıştır. Yapay zeka ajanlarının, insan müdahalesi olmadan hedef sistemi 11 dakika içinde haritalandırarak Python başlangıç dosyaları üzerinden zararlı kod yürüttüğü kaydedilmiştir. Yazılımın 0.8.5 ve önceki sürümlerini etkileyen bu açık için kaynak kodunda düzeltme yapılmış olsa da henüz yüklenebilir bir yama yayınlanmamıştır.
+(XXXXXXX, AÇIK -thehackernews.com, 21.11.2026)
+» url=https://thehackernews.com/2026/11/attackers-ai-agents-found-zero-day-in.html
+» manset=hayir | kategori=nation_state_apt | puan=82
+» varlik | sektor=egitim | aktor_ulke=Çin
+» teknik | cve=CVE-2026-133968
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 7] Rackspace Spot Platformunda Kubernetes Sırlarının Ele Geçirilmesi
+─────────────────────────────────────────────────────────
+Rackspace, siber saldırganların sızdırılmış kimlik bilgilerini kullanarak Rackspace Spot bulut platformuna yetkisiz erişim sağladığını açıklamıştır. 17 Kasım 2026 tarihinde 00:20 ile 22:00 UTC saatleri arasında gerçekleşen ihlalde, saldırganların müşteri kümelerinde yetkisiz podlar oluşturduğu ve Kubernetes sırlarına eriştiği tespit edilmiştir. Bu sırların şifreler, API anahtarları ve kimlik doğrulama belirteçleri gibi kritik verileri içerdiği, saldırganların 23.224.79.106 IP adresi üzerinden işlem yaptığı belirtilmiştir. Şirket, 18 Kasım'da bir müşteri raporuyla durumdan haberdar olmuş ve güvenlik önlemi olarak tüm platform erişimini geçici olarak durdurmuştur. İlgili oturumların iptal edildiği ve hizmetin 21 Kasım 2026 tarihinde tamamen geri yüklendiği kaydedilmiştir. Etkilenen müşterilere, tüm API belirteçlerini yenilemeleri, yapılandırma dosyalarını güncellemeleri ve kümelerindeki tüm kimlik bilgilerini değiştirmeleri yönünde çağrıda bulunulmuştur.
+(XXXXXXX, AÇIK -bleepingcomputer.com, 22.11.2026)
+» url=https://www.bleepingcomputer.com/news/security/rackspace-spot-breach-let-hackers-access-customer-kubernetes-secrets/
+» manset=hayir | kategori=veri_ihlali | puan=69
+» sonradan | kategori=veri_ihlali | onem=59 | eksen=17/17/17/8 | rubrik=v2
+» kurban | ad=Rackspace | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 8] Yapay Zeka Sağlayıcılarında Veri Hırsızlığının Ortaya Çıkarılması
+─────────────────────────────────────────────────────────
+Siber güvenlik araştırmacıları, üç farklı yapay zeka çıkarım sağlayıcısının aylar süren bir veri hırsızlığına maruz kaldığını tespit etmiştir. Dragos tarafından yürütülen çalışmada, "Sıfır Veri Tutma" ayarı etkinleştirilmiş istemlerin dahi saldırganlar tarafından kopyalandığı belirlenmiştir. OpenRouter platformu, araştırmacıların bulguları doğrultusunda üç sağlayıcıyı sisteminden çıkardığını ve 125 uç noktanın veri tutmama uygunluğunu iptal ettiğini açıklamıştır. Temmuz ayında başlayan ihlallerin, yerleştirilen sahte istemler aracılığıyla ortaya çıkarıldığı ifade edilmiştir. Bir saldırganın AWS anahtarlarını çalarak on binlerce API çağrısı yaptığı ve Çin merkezli bir yapay zeka laboratuvarının veri toplama yasağı olan istemleri dahi kazıdığı bildirilmiştir. Phala ve Together AI gibi sağlayıcılar, ihlalleri doğrulayarak etkilenen kullanıcıların şifre ve belirteçlerini yenilemeleri gerektiğini duyurmuştur. Olayın yapay zeka ekosistemindeki tedarik zinciri risklerini yansıttığı belirtilmektedir.
+(XXXXXXX, AÇIK -thehackernews.com, 22.11.2026)
+» url=https://thehackernews.com/2026/11/openrouter-drops-3-providers-after.html
+» manset=hayir | kategori=veri_ihlali | puan=67
+» sonradan | kategori=veri_ihlali | onem=59 | eksen=17/17/17/8 | rubrik=v2
+» varlik | hedef=Çin
+» teknik | urun=AWS
+» kurban | ad=OpenRouter | kaynak=llm
+
+────────────────────────────────────────────────────────────────────────────────
+
+[ 9] GPGME Kütüphanesinde Kritik Bellek Hatasının Tespit Edilmesi
+─────────────────────────────────────────────────────────
+GnuPG projesi, GPGME standart kütüphanesinde uygulamaların verilerini açığa çıkarabilecek ve uzaktan kod yürütülmesine imkan tanıyabilecek kritik bir bellek hatası tespit edildiğini duyurmuştur. CVE-2026-129975 koduyla izlenen bu zafiyetin, alışılmadık derecede uzun kullanıcı kimliğine sahip kötü niyetli OpenPGP anahtarlarıyla tetiklenen bir "double free" (çift serbest bırakma) hatası olduğu açıklanmıştır. GPGME 2.3.0 öncesi sürümleri etkileyen bu durumdan e-posta istemcileri, XMPP yazılımları, Samba ve Gpg4win gibi çok sayıda uygulamanın etkilendiği bildirilmiştir. Johan Carlsson tarafından keşfedilen hata için GPGME 2.3.1 sürümü yayınlanmış ve kullanıcılara acilen güncelleme yapmaları tavsiye edilmiştir. Statik olarak bağlanmış kütüphane kopyalarına sahip uygulamaların ise kendi güncellemelerini yayınlamaları gerektiği, GPGMEPP ve GPGMEQT bileşenlerinin ise bu durumdan etkilenmediği kaydedilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 21.11.2026)
+» url=https://thehackernews.com/2026/11/gnupg-warns-critical-gpgme-flaw-could.html
+» manset=hayir | kategori=zafiyet_rutin | puan=68
+» sonradan | kategori=zafiyet_rutin | onem=50 | eksen=25/17/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-129975
+
+────────────────────────────────────────────────────────────────────────────────
+
+[10] Ghostscript Yazılımında Kum Havuzundan Kaçış Açığının Giderilmesi
+─────────────────────────────────────────────────────────
+Ghostscript yorumlayıcısında, saldırganların özel hazırlanmış dosyalar aracılığıyla güvenlik kum havuzundan kaçmasına ve sunucu üzerinde komut yürütmesine olanak tanıyan kritik bir güvenlik açığı tespit edilmiştir. CVE-2026-125396 koduyla takip edilen ve 8.5 puan alan bu zafiyetin, yazı tipi yükleme sürecindeki bir "use-after-free" hatasından kaynaklandığı açıklanmıştır. Linux sunucularında PDF ve görsel dönüştürme işlemlerinde yaygın olarak kullanılan yazılımın, ImageMagick ve WordPress eklentileri tarafından dolaylı olarak çağrıldığı ifade edilmiştir. Araştırmacılar, kimlik doğrulaması gerektirmeyen yazdırma kuyrukları ve e-posta ekleri üzerinden sistemlere sızmanın mümkün olduğunu kanıtlamıştır. Artifex, sorunu 8 Eylül tarihinde yayınladığı 10.08.0 sürümüyle düzeltmiştir. Ancak Debian 12 ve SUSE gibi birçok dağıtımın hâlâ savunmasız sürümleri barındırdığı, yöneticilerin görsel işleme yetkilerini kısıtlamaları ve AppArmor profilleri kullanmaları gerektiği bildirilmiştir.
+(XXXXXXX, AÇIK -thehackernews.com, 22.11.2026)
+» url=https://thehackernews.com/2026/11/researchers-demonstrate-ghostscript.html
+» manset=hayir | kategori=zafiyet_rutin | puan=55
+» sonradan | kategori=zafiyet_rutin | onem=41 | eksen=25/8/8/0 | rubrik=v2
+» teknik | cve=CVE-2026-125396
+
+────────────────────────────────────────────────────────────────────────────────
+
