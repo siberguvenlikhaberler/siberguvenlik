@@ -1485,3 +1485,23 @@ haberlerini yakaladı — reddedildi. Arşivdeki manşet taraması (264 manşet,
 23 Ağu → 20 Kas) aynı sınıftan 2 olası vaka daha gösteriyor (11 Eki Chromium
 typosquatting, 30 Ağu Claude Code); ikisinin gövdesi depoda olmadığı için
 kurala uyup uymadıkları ölçülemedi. Regresyon: `tests/test_yamali_zafiyet.py`.
+
+### AYNI GÜN YENİDEN ÜRETİMDE ARŞİV YAYIMLANAN RAPORU TAŞIR (2026-11-23)
+23 Kasım'da 09:13 koşusu 6 haber üretti, taban 7 olduğu için (havuz 16)
+başarısız sayıldı; 10:00 koşusu raporu yeniden üretip yayımladı (havuz 12,
+taban 5). `save_summary_to_archive` "bugünün bloğu zaten var" deyip ikinci
+koşuyu ATLIYORDU: yayımlanan 6 haberin yalnızca 1'i arşivdeydi, manşetteki
+Kirsten Davies haberi hiç yoktu. ÖLÇÜLDÜ (son 30 günün raporları ↔ arşiv):
+ayrışan tek gün 23 Kasım (9 Kasım'ın iki koşusu aynı rapordu).
+ÇARE `_arsiv_gun_blogunu_degistir`: bugünün SON bloğu yenisiyle değişir,
+eski günler birebir korunur. Etiket depoları (`retro_etiket`,
+`kurban_etiket`) KONUMLA anahtarlandığı için o bloğun anahtarları silinir —
+yoksa `|2` Cleverbridge etiketi yeni koşuda GL.iNet'e yapışırdı.
+`guvenli_yaz`'ın budama kapısı GEVŞEMEDİ: `izinli_dusus` yalnızca eski
+bloğun kayıt sayısı kadar açılır. Daha kötü rapor diske hiç yazılmadığı
+için (`DİSKE YAZILMADI, iyi sürüm korunuyor`) arşive de ulaşmaz. Reset
+prosedüründeki arşiv bloğu cerrahisi artık zorunlu değil, zararsızdır.
+23 Kasım bloğu yayımlanan raporla değiştirildi (manşet/kategori/puan
+ikinci koşunun skorlama kaydından); o 6 kaydın `» sonradan`/`» kurban`
+etiketi YOK, `retro_etiket parti/yaz` ile doldurulmalıdır.
+Regresyon: `tests/test_arsiv_gun_degistir.py`.

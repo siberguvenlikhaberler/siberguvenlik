@@ -5603,17 +5603,9 @@ document.addEventListener('DOMContentLoaded', initDragFile);
         # reset'te İŞARETÇİ olarak kullanılıyor, iki yerde birebir aynı üretilir.
         today_header = f"📅 {now.strftime('%d %B %Y').upper()} - EN ÖNEMLİ HABERLER (SEÇİLMİŞ)"
 
-        # Aynı gün ikinci koşuda (manuel tetikleme / retry) blok mükerrer
-        # eklenmesin: bugünün başlığı arşivde zaten varsa atla.
-        if os.path.exists(ARCHIVE_FILE):
-            try:
-                with open(ARCHIVE_FILE, encoding='utf-8') as f:
-                    if today_header in f.read():
-                        print("   ℹ️  Bugünün arşiv bloğu zaten mevcut — eklenmedi.")
-                        self._check_archive_size()
-                        return
-            except IOError:
-                pass
+        # Aynı gün ikinci koşuda (taban altı rapor sonrası retry / manuel
+        # tetik) blok EKLENMEZ ama ATLANMAZ da: yayımlanan rapor yenisidir,
+        # arşiv de onu taşımalıdır. Bkz. aşağıdaki _arsiv_gun_blogunu_degistir.
 
         archive_entry = f"\n{'=' * 80}\n{today_header}\n{'=' * 80}\n\n"
 
@@ -5711,14 +5703,86 @@ document.addEventListener('DOMContentLoaded', initDragFile);
                 yazilan += 1
 
         os.makedirs("data", exist_ok=True)
-        with open(ARCHIVE_FILE, 'a', encoding='utf-8') as f:
-            f.write(archive_entry)
+        if not self._arsiv_gun_blogunu_degistir(
+                today_header, archive_entry, now.strftime('%Y-%m-%d')):
+            with open(ARCHIVE_FILE, 'a', encoding='utf-8') as f:
+                f.write(archive_entry)
 
         print(f"✅ {ARCHIVE_FILE} (en önemli {yazilan} haber arşivlendi; "
               f"{len(top3_cards)} KRİTİK 3 + {len(news_items)} gövde)")
 
         self._check_archive_size()
         self._turetilmis_veriyi_tazele()
+
+    # Arşivdeki konumla (`<gün>|<sıra>`) anahtarlanan etiket depoları.
+    ARSIV_ETIKET_DEPOLARI = ('data/retro_etiket.json', 'data/kurban_etiket.json')
+
+    @classmethod
+    def _arsiv_gun_blogunu_degistir(cls, today_header, archive_entry, tarih):
+        """Bugünün arşiv bloğu varsa SON olanını yenisiyle değiştirir.
+
+        ÖLÇÜLDÜ (2026-11-23): 09:13 koşusu 6 haber üretti, taban 7 olduğu için
+        başarısız sayıldı; 10:00 koşusu raporu yeniden üretip yayımladı. Arşiv
+        ise "bugünün bloğu zaten var" deyip ilk koşuyu TUTTU — yayımlanan
+        6 haberin yalnızca 1'i arşivdeydi, manşetteki Kirsten Davies haberi
+        hiç yoktu. Yıl sonu analizinin omurgası yayımlanan raporla ayrışıyordu
+        (son 30 günde tek vaka).
+
+        Etiket depoları kayıtları KONUMLA anahtarlar; blok değişince eski
+        etiketler aynı sıradaki BAŞKA habere yapışırdı (23 Kasım: `|2`
+        Cleverbridge → yeni koşuda GL.iNet). O bloğun anahtarları silinir,
+        `_turetilmis_veriyi_tazele` yeni bloktan geri okur.
+
+        Dönüş: değiştirme yapıldıysa True (çağıran EKLEMEZ).
+        """
+        if not os.path.exists(ARCHIVE_FILE):
+            return False
+        with open(ARCHIVE_FILE, encoding='utf-8') as f:
+            icerik = f.read()
+        ayrac = '\n' + '=' * 80 + '\n'
+        n = icerik.count(ayrac + today_header)
+        if n == 0:
+            return False
+        bas = icerik.rfind(ayrac + today_header)
+        son = icerik.find(ayrac + '📅', bas + 1)
+        if son < 0:
+            son = len(icerik)
+        eski_blok = icerik[bas:son]
+        yeni = icerik[:bas] + archive_entry + icerik[son:]
+        import importlib.util as _iu
+        _sp = _iu.spec_from_file_location('arsiv_yaz', os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), 'scripts',
+            'arsiv_yaz.py'))
+        _m = _iu.module_from_spec(_sp)
+        _sp.loader.exec_module(_m)
+        guvenli_yaz, _kayit_say = _m.guvenli_yaz, _m._kayit_say
+        izinli = _kayit_say(eski_blok.splitlines(True))
+        guvenli_yaz(ARCHIVE_FILE, yeni.splitlines(True), izinli_dusus=izinli)
+
+        gun = tarih if n == 1 else f'{tarih}#{n}'
+        silinen = 0
+        for yol in cls.ARSIV_ETIKET_DEPOLARI:
+            try:
+                with open(yol, encoding='utf-8') as f:
+                    depo = json.load(f)
+            except (OSError, ValueError):
+                continue
+            eski_anahtar = [k for k in depo if k.startswith(gun + '|')]
+            if not eski_anahtar:
+                continue
+            for k in eski_anahtar:
+                del depo[k]
+            silinen += len(eski_anahtar)
+            girinti = 0 if 'retro' in yol else 1
+            tmp = yol + '.tmp'
+            with open(tmp, 'w', encoding='utf-8') as f:
+                json.dump(depo, f, ensure_ascii=False, indent=girinti,
+                          sort_keys=True)
+            os.replace(tmp, yol)
+        print(f"   ♻️  Bugünün arşiv bloğu YENİ koşuyla değiştirildi "
+              f"({izinli} → {_kayit_say(archive_entry.splitlines(True))} "
+              f"kayıt; {silinen} eski etiket silindi).")
+        return True
 
     _VARLIK_MODUL = None
 

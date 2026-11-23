@@ -27,14 +27,19 @@ def _kayit_say(satirlar):
     return sum(1 for s in satirlar if _BAS_RE.match(s))
 
 
-def guvenli_yaz(yol, satirlar):
+def guvenli_yaz(yol, satirlar, izinli_dusus=0):
     """Kayıt sayısı düşmüyorsa arşivi ATOMİK yazar; döndürdüğü sayı yeni
-    kayıt adedidir. Düşüyorsa hiçbir şey yazmaz ve RuntimeError yükseltir."""
+    kayıt adedidir. Düşüyorsa hiçbir şey yazmaz ve RuntimeError yükseltir.
+
+    `izinli_dusus`: yalnızca aynı günün bloğu yeniden yazılırken verilir
+    (eski blok N kayıt, yenisi daha az olabilir); düşüş bu sayıyı AŞARSA
+    yazım yine reddedilir — kapı gevşemez, yalnızca beklenen fark kadar açılır.
+    """
     yeni = _kayit_say(satirlar)
     if os.path.exists(yol):
         with open(yol, encoding='utf-8') as f:
             eski = _kayit_say(f.readlines())
-        if yeni < eski:
+        if yeni < eski - max(0, int(izinli_dusus)):
             raise RuntimeError(
                 f'YAZIM REDDEDİLDİ: kayıt sayısı {eski} → {yeni} düşüyor. '
                 f'{yol} budanmak üzereydi; dosyaya dokunulmadı.')
