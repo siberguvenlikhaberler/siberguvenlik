@@ -249,16 +249,21 @@ def test_erken_eleme_az_haber_kurtarmasindan_once():
 
 def test_hakem_kararsiz_cifti_mukerrer_ilan_edebilir():
     icerik = {1: ('Mozilla GPG Anahtarının Yenilenmesi',
-                  'Mozilla, ifşa olan Firefox imzalama anahtarını '
-                  'yenilemiştir.'),
+                  'Tarayıcı geliştiricisi Mozilla, ifşa olan Firefox imzalama '
+                  'anahtarını yenilemiştir.'),
               2: BAGIMSIZ, 3: BAGIMSIZ2,
               4: ('Akira Fidye Yazılımının Güvenli Modu Kullanması',
                   'Akira fidye yazılımı EDR atlatmak için güvenli modu '
                   'kullanmaktadır.')}
     gecmis = [{'tr_title': 'Mozilla Revokes Firefox and Thunderbird Linux '
                            'Signing Key', 'title': '',
-               'paragraph': 'Mozilla revoked its Linux signing key after a '
-                            'key compromise.', 'full_text': ''}]
+               # Ad CÜMLE ORTASINDA: 2026-11-24'ten beri son kapı hakeminin
+               # manşet işareti `capraz_gun_kaniti` ile sınanır; cümle başı
+               # Başlık Düzeni yüzünden kanıt sayılmaz. Gerçek golden çiftte
+               # (dedup_golden, 08-12 Mozilla GPG) kanıt 'llm_kanit:mozilla'.
+               'paragraph': 'The browser maker Mozilla revoked its Linux '
+                            'signing key after a key compromise.',
+               'full_text': ''}]
     s, rec, cnt, art = _kur([1, 2, 3], [4], [], icerik, gecmis)
     s._load_recent_report_views = lambda *a, **k: gecmis
     s._gemini_call_json = lambda *a, **k: {

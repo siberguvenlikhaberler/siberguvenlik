@@ -1580,6 +1580,15 @@ _KANIT_JENERIK = frozenset({
     'ulusal', 'national', 'federal', 'genel', 'general', 'devlet', 'state',
     'hükümet', 'governme', 'bakanlığ', 'ministry', 'hizmeti', 'service',
     'services', 'kurumu', 'ajansı', 'agency',
+    # Ay adları ve işletim sistemleri: son kapı hakeminin olay TANIMI
+    # ("Equinor'un 17 Kasım tarihli saldırısı", "BADBOX/XCPE Android TV
+    # botnet operasyonu") bunları taşır; ölçüldü (2026-11-24) 'kasım' 64,
+    # 'android' 23 ilgisiz geçmiş haberle "kanıt" üretiyordu.
+    'ocak', 'şubat', 'mart', 'nisan', 'mayıs', 'haziran', 'temmuz',
+    'ağustos', 'eylül', 'ekim', 'kasım', 'aralık', 'january', 'february',
+    'march', 'april', 'may', 'june', 'july', 'august', 'septembe',
+    'october', 'november', 'december', 'android', 'windows', 'linux',
+    'macos', 'ios',
 })
 
 

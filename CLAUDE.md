@@ -1505,3 +1505,27 @@ prosedüründeki arşiv bloğu cerrahisi artık zorunlu değil, zararsızdır.
 ikinci koşunun skorlama kaydından); o 6 kaydın `» sonradan`/`» kurban`
 etiketi YOK, `retro_etiket parti/yaz` ile doldurulmalıdır.
 Regresyon: `tests/test_arsiv_gun_degistir.py`.
+
+### SON KAPI HAKEMİNİN MANŞET İŞARETİ DE KANITLA SINANIR (2026-11-24)
+24 Kasım'da günün en yüksek puanlı haberi — Bulgaristan'da beş yıl fark
+edilmeyen hükümet casusluğu (96) — son mükerrer kapısındaki LLM hakemince
+"Infoblox tedarik zinciri ve SharePoint veri ihlali" ile aynı olay sayılıp
+manşetten düştü ve kalıcı yasak aldı; metinde ikisi de geçmiyor. 6 Kasım
+kanıt kuralı (`capraz_gun_kaniti`) yalnızca manşet çapraz-gün katmanında
+çalışıyordu. Artık son kapı hakeminin MANŞET işareti de sınanır; hakemin
+olay tanımı `ortak` yerine kullanılır. Gövde kararları ÖLÇÜLMEDİ, eski
+davranışta kalır. `_KANIT_JENERIK`'e ay adları ve işletim sistemi adları
+eklendi (olay tanımındaki 'kasım' 64, 'android' 23 ilgisiz haberle kanıt
+üretiyordu).
+ÖLÇÜLDÜ (gövde deposu olan 12 manşet işareti, 26 Eki → 24 Kas, herhangi bir
+geçmiş eşe karşı — üretim yalnızca hakemin eşine bakar, daha sıkıdır):
+7 kabul (OpenAI ajanları, Sırbistan/Pegasus, CyberStrikeAI, Binance,
+10 Kas soğutma, Equinor, Cold Relic — hepsi gerçek tekrar), 5 ret:
+Bulgaristan ve 22 Kas BADBOX (öncesinde hiç raporlanmamıştı — iki hatalı
+işaret düzelir) + üç soğutma kampanyası haberi (4 Kas SentinelOne
+değerlendirmesi, 6 Kas ABD uyarısı, 17 Kas Copeland açıkları) — bunlar artık
+manşette kalabilir; kampanya tekrarını defter `MANSET_TEKRAR_SINIRI` ile
+tutmaya devam eder. `dedup_golden`'ın hakem yoluna düşen 5 gerçek çapraz-gün
+mükerrerinin 5'i de kanıttan geçiyor (Mozilla GPG `llm_kanit:mozilla`,
+Gunra/CEVA/DeadLock/Linux e-posta `deterministik:defter`).
+Regresyon: `tests/test_son_kapi_hakem_kanit.py`.

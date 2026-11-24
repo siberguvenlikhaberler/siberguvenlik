@@ -8868,9 +8868,31 @@ document.addEventListener('DOMContentLoaded', initDragFile);
             print(f"   🤖 Mükerrer hakemi: {len(ciftler)} kararsız çift "
                   f"LLM'e soruluyor (deterministik {len(dusen)} tanesini "
                   f"zaten eledi)...")
+            manset_kume = set(top3_ids or [])
+            cift_by_no = {c[0]: c for c in ciftler}
             for no, (ayni, olay) in self._mukerrer_llm_hakem(ciftler).items():
                 aid = esleme.get(no)
                 if ayni and aid is not None and aid not in dusen:
+                    # KANIT KAPISI — MANŞET İÇİN (bkz. olay_iliski.
+                    # capraz_gun_kaniti). 24 Kasım: Bulgaristan'da beş yıllık
+                    # hükümet casusluğu (96) "Infoblox tedarik zinciri ve
+                    # SharePoint veri ihlali" denip manşetten düştü ve kalıcı
+                    # yasak aldı; metinde ikisi de geçmiyor. Hakemin olay
+                    # tanımı `ortak` yerine sınanır: tanımdaki ad iki metinde
+                    # de geçmeli ya da ölçülmüş tanımlardan biri bağlamalı.
+                    # Gövde kararları ÖLÇÜLMEDİĞİ için eski davranışta kalır.
+                    if aid in manset_kume and no in cift_by_no:
+                        _no, v_bugun, ev_gecmis, _n = cift_by_no[no]
+                        kabul, gerekce = _olay.capraz_gun_kaniti(
+                            v_bugun, ev_gecmis, ortak=olay, sozluk=sozluk)
+                        if not kabul:
+                            print(f"   ⚖️  ID {aid}: hakem 'mükerrer' dedi "
+                                  f"({olay[:50]}) ama {gerekce} — manşette "
+                                  f"kalır.")
+                            self._manset_karar_kaydet(
+                                'capraz_gun_kanit_siniri', aid, 0,
+                                f'son kapı hakemi: {gerekce} — {olay[:60]}')
+                            continue
                     dusen[aid] = f'kapi_capraz_gun_llm ({olay})'
                     print(f"   🤖 Hakem: ID {aid} MÜKERRER — {olay}")
 
