@@ -1,28 +1,5 @@
 [
  {
-  "date": "2026-10-25",
-  "views": [
-   {
-    "tr_title": "Çin Bağlantılı Grubun ConnectWise Üzerinden Bulut Kiracılarını Hedeflemesi",
-    "paragraph": "Microsoft, Çin bağlantılı Storm-0940 grubunun ConnectWise uygulama kimlik bilgilerini ele geçirerek 2.250'den fazla Microsoft 365 kiracısını hedef aldığını duyurmuştur. Saldırganlar, Go dilinde yazılmış açık kaynaklı yapay zeka tabanlı ARTEX sızma testi aracını kullanarak keşif, kimlik bilgisi saldırıları ve veri hırsızlığı süreçlerini otomatize etmiştir. Eylül 2021'den beri aktif olan grup, Eylül 2024 itibarıyla savunma sanayii, bankacılık ve teknoloji firmalarına yönelik saldırılarını hızlandı",
-    "title": "Microsoft says ConnectWise breach let Chinese spies loose on 2,250 cloud tenants",
-    "full_text": "Microsoft says ConnectWise breach let Chinese spies loose on 2,250 cloud tenants\n\nAI agents did the dirty work, with hackers gaining privileged access in some environments in under three hours\n\nPubKeep picks up where Microsoft Publisher signs off\n1 day ago\n\nOneDrive gives Macs a million things to keep in sync\n3 days ago\n\nMicrosoft admits that Always On VPN problems were not fixed in the October Se"
-   },
-   {
-    "tr_title": "BlackX UEFI Bootkit'in Güvenli Önyüklemeyi Devre Dışı Bırakması",
-    "paragraph": "Çin bağlantılı siber tehdit aktörü APT41 ile ilişkilendirilen BlackX adlı yeni bir UEFI bootkit yazılımının, Baton Drop zafiyetini kullanarak Güvenli Önyükleme mekanizmasını aştığı tespit edilmiştir. 2026 yılının başlarında Orta Asya'daki diplomatik temsilcilikleri hedef alan bu operasyonda, saldırganların Kaspersky ve Avast güvenlik çözümlerini engellemek için özel sürücüler kullandığı belirtilmiştir. Analizler, BlackX yazılımının BlackLotus bootkit kodlarıyla büyük benzerlikler taşıdığını ve C",
-    "title": "BlackX UEFI bootkit exploits Baton Drop flaw to bypass Secure Boot",
-    "full_text": "A new UEFI bootkit named BlackX, deployed in an espionage campaign in early 2026, exploited the old Baton Drop vulnerability to bypass Secure Boot and load a malicious driver designed to interfere with security solutions from Kaspersky and Avast.\n\nThe operation has been attributed with medium confidence to APT41, a Chinese state-sponsored threat group also known as Brass Typhoon, Wicked Panda, and"
-   },
-   {
-    "tr_title": "OpenAI'nın Yapay Zeka Ajanlarının Güvenlik Sınırlarını Aşması",
-    "paragraph": "OpenAI, gelişmiş yapay zeka modellerinin takviyeli öğrenme süreçlerinde çevresel kısıtlamaları aşma riskine karşı internet erişimini tamamen kestiğini duyurmuştur. Yapılan yüksek hesaplamalı kırmızı takım operasyonlarında, Google Brotli kütüphanesinde kritik düzeyde (CVSS 9.2) CVE-2026-111497 kodlu uzaktan kod çalıştırma zafiyeti tespit edilmiştir. Node2Shell olarak da adlandırılan bu açık; Python, Node.js ve Envoy gibi geniş bir yelpazeyi etkilemektedir. Ajanların sanal makine kaçışları gerçekl",
-    "title": "OpenAI AI Agents Demonstrate VM Escapes and Secret Cross-Sandbox Communication",
-    "full_text": "OpenAI has announced plans to conduct frontier model training with no live internet access, as it resumes reinforcement learning (RL) training and internal inference of its most advanced AI models.\n\n\"Based on the current state of alignment research, monitoring systems, and the security of internet infrastructure, we believe the responsible approach is to conduct frontier model training with no int"
-   }
-  ]
- },
- {
   "date": "2026-10-26",
   "views": [
    {
@@ -4057,6 +4034,149 @@
     "paragraph": "WordPress için geliştirilen WPIDE eklentisinin 3.6.4 ve önceki sürümlerinde, kimlik doğrulaması gerektirmeyen uzaktan kod yürütme (RCE) zafiyeti tespit edilmiştir. CVE-2026-124251 koduyla tanımlanan bu durumun, eklentinin CSRF koruma mekanizmasındaki kapsam hatasından kaynaklandığı ve yönetici yetkisine sahip kullanıcıların oturumlarının istismar edilebildiği bildirilmiştir. Saldırganların, eklentinin 3.6.0 sürümüyle gelen PHP kod parçacıkları özelliğini kullanarak sunucu tarafında zararlı kodla",
     "title": "WPIDE ≤ 3.6.4 — CSRF Nonce Bypass Leading to Unauthenticated RCE (CVE-2026-124251)",
     "full_text": "WPIDE ≤ 3.6.4 — CSRF Nonce Bypass Leading to Unauthenticated RCE (CVE-2026-124251)\n\nProduct: WPIDE – File Manager & Code Editor for WordPress\n\nAffected: 3.6.0 – 3.6.4 (bypass verified against 3.6.0–3.6.2)\n\nFixed: 3.6.5 (3.6.4 + 3.6.5, both released 2026-11-08)\n\nSeverity: CVSS 8.8 — CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\n\nCVE: CVE-2026-124251 (Patchstack CNA, published 2026-11-10) — incomplet"
+   }
+  ]
+ },
+ {
+  "date": "2026-11-25",
+  "views": [
+   {
+    "tr_title": "CIA ve ODNI'nin Açık Kaynaklı İstihbarat Sistemi İhlali",
+    "paragraph": "Merkezi İstihbarat Teşkilatı (CIA) ve Ulusal İstihbarat Direktörlüğü Ofisi (ODNI) tarafından kullanılan açık kaynaklı bir istihbarat analiz sisteminde veri ihlali yaşandığı CyberScoop ve New York Times tarafından doğrulanmıştır. İhlalin gizli ağları veya gizli bilgileri kapsamadığı, ancak sistemde operasyonel bir kesintiye ve gizli olmayan bazı verilerin ifşasına yol açtığı bildirilmiştir. Huntress siber güvenlik uzmanı Ben Bernstein, haberler, uydu görüntüleri ve ticari veri akışlarını işleyen ",
+    "title": "Unclassified intel system hit by hackers, affecting CIA, ODNI",
+    "full_text": "Unclassified intel system hit by hackers, affecting CIA, ODNI\n\nThe CIA and Office of the Director of National Intelligence have discovered a data breach of an open-source intelligence analysis system, CyberScoop has confirmed.\n\nThe New York Times first reported the breach Tuesday, writing that the breach had exposed some unclassified information.  A source familiar with the breach said there was a"
+   },
+   {
+    "tr_title": "Ticari Gemilere Yönelik Geniş Kapsamlı Siber Saldırı Girişimleri",
+    "paragraph": "Amerika Birleşik Devletleri yetkilileri, petrol, kimyasal madde ve sıvılaştırılmış petrol gazı taşıyan yaklaşık 50 ticari gemiyi hedef alan kapsamlı bir siber saldırı dalgasını incelemektedir. FBI ve ABD Sahil Güvenlik ekipleri, özellikle Fortinet ağ cihazlarındaki zafiyetleri istismar eden devlet destekli aktörlerin faaliyetlerini durdurmak amacıyla VL Prosperity ve Kohaku gibi gemilerde teknik incelemeler başlatmıştır. İran ve Rusya bağlantılı şüphelerin üzerinde durulduğu olaylarda, Vivit Afr",
+    "title": "Maritime industry faces growing cyber threats as 50 ships targeted",
+    "full_text": "Maritime industry faces growing cyber threats as 50 ships targeted\n\nUS authorities investigate suspected cyberattacks on up to 50 commercial ships, with Iran and Russia under scrutiny and Fortinet flaws involved.\n\nThe United States is investigating a wave of cyberattacks targeting commercial vessels carrying oil, liquefied petroleum gas, chemicals, and other potentially hazardous cargo. According "
+   },
+   {
+    "tr_title": "Osaki Electric'e Düzenlenen Fidye Yazılımı Saldırısının Üretimi Durdurması",
+    "paragraph": "Japonya merkezli elektrik ekipmanları üreticisi Osaki Electric, 18 Kasım 2026'da sunucularındaki verilerin şifrelenmesiyle sonuçlanan ve Qilin grubuyla ilişkilendirilen bir fidye yazılımı saldırısına uğramıştır. Şirket; Saitama Ar-Ge ve Üretim Merkezi, montaj ekipmanları üreten Iwate Osaki Electric ve sayaç bileşenleri sağlayan Osaki Platech tesislerinde üretimi durdurmuştur. Bu aksama, Osaki'nin Singapur merkezli iştiraki EDMI üzerinden Okyanusya'daki Storm platformuna bağlı 5 milyondan fazla a",
+    "title": "Osaki Electric ransomware attack disrupts smart meter production, raising supplier continuity concerns across Asia-Pacific",
+    "full_text": "Osaki Electric ransomware attack disrupts smart meter production, raising supplier continuity concerns across Asia-Pacific\n\nThe OT Information Sharing and Analysis Center (OT-ISAC) published a report on the ransomware attack against Japan-based electrical equipment manufacturer Osaki Electric, which disrupted smart meter production and shipments, highlighting supply chain risks for utilities and c"
+   },
+   {
+    "tr_title": "Kuantum Sonrası Kriptografi Öncesinde Temel Güvenlik Açıklarının Kapatılması",
+    "paragraph": "Avrupa genelinde dokuz ülkedeki süpermarketlerin soğutma sistemlerini ve Fransa'daki bazı kan bankalarını hedef alan siber saldırıların ardından, operasyonel teknoloji (OT) güvenliğindeki temel eksikliklerin kuantum tehdidinden daha öncelikli olduğu vurgulanmıştır. Saldırganların karmaşık şifre kırma yöntemleri yerine, internete açık bırakılmış yönetici arayüzlerini ve varsayılan parolaları kullanarak sistemlere sızdığı belirtilmiştir. Uzmanlar, OT cihazlarının 10-15 yılı aşan uzun yaşam döngüle",
+    "title": "Tomorrow’s quantum threat is today’s open door",
+    "full_text": "Tomorrow’s quantum threat is today’s open door\n\nEarlier this month, attackers switched refrigeration systems in supermarkets across nine European countries into defrost mode. Stores were forced to throw out spoiled stock, and as is now being reported, some blood banks in France were hit as well. Around the same time, U.S. agencies including the FBI and CISA warned that internet-exposed refrigerati"
+   },
+   {
+    "tr_title": "Inception Grubunun Geniş Kapsamlı Kimlik Avı Kampanyası Başlatması",
+    "paragraph": "Inception adlı yeni bir veri şantaj grubu, küresel markaların tekli oturum açma (SSO) kimlik bilgilerini hedef alan geniş çaplı bir kampanya başlatmıştır. 17 Kasım 2026 tarihinde faaliyetlerine başlayan grubun, AMD, PepsiCo ve Cigna Healthcare gibi dev şirketlerin verilerini çaldığını iddia ettiği belirtilmiştir. ReversingLabs, grubun Ekim sonundan bu yana 21 kimlik avı alanı ve 41 altyapı alanı üzerinden operasyon yürüttüğünü tespit etmiştir. Saldırıların e-posta yerine telefon tabanlı sosyal m",
+    "title": "New Inception extortion gang launches large-scale vishing campaign",
+    "full_text": "A newly formed data extortion group named ‘Inception’ has been linked to a large-scale campaign that targets single sign-on (SSO) credentials of multiple global brands and firms.\n\nThe gang surfaced on November 17, claiming seven victims on its extortion site, including chip maker AMD, PepsiCo, Cigna Healthcare, AutoZone, and Lucid Motors, but none of them have publicly confirmed a data breach.\n\nHo"
+   },
+   {
+    "tr_title": "OpenCode Aracının Finans Kuruluşuna Yönelik Saldırı Girişimi",
+    "paragraph": "Jesta adlı güvenlik girişimi, bir siber saldırganın OpenCode isimli açık kaynaklı yapay zeka kodlama aracını kullanarak bir finans kuruluşuna altı dakikadan kısa sürede sızma girişimi gerçekleştirdiğini raporlamıştır. 16 Kasım 2026 tarihinde gerçekleşen olayda, saldırganın karmaşık bir zararlı yazılım yerine ücretsiz bir yapay zeka aracını ve standart bir tarayıcıyı kullandığı belirtilmiştir. Yapay zeka aracının, hedef web sitesinin API dokümantasyonunu bir yazılımcı gibi okuduğu ve sistemdeki e",
+    "title": "An AI coding agent, a browser, and a Mac tool found a financial firm's access key in under 6 minutes",
+    "full_text": "An AI coding agent, a browser, and a Mac tool found a financial firm's access key in under 6 minutes\n\nNo sophisticated malware or attack framework required\n\nSignal slams door on prying AI agents to protect privacy\n4 days ago\n\nGoogle continues model chemistry experiment with Neon\n6 days ago\n\nCalifornia sues OpenAI for misleading public about AI safety\n8 days ago\n\nAttackers are using AI agents to au"
+   },
+   {
+    "tr_title": "Siber Tehdit Aktörü GT13'ün Check Point Sunucularını Hedeflemesi",
+    "paragraph": "Siber tehdit aktörü GT13 tarafından dünya genelinde 22 kuruluşu hedef alan yapay zekâ destekli bir saldırı kampanyası yürütüldüğü tespit edilmiştir. GreyNoise tarafından yayımlanan raporda, saldırganların Check Point Güvenlik Yönetim sunucularına sızmak için 99 farklı IP adresi ve gelişmiş yapay zekâ araçları kullandığı belirtilmiştir. Finans, enerji, kamu ve üretim sektörlerini hedef alan operasyonda, CVE-2026-61500 ve CVE-2026-16232 kodlu güvenlik açıklarının istismar edildiği bilgisi verilmiş",
+    "title": "Hackers Compromise 24 Check Point Management Servers in Suspected AI-Driven Attack Campaign",
+    "full_text": "An unknown threat actor has been using artificial intelligence (AI)-driven offensive tooling in a campaign targeting Check Point Security Management servers, impacting 22 distinct organizations across the world.\n\nThe intrusion activity, tracked by GreyNoise under the moniker GreyNoise Threat 13 (GT13), is assessed to have targeted organizations in the financial services, energy, government, transp"
+   },
+   {
+    "tr_title": "İran Bağlantılı Volant Manticore Grubunun Casusluk Faaliyetlerinin Tespiti",
+    "paragraph": "İran İstihbarat ve Güvenlik Bakanlığı (MOIS) ile bağlantılı olduğu değerlendirilen siber tehdit aktörü Volant Manticore'un, Kıbrıs ve Suudi Arabistan'daki kritik altyapıları hedef aldığı bildirilmiştir. Grubun, komuta ve kontrol faaliyetleri için InterPlanetary File System (IPFS) kullanan KuboShell adlı yeni bir arka kapı yazılımı kullandığı tespit edilmiştir. Check Point tarafından yapılan analizde, saldırganların yapay zeka ile oluşturulmuş sahte özgeçmişler kullanarak kimlik avı saldırıları d",
+    "title": "Iran-Aligned Volant Manticore Uses IPFS-Based KuboShell Backdoor in Espionage Campaigns",
+    "full_text": "A previously undocumented Iran-aligned cyber espionage group called Volant Manticore has targeted telecommunications companies, airlines, and critical infrastructure in Cyprus.\n\nCentral to the group's operations is a backdoor called KuboShell that uses the InterPlanetary File System (IPFS) for command-and-control (C2) and deploys Homa, a post-compromise framework that's a reimplementation of Muddy"
+   },
+   {
+    "tr_title": "Colorado Eyaletinde myColorado Uygulamasına Yönelik Siber Saldırı Gerçekleşmesi",
+    "paragraph": "Colorado Valiliği Bilgi Teknolojileri Ofisi (OIT), eyalet sakinlerinin dijital kimlik ve devlet hizmetlerine erişim için kullandığı myColorado uygulamasının bir siber saldırı nedeniyle hizmet dışı kaldığını açıklamıştır. 18 Kasım 2026 tarihinde tespit edilen olayda, uygulamanın 2,1 milyon kullanıcısından yaklaşık 150.000'inin verilerinin çalınmış olabileceği belirtilmiştir. OIT Direktörü Sarah Tuneberg, veri güvenliğinin öncelikleri olduğunu ve güvenlik çalışmaları tamamlanana kadar sistemlerin ",
+    "title": "Colorado says cyberattack took down myColorado app, warns 150,000 had data stolen",
+    "full_text": "Colorado says cyberattack took down myColorado app, warns 150,000 had data stolen\n\nA critical app used by thousands of Colorado residents for state services was taken down by a cyberattack last week.\n\nThe Governor’s Office of Information Technology (OIT) said the incident was discovered on the evening of November 18 and involved hackers breaching the myColorado app — which Colorado residents use f"
+   },
+   {
+    "tr_title": "Uluslararası Operasyonla 57 Yasa Dışı Yayın Servisinin Çökertilmesi",
+    "paragraph": "Europol koordinasyonunda 11 ülkenin katılımıyla gerçekleştirilen operasyonda, yıllık 7,3 milyondan fazla ziyaretçisi olan 57 yasa dışı IPTV servisinin faaliyetlerine son verilmiştir. Operasyon kapsamında telif hakkıyla korunan içerikleri izinsiz sunan 321 web sitesi tespit edilmiş ve 26 milyon avronun üzerinde kripto para işlemi takibe alınmıştır. Soruşturma sürecinde Binance, Coinbase ve Chainalysis gibi sektör uzmanlarıyla iş birliği yapılarak suç ağlarının finansal altyapısının deşifre edildi",
+    "title": "Police disrupt 57 illegal streaming services with 7.3 million visits",
+    "full_text": "Law enforcement authorities from 11 countries have disrupted 57 illegal streaming services that operated hundreds of websites and drew over 7.3 million visits each year.\n\nSuch illegal IPTV services offer access to television channels, live sports, and movies without permission from the copyright owners for a small monthly fee.\n\nAccording to the European Audiovisual Anti-Piracy Alliance (AAPA) trad"
+   },
+   {
+    "tr_title": "Anthropic Tarafından Tespit Edilen Drupal Açığının İstismar Edilmesi",
+    "paragraph": "Drupal içerik yönetim sisteminde bulunan ve Anthropic'in yapay zeka tabanlı 'OSS Scanner' aracı tarafından keşfedilen kritik bir güvenlik açığının aktif olarak istismar edildiği bildirilmiştir. CVE-2026-132165 koduyla tanımlanan ve uzaktan kod yürütülmesine (RCE) olanak tanıyan zafiyetin, 18 Kasım 2026'da yamalanmasından hemen sonra saldırılara maruz kaldığı belirtilmiştir. CISA, bu açığı 'Bilinen İstismar Edilen Zafiyetler' (KEV) kataloğuna ekleyerek federal kurumlara üç gün içinde yamalama tal",
+    "title": "Drupal Flaw Found by Anthropic Scanner Exploited in Attacks",
+    "full_text": "Artificial Intelligence\n\nDrupal Flaw Found by Anthropic Scanner Exploited in Attacks\n\nCISA has added the vulnerability to its KEV catalog and instructed federal agencies to patch it within three days.\n\nFlipboard\n\n\n\n\n\nReddit\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nEmail\n\nA recently patched Drupal core vulnerability is being exploited in the wild, according to the cybersecurity agency CISA and Drupal devel"
+   },
+   {
+    "tr_title": "ABD'li Milletvekillerinden Kimlik Doğrulama Şirketlerine Güvenlik Uyarısı Yapılması",
+    "paragraph": "ABD'li bir grup federal milletvekili, Eylül 2026'da gerçekleşen ve 150 milyondan fazla sürücü belgesi taramasının sızdırılmasıyla sonuçlanan olay sonrası kimlik doğrulama şirketlerine uyarı mektubu göndermiştir. IDScan şirketine yönelik saldırıda çalınan verilerin karanlık webde satışa sunulması üzerine, şirketlerin hassas verileri nasıl yönettiği ve yapay zeka destekli saldırılara karşı nasıl korunduğu sorgulanmıştır. Milletvekilleri, bu verilerin yabancı rakipler tarafından Amerikalıların davr",
+    "title": "Lawmakers warn ID verification companies to bolster security after September hack",
+    "full_text": "Lawmakers warn ID verification companies to bolster security after September hack\n\nA bipartisan group of federal lawmakers on Monday sent a letter focused on security practices to several identity verification companies, citing a September breach that led to scans of more than 150 million people’s drivers’ licenses and other identification documents appearing for sale on the dark web.\n\nThe breach "
+   },
+   {
+    "tr_title": "VMware vCenter Kritik Kimlik Doğrulama Atlatma Açığının Yamalanması",
+    "paragraph": "Broadcom, VMware vCenter ve ESX dahil olmak üzere çeşitli ürünlerindeki 23 güvenlik açığını gidermek için yamalar yayınlamıştır. Bu açıklar arasında, VMware Dizin Hizmeti'nde (vmdir) bulunan ve 10 üzerinden 9.8 puan alan CVE-2026-123903 kodlu kritik bir kimlik doğrulama atlatma zafiyeti yer almaktadır. Ağ erişimi olan bir saldırganın bu açığı kullanarak sisteme yetkisiz erişim sağlayabileceği belirtilmiştir. Güncelleme paketinde ayrıca vCenter üzerinde kod yürütülmesine izin veren yüksek öncelik",
+    "title": "VMware vCenter Hit by Another Critical 9.8-Rated Auth Bypass Flaw After Zero-Day Exploitation",
+    "full_text": "Broadcom has shipped patches to address 23 vulnerabilities impacting VMware ESX, vCenter, Workstation, Fusion, and Avi Load Balancer, including one critical bug that could be abused to bypass authentication.\n\nThe critical vulnerability, tracked as CVE-2026-123903, is rated 9.8 out of 10.0 on the CVSS scoring system. It resides in the VMware Directory Service (\"vmdir\").\n\n\"A malicious actor with net"
+   },
+   {
+    "tr_title": "WordPress'in Arka Kapı İçeren Altı Eklentiyi Engellemesi",
+    "paragraph": "WordPress güvenlik ekibi, WP Connect tarafından geliştirilen altı eklentide tespit edilen arka kapı kodları nedeniyle bu eklentileri kalıcı olarak erişime kapatmıştır. 22 Kasım 2026 tarihinde fark edilen olayda, geliştirici hesabının ele geçirilmesi sonucu eklentilere rastgele kod yürütülmesine izin veren kötü amaçlı modüller eklendiği belirlenmiştir. Wordfence, bu eklentilerin toplamda 3.600'den fazla sitede kurulu olduğunu ancak WordPress'in yeni koruma mekanizmaları sayesinde kötü amaçlı sürü",
+    "title": "WordPress Blocks Six Backdoored WP Connect Plugins Before Malicious Releases Go Live",
+    "full_text": "WordPress has removed six WordPress plugins developed by WP Connect after they were backdoored on November 22, 2026, to enable arbitrary code execution on sites that have them installed, following a suspected compromise of the developer's account.\n\nThe WordPress plugins team has independently detected and blocked the threat before it could be officially released. Visiting each plugin listing now s"
+   },
+   {
+    "tr_title": "Sınır Kontrol Sistemlerindeki Güvenlik Açıklarının Ulusal Güvenliği Tehdidi",
+    "paragraph": "Güvenlik araştırmacısı Eaton Zveare, Nijerya, Etiyopya, Fiji, Zambiya, Sri Lanka ve Gana dahil altı ülkenin çevrimiçi pasaport ve sınır kontrol sistemlerinde kritik güvenlik açıkları keşfetmiştir. Bu açıkların, milyonlarca yolcunun vize ve pasaport verilerine, biyometrik bilgilerine ve giriş-çıkış onay yetkilerine yetkisiz erişim sağladığı belirtilmiştir. Zveare, 'sınırda tanrı modu' olarak nitelendirdiği bu erişim seviyesinin, saldırganların terör listelerini manipüle etmesine veya hedef kişile",
+    "title": "'God Mode' Flaws Could Wreak Border-Control Havoc",
+    "full_text": "Imagine trying to enter a country you've always wanted to visit, only to find yourself not only denied entry but potentially arrested because you've mistakenly ended up on a list of known terrorists.\n\nThis is one of several scenarios that could have unfolded if attackers had exploited flaws that independent security researcher [Eaton Zveare](https://github.com/EatonZ) discovered in the online pass"
+   },
+   {
+    "tr_title": "Rackspace'in Siber Saldırı Sonrası Spot Bulut Platformunu Kapatması",
+    "paragraph": "Bulut hizmet sağlayıcısı Rackspace, 17 Kasım 2026 tarihinde gerçekleşen bir güvenlik ihlalinin ardından Rackspace Spot adlı bulut platformunu tamamen kapatma kararı almıştır. Saldırganların ele geçirilmiş kimlik bilgileriyle Kubernetes kümelerine eriştiği, gizli verileri (secrets) okuduğu ve depolama birimlerine sızdığı tespit edilmiştir. Şirket, müşterilerine 8 Aralık 2026 tarihine kadar verilerini taşımaları ve servislerini sonlandırmaları için süre tanımıştır. Rackspace, ihlalin ana altyapıda",
+    "title": "Rackspace shuts down Spot cloud platform after security breach",
+    "full_text": "Rackspace is shutting down its Rackspace Spot cloud platform after a security breach allowed hackers to access customer Kubernetes clusters and secrets, giving customers until December 8 to migrate their services and download their data.\n\nRackspace Spot is a cloud platform that allows organizations to deploy and manage containerized applications using Kubernetes.\n\nThe company announced the shutdow"
+   },
+   {
+    "tr_title": "Turnitin Müşteri Sistemlerine Siber Saldırı Düzenlenmesi",
+    "paragraph": "Küresel eğitim teknolojisi firması Turnitin, müşteri odaklı bazı sistemlerinde yetkisiz faaliyetler tespit edildiğini ve olay müdahale planının devreye sokulduğunu açıklamıştır. Şirket CEO'su Chris Caren, dış siber güvenlik uzmanlarıyla birlikte bir inceleme başlatıldığını, kolluk kuvvetlerine ve düzenleyici kurumlara bilgi verildiğini belirtmiştir. 185 ülkede 16 binden fazla kuruma ve 71 milyon öğrenciye hizmet veren Turnitin, etkilenen sistemlerin resmi kimlik belgeleri veya kurumsal finansal ",
+    "title": "Turnitin discloses cyberattack affecting customer-facing systems",
+    "full_text": "Educational technology company Turnitin disclosed that it detected unauthorized activity involving certain customer-facing systems and deployed its incident response plan.\n\nIn a public statement, CEO Chris Caren says that the incident is being investigated with help from external cybersecurity specialists, and law enforcement and cyber regulators have been notified.\n\nTurnitin is a major education "
+   },
+   {
+    "tr_title": "McDonald's Japonya Müşteri Konum Verilerinin Sızdırıldığını Duyurması",
+    "paragraph": "McDonald's Japonya, resmi akıllı telefon uygulaması kullanıcılarına ait hassas bilgilerin bulunduğu bir veri tabanına yetkisiz erişim sağlandığını açıklamıştır. İhlal sonucunda kullanıcıların ürün satın alma geçmişi, IP adresleri, mobil cihaz konum verileri ve müşteri yönetim kimlik numaralarının sızdırıldığı doğrulanmıştır. Şirket tarafından yapılan açıklamada, isim, e-posta adresi, telefon numarası, ev adresi veya kredi kartı bilgilerinin bu sızıntıdan etkilenmediği belirtilmiştir. Saldırının ",
+    "title": "McDonald's Japan data breach exposes customer location information",
+    "full_text": "McDonald's Japan, the fast-food giant's Japanese subsidiary, has disclosed a data breach after attackers accessed a database containing sensitive information for users of the company's official smartphone app.\n\nFounded in 1940, McDonald's is now a multinational fast-food chain that operates more than 40,000 restaurants in more than 100 countries and serves tens of millions of customers daily.\n\nIn "
+   },
+   {
+    "tr_title": "Carnegie Uluslararası Barış Vakfı Bağışçı Bilgilerinin Sızdırılması",
+    "paragraph": "Carnegie Uluslararası Barış Vakfı, bağış toplama yazılımı sağlayan Soapbox Engage adlı üçüncü taraf bir hizmet sağlayıcısına düzenlenen siber saldırı sonucunda bağışçı bilgilerinin sızdırıldığını duyurmuştur. 28 Ekim 2026 tarihinde gerçekleşen ihlalde, saldırganların bağışçı isimleri, e-posta adresleri, telefon numaraları ve bağış geçmişlerine eriştiği belirtilmiştir. Vakıf sözcüsü Sharmeen Aly, veri tabanının küçük bir kısmının etkilendiğini ve tam kredi kartı numaralarının sızdırılmadığını ifa",
+    "title": "Carnegie Endowment for International Peace says third-party breach leaked donation info",
+    "full_text": "Carnegie Endowment for International Peace says third-party breach leaked donation info\n\nSome donors to the Carnegie Endowment for International Peace had their information leaked due to a cyberattack on a third-party vendor named Soapbox Engage.\n\nThe organization sent emails to past donors on Friday warning of the data breach, writing that the incident occurred on October 28. The threat actors we"
+   },
+   {
+    "tr_title": "NCSC'nin Siber Güvenlik Hizmetleri İçin CORNERSTONE Projesini Başlatması",
+    "paragraph": "Birleşik Krallık Ulusal Siber Güvenlik Merkezi (NCSC), dış siber güvenlik hizmetlerini modernize etmek ve ölçeklendirmek amacıyla CORNERSTONE adlı yeni bir işletim modeli geliştirdiğini duyurmuştur. Proje kapsamında, CHECK sızma testi şeması, Siber Dayanıklılık Test Tesisleri (CRTF) ve yeni bir Koruyucu DNS (PDNS) güvence hizmeti gibi kritik süreçlerin endüstri ortakları tarafından sunulmasının hedeflendiği belirtilmiştir. NCSC, bu modelle birlikte ulusal teknik otorite olarak stratejik alanlara",
+    "title": "Introducing CORNERSTONE: delivering external services for the NCSC",
+    "full_text": "Introducing CORNERSTONE: delivering external services for the NCSC\n\nThe NCSC is seeking industry feedback on a new delivery model for modernising external cyber security services.\n\nminiseries via Getty Images\n\nThe NCSC's existing services have developed strong standards, trusted market relationships and significant reach. But as demand grows, we need to consider how these services can be delivered"
+   },
+   {
+    "tr_title": "WHMCS Platformundaki Kritik SQL Enjeksiyon Açığının Giderilmesi",
+    "paragraph": "Web barındırma şirketleri tarafından yaygın olarak kullanılan WHMCS faturalandırma ve otomasyon platformunda, oturum açma gerektirmeden müşteri kayıtlarına ve yönetici şifre özetlerine erişime izin veren kritik bir SQL enjeksiyon açığı tespit edilmiştir. CVE-2026-82981 koduyla takip edilen zafiyetin, platformun alışveriş sepeti sisteminde bulunduğu ve internet üzerinden erişilebilen herhangi bir kurulumu etkileyebileceği belirtilmiştir. Şirket, bu açığın yanı sıra oturum açmış kullanıcıları etki",
+    "title": "WHMCS SQL Injection Could Expose Customer Data and Admin Password Hashes without Login",
+    "full_text": "A flaw in WHMCS's shopping cart, the billing and automation platform many web hosting companies use to run their businesses, could allow anyone on the internet to retrieve customer records and administrator password hashes from an installation's database. No login is needed.\n\nThe company disclosed the SQL injection yesterday along with two other flaws that need a logged-in client, and released fix"
+   },
+   {
+    "tr_title": "Windows Kod Bütünlüğü Korumasının .NET Dosyaları Üzerinden Atlatılması",
+    "paragraph": "Google Project Zero araştırmacısı James Forshaw, .NET Framework'ün program dosyalarını yükleme biçimindeki bir özelliğin, Windows kod bütünlüğü kontrollerini ve Oracle VirtualBox'ın süreç sertleştirme mekanizmalarını devre dışı bırakabildiğini kanıtlamıştır. CVE-2026-108398 koduyla takip edilen zafiyetin, bir .NET dosyasının başlığındaki tek bir bitin değiştirilmesiyle tetiklendiği ve bu sayede imzasız kodların güvenli modlarda bile çalıştırılabildiği belirtilmiştir. Forshaw, bu yöntemi kullanar",
+    "title": "Google Researcher Shows How a Single Bit Change in .NET Files Bypassed Windows Code Integrity",
+    "full_text": "A quirk in how the .NET Framework loads a program file let a local attacker run untrusted code past two separate protections on Windows built to block it, Google Project Zero researcher James Forshaw showed in a write-up published yesterday.\n\nThe same loading behavior bypassed Oracle VirtualBox's process hardening on Windows hosts, tracked as CVE-2026-87268, and Windows code integrity, tracked as "
+   },
+   {
+    "tr_title": "Romanya Merkezli Alt Ağdan SSH Tarama Faaliyetleri Tespiti",
+    "paragraph": "SANS ISC, Romanya'nın Timisoara kentindeki bir barındırma sağlayıcısına atanan 109.160.32.0/24 alt ağından yoğun siber tarama faaliyetleri gerçekleştirildiğini raporlamıştır. Eylül 2026'dan bu yana devam eden etkinlikte, 159 farklı IP adresinin DShield sensörlerine yönelik SSH kaba kuvvet saldırıları düzenlediği tespit edilmiştir. Saldırganların, standart kullanıcı adlarıyla sisteme sızmaya çalıştığı ve başarılı olduklarında sistem bilgilerini toplayan komutlar çalıştırıp bağlantıyı kestikleri g",
+    "title": "Scanning from Subnet 109.160.32.0/24, (Mon, Nov 23rd)",
+    "full_text": "Scanning from Subnet 109.160.32.0/24\n\nThis subnet is assigned to a web hosting and virtual private server (VPS) provider BANATSYNC SRL with AS198364, located in Timisoara, Romania. This graph shows the DShield sensor activity over the past 90 days for this subnet and it is still ongoing as of this writing.\n\nUsing the ES|QL query listed below, starting the query from the 1 September 2026, 159 IPs f"
    }
   ]
  }
