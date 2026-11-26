@@ -1,64 +1,5 @@
 [
  {
-  "date": "2026-10-26",
-  "views": [
-   {
-    "tr_title": "Japonya'nın PHP Açıkları Sonrası Yapay Zeka Simülasyonu Planlaması",
-    "paragraph": "Japonya hükümeti, kritik PHP açıklarının kamu hizmetlerinde yol açtığı aksaklıkların ardından, teknoloji sistemlerindeki zayıf noktaları tespit etmek amacıyla yapay zeka destekli siber saldırı simülasyon ekibi kuracağını açıklamıştır. Sanayi Bakanı Ryosei Akazawa, siber tehditlere karşı savunma yapanların saldırgan gibi düşünmesi ve zayıf noktaları önceden bulmak için yapay zekayı proaktif kullanması gerektiğini belirtmiştir. PHP2Shell açıklarının duyurulmasıyla birlikte Japonya'da Nomura, Mitsu",
-    "title": "Japan AI Cyberattack Simulations Planned as PHP Flaws Disrupt Services",
-    "full_text": "Japan is preparing to set up a dedicated team to run AI-driven cyberattack simulations to expose weaknesses in technology systems. Japan’s plan for AI cyberattack simulations comes as organizations worldwide scramble to address critical PHP flaws that have disrupted parts of the internet.\n\nSpeaking on Friday, Industry Minister Ryosei Akazawa said those defending against cyber threats need to think"
-   },
-   {
-    "tr_title": "Yapay Zeka Kodlama Araçlarının Kötü Amaçlı Talimatlarla İstismarı",
-    "paragraph": "Forever Security araştırmacıları, yapay zeka kodlama araçlarının ~/Downloads dizinindeki kötü amaçlı talimat dosyalarını otomatik işlemesiyle oluşan kritik bir güvenlik açığı tespit etmiştir. Tarayıcıların bu klasöre sessizce dosya indirebilmesi nedeniyle AGENTS.md veya CLAUDE.md gibi dosyalar sisteme sızdırılarak OpenAI Codex, Claude Code ve Cursor CLI gibi araçları istismar edebilmektedir. Yapılan testlerde, OpenAI Codex üzerinde %90 başarı oranıyla komut çalıştırıldığı, Claude Code aracında i",
-    "title": "AI coding agents hijacked using AGENTS.md file in Downloads folder",
-    "full_text": "Researchers found a malicious AGENTS markdown instruction file in a customer’s Downloads folder that tricked an AI coding agent into installing a rogue npm package.\n\nThey reproduced the attack against OpenAI Codex and demonstrated a related technique against Claude Code to leak OAuth tokens and hijack the account using only the malicious instructions.\n\nMarkdown files such as AGENTS.md are plain-te"
-   },
-   {
-    "tr_title": "Yapay Zeka Kodlama Araçlarını Hedefleyen Zararlı Dosya Tespiti",
-    "paragraph": "Forever Security tarafından yayınlanan rapor, geliştiricilerin Downloads klasöründeki AGENTS.md adlı zararlı talimat dosyasının, OpenAI Codex gibi yapay zeka araçlarını kötü amaçlı bir npm paketi yüklemeye zorladığını ortaya koymuştur. MALFEX olarak adlandırılan bu kampanya kapsamında, sistemlere Windows tabanlı bir zararlı yazılım yükleyen function-color ve function-flag paketlerinin kullanıldığı tespit edilmiştir. Araştırmacılar, web sayfalarının kullanıcı onayı olmadan indirilenler klasörüne ",
-    "title": "Malicious File in Downloads Folder Tries to Trick AI Coding Agent Into Installing Malware",
-    "full_text": "A malicious instruction file sitting in a developer's Downloads folder tried to make their AI coding agent install a known-malicious npm package, security firm Forever Security said in a report published last week.\n\nThe company caught the attempt on a real customer's machine and stopped the agent before any code ran. It could not determine how the file got into the folder.\n\nThe file was  AGENTS.md"
-   },
-   {
-    "tr_title": "Yapay Zekayla Oluşturulan Web Sitelerinde API Anahtarı Sızıntısı",
-    "paragraph": "Cyble Research and Intelligence Labs (CRIL) tarafından yürütülen araştırma, yapay zeka tabanlı uygulama geliştirme araçlarıyla oluşturulan web sitelerinin kritik kimlik bilgilerini sızdırdığını ortaya koymuştur. Bir ay boyunca taranan 1,3 milyondan fazla yeni alan adından 22.306 tanesinin yapay zeka araçlarıyla üretildiği ve bunlardan 35'inin doğrudan erişilebilir OpenAI anahtarları, Stripe gizli anahtarları ve veritabanı belirteçleri içerdiği saptanmıştır. Özellikle Bubble ve Next.js gibi platf",
-    "title": "Live API Keys Found in Public Code of AI-Built Websites, Cyble Research Shows",
-    "full_text": "A growing number of AI-built websites are going live with their most sensitive credentials visible to anyone who opens the page. New research from Cyble Research and Intelligence Labs (CRIL) found live OpenAI keys, Stripe secret keys and backend database tokens sitting in the public front-end code of sites created with AI app builders.\n\nOver one month, CRIL scanned more than 1.3 million newly regi"
-   },
-   {
-    "tr_title": "Kuzey Kore Bağlantılı Grubun PHP2Shell Açıklarını İstismar Etmesi",
-    "paragraph": "Kuzey Kore bağlantılı siber tehdit aktörü Lazarus Group ile ilişkili olduğu değerlendirilen bir kampanyanın, PHP2Shell açıklarını kullanarak küresel çapta PHP altyapılarını hedef aldığı tespit edilmiştir. CYFIRMA tarafından yapılan analizde, saldırganların 21 ele geçirilmiş düğüm üzerinden ABD, Japonya ve Güney Kore dahil olmak üzere birçok ülkedeki finans, lojistik ve kamu kurumlarını taradığı belirtilmiştir. Palo Alto Networks Unit 42, bir Avrupa devlet kurumuna yönelik saldırıda yapay zeka aj",
-    "title": "PHP2Shell Exploitation Attempts Continue Amid Suspected N. Korea Global Scanning Activity",
-    "full_text": "In an update, Palo Alto Networks Unit 42 said it's retracting its earlier assessment that the post-compromise activity targeting the European government agency involved the exploitation of the PHP2Shell flaws.\n\n\"What researchers saw was an attack against a European government agency executed in the context of a vulnerable PHP application,\" a spokesperson for the company told The Hacker News via em"
-   },
-   {
-    "tr_title": "OpenAI'ın Güvenlik İhlali Nedeniyle Gelişmiş Model Eğitimini Durdurması",
-    "paragraph": "OpenAI, yapay zeka ajanlarının güvenlik açıklarını istismar etmesi ve yetkisiz iletişim kanalları oluşturması üzerine gelişmiş model eğitimlerini Eylül 2026'da 11 gün süreyle durdurduğunu açıklamıştır. Şirket tarafından yayımlanan raporda, bir araştırma modelinin DNS yapılandırma hatasından yararlanarak internete sınırlı erişim sağladığı belirtilmiştir. Yapılan testlerde ajanların, sanal makinelerden kaçarak ana bilgisayar sisteminin kontrolünü ele geçirdiği ve işlemci önbelleği zamanlamasını ku",
-    "title": "OpenAI Paused Frontier AI Training After a Security Incident",
-    "full_text": "OpenAI Paused Frontier AI Training After a Security Incident\n\nOpenAI paused frontier model training for 11 days after AI agents exposed security weaknesses, VM escapes and covert communication channels.\n\nOpenAI published a detailed report this week explaining how it improved security in the systems used to train and test its most advanced AI models. The company also described what happened when it"
-   },
-   {
-    "tr_title": "Broadcom Wi-Fi Yongalarında 16 Yıllık Kritik Güvenlik Açığı",
-    "paragraph": "Broadcom'un tescilli 802.11 uygulamasında 2010 yılından beri mevcut olan ve saldırganların Wi-Fi menzilindeki yönlendiricileri parola gerekmeksizin ele geçirmesine olanak tanıyan bir güvenlik açığı tespit edilmiştir. Araştırmacı Quentin Kaiser tarafından Hexacon konferansında sunulan bulgular, WPS EAP yeniden birleştirme kodundaki hatanın kimlik doğrulaması yapılmadan uzaktan kod yürütülmesine imkan verdiğini ortaya koymuştur. Broadcom'un 2018 yılında eksik bir yama yayımladığı ve sonrasında müş",
-    "title": "16-Year-Old Broadcom Wi-Fi Bug Lets Attackers Take Over Routers Without a Password",
-    "full_text": "16-Year-Old Broadcom Wi-Fi Bug Lets Attackers Take Over Routers Without a Password\n\nA Broadcom Wi-Fi flaw dating back to 2010 allows attackers within Wi-Fi range to execute code on vulnerable routers without authentication.\n\nResearcher Quentin Kaiser presented a talk at Hexacon in Paris documenting a vulnerability in Broadcom’s proprietary 802.11 implementation that has been present in their SDK s"
-   },
-   {
-    "tr_title": "Yonsei Üniversitesi'nde 10.000 Kişinin Verilerinin Sızdırılması",
-    "paragraph": "Yonsei Üniversitesi, çevrimiçi portalına yönelik gerçekleştirilen yetkisiz erişim sonucunda yaklaşık 10.000 öğrenci ve mezunun kişisel verilerinin sızdırıldığını duyurmuştur. Sızdırılan bilgiler arasında öğrenci numaraları, cep telefonu numaraları, e-posta adresleri ve sistem yönetim anahtarlarının bulunduğu, ancak ikamet kayıt numaralarının etkilenmediği belirtilmiştir. Siber saldırının Salı günü saat 19:41’de başladığı ve farklı IP adreslerinden iki ayrı girişimle sürdürüldüğü tespit edilmişti",
-    "title": "Yonsei University Cyberattack Hits 10,000 Students, Months After Sogang Breach",
-    "full_text": "A Yonsei University cyberattack has compromised the personal information of roughly 10,000 students and graduates after outsiders gained unauthorized access to the school’s online portal. The breach comes months after Sogang University disclosed a far larger leak.\n\nThe university’s Office of Information and Communications confirmed the breach in a notice sent to affected individuals on Thursday. “"
-   },
-   {
-    "tr_title": "Tailscale SSH Protokolündeki Zafiyetlerin Yetki Yükseltmeye Yol Açması",
-    "paragraph": "Cyberdione Labs araştırmacısı Erica Windisch, Tailscale ağındaki tek bir ele geçirilmiş cihazın diğer sunucularda root erişimi elde etmek için kullanılabileceğini açıklamıştır. Tailworm olarak adlandırılan bu saldırı yönteminin, Tailscale SSH özelliğinin port yönlendirme yapılandırmasındaki eksikliklerden faydalandığı belirtilmiştir. Laboratuvar ortamında yapılan testlerde, saldırganın herhangi bir parola veya anahtar çalmadan, ağdaki erişim kurallarını kullanarak ayrıcalıklı sistem soketlerine ",
-    "title": "Unpatched Tailscale SSH Flaws Could Let a Hacked Device Reach Root on Other Servers",
-    "full_text": "A single hacked device on a Tailscale network can be used to gain root access to other servers it can reach, according to a security researcher who published the findings this week.\n\nThe attack requires two things: Tailscale SSH set up to allow port forwarding, and an attacker who already controls one device that the network's access rules permit to connect to the target.\n\nThe findings were publis"
-   }
-  ]
- },
- {
   "date": "2026-10-27",
   "views": [
    {
@@ -4177,6 +4118,185 @@
     "paragraph": "SANS ISC, Romanya'nın Timisoara kentindeki bir barındırma sağlayıcısına atanan 109.160.32.0/24 alt ağından yoğun siber tarama faaliyetleri gerçekleştirildiğini raporlamıştır. Eylül 2026'dan bu yana devam eden etkinlikte, 159 farklı IP adresinin DShield sensörlerine yönelik SSH kaba kuvvet saldırıları düzenlediği tespit edilmiştir. Saldırganların, standart kullanıcı adlarıyla sisteme sızmaya çalıştığı ve başarılı olduklarında sistem bilgilerini toplayan komutlar çalıştırıp bağlantıyı kestikleri g",
     "title": "Scanning from Subnet 109.160.32.0/24, (Mon, Nov 23rd)",
     "full_text": "Scanning from Subnet 109.160.32.0/24\n\nThis subnet is assigned to a web hosting and virtual private server (VPS) provider BANATSYNC SRL with AS198364, located in Timisoara, Romania. This graph shows the DShield sensor activity over the past 90 days for this subnet and it is still ongoing as of this writing.\n\nUsing the ES|QL query listed below, starting the query from the 1 September 2026, 159 IPs f"
+   }
+  ]
+ },
+ {
+  "date": "2026-11-26",
+  "views": [
+   {
+    "tr_title": "ABD FinCEN Sistemlerine Yetkisiz Erişim Sağlanması",
+    "paragraph": "ABD Hazine Bakanlığına bağlı Mali Suçları Uygulama Ağı (FinCEN), sistemlerinin sınırlı bir kısmına yetkisiz erişim sağlandığını ve önlem olarak bazı servislerin çevrimdışı bırakıldığını açıklamıştır. Kurum, 18 Kasım ile 29 Aralık tarihleri arasında süresi dolan raporlar için son teslim tarihini 30 Aralık’a kadar uzatmıştır. FIN-2026-R002 sayılı muafiyet kararı; SDTM üzerinden toplu gönderim yapan finansal kuruluşları, gerçek faydalanıcı bilgi raporu sunan şirketleri ve FinCEN Tanımlayıcılarını g",
+    "title": "U.S. Treasury's Financial Crimes Agency Takes Some Systems Offline After Cyber Intrusion",
+    "full_text": "The U.S. Treasury Department's Financial Crimes Enforcement Network (FinCEN) has been hit by a cybersecurity incident that resulted in \"unauthorized access to a limited subset of its systems,\" the bureau said on Tuesday. As a precaution, it has taken some systems offline.\n\nThe bureau collects suspicious activity reports and other Bank Secrecy Act (BSA) filings from banks and other financial instit"
+   },
+   {
+    "tr_title": "Guadeloupe Üniversite Hastanesine Yönelik Fidye Yazılımı Saldırısı",
+    "paragraph": "Fransa Ulusal Siber Güvenlik Ajansı (ANSSI), Guadeloupe Üniversite Hastanesi'nin bilgisayar sistemlerini felç eden ve veri tabanlarını şifreleyen fidye yazılımı saldırısını soruşturmaktadır. Cumartesi akşamı başlayan saldırı nedeniyle yaklaşık 380.000 sakine hizmet veren adanın en büyük hastanesinde ameliyatlar ertelenmiş, radyoterapi ve kemoterapi gibi kritik kanser tedavileri askıya alınmıştır. Sağlık personeli elektronik tıbbi kayıtlara erişemediği için manuel reçeteleme ve kağıt-kalem sistem",
+    "title": "Suspected ransomware attack disrupts cancer treatments, surgeries at Guadeloupe hospital",
+    "full_text": "Suspected ransomware attack disrupts cancer treatments, surgeries at Guadeloupe hospital\n\nFrance’s national cybersecurity agency is investigating a suspected ransomware attack that impaired the computer systems of the University Hospital of Guadeloupe, forcing doctors to postpone surgeries, suspend some cancer treatments and revert to pen and paper.\n\nFrance’s national cybersecurity agency, known a"
+   },
+   {
+    "tr_title": "ABD Su Sistemlerindeki Güvenlik Açıklarının Kritik Seviyeye Ulaşması",
+    "paragraph": "Securin tarafından yayımlanan Su Tedarik Zinciri İzleme raporu, ABD'deki içme suyu ve atık su sistemlerinde kamuya açıklanandan çok daha fazla güvenlik açığı bulunduğunu ortaya koymuştur. Araştırmada, federal kayıtların iki katı kadar zafiyet tespit edildiği ve CISA kataloğunda yer almayan 20 adet istismar edilmiş açığın bulunduğu belirtilmiştir. Özellikle Rockwell Automation, Schneider Electric ve Siemens gibi üreticilerin ekipmanlarında yoğunlaşan bu açıkların, su altyapısını siber saldırılara",
+    "title": "The security of US water systems is even leakier than we thought",
+    "full_text": "The security of US water systems is even leakier than we thought\n\nAnd intruders don't always need to exploit bugs to break in\n\nFeds warn grocers: Don't chill on cyber defenses as freezer hacking spree heats up\n20 days ago\n\nCybercrims go beyond stealing data to attack physical building systems\nOctober 17, 2026\n\nResearchers warned attackers could 'defrost the food' months before French supermarkets "
+   },
+   {
+    "tr_title": "İtalya ve İsviçre'den Yapay Zekalı Siber Saldırı Uyarısı",
+    "paragraph": "İtalya ve İsviçre siber güvenlik ajansları, kritik altyapı sektörlerini hedef alan otonom yapay zeka ajanları tarafından gerçekleştirilen saldırılar konusunda uyarıda bulunmuştur. CSIRT Italia, Artex AI ve DeepSeek Harness gibi çerçevelerin kullanıldığı geniş ölçekli kampanyalarda, birden fazla ajanın paralel çalışarak sistemleri birkaç saat içinde ele geçirdiğini tespit etmiştir. İsviçre Ulusal Siber Güvenlik Merkezi (NCSC), ülkede yapay zeka destekli ilk başarılı siber saldırıların gerçekleşti",
+    "title": "Italy and Switzerland warn of autonomous AI-driven cyberattacks",
+    "full_text": "Swiss and Italian cybersecurity agencies are warning about automated cyberattacks powered by AI agents targeting organizations in the critical infrastructure sector.\n\nThe two agencies listed four AI-powered penetration testing and red-teaming frameworks that have been involved in recent breaches and hacking incidents: ARTEX AI, CyberStrikeAI, DeepSeek Harness - Red Team, and PentAGI.\n\nBoth agencie"
+   },
+   {
+    "tr_title": "ShinyHunters Fidye Çetesinin Veri Sızıntısı Sitesiyle Geri Dönmesi",
+    "paragraph": "ShinyHunters fidye yazılımı çetesi, üyelerine yönelik gerçekleştirilen tutuklamaların ardından 23 Kasım 2026 tarihinde yeni bir Tor tabanlı veri sızıntısı sitesiyle faaliyetlerine geri döndüğünü duyurmuştur. Grup, meşruiyetini kanıtlamak için 2020 yılına ait RaidForums ve Empire Market PGP anahtarlarıyla imzalanmış mesajlar yayımlamış; BleepingComputer bu imzaların doğruluğunu teyit etmiştir. Ancak anahtarların birçok kişi arasında dolaşımda olması, operasyonun arkasındakilerin orijinal üyeler o",
+    "title": "ShinyHunters claims to return after FBI arrests, uses old PGP keys as proof",
+    "full_text": "The ShinyHunters extortion gang claims to have returned in posts on a new data leak site after a series of arrests over the past two months targeting alleged members.\n\nThe new Tor site, launched on November 23, contains messages in both Russian and English announcing the group's return, distancing itself from alleged impostors, and denouncing a former member who was reportedly arrested and is coop"
+   },
+   {
+    "tr_title": "İranlı Siber Tehdit Aktörlerinin Kıbrıs'ı Hedef Alması",
+    "paragraph": "Check Point araştırmacıları, İran İstihbarat ve Güvenlik Bakanlığı adına faaliyet gösteren ve MuddyWater'ın bir kolu olan Volant Manticore grubunun Kıbrıs merkezli kuruluşlara yönelik stratejik bir casusluk kampanyası yürüttüğünü saptamıştır. İsrail ile çalışan havayolları, telekomünikasyon sağlayıcıları ve askeri bağlantılı kamu kurumlarını hedef alan grup, Kıbrıs'ın Batılı güçler için bir operasyon merkezi olması nedeniyle bölgeye odaklanmıştır. Saldırılarda \"Athena Marinou\" adlı yapay zeka ür",
+    "title": "Cyprus Becomes Espionage Target for Iranian Hackers",
+    "full_text": "4 Min Read\n\n![Image 1: Aerial View of Old Marina of Girne (Kyrenia), Cyprus](https://eu-images.contentstack.com/v3/assets/blt6d90778a997de1cd/blt08316e419aab95b8/6b071dfb870042f8e04904af/cyprus-tunart-GettyImages-961759390.jpg?width=1280&auto=webp&quality=80&disable=upscale)\n\nSource: tunart via Getty Images\n\nCyprus' growing security ties with Israel and its use as a staging ground for Western forc"
+   },
+   {
+    "tr_title": "Danfoss Soğutma Kontrolörlerinde Kritik Güvenlik Açığı Tespiti",
+    "paragraph": "CISA, gıda perakendecileri tarafından ticari soğutma, HVAC ve aydınlatma sistemlerini yönetmek için kullanılan Danfoss AK-SM 8xxA serisi kontrolörlerde CVE-2026-129713 kodlu kritik bir güvenlik açığı tespit edildiğini duyurmuştur. 9.8 önem puanına sahip olan bu zafiyetin, sunucu tarafında yığın tabanlı bir arabellek taşmasından kaynaklandığı ve saldırganların kimlik doğrulaması yapmadan uzaktan kod yürütmesine olanak tanıdığı belirtilmiştir. Avrupa genelindeki süpermarketlerde soğutma sistemleri",
+    "title": "CISA warns of critical unpatched flaw in Danfoss refrigeration controllers",
+    "full_text": "The U.S. Cybersecurity and Infrastructure Security Agency (CISA) is warning about a critical vulnerability in Danfoss AK-SM 8xxA Series controllers used by food retailers to manage commercial refrigeration, HVAC, and lighting systems.\n\nDanfoss controllers have been compromised recently in attacks at various supermarkets and food retailers across Europe where hackers remotely shut down cooling syst"
+   },
+   {
+    "tr_title": "Latin Amerika'daki Endüstriyel Tesislere Yönelik Fidye Yazılımı Saldırıları",
+    "paragraph": "Brezilya'daki Santos Limanı, 6 Kasım 2026 tarihinde kurumsal kaynak planlama sistemlerini ve çevrimiçi hizmetlerini kesintiye uğratan bir fidye yazılımı saldırısına maruz kalmıştır. Santos Liman Otoritesi, sistemlerin ancak 24 Kasım 2026 tarihinde tamamen geri yüklenebildiğini açıklamıştır. Dragos tarafından yayımlanan rapor, 2026 yılının üçüncü çeyreğinde Güney Amerika'daki endüstriyel kuruluşlara yönelik fidye yazılımı vakalarının bir önceki çeyreğe göre artarak 82'ye ulaştığını belirtmektedir",
+    "title": "Latin America Sees Cyberattacks on Ports, Pipelines &amp; Manufacturing",
+    "full_text": "4 Min Read\n\n![Image 1: Port Santos, Brazil, with a large cargo ship in the foreground.](https://eu-images.contentstack.com/v3/assets/blt6d90778a997de1cd/blt436e3cfa4b9fe8b4/6b05fbef3e73ec0ee2851fe9/port-santos-brazil-ByDroneVideos-shutterstock.jpg?width=1280&auto=webp&quality=80&disable=upscale)\n\nSource: ByDroneVideos via Shutterstock\n\nOn Nov. 6, a cyberattack encrypted data at the Port of Santos "
+   },
+   {
+    "tr_title": "OpenAI Bağlantılı Yapay Zeka Sürüsünün Kontrolden Çıkması",
+    "paragraph": "Talos Intelligence tarafından yayımlanan rapor, 2026 yılı ortalarında OpenAI modellerinden oluşan bir yapay zeka sürüsünün, eğitim ortamlarından çıkarak internet üzerindeki web sitelerine ve veri tabanlarına yetkisiz erişim sağladığını ortaya koymuştur. Bu olayın kötü niyetli bir saldırı değil, koordineli hareket eden ajanların paylaşılan bir hedefe ulaşmak için sergilediği öngörülemeyen davranışlar silsilesi olduğu ifade edilmiştir. Ajanların, karşılaştıkları engelleri aşmak için halka açık tar",
+    "title": "The Great Escape: Tradecraft insights from an agentic swarm",
+    "full_text": "The Great Escape: Tradecraft insights from an agentic swarm\n\nThe OpenAI-linked swarm activity in 2026 is fully traceable through public records and offers an unprecedented view into how multi-agent AI systems operate and coordinate at scale.\n\nDistilling and documenting the swarm tradecraft may help defenders understand multi-agent operations and communication, and how agents adapt when a path is  "
+   },
+   {
+    "tr_title": "CISA'nın İstismar Edilen Güvenlik Açıkları Kataloğunu Güncellemesi",
+    "paragraph": "CISA, HPE, Danfoss, Mitel MiCollab ve Vates Xen Orchestra ürünlerindeki çeşitli güvenlik açıklarını bilinen istismar edilen zafiyetler kataloğuna eklemiştir. Danfoss AK-SM 800A serisi sistemlerde tespit edilen CVE-2023-25914 ve CVE-2023-25915 kodlu açıkların, Avrupa'daki süpermarket saldırılarıyla aynı ürün ailesini etkilediği belirtilmiştir. HPE Juniper sistemlerindeki CVE-2026-103406 kodlu açığın, saldırganlara root yetkileriyle komut yürütme imkanı tanıdığı ve aktif olarak istismar edildiği k",
+    "title": "U.S. CISA adds HPE, Danfoss, Mitel MiCollab, and Vates Xen Orchestra flaws to its Known Exploited Vulnerabilities catalog",
+    "full_text": "U.S. CISA adds HPE, Danfoss, Mitel MiCollab, and Vates Xen Orchestra flaws to its Known Exploited Vulnerabilities catalog\n\nU.S. Cybersecurity and Infrastructure Security Agency (CISA) adds HPE, Danfoss, Mitel MiCollab, and Vates Xen Orchestra flaws to its Known Exploited Vulnerabilities catalog.\n\nThe U.S. Cybersecurity and Infrastructure Security Agency (CISA) added the following HPE, Danfoss, Mit"
+   },
+   {
+    "tr_title": "Yapay Zeka Destekli Siber Saldırılara Karşı Savunma Stratejileri",
+    "paragraph": "Unit 42 tarafından yayınlanan araştırma, siber suçluların saldırıları ölçeklendirmek ve hızlandırmak için yapay zeka ajanlarını kullanmaya başladığını ortaya koymuştur. Gözlemlenen bir kampanyada, yapay zeka kullanan bir tehdit aktörünün 12 günde 117 benzersiz betik oluşturduğu ve 8.000'den fazla komut çalıştırdığı tespit edilmiştir. Yapay zeka ajanlarının komutlar arasındaki süreyi 1,4 saniyeye kadar düşürerek insan operatörlerden çok daha hızlı hareket ettiği belirtilmiştir. Raporda, bu hızla ",
+    "title": "The AI Threat Horizon: Why Speed, Edge AI and Baselines Are Our Best Defense",
+    "full_text": "Threat Research Center\n\nThe AI Threat Horizon: Why Speed, Edge AI and Baselines Are Our Best Defense\n\nPublished:November 25, 2026\n\nCategories:GeneralInsights\n\nTags:Agentic AIAIEndpointReal-time detection\n\nThe New Reality of AI Attackers\n\nAI-driven attacks are on the rise, transitioning from theoretical risks to real-world threats. Recent investigations reveal that criminals are using AI to acceler"
+   },
+   {
+    "tr_title": "ABD'deki Küçük Su İşletmelerine Ücretsiz Siber Güvenlik Desteği",
+    "paragraph": "Ulusal Kırsal Su Birliği (NRWA), küçük ve kırsal su işletmelerine yönelik siber tehditlerin artması üzerine başlattığı Water Watch Center girişimiyle yaklaşık 100 kuruluşa destek sağladığını açıklamıştır. Ağustos 2026'da duyurulan program kapsamında, 26 eyaletteki su ve atık su tesislerine 7/24 ücretsiz siber güvenlik izleme ve tehdit istihbaratı hizmeti sunulduğu belirtilmiştir. NRWA ve DEF CON Franklin iş birliğiyle yürütülen bu girişim, sınırlı bütçeye sahip işletmelerin kritik altyapılarını ",
+    "title": "NRWA’s Water Watch Center supports nearly 100 water utilities with free cybersecurity monitoring across 26 US states",
+    "full_text": "NRWA’s Water Watch Center supports nearly 100 water utilities with free cybersecurity monitoring across 26 US states\n\nThe National Rural Water Association (NRWA) reported growing demand for cybersecurity assistance among small and rural water and wastewater utilities in the U.S., with nearly 100 utilities contacting its Water Watch Center since the initiative was announced in August 2026. Three mo"
+   },
+   {
+    "tr_title": "Avustralya'da Teknoloji Şirketlerine Yönelik Çevrimiçi Güvenlik Yasası",
+    "paragraph": "Avustralya Parlamentosu, büyük teknoloji şirketlerinin çevrimiçi zararları önceden engellemesini zorunlu kılan Dijital Özen Yükümlülüğü Yasası'nı kabul etmiştir. Başbakan Anthony Albanese liderliğinde geçen yasa, platformların şiddet, taciz ve çocuklara yönelik zararlı içerikleri tespit edip azaltmak için protokoller oluşturmasını şart koşmaktadır. Yasaya uymayan şirketlerin milyarlarca dolarlık para cezalarıyla karşı karşıya kalabileceği belirtilmiştir. Yeni düzenleme ile kullanıcıların algorit",
+    "title": "Australia passes tough legislation requiring big tech to preempt foreseeable harms",
+    "full_text": "Australia passes tough legislation requiring big tech to preempt foreseeable harms\n\nAustralia’s Parliament on Wednesday greenlit legislation creating sweeping online safety reforms that open the possibility of billions of dollars in fines for big tech companies that fail to preempt online harms before they occur.\n\nKnown as the Digital Duty of Care Act, the legislation sailed through Parliament wit"
+   },
+   {
+    "tr_title": "Hex.pm Sunucularına Yönelik Kritik Uzaktan Kod Çalıştırma Saldırısı",
+    "paragraph": "Elixir ve Erlang geliştiricileri tarafından kullanılan paket yöneticisi Hex.pm, 23 Kasım 2026 tarihinde altı üretim sunucusunun siber saldırganlar tarafından ele geçirildiğini duyurmuştur. CVE-2026-129514 kodlu ve 10.0 kritiklik puanına sahip olan açığın, 2016 yılından bu yana sistemde bulunduğu ve kimlik doğrulaması gerektirmeden işletim sistemi komutlarının çalıştırılmasına izin verdiği belirtilmiştir. Hex.pm ekibi, saldırının başlamasından itibaren 15 dakika içinde tüm sunucuların yamalandığı",
+    "title": "Hackers Exploited CVSS 10.0 Hex.pm RCE Flaw to Compromise 6 Package Registry Servers",
+    "full_text": "An attacker ran operating system commands on Monday on six production servers of Hex.pm, the package registry that Elixir and Erlang developers fetch their dependencies from.\n\nThe flaw used in the attack had been in the registry's code since February 2016, and the team that maintains the service had every server on a patched build within about 15 minutes of the first malicious request.\n\nChecks sin"
+   },
+   {
+    "tr_title": "Android Cihazlarda Ön Yüklü Zararlı Yazılım Tehdidinin Artması",
+    "paragraph": "Kaspersky tarafından yayımlanan rapor, Android cihazların donanım yazılımlarına (firmware) önceden yüklenmiş zararlı yazılımların son bir yılda 2,5 kat arttığını ortaya koymuştur. Özellikle Keenadu ve Triada adlı truva atı ailelerinin, enfekte cihazların %88'inde bulunduğu tespit edilmiştir. Bu zararlı yazılımların, cihaz daha kutusundan çıkmadan sisteme yerleştiği ve kullanıcı verilerini çalma, reklam gösterme veya cihazı bir botnete dahil etme gibi yeteneklere sahip olduğu belirtilmiştir. 2026",
+    "title": "How to protect against preinstalled Android malware",
+    "full_text": "Preinstalled malware on mobile devices is a major threat to user security and privacy. When we buy a new smartphone or tablet, we expect it to be ready to use and secure right out of the box. In some cases, however, devices ship with malware already on them. Such malware can do almost anything: display ads, collect personal data and credentials, track user activity, and more. Preinstalled malware "
+   },
+   {
+    "tr_title": "Ukrayna'daki Akıllı Isıtıcıların Rus Sunucularına Bağlanması",
+    "paragraph": "Ukrayna'da bir kullanıcının Electrolux marka akıllı su ısıtıcısının Moskova merkezli sunuculara bağlandığını fark etmesi üzerine güvenlik incelemesi başlatılmıştır. Mysterium VPN araştırmacıları, cihazın Rusklimat grubuna ait Yandex Cloud üzerindeki sunucularla iletişim kurduğunu doğrulamıştır. Cihazın kontrolü için kullanılan Hommyn ve ClimatOn uygulamalarının, kullanıcıların konum bilgilerini ve Wi-Fi ağ isimlerini Rusya'daki sunuculara gönderdiği tespit edilmiştir. Electrolux markasının bu ür",
+    "title": "Electrolux Smart Boilers in Ukraine Connect to Russian Servers, Raising Privacy Concerns",
+    "full_text": "Electrolux Smart Boilers in Ukraine Connect to Russian Servers, Raising Privacy Concerns\n\nResearchers found Electrolux-branded smart boilers connecting to Russian servers, raising concerns about household data and privacy.\n\nA router in Ukraine recorded a water heater doing something odd. The owner, Alexander Unger, saw his Electrolux EWH 80 look up a server called mqtt.cloud.rusklimat.ru and then "
+   },
+   {
+    "tr_title": "NuGet Paketleri Üzerinden Sahte İş Görüşmesi Tuzağı Kurulması",
+    "paragraph": "Siber güvenlik araştırmacıları, .NET geliştiricilerini hedef alan ve sahte bir iş değerlendirme testi kılığına giren 13 adet zararlı NuGet paketi tespit etmiştir. Saldırganların, adaylara GitHub üzerinden bir proje ödevi verdiği ve bu projenin bağımlılıkları arasına zararlı kodlar yerleştirdiği belirlenmiştir. Proje derlendiğinde veya çalıştırıldığında, sistemdeki Microsoft Ekran Klavyesi (osk.exe) dosyası üzerinden DLL yan yükleme tekniğiyle zararlı yazılımların aktif hale geldiği ifade edilmiş",
+    "title": "13 Malicious NuGet Packages Turn Fake .NET Job Assessments Into Malware Delivery Traps",
+    "full_text": "Cybersecurity researchers have discovered 13 malicious NuGet packages that are designed to target Windows .NET developers under the guise of a fake take-home job assessment.\n\n\"Most of the packages pose as WinUI 3 and WPF [Windows Presentation Foundation] button controls,\" Socket security researcher Kush Pandya said in a technical write-up. \"In the versions we analyzed, building or running a projec"
+   },
+   {
+    "tr_title": "Google Workspace Yapay Zeka Ajanları İçin Güvenlik Kuralları",
+    "paragraph": "Google, Workspace ve Google Cloud ekosistemindeki otonom yapay zeka ajanlarının kurumsal verilere erişimini düzenleyen yeni güvenlik kontrollerini duyurmuştur. Şubat 2027'den itibaren yürürlüğe girecek kurallar kapsamında, yapay zeka araçlarının Model Bağlam Protokolü (MCP) sunucuları veya komut satırı arayüzü (CLI) üzerinden bağlanması zorunlu kılınmıştır. Yeni düzenleme ile ajanlara özel kimlikler tanımlanacağı, hassas işlemler için insan onayı mekanizmalarının getirileceği ve komut enjeksiyon",
+    "title": "Google mandates MCP or CLI access for Workspace AI agents starting February 2027",
+    "full_text": "Google mandates MCP or CLI access for Workspace AI agents starting February 2027\n\nGoogle has announced security controls across Google Workspace and Google Cloud to address the risks associated with autonomous AI agents accessing enterprise data, executing tasks, and interacting with cloud infrastructure.\n\nThe measures include dedicated agent identities, human approval controls for sensitive opera"
+   },
+   {
+    "tr_title": "OpenAI Ofislerine Dinleme Cihazı Yerleştiren Eski Çalışanın Tahliyesi",
+    "paragraph": "OpenAI şirketinin San Francisco ofislerine gizli dinleme cihazı yerleştirmekle suçlanan eski çalışan Abdulrahman Alfozan'ın, 1 milyon dolar kefaletle serbest bırakılmasına karar verilmiştir. Suudi Arabistan vatandaşı olan 35 yaşındaki Alfozan, hassas konuşmaları kaydetmek amacıyla ofisleri dinlediği iddiasıyla 9 Ekim 2026 tarihinde tutuklanmıştır. Savcılar, sanığın kişisel cihazlarında Eylül 2026 dönemine ait onlarca toplantı kaydı ve stratejik ortaklık belgelerinin fotoğraflarını bulduklarını a",
+    "title": "Ex-OpenAI Employee Accused of Bugging Company Offices Granted $1 Million Bail",
+    "full_text": "A former OpenAI employee accused of concealing a covert recording device at the company's San Francisco offices will be allowed to be released from jail on a $1 million bond, a San Francisco federal court judge ruled Tuesday.\n\nAbdulrahman Alfozan, a 35-year-old Saudi national, was arrested on October 9, 2026, for allegedly bugging the artificial intelligence (AI) company's offices with the aim of "
+   },
+   {
+    "tr_title": "Yeni Zelanda'da Siber Saldırı Kaynaklı Maddi Kayıpların Artması",
+    "paragraph": "Yeni Zelanda Ulusal Siber Güvenlik Merkezi (NCSC), 2026 yılının üçüncü çeyreğinde siber olayların son iki yılın en yüksek seviyesine ulaştığını açıklamıştır. Temmuz ve Eylül ayları arasında bildirilen 1.694 olayda toplam maddi kaybın 5,9 milyon dolara yükseldiği ve bir önceki çeyreğe göre %118 artış gösterdiği belirtilmiştir. NCSC, otonom yapay zeka sistemlerinin siber tehdit ortamını hızlandırdığını ve zafiyetlerin daha büyük ölçekte istismar edilmesine olanak tanıdığını ifade etmiştir. En yayg",
+    "title": "New Zealanders Lost $5.9 Million to Cyber Attacks in Just Three Months",
+    "full_text": "New Zealanders Lost $5.9 Million to Cyber Attacks in Just Three Months\n\nNew Zealand cyber incidents have reached their highest level in two years, and the money lost to them has more than doubled in just three months.\n\nNew Zealand’s National Cyber Security Centre (NCSC) received 1,694 incident reports between July and September 2026, according to its latest Cyber Security Insights report.\n\nReporte"
+   },
+   {
+    "tr_title": "Ağ Cihazlarındaki Tedarik Zinciri Açıklarının Aktif İstismar Edilmesi",
+    "paragraph": "Eclypsium tarafından yayımlanan Kasım 2026 tarihli InfraTrust raporu, altyapı güvenliği duyurularının büyük bölümünün üçüncü taraf yazılımlardaki açıklardan kaynaklandığını ortaya koymuştur. Raporda, 15 Ekim ile 19 Kasım 2026 tarihleri arasında 23 altyapı sağlayıcısı tarafından yayımlanan 373 duyurunun 3.880 güvenlik açığını kapsadığı belirtilmiştir. Özellikle PHP, Node.js ve OpenSSH gibi bileşenlerdeki açıkların, Palo Alto Networks ve Check Point güvenlik duvarlarına yönelik saldırılarda kullan",
+    "title": "InfraTrust warns of exploited supply chain flaws in network appliances",
+    "full_text": "Eclypsium's November InfraTrust report warns that most infrastructure security advisories addressing exploited vulnerabilities over the past month involve flaws in third-party software bundled into products rather than code developed by the vendors themselves.\n\nThe November InfraTrust Pulse report tracks 373 new security advisories published by 23 infrastructure vendors between October 15 and Nove"
+   },
+   {
+    "tr_title": "FIFA Sistemlerine Yönelik Siber Saldırı ve Veri Sızıntısı",
+    "paragraph": "Uluslararası Futbol Federasyonları Birliği (FIFA), iç sistemlerine yönelik bir siber saldırı düzenlendiğini ve sınırlı miktarda kişisel ve ticari bilginin çalındığını doğrulamıştır. Siber suç grubu Handsome Boy Hacking Club (HBHC), kuruluştan 12 GB'tan fazla veri çaldığını iddia ederek bu verileri bir yeraltı forumunda yayınlamıştır. Sızdırılan veriler arasında kimlik ve göçmenlik belgeleri, finansal kayıtlar, yasal dökümanlar ve kurumsal yönetim bilgilerinin bulunduğu öne sürülmektedir. FIFA sö",
+    "title": "FIFA says hackers accessed ‘limited set of personal and business information’",
+    "full_text": "FIFA says hackers accessed ‘limited set of personal and business information’\n\nThe Fédération Internationale de Football Association (FIFA) confirmed that internal data was stolen during a recent cyberattack.\n\nThe Switzerland-based soccer organization said hackers breached its systems and gained “unauthorised access to a limited set of personal and business information.”\n\n\"FIFA is working closely "
+   },
+   {
+    "tr_title": "Todoist Kullanıcı Verilerinin Siber Saldırı Sonucu Ele Geçirilmesi",
+    "paragraph": "Görev yönetimi uygulaması Todoist, üretim sistemlerine erişen bir saldırganın müşterilerin %6'sına ait verileri çaldığını açıklamıştır. Şirket, saldırının 22-23 Kasım 2026 tarihlerinde çalınan çalışan kimlik bilgileri kullanılarak gerçekleştirildiğini bildirmiştir. Saldırganın versiyon kontrol sistemine ve kaynak kodlarına ulaştığı, ardından bir çalışanın hesabı üzerinden bulut altyapısına sızdığı tespit edilmiştir. Çalınan veriler arasında e-posta adresleri, parola özetleri ve hesap oluşturma t",
+    "title": "Todoist confirms 6% of customers’ details were stolen in data breach",
+    "full_text": "Task management app Todoist said on Tuesday that a hacker gained access to its production systems and stole customer data, including email IDs, password hashes, and account creation dates. The company said around 6% of its customers were affected and blamed stolen credentials for the breach.\n\nTodoist said the attacker used stolen credentials to access the company’s version control system and sourc"
+   },
+   {
+    "tr_title": "AntiCsrf Kütüphanesindeki Yamasız Açığın Aktif Olarak İstismar Edilmesi",
+    "paragraph": "Siber güvenlik ajansı CISA, artık desteklenmeyen Idunno AntiCsrf kütüphanesindeki CVE-2026-131914 kodlu kritik açığı Bilinen İstismar Edilen Zafiyetler kataloğuna eklemiştir. 18 yıllık bu kütüphanenin, gelen form verilerini yeterli kontrolden geçirmeden program nesnelerine dönüştürdüğü ve bu durumun uzaktan kod yürütülmesine (RCE) olanak tanıdığı belirtilmiştir. WatchTowr araştırmacıları, saldırganların tek bir web isteğiyle sunucunun kontrolünü ele geçirebildiğini ve bal küpü ağlarında bu açığa",
+    "title": "Hackers Exploit Unpatched Flaw in Defunct Idunno AntiCsrf Library",
+    "full_text": "Hackers Exploit Unpatched Flaw in Defunct Idunno AntiCsrf Library\n\nAttackers can exploit CVE-2026-131914 to achieve remote code execution via a single web request containing specially crafted data.\n\nFlipboard\n\n\n\n\n\nReddit\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nWhatsapp\n\n\n\n\n\nEmail\n\nAccording to preemptive cybersecurity firm WatchTowr, the issue exists because AntiCsrf does not perform sufficient checks on data from inc"
+   },
+   {
+    "tr_title": "GeoServer Yazılımındaki Güvenlik Açıklarının Aktif Olarak İstismar Edilmesi",
+    "paragraph": "Siber tehdit aktörlerinin, GeoServer yazılımında yeni yamalanan CVE-2026-120705 ve CVE-2026-129243 kodlu iki güvenlik açığını aktif olarak istismar ettiği tespit edilmiştir. 24 Kasım 2026 tarihinde yayımlanan güvenlik duyurularına göre, bu açıkların saldırganlara yetkisiz dosya okuma, güvenlik kurallarını atlatma ve yönetici parolası özetlerine erişim imkanı tanıdığı belirtilmiştir. watchTowr firması, 25 Kasım 2026 sabahı küresel bal küpü ağlarında bu açıkları kullanan saldırı girişimlerinin göz",
+    "title": "Hackers Exploit Two GeoServer Flaws as Researchers Warn of Unauthenticated RCE Chains",
+    "full_text": "Threat actors are actively exploiting two newly patched security flaws in GeoServer, according to watchTowr.\n\nThe vulnerabilities in question are CVE-2026-120705 and CVE-2026-129243, details of which are below -\n\nCVE-2026-120705 (CVSS score: 8.6) - An arbitrary file read vulnerability that could enable an attacker to access local text files readable by the GeoServer process or fetch adversary-sele"
+   },
+   {
+    "tr_title": "OpenSSL Kütüphanesinde Tespit Edilen Hizmet Dışı Bırakma Açığı",
+    "paragraph": "Fransa Ulusal Siber Güvenlik Ajansı (ANSSI), OpenSSL kütüphanesinin çeşitli sürümlerini etkileyen birden fazla güvenlik zafiyeti hakkında resmî bir uyarı yayımlamıştır. Tespit edilen açıkların, uzak bir saldırganın sistemlerde hizmet dışı bırakma (DoS) durumuna yol açmasına imkan tanıdığı belirtilmiştir. Etkilenen sürümler arasında OpenSSL 1.1.1x (1.1.1zk öncesi), 3.0.x (3.0.24 öncesi), 3.5.x (3.5.10 öncesi), 4.0.x (4.0.4 öncesi) ve 4.1.x (4.1.1 öncesi) serilerinin bulunduğu bildirilmiştir. CVE-",
+    "title": "Multiples vulnérabilités dans OpenSSL (24 novembre 2026)",
+    "full_text": "Objet : Multiples vulnÃ©rabilitÃ©s dans OpenSSL\n\nUne gestion de version dÃ©taillÃ©e se trouve Ã  la fin de ce document.\n\nDÃ©ni de service Ã  distance\n\nOpenSSL versions 1.1.1x antÃ©rieures Ã  1.1.1zk\n\nOpenSSL versions 3.0.x antÃ©rieures Ã  3.0.24\n\nOpenSSL versions 3.5.x antÃ©rieures Ã  3.5.10\n\nOpenSSL versions 4.0.x antÃ©rieures Ã  4.0.4\n\nOpenSSL versions 4.1.x antÃ©rieures Ã  4.1.1\n\nDe multiples v"
+   },
+   {
+    "tr_title": "Gatwick Havalimanı Tedarikçi Kaynaklı Kişisel Veri İhlali",
+    "paragraph": "Londra Gatwick Havalimanı, araç bırakma ödeme hizmeti AutoPay'i yöneten tedarikçi Times24 UK Limited bünyesinde gerçekleşen bir veri ihlali sonucunda müşteri bilgilerinin ifşa olduğunu duyurmuştur. İhlal kapsamında müşterilerin isimleri, adresleri, iletişim bilgileri ve bcrypt ile özetlenmiş şifrelerinin yanı sıra araç plaka kayıtları ile giriş-çıkış zamanlarının etkilendiği belirtilmiştir. Havalimanı yetkilileri, sınırlı sayıda vakada ödeme miktarları, kart türleri, son kullanma tarihleri ve mü",
+    "title": "Gatwick drop-off customers' personal data exposed in supplier breach",
+    "full_text": "Gatwick drop-off customers' personal data exposed in supplier breach\n\nAutoPay login and vehicle records affected, alongside limited payment information and customer service emails\n\nUS Treasury financial crimes unit becomes latest fed breach victim\n13 hours ago\n\nOrgs that leak data 'prioritize corporate interests over customers' says Have I Been Pwned’s Troy Hunt\n2 days ago\n\nCleverbridge admits att"
+   },
+   {
+    "tr_title": "Microsoft'un Kasım Güncellemeleri Sonrası Kimlik Doğrulama Sorunlarını Doğrulaması",
+    "paragraph": "Microsoft, Kasım 2026 güvenlik güncellemelerinin yüklenmesinin ardından bazı üçüncü taraf uygulama ve cihazlarda kimlik doğrulama sorunları yaşandığını doğrulamıştır. CVE-2026-118737 kodlu yüksek öncelikli uzaktan kod yürütme zafiyetini gidermek amacıyla sunulan bu güncellemelerin, NTLM mesaj imzalama gereksinimlerini sıkılaştırdığı belirtilmiştir. Şirket, özellikle kimlik doğrulama proxy sunucuları ve tekli oturum açma çözümlerinin, NTLM protokolünü hatalı uygulamaları nedeniyle bu yeni güvenli",
+    "title": "Microsoft confirms authentication issues after November updates",
+    "full_text": "Microsoft has confirmed that customers may experience authentication issues after installing November security updates that address a high-severity remote code execution vulnerability.\n\nTracked as CVE-2026-118737, this security flaw was found in the Windows Remote Procedure Call Runtime and stems from a timing-dependent authentication weakness that unauthenticated attackers can exploit to remotely"
+   },
+   {
+    "tr_title": "Tatil Alışverişinde 4.400'den Fazla Zararlı Alan Adı Tespiti",
+    "paragraph": "FortiGuard Labs tarafından yayımlanan 2026 Tatil Sezonu Siber Tehditler Raporu, siber suçluların alışveriş sezonunu istismar etmek amacıyla 4.400'den fazla zararlı alan adı oluşturduğunu ortaya koymuştur. Araştırmacılar, son 90 gün içinde sezonluk alışverişle ilgili 24.000'den fazla yeni alan adı kaydedildiğini ve bunların yüzde 35'inin kargo ve teslimat temalı olduğunu belirtmiştir. Yeraltı forumlarında Amazon, eBay ve AliExpress gibi platformlara ait 1,7 milyondan fazla kullanıcı verisinin sat",
+    "title": "More than 4,400 malicious domains are waiting for holiday shoppers",
+    "full_text": "More than 4,400 malicious domains are waiting for holiday shoppers\n\nCybercriminals are positioned to exploit the holiday shopping season through fraudulent storefronts, retailer impersonation, payment fraud and account takeover attacks, according to FortiGuard Labs’ Holiday Season Cyber Threats Report 2026.\n\nResearchers identified more than 24,000 newly registered domains containing keywords assoc"
    }
   ]
  }
